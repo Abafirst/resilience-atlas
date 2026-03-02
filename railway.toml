@@ -1,21 +1,6 @@
-# Railway configuration for a Node.js application
+[build]
+builder = "nixpacks"
 
-# Node.js
-# https://railway.app/docs/deploy/nodejs
-
-# Environment Variables
-env:
-  NODE_ENV: production
-
-# Commands to run
-build: npm install
-start: npm start
-
-# Deploy settings
-# Specify the port Railway should listen on
-port: 3000
-
-# Build command and the start command for development
-production:
-  build_command: npm run build
-  start_command: npm start
+[deploy]
+startCommand = "npm start"
+restartPolicyMaxRetries = 5
