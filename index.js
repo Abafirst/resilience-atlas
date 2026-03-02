@@ -1,31 +1,27 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const { MongoClient } = require('mongodb');
-const stripe = require('stripe');
-const jwt = require('jsonwebtoken');
+// New payment endpoint code and webhook handler
 
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is running' });
+app.post('/payment', async (req, res) => {
+    // Handle payment request
+    const paymentData = req.body;
+    try {
+        // Process the payment
+        const result = await processPayment(paymentData);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ error: 'Payment processing failed' });
+    }
 });
 
-// Basic route
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
+app.post('/webhook', (req, res) => {
+    // Handle webhook event
+    const event = req.body;
+    switch (event.type) {
+        case 'payment_completed':
+            // Handle completed payment
+            break;
+        // Other event types...
+        default:
+            console.log('Unhandled event type:', event.type);
+    }
+    res.status(200).send('Webhook received');
 });
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-module.exports = app;
