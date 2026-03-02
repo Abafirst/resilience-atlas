@@ -1,6 +1,14 @@
-[build]
-builder = "nixpacks"
+# railway.toml
 
-[deploy]
-startCommand = "npm start"
-restartPolicyMaxRetries = 5
+[services]
+  [[services]]
+    name = "backend"
+    root = "."
+    build = "npm install"
+    start = "node index.js"
+
+  [[services]]
+    name = "frontend"
+    root = "client"
+    build = "npm install && npm run build"
+    start = "npm run preview"
