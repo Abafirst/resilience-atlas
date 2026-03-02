@@ -1,1 +1,19 @@
-{\n  "name": "resilience-atlas",\n  "version": "1.0.0",\n  "description": "A Node.js application using Express, MongoDB, Stripe, and JWT authentication",\n  "main": "index.js",\n  "scripts": {\n    "test": "echo \"Error: no test specified\" && exit 1"\n  },\n  "dependencies": {\n    "express": "^4.17.1",\n    "mongodb": "^4.1.0",\n    "stripe": "^8.0.0",\n    "jsonwebtoken": "^8.5.1"\n  },\n  "author": "Abafirst",\n  "license": "ISC"\n}
+{
+  "name": "resilience-atlas",
+  "version": "1.0.0",
+  "description": "A Node.js application using Express, MongoDB, Stripe, and JWT authentication",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^4.1.0",
+    "stripe": "^8.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "dotenv": "^10.0.0"
+  },
+  "author": "Abafirst",
+  "license": "ISC"
+}
