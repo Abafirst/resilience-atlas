@@ -226,8 +226,16 @@ app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
 
 // Start server only when run directly (not when required by tests)
 if (require.main === module) {
-    app.listen(PORT, '0.0.0.0', () => {
+    const server = app.listen(PORT, '0.0.0.0', () => {
         console.log(`🚀 Server running on port ${PORT}`);
+    });
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
+            process.exit(1);
+        } else {
+            throw err;
+        }
     });
 }
 
