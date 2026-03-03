@@ -12,80 +12,57 @@
 - API integration for real-time data retrieval
 - User-friendly interface
 
-### Quick start — run it locally in 4 steps
-
-> **You only need one terminal window.** Follow these steps top-to-bottom.
-
-**Step 1 — Download the code**
-
-Open a terminal, then paste:
-```bash
-git clone https://github.com/Abafirst/resilience-atlas.git
-cd resilience-atlas
-```
-
-**Step 2 — Install dependencies** *(run this once, not every time)*
-
-```bash
-npm install
-```
-
-This downloads all the libraries the app needs into a `node_modules` folder.
-It can take 30–60 seconds — just wait for the prompt to return.
-
-**Step 3 — Create your `.env` file**
-
-```bash
-cp .env.example .env
-```
-
-Then open `.env` in any text editor and fill in your credentials
-(MongoDB URI, Stripe keys, JWT secret). You can skip credentials you don't have yet —
-the server will still start without them.
-
-**Step 4 — Start the server**
-
-```bash
-npm start
-```
-
-You'll see:
-```
-🚀 Server running on port 3000
-```
-
-> ⚠️ **The terminal will stay busy** — that's normal. The server is running and waiting for requests.
-> **Do not close the terminal** while you want the server to be available.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Abafirst/resilience-atlas.git
+   cd resilience-atlas
+   ```
+2. Install the necessary dependencies:
+   ```bash
+   npm install
+   ```
+3. Copy `.env.example` to `.env` and fill in your credentials:
+   ```bash
+   cp .env.example .env
+   ```
+4. Start the application:
+   ```bash
+   npm start
+   ```
 
 ### Testing in the browser
 
-While `npm start` is still running, open a **new browser tab** (you don't need a new terminal) and go to:
+Once the server is running, open your browser and go to:
 
 ```
 http://localhost:3000/index.html
 ```
 
-This loads the **in-browser API Tester** — click any button to call an endpoint and see the live JSON response instantly. No curl or Postman needed.
+This loads the **in-browser API Tester** — a simple page that lets you click buttons to call every endpoint and see the live JSON responses without needing any external tool.
 
 ![Browser API Tester](https://github.com/user-attachments/assets/b5b21286-c80d-4ada-a868-d4c575dee813)
 
-To stop the server, go back to the terminal and press **Ctrl + C**.
-
 ### Running the automated test suite
-
-Open a **new terminal** (while the server is *not* running), then:
 
 ```bash
 npm test
 ```
 
-No database or Stripe credentials are needed for the automated tests — they mock everything.
+No database or Stripe credentials are needed for the automated tests.
 
 ### API Endpoints
 - **GET /health** — Server health check
 - **GET /** — Welcome message
 - **POST /create-payment** *(requires JWT)* — Create a Stripe Payment Intent
 - **GET /payment/:id** *(requires JWT)* — Get the status of a payment
+
+### Deployment Instructions
+1. Build the application for production:
+   ```bash
+   npm run build
+   ```
+2. Deploy the build folder to your chosen hosting service (e.g., AWS, Heroku).
 
 ## License
 This project is licensed under the MIT License.
