@@ -17,6 +17,9 @@
     "jsonwebtoken": "^8.5.1",
     "dotenv": "^10.0.0"
   },
+  "devDependencies": {
+    "supertest": "^6.3.4"
+  },
   "author": "Abafirst",
   "license": "ISC"
 }

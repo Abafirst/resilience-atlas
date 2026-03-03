@@ -14,15 +14,19 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
+// MongoDB connection — only attempt when MONGODB_URI is configured
 let db;
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-mongoClient.connect().then(() => {
-    db = mongoClient.db('resilience-atlas');
-    console.log('✅ MongoDB connected');
-}).catch(err => {
-    console.error('❌ MongoDB connection failed:', err);
-});
+if (process.env.MONGODB_URI) {
+    const mongoClient = new MongoClient(process.env.MONGODB_URI);
+    mongoClient.connect().then(() => {
+        db = mongoClient.db('resilience-atlas');
+        console.log('✅ MongoDB connected');
+    }).catch(err => {
+        console.error('❌ MongoDB connection failed:', err);
+    });
+} else {
+    console.warn('⚠️  MONGODB_URI not set — database features will be unavailable');
+}
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -192,9 +196,11 @@ app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
     }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+// Start server only when run directly (not when required by tests)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+    });
+}
 
 module.exports = app;

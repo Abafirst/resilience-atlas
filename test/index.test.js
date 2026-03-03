@@ -5,12 +5,29 @@
 const assert = require('assert');
 const path = require('path');
 
+// Set test environment variables before requiring the app
+process.env.JWT_SECRET = 'test-secret';
+process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+// Leave MONGODB_URI unset so the guard in index.js is exercised
+
 let passed = 0;
 let failed = 0;
 
 function test(name, fn) {
     try {
         fn();
+        console.log(`  ✅ PASS: ${name}`);
+        passed++;
+    } catch (err) {
+        console.error(`  ❌ FAIL: ${name}`);
+        console.error(`     ${err.message}`);
+        failed++;
+    }
+}
+
+async function testAsync(name, fn) {
+    try {
+        await fn();
         console.log(`  ✅ PASS: ${name}`);
         passed++;
     } catch (err) {
@@ -131,8 +148,45 @@ test('dotenv.config() is called before stripe is initialized', () => {
     assert(dotenvPos < stripePos, 'dotenv.config() must come before stripe initialization so STRIPE_SECRET_KEY is loaded');
 });
 
-// --- Summary ---
-console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
-if (failed > 0) {
-    process.exit(1);
+// --- HTTP endpoint tests ---
+console.log('\nHTTP endpoints:');
+
+const supertest = require('supertest');
+const app = require('../index.js');
+const request = supertest(app);
+
+async function runHttpTests() {
+
+    await testAsync('GET / returns 200 with welcome message', async () => {
+        const res = await request.get('/');
+        assert.strictEqual(res.status, 200, `expected 200, got ${res.status}`);
+        assert(res.body.message, 'response should have a message field');
+    });
+
+    await testAsync('GET /health returns 200 with status OK', async () => {
+        const res = await request.get('/health');
+        assert.strictEqual(res.status, 200, `expected 200, got ${res.status}`);
+        assert.strictEqual(res.body.status, 'OK', 'health check status should be OK');
+    });
+
+    await testAsync('POST /create-payment without token returns 401', async () => {
+        const res = await request.post('/create-payment').send({ amount: 10 });
+        assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
+    });
+
+    await testAsync('GET /payment/:id without token returns 401', async () => {
+        const res = await request.get('/payment/pi_test123');
+        assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
+    });
+
+    // --- Summary ---
+    console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
+    if (failed > 0) {
+        process.exit(1);
+    }
 }
+
+runHttpTests().catch(err => {
+    console.error('Test runner error:', err);
+    process.exit(1);
+});
