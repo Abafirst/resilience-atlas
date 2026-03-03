@@ -61,6 +61,11 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
 });
 
+// Mount route modules
+app.use('/auth', require('./routes/auth'));
+app.use('/api/quizzes', require('./routes/quizzes'));
+app.use('/api/payments', require('./routes/payments'));
+
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
 

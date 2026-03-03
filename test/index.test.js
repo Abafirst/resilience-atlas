@@ -179,6 +179,50 @@ async function runHttpTests() {
         assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
     });
 
+    // --- Auth endpoint tests ---
+    console.log('\nAuth endpoints:');
+
+    await testAsync('POST /auth/signup with missing body returns 400', async () => {
+        const res = await request.post('/auth/signup').send({});
+        assert.strictEqual(res.status, 400, `expected 400, got ${res.status}`);
+        assert(res.body.error, 'response should have an error field');
+    });
+
+    await testAsync('POST /auth/signup creates a user and returns 201', async () => {
+        const res = await request.post('/auth/signup').send({ username: 'testuser_suite', password: 'pass1234' });
+        assert.strictEqual(res.status, 201, `expected 201, got ${res.status}`);
+        assert(res.body.message, 'response should have a message field');
+    });
+
+    await testAsync('POST /auth/signup duplicate username returns 409', async () => {
+        await request.post('/auth/signup').send({ username: 'dup_user', password: 'pass1234' });
+        const res = await request.post('/auth/signup').send({ username: 'dup_user', password: 'pass1234' });
+        assert.strictEqual(res.status, 409, `expected 409, got ${res.status}`);
+    });
+
+    await testAsync('POST /auth/login with valid credentials returns a JWT token', async () => {
+        await request.post('/auth/signup').send({ username: 'login_user', password: 'pass1234' });
+        const res = await request.post('/auth/login').send({ username: 'login_user', password: 'pass1234' });
+        assert.strictEqual(res.status, 200, `expected 200, got ${res.status}`);
+        assert(typeof res.body.token === 'string' && res.body.token.length > 0, 'response should include a JWT token');
+    });
+
+    await testAsync('POST /auth/login with wrong password returns 401', async () => {
+        await request.post('/auth/signup').send({ username: 'badpass_user', password: 'correct' });
+        const res = await request.post('/auth/login').send({ username: 'badpass_user', password: 'wrong' });
+        assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
+    });
+
+    // --- Quiz endpoint tests ---
+    console.log('\nQuiz endpoints:');
+
+    await testAsync('GET /api/quizzes returns 200 with 36 questions', async () => {
+        const res = await request.get('/api/quizzes');
+        assert.strictEqual(res.status, 200, `expected 200, got ${res.status}`);
+        assert(Array.isArray(res.body), 'response should be an array');
+        assert.strictEqual(res.body.length, 36, `expected 36 questions, got ${res.body.length}`);
+    });
+
     // --- Summary ---
     console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
     if (failed > 0) {

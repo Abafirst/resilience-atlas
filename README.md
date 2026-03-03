@@ -25,23 +25,50 @@
 3. Copy `.env.example` to `.env` and fill in your credentials:
    ```bash
    cp .env.example .env
+   # Edit .env — at minimum set JWT_SECRET, STRIPE_SECRET_KEY, and STRIPE_PUBLISHABLE_KEY
    ```
-4. Start the application:
+4. Build the React payment frontend:
+   ```bash
+   npm run build:client
+   ```
+5. Start the application:
    ```bash
    npm start
    ```
 
 ### Testing in the browser
 
-Once the server is running, open your browser and go to:
+Once the server is running, open the **React payment UI** at:
+
+```
+http://localhost:3000/app
+```
+
+This loads the full payment flow — create an account, sign in, enter card details, and complete a payment.
+
+You can also open the **in-browser API Tester** at:
 
 ```
 http://localhost:3000/index.html
 ```
 
-This loads the **in-browser API Tester** — a simple page that lets you click buttons to call every endpoint and see the live JSON responses without needing any external tool.
+This is a simple page that lets you click buttons to call every endpoint and see the live JSON responses without needing any external tool.
 
-![Browser API Tester](https://github.com/user-attachments/assets/b5b21286-c80d-4ada-a868-d4c575dee813)
+### Auth endpoints (no database required)
+
+The signup/login endpoints use an in-memory user store when no database is configured, so you can test the auth flow immediately without MongoDB:
+
+```bash
+# Register a new user
+curl -X POST http://localhost:3000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"mypassword"}'
+
+# Log in and get a JWT
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","password":"mypassword"}'
+```
 
 ### Running the automated test suite
 
@@ -49,20 +76,16 @@ This loads the **in-browser API Tester** — a simple page that lets you click b
 npm test
 ```
 
-No database or Stripe credentials are needed for the automated tests.
+No database or Stripe credentials are needed for the automated tests — all 27 tests run with mocked/placeholder values.
 
 ### API Endpoints
 - **GET /health** — Server health check
-- **GET /** — Welcome message
+- **GET /config** — Returns the Stripe publishable key for the frontend
+- **POST /auth/signup** — Register a new user (returns `201` on success)
+- **POST /auth/login** — Sign in and get a JWT token
+- **GET /api/quizzes** — Retrieve all 36 resilience quiz questions
 - **POST /create-payment** *(requires JWT)* — Create a Stripe Payment Intent
 - **GET /payment/:id** *(requires JWT)* — Get the status of a payment
-
-### Deployment Instructions
-1. Build the application for production:
-   ```bash
-   npm run build
-   ```
-2. Deploy the build folder to your chosen hosting service (e.g., AWS, Heroku).
 
 ## License
 This project is licensed under the MIT License.
