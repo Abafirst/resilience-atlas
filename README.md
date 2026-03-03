@@ -22,16 +22,40 @@
    ```bash
    npm install
    ```
-3. Start the application:
+3. Copy `.env.example` to `.env` and fill in your credentials:
+   ```bash
+   cp .env.example .env
+   ```
+4. Start the application:
    ```bash
    npm start
    ```
 
+### Testing in the browser
+
+Once the server is running, open your browser and go to:
+
+```
+http://localhost:3000/index.html
+```
+
+This loads the **in-browser API Tester** — a simple page that lets you click buttons to call every endpoint and see the live JSON responses without needing any external tool.
+
+![Browser API Tester](https://github.com/user-attachments/assets/b5b21286-c80d-4ada-a868-d4c575dee813)
+
+### Running the automated test suite
+
+```bash
+npm test
+```
+
+No database or Stripe credentials are needed for the automated tests.
+
 ### API Endpoints
-- **GET /api/v1/data**: Retrieve resilience data
-- **POST /api/v1/data**: Submit new resilience data
-- **PUT /api/v1/data/:id**: Update existing resilience data by ID
-- **DELETE /api/v1/data/:id**: Delete resilience data by ID
+- **GET /health** — Server health check
+- **GET /** — Welcome message
+- **POST /create-payment** *(requires JWT)* — Create a Stripe Payment Intent
+- **GET /payment/:id** *(requires JWT)* — Get the status of a payment
 
 ### Deployment Instructions
 1. Build the application for production:

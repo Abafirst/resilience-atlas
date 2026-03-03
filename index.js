@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');
 const { MongoClient } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
@@ -49,6 +50,9 @@ app.get('/health', (req, res) => {
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
 });
+
+// Serve browser test UI at /index.html (and any other static assets in public/)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // CREATE PAYMENT INTENT ENDPOINT
 app.post('/create-payment', verifyToken, async (req, res) => {
