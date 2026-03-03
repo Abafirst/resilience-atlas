@@ -1,7 +1,7 @@
 # Railway Configuration
 
 [build]
-  buildCommand = "npm install"
+  buildCommand = "npm install && npm run build:client"
 
 [deploy]
   startCommand = "npm start"
