@@ -1,40 +1,54 @@
 # Resilience Atlas
 
-## Project Documentation
+> **Consolidated repository** — single source of truth for the Resilience Atlas platform.
 
-### Features
-- Comprehensive visualization of resilience data
-- Interactive data exploration and analysis tools
-- API integration for real-time data retrieval
-- User-friendly interface
+Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalised insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Abafirst/resilience-atlas.git
-   cd resilience-atlas
-   ```
-2. Install the necessary dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the application:
-   ```bash
-   npm start
-   ```
+## Features
 
-### API Endpoints
-- **GET /api/v1/data**: Retrieve resilience data
-- **POST /api/v1/data**: Submit new resilience data
-- **PUT /api/v1/data/:id**: Update existing resilience data by ID
-- **DELETE /api/v1/data/:id**: Delete resilience data by ID
+- 🧠 36-question resilience assessment with 6-type scoring
+- 📧 Email report delivery (Yahoo Mail / Nodemailer)
+- 🔐 JWT authentication — login, signup, profile
+- 💳 Stripe payments with webhook handling
+- 🤝 Affiliate referral system
+- 🔔 OpenClaw — GitHub webhook → Telegram notifications
+- 🚀 Railway deployment ready
 
-### Deployment Instructions
-1. Build the application for production:
-   ```bash
-   npm run build
-   ```
-2. Deploy the build folder to your chosen hosting service (e.g., AWS, Heroku).
+## Quick Start
+
+```bash
+git clone https://github.com/Abafirst/resilience-atlas.git
+cd resilience-atlas
+npm install
+cp .env.example .env   # fill in your values
+npm start
+```
+
+## Documentation
+
+Full documentation lives in the [`docs/`](docs/) directory:
+
+- [docs/README.md](docs/README.md) — Project overview and API reference
+- [docs/SETUP.md](docs/SETUP.md) — Installation and configuration
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — Deployment guide (Railway, Docker, Heroku)
+- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — How to contribute
+- [docs/CHANGELOG.md](docs/CHANGELOG.md) — Version history
+- [docs/OPENCLAW.md](docs/OPENCLAW.md) — GitHub → Telegram integration
+
+## Project Structure
+
+```
+backend/            Express API server, routes, middleware, models, services, utils
+frontend/           HTML pages and client-side JavaScript
+integrations/       OpenClaw (GitHub → Telegram) and other third-party integrations
+docs/               Project documentation
+questions.json      36-question assessment data
+package.json        Combined dependencies
+.env.example        Environment variable template
+Dockerfile          Docker container definition
+railway.toml        Railway deployment configuration
+```
 
 ## License
-This project is licensed under the MIT License.
+
+MIT License

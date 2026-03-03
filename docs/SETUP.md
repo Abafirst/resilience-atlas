@@ -1,0 +1,99 @@
+# Setup Guide
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- MongoDB (local or Atlas cloud)
+- Stripe account (test keys for development)
+- Yahoo Mail account with an App Password (for email delivery)
+- Telegram bot token (optional, for OpenClaw notifications)
+
+---
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/Abafirst/resilience-atlas.git
+cd resilience-atlas
+```
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+## 3. Configure Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and fill in:
+
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Server port (default 3000) |
+| `NODE_ENV` | `development` or `production` |
+| `MONGODB_URI` | MongoDB connection string |
+| `JWT_SECRET` | Random secret for signing JWTs |
+| `SESSION_SECRET` | Random secret for express-session |
+| `YAHOO_EMAIL` | Yahoo email for sending reports |
+| `YAHOO_APP_PASSWORD` | Yahoo App Password (not your login password) |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key |
+| `STRIPE_SECRET_KEY` | Stripe secret key |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token (OpenClaw) |
+| `TELEGRAM_CHAT_ID` | Telegram chat/channel ID (OpenClaw) |
+| `APP_URL` | Public URL of the application |
+| `CORS_ORIGIN` | Allowed CORS origin(s) |
+
+## 4. Start the Server
+
+```bash
+# Development (with auto-restart via nodemon)
+npm run dev
+
+# Production
+npm start
+```
+
+The API will be available at `http://localhost:3000`.
+
+---
+
+## Yahoo App Password
+
+1. Go to [Yahoo Account Security](https://login.yahoo.com/account/security)
+2. Enable two-step verification
+3. Generate an App Password under "Manage app passwords"
+4. Use this password as `YAHOO_APP_PASSWORD` — **not** your regular password
+
+---
+
+## MongoDB Atlas (Cloud)
+
+1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com)
+2. Create a database user with read/write access
+3. Whitelist your IP address (or `0.0.0.0/0` for development)
+4. Copy the connection string and set it as `MONGODB_URI`
+
+---
+
+## Running Tests
+
+```bash
+npm test
+```
+
+---
+
+## OpenClaw Standalone Mode
+
+To run the GitHub-to-Telegram webhook server independently:
+
+```bash
+node integrations/openclaw/webhook.js
+```
+
+See [OPENCLAW.md](OPENCLAW.md) for full setup.
