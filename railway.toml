@@ -1,19 +1,8 @@
 # Railway Configuration
 
-# This file is used to configure your Railway project.
-
-# Backend configuration
 [build]
-  command = "npm install"
-  output = "/"
+  buildCommand = "npm install"
 
-# Specify where to run your backend from
-[backend]
-  dockerfile = "./Dockerfile"
-  startCommand = "npm run start"
-
-# Deployment settings
-[deployment]
-  branch = "main"
-  autoDeploy = true
-  environment = "production"
+[deploy]
+  startCommand = "npm start"
+  healthcheckPath = "/health"
