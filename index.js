@@ -1,10 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const { MongoClient } = require('mongodb');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;

@@ -1,18 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
 // Load environment variables from .env file
 dotenv.config();
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 // Initialize Express app
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

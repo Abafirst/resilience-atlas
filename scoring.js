@@ -30,8 +30,4 @@ function calculateScore(answers, correctAnswers) {
     return { score, feedback };
 }
 
-// Example usage:
-const userAnswers = [1, 0, 1, 1]; // User's answers
-const correctAnswers = [1, 0, 1, 0]; // Correct answers
-const result = calculateScore(userAnswers, correctAnswers);
-console.log(`Score: ${result.score}, Feedback: ${result.feedback}`);
+module.exports = { calculateScore };

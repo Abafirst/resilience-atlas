@@ -4,18 +4,13 @@
 
 # Backend configuration
 [build]
-  command = "npm install && npm run build"
+  command = "npm install"
   output = "/"
 
 # Specify where to run your backend from
 [backend]
   dockerfile = "./Dockerfile"
   startCommand = "npm run start"
-
-# Frontend configuration
-[frontend]
-  buildCommand = "npm install && npm run build"
-  outputDirectory = "./client/build"
 
 # Deployment settings
 [deployment]
