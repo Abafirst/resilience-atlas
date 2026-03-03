@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { MongoClient } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
@@ -10,6 +11,10 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Apply a broad rate limit to all requests to mitigate DoS
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false });
+app.use(limiter);
 
 // Middleware
 app.use(express.json());
@@ -46,6 +51,11 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
+// Client config endpoint — exposes safe public values to the frontend
+app.get('/config', (req, res) => {
+    res.json({ stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '' });
+});
+
 // Basic route
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
@@ -53,6 +63,15 @@ app.get('/', (req, res) => {
 
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve React frontend from client/dist when the build is present
+const clientDist = path.join(__dirname, 'client', 'dist');
+app.use(express.static(clientDist));
+// Catch-all: serve React app for /app and all client-side sub-routes.
+// This route is intentionally registered last so all API routes above take precedence.
+app.get('/app*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
 
 // CREATE PAYMENT INTENT ENDPOINT
 app.post('/create-payment', verifyToken, async (req, res) => {
