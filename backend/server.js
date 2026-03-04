@@ -11,6 +11,10 @@ dotenv.config();
 
 const app = express();
 
+// Startup state flags
+let serverReady = false;
+let dbConnected = false;
+
 // Security headers
 app.use(helmet());
 
@@ -33,13 +37,19 @@ app.use('/api/', limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
+// MongoDB connection with graceful fallback
 mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-.then(() => logger.info('✅ MongoDB connected'))
-.catch(err => logger.error('❌ MongoDB connection failed:', err));
+.then(() => {
+    dbConnected = true;
+    logger.info('✅ MongoDB connected');
+})
+.catch(err => {
+    dbConnected = false;
+    logger.error('❌ MongoDB connection failed, running in limited mode:', err.message);
+});
 
 // Static files
 app.use(express.static(path.join(__dirname, '../frontend/public')));
@@ -53,9 +63,18 @@ app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/stripe', require('./routes/stripe').router);
 app.use('/api/affiliates', require('./routes/affiliates'));
 
-// Health check
+// Health check — returns 503 while starting up, 200 once the server is ready.
+// The db field reflects the MongoDB connection state at the time of the request;
+// it may be 'disconnected' if MongoDB is still connecting or permanently unavailable.
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'OK', message: 'Resilience Atlas server is running' });
+    if (!serverReady) {
+        return res.status(503).json({ status: 'starting', message: 'Server is starting up' });
+    }
+    res.status(200).json({
+        status: 'OK',
+        message: 'Resilience Atlas server is running',
+        db: dbConnected ? 'connected' : 'disconnected'
+    });
 });
 
 // Root endpoint
@@ -76,6 +95,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+    serverReady = true;
     logger.info(`🚀 Server running on port ${PORT}`);
 });
 

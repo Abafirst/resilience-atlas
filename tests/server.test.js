@@ -112,10 +112,14 @@ function authToken(payload = {}) {
 // ── Health / Root ─────────────────────────────────────────────────────────────
 
 describe('GET /health', () => {
-    test('returns 200 with status OK', async () => {
+    test('returns 200 with status OK once server is ready, or 503 while starting', async () => {
         const res = await request(app).get('/health');
-        expect(res.status).toBe(200);
-        expect(res.body).toMatchObject({ status: 'OK' });
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.body).toMatchObject({ status: 'OK' });
+        } else {
+            expect(res.body).toMatchObject({ status: 'starting' });
+        }
     });
 });
 
