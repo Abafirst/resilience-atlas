@@ -38,10 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection with graceful fallback
-mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE_URL)
 .then(() => {
     dbConnected = true;
     logger.info('✅ MongoDB connected');

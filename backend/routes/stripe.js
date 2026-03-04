@@ -1,10 +1,26 @@
 const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { authenticateJWT } = require('../middleware/auth');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
 const router = express.Router();
+
+// Lazily initialize Stripe so a missing STRIPE_SECRET_KEY does not crash the
+// server at startup.  Routes that actually need Stripe will return 503 if the
+// key is absent rather than preventing the whole app from starting.
+let _stripe;
+function getStripe() {
+    if (!_stripe) {
+        if (!process.env.STRIPE_SECRET_KEY) {
+            throw new Error(
+                'STRIPE_SECRET_KEY environment variable is not set. ' +
+                'Configure it in your Railway dashboard or local .env file.'
+            );
+        }
+        _stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    }
+    return _stripe;
+}
 
 /**
  * POST /api/stripe/create-payment-intent
@@ -24,7 +40,7 @@ router.post('/create-payment-intent', authenticateJWT, async (req, res) => {
 
         let customerId = user.stripeCustomerId;
         if (!customerId) {
-            const customer = await stripe.customers.create({
+            const customer = await getStripe().customers.create({
                 email: user.email,
                 name: user.username,
                 metadata: { userId: user._id.toString() }
@@ -33,7 +49,7 @@ router.post('/create-payment-intent', authenticateJWT, async (req, res) => {
             await User.findByIdAndUpdate(user._id, { stripeCustomerId: customerId });
         }
 
-        const paymentIntent = await stripe.paymentIntents.create({
+        const paymentIntent = await getStripe().paymentIntents.create({
             amount: Math.round(amount * 100),
             currency,
             customer: customerId,
@@ -61,7 +77,7 @@ router.post('/create-payment-intent', authenticateJWT, async (req, res) => {
  */
 router.get('/payment/:paymentIntentId', authenticateJWT, async (req, res) => {
     try {
-        const paymentIntent = await stripe.paymentIntents.retrieve(req.params.paymentIntentId);
+        const paymentIntent = await getStripe().paymentIntents.retrieve(req.params.paymentIntentId);
         res.status(200).json({ paymentIntent });
     } catch (err) {
         logger.error('Payment retrieval error:', err);
@@ -78,7 +94,7 @@ const webhook = async (req, res) => {
     let event;
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        event = getStripe().webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
         logger.error('Stripe webhook signature verification failed:', err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
