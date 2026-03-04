@@ -82,9 +82,58 @@ The API will be available at `http://localhost:3000`.
 
 ## Running Tests
 
+### Automated tests (no live services required)
+
+All external dependencies (MongoDB, Stripe, email) are mocked, so you can run the full suite locally without any `.env` values set:
+
 ```bash
 npm test
 ```
+
+You should see output similar to:
+
+```
+PASS  tests/server.test.js
+PASS  tests/scoring.test.js
+PASS  tests/auth.middleware.test.js
+
+Tests: 35 passed, 35 total
+```
+
+### Manual health check (local server)
+
+1. Copy and fill in your environment file:
+
+   ```bash
+   cp .env.example .env
+   # edit .env — at minimum set MONGODB_URI and JWT_SECRET
+   ```
+
+2. Start the server:
+
+   ```bash
+   node backend/index.js
+   ```
+
+3. In a second terminal, poll the health endpoint:
+
+   ```bash
+   curl -i http://localhost:3000/health
+   ```
+
+   - **While the server is binding** you will receive `503`:
+
+     ```json
+     {"status":"starting","message":"Server is starting up"}
+     ```
+
+   - **Once the server is fully up** (the `app.listen` callback has fired) you will receive `200`:
+
+     ```json
+     {"status":"OK","message":"Resilience Atlas server is running","db":"connected"}
+     ```
+
+   `db` will be `"disconnected"` if `MONGODB_URI` is not set or MongoDB is unreachable; the server still starts and the health endpoint still returns `200`.
 
 ---
 
