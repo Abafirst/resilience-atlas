@@ -89,5 +89,18 @@ After deployment, verify the server is running:
 
 ```bash
 curl https://your-app.up.railway.app/health
-# {"status":"OK","message":"Resilience Atlas server is running"}
 ```
+
+Once the server has fully started you will see:
+
+```json
+{"status":"OK","message":"Resilience Atlas server is running","db":"connected"}
+```
+
+If the request arrives while the server is still binding to its port (e.g. during a rolling deploy), the endpoint returns `503 Service Unavailable`:
+
+```json
+{"status":"starting","message":"Server is starting up"}
+```
+
+Railway's health check retries automatically until it receives a `200`, so this is expected and harmless. The `db` field will be `"disconnected"` if MongoDB has not yet connected or is permanently unavailable; all other routes that require the database will return errors in that case.
