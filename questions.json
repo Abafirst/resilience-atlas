@@ -1,1 +1,182 @@
-[  {    "id": 1,    "question": "How do you feel when faced with challenges?",    "category": "Emotional"  },  {    "id": 2,    "question": "How well do you manage stress?",    "category": "Emotional"  },  {    "id": 3,    "question": "Do you often feel overwhelmed by your responsibilities?",    "category": "Emotional"  },  {    "id": 4,    "question": "How often do you feel happy or satisfied?",    "category": "Emotional"  },  {    "id": 5,    "question": "Do you express your emotions openly?",    "category": "Emotional"  },  {    "id": 6,    "question": "How do you cope with emotional pain?",    "category": "Emotional"  },  {    "id": 7,    "question": "How do you rise after a setback?",    "category": "Emotional"  },  {    "id": 8,    "question": "Do you seek support from others during tough times?",    "category": "Emotional"  },  {    "id": 9,    "question": "How often do you engage in self-reflection?",    "category": "Emotional"  },  {    "id": 10,    "question": "Are you able to find meaning in difficult situations?",    "category": "Emotional"  },  {    "id": 11,    "question": "How do you rate your mental clarity?",    "category": "Mental"  },  {    "id": 12,    "question": "Do you often feel mentally fatigued?",    "category": "Mental"  },  {    "id": 13,    "question": "How well do you concentrate when working?",    "category": "Mental"  },  {    "id": 14,    "question": "How do you react to new ideas or opinions?",    "category": "Mental"  },  {    "id": 15,    "question": "Do you practice mindfulness or meditation?",    "category": "Mental"  },  {    "id": 16,    "question": "How often do you challenge your thoughts?",    "category": "Mental"  },  {    "id": 17,    "question": "How do you handle distractions?",    "category": "Mental"  },  {    "id": 18,    "question": "Do you set clear goals for yourself?",    "category": "Mental"  },  {    "id": 19,    "question": "Do you often talk to yourself in a positive way?",    "category": "Mental"  },  {    "id": 20,    "question": "How do you define your problem-solving skills?",    "category": "Mental"  },  {    "id": 21,    "question": "How do you prioritize your physical health?",    "category": "Physical"  },  {    "id": 22,    "question": "How often do you exercise?",    "category": "Physical"  },  {    "id": 23,    "question": "How do you manage your diet?",    "category": "Physical"  },  {    "id": 24,    "question": "How much sleep do you get each night?",    "category": "Physical"  },  {    "id": 25,    "question": "Do you engage in physical relaxation techniques?",    "category": "Physical"  },  {    "id": 26,    "question": "How do you cope with physical pain?",    "category": "Physical"  },  {    "id": 27,    "question": "How well do you recover after physical exertion?",    "category": "Physical"  },  {    "id": 28,    "question": "How regularly do you get health check-ups?",    "category": "Physical"  },  {    "id": 29,    "question": "Do you make time for recreational activities?",    "category": "Physical"  },  {    "id": 30,    "question": "How do you stay hydrated?",    "category": "Physical"  },  {    "id": 31,    "question": "How do you handle setbacks in your fitness journey?",    "category": "Physical"  },  {    "id": 32,    "question": "How do you ensure a work-life balance?",    "category": "General"  },  {    "id": 33,    "question": "How often do you take breaks throughout the day?",    "category": "General"  },  {    "id": 34,    "question": "How do you maintain relationships with friends and family?",    "category": "General"  },  {    "id": 35,    "question": "Do you engage in hobbies or interests that bring you joy?",    "category": "General"  },  {    "id": 36,    "question": "How do you adapt to changes in your life?",    "category": "General"  }]
+[
+  {
+    "id": 1,
+    "question": "How do you feel when faced with challenges?",
+    "category": "Emotional"
+  },
+  {
+    "id": 2,
+    "question": "How well do you manage stress?",
+    "category": "Emotional"
+  },
+  {
+    "id": 3,
+    "question": "Do you often feel overwhelmed by your responsibilities?",
+    "category": "Emotional"
+  },
+  {
+    "id": 4,
+    "question": "How often do you feel happy or satisfied?",
+    "category": "Emotional"
+  },
+  {
+    "id": 5,
+    "question": "Do you express your emotions openly?",
+    "category": "Emotional"
+  },
+  {
+    "id": 6,
+    "question": "How do you cope with emotional pain?",
+    "category": "Emotional"
+  },
+  {
+    "id": 7,
+    "question": "How do you rise after a setback?",
+    "category": "Emotional"
+  },
+  {
+    "id": 8,
+    "question": "Do you seek support from others during tough times?",
+    "category": "Emotional"
+  },
+  {
+    "id": 9,
+    "question": "How often do you engage in self-reflection?",
+    "category": "Emotional"
+  },
+  {
+    "id": 10,
+    "question": "Are you able to find meaning in difficult situations?",
+    "category": "Emotional"
+  },
+  {
+    "id": 11,
+    "question": "How do you rate your mental clarity?",
+    "category": "Mental"
+  },
+  {
+    "id": 12,
+    "question": "Do you often feel mentally fatigued?",
+    "category": "Mental"
+  },
+  {
+    "id": 13,
+    "question": "How well do you concentrate when working?",
+    "category": "Mental"
+  },
+  {
+    "id": 14,
+    "question": "How do you react to new ideas or opinions?",
+    "category": "Mental"
+  },
+  {
+    "id": 15,
+    "question": "Do you practice mindfulness or meditation?",
+    "category": "Mental"
+  },
+  {
+    "id": 16,
+    "question": "How often do you challenge your thoughts?",
+    "category": "Mental"
+  },
+  {
+    "id": 17,
+    "question": "How do you handle distractions?",
+    "category": "Mental"
+  },
+  {
+    "id": 18,
+    "question": "Do you set clear goals for yourself?",
+    "category": "Mental"
+  },
+  {
+    "id": 19,
+    "question": "Do you often talk to yourself in a positive way?",
+    "category": "Mental"
+  },
+  {
+    "id": 20,
+    "question": "How do you define your problem-solving skills?",
+    "category": "Mental"
+  },
+  {
+    "id": 21,
+    "question": "How do you prioritize your physical health?",
+    "category": "Physical"
+  },
+  {
+    "id": 22,
+    "question": "How often do you exercise?",
+    "category": "Physical"
+  },
+  {
+    "id": 23,
+    "question": "How do you manage your diet?",
+    "category": "Physical"
+  },
+  {
+    "id": 24,
+    "question": "How much sleep do you get each night?",
+    "category": "Physical"
+  },
+  {
+    "id": 25,
+    "question": "Do you engage in physical relaxation techniques?",
+    "category": "Physical"
+  },
+  {
+    "id": 26,
+    "question": "How do you cope with physical pain?",
+    "category": "Physical"
+  },
+  {
+    "id": 27,
+    "question": "How well do you recover after physical exertion?",
+    "category": "Physical"
+  },
+  {
+    "id": 28,
+    "question": "How regularly do you get health check-ups?",
+    "category": "Physical"
+  },
+  {
+    "id": 29,
+    "question": "Do you make time for recreational activities?",
+    "category": "Physical"
+  },
+  {
+    "id": 30,
+    "question": "How do you stay hydrated?",
+    "category": "Physical"
+  },
+  {
+    "id": 31,
+    "question": "How do you handle setbacks in your fitness journey?",
+    "category": "Physical"
+  },
+  {
+    "id": 32,
+    "question": "How do you ensure a work-life balance?",
+    "category": "General"
+  },
+  {
+    "id": 33,
+    "question": "How often do you take breaks throughout the day?",
+    "category": "General"
+  },
+  {
+    "id": 34,
+    "question": "How do you maintain relationships with friends and family?",
+    "category": "General"
+  },
+  {
+    "id": 35,
+    "question": "Do you engage in hobbies or interests that bring you joy?",
+    "category": "General"
+  },
+  {
+    "id": 36,
+    "question": "How do you adapt to changes in your life?",
+    "category": "General"
+  }
+]
