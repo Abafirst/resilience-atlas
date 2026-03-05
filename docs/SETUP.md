@@ -78,6 +78,13 @@ The API will be available at `http://localhost:3000`.
 3. Whitelist your IP address (or `0.0.0.0/0` for development)
 4. Copy the connection string and set it as `MONGODB_URI`
 
+> **⚠️ Special characters in passwords** – If your database-user password contains
+> characters such as `@`, `!`, `#`, `$`, `%`, or `&`, you must URL-encode the
+> password before embedding it in the connection string.  
+> Run `node backend/utils/encodeMongoPassword.js 'your-raw-password'` to get the
+> encoded value, then build the URI using the encoded form.  
+> See [docs/MONGODB_URL_ENCODING.md](MONGODB_URL_ENCODING.md) for the full guide.
+
 ---
 
 ## Running Tests
