@@ -36,6 +36,11 @@ CORS_ORIGIN
 In your Railway project click **+ New Service → Database → MongoDB**.  
 Railway will automatically inject `MONGODB_URI` into your app environment.
 
+> **Password with special characters?**  If your MongoDB Atlas password contains
+> characters like `@`, `/`, `?`, `#`, or `%`, make sure to percent-encode them
+> before pasting the URI into the Railway Variables panel.  For example, `@` → `%40`.
+> Run `node -e "console.log(encodeURIComponent('your_password'))"` to encode quickly.
+
 ### 4. Deploy
 
 Railway auto-deploys on every push to `main`. You can also trigger a manual deploy from the dashboard.
