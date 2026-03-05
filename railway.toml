@@ -4,11 +4,6 @@
   buildCommand = "npm install && npm run build:client"
 
 [deploy]
-  startCommand = "npm start"
-  healthcheckPath = "/health"
-  command = "npm install"
-
-[deploy]
   startCommand = "node backend/index.js"
   healthcheckPath = "/health"
   healthcheckTimeout = 30
