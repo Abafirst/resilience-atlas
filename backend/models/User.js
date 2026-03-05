@@ -94,3 +94,11 @@ UserSchema.methods.toJSON = function () {
 };
 
 module.exports = mongoose.model('User', UserSchema);
+toJSON() {
+    return {
+        id: this._id,
+        username: this.username,
+        email: this.email,
+        // Add other fields that should be returned here
+    };
+}
