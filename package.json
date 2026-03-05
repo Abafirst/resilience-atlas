@@ -1,12 +1,12 @@
-{
-  "name": "your-project-name",
+﻿{
+  "name": "resilience-atlas",
   "version": "1.0.0",
-  "description": "A brief description of your project",
-  "main": "index.js",
+  "description": "A resilience assessment platform",
+  "main": "backend/server.js",
   "scripts": {
-    "test": "jest",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "jest --forceExit",
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
