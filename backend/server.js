@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const path = require('path');
 const logger = require('./utils/logger');
+const { sanitizeMongoUri } = require('./utils/mongoUri');
 
 dotenv.config();
 
@@ -38,7 +39,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection with graceful fallback
-mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE_URL)
+// sanitizeMongoUri ensures any special characters in the password are
+// properly percent-encoded, preventing URI-parsing failures.
+const mongoUri = sanitizeMongoUri(process.env.MONGODB_URI || process.env.DATABASE_URL);
+mongoose.connect(mongoUri)
 .then(() => {
     dbConnected = true;
     logger.info('✅ MongoDB connected');

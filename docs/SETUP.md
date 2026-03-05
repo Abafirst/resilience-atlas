@@ -78,6 +78,35 @@ The API will be available at `http://localhost:3000`.
 3. Whitelist your IP address (or `0.0.0.0/0` for development)
 4. Copy the connection string and set it as `MONGODB_URI`
 
+### Password special characters
+
+If your MongoDB password contains characters such as `@`, `/`, `?`, `#`, `[`, `]`, or `%`,
+they **must** be percent-encoded in the connection string, otherwise the URI parser will
+misinterpret them and the connection will fail.
+
+| Character | Encoded form |
+|-----------|-------------|
+| `@`       | `%40`       |
+| `/`       | `%2F`       |
+| `?`       | `%3F`       |
+| `#`       | `%23`       |
+| `[`       | `%5B`       |
+| `]`       | `%5D`       |
+| `%`       | `%25`       |
+| `:`       | `%3A`       |
+
+**Example** — password `p@ss/w0rd` becomes `p%40ss%2Fw0rd` in the URI:
+
+```
+mongodb+srv://resilience_user:p%40ss%2Fw0rd@cluster0.example.mongodb.net/resilience
+```
+
+The server automatically re-encodes credentials at startup so that an already-encoded
+URI is never double-encoded.  To URL-encode a password manually, run:
+
+```bash
+node -e "console.log(encodeURIComponent('your_password_here'))"
+```
 > **⚠️ Special characters in passwords** – If your database-user password contains
 > characters such as `@`, `!`, `#`, `$`, `%`, or `&`, you must URL-encode the
 > password before embedding it in the connection string.  
