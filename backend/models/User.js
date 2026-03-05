@@ -78,11 +78,19 @@ UserSchema.methods.comparePassword = async function (plainPassword) {
     return bcrypt.compare(plainPassword, this.password);
 };
 
-// Remove password from JSON output
+// Return only safe, necessary fields in JSON output (excludes password and __v)
 UserSchema.methods.toJSON = function () {
-    const obj = this.toObject();
-    delete obj.password;
-    return obj;
+    return {
+        _id: this._id,
+        username: this.username,
+        email: this.email,
+        role: this.role,
+        affiliateCode: this.affiliateCode,
+        createdAt: this.createdAt,
+        updatedAt: this.updatedAt,
+        quizResults: this.quizResults,
+        stripeCustomerId: this.stripeCustomerId
+    };
 };
 
 module.exports = mongoose.model('User', UserSchema);

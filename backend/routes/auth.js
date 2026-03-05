@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 const logger = require('../utils/logger');
+const { authResponse } = require('../utils/responseHelper');
 
 const router = express.Router();
 
@@ -43,11 +44,7 @@ router.post('/signup', async (req, res) => {
 
         logger.info(`New user registered: ${username}`);
 
-        res.status(201).json({
-            message: 'User registered successfully.',
-            token,
-            user: user.toJSON()
-        });
+        res.status(201).json(authResponse('User registered successfully.', token, user.toJSON()));
     } catch (err) {
         logger.error('Signup error:', err);
         res.status(500).json({ error: 'Internal server error.' });
@@ -84,11 +81,7 @@ router.post('/login', async (req, res) => {
 
         logger.info(`User logged in: ${user.username}`);
 
-        res.status(200).json({
-            message: 'Login successful.',
-            token,
-            user: user.toJSON()
-        });
+        res.status(200).json(authResponse('Login successful.', token, user.toJSON()));
     } catch (err) {
         logger.error('Login error:', err);
         res.status(500).json({ error: 'Internal server error.' });

@@ -43,7 +43,12 @@ const mockUser = {
             _id: this._id,
             username: this.username,
             email: this.email,
-            role: this.role
+            role: this.role,
+            affiliateCode: this.affiliateCode,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
+            quizResults: this.quizResults,
+            stripeCustomerId: this.stripeCustomerId
         };
     }),
     comparePassword: jest.fn().mockResolvedValue(true),
