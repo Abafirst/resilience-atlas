@@ -107,6 +107,12 @@ URI is never double-encoded.  To URL-encode a password manually, run:
 ```bash
 node -e "console.log(encodeURIComponent('your_password_here'))"
 ```
+> **⚠️ Special characters in passwords** – If your database-user password contains
+> characters such as `@`, `!`, `#`, `$`, `%`, or `&`, you must URL-encode the
+> password before embedding it in the connection string.  
+> Run `node backend/utils/encodeMongoPassword.js 'your-raw-password'` to get the
+> encoded value, then build the URI using the encoded form.  
+> See [docs/MONGODB_URL_ENCODING.md](MONGODB_URL_ENCODING.md) for the full guide.
 
 ---
 
