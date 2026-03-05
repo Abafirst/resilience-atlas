@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿module.exports = {
   testEnvironment: 'node',
   testMatch: [
@@ -7,11 +6,6 @@
   ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   forceExit: true,
-  detectOpenHandles: false
+  detectOpenHandles: false,
+  testTimeout: 10000
 };
-=======
-module.exports = {  // Existing configurations...
-  testEnvironmentOptions: {
-    experimentalGlobalCustomPatch: true,
-  },  // Other configurations...};
->>>>>>> bc886d68171b1755ac40b91398b8e0348a296e48
