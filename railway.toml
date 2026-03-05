@@ -1,6 +1,11 @@
 # Railway Configuration for Resilience Atlas
 
 [build]
+  buildCommand = "npm install && npm run build:client"
+
+[deploy]
+  startCommand = "npm start"
+  healthcheckPath = "/health"
   command = "npm install"
 
 [deploy]

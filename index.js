@@ -1,27 +1,38 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');
+const rateLimit = require('express-rate-limit');
 const { MongoClient } = require('mongodb');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const jwt = require('jsonwebtoken');
 
 dotenv.config();
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Apply a broad rate limit to all requests to mitigate DoS
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false });
+app.use(limiter);
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection
+// MongoDB connection — only attempt when MONGODB_URI is configured
 let db;
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-mongoClient.connect().then(() => {
-    db = mongoClient.db('resilience-atlas');
-    console.log('✅ MongoDB connected');
-}).catch(err => {
-    console.error('❌ MongoDB connection failed:', err);
-});
+if (process.env.MONGODB_URI) {
+    const mongoClient = new MongoClient(process.env.MONGODB_URI);
+    mongoClient.connect().then(() => {
+        db = mongoClient.db('resilience-atlas');
+        console.log('✅ MongoDB connected');
+    }).catch(err => {
+        console.error('❌ MongoDB connection failed:', err);
+    });
+} else {
+    console.warn('⚠️  MONGODB_URI not set — database features will be unavailable');
+}
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -40,9 +51,31 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
+// Client config endpoint — exposes safe public values to the frontend
+app.get('/config', (req, res) => {
+    res.json({ stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '' });
+});
+
 // Basic route
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
+});
+
+// Mount route modules
+app.use('/auth', require('./routes/auth'));
+app.use('/api/quizzes', require('./routes/quizzes'));
+app.use('/api/payments', require('./routes/payments'));
+
+// Serve browser test UI at /index.html (and any other static assets in public/)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve React frontend from client/dist when the build is present
+const clientDist = path.join(__dirname, 'client', 'dist');
+app.use(express.static(clientDist));
+// Catch-all: serve React app for /app and all client-side sub-routes.
+// This route is intentionally registered last so all API routes above take precedence.
+app.get('/app*', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 // CREATE PAYMENT INTENT ENDPOINT
@@ -191,9 +224,19 @@ app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
     }
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+// Start server only when run directly (not when required by tests)
+if (require.main === module) {
+    const server = app.listen(PORT, '0.0.0.0', () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+    });
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
+            process.exit(1);
+        } else {
+            throw err;
+        }
+    });
+}
 
 module.exports = app;

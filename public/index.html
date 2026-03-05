@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resilience Atlas — API Tester</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #222; }
+    header {
+      background: #1a3a5c; color: #fff; padding: 1.2rem 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    header h1 { font-size: 1.4rem; }
+    header span { font-size: 0.85rem; opacity: 0.75; }
+    main { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    .card {
+      background: #fff; border-radius: 8px; padding: 1.2rem 1.4rem;
+      margin-bottom: 1.4rem; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .card h2 { font-size: 1rem; margin-bottom: .8rem; color: #1a3a5c; }
+    label { display: block; font-size: .82rem; color: #555; margin-bottom: .25rem; }
+    input, textarea {
+      width: 100%; padding: .45rem .6rem; border: 1px solid #ccc;
+      border-radius: 5px; font-size: .9rem; margin-bottom: .7rem;
+    }
+    textarea { resize: vertical; height: 70px; font-family: monospace; font-size: .8rem; }
+    .row { display: flex; gap: .6rem; flex-wrap: wrap; }
+    button {
+      padding: .45rem 1.1rem; border: none; border-radius: 5px;
+      font-size: .88rem; cursor: pointer; font-weight: 600;
+    }
+    .btn-primary { background: #1a3a5c; color: #fff; }
+    .btn-primary:hover { background: #245080; }
+    .btn-secondary { background: #e8edf3; color: #1a3a5c; }
+    .btn-secondary:hover { background: #d2dce9; }
+    .method { font-size: .75rem; font-weight: 700; border-radius: 4px; padding: .15rem .45rem; }
+    .GET  { background:#d4edda; color:#155724; }
+    .POST { background:#d1ecf1; color:#0c5460; }
+    .response-box {
+      margin-top: .8rem; background: #1e1e2e; color: #a9b1d6;
+      border-radius: 6px; padding: .9rem 1rem; font-family: monospace;
+      font-size: .8rem; white-space: pre-wrap; word-break: break-all;
+      min-height: 60px; max-height: 240px; overflow-y: auto;
+    }
+    .status-ok   { color: #9ece6a; }
+    .status-err  { color: #f7768e; }
+    .tip { font-size: .78rem; color: #888; margin-top: .4rem; }
+    hr { border: none; border-top: 1px solid #e8edf3; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌍 Resilience Atlas</h1>
+    <span>In-browser API Tester — <span id="baseUrl"></span></span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Health Check ── -->
+  <div class="card">
+    <h2><span class="method GET">GET</span> /health — Server Health Check</h2>
+    <button class="btn-primary" onclick="call('GET','/health','health-res')">Send Request</button>
+    <div class="response-box" id="health-res">Click "Send Request" to test…</div>
+  </div>
+
+  <!-- ── Root / Welcome ── -->
+  <div class="card">
+    <h2><span class="method GET">GET</span> / — Welcome Message</h2>
+    <button class="btn-primary" onclick="call('GET','/','root-res')">Send Request</button>
+    <div class="response-box" id="root-res">Click "Send Request" to test…</div>
+  </div>
+
+  <!-- ── Auth Token Helper ── -->
+  <div class="card">
+    <h2>🔑 JWT Token (for protected endpoints)</h2>
+    <label>Paste a valid JWT here — it will be sent as <code>Authorization: Bearer &lt;token&gt;</code> on all authenticated requests below.</label>
+    <input type="text" id="jwt-token" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…" />
+    <p class="tip">
+      No token yet? Generate one from your server with <code>jwt.sign({ userId: '...' }, process.env.JWT_SECRET, { expiresIn: '1h' })</code>
+      or via <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a>.
+    </p>
+  </div>
+
+  <hr />
+
+  <!-- ── Create Payment ── -->
+  <div class="card">
+    <h2><span class="method POST">POST</span> /create-payment — Create Payment Intent</h2>
+    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above and real Stripe credentials on the server.</p>
+    <div class="row">
+    <label>Amount (USD dollars, e.g. 10.50)</label>
+        <input type="number" id="pay-amount" value="10" min="1" />
+      </div>
+      <div style="flex:1">
+        <label>Currency</label>
+        <input type="text" id="pay-currency" value="usd" />
+      </div>
+    </div>
+    <label>Description (optional)</label>
+    <input type="text" id="pay-desc" placeholder="Resilience Atlas Payment" />
+    <button class="btn-primary" onclick="createPayment()">Create Payment Intent</button>
+    <div class="response-box" id="pay-res">Click "Create Payment Intent" to test…</div>
+  </div>
+
+  <!-- ── Get Payment Status ── -->
+  <div class="card">
+    <h2><span class="method GET">GET</span> /payment/:id — Get Payment Status</h2>
+    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above.</p>
+    <label>Payment Intent ID</label>
+    <input type="text" id="get-pay-id" placeholder="pi_3OxxxxxxxxxxxxYYYY" />
+    <button class="btn-primary" onclick="getPayment()">Get Payment Status</button>
+    <div class="response-box" id="get-pay-res">Enter a Payment Intent ID and click the button to test…</div>
+  </div>
+
+</main>
+
+<script>
+  // Show the current origin in the header
+  document.getElementById('baseUrl').textContent = location.origin;
+
+  function fmt(res, body) {
+    const ok = res.ok;
+    const status = `HTTP ${res.status} ${res.statusText}`;
+    let text;
+    try { text = JSON.stringify(body, null, 2); } catch { text = String(body); }
+    return { ok, status, text };
+  }
+
+  async function call(method, path, outId, headers = {}, body = null) {
+    const box = document.getElementById(outId);
+    box.textContent = '⏳ Sending…';
+    try {
+      const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
+      if (body) opts.body = JSON.stringify(body);
+      const res = await fetch(path, opts);
+      let json;
+      try { json = await res.json(); } catch { json = await res.text(); }
+      const { ok, status, text } = fmt(res, json);
+      box.innerHTML = `<span class="${ok ? 'status-ok' : 'status-err'}">${status}</span>\n\n${escHtml(text)}`;
+    } catch (err) {
+      box.innerHTML = `<span class="status-err">Error: ${escHtml(err.message)}</span>`;
+    }
+  }
+
+  function authHeaders() {
+    const token = document.getElementById('jwt-token').value.trim();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  function createPayment() {
+    const amount   = parseFloat(document.getElementById('pay-amount').value) || 10;
+    const currency = document.getElementById('pay-currency').value.trim() || 'usd';
+    const description = document.getElementById('pay-desc').value.trim();
+    call('POST', '/create-payment', 'pay-res', authHeaders(), { amount, currency, description });
+  }
+
+  function getPayment() {
+    const id = document.getElementById('get-pay-id').value.trim();
+    if (!id) { document.getElementById('get-pay-res').textContent = '⚠️ Please enter a Payment Intent ID.'; return; }
+    call('GET', `/payment/${id}`, 'get-pay-res', authHeaders());
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+
+</body>
+</html>

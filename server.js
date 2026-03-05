@@ -1,18 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
 // Load environment variables from .env file
 dotenv.config();
 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 // Initialize Express app
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -57,6 +58,14 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
+});
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
+        process.exit(1);
+    } else {
+        throw err;
+    }
 });
