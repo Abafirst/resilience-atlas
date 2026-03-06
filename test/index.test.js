@@ -226,11 +226,9 @@ async function runHttpTests() {
     // --- Summary ---
     console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
     if (failed > 0) {
-        process.exit(1);
+        throw new Error(`${failed} test(s) failed`);
     }
 }
 
-runHttpTests().catch(err => {
-    console.error('Test runner error:', err);
-    process.exit(1);
-});
+// eslint-disable-next-line no-undef
+it('HTTP endpoint tests', () => runHttpTests(), 30000);
