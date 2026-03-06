@@ -4,6 +4,7 @@ jest.mock('winston');
 
 // ...other mocks...
 
+const request = require('supertest');
 const app = require('../backend/server');
 
 /**
@@ -96,8 +97,8 @@ const mockUser = {
 jest.mock('../backend/models/User', () => {
   const MockUser = jest.fn().mockImplementation(() => mockUser);
   MockUser.findOne = jest.fn().mockResolvedValue(null);
-  MockUser.findById = jest.fn().mockResolvedValue(mockUser);
-  MockUser.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUser);
+  MockUser.findById = jest.fn().mockImplementation(() => Promise.resolve(mockUser));
+  MockUser.findByIdAndUpdate = jest.fn().mockImplementation(() => Promise.resolve(mockUser));
   MockUser.countDocuments = jest.fn().mockResolvedValue(0);
   MockUser.find = jest.fn().mockResolvedValue([]);
   return MockUser;
@@ -141,6 +142,13 @@ jest.mock('jsonwebtoken', () => {
   };
 });
 
+
+// ── Test helpers ──────────────────────────────────────────────────────────────
+
+const jwt = require('jsonwebtoken');
+function authToken() {
+    return jwt.sign({ id: mockUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
 
 // ── Health / Root ─────────────────────────────────────────────────────────────
 
