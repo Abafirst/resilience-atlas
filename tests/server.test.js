@@ -1,5 +1,11 @@
 'use strict';
 
+jest.mock('winston');
+
+// ...other mocks...
+
+const app = require('../backend/server');
+
 /**
  * Integration tests for the backend Express server.
  * External dependencies (mongoose, stripe, nodemailer) are mocked so that
@@ -14,105 +20,127 @@ process.env.STRIPE_WEBHOOK_SECRET = 'whsec_placeholder';
 
 // ── Mocks ────────────────────────────────────────────────────────────────────
 
+// IMPORTANT: mock winston before requiring the server, because backend/utils/logger.js
+// imports winston at module-load time.
+jest.mock('winston', () => {
+  const loggerInstance = {
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+    add: jest.fn(),
+  };
+
+  return {
+    createLogger: jest.fn(() => loggerInstance),
+    format: {
+      combine: jest.fn((...args) => args),
+      timestamp: jest.fn(() => ({})),
+      errors: jest.fn(() => ({})),
+      splat: jest.fn(() => ({})),
+      json: jest.fn(() => ({})),
+      colorize: jest.fn(() => ({})),
+      printf: jest.fn((fn) => fn),
+    },
+    transports: {
+      Console: function ConsoleTransport() {},
+      File: function FileTransport() {},
+    },
+  };
+});
+
 // Mock mongoose so the server doesn't attempt a real DB connection.
 jest.mock('mongoose', () => {
-    const m = {
-        connect: jest.fn().mockResolvedValue({}),
-        Schema: class Schema {
-            constructor() {}
-            pre() { return this; }
-            methods = {};
-            // Allow `new Schema()` to look like a constructor
-        },
-        model: jest.fn()
-    };
-    return m;
+  const m = {
+    connect: jest.fn().mockResolvedValue({}),
+    Schema: class Schema {
+      constructor() {}
+      pre() {
+        return this;
+      }
+      methods = {};
+    },
+    model: jest.fn(),
+  };
+  return m;
 });
 
 // Mock User model used by routes.
 const mockUser = {
-    _id: 'user001',
-    username: 'testuser',
-    email: 'test@example.com',
-    role: 'user',
-    affiliateCode: 'RA-TESTUSER-ABC',
-    stripeCustomerId: null,
-    quizResults: [],
-    toJSON: jest.fn(function () {
-        return {
-            _id: this._id,
-            username: this.username,
-            email: this.email,
-            role: this.role,
-            affiliateCode: this.affiliateCode,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt,
-            quizResults: this.quizResults,
-            stripeCustomerId: this.stripeCustomerId
-        };
-    }),
-    comparePassword: jest.fn().mockResolvedValue(true),
-    save: jest.fn().mockResolvedValue(true)
+  _id: 'user001',
+  username: 'testuser',
+  email: 'test@example.com',
+  role: 'user',
+  affiliateCode: 'RA-TESTUSER-ABC',
+  stripeCustomerId: null,
+  quizResults: [],
+  createdAt: new Date('2026-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+  toJSON: jest.fn(function () {
+    return {
+      _id: this._id,
+      username: this.username,
+      email: this.email,
+      role: this.role,
+      affiliateCode: this.affiliateCode,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      quizResults: this.quizResults,
+      stripeCustomerId: this.stripeCustomerId,
+    };
+  }),
+  comparePassword: jest.fn().mockResolvedValue(true),
+  save: jest.fn().mockResolvedValue(true),
 };
 
 jest.mock('../backend/models/User', () => {
-    const MockUser = jest.fn().mockImplementation(() => mockUser);
-    MockUser.findOne = jest.fn().mockResolvedValue(null);
-    MockUser.findById = jest.fn().mockResolvedValue(mockUser);
-    MockUser.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUser);
-    MockUser.countDocuments = jest.fn().mockResolvedValue(0);
-    MockUser.find = jest.fn().mockResolvedValue([]);
-    return MockUser;
+  const MockUser = jest.fn().mockImplementation(() => mockUser);
+  MockUser.findOne = jest.fn().mockResolvedValue(null);
+  MockUser.findById = jest.fn().mockResolvedValue(mockUser);
+  MockUser.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUser);
+  MockUser.countDocuments = jest.fn().mockResolvedValue(0);
+  MockUser.find = jest.fn().mockResolvedValue([]);
+  return MockUser;
 });
 
 // Mock stripe.
 jest.mock('stripe', () => () => ({
-    paymentIntents: {
-        create: jest.fn().mockResolvedValue({
-            id: 'pi_test',
-            client_secret: 'secret_test',
-            status: 'requires_payment_method'
-        }),
-        retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' })
-    },
-    customers: {
-        create: jest.fn().mockResolvedValue({ id: 'cus_test' })
-    },
-    webhooks: {
-        constructEvent: jest.fn().mockReturnValue({ type: 'payment_intent.succeeded', data: { object: { id: 'pi_test' } } })
-    }
+  paymentIntents: {
+    create: jest.fn().mockResolvedValue({
+      id: 'pi_test',
+      client_secret: 'secret_test',
+      status: 'requires_payment_method',
+    }),
+    retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
+  },
+  customers: {
+    create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
+  },
+  webhooks: {
+    constructEvent: jest.fn().mockReturnValue({
+      type: 'payment_intent.succeeded',
+      data: { object: { id: 'pi_test' } },
+    }),
+  },
 }));
 
 // Mock nodemailer so no emails are actually sent.
 jest.mock('nodemailer', () => ({
-    createTransport: jest.fn(() => ({
-        sendMail: jest.fn().mockResolvedValue({ messageId: 'mock-id' })
-    }))
+  createTransport: jest.fn(() => ({
+    sendMail: jest.fn().mockResolvedValue({ messageId: 'mock-id' }),
+  })),
 }));
 
 // Mock jsonwebtoken so we can produce verifiable tokens in tests.
 jest.mock('jsonwebtoken', () => {
-    const real = jest.requireActual('jsonwebtoken');
-    return {
-        ...real,
-        // Keep sign/verify working with our test secret.
-        sign: real.sign,
-        verify: real.verify
-    };
+  const real = jest.requireActual('jsonwebtoken');
+  return {
+    ...real,
+    sign: real.sign,
+    verify: real.verify,
+  };
 });
 
-const jwt = require('jsonwebtoken');
-const request = require('supertest');
-const app = require('../backend/server');
-
-// Helper: create a valid JWT for the mock user.
-function authToken(payload = {}) {
-    return jwt.sign(
-        { userId: 'user001', username: 'testuser', role: 'user', ...payload },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-    );
-}
 
 // ── Health / Root ─────────────────────────────────────────────────────────────
 
