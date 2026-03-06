@@ -8,6 +8,8 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
+  ...rest of your package.json...
+}
   "dependencies": {
     "@dabh/diagnostics": "^2.0.8",
     "axios": "^1.13.6",
