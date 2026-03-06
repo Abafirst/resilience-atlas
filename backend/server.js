@@ -14,14 +14,12 @@ const app = express();
 
 // ... all your middleware and routes ...
 
-// Serve React frontend for all other routes (MUST be before 404 handler)
+// ✅ STATIC FILES FIRST
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// ✅ CATCH-ALL ROUTE SECOND (for React routing)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
-
-// 404 handler
-app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found' });
 });
 
 // ... error handler ...
@@ -31,3 +29,4 @@ app.listen(PORT, () => {
     serverReady = true;
     logger.info(`🚀 Server running on port ${PORT}`);
 });
+
