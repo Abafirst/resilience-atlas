@@ -9,6 +9,11 @@ const app = express();
 // Middleware
 app.use(express.json());
 
+// ✅ HEALTH CHECK ENDPOINT (for Railway healthcheck)
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
 // ✅ API ROUTES FIRST (must come before static files!)
 app.use('/auth', require('./routes/auth'));
 app.use('/api/auth', require('./routes/auth'));
