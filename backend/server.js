@@ -101,3 +101,27 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+// ... all your existing routes above ...
+
+// Example routes
+app.get('/api/users', (req, res) => {
+  // your code
+});
+
+app.post('/api/auth/login', (req, res) => {
+  // your code
+});
+
+// ADD THIS AT THE END - Serve React frontend for all other routes
+const path = require('path');
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
