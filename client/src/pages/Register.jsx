@@ -17,6 +17,7 @@ const styles = {
 
 export default function Register({ onRegistered, onLogin }) {
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +31,7 @@ export default function Register({ onRegistered, onLogin }) {
     if (password !== confirm) { setError('Passwords do not match'); return; }
     setLoading(true);
     try {
-      await register(username, password);
+      await register(username, email, password);
       setSuccess('Account created! Redirecting to login…');
       setTimeout(onRegistered, 1500);
     } catch (err) {
@@ -50,6 +51,8 @@ export default function Register({ onRegistered, onLogin }) {
         <form onSubmit={handleSubmit}>
           <label style={styles.label}>Username</label>
           <input style={styles.input} type="text" value={username} onChange={e => setUsername(e.target.value)} required autoFocus />
+          <label style={styles.label}>Email</label>
+          <input style={styles.input} type="email" value={email} onChange={e => setEmail(e.target.value)} required />
           <label style={styles.label}>Password</label>
           <input style={styles.input} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
           <label style={styles.label}>Confirm Password</label>
