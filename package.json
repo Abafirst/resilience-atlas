@@ -1,11 +1,1 @@
-{
-  "name": "resilience-atlas",
-  "version": "1.0.0",
-  "description": "A project for resilience",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Abafirst",
-  "license": "ISC"
-}
+{\n  "name": "resilience-atlas",\n  "version": "1.0.0",\n  "description": "A project to enhance resilience.",\n  "main": "index.js",\n  "scripts": {\n    "test": "echo 'No tests specified' && exit 0"\n  },\n  "repository": {\n    "type": "git",\n    "url": "git+https://github.com/Abafirst/resilience-atlas.git"\n  },\n  "author": "Your Name",\n  "license": "ISC",\n  "bugs": {\n    "url": "https://github.com/Abafirst/resilience-atlas/issues"\n  },\n  "homepage": "https://github.com/Abafirst/resilience-atlas#readme"\n}
