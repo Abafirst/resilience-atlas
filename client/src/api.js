@@ -1,4 +1,4 @@
-const BASE = '';
+const BASE = '/api';
 
 export async function login(username, password) {
   const res = await fetch(`${BASE}/auth/login`, {
