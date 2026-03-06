@@ -17,7 +17,11 @@ const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders:
 app.use(limiter);
 
 // Middleware
-app.use(express.json());
+// Apply JSON parsing to all routes except /webhook, which needs express.raw() to verify Stripe signatures
+app.use((req, res, next) => {
+    if (req.path === '/webhook') return next();
+    express.json()(req, res, next);
+});
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection — only attempt when MONGODB_URI is configured
@@ -80,6 +84,7 @@ app.get('/app*', (req, res) => {
 
 // CREATE PAYMENT INTENT ENDPOINT
 app.post('/create-payment', verifyToken, async (req, res) => {
+    if (!db) return res.status(503).json({ error: 'Database unavailable' });
     try {
         const { amount, currency = 'usd', description, metadata } = req.body;
 
@@ -142,6 +147,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
 
     // Handle different event types
+    if (!db) return res.status(503).json({ error: 'Database unavailable' });
     try {
         const paymentsCollection = db.collection('payments');
 
@@ -203,6 +209,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 // GET PAYMENT STATUS ENDPOINT
 app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
+    if (!db) return res.status(503).json({ error: 'Database unavailable' });
     try {
         const { paymentIntentId } = req.params;
 
