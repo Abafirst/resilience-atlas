@@ -1,5 +1,11 @@
 'use strict';
 
+jest.mock('winston');
+
+// ...other mocks...
+
+const app = require('../backend/server');
+
 /**
  * Integration tests for the backend Express server.
  * External dependencies (mongoose, stripe, nodemailer) are mocked so that
