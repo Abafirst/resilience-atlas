@@ -1,12 +1,10 @@
-{
+{ 
   "name": "resilience-atlas",
   "version": "1.0.0",
-  "description": "A resilience assessment platform",
-  "main": "backend/server.js",
+  "description": "A project for resilience data analysis.",
+  "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit",
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "test": "echo 'Error: no test specified' && exit 1"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -31,4 +29,11 @@
   "overrides": {
     "tar": "^7.5.10"
   }
+}
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abafirst/resilience-atlas.git"
+  },
+  "author": "Abafirst",
+  "license": "ISC"
 }
