@@ -15,7 +15,7 @@ const styles = {
 };
 
 export default function Login({ onLogin, onRegister }) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ export default function Login({ onLogin, onRegister }) {
     setError('');
     setLoading(true);
     try {
-      const data = await login(username, password);
+      const data = await login(email, password);
       onLogin(data.token);
     } catch (err) {
       setError(err.message);
@@ -41,8 +41,8 @@ export default function Login({ onLogin, onRegister }) {
         <p style={styles.subtitle}>Sign in to access your assessment</p>
         {error && <div style={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit}>
-          <label style={styles.label}>Username</label>
-          <input style={styles.input} type="text" value={username} onChange={e => setUsername(e.target.value)} required autoFocus />
+          <label style={styles.label}>Email</label>
+          <input style={styles.input} type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus />
           <label style={styles.label}>Password</label>
           <input style={styles.input} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
           <button style={styles.btn} type="submit" disabled={loading}>
