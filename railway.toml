@@ -1,7 +1,7 @@
 # Railway Configuration for Resilience Atlas
 
 [build]
-  buildCommand = "npm install && npm run build:client"
+ buildCommand = "npm install && npm run build"
 
 [deploy]
   startCommand = "node backend/server.js"
