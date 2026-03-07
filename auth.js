@@ -50,32 +50,32 @@ const authenticateJWT = (req, res, next) => {
 const signup = async (req, res) => {
     const { username, email, password } = req.body;
     const normalizedEmail = normalizeEmail(email);
-    const usernameOrEmail = username || normalizedEmail;
-    if (!usernameOrEmail || !password) {
+    const primaryIdentifier = username || normalizedEmail;
+    if (!primaryIdentifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
-    if (users.find(u => u.username === usernameOrEmail)) {
+    if (users.find(u => u.username === primaryIdentifier)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
     if (normalizedEmail && users.find(u => u.email === normalizedEmail)) {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { username: usernameOrEmail, email: normalizedEmail || null, password: hashedPassword };
+    const user = { username: primaryIdentifier, email: normalizedEmail || null, password: hashedPassword };
     users.push(user);
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const signupPayload = { username: usernameOrEmail };
+    const signupPayload = { username: primaryIdentifier };
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
-    const token = jwt.sign(signupPayload, jwtSecret);
+    const token = jwt.sign(signupPayload, jwtSecret, { expiresIn: '24h' });
     res.status(201).json({
         message: 'User signed up successfully',
         token,
-        user: normalizedEmail ? { username: usernameOrEmail, email: normalizedEmail } : { username: usernameOrEmail }
+        user: normalizedEmail ? { username: primaryIdentifier, email: normalizedEmail } : { username: primaryIdentifier }
     });
 };
 
@@ -109,7 +109,7 @@ const login = async (req, res) => {
     if (user.email) {
         loginPayload.email = user.email;
     }
-    const token = jwt.sign(loginPayload, jwtSecret);
+    const token = jwt.sign(loginPayload, jwtSecret, { expiresIn: '24h' });
     res.json({ token });
 };
 
