@@ -11,6 +11,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.locals.ready = require.main !== module;
 
 // Apply a broad rate limit to all requests to mitigate DoS
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false });
@@ -26,12 +27,15 @@ app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection — only attempt when MONGODB_URI is configured
 let db;
+let dbStatus = 'disconnected';
 if (process.env.MONGODB_URI) {
     const mongoClient = new MongoClient(process.env.MONGODB_URI);
     mongoClient.connect().then(() => {
         db = mongoClient.db('resilience-atlas');
+        dbStatus = 'connected';
         console.log('✅ MongoDB connected');
     }).catch(err => {
+        dbStatus = 'disconnected';
         console.error('❌ MongoDB connection failed:', err);
     });
 } else {
@@ -52,7 +56,14 @@ jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'OK', message: 'Server is running' });
+    if (!app.locals.ready) {
+        return res.status(503).json({ status: 'starting', message: 'Server is starting up' });
+    }
+    res.status(200).json({
+        status: 'OK',
+        message: 'Resilience Atlas server is running',
+        db: dbStatus
+    });
 });
 
 // Client config endpoint — exposes safe public values to the frontend
@@ -233,7 +244,9 @@ app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
 
 // Start server only when run directly (not when required by tests)
 if (require.main === module) {
+    app.locals.ready = false;
     const server = app.listen(PORT, '0.0.0.0', () => {
+        app.locals.ready = true;
         console.log(`🚀 Server running on port ${PORT}`);
     });
     server.on('error', (err) => {
