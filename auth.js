@@ -30,6 +30,13 @@ const crypto = require('crypto');
 
 const TOKEN_EXPIRATION = '24h';
 const generateUserId = () => crypto.randomUUID();
+const ensureUserIds = () => {
+    users.forEach((user) => {
+        if (!user.userId) {
+            user.userId = generateUserId();
+        }
+    });
+};
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
@@ -54,17 +61,35 @@ const authenticateJWT = (req, res, next) => {
 // Function for user signup
 const signup = async (req, res) => {
     const { username, email, password } = req.body;
+    ensureUserIds();
     const normalizedEmail = normalizeEmail(email);
     const primaryIdentifier = username || normalizedEmail;
     if (!primaryIdentifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
     const hasUsername = Boolean(username);
-    if (hasUsername && users.find(u => u.username === username)) {
+    let usernameExists = false;
+    let emailExists = false;
+    let emailUsedAsUsername = false;
+    for (const existingUser of users) {
+        if (hasUsername && existingUser.username === username) {
+            usernameExists = true;
+        }
+        if (normalizedEmail) {
+            if (existingUser.email === normalizedEmail) {
+                emailExists = true;
+            }
+            if (!hasUsername && existingUser.username === normalizedEmail) {
+                emailUsedAsUsername = true;
+            }
+        }
+        if (usernameExists || emailExists || emailUsedAsUsername) {
+            break;
+        }
+    }
+    if (usernameExists) {
         return res.status(409).json({ error: 'Username already taken' });
     }
-    const emailExists = normalizedEmail ? users.find(u => u.email === normalizedEmail) : null;
-    const emailUsedAsUsername = !hasUsername && normalizedEmail ? users.find(u => u.username === normalizedEmail) : null;
     if (emailExists || emailUsedAsUsername) {
         return res.status(409).json({ error: 'Email already taken' });
     }
@@ -91,6 +116,7 @@ const signup = async (req, res) => {
 // Function for user login
 const login = async (req, res) => {
     const { username, email, password } = req.body;
+    ensureUserIds();
     const normalizedEmail = normalizeEmail(email);
     const identifier = normalizedEmail || username;
     if (!identifier || !password) {
@@ -109,9 +135,6 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
         return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    if (!user.userId) {
-        user.userId = generateUserId();
     }
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
