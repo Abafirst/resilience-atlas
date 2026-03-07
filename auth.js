@@ -27,6 +27,7 @@ const normalizeEmail = (email) => {
 };
 
 const TOKEN_EXPIRATION = '24h';
+const generateUserId = () => `user_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
@@ -65,13 +66,14 @@ const signup = async (req, res) => {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { username: primaryIdentifier, email: normalizedEmail || null, password: hashedPassword };
+    const userId = generateUserId();
+    const user = { userId, username: primaryIdentifier, email: normalizedEmail || null, password: hashedPassword };
     users.push(user);
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const signupPayload = { username: primaryIdentifier, userId: primaryIdentifier };
+    const signupPayload = { username: primaryIdentifier, userId };
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
@@ -105,11 +107,14 @@ const login = async (req, res) => {
     if (!isMatch) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
+    if (!user.userId) {
+        user.userId = generateUserId();
+    }
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const loginPayload = { username: user.username, userId: user.username };
+    const loginPayload = { username: user.username, userId: user.userId };
     if (user.email) {
         loginPayload.email = user.email;
     }
