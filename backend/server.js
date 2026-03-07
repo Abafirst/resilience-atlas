@@ -66,7 +66,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 const startServer = () => {
-    app.locals.ready = false;
     const server = app.listen(PORT, () => {
         app.locals.ready = true;
         console.log(`🚀 Server running on port ${PORT}`);

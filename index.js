@@ -245,7 +245,6 @@ app.get('/payment/:paymentIntentId', verifyToken, async (req, res) => {
 
 // Start server only when run directly (not when required by tests)
 if (require.main === module) {
-    app.locals.ready = false;
     const server = app.listen(PORT, '0.0.0.0', () => {
         app.locals.ready = true;
         console.log(`🚀 Server running on port ${PORT}`);
