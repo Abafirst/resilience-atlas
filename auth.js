@@ -9,8 +9,8 @@ const resolveJwtSecret = () => {
     if (process.env.JWT_SECRET) {
         return process.env.JWT_SECRET;
     }
-    if (process.env.JEST_WORKER_ID) {
-        return 'test-secret';
+    if (process.env.NODE_ENV === 'test' && process.env.JWT_TEST_SECRET) {
+        return process.env.JWT_TEST_SECRET;
     }
     return null;
 };
