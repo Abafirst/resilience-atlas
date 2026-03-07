@@ -38,24 +38,25 @@ const authenticateJWT = (req, res, next) => {
 // Function for user signup
 const signup = async (req, res) => {
     const { username, email, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password are required' });
-    }
     const normalizedEmail = email?.trim().toLowerCase();
-    if (users.find(u => u.username === username)) {
+    const resolvedUsername = username || normalizedEmail;
+    if (!resolvedUsername || !password) {
+        return res.status(400).json({ error: 'Username or email and password are required' });
+    }
+    if (users.find(u => u.username === resolvedUsername)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
     if (normalizedEmail && users.find(u => u.email === normalizedEmail)) {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { username, email: normalizedEmail || null, password: hashedPassword };
+    const user = { username: resolvedUsername, email: normalizedEmail || null, password: hashedPassword };
     users.push(user);
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const signupPayload = { username };
+    const signupPayload = { username: resolvedUsername };
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
@@ -63,7 +64,7 @@ const signup = async (req, res) => {
     res.status(201).json({
         message: 'User signed up successfully',
         token,
-        user: normalizedEmail ? { username, email: normalizedEmail } : { username }
+        user: normalizedEmail ? { username: resolvedUsername, email: normalizedEmail } : { username: resolvedUsername }
     });
 };
 
