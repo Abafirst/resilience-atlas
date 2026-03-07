@@ -82,7 +82,7 @@ if (require.main === module) {
             console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
             process.exit(1);
         } else {
-            console.error(err);
+            console.error('❌ Failed to start server:', err);
             process.exit(1);
         }
     });

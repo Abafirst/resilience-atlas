@@ -59,8 +59,9 @@ const signup = async (req, res) => {
     if (username && users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
-    const emailConflict = normalizedEmail && (users.find(u => u.email === normalizedEmail) || (!username && users.find(u => u.username === normalizedEmail)));
-    if (emailConflict) {
+    const emailExists = normalizedEmail ? users.find(u => u.email === normalizedEmail) : null;
+    const emailUsedAsUsername = !username && normalizedEmail ? users.find(u => u.username === normalizedEmail) : null;
+    if (emailExists || emailUsedAsUsername) {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
