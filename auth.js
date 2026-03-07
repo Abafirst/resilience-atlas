@@ -41,7 +41,7 @@ const signup = async (req, res) => {
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required' });
     }
-    const normalizedEmail = email?.toLowerCase();
+    const normalizedEmail = email?.trim().toLowerCase();
     if (users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
@@ -70,7 +70,7 @@ const signup = async (req, res) => {
 // Function for user login
 const login = async (req, res) => {
     const { username, email, password } = req.body;
-    const identifier = email?.toLowerCase() || username;
+    const identifier = email?.trim().toLowerCase() || username;
     if (!identifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }

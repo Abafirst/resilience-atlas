@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 dotenv.config();
 
 const app = express();
-app.locals.ready = Boolean(process.env.JEST_WORKER_ID);
+const isTestEnv = Boolean(process.env.JEST_WORKER_ID);
+app.locals.ready = false;
 let dbStatus = 'disconnected';
 
 if (process.env.MONGODB_URI) {
@@ -26,7 +27,7 @@ app.use(express.json());
 
 // ✅ HEALTH CHECK ENDPOINT (for Railway healthcheck)
 app.get('/health', (req, res) => {
-    if (!app.locals.ready) {
+    if (!app.locals.ready && !isTestEnv) {
         return res.status(503).json({ status: 'starting', message: 'Server is starting up' });
     }
     res.status(200).json({
