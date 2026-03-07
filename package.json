@@ -1,17 +1,14 @@
 {
   "name": "resilience-atlas",
   "version": "1.0.0",
-  "description": "Resilience Atlas",
-  "main": "index.js",
+  "description": "A resilience assessment platform",
+  "main": "backend/server.js",
   "scripts": {
+    "test": "jest --forceExit",
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
-    "build:client": "npm --prefix client install && npm --prefix client run build",
-    "test": "jest --forceExit"
+    "build": "cd client && npm install && npm run build"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@dabh/diagnostics": "^2.0.8",
     "axios": "^1.13.6",
