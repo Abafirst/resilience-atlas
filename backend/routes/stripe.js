@@ -114,4 +114,5 @@ const webhook = async (req, res) => {
     res.json({ received: true });
 };
 
-module.exports = { router, webhook };
+router.webhook = webhook;
+module.exports = router;
