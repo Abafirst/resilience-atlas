@@ -69,19 +69,21 @@ const startServer = () => {
         app.locals.ready = true;
         console.log(`🚀 Server running on port ${PORT}`);
     });
-    server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
-            process.exit(1);
-        } else {
-            throw err;
-        }
-    });
+    return server;
 };
 
 app.startServer = startServer;
 module.exports = app;
 
 if (require.main === module) {
-    startServer();
+    const server = startServer();
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
+            process.exit(1);
+        } else {
+            console.error(err);
+            process.exit(1);
+        }
+    });
 }

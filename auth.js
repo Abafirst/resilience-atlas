@@ -56,10 +56,11 @@ const signup = async (req, res) => {
     if (!primaryIdentifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
-    if (users.find(u => u.username === primaryIdentifier)) {
+    if (username && users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
-    if (normalizedEmail && users.find(u => u.email === normalizedEmail)) {
+    const emailConflict = normalizedEmail && (users.find(u => u.email === normalizedEmail) || (!username && users.find(u => u.username === normalizedEmail)));
+    if (emailConflict) {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -69,7 +70,7 @@ const signup = async (req, res) => {
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const signupPayload = { username: primaryIdentifier };
+    const signupPayload = { username: primaryIdentifier, userId: primaryIdentifier };
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
@@ -107,7 +108,7 @@ const login = async (req, res) => {
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const loginPayload = { username: user.username };
+    const loginPayload = { username: user.username, userId: user.username };
     if (user.email) {
         loginPayload.email = user.email;
     }
