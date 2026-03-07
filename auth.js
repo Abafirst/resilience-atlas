@@ -26,8 +26,10 @@ const normalizeEmail = (email) => {
     return trimmed;
 };
 
+const crypto = require('crypto');
+
 const TOKEN_EXPIRATION = '24h';
-const generateUserId = () => `user_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+const generateUserId = () => crypto.randomUUID();
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
@@ -57,11 +59,12 @@ const signup = async (req, res) => {
     if (!primaryIdentifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
-    if (username && users.find(u => u.username === username)) {
+    const hasUsername = Boolean(username);
+    if (hasUsername && users.find(u => u.username === username)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
     const emailExists = normalizedEmail ? users.find(u => u.email === normalizedEmail) : null;
-    const emailUsedAsUsername = !username && normalizedEmail ? users.find(u => u.username === normalizedEmail) : null;
+    const emailUsedAsUsername = !hasUsername && normalizedEmail ? users.find(u => u.username === normalizedEmail) : null;
     if (emailExists || emailUsedAsUsername) {
         return res.status(409).json({ error: 'Email already taken' });
     }
