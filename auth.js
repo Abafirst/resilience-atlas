@@ -20,7 +20,10 @@ const normalizeEmail = (email) => {
         return null;
     }
     const trimmed = email.trim().toLowerCase();
-    return trimmed || null;
+    if (!trimmed) {
+        return null;
+    }
+    return trimmed;
 };
 
 // Middleware for JWT authentication
@@ -47,24 +50,24 @@ const authenticateJWT = (req, res, next) => {
 const signup = async (req, res) => {
     const { username, email, password } = req.body;
     const normalizedEmail = normalizeEmail(email);
-    const resolvedUsername = username || normalizedEmail;
-    if (!resolvedUsername || !password) {
+    const usernameOrEmail = username || normalizedEmail;
+    if (!usernameOrEmail || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
-    if (users.find(u => u.username === resolvedUsername)) {
+    if (users.find(u => u.username === usernameOrEmail)) {
         return res.status(409).json({ error: 'Username already taken' });
     }
     if (normalizedEmail && users.find(u => u.email === normalizedEmail)) {
         return res.status(409).json({ error: 'Email already taken' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { username: resolvedUsername, email: normalizedEmail || null, password: hashedPassword };
+    const user = { username: usernameOrEmail, email: normalizedEmail || null, password: hashedPassword };
     users.push(user);
     const jwtSecret = resolveJwtSecret();
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const signupPayload = { username: resolvedUsername };
+    const signupPayload = { username: usernameOrEmail };
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
@@ -72,7 +75,7 @@ const signup = async (req, res) => {
     res.status(201).json({
         message: 'User signed up successfully',
         token,
-        user: normalizedEmail ? { username: resolvedUsername, email: normalizedEmail } : { username: resolvedUsername }
+        user: normalizedEmail ? { username: usernameOrEmail, email: normalizedEmail } : { username: usernameOrEmail }
     });
 };
 
