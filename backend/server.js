@@ -42,8 +42,7 @@ app.use('/auth', require('./routes/auth'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/quiz', require('./routes/quiz'));
 app.use('/api/affiliates', require('./routes/affiliates'));
-const stripeRouter = require('./routes/stripe');
-app.use('/api/stripe', stripeRouter);
+app.use('/api/stripe', require('./routes/stripe'));
 
 // ✅ Basic route
 app.get('/', (req, res) => {

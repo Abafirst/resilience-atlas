@@ -26,6 +26,8 @@ const normalizeEmail = (email) => {
     return trimmed;
 };
 
+const TOKEN_EXPIRATION = '24h';
+
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1];
@@ -71,7 +73,7 @@ const signup = async (req, res) => {
     if (normalizedEmail) {
         signupPayload.email = normalizedEmail;
     }
-    const token = jwt.sign(signupPayload, jwtSecret, { expiresIn: '24h' });
+    const token = jwt.sign(signupPayload, jwtSecret, { expiresIn: TOKEN_EXPIRATION });
     res.status(201).json({
         message: 'User signed up successfully',
         token,
@@ -109,7 +111,7 @@ const login = async (req, res) => {
     if (user.email) {
         loginPayload.email = user.email;
     }
-    const token = jwt.sign(loginPayload, jwtSecret, { expiresIn: '24h' });
+    const token = jwt.sign(loginPayload, jwtSecret, { expiresIn: TOKEN_EXPIRATION });
     res.json({ token });
 };
 
