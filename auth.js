@@ -15,7 +15,13 @@ const resolveJwtSecret = () => {
     return null;
 };
 
-const normalizeEmail = (email) => email?.trim().toLowerCase();
+const normalizeEmail = (email) => {
+    if (!email) {
+        return null;
+    }
+    const trimmed = email.trim().toLowerCase();
+    return trimmed || null;
+};
 
 // Middleware for JWT authentication
 const authenticateJWT = (req, res, next) => {
@@ -78,9 +84,13 @@ const login = async (req, res) => {
     if (!identifier || !password) {
         return res.status(400).json({ error: 'Username or email and password are required' });
     }
-    const user = normalizedEmail
-        ? users.find(u => u.email === normalizedEmail) || (username ? users.find(u => u.username === username) : null)
-        : users.find(u => u.username === username);
+    let user = null;
+    if (normalizedEmail) {
+        user = users.find(u => u.email === normalizedEmail);
+    }
+    if (!user && username) {
+        user = users.find(u => u.username === username);
+    }
     if (!user) {
         return res.status(401).json({ error: 'Invalid credentials' });
     }
