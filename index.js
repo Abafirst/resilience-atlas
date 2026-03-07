@@ -11,7 +11,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.locals.ready = require.main !== module;
+app.locals.ready = Boolean(process.env.JEST_WORKER_ID);
 
 // Apply a broad rate limit to all requests to mitigate DoS
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false });

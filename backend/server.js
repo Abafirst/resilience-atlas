@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 dotenv.config();
 
 const app = express();
-app.locals.ready = require.main !== module;
+app.locals.ready = Boolean(process.env.JEST_WORKER_ID);
 let dbStatus = 'disconnected';
 
 if (process.env.MONGODB_URI) {

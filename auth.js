@@ -55,11 +55,15 @@ const signup = async (req, res) => {
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const token = jwt.sign({ username, email: normalizedEmail || undefined }, jwtSecret);
+    const signupPayload = { username };
+    if (normalizedEmail) {
+        signupPayload.email = normalizedEmail;
+    }
+    const token = jwt.sign(signupPayload, jwtSecret);
     res.status(201).json({
         message: 'User signed up successfully',
         token,
-        user: { username, email: normalizedEmail || undefined }
+        user: normalizedEmail ? { username, email: normalizedEmail } : { username }
     });
 };
 
@@ -84,7 +88,11 @@ const login = async (req, res) => {
     if (!jwtSecret) {
         return res.status(500).json({ error: 'Server misconfiguration: JWT_SECRET is not set' });
     }
-    const token = jwt.sign({ username: user.username, email: user.email || undefined }, jwtSecret);
+    const loginPayload = { username: user.username };
+    if (user.email) {
+        loginPayload.email = user.email;
+    }
+    const token = jwt.sign(loginPayload, jwtSecret);
     res.json({ token });
 };
 
