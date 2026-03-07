@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 const isTestEnv = Boolean(process.env.JEST_WORKER_ID);
-app.locals.ready = false;
+app.locals.ready = isTestEnv;
 let dbStatus = 'disconnected';
 
 if (process.env.MONGODB_URI) {
@@ -27,7 +27,7 @@ app.use(express.json());
 
 // ✅ HEALTH CHECK ENDPOINT (for Railway healthcheck)
 app.get('/health', (req, res) => {
-    if (!app.locals.ready && !isTestEnv) {
+    if (!app.locals.ready) {
         return res.status(503).json({ status: 'starting', message: 'Server is starting up' });
     }
     res.status(200).json({
