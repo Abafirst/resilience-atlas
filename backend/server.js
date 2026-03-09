@@ -1,16 +1,52 @@
-// server.js
-const path = require("path");
+// ==============================
+// Core dependencies
+// ==============================
 const express = require("express");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const { execSync } = require("child_process");
+const dotenv = require("dotenv");
+const path = require("path");
 
+const helmet = require("helmet");
+const cors = require("cors");
+const compression = require("compression");
+
+// ==============================
+// Load environment variables
+// ==============================
 dotenv.config();
+
+// ==============================
+// Express app
+// ==============================
 const app = express();
 
-// ============================
-// Database connection
-// ============================
+// ==============================
+// Middleware
+// ==============================
+
+// Security headers
+app.use(helmet());
+
+// CORS configuration
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Gzip compression
+app.use(compression());
+
+// Body parsing with limits
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+
+// ==============================
+// MongoDB Connection
+// ==============================
+
 let dbStatus = "disconnected";
 
 if (process.env.MONGODB_URI) {
@@ -21,68 +57,79 @@ if (process.env.MONGODB_URI) {
       console.log("✅ MongoDB connected");
     })
     .catch((err) => {
-      dbStatus = "disconnected";
-      console.error("❌ MongoDB connection failed:", err);
+      dbStatus = "error";
+      console.error("❌ MongoDB connection failed:", err.message);
     });
 } else {
   console.warn("⚠️ MONGODB_URI not set — database features disabled");
 }
 
-// ============================
-// Middleware
-// ============================
-app.use(express.json());
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, "../public")));
-// ============================
-// Health check endpoint
-// ============================
+// ==============================
+// Health Check
+// ==============================
+
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
-    message: "Resilience Atlas server is running",
-    db: dbStatus,
+    service: "Resilience Atlas API",
+    database: dbStatus,
+    timestamp: new Date().toISOString(),
   });
 });
 
-// ============================
-// API routes
-// ============================
+// ==============================
+// Public Config (safe frontend values)
+// ==============================
+
+app.get("/config", (req, res) => {
+  res.json({
+    stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
+  });
+});
+
+// ==============================
+// API ROUTES
+// ==============================
+
 app.use("/auth", require("./routes/auth"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/quiz", require("./routes/quiz"));
 app.use("/api/affiliates", require("./routes/affiliates"));
 app.use("/api/stripe", require("./routes/stripe"));
 
-// ============================
-// Catch-all for SPA
-// ============================
+// ==============================
+// Static Frontend
+// ==============================
+
+app.use(express.static(path.join(__dirname, "../public")));
+
+// SPA fallback
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-// ============================
-// Auto-pick free port starting at 3000
-// ============================
-let PORT = 3000;
-function isPortFree(port) {
-  try {
-    execSync(`lsof -i:${port}`);
-    return false; // port is in use
-  } catch {
-    return true; // port is free
-  }
-}
+// ==============================
+// Global Error Handler
+// ==============================
 
-while (!isPortFree(PORT)) {
-  PORT += 1;
-}
+app.use((err, req, res, next) => {
+  console.error("❌ Server Error:", err);
+
+  const isDev = (process.env.NODE_ENV || "development") === "development";
+
+  res.status(err.status || 500).json({
+    error: isDev ? err.message : "Internal server error",
+    ...(isDev && err.stack ? { stack: err.stack } : {}),
+  });
+});
+
+// ==============================
+// Start Server
+// ==============================
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`✅ MongoDB status: ${dbStatus}`);
 });
-// SPA fallback for React/Vanilla frontends
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+
