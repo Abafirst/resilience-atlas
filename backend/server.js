@@ -1,89 +1,88 @@
-const express = require('express');
-const path = require('path');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+// server.js
+const path = require("path");
+const express = require("express");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const { execSync } = require("child_process");
 
 dotenv.config();
-
 const app = express();
-const isTestEnv = Boolean(process.env.JEST_WORKER_ID);
-app.locals.ready = isTestEnv;
-let dbStatus = 'disconnected';
+
+// ============================
+// Database connection
+// ============================
+let dbStatus = "disconnected";
 
 if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI).then(() => {
-        dbStatus = 'connected';
-        console.log('✅ MongoDB connected');
-    }).catch((err) => {
-        dbStatus = 'disconnected';
-        console.error('❌ MongoDB connection failed:', err);
+  mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+      dbStatus = "connected";
+      console.log("✅ MongoDB connected");
+    })
+    .catch((err) => {
+      dbStatus = "disconnected";
+      console.error("❌ MongoDB connection failed:", err);
     });
 } else {
-    console.warn('⚠️  MONGODB_URI not set — database features will be unavailable');
+  console.warn("⚠️ MONGODB_URI not set — database features disabled");
 }
 
+// ============================
 // Middleware
+// ============================
 app.use(express.json());
-
-// ✅ HEALTH CHECK ENDPOINT (for Railway healthcheck)
-app.get('/health', (req, res) => {
-    if (!app.locals.ready) {
-        return res.status(503).json({ status: 'starting', message: 'Server is starting up' });
-    }
-    res.status(200).json({
-        status: 'OK',
-        message: 'Resilience Atlas server is running',
-        db: dbStatus
-    });
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, "../public")));
+// ============================
+// Health check endpoint
+// ============================
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "Resilience Atlas server is running",
+    db: dbStatus,
+  });
 });
 
-// ✅ API ROUTES FIRST (must come before static files!)
-app.use('/auth', require('./routes/auth'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/quiz', require('./routes/quiz'));
-app.use('/api/affiliates', require('./routes/affiliates'));
-app.use('/api/stripe', require('./routes/stripe'));
+// ============================
+// API routes
+// ============================
+app.use("/auth", require("./routes/auth"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/quiz", require("./routes/quiz"));
+app.use("/api/affiliates", require("./routes/affiliates"));
+app.use("/api/stripe", require("./routes/stripe"));
 
-// ✅ Basic route
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
+// ============================
+// Catch-all for SPA
+// ============================
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-// ✅ THEN static files
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-// ✅ CATCH-ALL ROUTE LAST (for React routing)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
-
-// Error handler
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(500).json({ error: 'Internal server error' });
-});
-
-const PORT = process.env.PORT || 3000;
-const startServer = () => {
-    const server = app.listen(PORT, () => {
-        app.locals.ready = true;
-        console.log(`🚀 Server running on port ${PORT}`);
-    });
-    return server;
-};
-
-app.startServer = startServer;
-module.exports = app;
-
-if (require.main === module) {
-    const server = startServer();
-    server.on('error', (err) => {
-        if (err.code === 'EADDRINUSE') {
-            console.error(`❌ Port ${PORT} is already in use. Set a different PORT environment variable or stop the process using that port.`);
-            process.exit(1);
-        } else {
-            console.error('❌ Failed to start server. Check configuration, permissions, and dependencies.', err);
-            process.exit(1);
-        }
-    });
+// ============================
+// Auto-pick free port starting at 3000
+// ============================
+let PORT = 3000;
+function isPortFree(port) {
+  try {
+    execSync(`lsof -i:${port}`);
+    return false; // port is in use
+  } catch {
+    return true; // port is free
+  }
 }
+
+while (!isPortFree(PORT)) {
+  PORT += 1;
+}
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ MongoDB status: ${dbStatus}`);
+});
+// SPA fallback for React/Vanilla frontends
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});

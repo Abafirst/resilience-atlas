@@ -1,0 +1,197 @@
+'use strict';
+
+/*
+  results.js – Results page logic for Resilience Assessment
+*/
+function generatePersonalizedReport(results) {
+  // You may want to tweak this template for your application and narrative style!
+  let text = `Dear ${results.firstName},\n\n`;
+
+  text += `Thank you for completing the Resilience Assessment. Your top profile is: ${results.profileName}.\n\n`;
+
+  // List ranked strengths
+  text += `Your resilience strengths, in order, are:\n`;
+  results.rankedTypes.forEach((type, i) => {
+    const score = results.scores[type];
+    if (!score) return;
+    text += `  ${i+1}. ${type}: ${score.raw} / ${score.max} (${score.percentage}%)\n`;
+  });
+  text += '\n';
+
+  // Individual scores (can be expanded)
+  text += 'Detailed Results:\n';
+  Object.keys(results.scores).forEach(type => {
+    const score = results.scores[type];
+    text += `- ${type}: ${score.raw} out of ${score.max} (${score.percentage}%)\n`;
+  });
+  text += '\n';
+
+  // Summary paragraph
+  text += 'Personalized Narrative:\n';
+  if (results.summary) {
+    text += results.summary + '\n\n';
+  } else if (results.reportText && typeof results.reportText === 'string' && results.reportText.length > 20) {
+    // fallback for older data
+    text += results.reportText.trim() + '\n\n';
+  } else {
+    text += 'No additional narrative was provided.\n\n';
+  }
+
+  text += 'Keep building your resilience journey!\n';
+
+  return text;
+}
+
+// ——— DOM ELEMENT REFERENCES —————————————————
+let btnDownload, btnEmail, btnRetake, emailInput, pdfAlert, emailAlert;
+
+document.addEventListener('DOMContentLoaded', () => {
+  btnDownload  = document.getElementById('btnDownload');
+  btnEmail     = document.getElementById('btnEmail');
+  btnRetake    = document.getElementById('btnRetake');
+  emailInput   = document.getElementById('emailInput');
+  pdfAlert     = document.getElementById('pdfAlert');
+  emailAlert   = document.getElementById('emailAlert');
+
+  if (btnDownload) btnDownload.addEventListener('click', downloadPdf);
+  if (btnEmail)    btnEmail.addEventListener('click', sendEmailReport);
+  if (btnRetake)   btnRetake.addEventListener('click', () => window.location.href = 'quiz.html');
+});
+
+// ——— HELPERS ———————————————————————————————————
+function getResults() {
+  // If using a custom Store utility:
+  if (typeof Store !== "undefined" && Store.get) {
+    return Store.get('resilience_results');
+  }
+  // Fallback, using localStorage:
+  const raw = localStorage.getItem('resilience_results');
+  try { return JSON.parse(raw); } catch { return null; }
+}
+
+// ——— DOWNLOAD PDF ————————————————————————
+async function downloadPdf() {
+  const results = getResults();
+  if (!results) {
+    showAlert(pdfAlert, 'No results to export.', 'error');
+    return;
+  }
+
+  // Prepare payload fields (must match backend expects)
+  const payload = {
+    firstName:   results.firstName,
+    email:       results.email,
+    scores:      results.scores,
+    profileName: results.profileName,
+    rankedTypes: results.rankedTypes,
+    reportText:  results.reportText
+  };
+
+  // Validate required fields
+  const required = ['firstName', 'email', 'scores', 'profileName', 'rankedTypes', 'reportText'];
+  const missing = required.filter(k => !payload[k]);
+  if (missing.length) {
+    showAlert(pdfAlert, `Missing required fields: ${missing.join(', ')}`, 'error');
+    return;
+  }
+
+  try {
+    showSpinner(btnDownload, true);
+    if (pdfAlert) pdfAlert.style.display = 'none';
+
+    // For debug
+    console.log("Sending to PDF API:", payload);
+
+    const res = await fetch('/api/generate-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `PDF generation failed (${res.status})`);
+    }
+
+    // Download
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resilience-report.pdf';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+
+    showAlert(pdfAlert, 'PDF downloaded successfully!', 'success');
+  } catch (err) {
+    showAlert(pdfAlert, err.message || 'Could not download PDF. Please try again.', 'error');
+  } finally {
+    showSpinner(btnDownload, false);
+  }
+}
+
+// ——— EMAIL REPORT ————————————————————————
+async function sendEmailReport() {
+  const results = getResults();
+  if (!results) {
+    showAlert(emailAlert, 'No results to send.', 'error');
+    return;
+  }
+  const email = emailInput?.value?.trim() || results.email || '';
+  if (!email) {
+    showAlert(emailAlert, 'Please provide a valid email.', 'error');
+    return;
+  }
+
+  const emailData = {
+    firstName:   results.firstName,
+    email:       email,
+    scores:      results.scores,
+    profileName: results.profileName,
+    rankedTypes: results.rankedTypes,
+    reportText:  results.reportText
+  };
+
+  // Optional: Validate fields as in downloadPdf
+  try {
+    showSpinner(btnEmail, true);
+    if (emailAlert) emailAlert.style.display = 'none';
+
+    // For debug
+    console.log("Sending email data:", emailData);
+
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(emailData)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Email send failed (${res.status})`);
+    }
+    showAlert(emailAlert, `Report sent to ${email}!`, 'success');
+  } catch (err) {
+    showAlert(emailAlert, err.message || 'Could not send report. Please try again.', 'error');
+  } finally {
+    showSpinner(btnEmail, false);
+  }
+}
+
+// ——— UI HELPERS —————————————————————————————
+function showAlert(el, msg, type) {
+  if (!el) return;
+  el.innerText = msg;
+  el.className = type === 'success'
+    ? 'alert alert-success'
+    : 'alert alert-danger';
+  el.style.display = '';
+}
+
+function showSpinner(btn, on) {
+  if (!btn) return;
+  btn.disabled = !!on;
+  // You can add more UI if you want: e.g., btn.innerHTML = on ? 'Loading...' : 'Download PDF';
+}

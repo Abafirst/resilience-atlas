@@ -3,171 +3,202 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resilience Atlas — API Tester</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #222; }
-    header {
-      background: #1a3a5c; color: #fff; padding: 1.2rem 2rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    header h1 { font-size: 1.4rem; }
-    header span { font-size: 0.85rem; opacity: 0.75; }
-    main { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
-    .card {
-      background: #fff; border-radius: 8px; padding: 1.2rem 1.4rem;
-      margin-bottom: 1.4rem; box-shadow: 0 1px 4px rgba(0,0,0,.08);
-    }
-    .card h2 { font-size: 1rem; margin-bottom: .8rem; color: #1a3a5c; }
-    label { display: block; font-size: .82rem; color: #555; margin-bottom: .25rem; }
-    input, textarea {
-      width: 100%; padding: .45rem .6rem; border: 1px solid #ccc;
-      border-radius: 5px; font-size: .9rem; margin-bottom: .7rem;
-    }
-    textarea { resize: vertical; height: 70px; font-family: monospace; font-size: .8rem; }
-    .row { display: flex; gap: .6rem; flex-wrap: wrap; }
-    button {
-      padding: .45rem 1.1rem; border: none; border-radius: 5px;
-      font-size: .88rem; cursor: pointer; font-weight: 600;
-    }
-    .btn-primary { background: #1a3a5c; color: #fff; }
-    .btn-primary:hover { background: #245080; }
-    .btn-secondary { background: #e8edf3; color: #1a3a5c; }
-    .btn-secondary:hover { background: #d2dce9; }
-    .method { font-size: .75rem; font-weight: 700; border-radius: 4px; padding: .15rem .45rem; }
-    .GET  { background:#d4edda; color:#155724; }
-    .POST { background:#d1ecf1; color:#0c5460; }
-    .response-box {
-      margin-top: .8rem; background: #1e1e2e; color: #a9b1d6;
-      border-radius: 6px; padding: .9rem 1rem; font-family: monospace;
-      font-size: .8rem; white-space: pre-wrap; word-break: break-all;
-      min-height: 60px; max-height: 240px; overflow-y: auto;
-    }
-    .status-ok   { color: #9ece6a; }
-    .status-err  { color: #f7768e; }
-    .tip { font-size: .78rem; color: #888; margin-top: .4rem; }
-    hr { border: none; border-top: 1px solid #e8edf3; margin: 1.5rem 0; }
-  </style>
+  <title>Resilience Assessment — Discover Your Resilience Profile</title>
+  <meta name="description" content="Take the Resilience Assessment developed by Dr. Janeen Molchany, Ph.D., BCBA, and discover your personalised resilience profile across six dimensions." />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🌍 Resilience Atlas</h1>
-    <span>In-browser API Tester — <span id="baseUrl"></span></span>
-  </div>
-</header>
-
-<main>
-
-  <!-- ── Health Check ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> /health — Server Health Check</h2>
-    <button class="btn-primary" onclick="call('GET','/health','health-res')">Send Request</button>
-    <div class="response-box" id="health-res">Click "Send Request" to test…</div>
-  </div>
-
-  <!-- ── Root / Welcome ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> / — Welcome Message</h2>
-    <button class="btn-primary" onclick="call('GET','/','root-res')">Send Request</button>
-    <div class="response-box" id="root-res">Click "Send Request" to test…</div>
-  </div>
-
-  <!-- ── Auth Token Helper ── -->
-  <div class="card">
-    <h2>🔑 JWT Token (for protected endpoints)</h2>
-    <label>Paste a valid JWT here — it will be sent as <code>Authorization: Bearer &lt;token&gt;</code> on all authenticated requests below.</label>
-    <input type="text" id="jwt-token" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…" />
-    <p class="tip">
-      No token yet? Generate one from your server with <code>jwt.sign({ userId: '...' }, process.env.JWT_SECRET, { expiresIn: '1h' })</code>
-      or via <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a>.
-    </p>
-  </div>
-
-  <hr />
-
-  <!-- ── Create Payment ── -->
-  <div class="card">
-    <h2><span class="method POST">POST</span> /create-payment — Create Payment Intent</h2>
-    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above and real Stripe credentials on the server.</p>
-    <div class="row">
-    <label>Amount (USD dollars, e.g. 10.50)</label>
-        <input type="number" id="pay-amount" value="10" min="1" />
-      </div>
-      <div style="flex:1">
-        <label>Currency</label>
-        <input type="text" id="pay-currency" value="usd" />
-      </div>
+  <!-- ── Header ──────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <div class="logo-icon" aria-hidden="true">&#9672;</div>
+        Resilience Assessment
+      </a>
+      <a class="btn btn-primary" href="quiz.html">Start Assessment</a>
     </div>
-    <label>Description (optional)</label>
-    <input type="text" id="pay-desc" placeholder="Resilience Atlas Payment" />
-    <button class="btn-primary" onclick="createPayment()">Create Payment Intent</button>
-    <div class="response-box" id="pay-res">Click "Create Payment Intent" to test…</div>
-  </div>
+  </header>
 
-  <!-- ── Get Payment Status ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> /payment/:id — Get Payment Status</h2>
-    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above.</p>
-    <label>Payment Intent ID</label>
-    <input type="text" id="get-pay-id" placeholder="pi_3OxxxxxxxxxxxxYYYY" />
-    <button class="btn-primary" onclick="getPayment()">Get Payment Status</button>
-    <div class="response-box" id="get-pay-res">Enter a Payment Intent ID and click the button to test…</div>
-  </div>
+  <main>
 
-</main>
+    <!-- ── Hero ─────────────────────────────────────── -->
+    <section class="hero">
+      <div class="container">
+        <span class="hero-badge">Evidence-Based Self-Discovery</span>
+        <h1>Understand How You&nbsp;Bounce&nbsp;Back</h1>
+        <p class="subtitle">
+          The Resilience Assessment measures six core dimensions of resilience
+          so you can see exactly where your strengths lie — and where to invest
+          in growth.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="quiz.html">Start Assessment</a>
+          <a class="btn btn-secondary btn-lg" href="#about">Learn More</a>
+        </div>
+      </div>
+    </section>
 
-<script>
-  // Show the current origin in the header
-  document.getElementById('baseUrl').textContent = location.origin;
+    <!-- ── Report types ──────────────────────────────── -->
+    <section class="section" id="reports">
+      <div class="container">
+        <div class="section-title">
+          <h2>Three Ways to See Your Results</h2>
+          <p>Every completed assessment generates a rich, personalised report — or all three.</p>
+        </div>
+        <div class="card-grid">
 
-  function fmt(res, body) {
-    const ok = res.ok;
-    const status = `HTTP ${res.status} ${res.statusText}`;
-    let text;
-    try { text = JSON.stringify(body, null, 2); } catch { text = String(body); }
-    return { ok, status, text };
-  }
+          <article class="card report-card">
+            <div class="report-card-accent accent-blue"></div>
+            <div class="report-icon icon-blue" aria-hidden="true">&#128202;</div>
+            <h3>Profile Overview</h3>
+            <p>
+              A visual snapshot of your six resilience dimensions with
+              scores, strength tiers, and a colour-coded bar chart you can
+              see at a glance.
+            </p>
+          </article>
 
-  async function call(method, path, outId, headers = {}, body = null) {
-    const box = document.getElementById(outId);
-    box.textContent = '⏳ Sending…';
-    try {
-      const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
-      if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(path, opts);
-      let json;
-      try { json = await res.json(); } catch { json = await res.text(); }
-      const { ok, status, text } = fmt(res, json);
-      box.innerHTML = `<span class="${ok ? 'status-ok' : 'status-err'}">${status}</span>\n\n${escHtml(text)}`;
-    } catch (err) {
-      box.innerHTML = `<span class="status-err">Error: ${escHtml(err.message)}</span>`;
-    }
-  }
+          <article class="card report-card">
+            <div class="report-card-accent accent-teal"></div>
+            <div class="report-icon icon-teal" aria-hidden="true">&#128203;</div>
+            <h3>Personalised Narrative</h3>
+            <p>
+              A written report tailored to your unique profile — explaining
+              what your scores mean, your primary strengths, and practical
+              next steps for growth.
+            </p>
+          </article>
 
-  function authHeaders() {
-    const token = document.getElementById('jwt-token').value.trim();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
+          <article class="card report-card">
+            <div class="report-card-accent accent-orange"></div>
+            <div class="report-icon icon-orange" aria-hidden="true">&#128196;</div>
+            <h3>Downloadable PDF</h3>
+            <p>
+              A polished, printable PDF combining your profile chart and
+              narrative report — ready to share with a coach, therapist, or
+              trusted colleague.
+            </p>
+          </article>
 
-  function createPayment() {
-    const amount   = parseFloat(document.getElementById('pay-amount').value) || 10;
-    const currency = document.getElementById('pay-currency').value.trim() || 'usd';
-    const description = document.getElementById('pay-desc').value.trim();
-    call('POST', '/create-payment', 'pay-res', authHeaders(), { amount, currency, description });
-  }
+        </div>
+      </div>
+    </section>
 
-  function getPayment() {
-    const id = document.getElementById('get-pay-id').value.trim();
-    if (!id) { document.getElementById('get-pay-res').textContent = '⚠️ Please enter a Payment Intent ID.'; return; }
-    call('GET', `/payment/${id}`, 'get-pay-res', authHeaders());
-  }
+    <!-- ── How it works ──────────────────────────────── -->
+    <section class="section how-it-works" id="how-it-works">
+      <div class="container">
+        <div class="section-title">
+          <h2>How It Works</h2>
+          <p>Four simple steps from start to insight.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step-item">
+            <div class="step-number">1</div>
+            <h3>Enter Your Details</h3>
+            <p>Provide your first name and email — that is all we need to get started.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-number">2</div>
+            <h3>Answer 36 Questions</h3>
+            <p>Rate 36 statements on a five-point scale. Most people finish in 10–15 minutes.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-number">3</div>
+            <h3>Receive Your Profile</h3>
+            <p>Instantly see your personalised resilience profile with scores across all six dimensions.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-number">4</div>
+            <h3>Download or Share</h3>
+            <p>Download a PDF report or email it to yourself for future reflection.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-</script>
+    <!-- ── Six resilience types ───────────────────────── -->
+    <section class="section" id="dimensions">
+      <div class="container">
+        <div class="section-title">
+          <h2>Six Dimensions of Resilience</h2>
+          <p>The assessment measures resilience across six evidence-based domains.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h4>&#9672; Adaptive Resilience</h4>
+            <p>The ability to adjust, pivot, and thrive amid change and uncertainty.</p>
+          </div>
+          <div class="card">
+            <h4>&#9672; Relational Resilience</h4>
+            <p>Drawing strength from and contributing to the people around you.</p>
+          </div>
+          <div class="card">
+            <h4>&#9672; Existential Resilience</h4>
+            <p>Finding meaning and purpose that sustains you through hardship.</p>
+          </div>
+          <div class="card">
+            <h4>&#9672; Emotional Resilience</h4>
+            <p>Recognising, regulating, and recovering from intense emotions.</p>
+          </div>
+          <div class="card">
+            <h4>&#9672; Physical Resilience</h4>
+            <p>Maintaining the body as a foundation for meeting life's demands.</p>
+          </div>
+          <div class="card">
+            <h4>&#9672; Cognitive Resilience</h4>
+            <p>Thinking flexibly, challenging unhelpful patterns, and problem-solving effectively.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── About Janeen ───────────────────────────────── -->
+    <section class="section credentials-section" id="about">
+      <div class="container">
+        <div class="credentials-inner">
+          <div class="credentials-avatar" aria-hidden="true">&#128105;&#8205;&#127979;</div>
+          <div class="credentials-text">
+            <h2>About Dr. Janeen Molchany</h2>
+            <p class="title">Janeen Molchany, Ph.D., BCBA</p>
+            <p>
+              Dr. Molchany is a board-certified behaviour analyst and researcher
+              whose work focuses on human resilience, behavioural health, and
+              evidence-based approaches to well-being. With decades of clinical
+              and consulting experience, she developed the Resilience Assessment
+              to give individuals an accessible, research-grounded window into
+              their own adaptive capacity.
+            </p>
+            <p>
+              The assessment framework draws on the latest findings from
+              positive psychology, behavioural science, and trauma-informed
+              practice — presented in a format that is warm, accessible, and
+              immediately actionable.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ───────────────────────────────────────── -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Discover Your Resilience Profile?</h2>
+        <p>It takes just 10–15 minutes and the insights last a lifetime.</p>
+        <a class="btn btn-primary btn-lg" href="quiz.html">Start the Free Assessment</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>
+      &copy; 2025 Resilience Assessment &nbsp;|&nbsp;
+      Developed by <strong>Janeen Molchany, Ph.D., BCBA</strong>
+    </p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
+  </footer>
 
 </body>
 </html>

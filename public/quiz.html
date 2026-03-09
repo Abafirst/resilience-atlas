@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Take the Assessment — Resilience Assessment</title>
+  <meta name="description" content="Answer 36 questions and discover your personalised resilience profile across six dimensions." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <div class="logo-icon" aria-hidden="true">&#9672;</div>
+        Resilience Assessment
+      </a>
+    </div>
+  </header>
+
+  <!-- ── Spinner overlay ──────────────────────────────── -->
+  <div id="spinnerOverlay" class="spinner-overlay" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="spinnerText" class="spinner-text">Processing&hellip;</p>
+  </div>
+
+  <main>
+    <div class="quiz-page">
+      <div class="quiz-wrapper">
+
+        <!-- Progress bar -->
+        <div class="progress-container" role="region" aria-label="Quiz progress">
+          <div class="progress-header">
+            <span id="progressLabel">Question 0 of 36</span>
+            <span id="progressPct"></span>
+          </div>
+          <div class="progress-bar-track" aria-hidden="true">
+            <div id="progressFill" class="progress-bar-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Name & Email -->
+        <div id="infoStep" class="info-step card">
+          <h2>Welcome to the Resilience Assessment</h2>
+          <p class="description">
+            This 36-question assessment takes about 10–15 minutes to complete.
+            Please answer each question honestly — there are no right or wrong
+            answers. Enter your details below to get started.
+          </p>
+
+          <div class="form-group">
+            <label for="firstName">First Name <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              autocomplete="given-name"
+              placeholder="Your first name"
+              required
+              aria-required="true"
+              aria-describedby="nameError"
+            />
+            <span id="nameError" class="field-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address <span aria-hidden="true">*</span></label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+              aria-required="true"
+              aria-describedby="emailError"
+            />
+            <span id="emailError" class="field-error" role="alert"></span>
+          </div>
+        </div>
+
+        <!-- Step 2: Questions (built by quiz.js) -->
+        <div id="questionContainer"></div>
+
+        <!-- Step 3: Review & Submit -->
+        <div id="submitStep" class="submit-step card">
+          <h2>You have answered all 36 questions!</h2>
+          <p>
+            Click <strong>Submit</strong> to generate your personalised
+            resilience report. This usually takes just a moment.
+          </p>
+          <button type="button" id="btnSubmit" class="btn btn-primary btn-lg">
+            <span class="btn-label">Submit &amp; See My Results</span>
+          </button>
+          <div id="submitAlert" class="alert" role="alert"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="quiz-nav">
+          <button type="button" id="btnPrev" class="btn btn-secondary" style="visibility:hidden">
+            <span aria-hidden="true">&larr;</span>
+            <span class="btn-label">Previous</span>
+          </button>
+          <button type="button" id="btnNext" class="btn btn-primary">
+            <span class="btn-label">Start Quiz</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+
+      </div><!-- /.quiz-wrapper -->
+    </div><!-- /.quiz-page -->
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>
+      &copy; 2025 Resilience Assessment &nbsp;|&nbsp;
+      Developed by <strong>Janeen Molchany, Ph.D., BCBA</strong>
+    </p>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
