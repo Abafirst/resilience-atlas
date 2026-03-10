@@ -1417,3 +1417,39 @@ main { flex: 1; }
 .share-btn-native:hover   { background: #3a8eba; }
 
 
+
+/* Results Page Layout */
+
+.report-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.report-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.results-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.results-page {
+  background: #F5F7FA;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
