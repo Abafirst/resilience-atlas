@@ -1,6 +1,6 @@
 /* =============================================================
    org-dashboard.js
-   Client-side logic for the Organisation Dashboard page.
+   Client-side logic for the Organization Dashboard page.
    Reads ?orgId=<id> from the URL and populates the dashboard
    with leadership report summary data.
    ============================================================= */
@@ -231,7 +231,7 @@
   function init() {
     const orgId = qp('orgId');
     if (!orgId) {
-      $('insights-loading').textContent = 'No organisation ID specified (?orgId=…).';
+      $('insights-loading').textContent = 'No organization ID specified (?orgId=…).';
       return;
     }
 
@@ -240,7 +240,7 @@
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (data && data.organization) {
-          $('org-name').textContent = data.organization.name || 'Organisation Dashboard';
+          $('org-name').textContent = data.organization.name || 'Organization Dashboard';
         }
       })
       .catch(() => {});

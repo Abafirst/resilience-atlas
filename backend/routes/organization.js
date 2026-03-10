@@ -3,12 +3,13 @@
 /**
  * organization.js
  *
- * Routes for managing organisations (create, invite members, link results).
+ * Routes for managing organizations (create, invite members, link results).
  * All mutating endpoints require authentication.
  */
 
 const express = require('express');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 
 const Organization = require('../models/Organization');
 const ResilienceResult = require('../models/ResilienceResult');
@@ -17,23 +18,33 @@ const { maybeAutoGenerate } = require('../services/leadership-report-generator')
 
 const router = express.Router();
 
+const orgLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+router.use(orgLimiter);
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function isAdmin(org, userId) {
   return org.admins.some((id) => id.toString() === userId.toString());
 }
 
-// ── Create organisation ───────────────────────────────────────────────────────
+// ── Create organization ───────────────────────────────────────────────────────
 
 /**
  * POST /api/org
- * Create a new organisation. The requesting user becomes the first admin.
+ * Create a new organization. The requesting user becomes the first admin.
  */
 router.post('/', authenticateJWT, async (req, res) => {
   try {
     const { name } = req.body;
     if (!name || !name.trim()) {
-      return res.status(400).json({ error: 'Organisation name is required.' });
+      return res.status(400).json({ error: 'Organization name is required.' });
     }
 
     const org = await Organization.create({
@@ -48,21 +59,21 @@ router.post('/', authenticateJWT, async (req, res) => {
   }
 });
 
-// ── Get organisation ──────────────────────────────────────────────────────────
+// ── Get organization ──────────────────────────────────────────────────────────
 
 /**
  * GET /api/org/:organizationId
- * Get organisation details. Admin only.
+ * Get organization details. Admin only.
  */
 router.get('/:organizationId', authenticateJWT, async (req, res) => {
   try {
     const { organizationId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(organizationId)) {
-      return res.status(400).json({ error: 'Invalid organisation ID.' });
+      return res.status(400).json({ error: 'Invalid organization ID.' });
     }
 
     const org = await Organization.findById(organizationId);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
 
     if (!isAdmin(org, req.user.userId)) {
       return res.status(403).json({ error: 'Access denied.' });
@@ -86,11 +97,11 @@ router.post('/:organizationId/invite', authenticateJWT, async (req, res) => {
   try {
     const { organizationId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(organizationId)) {
-      return res.status(400).json({ error: 'Invalid organisation ID.' });
+      return res.status(400).json({ error: 'Invalid organization ID.' });
     }
 
     const org = await Organization.findById(organizationId);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
 
     if (!isAdmin(org, req.user.userId)) {
       return res.status(403).json({ error: 'Access denied.' });
@@ -120,7 +131,7 @@ router.post('/:organizationId/invite', authenticateJWT, async (req, res) => {
 
 /**
  * POST /api/org/:organizationId/results
- * Associate a completed ResilienceResult with the organisation.
+ * Associate a completed ResilienceResult with the organization.
  * Triggers auto-generation check.
  * Body: { resultId: string }
  */
@@ -128,7 +139,7 @@ router.post('/:organizationId/results', authenticateJWT, async (req, res) => {
   try {
     const { organizationId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(organizationId)) {
-      return res.status(400).json({ error: 'Invalid organisation ID.' });
+      return res.status(400).json({ error: 'Invalid organization ID.' });
     }
 
     const { resultId } = req.body;
@@ -137,7 +148,7 @@ router.post('/:organizationId/results', authenticateJWT, async (req, res) => {
     }
 
     const org = await Organization.findById(organizationId);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
 
     await Organization.findByIdAndUpdate(organizationId, {
       $addToSet: { completedResultIds: resultId },
@@ -152,7 +163,7 @@ router.post('/:organizationId/results', authenticateJWT, async (req, res) => {
     }
 
     res.json({
-      message: 'Result linked to organisation.',
+      message: 'Result linked to organization.',
       autoReportGenerated: !!autoReport,
       autoReportId: autoReport ? autoReport._id : null,
     });

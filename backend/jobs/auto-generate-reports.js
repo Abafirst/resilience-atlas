@@ -3,7 +3,7 @@
 /**
  * auto-generate-reports.js
  *
- * Scheduled job that checks all active organisations and generates a
+ * Scheduled job that checks all active organizations and generates a
  * leadership report whenever the response rate reaches ≥50%.
  *
  * Invoke via cron or directly: node backend/jobs/auto-generate-reports.js
@@ -18,7 +18,7 @@ const Organization = require('../models/Organization');
 const { maybeAutoGenerate } = require('../services/leadership-report-generator');
 
 /**
- * Run the auto-generation check across all active organisations.
+ * Run the auto-generation check across all active organizations.
  * Safe to call repeatedly (idempotent per cycle).
  */
 async function runAutoGenerateJob() {

@@ -4,13 +4,14 @@
  * leadership-report.js
  *
  * API endpoints for the Leadership Insights Report.
- * All routes require authentication and admin membership in the organisation.
+ * All routes require authentication and admin membership in the organization.
  *
  * Base path: /api/org/:organizationId/leadership-report
  */
 
 const express = require('express');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 
 const LeadershipReport = require('../models/LeadershipReport');
 const Organization = require('../models/Organization');
@@ -18,6 +19,16 @@ const { authenticateJWT } = require('../middleware/auth');
 const { generateLeadershipReport } = require('../services/leadership-report-generator');
 
 const router = express.Router({ mergeParams: true });
+
+const reportLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+router.use(reportLimiter);
 
 // ── Helper ────────────────────────────────────────────────────────────────────
 
@@ -29,13 +40,13 @@ async function requireOrgAdmin(req, res) {
   const { organizationId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(organizationId)) {
-    res.status(400).json({ error: 'Invalid organisation ID.' });
+    res.status(400).json({ error: 'Invalid organization ID.' });
     return null;
   }
 
   const org = await Organization.findById(organizationId);
   if (!org) {
-    res.status(404).json({ error: 'Organisation not found.' });
+    res.status(404).json({ error: 'Organization not found.' });
     return null;
   }
 
@@ -51,7 +62,7 @@ async function requireOrgAdmin(req, res) {
 
 /**
  * GET /api/org/:organizationId/leadership-report
- * Returns the most recent non-archived leadership report for the organisation.
+ * Returns the most recent non-archived leadership report for the organization.
  */
 router.get('/', authenticateJWT, async (req, res) => {
   try {

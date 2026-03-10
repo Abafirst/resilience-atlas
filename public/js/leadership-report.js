@@ -320,7 +320,7 @@
     // Footer meta
     const orgId = qp('orgId') || '';
     $('report-footer-meta').textContent =
-      `Report generated: ${date} | Organisation ID: ${orgId} | Resilience Atlas for Teams`;
+      `Report generated: ${date} | Organization ID: ${orgId} | Resilience Atlas for Teams`;
 
     renderTeamOverview(report);
     renderDimensionAnalysis(report.dimensionAnalysis || {});
@@ -382,7 +382,7 @@
   function init() {
     const orgId = qp('orgId');
     if (!orgId) {
-      showError('No organisation ID specified. Add ?orgId=<id> to the URL.');
+      showError('No organization ID specified. Add ?orgId=<id> to the URL.');
       return;
     }
 

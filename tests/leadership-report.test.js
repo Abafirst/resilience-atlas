@@ -3,7 +3,7 @@
 /**
  * leadership-report.test.js
  *
- * Integration tests for the Leadership Report and Organisation API endpoints.
+ * Integration tests for the Leadership Report and Organization API endpoints.
  * All external dependencies (mongoose, models) are mocked.
  */
 
@@ -57,7 +57,7 @@ jest.mock('mongoose', () => {
 
 const mockOrg = {
   _id: 'org001',
-  name: 'Test Organisation',
+  name: 'Test Organization',
   admins: ['user001'],
   invitedEmails: ['a@example.com', 'b@example.com'],
   completedResultIds: ['res001'],
@@ -212,7 +212,7 @@ function authToken(userId = 'user001') {
   return jwt.sign({ userId, username: 'testuser', role: 'user' }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
-// ── Organisation routes ──────────────────────────────────────────────────────
+// ── Organization routes ──────────────────────────────────────────────────────
 
 describe('POST /api/org', () => {
   test('returns 401 without token', async () => {
