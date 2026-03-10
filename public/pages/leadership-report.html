@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leadership Insights Report — Resilience Atlas for Teams</title>
+  <meta name="description" content="Aggregated team resilience insights for organisational leaders. GDPR/CCPA compliant — no individual data exposed." />
+  <link rel="stylesheet" href="/css/leadership-report.css" />
+</head>
+<body>
+
+  <!-- Skip navigation for screen readers -->
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ── Page header ─────────────────────────────────────────── -->
+  <header class="page-header" role="banner">
+    <div class="page-header__inner">
+      <div>
+        <div class="page-header__brand">Resilience Atlas for Teams</div>
+        <h1 class="page-header__title">Leadership Insights Report</h1>
+        <p class="page-header__subtitle" id="report-subtitle">Loading report…</p>
+      </div>
+      <nav class="page-header__actions" aria-label="Report actions">
+        <button class="btn btn--outline" id="btn-back" onclick="window.history.back()">← Dashboard</button>
+        <button class="btn btn--primary" id="btn-print" onclick="window.print()" aria-label="Print report">🖨 Print / Save PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Main content ────────────────────────────────────────── -->
+  <main id="main-content" class="report-layout" aria-live="polite">
+
+    <!-- Loading state -->
+    <div class="state-loading" id="state-loading" role="status" aria-label="Loading report">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading your team's leadership report…</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="state-error" id="state-error" style="display:none" role="alert">
+      <p id="error-message">Unable to load the report.</p>
+      <button class="btn btn--generate" id="btn-generate-first">Generate First Report</button>
+    </div>
+
+    <!-- Report content (hidden until loaded) -->
+    <div id="report-content" style="display:none">
+
+      <!-- ── SECTION 1: Team Overview ──────────────────────── -->
+      <section class="report-section" aria-labelledby="s1-title">
+        <h2 class="section-title" id="s1-title"><span class="icon" aria-hidden="true">📊</span> Team Overview</h2>
+
+        <div class="kpi-grid" id="kpi-grid" role="list" aria-label="Key performance indicators">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Strength distribution -->
+        <h3 style="font-size:1rem;margin:1.25rem 0 0.6rem;color:var(--brand-dark)">Primary Resilience Strengths Distribution</h3>
+        <div class="strength-chart" id="strength-chart" aria-label="Bar chart: primary strength distribution">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ── SECTION 2: Dimension Analysis ─────────────────── -->
+      <section class="report-section" aria-labelledby="s2-title">
+        <h2 class="section-title" id="s2-title"><span class="icon" aria-hidden="true">🧩</span> Dimension Analysis</h2>
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">
+          Scores are aggregated team averages (0–100). No individual data is shown.
+        </p>
+        <div class="dimension-grid" id="dimension-grid" role="list" aria-label="Resilience dimension analysis">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ── SECTION 3: Key Observations ───────────────────── -->
+      <section class="report-section" aria-labelledby="s3-title">
+        <h2 class="section-title" id="s3-title"><span class="icon" aria-hidden="true">🔍</span> Key Observations</h2>
+        <ul class="observation-list" id="observation-list" aria-label="Key observations about your team">
+          <!-- Populated by JS -->
+        </ul>
+      </section>
+
+      <!-- ── SECTION 4: Leadership Recommendations ─────────── -->
+      <section class="report-section" aria-labelledby="s4-title">
+        <h2 class="section-title" id="s4-title"><span class="icon" aria-hidden="true">💡</span> Leadership Recommendations</h2>
+        <div class="recommendation-list" id="recommendation-list" role="list" aria-label="Leadership recommendations">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ── Appendix ──────────────────────────────────────── -->
+      <section class="report-section" aria-labelledby="appendix-title">
+        <h2 class="section-title" id="appendix-title"><span class="icon" aria-hidden="true">📖</span> How to Use This Report</h2>
+        <ul style="font-size:0.9rem;line-height:1.7;color:var(--text-muted);padding-left:1.2rem">
+          <li>Share insights with your leadership team and HR partners.</li>
+          <li>Use the recommendations as conversation starters in team meetings.</li>
+          <li>Revisit this report after implementing interventions to measure progress.</li>
+          <li>Individual results are kept private — this report shows only team-level patterns.</li>
+          <li>Re-run the assessment after 60–90 days to track resilience growth.</li>
+        </ul>
+      </section>
+
+      <!-- ── Privacy statement ─────────────────────────────── -->
+      <footer class="privacy-footer" role="contentinfo" aria-labelledby="privacy-title">
+        <p><strong id="privacy-title">🔒 Privacy Statement</strong></p>
+        <p>
+          This report contains <strong>only aggregated, anonymous statistics</strong>. No individual names,
+          scores, or responses are stored or displayed. It is not possible to reverse-engineer individual
+          responses from this data. This report is compliant with <strong>GDPR</strong> and <strong>CCPA</strong>
+          data-minimisation principles. Access is restricted to verified organisation administrators.
+        </p>
+        <p id="report-footer-meta" style="margin-top:0.5rem"></p>
+      </footer>
+
+    </div>
+    <!-- end #report-content -->
+
+  </main>
+
+  <script src="/js/leadership-report.js"></script>
+</body>
+</html>
