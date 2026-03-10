@@ -112,6 +112,15 @@ jest.mock('../backend/models/ResilienceResult', () => ({
   create: jest.fn().mockResolvedValue({}),
 }));
 
+// Mock PracticeCompletion model used by the evidence-practices route.
+jest.mock('../backend/models/PracticeCompletion', () => ({
+  create: jest.fn().mockResolvedValue({ _id: 'comp001' }),
+  find: jest.fn().mockReturnValue({
+    sort: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue([]) })
+  }),
+  countDocuments: jest.fn().mockResolvedValue(0),
+}));
+
 // Mock stripe — use a regular function so `new Stripe(key)` works as a constructor.
 jest.mock('stripe', () => function Stripe() {
   return {

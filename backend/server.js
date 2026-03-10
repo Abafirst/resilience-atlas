@@ -97,6 +97,7 @@ app.use("/api/quiz", require("./routes/quiz"));
 app.use("/api/affiliates", require("./routes/affiliates"));
 app.use("/api/stripe", require("./routes/stripe"));
 app.use("/api/report", require("./routes/report"));
+app.use("/api/evidence-practices", require("./routes/evidence-practices"));
 
 // ==============================
 // Root API info
