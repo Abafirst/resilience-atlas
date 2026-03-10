@@ -1,0 +1,284 @@
+/* =============================================================
+   payment-ui.css — Payment gating & upgrade UI for Resilience Atlas
+   ============================================================= */
+
+/* ── Payment Success Banner ─────────────────────────────────── */
+.payment-success-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #22c55e;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Locked Sections ─────────────────────────────────────────── */
+.locked {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.locked > *:not(.payment-overlay) {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Payment Overlay ─────────────────────────────────────────── */
+.payment-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+  border-radius: inherit;
+}
+
+.payment-overlay__inner {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.payment-overlay__icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.payment-overlay__message {
+  font-size: 1.05rem;
+  color: #374151;
+  margin: 0 0 1.25rem 0;
+  font-weight: 500;
+}
+
+/* ── Upgrade Comparison Section ──────────────────────────────── */
+.upgrade-comparison {
+  margin: 3rem 0;
+  padding: 2rem 1.5rem;
+  background: #f9fafb;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.upgrade-comparison__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.upgrade-comparison__subtitle {
+  color: #6b7280;
+  margin: 0 auto 2rem auto;
+  max-width: 520px;
+  line-height: 1.55;
+}
+
+.upgrade-comparison__disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.upgrade-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .upgrade-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Upgrade Card ────────────────────────────────────────────── */
+.upgrade-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.upgrade-card:hover,
+.upgrade-card:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+.upgrade-card--atlas-premium {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+}
+
+.upgrade-card--atlas-premium:hover,
+.upgrade-card--atlas-premium:focus-within {
+  border-color: #d97706;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.18);
+}
+
+.upgrade-card__header {
+  margin-bottom: 1.25rem;
+}
+
+.upgrade-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.badge-blue {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-gold {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.upgrade-card__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+}
+
+.upgrade-card__price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+  margin: 0 0 0.5rem 0;
+}
+
+.upgrade-card--atlas-premium .upgrade-card__price {
+  color: #d97706;
+}
+
+.upgrade-card__description {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.upgrade-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  flex: 1;
+}
+
+.upgrade-card__features li {
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: #374151;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.upgrade-card__features li:last-child {
+  border-bottom: none;
+}
+
+.upgrade-card__features li span[aria-hidden] {
+  color: #22c55e;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* ── Upgrade Button ──────────────────────────────────────────── */
+.btn-upgrade {
+  display: inline-block;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.btn-upgrade:hover {
+  opacity: 0.92;
+}
+
+.btn-upgrade:active {
+  transform: scale(0.98);
+}
+
+.btn-upgrade:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.btn-upgrade.btn-sm {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9rem;
+  width: auto;
+}
+
+.upgrade-card--atlas-premium .btn-upgrade {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.upgrade-card--atlas-premium .btn-upgrade:focus-visible {
+  outline-color: #d97706;
+}
+
+.upgrade-card__trust {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Deep Analysis Preview (blurred placeholder) ─────────────── */
+.deep-analysis-preview {
+  padding: 1rem 0;
+}
+
+.deep-analysis-preview p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.55;
+}

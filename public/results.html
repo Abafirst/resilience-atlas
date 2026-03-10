@@ -7,6 +7,7 @@
   <meta name="description" content="View your personalised resilience profile, download a PDF report, or email it to yourself." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/evidence-practices.css" />
+  <link rel="stylesheet" href="css/payment-ui.css" />
 </head>
 <body>
 
@@ -76,6 +77,37 @@
           </div>
         </section>
 
+        <!-- Deep Analysis (locked for free users) -->
+        <section
+          class="profile-section card locked"
+          data-tier="deep-report"
+          aria-labelledby="deepAnalysisHeading"
+        >
+          <h2 id="deepAnalysisHeading">Detailed Resilience Dimension Analysis</h2>
+          <div class="deep-analysis-preview" aria-hidden="true">
+            <p>Comprehensive breakdown of all 6 resilience dimensions with personalised insights tailored to your unique profile.</p>
+            <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
+            <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalised development roadmap.</p>
+          </div>
+          <!-- Overlay injected by upgrade-cards.js -->
+          <div class="payment-overlay" role="region" aria-label="Premium content — locked">
+            <div class="payment-overlay__inner">
+              <span class="payment-overlay__icon" aria-hidden="true">&#128274;</span>
+              <p class="payment-overlay__message">Unlock with <strong>Deep Report</strong></p>
+              <button
+                class="btn btn-upgrade btn-sm"
+                onclick="PaymentGating.startCheckout('deep-report')"
+                aria-label="Unlock Deep Report"
+              >
+                Unlock Now
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Upgrade Cards (hidden once user has a paid tier) -->
+        <div id="upgradeCardsContainer"></div>
+
         <!-- PDF Alert -->
         <div id="pdfAlert" class="alert" role="alert"></div>
 
@@ -116,6 +148,9 @@
         <!-- Evidence-Based Micro-Practices Section -->
         <div id="evidencePracticesContainer"></div>
 
+        <!-- Resilience Affirmations Section -->
+        <div id="affirmationsContainer"></div>
+
       </div><!-- /.results-wrapper -->
     </div><!-- /.results-page -->
   </main>
@@ -131,6 +166,8 @@
 
   <script src="js/app.js"></script>
   <script src="js/visualizations.js"></script>
+  <script src="js/upgrade-cards.js"></script>
+  <script src="js/payment-gating.js"></script>
   <script src="js/results.js"></script>
   <script src="js/evidence-based-practices.js"></script>
 </body>

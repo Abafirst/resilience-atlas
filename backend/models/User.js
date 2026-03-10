@@ -25,6 +25,21 @@ const userSchema = new mongoose.Schema({
   referralCode: {
     type: String,
     default: null
+  },
+
+  purchasedDeepReport: {
+    type: Boolean,
+    default: false
+  },
+
+  atlasPremium: {
+    type: Boolean,
+    default: false
+  },
+
+  purchaseDate: {
+    type: Date,
+    default: null
   }
 
 }, { timestamps: true });
