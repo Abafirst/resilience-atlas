@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  compass-icon.svg
+  Minimalist six-point compass icon for Resilience Atlas.
+
+  Six points represent the six resilience dimensions:
+    N  — Cognitive-Narrative (Meaning & Perspective)
+    NE — Agentic-Generative  (Action & Growth)
+    SE — Relational           (Support & Connection)
+    S  — Emotional-Adaptive  (Emotional Flexibility)
+    SW — Spiritual-Existential (Purpose & Values)
+    NW — Somatic-Behavioral  (Body & Habits)
+
+  Designed for use as a subtle watermark (15% opacity) or standalone icon.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 100 100"
+     width="100" height="100"
+     role="img"
+     aria-label="Resilience Atlas compass icon">
+
+  <title>Resilience Atlas Compass</title>
+  <desc>A minimalist six-point compass representing the six resilience dimensions</desc>
+
+  <!-- Outer ring -->
+  <circle cx="50" cy="50" r="46"
+          fill="none"
+          stroke="#1565C0"
+          stroke-width="1.5"
+          opacity="0.6"/>
+
+  <!-- Inner ring -->
+  <circle cx="50" cy="50" r="8"
+          fill="none"
+          stroke="#1565C0"
+          stroke-width="1.2"
+          opacity="0.5"/>
+
+  <!-- Centre dot -->
+  <circle cx="50" cy="50" r="2.5"
+          fill="#1565C0"
+          opacity="0.7"/>
+
+  <!-- Tick marks at cardinal & intercardinal points -->
+  <!-- N -->  <line x1="50" y1="4"  x2="50" y2="12"  stroke="#1565C0" stroke-width="2"   stroke-linecap="round"/>
+  <!-- NE --> <line x1="82.6" y1="17.4" x2="77.3" y2="22.7" stroke="#0097A7" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- E -->  <line x1="96" y1="50"  x2="88" y2="50"  stroke="#1565C0" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- SE --> <line x1="82.6" y1="82.6" x2="77.3" y2="77.3" stroke="#0097A7" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- S -->  <line x1="50" y1="96"  x2="50" y2="88"  stroke="#1565C0" stroke-width="2"   stroke-linecap="round"/>
+  <!-- SW --> <line x1="17.4" y1="82.6" x2="22.7" y2="77.3" stroke="#0097A7" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- W -->  <line x1="4" y1="50"   x2="12" y2="50"  stroke="#1565C0" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- NW --> <line x1="17.4" y1="17.4" x2="22.7" y2="22.7" stroke="#0097A7" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- North needle (primary — deep navy) -->
+  <polygon points="50,6 46,50 50,44 54,50"
+           fill="#1565C0"/>
+
+  <!-- South needle (secondary — teal) -->
+  <polygon points="50,94 46,50 50,56 54,50"
+           fill="#0097A7"
+           opacity="0.7"/>
+
+  <!-- Dimension labels (N, S only for minimalism) -->
+  <text x="50" y="3"
+        text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif"
+        font-size="7"
+        font-weight="600"
+        fill="#1565C0"
+        opacity="0.8">N</text>
+
+  <text x="50" y="100"
+        text-anchor="middle"
+        font-family="Inter, system-ui, sans-serif"
+        font-size="7"
+        font-weight="600"
+        fill="#0097A7"
+        opacity="0.6">S</text>
+</svg>

@@ -3,15 +3,21 @@
 /**
  * insights.js
  *
- * API routes for the Philosophical Content Engine.
+ * API routes for the Philosophical Content Engine and Graphics System.
  *
  * Base path: /api/insights
  *
- * GET  /api/insights/today            — today's full content bundle
- * GET  /api/insights/day/:dayNumber   — bundle for a specific day number
- * GET  /api/insights/quotes           — full quote library (paginated)
- * GET  /api/insights/quotes/:id       — single quote entry
- * GET  /api/insights/dimension/:name  — today's insight for a given dimension
+ * GET  /api/insights/today                        — today's full content bundle
+ * GET  /api/insights/day/:dayNumber               — bundle for a specific day number
+ * GET  /api/insights/quotes                       — full quote library (paginated)
+ * GET  /api/insights/quotes/:id                   — single quote entry
+ * GET  /api/insights/dimension/:name              — today's insight for a given dimension
+ *
+ * Graphics & Social Media:
+ * GET  /api/insights/:insightId/graphics          — all graphic formats metadata
+ * GET  /api/insights/:insightId/social-content    — all platform social content
+ * GET  /api/insights/:insightId/download/:format  — download graphic (SVG)
+ * POST /api/insights/:insightId/publish           — publish to all channels
  */
 
 const express    = require('express');
@@ -26,6 +32,21 @@ const {
 } = require('../services/philosophical-content-engine');
 
 const { PHILOSOPHICAL_QUOTES, DIMENSION_SUBTITLES } = require('../data/philosophical-quotes');
+
+const {
+  getGraphicsMetadata,
+  generateGraphic,
+  DIMENSION_HEADLINES,
+} = require('../services/image-generator');
+
+const { generateSocialContent } = require('../services/social-content-generator');
+
+const {
+  distributeByQuoteId,
+  publishToAllChannels,
+} = require('../services/content-distributor');
+
+const { FORMATS } = require('../config/design-system');
 
 const router = express.Router();
 
@@ -152,6 +173,122 @@ router.get('/dimensions', (req, res) => {
     ok:           true,
     data:         { dimensions, totalQuotes: TOTAL_QUOTES },
   });
+});
+
+// ── GET /api/insights/:insightId/graphics ─────────────────────────────────────
+// Returns metadata for all available graphic formats for the given insight.
+// insightId is a quote id (e.g. 'cn-001').
+
+router.get('/:insightId/graphics', (req, res) => {
+  const entry = PHILOSOPHICAL_QUOTES.find(q => q.id === req.params.insightId);
+  if (!entry) {
+    return res.status(404).json({ error: 'Insight not found.' });
+  }
+
+  try {
+    const bundle  = generateContentBundle(entry);
+    const formats = getGraphicsMetadata(bundle.insight);
+
+    res.json({
+      ok:   true,
+      data: {
+        insightId: entry.id,
+        dimension: bundle.insight.dimension,
+        subtitle:  bundle.insight.subtitle,
+        headline:  DIMENSION_HEADLINES[bundle.insight.dimension] || 'A daily resilience insight',
+        formats,
+      },
+    });
+  } catch (err) {
+    /* istanbul ignore next */
+    res.status(500).json({ error: 'Failed to generate graphics metadata.' });
+  }
+});
+
+// ── GET /api/insights/:insightId/social-content ───────────────────────────────
+// Returns all platform-specific social media content for the given insight.
+
+router.get('/:insightId/social-content', (req, res) => {
+  const entry = PHILOSOPHICAL_QUOTES.find(q => q.id === req.params.insightId);
+  if (!entry) {
+    return res.status(404).json({ error: 'Insight not found.' });
+  }
+
+  try {
+    const bundle  = generateContentBundle(entry);
+    const content = generateSocialContent(bundle);
+
+    res.json({ ok: true, data: content });
+  } catch (err) {
+    /* istanbul ignore next */
+    res.status(500).json({ error: 'Failed to generate social content.' });
+  }
+});
+
+// ── GET /api/insights/:insightId/download/:format ─────────────────────────────
+// Download a graphic as an SVG file.
+// :format must be one of: square, story, feed
+
+router.get('/:insightId/download/:format', (req, res) => {
+  const entry = PHILOSOPHICAL_QUOTES.find(q => q.id === req.params.insightId);
+  if (!entry) {
+    return res.status(404).json({ error: 'Insight not found.' });
+  }
+
+  const formatKey = req.params.format;
+  if (!FORMATS[formatKey]) {
+    return res.status(400).json({
+      error:   `Unknown format "${formatKey}".`,
+      formats: Object.keys(FORMATS),
+    });
+  }
+
+  try {
+    const bundle  = generateContentBundle(entry);
+    const graphic = generateGraphic(bundle.insight, formatKey);
+    const fmt     = FORMATS[formatKey];
+
+    res.set({
+      'Content-Type':        graphic.mimeType,
+      'Content-Disposition': `attachment; filename="resilience-atlas-${entry.id}-${formatKey}.svg"`,
+      'X-Graphic-Width':     String(fmt.width),
+      'X-Graphic-Height':    String(fmt.height),
+    });
+
+    res.send(graphic.buffer);
+  } catch (err) {
+    /* istanbul ignore next */
+    res.status(500).json({ error: 'Failed to generate graphic.' });
+  }
+});
+
+// ── POST /api/insights/:insightId/publish ─────────────────────────────────────
+// Publish the insight to all configured distribution channels.
+// Returns per-channel publish results.
+
+router.post('/:insightId/publish', async (req, res) => {
+  const entry = PHILOSOPHICAL_QUOTES.find(q => q.id === req.params.insightId);
+  if (!entry) {
+    return res.status(404).json({ error: 'Insight not found.' });
+  }
+
+  try {
+    const pkg     = distributeByQuoteId(entry.id);
+    const results = await publishToAllChannels(pkg);
+
+    res.json({
+      ok:      true,
+      data: {
+        insightId: entry.id,
+        dimension: pkg.dimension,
+        channels:  results,
+        publishedAt: new Date().toISOString(),
+      },
+    });
+  } catch (err) {
+    /* istanbul ignore next */
+    res.status(500).json({ error: 'Failed to publish insight.' });
+  }
 });
 
 module.exports = router;
