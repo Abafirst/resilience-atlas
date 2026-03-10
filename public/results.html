@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Resilience Profile — Resilience Assessment</title>
-  <meta name="description" content="View your personalized resilience profile, download a PDF report, or email it to yourself." />
+  <meta name="description" content="View your personalised resilience profile, download a PDF report, or email it to yourself." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -30,164 +30,55 @@
     <div class="results-page">
       <div class="results-wrapper">
 
-        <!-- ── Psychometric Report Header ─────────────── -->
-        <div class="psychometric-report-header" role="banner">
-          <h1>Resilience Assessment Report</h1>
-          <p id="reportDate" class="report-date"></p>
-          <p id="respondentName" class="respondent-name"></p>
+        <!-- Greeting -->
+        <div class="results-header">
+          <h1 id="greeting" class="results-greeting">Your Results</h1>
+          <p id="resultsSubtitle" class="results-subtitle"></p>
         </div>
-
-        <!-- ── Overall Score Card ─────────────────────── -->
-        <section class="overall-score-section card" aria-labelledby="overallHeading">
-          <div class="score-display-block">
-            <h2 id="overallHeading">Overall Resilience Score</h2>
-            <div id="scoreCircle" class="score-circle" aria-live="polite">—</div>
-            <p id="scoreInterpretation" class="score-interpretation"></p>
-          </div>
-        <!-- Report Header -->
-        <div class="results-header report-header-card">
-          <div class="report-header-top">
-            <h1 id="greeting" class="results-greeting">Your Resilience Profile</h1>
-            <p id="resultsSubtitle" class="results-subtitle"></p>
-          </div>
-          <div class="report-meta">
-            <span class="report-meta-label">Assessment Date:</span>
-            <span id="reportDate" class="report-meta-value"></span>
-          </div>
-        </div>
-
-        <!-- Overall Score -->
-        <section class="overall-score-section card" aria-label="Overall Resilience Score">
-          <div class="overall-score-inner">
-            <div class="overall-score-ring" aria-hidden="true">
-              <span id="overallScore" class="overall-score-value">—</span>
-            </div>
-            <div class="overall-score-text">
-              <h2 class="overall-score-heading">Overall Resilience Score</h2>
-              <p class="overall-score-sub">Based on your responses across all 6 resilience dimensions</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Radar Chart -->
-        <section class="radar-section card" aria-labelledby="radarHeading">
-          <h2 id="radarHeading">Resilience Radar</h2>
-          <p class="section-description">Your resilience profile across all six dimensions</p>
-          <div class="radar-container">
-            <canvas id="radarChart" width="480" height="480" aria-label="Radar chart of resilience scores"></canvas>
-          </div>
-        </section>
 
         <!-- Resilience Profile Bars -->
         <section class="profile-section card" aria-labelledby="profileHeading">
           <h2 id="profileHeading">Your Resilience Profile</h2>
-          <p class="section-description">All six dimensions ranked by score</p>
           <div id="profileBars" aria-live="polite"></div>
         </section>
 
-        <!-- ── Radar Chart Section ────────────────────── -->
-        <section class="radar-chart-section card" aria-labelledby="radarHeading">
-          <h2 id="radarHeading">Resilience Profile Visualization</h2>
-          <div id="radarChart" class="radar-chart-container" role="img" aria-label="Radar chart of resilience dimensions"></div>
-          <p class="chart-description">Six dimensions of your resilience profile</p>
+        <!-- Radar Chart -->
+        <section class="profile-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Resilience Dimensions Overview</h2>
+          <div id="radarChartContainer" aria-label="Resilience radar chart"></div>
         </section>
 
-        <!-- ── Strength Rankings ──────────────────────── -->
-        <section class="strengths-section" aria-labelledby="strengthsHeading">
-          <h2 id="strengthsHeading">Your Resilience Strengths</h2>
-          <div class="strength-ranking">
-            <div class="rank-strength-card primary" role="article" aria-label="Primary strength">
-              <span class="rank-badge" aria-hidden="true">1</span>
-              <h3>Primary Strength</h3>
-              <p id="primaryStrength" class="strength-type-name">—</p>
-              <p id="primaryStrengthScore" class="strength-score-display">—</p>
+        <!-- Strengths Summary -->
+        <section aria-labelledby="strengthsHeading" class="mt-8">
+          <h2 id="strengthsHeading" class="mb-4">Your Resilience Strengths</h2>
+          <div class="strengths-cards">
+            <div class="strength-card primary">
+              <h4>Primary Strength</h4>
+              <p id="primaryStrength">—</p>
             </div>
-            <div class="rank-strength-card solid" role="article" aria-label="Solid strength">
-              <span class="rank-badge" aria-hidden="true">2</span>
-              <h3>Solid Strength</h3>
-              <p id="solidStrength" class="strength-type-name">—</p>
-              <p id="solidStrengthScore" class="strength-score-display">—</p>
+            <div class="strength-card solid">
+              <h4>Solid Strength</h4>
+              <p id="solidStrength">—</p>
             </div>
-            <div class="rank-strength-card emerging" role="article" aria-label="Growth opportunity">
-              <span class="rank-badge" aria-hidden="true">6</span>
-              <h3>Growth Opportunity</h3>
-              <p id="emergingStrength" class="strength-type-name">—</p>
-              <p id="emergingStrengthScore" class="strength-score-display">—</p>
+            <div class="strength-card emerging">
+              <h4>Emerging Strength</h4>
+              <p id="emergingStrength">—</p>
             </div>
           </div>
         </section>
 
-        <!-- ── Detailed Scores (Profile Bars) ─────────── -->
-        <section class="profile-section card" aria-labelledby="profileHeading">
-          <h2 id="profileHeading">Detailed Resilience Profile</h2>
-          <div id="profileBars" aria-live="polite"></div>
-        </section>
-
-        <!-- ── Personalized Narrative Report ──────────── -->
-        <section class="narrative-report-section card" aria-labelledby="reportHeading">
-          <h2 id="reportHeading">Personalized Resilience Report</h2>
-          <div id="reportText" class="report-narrative" role="region" aria-live="polite">
-        <!-- Personalized Report -->
+        <!-- Personalised Report -->
         <section class="report-text-section" aria-labelledby="reportHeading">
-          <h2 id="reportHeading">Your Personalized Report</h2>
+          <h2 id="reportHeading">Your Personalised Report</h2>
           <div id="reportText" class="report-text-card" role="region" aria-live="polite">
             Loading your report&hellip;
           </div>
         </section>
 
-        <!-- ── Recommendations ────────────────────────── -->
-        <section class="recommendations-section card" aria-labelledby="recommendationsHeading">
-          <h2 id="recommendationsHeading">Development Recommendations</h2>
-          <div id="recommendations" aria-live="polite"></div>
-        </section>
-
-        <!-- ── PDF Alert ───────────────────────────────── -->
+        <!-- PDF Alert -->
         <div id="pdfAlert" class="alert" role="alert"></div>
 
-        <!-- ── Resilience Journey Tracker ────────────────── -->
-        <section class="journey-tracker card" aria-labelledby="journeyHeading" id="journeyTracker">
-          <h2 id="journeyHeading">&#9788; Your Resilience Atlas Journey</h2>
-          <p id="journeyMessage" class="journey-message">You've mapped the first point in your Resilience Atlas.</p>
-          <p class="journey-retake-hint">Return in 30 days to see how your resilience evolves.</p>
-
-          <!-- Progress indicator: previous ← current ─────── -->
-          <div class="journey-progress" id="journeyProgress" hidden>
-            <div class="journey-node previous-node">
-              <span class="journey-node-label">Previous Assessment</span>
-              <span class="journey-node-score" id="prevScore">—</span>
-              <span class="journey-node-date"  id="prevDate">—</span>
-            </div>
-            <div class="journey-arrow" aria-hidden="true">&#8594;</div>
-            <div class="journey-node current-node">
-              <span class="journey-node-label">Current Assessment</span>
-              <span class="journey-node-score" id="currScore">—</span>
-              <span class="journey-node-date"  id="currDate">Today</span>
-            </div>
-          </div>
-
-          <!-- Per-dimension change indicators ─────────────── -->
-          <div class="dimension-changes" id="dimensionChanges" hidden aria-label="Dimension changes"></div>
-
-          <div class="journey-cta">
-            <a href="atlas.html" class="btn btn-secondary">&#9788; View My Full Atlas</a>
-            <a href="quiz.html"  class="btn btn-primary"   id="btnRetakeAtlas">&#8635; Retake Assessment</a>
-          </div>
-        </section>
-
-        <!-- ── Social Sharing ─────────────────────────────── -->
-        <section class="share-section card" aria-labelledby="shareHeading">
-          <h2 id="shareHeading">Share Your Resilience Profile</h2>
-          <p class="section-description">
-            Share your resilience profile with your network and inspire others to discover their strengths.
-          </p>
-          <div id="shareButtonsContainer"></div>
-          <p class="share-disclaimer">
-            "Discover your resilience profile with The Resilience Atlas" &nbsp;&mdash;&nbsp;
-            <strong>resilienceatlas.com</strong>
-          </p>
-        </section>
-
-        <!-- ── Action Buttons ─────────────────────────────── -->
+        <!-- Action Buttons -->
         <div class="results-actions">
           <button type="button" id="btnDownload" class="btn btn-primary">
             <span aria-hidden="true">&#8681;</span>
@@ -200,7 +91,7 @@
           </button>
         </div>
 
-        <!-- ── Email Section ───────────────────────────────── -->
+        <!-- Email Section -->
         <section aria-labelledby="emailHeading" class="text-center mt-8">
           <h3 id="emailHeading" class="mb-4">Email Your Report</h3>
           <div class="email-input-row">
@@ -228,85 +119,15 @@
   <!-- ── Footer ───────────────────────────────────────── -->
   <footer class="site-footer">
     <p>
-      &copy; 2025 The Resilience Atlas &nbsp;|&nbsp;
+      &copy; 2025 Resilience Assessment &nbsp;|&nbsp;
       Developed by <strong>Janeen Molchany, Ph.D., BCBA</strong>
     </p>
-    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
   </footer>
 
   <script src="js/app.js"></script>
   <script src="js/visualizations.js"></script>
   <script src="js/results.js"></script>
-  <script src="js/ResilienceCompass.js"></script>
-  <script src="js/ShareButtons.js"></script>
-  <script>
-    /* ── Resilience Atlas journey tracker (inline enhancement) ─ */
-    'use strict';
-
-    document.addEventListener('DOMContentLoaded', function () {
-      var results  = (typeof Store !== 'undefined') ? Store.get('resilience_results') : null;
-      if (!results) return;
-
-      /* Populate current score in journey tracker */
-      var currScore = document.getElementById('currScore');
-      var currDate  = document.getElementById('currDate');
-      if (currScore) currScore.textContent = (results.overall || '—') + '%';
-      if (currDate)  currDate.textContent  = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-
-      /* Evolution data from quiz submission */
-      var evolution = results.evolution;
-      if (evolution && !evolution.isFirstAssessment && evolution.overallChange !== null) {
-        var journeyProgress  = document.getElementById('journeyProgress');
-        var dimensionChanges = document.getElementById('dimensionChanges');
-        var journeyMessage   = document.getElementById('journeyMessage');
-
-        if (journeyProgress) journeyProgress.hidden = false;
-        if (journeyMessage)  journeyMessage.textContent = results.retakeMessage ||
-          'Your Resilience Atlas has been updated. Track your evolution below.';
-
-        /* Previous score */
-        var prevScore = document.getElementById('prevScore');
-        var prevDate  = document.getElementById('prevDate');
-        if (prevScore && results.overall !== undefined && evolution.overallChange !== null) {
-          var prevOverall = results.overall - evolution.overallChange;
-          if (prevScore) prevScore.textContent = prevOverall + '%';
-        }
-
-        /* Per-dimension change indicators */
-        if (dimensionChanges && evolution.changes) {
-          dimensionChanges.hidden = false;
-          var dims = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
-          var frag = document.createDocumentFragment();
-
-          dims.forEach(function (dim) {
-            var val = evolution.changes[dim];
-            if (val === null || val === undefined) return;
-            var badge = document.createElement('div');
-            badge.className = 'dim-change-badge';
-            var arrow = val > 0 ? '↑' : val < 0 ? '↓' : '→';
-            var cls   = val > 0 ? 'change-up' : val < 0 ? 'change-down' : 'change-stable';
-            badge.innerHTML =
-              '<span class="dim-change-name">' + dim.charAt(0).toUpperCase() + dim.slice(1) + '</span>' +
-              '<span class="dim-change-val ' + cls + '">' + arrow + (val > 0 ? '+' : '') + val + '</span>';
-            frag.appendChild(badge);
-          });
-          dimensionChanges.appendChild(frag);
-        }
-      }
-
-      /* Share buttons */
-      var shareContainer = document.getElementById('shareButtonsContainer');
-      if (shareContainer && typeof ShareButtons !== 'undefined') {
-        ShareButtons.render(shareContainer, {
-          url:      window.location.href,
-          title:    'My Resilience Profile — The Resilience Atlas',
-          text:     'I just completed The Resilience Atlas assessment! My overall score: ' +
-                    (results.overall || '—') + '%. #ResilienceAtlas',
-          imageUrl: '/api/share/profile-card',
-        });
-      }
-    });
-  </script>
 </body>
 </html>
 

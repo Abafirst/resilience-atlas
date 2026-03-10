@@ -52,49 +52,21 @@ jest.mock('winston', () => {
 
 // Mock mongoose so the server doesn't attempt a real DB connection.
 jest.mock('mongoose', () => {
+  class Schema {
+    constructor() {}
+    pre() {
+      return this;
+    }
+    methods = {};
+  }
+  Schema.Types = { ObjectId: String, Mixed: {} };
+
   const m = {
     connect: jest.fn().mockResolvedValue({}),
-    Schema: class Schema {
-      constructor() {}
-      pre() {
-        return this;
-      }
-      index() {
-        return this;
-      }
-      methods = {};
-      static Types = { ObjectId: String };
-    },
+    Schema,
     model: jest.fn(),
-    Types: { ObjectId: String },
   };
-  m.Schema.Types = { ObjectId: String };
   return m;
-});
-
-// Mock ResilienceAssessment model used by quiz and atlas routes.
-jest.mock('../backend/models/ResilienceAssessment', () => {
-  const mockAssessment = {
-    _id: 'assessment001',
-    userId: 'user001',
-    overall: 75,
-    dominantType: 'emotional',
-    scores: { emotional: 80, mental: 70, physical: 65, social: 75, spiritual: 60, financial: 55 },
-    assessmentDate: new Date('2026-01-01T00:00:00.000Z'),
-    save: jest.fn().mockResolvedValue({ _id: 'assessment001' }),
-  };
-  const MockAssessment = jest.fn().mockImplementation(() => mockAssessment);
-  MockAssessment.findOne = jest.fn().mockImplementation(() => ({
-    sort: jest.fn().mockReturnThis(),
-    lean: jest.fn().mockResolvedValue(null),
-  }));
-  MockAssessment.find = jest.fn().mockImplementation(() => ({
-    sort: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-    lean: jest.fn().mockResolvedValue([]),
-  }));
-  MockAssessment.findById = jest.fn().mockResolvedValue(null);
-  return MockAssessment;
 });
 
 // Mock User model used by routes.
@@ -135,8 +107,13 @@ jest.mock('../backend/models/User', () => {
   return MockUser;
 });
 
-// Mock stripe (use a regular function so it can be called with `new`).
-jest.mock('stripe', () => function MockStripe() {
+// Mock ResilienceResult model so DB saves don't require a real connection.
+jest.mock('../backend/models/ResilienceResult', () => ({
+  create: jest.fn().mockResolvedValue({}),
+}));
+
+// Mock stripe — use a regular function so `new Stripe(key)` works as a constructor.
+jest.mock('stripe', () => function Stripe() {
   return {
     paymentIntents: {
       create: jest.fn().mockResolvedValue({
@@ -198,9 +175,10 @@ describe('GET /health', () => {
 });
 
 describe('GET /', () => {
-    test('returns 200 with HTML content (SPA)', async () => {
+    test('returns 200 with welcome message', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('message');
     });
 });
 
