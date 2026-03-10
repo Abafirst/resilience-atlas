@@ -24,6 +24,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const { QUEUE_NAME } = require('../queue/reportQueue');
 const ResilienceReport = require('../backend/models/ResilienceReport');
 const reportService = require('../backend/services/reportService');
+const { generateReport } = require('../backend/scoring');
 const emailService = require('../backend/services/emailService');
 const logger = require('../backend/utils/logger');
 
@@ -65,14 +66,17 @@ async function processJob(job) {
     );
 
     try {
-        // 3. Generate narrative text.
+        // 3. Compute the structured report once and reuse it for narrative, PDF, and email.
+        const report = generateReport(scores);
+
+        // 4. Generate narrative text.
         const reportText = reportService.generateNarrativeReport(scores);
 
-        // 4. Generate PDF.
+        // 5. Generate PDF.
         const pdfBuffer = await reportService.generatePDFReport(scores, username);
         const pdfUrl = reportService.savePDF(pdfBuffer, userId, resultsHash);
 
-        // 5. Persist to MongoDB.
+        // 6. Persist to MongoDB.
         reportDoc = await ResilienceReport.findOneAndUpdate(
             { _id: reportDoc._id },
             { $set: { reportText, pdfUrl, status: 'ready', errorMessage: null } },
@@ -81,10 +85,9 @@ async function processJob(job) {
 
         logger.info(`Report ${reportDoc._id} ready for user ${userId}`);
 
-        // 6. Optional email delivery.
+        // 7. Optional email delivery (reuses the already-computed report object).
         if (email) {
             try {
-                const report = require('../backend/scoring').generateReport(scores);
                 await emailService.sendQuizReport(email, username, report);
                 logger.info(`Email sent to ${email}`);
             } catch (emailErr) {

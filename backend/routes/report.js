@@ -1,18 +1,28 @@
 'use strict';
 
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const { authenticateJWT } = require('../middleware/auth');
 const ResilienceReport = require('../models/ResilienceReport');
 const logger = require('../utils/logger');
 
 const router = express.Router();
 
+// Rate limiter: 100 requests per minute per IP for report endpoints.
+const reportRateLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a minute.' },
+});
+
 /**
  * GET /api/report/status?hash=<resultsHash>
  * Poll whether the report for a given resultsHash is ready.
  * Returns status: "pending" | "processing" | "ready" | "failed"
  */
-router.get('/status', authenticateJWT, async (req, res) => {
+router.get('/status', reportRateLimiter, authenticateJWT, async (req, res) => {
     try {
         const { hash } = req.query;
         if (!hash) {
@@ -39,7 +49,7 @@ router.get('/status', authenticateJWT, async (req, res) => {
  * GET /api/report/:hash
  * Retrieve the full generated report (text + PDF URL) once status is "ready".
  */
-router.get('/:hash', authenticateJWT, async (req, res) => {
+router.get('/:hash', reportRateLimiter, authenticateJWT, async (req, res) => {
     try {
         const { hash } = req.params;
 

@@ -60,8 +60,11 @@ router.post('/submit', quizRateLimiter, authenticateJWT, async (req, res) => {
             { userId: req.user.userId, resultsHash },
             { $setOnInsert: { userId: req.user.userId, resultsHash, status: 'pending' } },
             { upsert: true, new: true }
-        ).catch(() => {
-            // Ignore duplicate-key errors from the unique index — report already exists.
+        ).catch((err) => {
+            // Ignore duplicate-key errors (race condition: two identical submissions).
+            if (err.code !== 11000) {
+                logger.warn('ResilienceReport upsert error (non-fatal):', err.message);
+            }
         });
 
         // 4. Queue background report generation (non-blocking).
