@@ -1418,38 +1418,57 @@ main { flex: 1; }
 
 
 
-/* Results Page Layout */
+/* ── Atlas Chart Container ──────────────────────────────────────────────── */
 
-.report-container {
-  max-width: 900px;
+.atlas-chart-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#resilienceRadar {
+  max-width: 600px;
+  height: auto;
+  min-height: 400px;
+  display: block;
   margin: 0 auto;
-  padding: 2rem;
 }
 
-.report-section {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+.chart-description {
+  max-width: 600px;
+  margin: 2rem auto 0;
+  color: #757575;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
 }
 
-.results-wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
+/* ── Responsive adjustments ─────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .atlas-chart-container {
+    padding: 1rem 0;
+  }
+
+  #resilienceRadar {
+    min-height: 350px;
+  }
+
+  .chart-description {
+    font-size: 13px;
+  }
 }
 
-.profile-section {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-}
+@media (max-width: 480px) {
+  .atlas-chart-container {
+    max-width: 100%;
+    padding: 1rem;
+  }
 
-.results-page {
-  background: #F5F7FA;
-  min-height: 100vh;
-  padding: 2rem 1rem;
+  #resilienceRadar {
+    min-height: 300px;
+  }
 }
