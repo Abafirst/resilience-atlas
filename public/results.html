@@ -144,7 +144,50 @@
         <!-- ── PDF Alert ───────────────────────────────── -->
         <div id="pdfAlert" class="alert" role="alert"></div>
 
-        <!-- ── Action Buttons ─────────────────────────── -->
+        <!-- ── Resilience Journey Tracker ────────────────── -->
+        <section class="journey-tracker card" aria-labelledby="journeyHeading" id="journeyTracker">
+          <h2 id="journeyHeading">&#9788; Your Resilience Atlas Journey</h2>
+          <p id="journeyMessage" class="journey-message">You've mapped the first point in your Resilience Atlas.</p>
+          <p class="journey-retake-hint">Return in 30 days to see how your resilience evolves.</p>
+
+          <!-- Progress indicator: previous ← current ─────── -->
+          <div class="journey-progress" id="journeyProgress" hidden>
+            <div class="journey-node previous-node">
+              <span class="journey-node-label">Previous Assessment</span>
+              <span class="journey-node-score" id="prevScore">—</span>
+              <span class="journey-node-date"  id="prevDate">—</span>
+            </div>
+            <div class="journey-arrow" aria-hidden="true">&#8594;</div>
+            <div class="journey-node current-node">
+              <span class="journey-node-label">Current Assessment</span>
+              <span class="journey-node-score" id="currScore">—</span>
+              <span class="journey-node-date"  id="currDate">Today</span>
+            </div>
+          </div>
+
+          <!-- Per-dimension change indicators ─────────────── -->
+          <div class="dimension-changes" id="dimensionChanges" hidden aria-label="Dimension changes"></div>
+
+          <div class="journey-cta">
+            <a href="atlas.html" class="btn btn-secondary">&#9788; View My Full Atlas</a>
+            <a href="quiz.html"  class="btn btn-primary"   id="btnRetakeAtlas">&#8635; Retake Assessment</a>
+          </div>
+        </section>
+
+        <!-- ── Social Sharing ─────────────────────────────── -->
+        <section class="share-section card" aria-labelledby="shareHeading">
+          <h2 id="shareHeading">Share Your Resilience Profile</h2>
+          <p class="section-description">
+            Share your resilience profile with your network and inspire others to discover their strengths.
+          </p>
+          <div id="shareButtonsContainer"></div>
+          <p class="share-disclaimer">
+            "Discover your resilience profile with The Resilience Atlas" &nbsp;&mdash;&nbsp;
+            <strong>resilienceatlas.com</strong>
+          </p>
+        </section>
+
+        <!-- ── Action Buttons ─────────────────────────────── -->
         <div class="results-actions">
           <button type="button" id="btnDownload" class="btn btn-primary">
             <span aria-hidden="true">&#8681;</span>
@@ -157,7 +200,7 @@
           </button>
         </div>
 
-        <!-- ── Email Section ───────────────────────────── -->
+        <!-- ── Email Section ───────────────────────────────── -->
         <section aria-labelledby="emailHeading" class="text-center mt-8">
           <h3 id="emailHeading" class="mb-4">Email Your Report</h3>
           <div class="email-input-row">
@@ -185,15 +228,85 @@
   <!-- ── Footer ───────────────────────────────────────── -->
   <footer class="site-footer">
     <p>
-      &copy; 2025 Resilience Assessment &nbsp;|&nbsp;
+      &copy; 2025 The Resilience Atlas &nbsp;|&nbsp;
       Developed by <strong>Janeen Molchany, Ph.D., BCBA</strong>
     </p>
-    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical assessment.</p>
   </footer>
 
   <script src="js/app.js"></script>
   <script src="js/visualizations.js"></script>
   <script src="js/results.js"></script>
+  <script src="js/ResilienceCompass.js"></script>
+  <script src="js/ShareButtons.js"></script>
+  <script>
+    /* ── Resilience Atlas journey tracker (inline enhancement) ─ */
+    'use strict';
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var results  = (typeof Store !== 'undefined') ? Store.get('resilience_results') : null;
+      if (!results) return;
+
+      /* Populate current score in journey tracker */
+      var currScore = document.getElementById('currScore');
+      var currDate  = document.getElementById('currDate');
+      if (currScore) currScore.textContent = (results.overall || '—') + '%';
+      if (currDate)  currDate.textContent  = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+      /* Evolution data from quiz submission */
+      var evolution = results.evolution;
+      if (evolution && !evolution.isFirstAssessment && evolution.overallChange !== null) {
+        var journeyProgress  = document.getElementById('journeyProgress');
+        var dimensionChanges = document.getElementById('dimensionChanges');
+        var journeyMessage   = document.getElementById('journeyMessage');
+
+        if (journeyProgress) journeyProgress.hidden = false;
+        if (journeyMessage)  journeyMessage.textContent = results.retakeMessage ||
+          'Your Resilience Atlas has been updated. Track your evolution below.';
+
+        /* Previous score */
+        var prevScore = document.getElementById('prevScore');
+        var prevDate  = document.getElementById('prevDate');
+        if (prevScore && results.overall !== undefined && evolution.overallChange !== null) {
+          var prevOverall = results.overall - evolution.overallChange;
+          if (prevScore) prevScore.textContent = prevOverall + '%';
+        }
+
+        /* Per-dimension change indicators */
+        if (dimensionChanges && evolution.changes) {
+          dimensionChanges.hidden = false;
+          var dims = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+          var frag = document.createDocumentFragment();
+
+          dims.forEach(function (dim) {
+            var val = evolution.changes[dim];
+            if (val === null || val === undefined) return;
+            var badge = document.createElement('div');
+            badge.className = 'dim-change-badge';
+            var arrow = val > 0 ? '↑' : val < 0 ? '↓' : '→';
+            var cls   = val > 0 ? 'change-up' : val < 0 ? 'change-down' : 'change-stable';
+            badge.innerHTML =
+              '<span class="dim-change-name">' + dim.charAt(0).toUpperCase() + dim.slice(1) + '</span>' +
+              '<span class="dim-change-val ' + cls + '">' + arrow + (val > 0 ? '+' : '') + val + '</span>';
+            frag.appendChild(badge);
+          });
+          dimensionChanges.appendChild(frag);
+        }
+      }
+
+      /* Share buttons */
+      var shareContainer = document.getElementById('shareButtonsContainer');
+      if (shareContainer && typeof ShareButtons !== 'undefined') {
+        ShareButtons.render(shareContainer, {
+          url:      window.location.href,
+          title:    'My Resilience Profile — The Resilience Atlas',
+          text:     'I just completed The Resilience Atlas assessment! My overall score: ' +
+                    (results.overall || '—') + '%. #ResilienceAtlas',
+          imageUrl: '/api/share/profile-card',
+        });
+      }
+    });
+  </script>
 </body>
 </html>
 

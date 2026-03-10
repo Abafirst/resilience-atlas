@@ -1,0 +1,177 @@
+'use strict';
+
+/**
+ * Evolution tracking engine for The Resilience Atlas.
+ *
+ * Compares the most recent assessment with the previous one and returns
+ * change metrics, a compass-direction interpretation, and a human-readable
+ * evolution summary.
+ *
+ * Compass mapping (aligned with the Atlas concept):
+ *   North  → Mental   (cognitive growth)
+ *   East   → Social   (relational expansion)
+ *   South  → Physical (somatic grounding)
+ *   West   → Emotional + Spiritual (emotional/spiritual integration)
+ *   Financial contributes diagonally between North and East (NE axis)
+ */
+
+const DIMENSIONS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+
+const DIRECTION_DESCRIPTIONS = {
+    N:  'Your compass points North — indicating growth in mental and cognitive resilience.',
+    NE: 'Your compass points Northeast — reflecting growth in both cognitive and relational dimensions.',
+    E:  'Your compass points East — highlighting expansion in social and relational resilience.',
+    SE: 'Your compass points Southeast — suggesting development in relational and somatic areas.',
+    S:  'Your compass points South — indicating grounding in somatic and physical resilience.',
+    SW: 'Your compass points Southwest — reflecting integration of physical and emotional resilience.',
+    W:  'Your compass points West — indicating deepening of emotional and spiritual resilience.',
+    NW: 'Your compass points Northwest — reflecting integration of emotional and cognitive growth.',
+};
+
+/**
+ * Map an angle (degrees, 0 = North, clockwise) to an 8-point compass bearing.
+ *
+ * @param {number} deg - Angle in degrees (0 = North, 90 = East)
+ * @returns {string} One of: N, NE, E, SE, S, SW, W, NW
+ */
+function angleToBearing(deg) {
+    const normalized = ((deg % 360) + 360) % 360;
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const index = Math.round(normalized / 45) % 8;
+    return directions[index];
+}
+
+/**
+ * Calculate the compass direction and magnitude of change.
+ *
+ * Axes:
+ *   N-S: mental improvement (N) vs physical improvement (S)
+ *   E-W: social improvement (E) vs emotional+spiritual improvement (W)
+ *
+ * @param {Object} changes - Per-dimension change values
+ * @returns {{ primary: string, magnitude: number }}
+ */
+function calculateDirection(changes) {
+    // North-South axis: positive = mental (North), negative = physical (South)
+    const northward = (changes.mental || 0) - (changes.physical || 0);
+
+    // East-West axis: positive = social (East), negative = emotional+spiritual (West)
+    const eastward = (changes.social || 0) - ((changes.emotional || 0) + (changes.spiritual || 0));
+
+    const magnitude = Math.sqrt(northward ** 2 + eastward ** 2);
+
+    if (magnitude < 0.5) {
+        return { primary: 'N', magnitude: 0 };
+    }
+
+    // atan2 gives angle where East = 0, North = π/2.
+    // We convert to compass bearing: North = 0, East = 90 (clockwise).
+    const radians = Math.atan2(eastward, northward);
+    const degrees = 90 - (radians * 180) / Math.PI;
+
+    // Normalize magnitude to a 0–10 scale (assuming max ~50-point change)
+    const normalizedMagnitude = Math.min(10, Math.round((magnitude / 50) * 10));
+
+    return {
+        primary: angleToBearing(degrees),
+        magnitude: normalizedMagnitude,
+    };
+}
+
+/**
+ * Generate a human-readable interpretation of the evolution.
+ *
+ * @param {number} overallChange - Change in overall score
+ * @param {Object} changes       - Per-dimension changes
+ * @param {{ primary: string, magnitude: number }} direction - Compass direction
+ * @returns {string}
+ */
+function generateInterpretation(overallChange, changes, direction) {
+    const allZero = DIMENSIONS.every((d) => changes[d] === 0);
+    if (allZero) {
+        return (
+            'Your resilience profile remains stable since your last assessment. ' +
+            'Consistency may suggest your current practices are well-anchored.'
+        );
+    }
+
+    const improved = DIMENSIONS.filter((d) => changes[d] > 0);
+    const declined = DIMENSIONS.filter((d) => changes[d] < 0);
+
+    let text = '';
+
+    if (overallChange > 0) {
+        text += `Your overall resilience has grown by ${overallChange} points since your last assessment, which may suggest meaningful progress in your resilience journey. `;
+    } else if (overallChange < 0) {
+        text += `Your overall resilience has shifted by ${Math.abs(overallChange)} points. Fluctuations can often indicate areas of active exploration and growth. `;
+    } else {
+        text += 'Your overall resilience score is similar to your previous assessment. ';
+    }
+
+    if (improved.length > 0) {
+        const names = improved
+            .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
+            .join(', ');
+        text += `Dimensions showing growth include: ${names}. `;
+    }
+
+    if (declined.length > 0) {
+        const names = declined
+            .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
+            .join(', ');
+        text += `Areas for continued attention include: ${names}. `;
+    }
+
+    const dirDesc = DIRECTION_DESCRIPTIONS[direction.primary] || '';
+    if (dirDesc) {
+        text += dirDesc;
+    }
+
+    return text.trim();
+}
+
+/**
+ * Compare the current assessment with the previous one and return evolution data.
+ *
+ * @param {Object} current - Current assessment: { categories, overall, dominantType }
+ *   current.categories must be { emotional, mental, physical, social, spiritual, financial }
+ * @param {Object|null} previous - Previous ResilienceAssessment document (or null if first)
+ * @returns {Object} Evolution data
+ */
+function calculateEvolution(current, previous) {
+    if (!previous) {
+        return {
+            overallChange: null,
+            changes: Object.fromEntries(DIMENSIONS.map((d) => [d, null])),
+            direction: { primary: 'N', magnitude: 0 },
+            interpretation:
+                "You've mapped the first point in your Resilience Atlas. " +
+                'Return in 30 days to see how your resilience evolves.',
+            isFirstAssessment: true,
+        };
+    }
+
+    const prevScores = previous.scores || {};
+    const currScores = current.categories || {};
+
+    const changes = {};
+    for (const dim of DIMENSIONS) {
+        const curr = currScores[dim] ?? 0;
+        const prev = prevScores[dim] ?? 0;
+        changes[dim] = curr - prev;
+    }
+
+    const overallChange = (current.overall ?? 0) - (previous.overall ?? 0);
+    const direction = calculateDirection(changes);
+    const interpretation = generateInterpretation(overallChange, changes, direction);
+
+    return {
+        overallChange,
+        changes,
+        direction,
+        interpretation,
+        isFirstAssessment: false,
+    };
+}
+
+module.exports = { calculateEvolution, calculateDirection, angleToBearing };

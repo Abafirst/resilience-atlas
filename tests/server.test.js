@@ -63,11 +63,38 @@ jest.mock('mongoose', () => {
         return this;
       }
       methods = {};
+      static Types = { ObjectId: String };
     },
     model: jest.fn(),
+    Types: { ObjectId: String },
   };
   m.Schema.Types = { ObjectId: String };
   return m;
+});
+
+// Mock ResilienceAssessment model used by quiz and atlas routes.
+jest.mock('../backend/models/ResilienceAssessment', () => {
+  const mockAssessment = {
+    _id: 'assessment001',
+    userId: 'user001',
+    overall: 75,
+    dominantType: 'emotional',
+    scores: { emotional: 80, mental: 70, physical: 65, social: 75, spiritual: 60, financial: 55 },
+    assessmentDate: new Date('2026-01-01T00:00:00.000Z'),
+    save: jest.fn().mockResolvedValue({ _id: 'assessment001' }),
+  };
+  const MockAssessment = jest.fn().mockImplementation(() => mockAssessment);
+  MockAssessment.findOne = jest.fn().mockImplementation(() => ({
+    sort: jest.fn().mockReturnThis(),
+    lean: jest.fn().mockResolvedValue(null),
+  }));
+  MockAssessment.find = jest.fn().mockImplementation(() => ({
+    sort: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+    lean: jest.fn().mockResolvedValue([]),
+  }));
+  MockAssessment.findById = jest.fn().mockResolvedValue(null);
+  return MockAssessment;
 });
 
 // Mock User model used by routes.
@@ -108,46 +135,28 @@ jest.mock('../backend/models/User', () => {
   return MockUser;
 });
 
-// Mock stripe.
-jest.mock('stripe', () => {
-  const MockStripe = function () {
-    return {
-      paymentIntents: {
-        create: jest.fn().mockResolvedValue({
-          id: 'pi_test',
-          client_secret: 'secret_test',
-          status: 'requires_payment_method',
-        }),
-        retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
-      },
-      customers: {
-        create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
-      },
-      webhooks: {
-        constructEvent: jest.fn().mockReturnValue({
-          type: 'payment_intent.succeeded',
-          data: { object: { id: 'pi_test' } },
-        }),
-      },
-    };
+// Mock stripe (use a regular function so it can be called with `new`).
+jest.mock('stripe', () => function MockStripe() {
+  return {
+    paymentIntents: {
+      create: jest.fn().mockResolvedValue({
+        id: 'pi_test',
+        client_secret: 'secret_test',
+        status: 'requires_payment_method',
+      }),
+      retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
+    },
+    customers: {
+      create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
+    },
+    webhooks: {
+      constructEvent: jest.fn().mockReturnValue({
+        type: 'payment_intent.succeeded',
+        data: { object: { id: 'pi_test' } },
+      }),
+    },
   };
-  return MockStripe;
 });
-
-// Mock the ResilienceReport model used by the report routes.
-jest.mock('../backend/models/ResilienceReport', () => {
-  const MockReport = jest.fn().mockImplementation(() => ({}));
-  MockReport.findOne = jest.fn().mockResolvedValue(null);
-  MockReport.findOneAndUpdate = jest.fn().mockResolvedValue({ _id: 'report001', status: 'pending' });
-  return MockReport;
-});
-
-// Mock the report queue so no Redis connection is needed.
-jest.mock('../queue/reportQueue', () => ({
-  addReportJob: jest.fn().mockResolvedValue(null),
-  getReportQueue: jest.fn().mockReturnValue(null),
-  QUEUE_NAME: 'reportGeneration',
-}));
 
 // Mock nodemailer so no emails are actually sent.
 jest.mock('nodemailer', () => ({
