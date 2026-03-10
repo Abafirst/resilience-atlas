@@ -30,6 +30,20 @@
     <div class="results-page">
       <div class="results-wrapper">
 
+        <!-- ── Psychometric Report Header ─────────────── -->
+        <div class="psychometric-report-header" role="banner">
+          <h1>Resilience Assessment Report</h1>
+          <p id="reportDate" class="report-date"></p>
+          <p id="respondentName" class="respondent-name"></p>
+        </div>
+
+        <!-- ── Overall Score Card ─────────────────────── -->
+        <section class="overall-score-section card" aria-labelledby="overallHeading">
+          <div class="score-display-block">
+            <h2 id="overallHeading">Overall Resilience Score</h2>
+            <div id="scoreCircle" class="score-circle" aria-live="polite">—</div>
+            <p id="scoreInterpretation" class="score-interpretation"></p>
+          </div>
         <!-- Report Header -->
         <div class="results-header report-header-card">
           <div class="report-header-top">
@@ -71,25 +85,48 @@
           <div id="profileBars" aria-live="polite"></div>
         </section>
 
-        <!-- Strengths Summary -->
-        <section aria-labelledby="strengthsHeading" class="mt-8">
-          <h2 id="strengthsHeading" class="mb-4">Your Resilience Strengths</h2>
-          <div class="strengths-cards">
-            <div class="strength-card primary">
-              <h4>Primary Strength</h4>
-              <p id="primaryStrength">—</p>
+        <!-- ── Radar Chart Section ────────────────────── -->
+        <section class="radar-chart-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Resilience Profile Visualization</h2>
+          <div id="radarChart" class="radar-chart-container" role="img" aria-label="Radar chart of resilience dimensions"></div>
+          <p class="chart-description">Six dimensions of your resilience profile</p>
+        </section>
+
+        <!-- ── Strength Rankings ──────────────────────── -->
+        <section class="strengths-section" aria-labelledby="strengthsHeading">
+          <h2 id="strengthsHeading">Your Resilience Strengths</h2>
+          <div class="strength-ranking">
+            <div class="rank-strength-card primary" role="article" aria-label="Primary strength">
+              <span class="rank-badge" aria-hidden="true">1</span>
+              <h3>Primary Strength</h3>
+              <p id="primaryStrength" class="strength-type-name">—</p>
+              <p id="primaryStrengthScore" class="strength-score-display">—</p>
             </div>
-            <div class="strength-card solid">
-              <h4>Solid Strength</h4>
-              <p id="solidStrength">—</p>
+            <div class="rank-strength-card solid" role="article" aria-label="Solid strength">
+              <span class="rank-badge" aria-hidden="true">2</span>
+              <h3>Solid Strength</h3>
+              <p id="solidStrength" class="strength-type-name">—</p>
+              <p id="solidStrengthScore" class="strength-score-display">—</p>
             </div>
-            <div class="strength-card emerging">
-              <h4>Emerging Strength</h4>
-              <p id="emergingStrength">—</p>
+            <div class="rank-strength-card emerging" role="article" aria-label="Growth opportunity">
+              <span class="rank-badge" aria-hidden="true">6</span>
+              <h3>Growth Opportunity</h3>
+              <p id="emergingStrength" class="strength-type-name">—</p>
+              <p id="emergingStrengthScore" class="strength-score-display">—</p>
             </div>
           </div>
         </section>
 
+        <!-- ── Detailed Scores (Profile Bars) ─────────── -->
+        <section class="profile-section card" aria-labelledby="profileHeading">
+          <h2 id="profileHeading">Detailed Resilience Profile</h2>
+          <div id="profileBars" aria-live="polite"></div>
+        </section>
+
+        <!-- ── Personalized Narrative Report ──────────── -->
+        <section class="narrative-report-section card" aria-labelledby="reportHeading">
+          <h2 id="reportHeading">Personalized Resilience Report</h2>
+          <div id="reportText" class="report-narrative" role="region" aria-live="polite">
         <!-- Personalized Report -->
         <section class="report-text-section" aria-labelledby="reportHeading">
           <h2 id="reportHeading">Your Personalized Report</h2>
@@ -98,10 +135,16 @@
           </div>
         </section>
 
-        <!-- PDF Alert -->
+        <!-- ── Recommendations ────────────────────────── -->
+        <section class="recommendations-section card" aria-labelledby="recommendationsHeading">
+          <h2 id="recommendationsHeading">Development Recommendations</h2>
+          <div id="recommendations" aria-live="polite"></div>
+        </section>
+
+        <!-- ── PDF Alert ───────────────────────────────── -->
         <div id="pdfAlert" class="alert" role="alert"></div>
 
-        <!-- Action Buttons -->
+        <!-- ── Action Buttons ─────────────────────────── -->
         <div class="results-actions">
           <button type="button" id="btnDownload" class="btn btn-primary">
             <span aria-hidden="true">&#8681;</span>
@@ -114,7 +157,7 @@
           </button>
         </div>
 
-        <!-- Email Section -->
+        <!-- ── Email Section ───────────────────────────── -->
         <section aria-labelledby="emailHeading" class="text-center mt-8">
           <h3 id="emailHeading" class="mb-4">Email Your Report</h3>
           <div class="email-input-row">
