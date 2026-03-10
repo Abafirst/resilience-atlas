@@ -106,6 +106,7 @@ app.use("/api/report", require("./routes/report"));
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));
 app.use("/api/org", require("./routes/organization"));
 app.use("/api/org/:organizationId/leadership-report", require("./routes/leadership-report"));
+app.use("/api/insights", require("./routes/insights"));
 
 // ==============================
 // Root API info
