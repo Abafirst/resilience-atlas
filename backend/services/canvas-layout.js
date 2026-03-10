@@ -16,6 +16,16 @@
 
 const { COLORS, TYPOGRAPHY, BRANDING, LAYOUT } = require('../config/design-system');
 
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+/**
+ * Approximate ratio of a character's rendered width to the current font size
+ * for proportional sans-serif and serif fonts at typical display sizes.
+ * A real canvas context would give exact glyph metrics; this constant provides
+ * a reasonable approximation without native dependencies.
+ */
+const CHAR_WIDTH_RATIO = 0.52;
+
 // ── Text wrapping ─────────────────────────────────────────────────────────────
 
 /**
@@ -147,7 +157,7 @@ function renderQuote(quoteText, quoteAuthor, W, scale) {
   const authorSize = Math.round(TYPOGRAPHY.author.size * scale);
 
   // Approximate chars per line based on available width and font size
-  const charsPerLine = Math.floor(maxWidth / (fontSize * 0.52));
+  const charsPerLine = Math.floor(maxWidth / (fontSize * CHAR_WIDTH_RATIO));
   const lines = wrapText(`"${quoteText}"`, charsPerLine);
 
   const quoteTop   = Math.round(LAYOUT.quoteTop * scale);
@@ -207,7 +217,7 @@ function renderPractice(practiceText, W, scale) {
   const labelY      = boxY + innerPad + labelSize;
   const textY       = labelY + Math.round(lineHeight * 0.8);
 
-  const charsPerLine = Math.floor((boxW - innerPad * 2) / (fontSize * 0.52));
+  const charsPerLine = Math.floor((boxW - innerPad * 2) / (fontSize * CHAR_WIDTH_RATIO));
   const lines = wrapText(practiceText, charsPerLine);
 
   const lineElems = lines.map((line, i) => {

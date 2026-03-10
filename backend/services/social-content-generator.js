@@ -79,14 +79,14 @@ const COMMON_HASHTAGS = [
  * @returns {string} Instagram caption
  */
 function formatInstagramCaption(insight) {
-  const emoji   = DIMENSION_EMOJIS[insight.dimension] || DEFAULT_EMOJI;
-  const dimTags = DIMENSION_HASHTAGS[insight.dimension] || [];
-  const slug    = insight.dimension.replace(/-/g, '');
+  const emoji            = DIMENSION_EMOJIS[insight.dimension] || DEFAULT_EMOJI;
+  const dimTags          = DIMENSION_HASHTAGS[insight.dimension] || [];
+  const dimensionHashtag = insight.dimension.replace(/-/g, '');
 
   const hashtags = [
     ...COMMON_HASHTAGS,
     ...dimTags,
-    `#${slug}`,
+    `#${dimensionHashtag}`,
     '#QuoteOfTheDay',
     '#DailyResilience',
     '#WisdomQuotes',
