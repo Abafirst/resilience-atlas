@@ -111,9 +111,8 @@ app.use("/api/insights", require("./routes/insights"));
 // ==============================
 // Root API info
 // ==============================
-
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to Resilience Atlas API" });
+  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 // ==============================
