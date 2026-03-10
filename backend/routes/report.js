@@ -1,7 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
+
+/** Rate limiter — PDF generation is expensive, so keep this conservative. */
+const reportLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
 
 /**
  * GET /api/report/download
@@ -14,7 +24,7 @@ const Purchase = require('../models/Purchase');
  * Graceful degradation: if the database is unavailable the check is skipped so
  * the endpoint never blocks unexpectedly in development environments.
  */
-router.get('/download', async (req, res) => {
+router.get('/download', reportLimiter, async (req, res) => {
     try {
         const { overall, dominantType, scores, email } = req.query;
 

@@ -21,7 +21,6 @@
     const ATLAS_PREMIUM_FEATURES = [
         'Everything in Deep Report',
         'Resilience evolution tracking (historical comparison)',
-        'Historical assessment comparison',
         'Unlimited reassessments',
         'Personalized growth pathway',
         'Micro-practice progress tracking',

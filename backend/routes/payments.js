@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 
 const stripe = require('../config/stripe');
 const Purchase = require('../models/Purchase');
@@ -22,12 +23,34 @@ const TIERS = {
     },
 };
 
+/** Rate limiter for all payment endpoints — low limit to prevent abuse. */
+const paymentsLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+/**
+ * Webhook rate limiter — more permissive than other endpoints because Stripe
+ * may retry events, but still guards against excessive unauthenticated traffic.
+ * Signature verification provides the primary security layer.
+ */
+const webhookLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/payments/checkout
 // Create a Stripe Checkout session for the requested tier.
 // Body: { tier: 'deep-report' | 'atlas-premium', email: string }
 // ─────────────────────────────────────────────────────────────────────────────
-router.post('/checkout', async (req, res) => {
+router.post('/checkout', paymentsLimiter, async (req, res) => {
     try {
         const { tier, email } = req.body;
 
@@ -84,7 +107,7 @@ router.post('/checkout', async (req, res) => {
 // Verify a completed Stripe Checkout session and unlock premium content.
 // Query: ?session_id=<cs_xxx>
 // ─────────────────────────────────────────────────────────────────────────────
-router.get('/verify', async (req, res) => {
+router.get('/verify', paymentsLimiter, async (req, res) => {
     try {
         const { session_id } = req.query;
         if (!session_id) {
@@ -134,7 +157,7 @@ router.get('/verify', async (req, res) => {
 // Check the highest completed purchase tier for a given email.
 // Query: ?email=<email>
 // ─────────────────────────────────────────────────────────────────────────────
-router.get('/status', async (req, res) => {
+router.get('/status', paymentsLimiter, async (req, res) => {
     try {
         const { email } = req.query;
         if (!email) {
@@ -173,7 +196,7 @@ router.get('/status', async (req, res) => {
 // the express.raw() middleware is applied in server.js BEFORE express.json() for
 // this path.
 // ─────────────────────────────────────────────────────────────────────────────
-router.post('/webhook', async (req, res) => {
+router.post('/webhook', webhookLimiter, async (req, res) => {
     const sig = req.headers['stripe-signature'];
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 

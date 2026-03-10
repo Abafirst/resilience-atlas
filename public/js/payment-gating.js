@@ -50,14 +50,13 @@
                 (required === 'deep-report'  && isDeepReport())  ||
                 (required === 'atlas-premium' && isAtlasPremium());
 
+            const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
                 section.classList.remove('locked');
-                var overlay = section.querySelector('.payment-overlay');
                 if (overlay) overlay.hidden = true;
             } else {
                 section.classList.add('locked');
-                var overlay2 = section.querySelector('.payment-overlay');
-                if (overlay2) overlay2.hidden = false;
+                if (overlay) overlay.hidden = false;
             }
         });
     }
@@ -69,9 +68,9 @@
      * backend to verify the session, persist the tier, then clean the URL.
      */
     async function handleUpgradeSuccess() {
-        var params    = new URLSearchParams(window.location.search);
-        var upgrade   = params.get('upgrade');
-        var sessionId = params.get('session_id');
+        const params    = new URLSearchParams(window.location.search);
+        const upgrade   = params.get('upgrade');
+        const sessionId = params.get('session_id');
 
         if (upgrade !== 'success' || !sessionId) {
             // Show cancelled notice if needed.
