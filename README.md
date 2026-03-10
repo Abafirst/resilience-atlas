@@ -119,7 +119,7 @@ Repeat for each of the other 3 repositories. After archiving, add a short notice
 This makes it instantly clear to anyone who finds the old repo where they should go.
 > **Consolidated repository** — single source of truth for the Resilience Atlas platform.
 
-Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalised insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
+Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalized insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
 
 ## Features
 

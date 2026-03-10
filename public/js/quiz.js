@@ -326,7 +326,7 @@ async function submitQuiz() {
     return;
   }
 
-  Spinner.show('Generating your personalised report…');
+  Spinner.show('Generating your personalized report…');
   if (submitAlert) Alert.hide(submitAlert);
 
   try {
