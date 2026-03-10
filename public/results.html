@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Resilience Profile — Resilience Assessment</title>
-  <meta name="description" content="View your personalised resilience profile, download a PDF report, or email it to yourself." />
+  <meta name="description" content="View your personalized resilience profile, download a PDF report, or email it to yourself." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -30,15 +30,44 @@
     <div class="results-page">
       <div class="results-wrapper">
 
-        <!-- Greeting -->
-        <div class="results-header">
-          <h1 id="greeting" class="results-greeting">Your Results</h1>
-          <p id="resultsSubtitle" class="results-subtitle"></p>
+        <!-- Report Header -->
+        <div class="results-header report-header-card">
+          <div class="report-header-top">
+            <h1 id="greeting" class="results-greeting">Your Resilience Profile</h1>
+            <p id="resultsSubtitle" class="results-subtitle"></p>
+          </div>
+          <div class="report-meta">
+            <span class="report-meta-label">Assessment Date:</span>
+            <span id="reportDate" class="report-meta-value"></span>
+          </div>
         </div>
+
+        <!-- Overall Score -->
+        <section class="overall-score-section card" aria-label="Overall Resilience Score">
+          <div class="overall-score-inner">
+            <div class="overall-score-ring" aria-hidden="true">
+              <span id="overallScore" class="overall-score-value">—</span>
+            </div>
+            <div class="overall-score-text">
+              <h2 class="overall-score-heading">Overall Resilience Score</h2>
+              <p class="overall-score-sub">Based on your responses across all 6 resilience dimensions</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Radar Chart -->
+        <section class="radar-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Resilience Radar</h2>
+          <p class="section-description">Your resilience profile across all six dimensions</p>
+          <div class="radar-container">
+            <canvas id="radarChart" width="480" height="480" aria-label="Radar chart of resilience scores"></canvas>
+          </div>
+        </section>
 
         <!-- Resilience Profile Bars -->
         <section class="profile-section card" aria-labelledby="profileHeading">
           <h2 id="profileHeading">Your Resilience Profile</h2>
+          <p class="section-description">All six dimensions ranked by score</p>
           <div id="profileBars" aria-live="polite"></div>
         </section>
 
@@ -61,9 +90,9 @@
           </div>
         </section>
 
-        <!-- Personalised Report -->
+        <!-- Personalized Report -->
         <section class="report-text-section" aria-labelledby="reportHeading">
-          <h2 id="reportHeading">Your Personalised Report</h2>
+          <h2 id="reportHeading">Your Personalized Report</h2>
           <div id="reportText" class="report-text-card" role="region" aria-live="polite">
             Loading your report&hellip;
           </div>

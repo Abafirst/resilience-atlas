@@ -77,10 +77,58 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to Resilience Atlas API' });
 });
 
+// ── 6-Type Resilience Scoring ──────────────────────────
+// Maps 36 quiz answers (indices 0-35) to the 6 resilience types.
+// 6 questions per type, max raw score 30 per type (5 per question).
+const RESILIENCE_TYPE_MAP = {
+  'Agentic-Generative':    [0, 1, 2, 3, 4, 5],    // Q1–6:  Adaptive/Agentic
+  'Relational':            [6, 7, 8, 9, 10, 11],   // Q7–12: Relational
+  'Spiritual-Existential': [12, 13, 14, 15, 16, 17], // Q13–18: Existential
+  'Emotional-Adaptive':    [18, 19, 20, 21, 22, 23], // Q19–24: Emotional
+  'Somatic-Behavioral':    [24, 25, 26, 27, 28, 29], // Q25–30: Physical/Somatic
+  'Cognitive-Narrative':   [30, 31, 32, 33, 34, 35], // Q31–36: Cognitive
+};
+const MAX_PER_QUESTION = 5;
+
 // Mount route modules
 app.use('/auth', require('./routes/auth'));
 app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
+
+// POST /api/quiz — score 36 answers and return 6-type resilience results
+app.post('/api/quiz', (req, res) => {
+  try {
+    const { answers } = req.body || {};
+    if (!Array.isArray(answers) || answers.length !== 36) {
+      return res.status(400).json({ error: 'Please provide all 36 answers.' });
+    }
+
+    const scores = {};
+    let totalRaw = 0;
+    let totalMax = 0;
+
+    for (const [type, indices] of Object.entries(RESILIENCE_TYPE_MAP)) {
+      const raw = indices.reduce((sum, idx) => sum + (Number(answers[idx]) || 0), 0);
+      const max = indices.length * MAX_PER_QUESTION;
+      const percentage = parseFloat(((raw / max) * 100).toFixed(2));
+      scores[type] = { raw, max, percentage };
+      totalRaw += raw;
+      totalMax += max;
+    }
+
+    const overall = Math.round((totalRaw / totalMax) * 100);
+
+    const dominantType = Object.entries(scores).reduce(
+      (best, [type, s]) => (s.percentage > best[1] ? [type, s.percentage] : best),
+      ['', -1]
+    )[0];
+
+    return res.status(200).json({ overall, dominantType, scores });
+  } catch (err) {
+    console.error('Quiz scoring error:', err);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
 
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));

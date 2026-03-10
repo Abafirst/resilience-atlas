@@ -857,3 +857,105 @@ main { flex: 1; }
   }
 }
 
+/* ── Report header card ───────────────────────────── */
+.report-header-card {
+  background: linear-gradient(135deg, #1D4ED8 0%, #0D9488 100%);
+  color: #fff;
+  border-radius: var(--radius-xl);
+  padding: 2rem 2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.report-header-card .results-greeting {
+  color: #fff;
+  margin-bottom: .3rem;
+}
+
+.report-header-card .results-subtitle {
+  color: rgba(255,255,255,.85);
+}
+
+.report-meta {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: .85rem;
+  color: rgba(255,255,255,.75);
+}
+
+.report-meta-label { font-weight: 600; }
+.report-meta-value { font-weight: 400; }
+
+/* ── Overall score ring ───────────────────────────── */
+.overall-score-section { margin-bottom: 2rem; }
+
+.overall-score-inner {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.overall-score-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB 0%, #0D9488 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(37,99,235,.25);
+}
+
+.overall-score-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.overall-score-value.score-excellent { background: linear-gradient(135deg, #16A34A, #0D9488); }
+.overall-score-value.score-good      { background: linear-gradient(135deg, #2563EB, #0D9488); }
+.overall-score-value.score-moderate  { background: linear-gradient(135deg, #F59E0B, #F97316); }
+.overall-score-value.score-developing{ background: linear-gradient(135deg, #F97316, #DC2626); }
+
+.overall-score-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: .3rem;
+}
+
+.overall-score-sub {
+  font-size: .9rem;
+  color: var(--slate-600);
+  margin: 0;
+}
+
+/* ── Radar chart section ──────────────────────────── */
+.radar-section { margin-bottom: 2rem; }
+
+.radar-section h2 { margin-bottom: .4rem; }
+
+.section-description {
+  font-size: .92rem;
+  color: var(--slate-600);
+  margin-bottom: 1.25rem;
+}
+
+.radar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.radar-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+
