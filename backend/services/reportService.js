@@ -29,7 +29,7 @@ function generateNarrativeReport(scores) {
     const report = generateReport(scores);
 
     const lines = [
-        `Resilience Atlas — Personal Report`,
+        `The Resilience Atlas™ — Personal Report`,
         `=====================================`,
         ``,
         `Overall Resilience Score: ${report.overall}%`,
@@ -73,7 +73,7 @@ function generatePDFReport(scores, username) {
             doc.on('error', reject);
 
             // Title
-            doc.fontSize(22).font('Helvetica-Bold').text('Resilience Atlas', { align: 'center' });
+            doc.fontSize(22).font('Helvetica-Bold').text('The Resilience Atlas\u2122', { align: 'center' });
             doc.fontSize(16).font('Helvetica').text('Personal Resilience Report', { align: 'center' });
             doc.moveDown();
 

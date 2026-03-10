@@ -17,7 +17,7 @@
 
 const { PHILOSOPHICAL_QUOTES } = require('../data/philosophical-quotes');
 
-const CALL_TO_ACTION = 'Discover your resilience profile with The Resilience Atlas.';
+const CALL_TO_ACTION = 'Discover your resilience profile with The Resilience Atlas™.';
 const TOTAL_QUOTES   = PHILOSOPHICAL_QUOTES.length;
 
 // ── Core selector ─────────────────────────────────────────────────────────────
@@ -80,11 +80,11 @@ function buildInsight(entry) {
  * @returns {Object} { subject, html, text }
  */
 function formatEmail(insight) {
-  const subject = `Your Daily Resilience Insight — ${insight.dimension}`;
+  const subject = `Your Daily Resilience Insight from The Resilience Atlas™ — ${insight.dimension}`;
 
   const text = [
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-    'Resilience Atlas — Daily Insight',
+    'The Resilience Atlas™ — Daily Insight',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     '',
     `${insight.dimension}`,
@@ -107,7 +107,7 @@ function formatEmail(insight) {
   const html = `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a2e;">
   <div style="background: linear-gradient(135deg, #2c5f8a, #1a3a5c); padding: 24px; border-radius: 8px 8px 0 0;">
-    <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Resilience Atlas</h1>
+    <h1 style="color: #ffffff; margin: 0; font-size: 22px;">The Resilience Atlas™</h1>
     <p style="color: #b3d4f0; margin: 4px 0 0; font-size: 14px;">Daily Insight</p>
   </div>
 
@@ -198,7 +198,7 @@ function formatGraphicPrompt(insight) {
     `Top label: "${insight.dimension} — ${insight.subtitle}" in small uppercase sans-serif. ` +
     `Centre: the quote "${insight.quoteText}" in elegant serif font. ` +
     `Below: "— ${insight.quoteAuthor}" in italics. ` +
-    `Bottom: "Resilience Atlas" logo wordmark. ` +
+    `Bottom: "The Resilience Atlas™" logo wordmark. ` +
     `Mood: reflective, hopeful, professional. No stock-photo people.`
   );
 }
@@ -216,7 +216,7 @@ function formatVideoScript(insight) {
     '',
     `[OPEN — 0:00–0:05]`,
     `Gentle ambient music. Slow fade in on a calming nature scene or abstract visual.`,
-    `Voice-over: "A daily insight from The Resilience Atlas."`,
+    `Voice-over: "A daily insight from The Resilience Atlas™."`,
     '',
     `[QUOTE — 0:05–0:25]`,
     `Text animates in on screen.`,

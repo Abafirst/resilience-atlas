@@ -145,7 +145,7 @@ function calculateEvolution(current, previous) {
             changes: Object.fromEntries(DIMENSIONS.map((d) => [d, null])),
             direction: { primary: 'N', magnitude: 0 },
             interpretation:
-                "You've mapped the first point in your Resilience Atlas. " +
+                "You've mapped the first point on The Resilience Atlas\u2122. " +
                 'Return in 30 days to see how your resilience evolves.',
             isFirstAssessment: true,
         };

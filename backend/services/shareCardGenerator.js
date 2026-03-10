@@ -199,7 +199,7 @@ function generateShareCard(opts) {
   <!-- Call to action -->
   <text x="${W / 2}" y="578" font-family="Arial, sans-serif" font-size="18"
         fill="${COLORS.textMuted}" text-anchor="middle">
-    Discover your resilience profile with The Resilience Atlas
+    Discover your resilience profile with The Resilience Atlas™
   </text>
   <text x="${W / 2}" y="612" font-family="Arial, sans-serif" font-size="17" font-weight="bold"
         fill="${COLORS.primary}" text-anchor="middle">resilienceatlas.com</text>

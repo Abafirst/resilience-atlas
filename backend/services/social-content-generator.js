@@ -18,7 +18,7 @@
  */
 
 const BRANDING_URL  = 'resilienceatlas.com';
-const BRANDING_NAME = 'Resilience Atlas';
+const BRANDING_NAME = 'The Resilience Atlas™';
 
 // ── Dimension-to-emoji mapping ─────────────────────────────────────────────────
 
@@ -119,7 +119,7 @@ function formatInstagramCaption(insight) {
  */
 function formatInstagramAltText(insight) {
   return (
-    `Resilience Atlas insight card for the ${insight.dimension} dimension. ` +
+    `The Resilience Atlas™ insight card for the ${insight.dimension} dimension. ` +
     `Quote: "${insight.quoteText}" by ${insight.quoteAuthor}. ` +
     `Today's practice: ${insight.microPractice}`
   );

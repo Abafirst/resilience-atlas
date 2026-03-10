@@ -89,7 +89,7 @@ router.get('/download', reportLimiter, async (req, res) => {
           </style>
         </head>
         <body>
-          <h1>Resilience Assessment Report</h1>
+          <h1>The Resilience Atlas™ Report</h1>
           <p class="subtitle">Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
 
           <div class="score-section">
@@ -123,7 +123,7 @@ router.get('/download', reportLimiter, async (req, res) => {
           </table>
 
           <div class="footer">
-            Resilience Atlas &mdash; For educational and self-reflection purposes only. Not a clinical diagnosis.
+            The Resilience Atlas™ &mdash; For educational and self-reflection purposes only. Not a clinical diagnosis.
           </div>
         </body>
       </html>
