@@ -189,6 +189,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (reportText) {
     reportText.innerHTML = generateNarrativeReport(results, primaryStrength, solidStrength, emergingStrength);
   }
+
+  // ── Evidence-Based Practices ──────────────────────────
+  const practicesContainer = document.getElementById('evidencePracticesContainer');
+  if (practicesContainer && window.EvidencePractices) {
+    practicesContainer.innerHTML = window.EvidencePractices.renderPracticesSection(emergingStrength);
+    window.EvidencePractices.initPracticeInteractions();
+  }
 });
 
 // ── Download PDF button ────────────────────────────────
