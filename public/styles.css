@@ -857,3 +857,318 @@ main { flex: 1; }
   }
 }
 
+
+/* ── Psychometric Report Styling ───────────────────── */
+
+/* Report Header */
+.psychometric-report-header {
+  text-align: center;
+  padding: 3rem 1.5rem 2.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--white);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  margin-bottom: 0;
+}
+
+.psychometric-report-header h1 {
+  color: var(--white);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  margin-bottom: .75rem;
+}
+
+.report-date,
+.respondent-name {
+  color: rgba(255, 255, 255, .85);
+  font-size: .95rem;
+  margin-top: .25rem;
+}
+
+/* Overall Score Section */
+.overall-score-section {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+}
+
+.score-display-block {
+  text-align: center;
+}
+
+.score-display-block h2 {
+  margin-bottom: 1.5rem;
+}
+
+.score-circle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--white);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, .35);
+  margin: 0 auto 1.25rem;
+}
+
+.score-interpretation {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--slate-600);
+}
+
+/* Radar Chart Section */
+.radar-chart-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  margin-top: 2rem;
+}
+
+.radar-chart-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.radar-chart-container {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  justify-content: center;
+}
+
+.chart-description {
+  margin-top: 1rem;
+  font-size: .9rem;
+  color: var(--slate-400);
+  text-align: center;
+}
+
+/* Strength Rankings */
+.strengths-section {
+  padding: 2rem 0;
+}
+
+.strengths-section h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.strength-ranking {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: .5rem;
+}
+
+.rank-strength-card {
+  padding: 2rem 1.5rem 1.5rem;
+  border-radius: var(--radius-lg);
+  position: relative;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.rank-strength-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.rank-strength-card.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--white);
+  transform: scale(1.04);
+}
+
+.rank-strength-card.primary:hover {
+  transform: scale(1.04) translateY(-4px);
+}
+
+.rank-strength-card.solid {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: var(--white);
+}
+
+.rank-strength-card.emerging {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #5c3a1e;
+}
+
+.rank-strength-card h3 {
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: .6rem;
+  opacity: .9;
+}
+
+.rank-strength-card.primary h3,
+.rank-strength-card.solid h3 { color: rgba(255, 255, 255, .85); }
+.rank-strength-card.emerging h3 { color: #7c4f2a; }
+
+.strength-type-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: .35rem;
+  color: inherit;
+}
+
+.rank-strength-card.primary .strength-type-name,
+.rank-strength-card.solid   .strength-type-name { color: var(--white); }
+
+.strength-score-display {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: inherit;
+}
+
+.rank-strength-card.primary .strength-score-display,
+.rank-strength-card.solid   .strength-score-display { color: var(--white); }
+
+.rank-badge {
+  position: absolute;
+  top: -14px;
+  right: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--white);
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+}
+
+/* Narrative report */
+.narrative-report-section {
+  margin-top: 2rem;
+  padding: 2rem;
+}
+
+.narrative-report-section h2 { margin-bottom: 1.25rem; }
+
+.report-narrative {
+  line-height: 1.85;
+  font-size: 1rem;
+  color: #444;
+}
+
+.report-narrative p {
+  margin-bottom: 1rem;
+  color: var(--slate-600);
+}
+
+.report-narrative p:last-child { margin-bottom: 0; }
+
+/* Recommendations */
+.recommendations-section {
+  margin-top: 2rem;
+  padding: 2rem;
+}
+
+.recommendations-section h2 { margin-bottom: 1.25rem; }
+
+.recommendation-group {
+  margin-bottom: 1.75rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border-left: 4px solid transparent;
+}
+
+.recommendation-group.growth-area {
+  background: #fef9ec;
+  border-left-color: var(--orange);
+}
+
+.recommendation-group.primary-area {
+  background: #eff6ff;
+  border-left-color: var(--blue);
+}
+
+.rec-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  color: var(--slate-800);
+}
+
+.rec-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.rec-list li {
+  padding-left: 1.4rem;
+  position: relative;
+  color: var(--slate-600);
+  font-size: .97rem;
+  line-height: 1.6;
+}
+
+.rec-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+  font-weight: 700;
+}
+
+/* Responsive adjustments for psychometric sections */
+@media (max-width: 640px) {
+  .strength-ranking {
+    grid-template-columns: 1fr;
+  }
+
+  .rank-strength-card.primary {
+    transform: none;
+  }
+
+  .rank-strength-card.primary:hover {
+    transform: translateY(-4px);
+  }
+
+  .score-circle {
+    width: 140px;
+    height: 140px;
+    font-size: 1.75rem;
+  }
+
+  .psychometric-report-header {
+    padding: 2rem 1rem 1.75rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .site-header,
+  .results-actions,
+  .email-input-row,
+  #emailAlert,
+  #pdfAlert,
+  #btnEmail,
+  #btnDownload,
+  #btnRetake { display: none !important; }
+
+  .psychometric-report-header {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .score-circle,
+  .rank-strength-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body { background: white; }
+  .results-wrapper { max-width: 100%; }
+}

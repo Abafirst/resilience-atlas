@@ -82,6 +82,46 @@ app.use('/auth', require('./routes/auth'));
 app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
 
+// ── Quiz submission: compute 6-type resilience scores ─────────────────────────
+const QUIZ_TYPE_MAP = {
+    'Cognitive-Narrative':  [30, 31, 32, 33, 34, 35], // Q31–Q36
+    'Relational':           [6,  7,  8,  9,  10, 11], // Q7–Q12
+    'Agentic-Generative':   [0,  1,  2,  3,  4,  5],  // Q1–Q6
+    'Emotional-Adaptive':   [18, 19, 20, 21, 22, 23], // Q19–Q24
+    'Spiritual-Existential':[12, 13, 14, 15, 16, 17], // Q13–Q18
+    'Somatic-Behavioral':   [24, 25, 26, 27, 28, 29], // Q25–Q30
+};
+const MAX_ANSWER = 5;
+
+app.post('/api/quiz', (req, res) => {
+    const { firstName, email, answers } = req.body || {};
+
+    if (!Array.isArray(answers) || answers.length !== 36) {
+        return res.status(400).json({ error: 'Please provide all 36 answers.' });
+    }
+
+    const scores = {};
+    let totalRaw = 0;
+    let totalMax = 0;
+
+    for (const [type, indices] of Object.entries(QUIZ_TYPE_MAP)) {
+        const raw = indices.reduce((sum, idx) => sum + (Number(answers[idx]) || 0), 0);
+        const max = indices.length * MAX_ANSWER;
+        const percentage = Math.round((raw / max) * 10000) / 100;
+        scores[type] = { raw, max, percentage };
+        totalRaw += raw;
+        totalMax += max;
+    }
+
+    const overall = Math.round((totalRaw / totalMax) * 100);
+    const dominantType = Object.entries(scores).reduce(
+        (best, [type, data]) => (data.percentage > best[1] ? [type, data.percentage] : best),
+        ['', -1]
+    )[0];
+
+    res.status(200).json({ overall, dominantType, scores });
+});
+
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
 
