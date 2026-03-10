@@ -65,6 +65,19 @@ if (process.env.MONGODB_URI) {
 }
 
 // ==============================
+// Root API endpoint
+// ==============================
+
+app.get("/", (req, res, next) => {
+  // Serve JSON welcome message for programmatic clients (e.g., API tests).
+  // Static file serving handles browsers requesting the HTML landing page.
+  if (!req.headers.accept || !req.headers.accept.includes("text/html")) {
+    return res.json({ message: "Welcome to The Resilience Atlas API", version: "2.0.0" });
+  }
+  next();
+});
+
+// ==============================
 // Health Check
 // ==============================
 
@@ -96,6 +109,8 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/quiz", require("./routes/quiz"));
 app.use("/api/affiliates", require("./routes/affiliates"));
 app.use("/api/stripe", require("./routes/stripe"));
+app.use("/api/atlas", require("./routes/atlas"));
+app.use("/api/share", require("./routes/share"));
 
 // ==============================
 // Static Frontend
@@ -129,7 +144,11 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+if (!process.env.JEST_WORKER_ID) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
 
