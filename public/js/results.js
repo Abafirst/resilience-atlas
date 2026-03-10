@@ -196,6 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
     practicesContainer.innerHTML = window.EvidencePractices.renderPracticesSection(emergingStrength);
     window.EvidencePractices.initPracticeInteractions();
   }
+
+  // ── Affirmations ──────────────────────────────────────
+  const affirmationsContainer = document.getElementById('affirmationsContainer');
+  if (affirmationsContainer && window.Affirmations) {
+    affirmationsContainer.innerHTML = window.Affirmations.renderAffirmationsSection(primaryStrength);
+    window.Affirmations.initAffirmationInteractions();
+  }
 });
 
 // ── Download PDF button ────────────────────────────────

@@ -940,6 +940,8 @@ function renderPracticeCard(practice) {
         </div>
       </details>
 
+      ${window.Affirmations ? window.Affirmations.renderAffirmationForPractice(practice.id) : ''}
+
       <div class="ep-card__action">
         <button
           class="ep-btn-practice${completed ? ' ep-btn-practice--done' : ''}"
@@ -955,10 +957,18 @@ function renderPracticeCard(practice) {
 
 // ── UI: Render reflection modal ───────────────────────────────────────────────
 function renderReflectionModal(practice) {
+  const affirmationHtml = window.Affirmations
+    ? window.Affirmations.renderAffirmationForPractice(practice.id)
+        .replace('aff-practice-hint', 'aff-reflection-prompt')
+        .replace('aff-practice-hint__label', 'aff-practice-hint__label')
+        .replace('aff-practice-hint__text', 'aff-practice-hint__text')
+    : '';
+
   return `
     <div class="ep-modal-overlay" id="ep-modal" role="dialog" aria-modal="true" aria-labelledby="ep-modal-title">
       <div class="ep-modal">
         <h4 id="ep-modal-title">${escHtml(practice.emoji)} Reflection: ${escHtml(practice.practiceTitle)}</h4>
+        ${affirmationHtml}
         <p class="ep-modal__prompt">${escHtml(practice.reflectionQuestion)}</p>
         <label for="ep-reflection-input" class="hidden">Your reflection</label>
         <textarea
