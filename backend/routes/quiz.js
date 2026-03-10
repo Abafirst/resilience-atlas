@@ -1,4 +1,5 @@
-const express = require('express');
+const express   = require('express');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 const { calculateResilienceScores, generateReport } = require('../scoring');
@@ -9,6 +10,15 @@ const { generateNarrativeReport } = require('../services/reportGenerator');
 const logger = require('../utils/logger');
 
 const router = express.Router();
+
+// Rate limiting: 20 quiz submissions per minute per IP
+const submitLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max:      20,
+    standardHeaders: true,
+    legacyHeaders:   false,
+    message: { error: 'Too many quiz submissions. Please wait a moment before trying again.' },
+});
 
 /**
  * POST /api/quiz/submit
@@ -22,7 +32,7 @@ const router = express.Router();
  *   5. Generate pattern-based narrative report
  *   6. Return results with evolution data and retake encouragement
  */
-router.post('/submit', authenticateJWT, async (req, res) => {
+router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
     try {
         const { answers } = req.body;
 

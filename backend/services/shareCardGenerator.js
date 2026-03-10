@@ -39,7 +39,8 @@ const DIR_ANGLE = { N: 0, NE: 45, E: 90, SE: 135, S: 180, SW: 225, W: 270, NW: 3
  */
 function compassSvg(cx, cy, r, direction) {
     const bearing = DIR_ANGLE[direction] !== undefined ? DIR_ANGLE[direction] : 0;
-    // Convert compass bearing to standard math angle (90 - bearing)
+    // Convert compass bearing (0=North, clockwise) to standard math angle:
+    // standard_angle = 90 - compass_bearing gives East=0, North=90 (counterclockwise)
     const rad = ((90 - bearing) * Math.PI) / 180;
     const ax  = cx + r * 0.65 * Math.cos(rad);
     const ay  = cy - r * 0.65 * Math.sin(rad);

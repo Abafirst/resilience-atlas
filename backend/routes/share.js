@@ -1,12 +1,24 @@
 'use strict';
 
-const express = require('express');
+const express   = require('express');
+const rateLimit = require('express-rate-limit');
 const { authenticateJWT } = require('../middleware/auth');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
 const { generateShareCard } = require('../services/shareCardGenerator');
 const logger = require('../utils/logger');
 
 const router = express.Router();
+
+// Rate limiting: 30 requests per minute per IP (SVG generation is more expensive)
+const shareLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max:      30,
+    standardHeaders: true,
+    legacyHeaders:   false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+router.use(shareLimiter);
 
 /**
  * GET /api/share/profile-card

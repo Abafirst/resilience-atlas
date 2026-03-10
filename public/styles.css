@@ -1273,4 +1273,146 @@ main { flex: 1; }
   height: auto;
 }
 
+/* ── Resilience Journey Tracker ────────────────────────────── */
+
+.journey-tracker {
+  background: linear-gradient(135deg, #f0f6ff 0%, #e8f3fb 100%);
+  border-left: 4px solid #4a9eca;
+}
+
+.journey-message {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a3a5c;
+  margin-bottom: 0.25rem;
+}
+
+.journey-retake-hint {
+  font-size: 0.9rem;
+  color: #4a9eca;
+  margin-bottom: 1.25rem;
+}
+
+.journey-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  flex-wrap: wrap;
+}
+
+.journey-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  min-width: 130px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.journey-node.current-node { border: 2px solid #4a9eca; }
+.journey-node.previous-node { border: 2px solid #d0dce8; }
+
+.journey-node-label {
+  font-size: 0.75rem;
+  color: #6a8ca8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+
+.journey-node-score {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1a3a5c;
+  line-height: 1;
+}
+
+.journey-node-date {
+  font-size: 0.8rem;
+  color: #6a8ca8;
+  margin-top: 0.25rem;
+}
+
+.journey-arrow {
+  font-size: 1.8rem;
+  color: #4a9eca;
+}
+
+/* Dimension change badges */
+.dimension-changes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.dim-change-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  min-width: 80px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  font-size: 0.8rem;
+}
+
+.dim-change-name { color: #6a8ca8; font-size: 0.75rem; }
+.dim-change-val  { font-weight: bold; font-size: 1rem; margin-top: 2px; }
+.change-up     { color: #2e7d52; }
+.change-down   { color: #b84040; }
+.change-stable { color: #6a8ca8; }
+
+.journey-cta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+/* ── Share section ─────────────────────────────────────────── */
+
+.share-section { background: #fafcfe; }
+
+.share-disclaimer {
+  font-size: 0.85rem;
+  color: #6a8ca8;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.share-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0.75rem 0;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid #d0dce8;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a3a5c;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.share-btn:hover { background: #4a9eca; border-color: #4a9eca; color: #fff; }
+.share-btn-linkedin { border-color: #0077b5; color: #0077b5; }
+.share-btn-linkedin:hover { background: #0077b5; color: #fff; }
+.share-btn-twitter  { border-color: #000; color: #000; }
+.share-btn-twitter:hover  { background: #000; color: #fff; }
+.share-btn-native   { background: #4a9eca; color: #fff; border-color: #4a9eca; }
+.share-btn-native:hover   { background: #3a8eba; }
+
 

@@ -1,11 +1,23 @@
 'use strict';
 
-const express = require('express');
+const express   = require('express');
+const rateLimit = require('express-rate-limit');
 const { authenticateJWT } = require('../middleware/auth');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
 const logger = require('../utils/logger');
 
 const router = express.Router();
+
+// Rate limiting: 60 requests per minute per IP
+const atlasLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max:      60,
+    standardHeaders: true,
+    legacyHeaders:   false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+router.use(atlasLimiter);
 
 /**
  * GET /api/atlas/history
