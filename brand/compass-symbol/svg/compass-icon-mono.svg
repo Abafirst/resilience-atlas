@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="compass-mono-title compass-mono-desc">
+  <title id="compass-mono-title">Resilience Atlas Compass — Monochrome</title>
+  <desc id="compass-mono-desc">Monochrome single-color version of the Resilience Atlas six-point compass star. All elements rendered in Deep Navy #1565C0 for use on light backgrounds.</desc>
+
+  <defs>
+    <filter id="arrow-shadow-m" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="rgba(21,101,192,0.25)" flood-opacity="1"/>
+    </filter>
+    <radialGradient id="center-dot-m" cx="38%" cy="32%" r="58%">
+      <stop offset="0%" stop-color="#5B9BD5"/>
+      <stop offset="60%" stop-color="#1565C0"/>
+      <stop offset="100%" stop-color="#0D3E7A"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer circle boundary -->
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#1565C0" stroke-width="2"/>
+
+  <!-- Degree markers -->
+  <g opacity="0.2" stroke="#1565C0" stroke-width="1.5" stroke-linecap="round">
+    <line x1="100" y1="12"   x2="100" y2="16"/>
+    <line x1="144" y1="23.8" x2="142" y2="27.3"/>
+    <line x1="176.2" y1="56" x2="172.8" y2="58"/>
+    <line x1="188" y1="100" x2="184" y2="100"/>
+    <line x1="176.2" y1="144" x2="172.8" y2="142"/>
+    <line x1="144" y1="176.2" x2="142" y2="172.8"/>
+    <line x1="100" y1="188" x2="100" y2="184"/>
+    <line x1="56" y1="176.2" x2="58" y2="172.8"/>
+    <line x1="23.8" y1="144" x2="27.3" y2="142"/>
+    <line x1="12" y1="100"  x2="16" y2="100"/>
+    <line x1="23.8" y1="56" x2="27.3" y2="58"/>
+    <line x1="56" y1="23.8" x2="58" y2="27.3"/>
+  </g>
+
+  <!-- Radial connecting lines -->
+  <g opacity="0.25" stroke="#1565C0" stroke-width="0.75" stroke-dasharray="2,3">
+    <line x1="100" y1="100" x2="100"  y2="60"/>
+    <line x1="100" y1="100" x2="134.6" y2="80"/>
+    <line x1="100" y1="100" x2="134.6" y2="120"/>
+    <line x1="100" y1="100" x2="100"  y2="140"/>
+    <line x1="100" y1="100" x2="65.4" y2="120"/>
+    <line x1="100" y1="100" x2="65.4" y2="80"/>
+  </g>
+
+  <!-- Inner hexagon -->
+  <polygon
+    points="100,60 134.6,80 134.6,120 100,140 65.4,120 65.4,80"
+    fill="none" stroke="#1565C0" stroke-width="1" opacity="0.3"/>
+
+  <!-- All six arrows in single color -->
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(0)"   fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(60)"  fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(120)" fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(180)" fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(240)" fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+  <path d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
+    transform="translate(100,100) rotate(300)" fill="#1565C0" filter="url(#arrow-shadow-m)"/>
+
+  <!-- Central dot -->
+  <circle cx="100" cy="100" r="8" fill="url(#center-dot-m)"/>
+  <circle cx="97.5" cy="97.5" r="2.5" fill="white" opacity="0.35"/>
+</svg>
