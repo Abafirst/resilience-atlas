@@ -78,7 +78,7 @@ router.post('/', async (req, res) => {
             overall: result.overall,
             dominantType: result.dominantType,
             scores: result.scores,
-        }).catch(err => logger.error('Failed to save resilience result:', err.message));
+        }).catch(err => logger.error('Failed to save resilience result:', err));
 
         res.status(200).json(result);
     } catch (err) {

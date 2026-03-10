@@ -102,6 +102,13 @@ function renderRadarChart(container, scores) {
   svg.setAttribute('viewBox', '0 0 400 400');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '400');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Radar chart showing scores for: ' + types.join(', '));
+
+  // Accessible title element
+  const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+  title.textContent = 'Resilience dimensions radar chart';
+  svg.appendChild(title);
 
   const center = 200;
   const maxRadius = 150;

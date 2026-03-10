@@ -88,10 +88,14 @@ router.get('/download', async (req, res) => {
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
 
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: 'networkidle0' });
-        const pdf = await page.pdf({ format: 'A4', printBackground: true });
-        await browser.close();
+        let pdf;
+        try {
+            const page = await browser.newPage();
+            await page.setContent(html, { waitUntil: 'networkidle0' });
+            pdf = await page.pdf({ format: 'A4', printBackground: true });
+        } finally {
+            await browser.close();
+        }
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="resilience-report.pdf"');

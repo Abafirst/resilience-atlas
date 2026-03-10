@@ -15,11 +15,7 @@ const ResilienceResultSchema = new mongoose.Schema({
   dominantType: String,
   scores: {
     type: Map,
-    of: {
-      raw: Number,
-      max: Number,
-      percentage: Number
-    }
+    of: mongoose.Schema.Types.Mixed
   },
   createdAt: {
     type: Date,
