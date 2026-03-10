@@ -71,14 +71,14 @@ function generateNarrativeReport(results, primary, solid, emerging) {
 
   var safe = (typeof escapeHtml === 'function') ? escapeHtml : function(s) { return s; };
 
-  return '<p>' + greeting + ' overall resilience score is <strong>' + overall + '%</strong>, indicating a <strong>' + level + '</strong> foundation of resilience.</p>' +
-    '<p>Your dominant resilience strength is <strong>' + safe(primary) + '</strong> (' + primaryPct.toFixed(1) + '%). ' +
-    'This reflects ' + (TYPE_INTERPRETATIONS[primary] || 'a core area of personal strength') + '.</p>' +
-    '<p>You also demonstrate solid capacity in <strong>' + safe(solid) + '</strong> (' + solidPct.toFixed(1) + '%), ' +
-    'which complements and reinforces your primary strength, creating a robust resilience foundation.</p>' +
-    '<p>Your greatest opportunity for growth lies in <strong>' + safe(emerging) + '</strong> (' + emergingPct.toFixed(1) + '%). ' +
-    'Strengthening ' + (TYPE_INTERPRETATIONS[emerging] || 'this dimension') + ' can further expand your resilience profile ' +
-    'and provide additional resources during challenging times.</p>';
+  return `<p>${greeting} overall resilience score is <strong>${overall}%</strong>, indicating a <strong>${level}</strong> foundation of resilience.</p>` +
+    `<p>Your dominant resilience strength is <strong>${safe(primary)}</strong> (${primaryPct.toFixed(1)}%). ` +
+    `This reflects ${TYPE_INTERPRETATIONS[primary] || 'a core area of personal strength'}.</p>` +
+    `<p>You also demonstrate solid capacity in <strong>${safe(solid)}</strong> (${solidPct.toFixed(1)}%), ` +
+    `which complements and reinforces your primary strength, creating a robust resilience foundation.</p>` +
+    `<p>Your greatest opportunity for growth lies in <strong>${safe(emerging)}</strong> (${emergingPct.toFixed(1)}%). ` +
+    `Strengthening ${TYPE_INTERPRETATIONS[emerging] || 'this dimension'} can further expand your resilience profile ` +
+    `and provide additional resources during challenging times.</p>`;
 }
 
 // ── Generate recommendations HTML ─────────────────────

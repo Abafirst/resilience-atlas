@@ -203,19 +203,24 @@ function renderRadarChart(container, scores) {
   ctx.font     = `600 ${fontSize}px system-ui, sans-serif`;
   ctx.fillStyle = '#1e293b';
 
+  /** Returns the canvas textAlign value for a label positioned at (px, py). */
+  function getTextAlignment(px) {
+    if (px < cx - 4) return 'right';
+    if (px > cx + 4) return 'left';
+    return 'center';
+  }
+
   labels.forEach((label, i) => {
     const angle = axisAngle(i);
     const p     = polarPoint(angle, labelR);
 
-    // Wrap long labels
+    // Wrap long labels at hyphens
     const words = label.split('-');
     const line1 = words[0] || '';
     const line2 = words.slice(1).join('-') || '';
     const lineH = fontSize * 1.25;
 
-    ctx.textAlign    = Math.abs(angle) < 0.01 || Math.abs(Math.abs(angle) - Math.PI) < 0.01
-                         ? 'center'
-                         : p.x < cx - 4 ? 'right' : p.x > cx + 4 ? 'left' : 'center';
+    ctx.textAlign    = getTextAlignment(p.x);
     ctx.textBaseline = p.y < cy - 4 ? 'bottom' : p.y > cy + 4 ? 'top' : 'middle';
 
     if (line2) {

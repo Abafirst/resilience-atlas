@@ -107,7 +107,7 @@ app.post('/api/quiz', (req, res) => {
     for (const [type, indices] of Object.entries(QUIZ_TYPE_MAP)) {
         const raw = indices.reduce((sum, idx) => sum + (Number(answers[idx]) || 0), 0);
         const max = indices.length * MAX_ANSWER;
-        const percentage = Math.round((raw / max) * 10000) / 100;
+        const percentage = Math.round((raw / max) * 10000) / 100; // ×10000 then ÷100 → two decimal places
         scores[type] = { raw, max, percentage };
         totalRaw += raw;
         totalMax += max;
