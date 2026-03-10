@@ -104,7 +104,8 @@ app.use("/api/stripe", require("./routes/stripe"));
 app.use("/api/payments", require("./routes/payments"));
 app.use("/api/report", require("./routes/report"));
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));
-app.use("/api/affirmations", require("./routes/affirmations"));
+app.use("/api/org", require("./routes/organization"));
+app.use("/api/org/:organizationId/leadership-report", require("./routes/leadership-report"));
 
 // ==============================
 // Root API info

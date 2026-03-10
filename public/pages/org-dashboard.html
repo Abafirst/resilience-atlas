@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organization Dashboard — Resilience Atlas for Teams</title>
+  <meta name="description" content="Organization admin dashboard with Leadership Insights Report summary." />
+  <link rel="stylesheet" href="/css/org-dashboard.css" />
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="page-header" role="banner">
+    <div class="page-header__inner">
+      <div>
+        <div class="page-header__brand">Resilience Atlas for Teams</div>
+        <h1 class="page-header__title" id="org-name">Organization Dashboard</h1>
+      </div>
+      <nav aria-label="Header actions">
+        <button class="btn btn--primary" id="btn-full-report">View Full Report</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="dashboard-layout" aria-live="polite">
+
+    <!-- ── Sidebar ────────────────────────────────────────────── -->
+    <aside class="sidebar" aria-label="Organization summary">
+
+      <div class="sidebar-card">
+        <h3>Organization Stats</h3>
+        <div id="org-stats">
+          <div class="stat-item">
+            <span class="stat-label">Invited</span>
+            <span class="stat-value" id="stat-invited">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Responded</span>
+            <span class="stat-value" id="stat-responded">—</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Response Rate</span>
+            <span class="stat-value" id="stat-rate">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Report History</h3>
+        <ul class="history-list" id="history-list" role="list" aria-label="Report history">
+          <li style="color:var(--text-muted);font-size:0.88rem">Loading…</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Generate Report</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0 0 0.75rem">
+          Reports auto-generate when 50%+ of invitees complete the assessment. You can also generate manually.
+        </p>
+        <button class="btn btn--green" id="btn-generate" style="width:100%">
+          ⚡ Generate Now
+        </button>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin:0.5rem 0 0" id="generate-status"></p>
+      </div>
+
+    </aside>
+
+    <!-- ── Main area ──────────────────────────────────────────── -->
+    <div class="main-area">
+
+      <!-- Leadership Insights summary -->
+      <section class="section-card" aria-labelledby="insights-title">
+        <h2 id="insights-title">💡 Leadership Insights</h2>
+        <div id="insights-loading" style="color:var(--text-muted);font-size:0.9rem">Loading report summary…</div>
+        <div id="insights-content" style="display:none">
+
+          <!-- KPI row -->
+          <div class="kpi-row" id="kpi-row" role="list" aria-label="Key metrics" style="margin-bottom:1.25rem"></div>
+
+          <!-- Dimension chart -->
+          <h3 style="font-size:0.95rem;margin:0 0 0.6rem;color:var(--brand-dark)">Dimension Analysis</h3>
+          <div id="dim-chart" aria-label="Resilience dimension scores"></div>
+
+          <!-- Report actions -->
+          <div class="report-actions">
+            <button class="btn btn--primary" id="btn-full-report-2" style="background:var(--brand-primary);color:#fff">
+              📋 View Full Report
+            </button>
+          </div>
+        </div>
+        <div id="insights-empty" style="display:none" class="no-report-state">
+          <p>No report generated yet.</p>
+          <p style="font-size:0.85rem">Click "Generate Now" in the sidebar to create your first leadership insights report.</p>
+        </div>
+      </section>
+
+      <!-- Key observations -->
+      <section class="section-card" id="observations-section" style="display:none" aria-labelledby="obs-title">
+        <h2 id="obs-title">🔍 Key Observations <small style="font-size:0.8rem;font-weight:400;color:var(--text-muted)">(preview)</small></h2>
+        <div class="obs-preview" id="obs-preview"></div>
+        <details style="margin-top:0.75rem">
+          <summary style="cursor:pointer;font-size:0.88rem;color:var(--brand-primary);font-weight:600">Show all observations</summary>
+          <div id="obs-full" style="margin-top:0.75rem"></div>
+        </details>
+      </section>
+
+      <!-- Recommendations -->
+      <section class="section-card" id="recs-section" style="display:none" aria-labelledby="recs-title">
+        <h2 id="recs-title">✅ Recommendations <small style="font-size:0.8rem;font-weight:400;color:var(--text-muted)">(preview)</small></h2>
+        <div id="recs-preview"></div>
+        <details style="margin-top:0.75rem">
+          <summary style="cursor:pointer;font-size:0.88rem;color:var(--brand-primary);font-weight:600">Show all recommendations</summary>
+          <div id="recs-full" style="margin-top:0.75rem"></div>
+        </details>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script src="/js/org-dashboard.js"></script>
+</body>
+</html>
