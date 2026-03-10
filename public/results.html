@@ -44,6 +44,45 @@
             <div id="scoreCircle" class="score-circle" aria-live="polite">—</div>
             <p id="scoreInterpretation" class="score-interpretation"></p>
           </div>
+        <!-- Report Header -->
+        <div class="results-header report-header-card">
+          <div class="report-header-top">
+            <h1 id="greeting" class="results-greeting">Your Resilience Profile</h1>
+            <p id="resultsSubtitle" class="results-subtitle"></p>
+          </div>
+          <div class="report-meta">
+            <span class="report-meta-label">Assessment Date:</span>
+            <span id="reportDate" class="report-meta-value"></span>
+          </div>
+        </div>
+
+        <!-- Overall Score -->
+        <section class="overall-score-section card" aria-label="Overall Resilience Score">
+          <div class="overall-score-inner">
+            <div class="overall-score-ring" aria-hidden="true">
+              <span id="overallScore" class="overall-score-value">—</span>
+            </div>
+            <div class="overall-score-text">
+              <h2 class="overall-score-heading">Overall Resilience Score</h2>
+              <p class="overall-score-sub">Based on your responses across all 6 resilience dimensions</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Radar Chart -->
+        <section class="radar-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Resilience Radar</h2>
+          <p class="section-description">Your resilience profile across all six dimensions</p>
+          <div class="radar-container">
+            <canvas id="radarChart" width="480" height="480" aria-label="Radar chart of resilience scores"></canvas>
+          </div>
+        </section>
+
+        <!-- Resilience Profile Bars -->
+        <section class="profile-section card" aria-labelledby="profileHeading">
+          <h2 id="profileHeading">Your Resilience Profile</h2>
+          <p class="section-description">All six dimensions ranked by score</p>
+          <div id="profileBars" aria-live="polite"></div>
         </section>
 
         <!-- ── Radar Chart Section ────────────────────── -->
