@@ -197,11 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
     window.EvidencePractices.initPracticeInteractions();
   }
 
-  // ── Affirmations ──────────────────────────────────────
-  const affirmationsContainer = document.getElementById('affirmationsContainer');
-  if (affirmationsContainer && window.Affirmations) {
-    affirmationsContainer.innerHTML = window.Affirmations.renderAffirmationsSection(primaryStrength);
-    window.Affirmations.initAffirmationInteractions();
+  // ── Store email for payment gating ────────────────────
+  const email = results.email || '';
+  if (email && !localStorage.getItem('resilience_email')) {
+    localStorage.setItem('resilience_email', email);
+  }
+
+  // ── Render upgrade cards for free users ───────────────
+  const upgradeContainer = document.getElementById('upgradeCardsContainer');
+  if (upgradeContainer && window.UpgradeCards && window.PaymentGating) {
+    if (!window.PaymentGating.isDeepReport()) {
+      upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
+    }
+  }
+
+  // ── Re-apply gating after results render ──────────────
+  if (window.PaymentGating) {
+    window.PaymentGating.applyGating();
   }
 });
 
@@ -211,8 +223,23 @@ document.getElementById('btnDownload')?.addEventListener('click', () => {
     const results = JSON.parse(localStorage.getItem('resilience_results'));
     if (!results) throw new Error('No results to download. Please finish the assessment first.');
 
+    // Gate PDF behind Deep Report purchase.
+    if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
+      showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', '🔒');
+      if (window.UpgradeCards) {
+        const upgradeContainer = document.getElementById('upgradeCardsContainer');
+        if (upgradeContainer && !upgradeContainer.innerHTML.trim()) {
+          upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
+        }
+        upgradeContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    const email = localStorage.getItem('resilience_email') || results.email || '';
     const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
-    window.location.href = `/api/report/download?overall=${results.overall}&dominantType=${encodeURIComponent(results.dominantType)}&scores=${scoresStr}`;
+    const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+    window.location.href = `/api/report/download?overall=${results.overall}&dominantType=${encodeURIComponent(results.dominantType)}&scores=${scoresStr}${emailParam}`;
   } catch (e) {
     showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
   }
