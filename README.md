@@ -1,113 +1,86 @@
-# Resilience Atlas
+# The Resilience Atlas
 
-> ⭐ **This is the official, canonical repository for Resilience Atlas.**
-> All development, deployments, and issues should be managed here.
-> Any other repositories with a similar name are outdated and should be **archived** — see the note at the bottom of this file for instructions.
+> **A longitudinal resilience navigation system** — track how your resilience profile evolves over time through comprehensive assessments, visual insights, and personalized guidance.
 
-A comprehensive digital assessment tool for measuring personal resilience across six dimensions.
-
-## Overview
-
-Resilience Atlas helps individuals understand their resilience profile through a science-backed 36-question assessment. Users receive personalized insights, visual reports, and actionable recommendations for growth.
-
-## The Six Resilience Dimensions
-
-1. **Cognitive-Narrative** — Meaning-making and reframing through narrative
-2. **Relational** — Strength from connections and supportive relationships
-3. **Agentic-Generative** — Purposeful action and creating change
-4. **Emotional-Adaptive** — Flexibility in managing emotions
-5. **Spiritual-Existential** — Purpose, values, and sense of meaning
-6. **Somatic-Behavioral** — Body awareness and behavioral practices
-
-## Scoring Model
-
-- **36 questions** on a 1–5 Likert scale
-- **6 dimensions** scored independently (6 questions each)
-- **Overall score** calculated as the average across all questions
-- **Percentages** normalized to 0–100 scale
-- **Deterministic** algorithm ensures consistent, replicable results
-
-## Architecture
-
-### Frontend
-- `public/quiz.html` — Assessment interface
-- `public/results.html` — Results display with radar chart and narrative report
-- `public/js/quiz.js` — Quiz logic and submission
-- `public/js/results.js` — Results rendering, narrative generation, PDF download
-- `public/js/visualizations.js` — Radar chart and bar chart visualization
-
-### Backend
-- `backend/scoring.js` — Core scoring algorithm
-- `backend/routes/quiz.js` — Quiz API routes (questions + submission)
-- `backend/routes/report.js` — PDF report generation (Puppeteer)
-- `backend/models/ResilienceResult.js` — MongoDB persistence model
-
-## API Routes
-
-### Quiz
-- `POST /api/quiz` — Submit answers and receive resilience scores
-- `GET /api/quiz/questions` — Get all 36 questions
-
-### Reports
-- `GET /api/report/download` — Download results as PDF
-
-### Auth
-- `POST /auth/signup` / `POST /auth/login` — User authentication (JWT)
-
-### Payments
-- `POST /create-payment` *(requires JWT)* — Stripe payment intent
-- `GET /payment/:id` *(requires JWT)* — Payment status
-
-## Running the Project
-
-### Prerequisites
-- Node.js 18+
-- MongoDB 4.0+ (optional — app works without it)
-
-### Installation
-```bash
-git clone https://github.com/Abafirst/resilience-atlas.git
-cd resilience-atlas
-npm install
-cp .env.example .env
-# Edit .env — set JWT_SECRET, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY, MONGODB_URI
-npm start
-```
-
-### Testing
-```bash
-npm test
-```
-
-No database or Stripe credentials needed — all tests run with mocked values.
-
-### Project Documentation
-
-See the `docs/` directory for detailed setup, deployment, and contribution guides.
+Resilience Atlas is a full-stack web application that helps users discover and track their resilience profile through a comprehensive 36-question assessment, delivering personalized insights across six resilience dimensions: **Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, and Somatic-Behavioral**.
 
 ---
 
-## Consolidating repositories — how to archive the old ones
+## ✨ Features
 
-If you have other GitHub repositories for this project that are no longer needed, **archiving** is the safest option instead of deleting:
+### Core Assessment
+- 🧠 **36-question Resilience Assessment** — six-category scoring algorithm
+- 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, Somatic-Behavioral
+- 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
 
-- **Archived repos are read-only** — no one can accidentally push to them.
-- **GitHub shows a clear "Archived" banner** on every page of the repo, so there is no confusion.
-- **History and code are preserved** in case you ever need to reference something.
-- **It is reversible** — you can unarchive at any time.
+### Enhanced Results & Visualization
+- 📈 **Interactive Radar Chart** — Visual representation of your 6-dimension profile
+- 📊 **Score Breakdown** — Detailed percentage scores for each resilience type
+- 📄 **Structured Narrative Report** — AI-powered, pattern-based interpretations tailored to your profile
+- 🎨 **Strength Cards** — Primary, Solid, and Emerging strength identification and descriptions
+- 📥 **PDF Download** — Generate downloadable PDF report of your resilience profile
+- 📧 **Email Results** — Receive your full assessment report via email
 
-### Steps to archive a GitHub repository
+### Longitudinal Tracking (Resilience Atlas)
+- 📅 **Assessment History Timeline** — View all past assessments chronologically
+- 🧭 **Evolution Compass** — Visual compass showing direction of resilience growth
+  - North → Cognitive/Mental growth
+  - East → Relational/Social expansion
+  - South → Somatic/Physical grounding
+  - West → Emotional/Spiritual integration
+- 📊 **Comparative Analysis** — See how each dimension changed between assessments
+- 🗺️ **Resilience Atlas Page** (`/atlas`) — Complete journey visualization with:
+  - Assessment history timeline
+  - Individual radar charts for each assessment
+  - Evolution compass visualization
+  - Narrative evolution summary
+- 🚀 **Retake Encouragement** — "Return in 30 days to see how your resilience evolves"
+- 📍 **Journey Tracker** — Progress indicator showing previous ↔ current → next evolution
 
-1. Go to the repository on GitHub (e.g. `https://github.com/Abafirst/<repo-name>`)
-2. Click **Settings** (top right of the repo page)
-3. Scroll down to the **Danger Zone** section
-4. Click **Archive this repository**
-5. Confirm the action
+### Social Sharing & Virality
+- 📸 **Shareable Profile Card** — Beautiful 1200×630 PNG optimized for social media
+  - Includes primary/solid/emerging strengths
+  - Overall resilience score
+  - Mini radar chart
+  - Compass visualization
+  - "Discover your resilience profile with The Resilience Atlas" call-to-action
+- 🔗 **Social Share Buttons:**
+  - Share on LinkedIn
+  - Share on X (Twitter)
+  - Download Image
+  - Copy Share Link
+- 📱 **Web Share API** — Native sharing on supported browsers with fallbacks
 
-Repeat for each of the other repositories. After archiving, add a short notice to their `README.md`:
+### Asynchronous Report Generation
+- ⚡ **Fast Quiz Submission** — Response time < 200ms (non-blocking)
+- 🔄 **Background Processing** — Reports generated asynchronously by dedicated worker
+- 📋 **Job Queue System** — Redis-backed job management for scalability
+- 🔁 **Job Retries** — Automatic retry logic (up to 3 attempts) for failed jobs
+- 📝 **Report Caching** — Intelligent caching to reuse reports for identical assessments
+- 🌍 **Horizontal Scalability** — Web server and worker server run independently
 
-```markdown
-> ⚠️ **ARCHIVED** — This repository is no longer maintained.
-> The active project has moved to: https://github.com/Abafirst/resilience-atlas
-```
+### User Experience
+- 🔐 **JWT Authentication** — Secure login, signup, and profile management
+- 💾 **MongoDB Persistence** — Results stored securely and indefinitely
+- 🎯 **Immediate Feedback** — Scores displayed instantly after quiz completion
+- 📊 **Pattern Detection** — Smart narrative generation based on assessment patterns
+- ♿ **Accessible Visualizations** — SVG-based charts with ARIA labels
 
+---
+
+## 🎯 Assessment Dimensions
+
+Each resilience type is scored on a scale of 1-5 (Never to Always/Excellent):
+
+| Dimension | Description |
+|-----------|-------------|
+| **Cognitive-Narrative** | Your resilience is driven by meaning-making and reframing experiences. You find strength in narrative coherence. |
+| **Relational** | Strengthened through connection, trust, and supportive relationships. You thrive when you have people to lean on. |
+| **Agentic-Generative** | You demonstrate resilience through purposeful action and forward momentum. Energized by creating change. |
+| **Emotional-Adaptive** | You show flexibility in managing emotions and adapting to stress. You work skillfully with emotional experiences. |
+| **Spiritual-Existential** | Your resilience is grounded in purpose, values, and meaning. You draw strength from a coherent worldview. |
+| **Somatic-Behavioral** | You rely on body awareness and behavioral habits to stabilize and recover. Physical practices provide foundation. |
+
+---
+
+## 🏗️ Project Structure
