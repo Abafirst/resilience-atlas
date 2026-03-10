@@ -39,6 +39,11 @@ app.use(
 // Gzip compression
 app.use(compression());
 
+// Raw body for Stripe webhook signature verification — must be registered
+// BEFORE the global express.json() parser, which would otherwise consume the
+// readable stream and make signature verification impossible.
+app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
+
 // Body parsing with limits
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -96,6 +101,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/quiz", require("./routes/quiz"));
 app.use("/api/affiliates", require("./routes/affiliates"));
 app.use("/api/stripe", require("./routes/stripe"));
+app.use("/api/payments", require("./routes/payments"));
 app.use("/api/report", require("./routes/report"));
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));
 

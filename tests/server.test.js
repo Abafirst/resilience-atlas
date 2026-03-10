@@ -121,6 +121,13 @@ jest.mock('../backend/models/PracticeCompletion', () => ({
   countDocuments: jest.fn().mockResolvedValue(0),
 }));
 
+// Mock Purchase model used by the payments route and report download.
+jest.mock('../backend/models/Purchase', () => ({
+  create: jest.fn().mockResolvedValue({ _id: 'purchase001' }),
+  findOne: jest.fn().mockResolvedValue(null),
+  findOneAndUpdate: jest.fn().mockResolvedValue({}),
+}));
+
 // Mock stripe — use a regular function so `new Stripe(key)` works as a constructor.
 jest.mock('stripe', () => function Stripe() {
   return {
@@ -134,6 +141,20 @@ jest.mock('stripe', () => function Stripe() {
     },
     customers: {
       create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
+    },
+    checkout: {
+      sessions: {
+        create: jest.fn().mockResolvedValue({
+          id: 'cs_test',
+          url: 'https://checkout.stripe.com/pay/cs_test',
+        }),
+        retrieve: jest.fn().mockResolvedValue({
+          id: 'cs_test',
+          payment_status: 'paid',
+          customer_email: 'test@example.com',
+          metadata: { tier: 'deep-report', email: 'test@example.com' },
+        }),
+      },
     },
     webhooks: {
       constructEvent: jest.fn().mockReturnValue({
