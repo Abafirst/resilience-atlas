@@ -93,7 +93,7 @@ const FORMATS = {
 // ── Branding ───────────────────────────────────────────────────────────────────
 
 const BRANDING = {
-  name:         'Resilience Atlas',
+  name:         'The Resilience Atlas™',
   url:          'resilienceatlas.com',
   cta:          'Discover your resilience profile at resilienceatlas.com',
   shortCta:     'resilienceatlas.com',

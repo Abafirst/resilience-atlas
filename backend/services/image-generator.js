@@ -95,8 +95,8 @@ function buildSvgCard(insight, format) {
   const svg = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"`,
-    `     role="img" aria-label="Resilience Atlas insight card — ${_escapeSvgAttr(insight.dimension)}">`,
-    `  <title>Resilience Atlas — ${_escapeSvgAttr(insight.dimension)}</title>`,
+    `     role="img" aria-label="The Resilience Atlas™ insight card — ${_escapeSvgAttr(insight.dimension)}">`,
+    `  <title>The Resilience Atlas™ — ${_escapeSvgAttr(insight.dimension)}</title>`,
     `  <desc>${_escapeSvgAttr(insight.quoteText)} — ${_escapeSvgAttr(insight.quoteAuthor)}</desc>`,
     ...layers,
     '</svg>',

@@ -203,7 +203,7 @@ function generateEmergingStrength(ranked) {
     return (
         `Your ${label} dimension (${emerging.score}%) may represent your most significant ` +
         'growth opportunity. This is not a weakness — it is an invitation to explore an ' +
-        'underdeveloped area of your resilience atlas. ' +
+        'underdeveloped area of your resilience profile. ' +
         action
     );
 }
@@ -242,7 +242,7 @@ function generateGrowthSuggestions(ranked, patterns) {
 function generateEvolutionSummary(evolution) {
     if (!evolution || evolution.isFirstAssessment) {
         return (
-            "You've mapped the first point in your Resilience Atlas. " +
+            "You've mapped the first point on The Resilience Atlas\u2122. " +
             'Each assessment creates a new data point in your personal resilience journey. ' +
             'Return in 30 days to see how your resilience evolves and track your progress.'
         );
@@ -262,7 +262,7 @@ function generateEvolutionSummary(evolution) {
         }
     }
 
-    summary += 'Continue exploring your resilience atlas by retaking the assessment in 30 days.';
+    summary += 'Continue exploring The Resilience Atlas\u2122 by retaking the assessment in 30 days.';
     return summary;
 }
 
