@@ -40,7 +40,7 @@ const UserAffirmationSchema = new mongoose.Schema({
   },
 });
 
-UserAffirmationSchema.index({ userId: 1, affirmationId: 1 }, { unique: false });
+UserAffirmationSchema.index({ userId: 1, affirmationId: 1 });
 UserAffirmationSchema.index({ userId: 1, isFavorited: 1 });
 
 module.exports = mongoose.model('UserAffirmation', UserAffirmationSchema);

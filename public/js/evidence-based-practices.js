@@ -959,9 +959,6 @@ function renderPracticeCard(practice) {
 function renderReflectionModal(practice) {
   const affirmationHtml = window.Affirmations
     ? window.Affirmations.renderAffirmationForPractice(practice.id)
-        .replace('aff-practice-hint', 'aff-reflection-prompt')
-        .replace('aff-practice-hint__label', 'aff-practice-hint__label')
-        .replace('aff-practice-hint__text', 'aff-practice-hint__text')
     : '';
 
   return `

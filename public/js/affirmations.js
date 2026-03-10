@@ -615,7 +615,7 @@ function getDailyAffirmation(resilienceType) {
   if (!source.length) return null;
 
   const dayOfYear = Math.floor(
-    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
+    (new Date() - new Date(new Date().getFullYear(), 0, 1)) / 86400000
   );
   const pick = source[dayOfYear % source.length];
 
