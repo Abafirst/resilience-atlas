@@ -42,7 +42,6 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
 
         // 1. Score the quiz (scoring.js unchanged)
         const scores = calculateResilienceScores(answers);
-        const report = generateReport(scores);
 
         const userId = req.user.userId || req.user.id;
 
@@ -116,6 +115,19 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
             } catch (emailErr) {
                 logger.warn('Email delivery failed (non-fatal):', emailErr.message);
             }
+        });
+
+        // 4. Queue background report generation (non-blocking).
+        const jobQueued = await addReportJob({
+            userId: req.user.userId,
+            scores,
+            username: req.user.username || (user && user.username),
+            email: user ? user.email : null,
+            resultsHash,
+        });
+
+        if (!jobQueued) {
+            logger.warn('Report queue unavailable — report will not be generated asynchronously.');
         }
 
         logger.info(`Quiz submitted by user: ${req.user.username}`);
@@ -136,13 +148,13 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
         });
     } catch (err) {
         logger.error('Quiz submission error:', err);
-        res.status(500).json({ error: 'Internal server error.' });
+        return res.status(500).json({ error: 'Internal server error.' });
     }
 });
 
 /**
  * GET /api/quiz/results
- * Get quiz history for the authenticated user
+ * Get quiz history for the authenticated user.
  */
 router.get('/results', authenticateJWT, async (req, res) => {
     try {
@@ -159,7 +171,7 @@ router.get('/results', authenticateJWT, async (req, res) => {
 
 /**
  * GET /api/quiz/questions
- * Return the list of quiz questions
+ * Return the list of quiz questions.
  */
 router.get('/questions', (req, res) => {
     try {
@@ -172,3 +184,4 @@ router.get('/questions', (req, res) => {
 });
 
 module.exports = router;
+

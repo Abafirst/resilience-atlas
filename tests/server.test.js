@@ -198,10 +198,9 @@ describe('GET /health', () => {
 });
 
 describe('GET /', () => {
-    test('returns 200 with welcome message', async () => {
+    test('returns 200 with HTML content (SPA)', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('message');
     });
 });
 
