@@ -53,6 +53,12 @@ function esc(str) {
     .replace(/"/g, '&quot;');
 }
 
+// ── Email validation (fallback if app.js not loaded) ──
+function _isValidEmail(email) {
+  if (typeof isValidEmail === 'function') return isValidEmail(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
+}
+
 // ── Show alert helper ──────────────────────────────────
 function showAlert(elId, message, type = 'success', emoji = '') {
   const el = document.getElementById(elId);
@@ -239,7 +245,7 @@ document.getElementById('btnRetake')?.addEventListener('click', () => {
 document.getElementById('btnEmail')?.addEventListener('click', async () => {
   const emailInput = document.getElementById('emailInput');
   const email = (emailInput && emailInput.value.trim()) || '';
-  if (!email || !isValidEmail(email)) {
+  if (!email || !_isValidEmail(email)) {
     showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
     if (emailInput) emailInput.focus();
     return;
