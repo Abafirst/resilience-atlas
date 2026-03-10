@@ -96,6 +96,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/quiz", require("./routes/quiz"));
 app.use("/api/affiliates", require("./routes/affiliates"));
 app.use("/api/stripe", require("./routes/stripe"));
+app.use("/api/report", require("./routes/report"));
 
 // ==============================
 // Static Frontend
@@ -129,7 +130,11 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+if (!process.env.JEST_WORKER_ID) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
 

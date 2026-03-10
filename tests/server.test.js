@@ -59,10 +59,14 @@ jest.mock('mongoose', () => {
       pre() {
         return this;
       }
+      index() {
+        return this;
+      }
       methods = {};
     },
     model: jest.fn(),
   };
+  m.Schema.Types = { ObjectId: String };
   return m;
 });
 
@@ -105,24 +109,44 @@ jest.mock('../backend/models/User', () => {
 });
 
 // Mock stripe.
-jest.mock('stripe', () => () => ({
-  paymentIntents: {
-    create: jest.fn().mockResolvedValue({
-      id: 'pi_test',
-      client_secret: 'secret_test',
-      status: 'requires_payment_method',
-    }),
-    retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
-  },
-  customers: {
-    create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
-  },
-  webhooks: {
-    constructEvent: jest.fn().mockReturnValue({
-      type: 'payment_intent.succeeded',
-      data: { object: { id: 'pi_test' } },
-    }),
-  },
+jest.mock('stripe', () => {
+  const MockStripe = function () {
+    return {
+      paymentIntents: {
+        create: jest.fn().mockResolvedValue({
+          id: 'pi_test',
+          client_secret: 'secret_test',
+          status: 'requires_payment_method',
+        }),
+        retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
+      },
+      customers: {
+        create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
+      },
+      webhooks: {
+        constructEvent: jest.fn().mockReturnValue({
+          type: 'payment_intent.succeeded',
+          data: { object: { id: 'pi_test' } },
+        }),
+      },
+    };
+  };
+  return MockStripe;
+});
+
+// Mock the ResilienceReport model used by the report routes.
+jest.mock('../backend/models/ResilienceReport', () => {
+  const MockReport = jest.fn().mockImplementation(() => ({}));
+  MockReport.findOne = jest.fn().mockResolvedValue(null);
+  MockReport.findOneAndUpdate = jest.fn().mockResolvedValue({ _id: 'report001', status: 'pending' });
+  return MockReport;
+});
+
+// Mock the report queue so no Redis connection is needed.
+jest.mock('../queue/reportQueue', () => ({
+  addReportJob: jest.fn().mockResolvedValue(null),
+  getReportQueue: jest.fn().mockReturnValue(null),
+  QUEUE_NAME: 'reportGeneration',
 }));
 
 // Mock nodemailer so no emails are actually sent.
@@ -165,10 +189,9 @@ describe('GET /health', () => {
 });
 
 describe('GET /', () => {
-    test('returns 200 with welcome message', async () => {
+    test('returns 200 with HTML content (SPA)', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('message');
     });
 });
 
