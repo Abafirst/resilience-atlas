@@ -92,11 +92,15 @@ main { flex: 1; }
 
 .logo-icon {
   width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--blue), var(--teal));
   border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  color: var(--white);
-  font-size: 1.1rem;
+  overflow: hidden;
+}
+
+.logo-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* ── Footer ───────────────────────────────────────── */
