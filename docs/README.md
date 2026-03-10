@@ -2,7 +2,7 @@
 
 > **Single source of truth** — consolidated from Aba-First/demo-repository, Aba-First/resilience_humanity, and Abafirst/OpenClaw.
 
-Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalised insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
+Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalized insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
 
 ---
 

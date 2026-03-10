@@ -56,7 +56,7 @@ Use the [GitHub Issues](https://github.com/Abafirst/resilience-atlas/issues) tra
 Include:
 - A clear title and description
 - Steps to reproduce the issue
-- Expected vs actual behaviour
+- Expected vs actual behavior
 - Relevant logs or screenshots
 
 ---
