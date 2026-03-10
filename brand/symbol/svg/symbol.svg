@@ -1,0 +1,86 @@
+<!--
+  Resilience Atlas — Brand Symbol (Master / Full Color)
+  =====================================================
+  viewBox  : 0 0 200 200
+  Colors   : #1565C0 (Deep Navy), #0097A7 (Soft Teal), #6A4C93 (Muted Purple)
+  Design   : Minimalist compass-inspired geometric mark
+  Usage    : Primary branding, large displays, print
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img"
+     aria-label="Resilience Atlas">
+  <title>Resilience Atlas</title>
+
+  <defs>
+    <!-- Gradient for the central focal point -->
+    <radialGradient id="ra-center-grad" cx="38%" cy="35%" r="65%">
+      <stop offset="0%"   stop-color="#5C8FD6"/>
+      <stop offset="100%" stop-color="#1565C0"/>
+    </radialGradient>
+
+    <!-- Clip path keeps all content inside the outer circle -->
+    <clipPath id="ra-clip">
+      <circle cx="100" cy="100" r="91"/>
+    </clipPath>
+  </defs>
+
+  <!-- ── 1. Subtle inner background geometry (hexagon) ─────────────── -->
+  <!-- Visible at larger sizes; represents interconnection of dimensions -->
+  <polygon
+    points="145,100 122.5,138.97 77.5,138.97 55,100 77.5,61.03 122.5,61.03"
+    fill="none"
+    stroke="#0097A7"
+    stroke-width="0.75"
+    opacity="0.18"
+    clip-path="url(#ra-clip)"
+  />
+
+  <!-- ── 2. Inner structural ring (teal) ───────────────────────────── -->
+  <circle cx="100" cy="100" r="58"
+    fill="none"
+    stroke="#0097A7"
+    stroke-width="1"
+    opacity="0.22"
+  />
+
+  <!-- ── 3. Outer circular boundary — the Atlas map ────────────────── -->
+  <circle cx="100" cy="100" r="91"
+    fill="none"
+    stroke="#1565C0"
+    stroke-width="1.75"
+    opacity="0.75"
+  />
+
+  <!-- ── 4. Cardinal directional markers (N / E / S / W) ───────────── -->
+  <!-- North -->
+  <line x1="100" y1="9" x2="100" y2="26"
+    stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- South -->
+  <line x1="100" y1="174" x2="100" y2="191"
+    stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- East -->
+  <line x1="174" y1="100" x2="191" y2="100"
+    stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- West -->
+  <line x1="9"   y1="100" x2="26"  y2="100"
+    stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- ── 5. Ordinal markers (NE / SE / SW / NW) — very subtle ──────── -->
+  <!-- NE  45° → r=91 → (164.3, 35.7) -->
+  <circle cx="164.3" cy="35.7" r="2.2" fill="#E0E0E0" opacity="0.55"/>
+  <!-- SE 135° → (164.3, 164.3) -->
+  <circle cx="164.3" cy="164.3" r="2.2" fill="#E0E0E0" opacity="0.55"/>
+  <!-- SW 225° → (35.7, 164.3) -->
+  <circle cx="35.7"  cy="164.3" r="2.2" fill="#E0E0E0" opacity="0.55"/>
+  <!-- NW 315° → (35.7, 35.7) -->
+  <circle cx="35.7"  cy="35.7"  r="2.2" fill="#E0E0E0" opacity="0.55"/>
+
+  <!-- ── 6. Central focal point — the individual ───────────────────── -->
+  <circle cx="100" cy="100" r="8"
+    fill="url(#ra-center-grad)"
+  />
+  <!-- Subtle specular highlight -->
+  <circle cx="97.2" cy="97.2" r="2.8"
+    fill="white"
+    opacity="0.3"
+  />
+</svg>
