@@ -1417,3 +1417,58 @@ main { flex: 1; }
 .share-btn-native:hover   { background: #3a8eba; }
 
 
+
+/* ── Atlas Chart Container ──────────────────────────────────────────────── */
+
+.atlas-chart-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#resilienceRadar {
+  max-width: 600px;
+  height: auto;
+  min-height: 400px;
+  display: block;
+  margin: 0 auto;
+}
+
+.chart-description {
+  max-width: 600px;
+  margin: 2rem auto 0;
+  color: #757575;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* ── Responsive adjustments ─────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .atlas-chart-container {
+    padding: 1rem 0;
+  }
+
+  #resilienceRadar {
+    min-height: 350px;
+  }
+
+  .chart-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .atlas-chart-container {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  #resilienceRadar {
+    min-height: 300px;
+  }
+}
