@@ -96,17 +96,29 @@ function renderRadarChart(container, scores) {
   container.innerHTML = '';
 
 const types = [
-  "Somatic-Behavioral",
-  "Cognitive-Narrative",
-  "Emotional-Adaptive",
-  "Relational",
-  "Agentic-Generative",
-  "Spiritual-Existential"
+ "Agentic-Generative",
+ "Relational",
+ "Spiritual-Existential",
+ "Emotional-Adaptive",
+ "Somatic-Behavioral",
+ "Cognitive-Narrative"
 ];
-
+const atlasColors = {
+ "Agentic-Generative": "#4f46e5",   // Indigo
+ "Relational": "#14b8a6",           // Teal
+ "Spiritual-Existential": "#8b5cf6",// Violet
+ "Emotional-Adaptive": "#ec4899",   // Rose
+ "Somatic-Behavioral": "#f59e0b",   // Amber
+ "Cognitive-Narrative": "#64748b"   // Slate
+};
 const percentages = types.map(type =>
   scores[type] ? scores[type].percentage : 0
 );
+const maxScore = Math.max(...percentages);
+const dominantIndex = percentages.indexOf(maxScore);
+// Animation state
+let progress = 0;
+const animationSpeed = 0.04;
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 400 400');
   svg.setAttribute('width', '100%');
@@ -127,13 +139,18 @@ const percentages = types.map(type =>
   for (let level = 1; level <= 5; level++) {
     const radius = (maxRadius / 5) * level;
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', center);
-    circle.setAttribute('cy', center);
-    circle.setAttribute('r', radius);
-    circle.setAttribute('fill', 'none');
-    circle.setAttribute('stroke', '#e0e7ff');
-    circle.setAttribute('stroke-width', '1');
-    svg.appendChild(circle);
+circle.setAttribute('r', i === dominantIndex ? '8' : '4');
+circle.setAttribute('fill', atlasColors[types[i]]);
+
+if (i === dominantIndex) {
+  circle.setAttribute('stroke', atlasColors[types[i]]);
+  circle.setAttribute('stroke-width', '3');
+  circle.setAttribute('opacity', '0.9');
+}
+
+circle.setAttribute('stroke', '#e0e7ff');
+circle.setAttribute('stroke-width', '1');
+svg.appendChild(circle);
   }
 
   // Draw axes and labels
@@ -173,7 +190,7 @@ const percentages = types.map(type =>
   const points = [];
   for (let i = 0; i < numAxes; i++) {
     const rad = (angles[i] * Math.PI) / 180;
-    const radius = (maxRadius / 100) * percentages[i];
+const radius = (percentages[i] / 100) * maxRadius * progress;
     points.push([center + radius * Math.cos(rad), center + radius * Math.sin(rad)]);
   }
 
@@ -195,8 +212,17 @@ const percentages = types.map(type =>
     circle.setAttribute('fill', '#667eea');
     svg.appendChild(circle);
   }
+container.appendChild(svg);
 
-  container.appendChild(svg);
+if (progress < 1) {
+  requestAnimationFrame(() => {
+    progress += animationSpeed;
+    if (progress > 1) progress = 1;
+
+    container.innerHTML = "";
+    renderRadarChart(container, scores);
+  });
+}
 }
 
 window.renderRadarChart = renderRadarChart;
