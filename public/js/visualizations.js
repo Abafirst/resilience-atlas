@@ -95,9 +95,18 @@ function renderRadarChart(container, scores) {
 
   container.innerHTML = '';
 
-  const types = Object.keys(scores);
-  const percentages = Object.values(scores).map(s => s.percentage);
+const types = [
+  "Somatic-Behavioral",
+  "Cognitive-Narrative",
+  "Emotional-Adaptive",
+  "Relational",
+  "Agentic-Generative",
+  "Spiritual-Existential"
+];
 
+const percentages = types.map(type =>
+  scores[type] ? scores[type].percentage : 0
+);
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 400 400');
   svg.setAttribute('width', '100%');
