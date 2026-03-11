@@ -6,61 +6,54 @@
 
 // ── Question bank (36 questions, 6 per resilience type) ─
 const QUESTIONS = [
-  // Adaptive Resilience (Q1–6)
-  { id: 1,  category: 'Adaptive Resilience',    text: 'I adjust my plans when unexpected changes arise.' },
-  { id: 2,  category: 'Adaptive Resilience',    text: 'I see challenges as opportunities to learn and grow.' },
-  { id: 3,  category: 'Adaptive Resilience',    text: 'When one approach fails, I quickly try a different strategy.' },
-  { id: 4,  category: 'Adaptive Resilience',    text: 'I recover my equilibrium fairly quickly after setbacks.' },
-  { id: 5,  category: 'Adaptive Resilience',    text: 'I remain productive even during periods of uncertainty.' },
-  { id: 6,  category: 'Adaptive Resilience',    text: 'I am comfortable with ambiguity and not having all the answers.' },
 
-  // Relational Resilience (Q7–12)
-  { id: 7,  category: 'Relational Resilience',  text: 'I reach out to others when I need support.' },
-  { id: 8,  category: 'Relational Resilience',  text: 'I have people in my life I can count on during hard times.' },
-  { id: 9,  category: 'Relational Resilience',  text: 'I contribute to the well-being of people around me.' },
-  { id: 10, category: 'Relational Resilience',  text: 'I feel a genuine sense of belonging in my community.' },
-  { id: 11, category: 'Relational Resilience',  text: 'I maintain close relationships even when life gets busy.' },
-  { id: 12, category: 'Relational Resilience',  text: 'I am able to set healthy boundaries while staying connected.' },
+  // Somatic-Behavioral (Q1-6)
+  { id: 1, category: 'Somatic-Behavioral', text: 'Physical movement helps me regulate stress.' },
+  { id: 2, category: 'Somatic-Behavioral', text: 'I notice how my body reacts to stress.' },
+  { id: 3, category: 'Somatic-Behavioral', text: 'Healthy routines help me stay grounded.' },
+  { id: 4, category: 'Somatic-Behavioral', text: 'Breathing or physical grounding helps me reset.' },
+  { id: 5, category: 'Somatic-Behavioral', text: 'Sleep and rest influence my resilience.' },
+  { id: 6, category: 'Somatic-Behavioral', text: 'Exercise or movement improves my mood.' },
 
-  // Existential Resilience (Q13–18)
-  { id: 13, category: 'Existential Resilience', text: 'I have a clear sense of purpose that guides my decisions.' },
-  { id: 14, category: 'Existential Resilience', text: 'I can find meaning even in difficult or painful experiences.' },
-  { id: 15, category: 'Existential Resilience', text: 'My values provide a stable foundation when things go wrong.' },
-  { id: 16, category: 'Existential Resilience', text: 'I feel that my life contributes something meaningful to the world.' },
-  { id: 17, category: 'Existential Resilience', text: 'I draw on spiritual or philosophical beliefs during tough times.' },
-  { id: 18, category: 'Existential Resilience', text: 'I have a sense of hope about the future, even when it is uncertain.' },
+  // Cognitive-Narrative (Q7-12)
+  { id: 7, category: 'Cognitive-Narrative', text: 'I reflect on difficult experiences to learn from them.' },
+  { id: 8, category: 'Cognitive-Narrative', text: 'I can reframe setbacks in a constructive way.' },
+  { id: 9, category: 'Cognitive-Narrative', text: 'My personal story helps me understand challenges.' },
+  { id: 10, category: 'Cognitive-Narrative', text: 'I find meaning in difficult experiences.' },
+  { id: 11, category: 'Cognitive-Narrative', text: 'I actively interpret events in ways that support growth.' },
+  { id: 12, category: 'Cognitive-Narrative', text: 'Reflection helps me move forward after adversity.' },
 
-  // Emotional Resilience (Q19–24)
-  { id: 19, category: 'Emotional Resilience',   text: 'I am aware of my emotions and can name them accurately.' },
-  { id: 20, category: 'Emotional Resilience',   text: 'I manage strong emotions without them overwhelming me.' },
-  { id: 21, category: 'Emotional Resilience',   text: 'I allow myself to grieve or feel pain without getting stuck in it.' },
-  { id: 22, category: 'Emotional Resilience',   text: 'I can regulate my stress response in high-pressure moments.' },
-  { id: 23, category: 'Emotional Resilience',   text: 'I use healthy strategies (e.g., exercise, breathing) to cope.' },
-  { id: 24, category: 'Emotional Resilience',   text: 'I bounce back emotionally after disappointment or loss.' },
+  // Emotional-Adaptive (Q13-18)
+  { id: 13, category: 'Emotional-Adaptive', text: 'I can adapt emotionally to stressful situations.' },
+  { id: 14, category: 'Emotional-Adaptive', text: 'I manage difficult emotions effectively.' },
+  { id: 15, category: 'Emotional-Adaptive', text: 'I recover emotionally after setbacks.' },
+  { id: 16, category: 'Emotional-Adaptive', text: 'I can tolerate emotional discomfort when needed.' },
+  { id: 17, category: 'Emotional-Adaptive', text: 'I regulate my emotional reactions well.' },
+  { id: 18, category: 'Emotional-Adaptive', text: 'My emotions help guide my decisions.' },
 
-  // Physical Resilience (Q25–30)
-  { id: 25, category: 'Physical Resilience',    text: 'I prioritize sleep and feel adequately rested most days.' },
-  { id: 26, category: 'Physical Resilience',    text: 'I engage in regular physical movement or exercise.' },
-  { id: 27, category: 'Physical Resilience',    text: 'I nourish my body with food that supports my energy and focus.' },
-  { id: 28, category: 'Physical Resilience',    text: "I listen to my body's signals and rest when I need to." },
-  { id: 29, category: 'Physical Resilience',    text: "My physical health supports my ability to handle life's demands." },
-  { id: 30, category: 'Physical Resilience',    text: 'I take proactive steps to maintain or improve my physical well-being.' },
+  // Relational (Q19-24)
+  { id: 19, category: 'Relational', text: 'I reach out to others when I need support.' },
+  { id: 20, category: 'Relational', text: 'I maintain supportive relationships.' },
+  { id: 21, category: 'Relational', text: 'I feel connected to my community.' },
+  { id: 22, category: 'Relational', text: 'I contribute to the well-being of others.' },
+  { id: 23, category: 'Relational', text: 'I communicate openly with people I trust.' },
+  { id: 24, category: 'Relational', text: 'My relationships help me through challenges.' },
 
-  // Cognitive Resilience (Q31–36)
-  { id: 31, category: 'Cognitive Resilience',   text: 'I challenge negative self-talk and replace it with balanced thinking.' },
-  { id: 32, category: 'Cognitive Resilience',   text: 'I can focus on what I can control rather than what I cannot.' },
-  { id: 33, category: 'Cognitive Resilience',   text: 'I break overwhelming problems into manageable steps.' },
-  { id: 34, category: 'Cognitive Resilience',   text: 'I maintain perspective and avoid catastrophizing difficult situations.' },
-  { id: 35, category: 'Cognitive Resilience',   text: 'I am open to changing my mind when new information is available.' },
-  { id: 36, category: 'Cognitive Resilience',   text: 'I use reflection and learning as tools to navigate future challenges.' },
-];
+  // Agentic-Generative (Q25-30)
+  { id: 25, category: 'Agentic-Generative', text: 'I take action to improve difficult situations.' },
+  { id: 26, category: 'Agentic-Generative', text: 'I pursue meaningful goals even during stress.' },
+  { id: 27, category: 'Agentic-Generative', text: 'I create opportunities even when things are hard.' },
+  { id: 28, category: 'Agentic-Generative', text: 'I stay motivated when facing adversity.' },
+  { id: 29, category: 'Agentic-Generative', text: 'I generate new possibilities in challenging times.' },
+  { id: 30, category: 'Agentic-Generative', text: 'I move forward with purpose after setbacks.' },
 
-const LIKERT_OPTIONS = [
-  { value: 1, label: 'Strongly Disagree' },
-  { value: 2, label: 'Disagree' },
-  { value: 3, label: 'Neutral' },
-  { value: 4, label: 'Agree' },
-  { value: 5, label: 'Strongly Agree' },
+  // Spiritual-Existential (Q31-36)
+  { id: 31, category: 'Spiritual-Existential', text: 'I have a sense of purpose that guides me.' },
+  { id: 32, category: 'Spiritual-Existential', text: 'My values help orient me during difficult times.' },
+  { id: 33, category: 'Spiritual-Existential', text: 'I reflect on deeper meaning in life events.' },
+  { id: 34, category: 'Spiritual-Existential', text: 'I feel connected to something larger than myself.' },
+  { id: 35, category: 'Spiritual-Existential', text: 'My beliefs help me stay grounded.' },
+  { id: 36, category: 'Spiritual-Existential', text: 'Purpose gives me strength during adversity.' }
 ];
 
 // ── State ──────────────────────────────────────────────
