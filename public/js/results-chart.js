@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  const stored = localStorage.getItem("quizResults");
+const stored = localStorage.getItem("resilience_results");
   if (!stored) {
     console.warn("No quiz results found in localStorage");
     return;
