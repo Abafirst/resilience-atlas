@@ -26,8 +26,11 @@ const stored = localStorage.getItem("resilience_results");
   const brandColor =
     getComputedStyle(document.documentElement)
       .getPropertyValue('--blue') || "#4F46E5";
+if (window.resilienceChart) {
+  window.resilienceChart.destroy();
+}
 
-  new Chart(ctx, {
+window.resilienceChart = new Chart(ctx, {
     type: "radar",
     data: {
       labels: labels,
@@ -227,4 +230,4 @@ const stored = localStorage.getItem("resilience_results");
   window.ResilienceChart = { render: initializeChart };
 
 })();
- d16ce3e551d5da4c988c83f9762daf5e928d9b3f
+
