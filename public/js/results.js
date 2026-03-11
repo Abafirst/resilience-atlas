@@ -279,3 +279,27 @@ document.getElementById('btnEmail')?.addEventListener('click', async () => {
     showAlert('emailAlert', e.message || 'Failed to send email.', 'error', '❌');
   }
 });
+document.addEventListener("DOMContentLoaded", async () => {
+
+  try {
+
+    const res = await fetch("/api/report");
+    const data = await res.json();
+
+    const reportEl = document.getElementById("reportText");
+
+    if (reportEl && data.summary) {
+reportEl.innerHTML = `
+<h3>Your Resilience Profile Overview</h3>
+<p><strong>Overall Score:</strong> ${data.overallScore}%</p>
+<p>${data.summary}</p>
+`;
+    }
+
+    if (window.renderRadarChart && data.dimensions) {
+      renderRadarChart(data.dimensions);
+    }
+  } catch (err) {
+    console.error("Failed to load report:", err);
+  }
+});

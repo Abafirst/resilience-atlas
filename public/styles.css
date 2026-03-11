@@ -7,24 +7,31 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --blue:       #2563EB;
-  --blue-dark:  #1D4ED8;
-  --blue-light: #DBEAFE;
-  --teal:       #0D9488;
-  --teal-light: #CCFBF1;
-  --orange:     #F97316;
-  --orange-light: #FED7AA;
-  --slate-900:  #0F172A;
-  --slate-800:  #1E293B;
-  --slate-600:  #475569;
-  --slate-400:  #94A3B8;
-  --slate-200:  #E2E8F0;
-  --slate-100:  #F1F5F9;
-  --slate-50:   #F8FAFC;
-  --white:      #FFFFFF;
-  --success:    #16A34A;
-  --error:      #DC2626;
+:root {
 
+  /* Primary Brand Colors */
+
+  --blue: #4F46E5;        /* Indigo */
+  --blue-dark: #4338CA;
+  --blue-light: #E0E7FF;
+
+  --teal: #059669;        /* Emerald */
+  --teal-light: #D1FAE5;
+
+  --orange: #F59E0B;      /* Warm Amber */
+  --orange-light: #FEF3C7;
+
+  /* Neutral System */
+
+  --slate-900: #0F172A;
+  --slate-800: #1E293B;
+  --slate-600: #475569;
+  --slate-400: #94A3B8;
+  --slate-200: #E2E8F0;
+  --slate-100: #F1F5F9;
+  --slate-50: #F8FAFC;
+
+}
   --radius-sm:  6px;
   --radius-md:  10px;
   --radius-lg:  16px;
@@ -1416,4 +1423,20 @@ main { flex: 1; }
 .share-btn-native   { background: #4a9eca; color: #fff; border-color: #4a9eca; }
 .share-btn-native:hover   { background: #3a8eba; }
 
+/* ===================================
+   Resilience Atlas Radar Chart
+=================================== */
 
+.atlas-chart-container {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+#resilienceRadar {
+  width: 100%;
+  height: 420px;
+}
