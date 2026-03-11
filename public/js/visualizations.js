@@ -127,6 +127,28 @@ const animationSpeed = 0.04;
   svg.setAttribute('height', '400');
   svg.setAttribute('role', 'img');
   svg.setAttribute('aria-label', 'Radar chart showing scores for: ' + types.join(', '));
+// Compass ring
+const compass = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+compass.setAttribute('cx', 200);
+compass.setAttribute('cy', 200);
+compass.setAttribute('r', 160);
+compass.setAttribute('fill', 'none');
+compass.setAttribute('stroke', '#e5e7eb');
+compass.setAttribute('stroke-width', 2);
+svg.appendChild(compass);
+
+// Cardinal directions
+['N','E','S','W'].forEach((dir,i)=>{
+  const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+  const positions = [[200,20],[380,200],[200,390],[20,200]];
+  text.setAttribute('x', positions[i][0]);
+  text.setAttribute('y', positions[i][1]);
+  text.setAttribute('text-anchor','middle');
+  text.setAttribute('font-size','14');
+  text.setAttribute('fill','#9ca3af');
+  text.textContent = dir;
+  svg.appendChild(text);
+});
 
   // Accessible title element
   const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
