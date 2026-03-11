@@ -114,8 +114,10 @@ const atlasColors = {
 const percentages = types.map(type =>
   scores[type] ? scores[type].percentage : 0
 );
+
 const maxScore = Math.max(...percentages);
 const dominantIndex = percentages.indexOf(maxScore);
+const dominantColor = atlasColors[types[dominantIndex]];
 // Animation state
 let progress = 0;
 const animationSpeed = 0.04;

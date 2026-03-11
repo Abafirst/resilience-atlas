@@ -261,22 +261,20 @@ document.getElementById('btnEmail')?.addEventListener('click', async () => {
     return;
   }
   showAlert('emailAlert', 'Sending your report to ' + email + '...', 'success', '✉️');
-  try {
-    const results = JSON.parse(localStorage.getItem('resilience_results'));
-    if (!results) throw new Error('No results to send. Please finish the assessment first.');
+try {
+  const results = JSON.parse(localStorage.getItem('resilience_results'));
+  if (!results) throw new Error('No results to send. Please finish the assessment first.');
 
-    results.reportText = generatePersonalizedReport(results);
+  results.reportText = generatePersonalizedReport(results);
 
-    const res = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...results, email }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || ('Sending failed (status: ' + res.status + ')'));
-    showAlert('emailAlert', 'Report sent to ' + email + '! 🎉', 'success', '✅');
-  } catch (e) {
-    showAlert('emailAlert', e.message || 'Failed to send email.', 'error', '❌');
+const url = `/api/report/download?overall=${results.overall}&dominantType=${results.dominantType}&scores=${encodeURIComponent(JSON.stringify(results.scores))}&email=${email}`;
+  window.open(url, "_blank");
+
+  showAlert('emailAlert', 'Generating your report...', 'success', '📄');
+
+} catch (e) {
+  showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
+}
   }
 });
 document.addEventListener("DOMContentLoaded", async () => {
