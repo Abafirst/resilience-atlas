@@ -4,6 +4,14 @@
 
 'use strict';
 
+// Likert scale options
+const LIKERT_OPTIONS = [
+  { value: 1, label: "Never" },
+  { value: 2, label: "Rarely" },
+  { value: 3, label: "Sometimes" },
+  { value: 4, label: "Often" },
+  { value: 5, label: "Almost Always" }
+];
 // ── Question bank (36 questions, 6 per resilience type) ─
 const QUESTIONS = [
 
