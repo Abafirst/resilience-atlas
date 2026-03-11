@@ -1495,3 +1495,9 @@ main { flex: 1; }
   }
 >>>>>>> d16ce3e551d5da4c988c83f9762daf5e928d9b3f
 }
+/* Radar chart sizing */
+#radarChartContainer svg {
+  max-width: 520px;
+  margin: 0 auto;
+  display: block;
+}
