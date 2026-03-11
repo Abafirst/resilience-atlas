@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/evidence-practices.css" />
   <link rel="stylesheet" href="css/payment-ui.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -50,6 +51,18 @@
         <section class="profile-section card" aria-labelledby="radarHeading">
           <h2 id="radarHeading">Resilience Dimensions Overview</h2>
           <div id="radarChartContainer" aria-label="Resilience radar chart"></div>
+        </section>
+
+        <!-- Resilience Atlas Map (Chart.js Radar Chart) -->
+        <section class="profile-section card" aria-labelledby="atlasHeading">
+          <h2 id="atlasHeading">Your Resilience Atlas Map</h2>
+          <div class="atlas-chart-container">
+            <canvas id="resilienceRadar" aria-label="Resilience dimensions radar chart"></canvas>
+          </div>
+          <p class="chart-description">
+            This radar chart maps your strengths across the six dimensions of resilience.
+            Dimensions closer to the outer edge indicate greater resilience in that area.
+          </p>
         </section>
 
         <!-- Strengths Summary -->
@@ -173,8 +186,8 @@
 <script src="js/results.js"></script>
 <script src="js/evidence-based-practices.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/results-chart.js"></script>
+
 </body>
 </html>
 
