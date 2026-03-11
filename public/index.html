@@ -3,199 +3,416 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Resilience Atlas™ — Discover Your Resilience Profile</title>
-  <meta name="description" content="Take The Resilience Atlas™ assessment developed by Dr. Janeen Molchany, Ph.D., BCBA, and discover your personalized resilience profile across six dimensions." />
+  <title>The Resilience Atlas™ — Journey &amp; Evolution</title>
+  <meta name="description" content="Navigate your resilience journey. View your assessment history, evolution compass, and longitudinal resilience profile." />
   <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Atlas page supplemental styles ─────────────────────── */
+    .atlas-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
+      color: #fff;
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid #1e4060;
+    }
+    .atlas-hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #4a9eca;
+    }
+    .atlas-hero p { color: #a8c4d8; max-width: 600px; margin: 0 auto; }
+
+    .atlas-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 2rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (min-width: 800px) {
+      .atlas-grid { grid-template-columns: 2fr 1fr; }
+    }
+
+    /* Timeline */
+    .atlas-timeline { list-style: none; padding: 0; margin: 0; }
+    .atlas-timeline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #e8edf2;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 4px;
+    }
+    .atlas-timeline-item:hover { background: #f4f7fa; }
+    .atlas-timeline-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4a9eca;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .atlas-timeline-dot.first { background: #f0c060; }
+    .atlas-timeline-meta { font-size: 0.85rem; color: #6a8ca8; margin-top: 2px; }
+    .atlas-timeline-score { font-size: 1.4rem; font-weight: bold; color: #1a3a5c; }
+    .atlas-timeline-type  { font-size: 0.9rem; color: #4a9eca; }
+
+    /* Compass section */
+    .compass-card {
+      background: #0f2942;
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: #fff;
+      text-align: center;
+    }
+    .compass-card h3 { color: #4a9eca; margin-bottom: 0.5rem; }
+    .compass-card p  { color: #a8c4d8; font-size: 0.85rem; margin-bottom: 1rem; }
+    #compassContainer { max-width: 280px; margin: 0 auto; }
+
+    /* Changes table */
+    .compass-changes-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    .compass-changes-table td { padding: 4px 8px; }
+    .compass-dim-label  { color: #a8c4d8; }
+    .compass-dim-change { font-weight: bold; text-align: right; }
+    .change-up     { color: #7fba8f; }
+    .change-down   { color: #e07060; }
+    .change-stable { color: #a8c4d8; }
+
+    /* Evolution narrative */
+    .evolution-narrative {
+      background: #f4f7fa;
+      border-left: 4px solid #4a9eca;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      margin-top: 1rem;
+    }
+    .evolution-narrative p { margin: 0; }
+
+    /* Assessment detail panel */
+    .assessment-detail {
+      display: none;
+      background: #fff;
+      border: 1px solid #d0dce8;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .assessment-detail.visible { display: block; }
+    .detail-scores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+    .detail-score-item {
+      flex: 1 1 120px;
+      background: #f4f7fa;
+      border-radius: 6px;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    .detail-score-label { font-size: 0.8rem; color: #6a8ca8; }
+    .detail-score-value { font-size: 1.3rem; font-weight: bold; color: #1a3a5c; }
+
+    /* Empty state */
+    .atlas-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #6a8ca8;
+    }
+    .atlas-empty h3 { color: #1a3a5c; margin-bottom: 1rem; }
+    .atlas-empty p  { max-width: 480px; margin: 0 auto 1.5rem; }
+
+    /* Loading */
+    .atlas-loading { text-align: center; padding: 3rem; color: #6a8ca8; }
+  </style>
 </head>
 <body>
 
-  <!-- ── Header ──────────────────────────────────────── -->
+  <!-- ── Header ──────────────────────────────────────────── -->
   <header class="site-header">
     <div class="header-inner">
       <a class="logo" href="index.html">
         <div class="logo-icon" aria-hidden="true"><img src="/brand/symbol/svg/symbol.svg" alt="" width="36" height="36"></div>
         The Resilience Atlas&#8482;
       </a>
-      <a class="btn btn-primary" href="quiz.html">Start Assessment</a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="quiz.html"    class="btn btn-primary">Take Assessment</a>
+        <a href="results.html" class="btn btn-secondary">My Results</a>
+      </nav>
+    </div>
+  </header>
 
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <section class="atlas-hero">
+    <h1>&#9788; The Resilience Atlas&#8482;</h1>
+    <p>
+      Navigate your resilience journey. Each assessment marks a new point on your
+      personal atlas — tracking how your resilience evolves over time.
+    </p>
+  </section>
+
+  <!-- ── Main content ────────────────────────────────────── -->
   <main>
+    <div id="atlasLoading" class="atlas-loading">
+      <p>Loading your resilience history&hellip;</p>
+    </div>
 
-    <!-- ── Hero ─────────────────────────────────────── -->
-    <section class="hero">
-      <div class="container">
-        <span class="hero-badge">Evidence-Based Self-Discovery</span>
-        <h1>Understand How You&nbsp;Bounce&nbsp;Back</h1>
-        <p class="subtitle">
-          The Resilience Atlas&#8482; measures six core dimensions of resilience
-          so you can see exactly where your strengths lie — and where to invest
-          in growth.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary btn-lg" href="quiz.html">Start Assessment</a>
-          <a class="btn btn-secondary btn-lg" href="#about">Learn More</a>
+    <div id="atlasEmpty" class="atlas-empty" hidden>
+      <h3>Your Atlas Awaits</h3>
+      <p>
+        Complete your first assessment to map the first point on The Resilience Atlas&#8482;.
+        Every retake adds a new data point to your longitudinal resilience journey.
+      </p>
+      <a href="quiz.html" class="btn btn-primary btn-lg">Take the Assessment</a>
+    </div>
+
+    <div id="atlasContent" class="atlas-grid" hidden>
+
+      <!-- ── Left column: timeline + detail ────────────── -->
+      <div>
+        <div class="card">
+          <h2>Assessment History</h2>
+          <p class="section-description">
+            Your most recent <span id="assessmentCount">0</span> assessments,
+            newest first. Click any entry to view details.
+          </p>
+          <ul id="timeline" class="atlas-timeline" aria-label="Assessment history"></ul>
+        </div>
+
+        <!-- Selected assessment detail panel -->
+        <div id="assessmentDetail" class="assessment-detail" role="region" aria-live="polite" aria-label="Assessment details">
+          <h3 id="detailHeading">Assessment Details</h3>
+          <p id="detailDate" class="atlas-timeline-meta"></p>
+          <div class="detail-scores" id="detailScores"></div>
+        </div>
+
+        <!-- Evolution narrative -->
+        <div id="evolutionNarrative" class="evolution-narrative" hidden>
+          <p id="evolutionText"></p>
         </div>
       </div>
-    </section>
 
-    <!-- ── Report types ──────────────────────────────── -->
-    <section class="section" id="reports">
-      <div class="container">
-        <div class="section-title">
-          <h2>Three Ways to See Your Results</h2>
-          <p>Every completed assessment generates a rich, personalized report — or all three.</p>
+      <!-- ── Right column: compass ──────────────────────── -->
+      <div>
+        <div class="compass-card">
+          <h3>Evolution Compass</h3>
+          <p>
+            Direction and magnitude of your resilience change since your last assessment.
+          </p>
+          <div id="compassContainer" aria-label="Resilience evolution compass"></div>
+          <div id="changesContainer" aria-label="Dimension changes"></div>
         </div>
-        <div class="card-grid">
 
-          <article class="card report-card">
-            <div class="report-card-accent accent-blue"></div>
-            <div class="report-icon icon-blue" aria-hidden="true">&#128202;</div>
-            <h3>Profile Overview</h3>
-            <p>
-              A visual snapshot of your six resilience dimensions with
-              scores, strength tiers, and a color-coded bar chart you can
-              see at a glance.
-            </p>
-          </article>
-
-          <article class="card report-card">
-            <div class="report-card-accent accent-teal"></div>
-            <div class="report-icon icon-teal" aria-hidden="true">&#128203;</div>
-            <h3>Personalized Narrative</h3>
-            <p>
-              A written report tailored to your unique profile — explaining
-              what your scores mean, your primary strengths, and practical
-              next steps for growth.
-            </p>
-          </article>
-
-          <article class="card report-card">
-            <div class="report-card-accent accent-orange"></div>
-            <div class="report-icon icon-orange" aria-hidden="true">&#128196;</div>
-            <h3>Downloadable PDF</h3>
-            <p>
-              A polished, printable PDF combining your profile chart and
-              narrative report — ready to share with a coach, therapist, or
-              trusted colleague.
-            </p>
-          </article>
-
+        <!-- Retake encouragement -->
+        <div class="card" style="margin-top:1rem; text-align:center;">
+          <h3>Continue Your Journey</h3>
+          <p>Retake the assessment in 30 days to track your evolution.</p>
+          <a href="quiz.html" class="btn btn-primary" id="btnRetake">
+            Retake Assessment
+          </a>
         </div>
       </div>
-    </section>
 
-    <!-- ── How it works ──────────────────────────────── -->
-    <section class="section how-it-works" id="how-it-works">
-      <div class="container">
-        <div class="section-title">
-          <h2>How It Works</h2>
-          <p>Four simple steps from start to insight.</p>
-        </div>
-        <div class="steps-grid">
-          <div class="step-item">
-            <div class="step-number">1</div>
-            <h3>Enter Your Details</h3>
-            <p>Provide your first name and email — that is all we need to get started.</p>
-          </div>
-          <div class="step-item">
-            <div class="step-number">2</div>
-            <h3>Answer 36 Questions</h3>
-            <p>Rate 36 statements on a five-point scale. Most people finish in 10–15 minutes.</p>
-          </div>
-          <div class="step-item">
-            <div class="step-number">3</div>
-            <h3>Receive Your Profile</h3>
-            <p>Instantly see your personalized resilience profile with scores across all six dimensions.</p>
-          </div>
-          <div class="step-item">
-            <div class="step-number">4</div>
-            <h3>Download or Share</h3>
-            <p>Download a PDF report or email it to yourself for future reflection.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── Six resilience types ───────────────────────── -->
-    <section class="section" id="dimensions">
-      <div class="container">
-        <div class="section-title">
-          <h2>Six Dimensions of Resilience</h2>
-          <p>The assessment measures resilience across six evidence-based domains.</p>
-        </div>
-        <div class="card-grid">
-          <div class="card">
-            <h4>&#9672; Adaptive Resilience</h4>
-            <p>The ability to adjust, pivot, and thrive amid change and uncertainty.</p>
-          </div>
-          <div class="card">
-            <h4>&#9672; Relational Resilience</h4>
-            <p>Drawing strength from and contributing to the people around you.</p>
-          </div>
-          <div class="card">
-            <h4>&#9672; Existential Resilience</h4>
-            <p>Finding meaning and purpose that sustains you through hardship.</p>
-          </div>
-          <div class="card">
-            <h4>&#9672; Emotional Resilience</h4>
-            <p>Recognising, regulating, and recovering from intense emotions.</p>
-          </div>
-          <div class="card">
-            <h4>&#9672; Physical Resilience</h4>
-            <p>Maintaining the body as a foundation for meeting life's demands.</p>
-          </div>
-          <div class="card">
-            <h4>&#9672; Cognitive Resilience</h4>
-            <p>Thinking flexibly, challenging unhelpful patterns, and problem-solving effectively.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── About Janeen ───────────────────────────────── -->
-    <section class="section credentials-section" id="about">
-      <div class="container">
-        <div class="credentials-inner">
-          <div class="credentials-avatar" aria-hidden="true">&#128105;&#8205;&#127979;</div>
-          <div class="credentials-text">
-            <h2>About Dr. Janeen Molchany</h2>
-            <p class="title">Janeen Molchany, Ph.D., BCBA</p>
-            <p>
-              Dr. Molchany is a board-certified behavior analyst and researcher
-              whose work focuses on human resilience, behavioral health, and
-              evidence-based approaches to well-being. With decades of clinical
-              and consulting experience, she developed The Resilience Atlas™
-              to give individuals an accessible, research-grounded window into
-              their own adaptive capacity.
-            </p>
-            <p>
-              The assessment framework draws on the latest findings from
-              positive psychology, behavioral science, and trauma-informed
-              practice — presented in a format that is warm, accessible, and
-              immediately actionable.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── CTA ───────────────────────────────────────── -->
-    <section class="cta-section">
-      <div class="container">
-        <h2>Ready to Discover Your Resilience Profile?</h2>
-        <p>It takes just 10–15 minutes and the insights last a lifetime.</p>
-        <a class="btn btn-primary btn-lg" href="quiz.html">Start the Free Assessment</a>
-      </div>
-    </section>
+    </div><!-- /.atlas-grid -->
 
   </main>
 
-  <!-- ── Footer ───────────────────────────────────────── -->
+  <!-- ── Footer ───────────────────────────────────────────── -->
   <footer class="site-footer">
     <p>&copy; 2026 The Resilience Atlas&#8482;</p>
     <p class="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
-    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical assessment.</p>
   </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/visualizations.js"></script>
+  <script src="js/ResilienceCompass.js"></script>
+  <script>
+    /* ── Atlas page logic ────────────────────────────────── */
+    'use strict';
+
+    var atlasLoading    = document.getElementById('atlasLoading');
+    var atlasEmpty      = document.getElementById('atlasEmpty');
+    var atlasContent    = document.getElementById('atlasContent');
+    var timeline        = document.getElementById('timeline');
+    var countEl         = document.getElementById('assessmentCount');
+    var detailPanel     = document.getElementById('assessmentDetail');
+    var detailHeading   = document.getElementById('detailHeading');
+    var detailDate      = document.getElementById('detailDate');
+    var detailScores    = document.getElementById('detailScores');
+    var compassContainer = document.getElementById('compassContainer');
+    var changesContainer = document.getElementById('changesContainer');
+    var evolutionBox    = document.getElementById('evolutionNarrative');
+    var evolutionText   = document.getElementById('evolutionText');
+
+    var DIMS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+
+    function capitalize(s) {
+      return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+    }
+
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function getAuthHeader() {
+      var token = (typeof Store !== 'undefined' && Store.get('atlas_token')) ||
+                  localStorage.getItem('atlas_token');
+      return token ? { 'Authorization': 'Bearer ' + token } : {};
+    }
+
+    async function fetchHistory() {
+      var headers = Object.assign({ 'Content-Type': 'application/json' }, getAuthHeader());
+      var res = await fetch('/api/atlas/history', { headers: headers });
+      if (!res.ok) throw new Error('Failed to load history');
+      return res.json();
+    }
+
+    function renderTimeline(assessments) {
+      timeline.innerHTML = '';
+      countEl.textContent = assessments.length;
+
+      assessments.forEach(function (a, idx) {
+        var li  = document.createElement('li');
+        li.className = 'atlas-timeline-item';
+        li.setAttribute('tabindex', '0');
+        li.setAttribute('role', 'button');
+        li.setAttribute('aria-label', 'Assessment ' + formatDate(a.assessmentDate));
+
+        var dot = document.createElement('div');
+        dot.className = 'atlas-timeline-dot' + (idx === assessments.length - 1 ? ' first' : '');
+
+        var info = document.createElement('div');
+        info.innerHTML =
+          '<div class="atlas-timeline-score">' + a.overall + '%</div>' +
+          '<div class="atlas-timeline-type">' + capitalize(a.dominantType) + '</div>' +
+          '<div class="atlas-timeline-meta">' + formatDate(a.assessmentDate) + '</div>';
+
+        li.appendChild(dot);
+        li.appendChild(info);
+
+        li.addEventListener('click', function () { showDetail(a, idx, assessments); });
+        li.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { showDetail(a, idx, assessments); }
+        });
+
+        timeline.appendChild(li);
+      });
+    }
+
+    function showDetail(assessment, idx, all) {
+      detailHeading.textContent = 'Assessment — ' + formatDate(assessment.assessmentDate);
+      detailDate.textContent    = 'Overall: ' + assessment.overall + '% | Dominant: ' + capitalize(assessment.dominantType);
+
+      detailScores.innerHTML = '';
+      DIMS.forEach(function (dim) {
+        var val = (assessment.scores && assessment.scores[dim]) || 0;
+        var item = document.createElement('div');
+        item.className = 'detail-score-item';
+        item.innerHTML =
+          '<div class="detail-score-label">' + capitalize(dim) + '</div>' +
+          '<div class="detail-score-value">' + val + '%</div>';
+        detailScores.appendChild(item);
+      });
+
+      detailPanel.classList.add('visible');
+
+      // Show compass for this vs previous
+      if (idx < all.length - 1) {
+        var prev = all[idx + 1]; // older assessment
+        renderCompassFromAssessments(assessment, prev);
+      } else {
+        // First ever assessment
+        if (typeof ResilienceCompass !== 'undefined') {
+          ResilienceCompass.render(compassContainer, { direction: 'N', magnitude: 0, changes: {} });
+          changesContainer.innerHTML = '';
+        }
+        evolutionText.textContent = "You've mapped the first point on The Resilience Atlas\u2122. Return in 30 days to see how your resilience evolves.";
+        evolutionBox.hidden = false;
+      }
+    }
+
+    function calculateSimpleEvolution(current, previous) {
+      var changes = {};
+      var overallChange = (current.overall || 0) - (previous.overall || 0);
+      DIMS.forEach(function (dim) {
+        changes[dim] = ((current.scores && current.scores[dim]) || 0) -
+                       ((previous.scores && previous.scores[dim]) || 0);
+      });
+      return { changes: changes, overallChange: overallChange };
+    }
+
+    function pickDirection(changes) {
+      /*
+       * Client-side mirror of the compass direction algorithm in
+       * backend/services/evolution.js (calculateDirection).
+       * Duplicated here because the backend module is a Node.js CommonJS
+       * module and cannot be directly imported by the browser.
+       * If the algorithm changes, update both locations.
+       */
+      var northward = (changes.mental || 0) - (changes.physical || 0);
+      var eastward  = (changes.social || 0) - ((changes.emotional || 0) + (changes.spiritual || 0));
+      var magnitude = Math.sqrt(northward * northward + eastward * eastward);
+      if (magnitude < 0.5) return { primary: 'N', magnitude: 0 };
+      // Convert standard math angle to compass bearing: bearing = 90 - atan2_deg
+      var deg = 90 - Math.atan2(eastward, northward) * 180 / Math.PI;
+      var dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      var idx  = Math.round(((deg % 360) + 360) % 360 / 45) % 8;
+      return { primary: dirs[idx], magnitude: Math.min(10, Math.round(magnitude / 50 * 10)) };
+    }
+
+    function renderCompassFromAssessments(current, previous) {
+      var evo  = calculateSimpleEvolution(current, previous);
+      var dir  = pickDirection(evo.changes);
+      var sign = evo.overallChange > 0 ? '+' : '';
+
+      if (typeof ResilienceCompass !== 'undefined') {
+        ResilienceCompass.render(compassContainer, {
+          direction: dir.primary,
+          magnitude: dir.magnitude,
+          changes:   evo.changes,
+        });
+        ResilienceCompass.renderChanges(changesContainer, evo.changes);
+      }
+
+      var text = evo.overallChange !== 0
+        ? 'Overall change: ' + sign + evo.overallChange + ' points since this assessment.'
+        : 'Your overall score was stable between these assessments.';
+      evolutionText.textContent = text;
+      evolutionBox.hidden = false;
+    }
+
+    async function init() {
+      try {
+        var data = await fetchHistory();
+        atlasLoading.hidden = true;
+
+        if (!data.assessments || data.assessments.length === 0) {
+          atlasEmpty.hidden = false;
+          return;
+        }
+
+        atlasContent.hidden = false;
+        renderTimeline(data.assessments);
+
+        // Auto-show latest assessment and its evolution
+        if (data.assessments.length >= 2) {
+          showDetail(data.assessments[0], 0, data.assessments);
+        } else {
+          showDetail(data.assessments[0], data.assessments.length - 1, data.assessments);
+        }
+      } catch (err) {
+        atlasLoading.hidden = true;
+        atlasEmpty.hidden = false;
+        console.error('Atlas load error:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 
 </body>
 </html>
