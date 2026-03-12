@@ -100,7 +100,7 @@ const types = [
  "Relational",
  "Spiritual-Existential",
  "Emotional-Adaptive",
- "Somatic-Behavioral",
+ "Somatic-Regulative",
  "Cognitive-Narrative"
 ];
 const atlasColors = {
@@ -108,7 +108,7 @@ const atlasColors = {
  "Relational": "#14b8a6",           // Teal
  "Spiritual-Existential": "#8b5cf6",// Violet
  "Emotional-Adaptive": "#ec4899",   // Rose
- "Somatic-Behavioral": "#f59e0b",   // Amber
+ "Somatic-Regulative": "#f59e0b",   // Amber
  "Cognitive-Narrative": "#64748b"   // Slate
 };
 const percentages = types.map(type =>
@@ -121,12 +121,14 @@ const dominantColor = atlasColors[types[dominantIndex]];
 // Animation state
 let progress = 0;
 const animationSpeed = 0.04;
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', '0 0 400 400');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '400');
-  svg.setAttribute('role', 'img');
-  svg.setAttribute('aria-label', 'Radar chart showing scores for: ' + types.join(', '));
+const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+svg.setAttribute('viewBox', '0 0 400 400');
+svg.setAttribute('width', '100%');
+svg.setAttribute('height', '400');
+svg.setAttribute('role', 'img');
+svg.setAttribute('aria-label', 'Radar chart showing scores for: ' + types.join(', '));
+
+container.appendChild(svg);
 // Compass ring
 const compass = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 compass.setAttribute('cx', 200);
@@ -163,13 +165,11 @@ svg.appendChild(compass);
   for (let level = 1; level <= 5; level++) {
     const radius = (maxRadius / 5) * level;
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-circle.setAttribute('r', i === dominantIndex ? '8' : '4');
-circle.setAttribute('fill', atlasColors[types[i]]);
+circle.setAttribute('r', level === dominantIndex ? '8' : '4');
+circle.setAttribute('fill', atlasColors[types[level]]);
 
-if (i === dominantIndex) {
-  circle.setAttribute('stroke', atlasColors[types[i]]);
-  circle.setAttribute('stroke-width', '3');
-  circle.setAttribute('opacity', '0.9');
+if (level === dominantIndex) {
+circle.setAttribute('stroke', atlasColors[types[level]]);
 }
 
 circle.setAttribute('stroke', '#e0e7ff');
@@ -243,7 +243,6 @@ if (progress < 1) {
     progress += animationSpeed;
     if (progress > 1) progress = 1;
 
-    container.innerHTML = "";
     renderRadarChart(container, scores);
   });
 }

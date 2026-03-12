@@ -1,20 +1,16 @@
-/* =====================================================
-   results.js — Results page logic for Resilience Atlas
-   ===================================================== */
-
+/*
+results.js — Results page logic for Resilience Atlas
+*/
 'use strict';
 
-// ── Utility: minimal HTML escaping ─────────────────────
-const escapeHtml = (typeof window !== 'undefined' && window.escapeHtml)
-  ? window.escapeHtml
-  : function(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    };
+// Load saved quiz results FIRST
+window.results = JSON.parse(localStorage.getItem('resilience_results') || 'null');
+let results = window.results;
 
+// Backward compatibility
+if (results && results.scores && results.scores["Somatic-Behavioral"]) {
+  results.scores["Somatic-Regulative"] = results.scores["Somatic-Behavioral"];
+}
 // ── Type descriptions ──────────────────────────────────
 const TYPE_DESCRIPTIONS = {
   'Cognitive-Narrative':
@@ -35,11 +31,10 @@ const TYPE_DESCRIPTIONS = {
   'Spiritual-Existential':
     'Your resilience is grounded in purpose, values, and a sense of meaning beyond ' +
     'yourself. You draw strength from a coherent worldview and connection to something larger.',
-  'Somatic-Behavioral':
+'Somatic-Regulative':
     'You rely on body awareness and behavioral habits to stabilize and recover from ' +
     'stress. Your physical practices and consistent routines provide a reliable foundation.',
 };
-
 // ── Utility: show feedback alert ───────────────────────
 function showAlert(elID, message, type, emoji) {
   const el = document.getElementById(elID);
@@ -132,10 +127,23 @@ function generatePersonalizedReport(results) {
   text += '\nKeep building your resilience journey!\n';
   return text;
 }
-
+// Load saved quiz results
+const stored = localStorage.getItem('resilience_results');
+results = stored ? JSON.parse(stored) : null;
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   try {
+// — Radar chart —
+const radarContainer = document.getElementById('radarChartContainer');
+
+if (radarContainer && window.renderRadarChart && results && results.scores) {
+
+  const radarScores = Object.fromEntries(
+    Object.entries(results.scores).map(([k, v]) => [k, v.percentage])
+  );
+
+  window.renderRadarChart(radarContainer, radarScores);
+}
     // ── Download PDF button ────────────────────────────────
     const downloadButton = document.getElementById('btnDownload');
     if (downloadButton) {
@@ -260,13 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const emergingEl = document.getElementById('emergingStrength');
     if (emergingEl) emergingEl.textContent = `${emergingStrength} (${results.scores[emergingStrength].percentage.toFixed(1)}%)`;
-
-    // ── Radar chart ───────────────────────────────────────
-    const radarContainer = document.getElementById('radarChartContainer');
-    const renderRadar = (typeof window !== 'undefined') ? window.renderRadarChart : null;
-    if (radarContainer && typeof renderRadar === 'function') {
-      renderRadar(radarContainer, results.scores);
-    }
 
     // ── Bar chart ─────────────────────────────────────────
     const profileBars = document.getElementById('profileBars');

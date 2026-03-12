@@ -1490,14 +1490,27 @@ main { flex: 1; }
     padding: 1rem;
   }
 
-  #resilienceRadar {
-    min-height: 300px;
-  }
->>>>>>> d16ce3e551d5da4c988c83f9762daf5e928d9b3f
-}
 /* Radar chart sizing */
 #radarChartContainer svg {
   max-width: 520px;
   margin: 0 auto;
   display: block;
+}
+#radarChartContainer {
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#radarChartContainer svg {
+  max-width: 420px;
+}
+/* Radar chart container fix */
+#radarChartContainer {
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
