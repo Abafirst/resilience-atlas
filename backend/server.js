@@ -19,7 +19,7 @@ dotenv.config();
 // Express app
 // ==============================
 const app = express();
-app.use(express.static(path.join(process.cwd(), "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 // ==============================
 // Middleware
 // ==============================
