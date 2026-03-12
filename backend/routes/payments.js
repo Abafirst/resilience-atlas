@@ -65,26 +65,33 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
 
         const tierConfig = TIERS[tier];
         const appUrl = process.env.APP_URL || 'http://localhost:3000';
+const cleanEmail = String(email || '')
+  .replace(/"/g, '')
+  .replace(/'/g, '')
+  .trim()
+  .toLowerCase();
 
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: tierConfig.currency,
-                        product_data: { name: tierConfig.name },
-                        unit_amount: tierConfig.amount,
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            customer_email: email.toLowerCase().trim(),
-            metadata: { tier, email: email.toLowerCase().trim() },
-            success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
-        });
-
+if (!cleanEmail || !cleanEmail.includes('@')) {
+  return res.status(400).json({ error: 'Valid email is required.' });
+}
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: [
+    {
+      price_data: {
+        currency: tierConfig.currency,
+        product_data: { name: tierConfig.name },
+        unit_amount: tierConfig.amount,
+      },
+      quantity: 1,
+    },
+  ],
+  mode: 'payment',
+  customer_email: cleanEmail,
+  metadata: { tier, email: cleanEmail },
+  success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
+});
         // Record pending purchase so the webhook can update it later.
         await Purchase.create({
             email: email.toLowerCase().trim(),

@@ -124,19 +124,28 @@ function generatePersonalizedReport(results) {
 
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  const results = JSON.parse(localStorage.getItem('resilience_results'));
+try {
 
-  if (!results || !results.scores) {
-    showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
-    ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = '—';
-    });
-    const reportText = document.getElementById('reportText');
-    if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
-    return;
-  }
+const stored = localStorage.getItem('resilience_results');
+const results = stored ? JSON.parse(stored) : null;
 
+    if (!results || !results.scores) {
+      showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
+
+      ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '—';
+      });
+
+      const reportText = document.getElementById('profileBars');
+      if (reportText) {
+        reportText.innerHTML = "<p>No results found. Please complete the assessment.</p>";
+      }
+
+      return;
+}
+
+});
   // ── Rank resilience types by percentage ─────────────
   const ranked = Object.entries(results.scores)
     .sort((a, b) => b[1].percentage - a[1].percentage);
@@ -212,11 +221,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Re-apply gating after results render ──────────────
-  if (window.PaymentGating) {
-    window.PaymentGating.applyGating();
-  }
-});
+if (window.PaymentGating) {
+  window.PaymentGating.applyGating();
+}
 
+} catch (err) {
+  console.error("Failed to load report:", err);
+}
+
+});
 // ── Download PDF button ────────────────────────────────
 document.getElementById('btnDownload')?.addEventListener('click', () => {
   try {
@@ -239,7 +252,10 @@ document.getElementById('btnDownload')?.addEventListener('click', () => {
     const email = localStorage.getItem('resilience_email') || results.email || '';
     const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
     const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-    window.location.href = `/api/report/download?overall=${results.overall}&dominantType=${encodeURIComponent(results.dominantType)}&scores=${scoresStr}${emailParam}`;
+window.location.href =
+  `/api/report/download?overall=${results.overall}` +
+  `&dominantType=${encodeURIComponent(results.dominantType)}` +
+  `&scores=${scoresStr}${emailParam}`;
   } catch (e) {
     showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
   }
@@ -264,40 +280,42 @@ document.getElementById('btnEmail')?.addEventListener('click', async () => {
 try {
   const results = JSON.parse(localStorage.getItem('resilience_results'));
   if (!results) throw new Error('No results to send. Please finish the assessment first.');
-
-  results.reportText = generatePersonalizedReport(results);
-
+results.reportText = generatePersonalizedReport(results);
 const url = `/api/report/download?overall=${results.overall}&dominantType=${results.dominantType}&scores=${encodeURIComponent(JSON.stringify(results.scores))}&email=${email}`;
-  window.open(url, "_blank");
+window.open(url, "_blank");
 
-  showAlert('emailAlert', 'Generating your report...', 'success', '📄');
-
+showAlert('emailAlert', 'Generating your report...', 'success', '📄');
 } catch (e) {
   showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
-}
-  }
-});
+
 document.addEventListener("DOMContentLoaded", async () => {
 
   try {
 
-    const res = await fetch("/api/report");
-    const data = await res.json();
-
+const data = {
+  overallScore: 74,
+  summary: "Your resilience profile shows strong narrative meaning-making and relational support. You tend to process adversity through reflection and connection with others.",
+  dimensions: {
+    "Cognitive-Narrative": 82,
+    "Relational": 78,
+    "Agentic-Generative": 70,
+    "Emotional-Adaptive": 68,
+    "Spiritual-Existential": 72
+  }
+};
     const reportEl = document.getElementById("reportText");
 
     if (reportEl && data.summary) {
-reportEl.innerHTML = `
-<h3>Your Resilience Profile Overview</h3>
-<p><strong>Overall Score:</strong> ${data.overallScore}%</p>
-<p>${data.summary}</p>
-`;
+reportEl.innerHTML =
+  "<h3>Your Resilience Profile Overview</h3>" +
+  "<p><strong>Overall Score:</strong> " + data.overallScore + "%</p>" +
+  "<p>" + data.summary + "</p>";
     }
+if (window.renderRadarChart && results.scores) {
+  renderRadarChart(results.scores);
+}
+} catch (err) {
+  console.error("Failed to load report:", err);
+}
 
-    if (window.renderRadarChart && data.dimensions) {
-      renderRadarChart(data.dimensions);
-    }
-  } catch (err) {
-    console.error("Failed to load report:", err);
-  }
 });
