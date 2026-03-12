@@ -4,6 +4,17 @@
 
 'use strict';
 
+// ── Utility: minimal HTML escaping ─────────────────────
+const escapeHtml = (typeof window !== 'undefined' && window.escapeHtml)
+  ? window.escapeHtml
+  : function(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+
 // ── Type descriptions ──────────────────────────────────
 const TYPE_DESCRIPTIONS = {
   'Cognitive-Narrative':
@@ -175,9 +186,12 @@ document.addEventListener('DOMContentLoaded', () => {
       emailButton.addEventListener('click', async () => {
         const emailInput = document.getElementById('emailInput');
         const email = emailInput?.value.trim();
-        const isValid = typeof isValidEmail === 'function' ? isValidEmail(email || '') : Boolean(email);
+        const validateEmail = (typeof window !== 'undefined' && typeof window.isValidEmail === 'function')
+          ? window.isValidEmail
+          : function(value) { return Boolean(value); };
+        const isValid = validateEmail(email || '');
         if (!email || !isValid) {
-          showAlert('emailAlert', 'Please enter your email address.', 'error', '📧');
+          showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
           if (emailInput) emailInput.focus();
           return;
         }
@@ -249,19 +263,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Radar chart ───────────────────────────────────────
     const radarContainer = document.getElementById('radarChartContainer');
-    if (radarContainer && typeof renderRadarChart === 'function') {
-      renderRadarChart(radarContainer, results.scores);
+    const renderRadar = (typeof window !== 'undefined') ? window.renderRadarChart : null;
+    if (radarContainer && typeof renderRadar === 'function') {
+      renderRadar(radarContainer, results.scores);
     }
 
     // ── Bar chart ─────────────────────────────────────────
     const profileBars = document.getElementById('profileBars');
-    if (profileBars && typeof renderProfileBars === 'function') {
+    const renderBars = (typeof window !== 'undefined') ? window.renderProfileBars : null;
+    if (profileBars && typeof renderBars === 'function') {
       const items = Object.entries(results.scores).map(([label, s]) => ({
         label,
         score: s.raw,
         maxScore: s.max,
       }));
-      renderProfileBars(profileBars, items);
+      renderBars(profileBars, items);
     }
 
     // ── Narrative report ──────────────────────────────────
