@@ -1,12 +1,13 @@
+// ⚠️ CRITICAL FILE
+// Do not replace structure — required for rendering results, radar chart, and report
 /*
 results.js — Results page logic for Resilience Atlas
 */
 'use strict';
 
 // Load saved quiz results FIRST
-window.results = JSON.parse(localStorage.getItem('resilience_results') || 'null');
-let results = window.results;
-
+const results = JSON.parse(localStorage.getItem('resilience_results')) || null;
+window.results = results;
 // Backward compatibility
 if (results && results.scores && results.scores["Somatic-Behavioral"]) {
   results.scores["Somatic-Regulative"] = results.scores["Somatic-Behavioral"];
@@ -127,32 +128,37 @@ function generatePersonalizedReport(results) {
   text += '\nKeep building your resilience journey!\n';
   return text;
 }
-// Load saved quiz results
-const stored = localStorage.getItem('resilience_results');
-results = stored ? JSON.parse(stored) : null;
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   try {
-// — Radar chart —
-const radarContainer = document.getElementById('radarChartContainer');
-
-if (radarContainer && window.renderRadarChart && results && results.scores) {
-
-  const radarScores = Object.fromEntries(
-    Object.entries(results.scores).map(([k, v]) => [k, v.percentage])
-  );
-
-  window.renderRadarChart(radarContainer, radarScores);
-}
     // ── Download PDF button ────────────────────────────────
-    const downloadButton = document.getElementById('btnDownload');
-    if (downloadButton) {
-      downloadButton.addEventListener('click', () => {
-        try {
-          const storedResults = localStorage.getItem('resilience_results');
-          const results = storedResults ? JSON.parse(storedResults) : null;
-          if (!results) throw new Error('No results to download. Please finish the assessment first.');
+const downloadButton = document.getElementById('btnDownload');
 
+if (downloadButton) {
+  downloadButton.addEventListener('click', () => {
+    try {
+
+      const storedResults = localStorage.getItem('resilience_results');
+      const downloadResults = storedResults ? JSON.parse(storedResults) : null;
+
+      if (!downloadResults) {
+        throw new Error('No results to download.');
+      }
+
+      const email = localStorage.getItem('resilience_email') || downloadResults.email || '';
+      const scoresStr = encodeURIComponent(JSON.stringify(downloadResults.scores));
+      const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+
+      window.location.href =
+        `/api/report/download?overall=${downloadResults.overall}` +
+        `&dominantType=${encodeURIComponent(downloadResults.dominantType)}` +
+        `&scores=${scoresStr}${emailParam}`;
+
+    } catch (err) {
+      console.error(err);
+    }
+  });
+}
           // Gate PDF behind Deep Report purchase.
           if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
             showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', '🔒');
