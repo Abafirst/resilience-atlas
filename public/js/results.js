@@ -260,6 +260,16 @@ if (!results || !results.scores) {
     const subtitleEl = document.getElementById('resultsSubtitle');
     if (subtitleEl) subtitleEl.textContent = `Overall Score: ${results.overall}% — Dominant Type: ${results.dominantType}`;
 
+    // ── Primary Resilience Mode card ──────────────────────
+    const primaryTypeEl = document.getElementById('primaryType');
+    if (primaryTypeEl) primaryTypeEl.textContent = primaryStrength;
+
+    const primaryDescEl = document.getElementById('primaryDescription');
+    if (primaryDescEl) primaryDescEl.textContent = TYPE_DESCRIPTIONS[primaryStrength] || '';
+
+    const primaryDimLabel = document.getElementById('primaryDimensionLabel');
+    if (primaryDimLabel) primaryDimLabel.textContent = primaryStrength;
+
     // ── Strength cards ────────────────────────────────────
     const primaryEl = document.getElementById('primaryStrength');
     if (primaryEl) primaryEl.textContent = `${primaryStrength} (${results.scores[primaryStrength].percentage.toFixed(1)}%)`;
@@ -269,6 +279,12 @@ if (!results || !results.scores) {
 
     const emergingEl = document.getElementById('emergingStrength');
     if (emergingEl) emergingEl.textContent = `${emergingStrength} (${results.scores[emergingStrength].percentage.toFixed(1)}%)`;
+
+    // ── Radar chart ───────────────────────────────────────
+    const radarContainer = document.getElementById('radarChartContainer');
+    if (radarContainer && typeof window.renderRadarChart === 'function') {
+      window.renderRadarChart(radarContainer, results.scores);
+    }
 
     // ── Bar chart ─────────────────────────────────────────
     const profileBars = document.getElementById('profileBars');

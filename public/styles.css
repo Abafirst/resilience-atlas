@@ -1514,3 +1514,277 @@ main { flex: 1; }
   justify-content: center;
   align-items: center;
 }
+
+/* ── Premium Assessment Experience — Results Page ─── */
+
+/* Results header description */
+.results-header-desc {
+  font-size: 1.1rem;
+  color: var(--slate-600);
+  max-width: 600px;
+  margin: 0 auto .5rem;
+}
+
+/* Primary Resilience Mode card */
+.primary-type-card {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+  border: 2px solid #e6eeff;
+  margin-bottom: 2rem;
+}
+
+.primary-type-card h2 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.primary-type-name {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #2b4cff;
+  margin-bottom: 1rem;
+  line-height: 1.1;
+}
+
+.primary-type-description {
+  font-size: 1rem;
+  color: #666;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Atlas map section */
+.atlas-section {
+  margin-bottom: 2rem;
+}
+
+.atlas-description {
+  color: #666;
+  font-size: .95rem;
+  margin-bottom: 1.25rem;
+}
+
+.atlas-highlight {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-left: 4px solid #2b4cff;
+  border-radius: 6px;
+  font-size: .95rem;
+  color: #333;
+}
+
+#primaryDimensionLabel {
+  font-weight: 700;
+  color: #2b4cff;
+}
+
+/* Insight progress indicator */
+.insight-progress {
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
+
+.insight-progress p {
+  font-size: .875rem;
+  color: #666;
+  margin-bottom: .5rem;
+}
+
+.insight-progress .progress-bar {
+  height: 8px;
+  background: #eeeeee;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: .75rem auto;
+  max-width: 300px;
+}
+
+.insight-progress .progress-fill {
+  width: 40%;
+  height: 100%;
+  background: #2b4cff;
+  border-radius: 6px;
+  transition: width .6s ease;
+}
+
+/* Core strengths grid */
+.strengths-section {
+  margin-bottom: 2rem;
+}
+
+.strengths-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.strength-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.strength-card-premium {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.strength-card-premium:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.strength-card-premium h3 {
+  font-size: .8rem;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: .75rem;
+}
+
+.strength-card-premium div {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a3a5c;
+  line-height: 1.4;
+}
+
+/* Premium blurred preview */
+.premium-preview {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.blur-preview {
+  filter: blur(5px);
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+}
+
+.premium-lock-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: white;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: max-content;
+  max-width: 90%;
+}
+
+.premium-lock-message h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: .6rem;
+  color: #1a3a5c;
+}
+
+.premium-lock-message p {
+  color: #666;
+  font-size: .9rem;
+  margin-bottom: 1rem;
+}
+
+/* Upgrade offer section */
+.upgrade-offer {
+  background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+  border: 2px solid #e6eeff;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.upgrade-offer h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.upgrade-intro {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2b4cff;
+  margin: 1.25rem 0;
+}
+
+.upgrade-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.upgrade-benefits li {
+  padding: .6rem 0;
+  color: #666;
+  font-size: .95rem;
+}
+
+.upgrade-benefits li::before {
+  content: "✓ ";
+  color: #2b4cff;
+  font-weight: bold;
+  margin-right: .5rem;
+}
+
+.upgrade-button {
+  background: #2b4cff;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.upgrade-button:hover {
+  background: #1e35cc;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(43, 76, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .strength-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .primary-type-name {
+    font-size: 1.75rem;
+  }
+
+  .premium-lock-message {
+    padding: 1.5rem;
+  }
+
+  .upgrade-offer {
+    padding: 1.5rem;
+  }
+}
