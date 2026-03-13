@@ -245,7 +245,7 @@
     }
 
     try {
-      var res  = await apiFetch('/api/org/' + orgId + '/invite', {
+      var res  = await apiFetch('/api/organizations/' + orgId + '/invite', {
         method: 'POST',
         body: JSON.stringify({ emails: emails }),
       });

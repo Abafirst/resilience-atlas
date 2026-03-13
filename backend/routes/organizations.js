@@ -195,6 +195,41 @@ router.get('/:id/users', authenticateJWT, async (req, res) => {
   }
 });
 
+// ── Invite members ────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/organizations/:id/invite
+ * Add email addresses to the invited list. Admin only.
+ * Body: { emails: [string] }
+ */
+router.post('/:id/invite', authenticateJWT, async (req, res) => {
+  try {
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+
+    const org = await Organization.findById(req.params.id);
+    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
+
+    const { emails } = req.body;
+    if (!Array.isArray(emails) || emails.length === 0) {
+      return res.status(400).json({ error: 'emails must be a non-empty array.' });
+    }
+
+    const sanitised = emails
+      .map((e) => String(e).toLowerCase().trim())
+      .filter((e) => e.includes('@'));
+
+    await Organization.findByIdAndUpdate(req.params.id, {
+      $addToSet: { invitedEmails: { $each: sanitised } },
+    });
+
+    res.json({ message: `${sanitised.length} email(s) added.`, emails: sanitised });
+  } catch (err) {
+    console.error('[organizations] invite error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // ── Analytics ─────────────────────────────────────────────────────────────────
 
 /**

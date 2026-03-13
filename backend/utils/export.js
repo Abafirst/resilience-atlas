@@ -47,12 +47,12 @@ function buildCsv(results) {
       csvCell(r.firstName || ''),
       csvCell(r.email || ''),
       r.overall != null ? r.overall : '',
-      pct('Relational'),
-      pct('Cognitive'),
-      pct('Somatic'),
-      pct('Emotional'),
-      pct('Spiritual'),
-      pct('Agentic'),
+      pct('relational'),
+      pct('cognitive'),
+      pct('somatic'),
+      pct('emotional'),
+      pct('spiritual'),
+      pct('agentic'),
       r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US') : '',
     ];
   });

@@ -30,17 +30,16 @@ const TeamResult       = require('../models/TeamResult');
  */
 const DIM_MAP = {
   relational:           'relational',
-  'relational':         'relational',
-  cognitive:            'cognitive',
   'cognitive-narrative':'cognitive',
-  somatic:              'somatic',
+  cognitive:            'cognitive',
   'somatic-behavioral': 'somatic',
-  emotional:            'emotional',
+  somatic:              'somatic',
   'emotional-adaptive': 'emotional',
-  spiritual:            'spiritual',
+  emotional:            'emotional',
   'spiritual-existential': 'spiritual',
-  agentic:              'agentic',
+  spiritual:            'spiritual',
   'agentic-generative': 'agentic',
+  agentic:              'agentic',
 };
 
 function canonicalDim(key) {
