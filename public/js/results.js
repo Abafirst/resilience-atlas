@@ -183,7 +183,6 @@ if (downloadButton) {
           showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
         }
       });
-    }
 
     // ── Retake quiz button ─────────────────────────────────
     const retakeButton = document.getElementById('btnRetake');
@@ -229,22 +228,18 @@ if (downloadButton) {
           showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
         }
       });
-    }
 
-    const stored = localStorage.getItem('resilience_results');
-    const results = stored ? JSON.parse(stored) : null;
+if (!results || !results.scores) {
+  showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
 
-    if (!results || !results.scores) {
-      showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
-      ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = '—';
-      });
-      const reportText = document.getElementById('reportText');
-      if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
-      return;
-    }
+  ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '—';
+  });
 
+  const reportText = document.getElementById('reportText');
+  if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
+}
     // ── Rank resilience types by percentage ─────────────
     const ranked = Object.entries(results.scores)
       .sort((a, b) => b[1].percentage - a[1].percentage);
@@ -318,7 +313,5 @@ if (downloadButton) {
     if (window.PaymentGating) {
       window.PaymentGating.applyGating();
     }
-  } catch (err) {
-    console.error('Failed to load report:', err);
-  }
-});
+
+}
