@@ -200,9 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Store email for payment gating ────────────────────
-  const storedEmail = results.email || '';
-  if (storedEmail && !localStorage.getItem('resilience_email')) {
-    localStorage.setItem('resilience_email', storedEmail);
+  const resultEmail = results.email || '';
+  if (resultEmail && !localStorage.getItem('resilience_email')) {
+    localStorage.setItem('resilience_email', resultEmail);
   }
 
   // ── Render upgrade cards for free users ───────────────
@@ -229,9 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
           upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        const dlEmail = localStorage.getItem('resilience_email') || results.email || '';
+        const downloadEmail = localStorage.getItem('resilience_email') || results.email || '';
         const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
-        const emailParam = dlEmail ? `&email=${encodeURIComponent(dlEmail)}` : '';
+        const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
         window.location.href =
           `/api/report/download?overall=${results.overall}` +
           `&dominantType=${encodeURIComponent(results.dominantType)}` +
@@ -256,17 +256,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (emailButton) {
     emailButton.addEventListener('click', async () => {
       const emailInput = document.getElementById('emailInput');
-      const emailAddr = emailInput?.value.trim();
+      const inputEmail = emailInput?.value.trim();
       const validateEmail = (typeof window !== 'undefined' && typeof window.isValidEmail === 'function')
         ? window.isValidEmail
         : function(value) { return Boolean(value); };
-      const isValid = validateEmail(emailAddr || '');
-      if (!emailAddr || !isValid) {
+      const isValid = validateEmail(inputEmail || '');
+      if (!inputEmail || !isValid) {
         showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
         if (emailInput) emailInput.focus();
         return;
       }
-      showAlert('emailAlert', 'Sending your report to ' + emailAddr + '...', 'success', '✉️');
+      showAlert('emailAlert', 'Sending your report to ' + inputEmail + '...', 'success', '✉️');
       try {
         const storedResults = localStorage.getItem('resilience_results');
         const emailResults = storedResults ? JSON.parse(storedResults) : null;
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `/api/report/download?overall=${emailResults.overall}` +
           `&dominantType=${encodeURIComponent(emailResults.dominantType)}` +
           `&scores=${encodeURIComponent(JSON.stringify(emailResults.scores))}` +
-          `&email=${encodeURIComponent(emailAddr)}`;
+          `&email=${encodeURIComponent(inputEmail)}`;
         window.open(url, '_blank');
 
         showAlert('emailAlert', 'Generating your report...', 'success', '📄');
