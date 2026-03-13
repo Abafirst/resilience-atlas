@@ -36,13 +36,32 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+
 purchaseDate: {
   type: Date,
   default: null
 }
 
-}, { timestamps: true });
+  // B2B organization fields (optional, null for free-tier users)
+  organization_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    default: null,
+  },
 
+  role: {
+    type: String,
+    enum: ['member', 'admin'],
+    default: 'member',
+  },
+
+  teamName: {
+    type: String,
+    default: null,
+    trim: true,
+  },
+
+}, { timestamps: true });
 
 // Hash password before saving
 userSchema.pre('save', async function () {
@@ -54,12 +73,9 @@ userSchema.pre('save', async function () {
 
 });
 
-
 // Compare password for login
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-
 module.exports = mongoose.model('User', userSchema);
-

@@ -6,9 +6,13 @@
   <title>Your Resilience Profile — The Resilience Atlas™</title>
 <meta name="description" content="View your personalised resilience profile from The Resilience Atlas™, download a PDF.">
   <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/evidence-practices.css" />
   <link rel="stylesheet" href="css/payment-ui.css" />
+  <link rel="stylesheet" href="css/sharing.css" />
 </head>
 <body>
 
@@ -147,6 +151,14 @@
           </button>
         </div>
 
+        <!-- Business tier: link to team dashboard -->
+        <div class="business-dashboard-link" hidden style="text-align:center;margin-top:1rem">
+          <a href="/dashboard.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4em">
+            <span aria-hidden="true">&#128202;</span>
+            View on Team Dashboard
+          </a>
+        </div>
+
         <!-- Email Section -->
         <section aria-labelledby="emailHeading" class="text-center mt-8">
           <h3 id="emailHeading" class="mb-4">Email Your Report</h3>
@@ -177,6 +189,45 @@
         <!-- Upgrade Cards (at the bottom, after all free content) -->
         <div id="upgradeCardsContainer"></div>
 
+        <!-- ── Sharing Section ──────────────────────────────── -->
+        <section class="share-section" aria-labelledby="shareHeading">
+          <h3 id="shareHeading">Share Your Resilience Dimension</h3>
+          <p class="share-desc">Discovered your strongest dimension? Share it and invite others to map theirs.</p>
+          <div class="share-buttons" role="group" aria-label="Share options">
+            <button type="button" id="btnShareLinkedIn" class="btn-share btn-share-linkedin" aria-label="Share on LinkedIn">
+              <span class="share-icon" aria-hidden="true">in</span> LinkedIn
+            </button>
+            <button type="button" id="btnShareTwitter" class="btn-share btn-share-twitter" aria-label="Share on X (Twitter)">
+              <span class="share-icon" aria-hidden="true">&#x1D54F;</span> X / Twitter
+            </button>
+            <button type="button" id="btnShareCopy" class="btn-share btn-share-copy" aria-label="Copy share link">
+              <span class="share-icon" aria-hidden="true">&#128279;</span> Copy Link
+            </button>
+            <button type="button" id="btnShareDownload" class="btn-share btn-share-download" aria-label="Download radar chart as PNG">
+              <span class="share-icon" aria-hidden="true">&#8681;</span> Download Radar
+            </button>
+          </div>
+          <p class="share-preview-text" id="sharePreviewText" aria-live="polite"></p>
+        </section>
+
+        <!-- ── Invite Colleagues ─────────────────────────────── -->
+        <section class="invite-section" aria-labelledby="inviteHeading">
+          <h3 id="inviteHeading">Compare with Your Team</h3>
+          <p>Invite a colleague to take the assessment and compare your Six Dimensions of Resilience profiles.</p>
+          <form class="invite-form" id="inviteColleagueForm" novalidate>
+            <label for="inviteEmailInput" class="hidden">Colleague email</label>
+            <input
+              type="email"
+              id="inviteEmailInput"
+              placeholder="colleague@company.com"
+              autocomplete="email"
+              aria-label="Colleague email address"
+            />
+            <button type="submit" class="btn-invite">Send Invite</button>
+          </form>
+          <p class="invite-status" id="inviteStatus" aria-live="polite"></p>
+        </section>
+
       </div><!-- /.results-wrapper -->
     </div><!-- /.results-page -->
   </main>
@@ -188,13 +239,29 @@
     <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
   </footer>
 <script src="/js/chart.js"></script>
-
 <script src="/js/app.js"></script>
 <script src="/js/visualizations.js"></script>
 <script src="/js/upgrade-cards.js"></script>
 <script src="/js/payment-gating.js"></script>
 <script src="/js/results.js"></script>
 <script src="/js/evidence-based-practices.js"></script>
+<script src="/js/sharing.js"></script>
+<script>
+  // Initialise sharing after results are loaded.
+  // results.js sets window.dominantDimension once scoring is complete.
+  document.addEventListener('resultsLoaded', function (e) {
+    var dim = (e && e.detail && e.detail.dominantDimension) || window.dominantDimension || '';
+    if (window.ResilienceSharing) ResilienceSharing.init(dim);
+  });
+  // Fallback: init after a short delay in case event was already fired.
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (window.ResilienceSharing) {
+        ResilienceSharing.init(window.dominantDimension || '');
+      }
+    }, 1200);
+  });
+</script>
 </body>
 </html>
 

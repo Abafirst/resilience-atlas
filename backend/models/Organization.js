@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 /**
- * Organization model for team/leadership features.
+ * Organization model for team/leadership and B2B features.
  * Stores organization details, admin references, and invited members.
  */
 const organizationSchema = new mongoose.Schema(
@@ -12,7 +12,44 @@ const organizationSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Admin users who can view leadership reports
+    // URL-safe unique identifier (e.g. "acme-corp")
+    slug: {
+      type: String,
+      unique: true,
+      sparse: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    // Primary contact / owner email
+    adminEmail: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      default: null,
+    },
+
+    // Business tier: "free" | "business"
+    tier: {
+      type: String,
+      enum: ['free', 'business'],
+      default: 'free',
+    },
+
+    // Subscription lifecycle: "active" | "trial" | "cancelled"
+    subscription_status: {
+      type: String,
+      enum: ['active', 'trial', 'cancelled'],
+      default: 'trial',
+    },
+
+    // Maximum number of seats / users
+    max_users: {
+      type: Number,
+      default: null,
+    },
+
+    // Admin users who can view leadership reports and manage the org
     admins: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -20,7 +57,7 @@ const organizationSchema = new mongoose.Schema(
       },
     ],
 
-    // Email addresses invited to take the assessment
+    // Email addresses invited to take the assessment (legacy; Invite model is preferred)
     invitedEmails: [
       {
         type: String,
@@ -54,6 +91,42 @@ const organizationSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+
+    // ── Business tier fields (optional) ──────────────────────────────────────
+
+    // Human-readable company name used for business/enterprise accounts
+    company_name: {
+      type: String,
+      trim: true,
+    },
+
+    // Primary contact / billing email for the organisation
+    admin_email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+    },
+
+    // Subscription plan level
+    plan: {
+      type: String,
+      enum: ['free', 'business', 'enterprise'],
+      default: 'free',
+    },
+
+    // Current subscription status
+    subscription_status: {
+      type: String,
+      enum: ['active', 'cancelled', 'trialing'],
+      default: 'active',
+    },
+
+    // Optional branding and seat configuration
+    settings: {
+      team_name: { type: String, trim: true },
+      max_users:  { type: Number, default: 100 },
+      custom_branding: { type: Boolean, default: false },
     },
   },
   { timestamps: true }
