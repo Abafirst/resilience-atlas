@@ -40,11 +40,10 @@ router.post('/create-checkout-session', async (req, res) => {
         }
       ],
 
-      mode: 'payment',
+mode: 'payment',
 
-      success_url: 'http://localhost:3000/results.html',
-      cancel_url: 'http://localhost:3000/quiz.html'
-
+success_url: 'https://resilience-atlas-production-e037.up.railway.app/results.html?session_id={CHECKOUT_SESSION_ID}',
+cancel_url: 'https://resilience-atlas-production-e037.up.railway.app/results.html',
     });
 
     res.json({ id: session.id });
