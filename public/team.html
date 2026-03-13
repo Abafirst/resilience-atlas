@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resilience Atlas for Teams — B2B Assessment Platform</title>
+  <meta name="description" content="Bring the Six Dimensions of Resilience to your organisation. Team dashboard, aggregated reports, and admin tools for HR and L&D teams." />
+  <meta property="og:title" content="Resilience Atlas for Teams" />
+  <meta property="og:description" content="Resilience Atlas for organisations: team dashboard, aggregate dimension reports, and CSV export." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <style>
+    .team-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
+      color: #fff;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .team-hero h1 { color:#fff; font-size: clamp(1.8rem,4vw,2.8rem); margin-bottom:.75rem; }
+    .team-hero p { color:#94a3b8; font-size:1.05rem; max-width:560px; margin:0 auto 0; line-height:1.65; }
+
+    .lead-form-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,.1);
+    }
+    .lead-form-wrap h2 { font-size:1.4rem; color:#0f172a; margin-bottom:.4rem; }
+    .lead-form-wrap p { font-size:.93rem; color:#475569; margin-bottom:1.5rem; }
+    .form-row { margin-bottom:1.1rem; }
+    .form-row label { display:block; font-size:.88rem; font-weight:600; color:#334155; margin-bottom:.3rem; }
+    .form-row input,
+    .form-row select,
+    .form-row textarea {
+      width:100%;
+      padding:.65rem 1rem;
+      border:1px solid #cbd5e1;
+      border-radius:8px;
+      font-size:.95rem;
+      background:#fff;
+      color:#0f172a;
+      outline:none;
+      transition:border-color 150ms;
+      font-family: inherit;
+    }
+    .form-row input:focus,
+    .form-row select:focus,
+    .form-row textarea:focus { border-color:#4F46E5; }
+    .form-row textarea { resize:vertical; min-height:90px; }
+    .btn-submit {
+      width:100%;
+      background:#4F46E5;
+      color:#fff;
+      font-size:1rem;
+      font-weight:700;
+      padding:.85rem;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      transition:background 200ms;
+      margin-top:.5rem;
+    }
+    .btn-submit:hover { background:#4338CA; }
+    .btn-submit:disabled { opacity:.6; cursor:not-allowed; }
+    .form-success {
+      text-align:center;
+      padding:2rem 1rem;
+      display:none;
+    }
+    .form-success .success-icon { font-size:3rem; margin-bottom:.75rem; }
+    .form-success h3 { color:#0f172a; margin-bottom:.5rem; }
+    .form-success p { color:#475569; }
+    .form-error { color:#dc2626; font-size:.88rem; margin-top:.75rem; display:none; }
+
+    .features-list {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+      gap:1.25rem;
+      max-width:1080px;
+      margin:0 auto;
+    }
+    .feature-item {
+      background:#fff;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      padding:1.5rem;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+    .feature-icon { font-size:1.5rem; margin-bottom:.6rem; }
+    .feature-item h4 { font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:.3rem; }
+    .feature-item p { font-size:.9rem; color:#475569; line-height:1.55; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav aria-label="Main navigation" style="display:flex;align-items:center;gap:1rem;">
+        <a href="/insights.html" style="font-size:.92rem;color:var(--slate-600);font-weight:500;">Insights</a>
+        <a href="/team.html" style="font-size:.92rem;color:#4F46E5;font-weight:600;">For Teams</a>
+        <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="team-hero" aria-label="Team page hero">
+    <span class="hero-eyebrow">Business Tier</span>
+    <h1>Resilience Atlas for Teams</h1>
+    <p>Bring the Six Dimensions of Resilience to your organisation. Aggregate insights, team dashboards, and tools for HR and L&amp;D professionals.</p>
+  </section>
+
+  <!-- Lead Capture Form -->
+  <section class="landing-section alt-bg" aria-labelledby="formHeading">
+    <div class="lead-form-wrap">
+      <h2 id="formHeading">Get Team Access</h2>
+      <p>Tell us about your organisation and we will be in touch within one business day.</p>
+
+      <form id="teamLeadForm" novalidate>
+        <div class="form-row">
+          <label for="contactName">Your Name <span aria-hidden="true">*</span></label>
+          <input type="text" id="contactName" name="contact_name" required autocomplete="name" placeholder="Jane Smith" />
+        </div>
+        <div class="form-row">
+          <label for="companyName">Company / Organisation <span aria-hidden="true">*</span></label>
+          <input type="text" id="companyName" name="company_name" required autocomplete="organization" placeholder="Acme Corp" />
+        </div>
+        <div class="form-row">
+          <label for="workEmail">Work Email <span aria-hidden="true">*</span></label>
+          <input type="email" id="workEmail" name="email" required autocomplete="email" placeholder="jane@acmecorp.com" />
+        </div>
+        <div class="form-row">
+          <label for="teamSize">Team Size</label>
+          <select id="teamSize" name="team_size">
+            <option value="">Select team size</option>
+            <option value="1-10">1 &ndash; 10</option>
+            <option value="11-50">11 &ndash; 50</option>
+            <option value="51-200">51 &ndash; 200</option>
+            <option value="201-500">201 &ndash; 500</option>
+            <option value="500+">500+</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="message">What are you hoping to achieve? (optional)</label>
+          <textarea id="message" name="message" placeholder="e.g. Understand team resilience profiles ahead of an organisational change programme..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submitLeadBtn">Request Team Access</button>
+        <p class="form-error" id="formError" role="alert"></p>
+      </form>
+
+      <div class="form-success" id="formSuccess" aria-live="polite">
+        <div class="success-icon" aria-hidden="true">&#9989;</div>
+        <h3>Thank you!</h3>
+        <p>We have received your enquiry and will be in touch within one business day.</p>
+        <a href="/quiz.html" class="btn btn-primary" style="margin-top:1rem;display:inline-block;">
+          Take the Individual Assessment
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="landing-section" aria-labelledby="featuresHeading">
+    <div class="section-header">
+      <span class="section-label">What You Get</span>
+      <h2 id="featuresHeading">Everything Your Team Needs</h2>
+    </div>
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#128202;</div>
+        <h4>Team Dashboard</h4>
+        <p>Centralised view of all team assessments with aggregated dimension scores and completion tracking.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#127775;</div>
+        <h4>Radar Chart Aggregation</h4>
+        <p>Visualise your team's collective Six Dimensions of Resilience profile on a single radar chart.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#128229;</div>
+        <h4>CSV Export</h4>
+        <p>Download all member results with dimension scores for your own analysis or HR reporting.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#128140;</div>
+        <h4>Individual Reports</h4>
+        <p>Each team member receives their personalised resilience profile and dimension narrative.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#128233;</div>
+        <h4>Bulk Invitations</h4>
+        <p>Invite your entire team via email with a single click. Simple onboarding, no friction.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon" aria-hidden="true">&#128274;</div>
+        <h4>Secure &amp; Private</h4>
+        <p>Individual data is always private by default. Admins see only aggregated team insights unless individuals choose to share.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="landing-section alt-bg">
+    <div class="final-cta">
+      <h2>Start with an Individual Assessment</h2>
+      <p>Not ready for a team rollout? Take the free individual assessment first and experience the Six Dimensions model yourself.</p>
+      <a class="btn-hero-primary" href="/quiz.html" style="display:inline-flex;margin:0 auto;">
+        <span aria-hidden="true">&#9654;</span> Take the Free Assessment
+      </a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+    <p class="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
+    <nav aria-label="Footer navigation" style="margin-top:1rem;display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap;">
+      <a href="/" style="color:var(--slate-400);font-size:.88rem;">Home</a>
+      <a href="/insights.html" style="color:var(--slate-400);font-size:.88rem;">Insights</a>
+      <a href="/quiz.html" style="color:var(--slate-400);font-size:.88rem;">Take Assessment</a>
+    </nav>
+  </footer>
+
+  <script>
+    (function () {
+      var form = document.getElementById('teamLeadForm');
+      var success = document.getElementById('formSuccess');
+      var errorEl = document.getElementById('formError');
+      var submitBtn = document.getElementById('submitLeadBtn');
+
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        errorEl.style.display = 'none';
+
+        var contact_name = document.getElementById('contactName').value.trim();
+        var company_name = document.getElementById('companyName').value.trim();
+        var email = document.getElementById('workEmail').value.trim();
+        var team_size = document.getElementById('teamSize').value;
+        var message = document.getElementById('message').value.trim();
+
+        if (!contact_name || !company_name || !email) {
+          errorEl.textContent = 'Please fill in your name, company, and email.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+
+        fetch('/api/growth/team-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact_name: contact_name, company_name: company_name, email: email, team_size: team_size, message: message })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.success) {
+            form.style.display = 'none';
+            success.style.display = 'block';
+          } else {
+            throw new Error(data.error || 'Submission failed');
+          }
+        })
+        .catch(function (err) {
+          errorEl.textContent = err.message || 'Something went wrong. Please try again.';
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Request Team Access';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

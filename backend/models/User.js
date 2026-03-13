@@ -37,31 +37,24 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
-  purchaseDate: {
-    type: Date,
-    default: null
-  },
+purchaseDate: {
+  type: Date,
+  default: null
+}
 
-  // B2B organization fields (null for free-tier / individual users)
-  organizationId: {
-  // ── Business tier fields (optional) ──────────────────────────────────────
-
-  // Link to the organisation this user belongs to
+  // B2B organization fields (optional, null for free-tier users)
   organization_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',
     default: null,
   },
 
-  // Role within the organization
-  // Role within the organisation
   role: {
     type: String,
     enum: ['member', 'admin'],
     default: 'member',
   },
 
-  // Optional team assignment within the organization
   teamName: {
     type: String,
     default: null,
@@ -69,7 +62,6 @@ const userSchema = new mongoose.Schema({
   },
 
 }, { timestamps: true });
-
 
 // Hash password before saving
 userSchema.pre('save', async function () {
@@ -81,12 +73,9 @@ userSchema.pre('save', async function () {
 
 });
 
-
 // Compare password for login
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-
 module.exports = mongoose.model('User', userSchema);
-
