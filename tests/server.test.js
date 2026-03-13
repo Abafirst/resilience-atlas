@@ -211,7 +211,7 @@ describe('GET /', () => {
     test('returns 200 with welcome message', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('message');
+        expect(res.type).toMatch(/html/);
     });
 });
 
