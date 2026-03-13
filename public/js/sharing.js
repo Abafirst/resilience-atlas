@@ -100,16 +100,8 @@
           trackShareEvent('copy_link', null);
         }).catch(() => showToast('Could not copy — please copy the URL manually.'));
       } else {
-        // Fallback for older browsers
-        const el = document.createElement('textarea');
-        el.value = link;
-        el.style.position = 'fixed';
-        el.style.opacity = '0';
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        showToast('Link copied!');
+        // Fallback for browsers without Clipboard API: prompt user to copy manually
+        showToast('Please copy this link: ' + link);
         trackShareEvent('copy_link', null);
       }
     },

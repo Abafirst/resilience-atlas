@@ -1,11 +1,31 @@
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 const Lead = require('../models/Lead');
 const AnalyticsEvent = require('../models/Analytics');
+const { authenticateJWT } = require('../middleware/auth');
+
+// Rate limit: 60 requests per minute for admin routes
+const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
+router.use(adminLimiter);
+
+// Simple admin check middleware — verifies the authenticated user has admin role.
+function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: 'Authentication required.' });
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+  next();
+}
 
 // ── GET /admin/leads ────────────────────────────────────────
-// List all leads (filterable by stage).
-router.get('/leads', async (req, res) => {
+// List all leads (filterable by stage). Admin-only.
+router.get('/leads', authenticateJWT, requireAdmin, async (req, res) => {
   try {
     const { stage, page = 1, limit = 50 } = req.query;
     const filter = stage ? { stage } : {};
@@ -24,8 +44,8 @@ router.get('/leads', async (req, res) => {
 });
 
 // ── PATCH /admin/leads/:id ──────────────────────────────────
-// Update lead stage or notes.
-router.patch('/leads/:id', async (req, res) => {
+// Update lead stage or notes. Admin-only.
+router.patch('/leads/:id', authenticateJWT, requireAdmin, async (req, res) => {
   try {
     const { stage, notes } = req.body;
     const update = {};
@@ -43,8 +63,8 @@ router.patch('/leads/:id', async (req, res) => {
 });
 
 // ── GET /admin/analytics ────────────────────────────────────
-// Summary of tracked analytics events.
-router.get('/analytics', async (req, res) => {
+// Summary of tracked analytics events. Admin-only.
+router.get('/analytics', authenticateJWT, requireAdmin, async (req, res) => {
   try {
     const summary = await AnalyticsEvent.aggregate([
       { $group: { _id: '$event', count: { $sum: 1 }, last: { $max: '$createdAt' } } },

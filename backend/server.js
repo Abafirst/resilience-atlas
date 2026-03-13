@@ -115,31 +115,42 @@ app.use("/admin", require("./routes/admin"));
 // ==============================
 // Root API info
 // ==============================
-app.get("/", (req, res) => {
+
+// Rate limiter for HTML page routes (prevents scraping / DoS)
+const rateLimit = require("express-rate-limit");
+const pageLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requests. Please try again later.",
+});
+
+app.get("/", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 // ── Insight article routes ──────────────────────────────────
-app.get("/insights", (req, res) => {
+app.get("/insights", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/insights.html"));
 });
-app.get("/insights/six-resilience-dimensions", (req, res) => {
+app.get("/insights/six-resilience-dimensions", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/insights/six-resilience-dimensions.html"));
 });
-app.get("/insights/resilience-under-pressure", (req, res) => {
+app.get("/insights/resilience-under-pressure", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/insights/resilience-under-pressure.html"));
 });
-app.get("/insights/team-resilience", (req, res) => {
+app.get("/insights/team-resilience", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/insights/team-resilience.html"));
 });
 
 // ── Team / B2B page ─────────────────────────────────────────
-app.get("/team", (req, res) => {
+app.get("/team", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/team.html"));
 });
 
 // ── Admin leads page ────────────────────────────────────────
-app.get("/admin/leads/ui", (req, res) => {
+app.get("/admin/leads/ui", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/admin/leads.html"));
 });
 
