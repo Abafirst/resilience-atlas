@@ -34,10 +34,37 @@
     <div class="results-page">
       <div class="results-wrapper">
 
-        <!-- Greeting -->
+        <!-- Greeting / Results Header -->
         <div class="results-header">
-          <h1 id="greeting" class="results-greeting">Your Results</h1>
+          <h1 id="greeting" class="results-greeting">Your Resilience Profile</h1>
+          <p class="results-header-desc">Your resilience system reveals how you adapt, recover, and grow through challenge.</p>
           <p id="resultsSubtitle" class="results-subtitle"></p>
+        </div>
+
+        <!-- Primary Resilience Mode -->
+        <section class="primary-type-card card" aria-labelledby="primaryTypeHeading">
+          <h2 id="primaryTypeHeading">Your Primary Resilience Mode</h2>
+          <div class="primary-type-name" id="primaryType">—</div>
+          <p class="primary-type-description" id="primaryDescription"></p>
+        </section>
+
+        <!-- Atlas Map (radar chart) -->
+        <section class="atlas-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Your Resilience Atlas Map</h2>
+          <p class="atlas-description">This map visualises the balance of your resilience system across six core dimensions.</p>
+          <div id="radarChartContainer" aria-label="Resilience radar chart"></div>
+          <div class="atlas-highlight">
+            Your strongest resilience system is: <span id="primaryDimensionLabel"></span>
+          </div>
+        </section>
+
+        <!-- Insight Progress Indicator -->
+        <div class="insight-progress" aria-hidden="true">
+          <p>Your resilience insights unlocked</p>
+          <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill"></div>
+          </div>
+          <p>Upgrade to unlock your complete resilience atlas</p>
         </div>
 
         <!-- Resilience Profile Bars -->
@@ -46,26 +73,21 @@
           <div id="profileBars" aria-live="polite"></div>
         </section>
 
-        <!-- Radar Chart -->
-<section class="profile-section card" aria-labelledby="radarHeading">
-  <h2 id="radarHeading">Resilience Dimensions Overview</h2>
-  <div id="radarChartContainer" aria-label="Resilience radar chart"></div>
-</section>
-        <!-- Strengths Summary -->
-        <section aria-labelledby="strengthsHeading" class="mt-8">
-          <h2 id="strengthsHeading" class="mb-4">Your Resilience Strengths</h2>
-          <div class="strengths-cards">
-            <div class="strength-card primary">
-              <h4>Primary Strength</h4>
-              <p id="primaryStrength">—</p>
+        <!-- Core Strengths Grid -->
+        <section class="strengths-section" aria-labelledby="strengthsHeading">
+          <h2 id="strengthsHeading">Your Core Resilience Strengths</h2>
+          <div class="strength-grid">
+            <div class="strength-card-premium">
+              <h3>Primary Strength</h3>
+              <div id="primaryStrength">—</div>
             </div>
-            <div class="strength-card solid">
-              <h4>Solid Strength</h4>
-              <p id="solidStrength">—</p>
+            <div class="strength-card-premium">
+              <h3>Solid Strength</h3>
+              <div id="solidStrength">—</div>
             </div>
-            <div class="strength-card emerging">
-              <h4>Emerging Strength</h4>
-              <p id="emergingStrength">—</p>
+            <div class="strength-card-premium">
+              <h3>Emerging Strength</h3>
+              <div id="emergingStrength">—</div>
             </div>
           </div>
         </section>
@@ -80,21 +102,22 @@
 
         <!-- Deep Analysis (locked for free users) -->
         <section
-          class="profile-section card locked"
+          class="premium-preview card locked"
           data-tier="deep-report"
           aria-labelledby="deepAnalysisHeading"
         >
-          <h2 id="deepAnalysisHeading">Detailed Resilience Dimension Analysis</h2>
-          <div class="deep-analysis-preview" aria-hidden="true">
+          <h2 id="deepAnalysisHeading">Deep Resilience Analysis</h2>
+          <div class="blur-preview" aria-hidden="true">
             <p>Comprehensive breakdown of all 6 resilience dimensions with personalised insights tailored to your unique profile.</p>
             <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
             <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalised development roadmap.</p>
           </div>
-          <!-- Overlay injected by upgrade-cards.js -->
-          <div class="payment-overlay" role="region" aria-label="Premium content — locked">
+          <!-- Overlay injected by payment-gating.js -->
+          <div class="premium-lock-message payment-overlay" role="region" aria-label="Premium content — locked">
             <div class="payment-overlay__inner">
               <span class="payment-overlay__icon" aria-hidden="true">&#128274;</span>
-              <p class="payment-overlay__message">Unlock with <strong>Deep Report</strong></p>
+              <h3>Unlock Your Complete Resilience Map</h3>
+              <p>Go deeper to understand the full structure of your resilience system.</p>
               <button
                 class="btn btn-upgrade btn-sm"
                 onclick="PaymentGating.startCheckout('deep-report')"
