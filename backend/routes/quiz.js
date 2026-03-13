@@ -1,4 +1,5 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 const { calculateResilienceScores, generateReport } = require('../scoring');
@@ -10,6 +11,15 @@ const { calculateEvolution } = require('../services/evolution');
 const { generateNarrativeReport } = require('../services/reportGenerator');
 
 const router = express.Router();
+
+// Rate limit for quiz submission: 10 submissions per 15 minutes per IP
+const submitLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many quiz submissions. Please try again in a few minutes.' },
+});
 
 // Map question indices (0-based) to the six resilience type names
 const RESILIENCE_CATEGORIES = {
@@ -94,7 +104,7 @@ router.post('/', async (req, res) => {
  * POST /api/quiz/submit
  * Submit quiz answers and receive resilience scores
  */
-router.post('/submit', authenticateJWT, async (req, res) => {
+router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
     try {
         const { answers } = req.body;
 
