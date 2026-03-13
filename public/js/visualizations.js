@@ -86,166 +86,323 @@ window.getStrengthTier   = getStrengthTier;
 window.escapeHtml        = escapeHtml;
 
 /**
- * Render a radar chart for 6 resilience dimensions.
- * @param {HTMLElement} container - Element to render into
- * @param {Object} scores - Scores object with { type: { percentage } }
+ * Render a premium Chart.js radar chart for 6 resilience dimensions.
+ *
+ * Features:
+ *  - Animated entrance (1200 ms, easeOutQuart)
+ *  - Dominant dimension glow label via canvas plugin
+ *  - Atlas Compass overlay (crosshairs, direction markers, center hub)
+ *  - Balance/equilibrium ring (green / blue / amber by score variance)
+ *  - Updates #primaryDimensionLabel with dominant dimension name
+ *
+ * @param {HTMLElement} container - Wrapper element (e.g. #radarChartContainer)
+ * @param {Object}      scores    - { typeName: { percentage: number } }
  */
 function renderRadarChart(container, scores) {
   if (!container || !scores) return;
 
-  container.innerHTML = '';
+  // ── Dimension metadata ────────────────────────────
+  var TYPES = [
+    'Agentic-Generative',
+    'Relational',
+    'Spiritual-Existential',
+    'Emotional-Adaptive',
+    'Somatic-Regulative',
+    'Cognitive-Narrative',
+  ];
 
-const types = [
- "Agentic-Generative",
- "Relational",
- "Spiritual-Existential",
- "Emotional-Adaptive",
- "Somatic-Regulative",
- "Cognitive-Narrative"
-];
-const atlasColors = {
- "Agentic-Generative": "#4f46e5",   // Indigo
- "Relational": "#14b8a6",           // Teal
- "Spiritual-Existential": "#8b5cf6",// Violet
- "Emotional-Adaptive": "#ec4899",   // Rose
- "Somatic-Regulative": "#f59e0b",   // Amber
- "Cognitive-Narrative": "#64748b"   // Slate
-};
-const percentages = types.map(type =>
-  scores[type] ? scores[type].percentage : 0
-);
-
-const maxScore = Math.max(...percentages);
-const dominantIndex = percentages.indexOf(maxScore);
-const dominantColor = atlasColors[types[dominantIndex]];
-// Animation state
-let progress = 0;
-const animationSpeed = 0.04;
-const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-svg.setAttribute('viewBox', '0 0 400 400');
-svg.setAttribute('width', '100%');
-svg.setAttribute('height', '400');
-svg.setAttribute('role', 'img');
-svg.setAttribute('aria-label', 'Radar chart showing scores for: ' + types.join(', '));
-
-container.appendChild(svg);
-// Compass ring
-const compass = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-compass.setAttribute('cx', 200);
-compass.setAttribute('cy', 200);
-compass.setAttribute('r', 160);
-compass.setAttribute('fill', 'none');
-compass.setAttribute('stroke', '#e5e7eb');
-compass.setAttribute('stroke-width', 2);
-svg.appendChild(compass);
-
-// Cardinal directions
-['N','E','S','W'].forEach((dir,i)=>{
-  const text = document.createElementNS('http://www.w3.org/2000/svg','text');
-  const positions = [[200,20],[380,200],[200,390],[20,200]];
-  text.setAttribute('x', positions[i][0]);
-  text.setAttribute('y', positions[i][1]);
-  text.setAttribute('text-anchor','middle');
-  text.setAttribute('font-size','14');
-  text.setAttribute('fill','#9ca3af');
-  text.textContent = dir;
-  svg.appendChild(text);
-});
-
-  // Accessible title element
-  const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-  title.textContent = 'Resilience dimensions radar chart';
-  svg.appendChild(title);
-
-  const center = 200;
-  const maxRadius = 150;
-  const numAxes = types.length;
-
-  // Draw concentric circles (20%, 40%, 60%, 80%, 100%)
-  for (let level = 1; level <= 5; level++) {
-    const radius = (maxRadius / 5) * level;
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-circle.setAttribute('r', level === dominantIndex ? '8' : '4');
-circle.setAttribute('fill', atlasColors[types[level]]);
-
-if (level === dominantIndex) {
-circle.setAttribute('stroke', atlasColors[types[level]]);
-}
-
-circle.setAttribute('stroke', '#e0e7ff');
-circle.setAttribute('stroke-width', '1');
-svg.appendChild(circle);
-  }
-
-  // Draw axes and labels
-  const angles = [];
-  for (let i = 0; i < numAxes; i++) {
-    const angle = (i * 360 / numAxes) - 90;
-    angles.push(angle);
-
-    const rad = (angle * Math.PI) / 180;
-    const x = center + maxRadius * Math.cos(rad);
-    const y = center + maxRadius * Math.sin(rad);
-
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', center);
-    line.setAttribute('y1', center);
-    line.setAttribute('x2', x);
-    line.setAttribute('y2', y);
-    line.setAttribute('stroke', '#ccc');
-    line.setAttribute('stroke-width', '1');
-    svg.appendChild(line);
-
-    const labelDist = maxRadius + 28;
-    const labelX = center + labelDist * Math.cos(rad);
-    const labelY = center + labelDist * Math.sin(rad);
-    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    text.setAttribute('x', labelX);
-    text.setAttribute('y', labelY);
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('dominant-baseline', 'middle');
-    text.setAttribute('font-size', '11');
-    text.setAttribute('fill', '#555');
-    text.textContent = types[i];
-    svg.appendChild(text);
-  }
-
-  // Compute data polygon points
-  const points = [];
-  for (let i = 0; i < numAxes; i++) {
-    const rad = (angles[i] * Math.PI) / 180;
-const radius = (percentages[i] / 100) * maxRadius * progress;
-    points.push([center + radius * Math.cos(rad), center + radius * Math.sin(rad)]);
-  }
-
-  // Draw filled polygon
-  const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  const pointStr = [...points, points[0]].map(p => `${p[0]},${p[1]}`).join(' ');
-  polygon.setAttribute('points', pointStr);
-  polygon.setAttribute('fill', 'rgba(102, 126, 234, 0.3)');
-  polygon.setAttribute('stroke', '#667eea');
-  polygon.setAttribute('stroke-width', '2');
-  svg.appendChild(polygon);
-
-  // Draw data points
-  for (let i = 0; i < numAxes; i++) {
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', points[i][0]);
-    circle.setAttribute('cy', points[i][1]);
-    circle.setAttribute('r', '4');
-    circle.setAttribute('fill', '#667eea');
-    svg.appendChild(circle);
-  }
-container.appendChild(svg);
-
-if (progress < 1) {
-  requestAnimationFrame(() => {
-    progress += animationSpeed;
-    if (progress > 1) progress = 1;
-
-    renderRadarChart(container, scores);
+  var percentages = TYPES.map(function(type) {
+    var s = scores[type];
+    if (!s) return 0;
+    return Math.round(typeof s === 'object' ? s.percentage : s);
   });
-}
+
+  // ── Dominant dimension ────────────────────────────
+  var maxPct       = Math.max.apply(null, percentages);
+  var dominantIdx  = percentages.indexOf(maxPct);
+  var dominantName = TYPES[dominantIdx];
+
+  // Update the DOM label
+  var labelEl = document.getElementById('primaryDimensionLabel');
+  if (labelEl) {
+    labelEl.textContent = dominantName;
+  }
+
+  // ── Balance ring colour (variance-based) ─────────
+  // Thresholds are calibrated for 0–100 percentage scores across 6 dimensions.
+  // With a max possible variance of ~2500 (all scores at extremes), the bands are:
+  //   < 200  → std-dev < ~14 pts  → well-balanced profile   → green
+  //   < 600  → std-dev < ~24 pts  → moderately varied       → blue
+  //   ≥ 600  → std-dev ≥ ~24 pts  → strongly peaked/spiky   → amber
+  var VARIANCE_BALANCED  = 200;
+  var VARIANCE_MODERATE  = 600;
+
+  var mean = percentages.reduce(function(a, b) { return a + b; }, 0) / percentages.length;
+  var variance = percentages.reduce(function(acc, v) {
+    return acc + Math.pow(v - mean, 2);
+  }, 0) / percentages.length;
+
+  var ringColor;
+  if (variance < VARIANCE_BALANCED) {
+    ringColor = 'rgba(16, 185, 129, 0.22)';   // green  — balanced
+  } else if (variance < VARIANCE_MODERATE) {
+    ringColor = 'rgba(59, 130, 246, 0.20)';   // blue   — moderate
+  } else {
+    ringColor = 'rgba(245, 158, 11, 0.22)';   // amber  — spiky
+  }
+
+  // ── Canvas setup ──────────────────────────────────
+  // Remove any legacy SVG siblings; keep the canvas element.
+  Array.from(container.querySelectorAll('svg')).forEach(function(el) {
+    el.remove();
+  });
+
+  var canvas = document.getElementById('radarChart');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'radarChart';
+    container.appendChild(canvas);
+  }
+
+  // Destroy previous Chart.js instance to avoid duplicate overlays.
+  if (window._resilienceRadarChart) {
+    window._resilienceRadarChart.destroy();
+    window._resilienceRadarChart = null;
+  }
+
+  // ── Chart.js custom plugins ───────────────────────
+
+  /**
+   * Balance ring drawn BEHIND the radar polygon.
+   */
+  var balanceRingPlugin = {
+    id: 'balanceRing',
+    beforeDraw: function(chart) {
+      var area = chart.chartArea;
+      if (!area) return;
+      var c  = chart.ctx;
+      var cx = (area.left + area.right)  / 2;
+      var cy = (area.top  + area.bottom) / 2;
+      var r  = Math.min(area.right - area.left, area.bottom - area.top) / 2;
+
+      c.save();
+      c.beginPath();
+      c.arc(cx, cy, r * 0.97, 0, Math.PI * 2);
+      c.strokeStyle = ringColor;
+      c.lineWidth   = 14;
+      c.stroke();
+      c.restore();
+    },
+  };
+
+  /**
+   * Compass crosshairs + direction markers + center hub drawn OVER the chart.
+   */
+  var compassPlugin = {
+    id: 'compassOverlay',
+    afterDraw: function(chart) {
+      var area = chart.chartArea;
+      if (!area) return;
+      var c  = chart.ctx;
+      var cx = (area.left + area.right)  / 2;
+      var cy = (area.top  + area.bottom) / 2;
+      var r  = Math.min(area.right - area.left, area.bottom - area.top) / 2;
+
+      c.save();
+
+      // Subtle dashed crosshair lines
+      c.strokeStyle = 'rgba(148, 163, 184, 0.18)';
+      c.lineWidth   = 1;
+      c.setLineDash([5, 5]);
+
+      c.beginPath();
+      c.moveTo(cx, cy - r - 10);
+      c.lineTo(cx, cy + r + 10);
+      c.stroke();
+
+      c.beginPath();
+      c.moveTo(cx - r - 10, cy);
+      c.lineTo(cx + r + 10, cy);
+      c.stroke();
+
+      c.setLineDash([]);
+
+      // Compass direction labels — 6 directions chosen to avoid overlapping
+      // the 6 axis labels of the radar chart (which sit at 0°, 60°, 120°, …).
+      // E (0°) and W (180°) are omitted because they coincide with axis labels.
+      var dirs = [
+        { label: 'N',  angle: -90  },
+        { label: 'NE', angle: -30  },
+        { label: 'SE', angle:  30  },
+        { label: 'S',  angle:  90  },
+        { label: 'SW', angle:  150 },
+        { label: 'NW', angle: -150 },
+      ];
+
+      c.font         = '9px Inter, Segoe UI, system-ui, sans-serif';
+      c.textAlign    = 'center';
+      c.textBaseline = 'middle';
+      c.fillStyle    = 'rgba(148, 163, 184, 0.55)';
+
+      dirs.forEach(function(d) {
+        var rad = (d.angle * Math.PI) / 180;
+        var dx  = cx + (r + 16) * Math.cos(rad);
+        var dy  = cy + (r + 16) * Math.sin(rad);
+        c.fillText(d.label, dx, dy);
+      });
+
+      // Center hub — radial glow
+      var grad = c.createRadialGradient(cx, cy, 0, cx, cy, 10);
+      grad.addColorStop(0, 'rgba(79, 70, 229, 0.9)');
+      grad.addColorStop(1, 'rgba(79, 70, 229, 0)');
+      c.beginPath();
+      c.arc(cx, cy, 10, 0, Math.PI * 2);
+      c.fillStyle = grad;
+      c.fill();
+
+      c.beginPath();
+      c.arc(cx, cy, 4, 0, Math.PI * 2);
+      c.fillStyle = '#4f46e5';
+      c.fill();
+
+      c.restore();
+    },
+  };
+
+  /**
+   * Overdraw the dominant dimension's axis label with a canvas glow effect.
+   */
+  var glowLabelPlugin = {
+    id: 'glowLabel',
+    afterDraw: function(chart) {
+      var scale = chart.scales && chart.scales.r;
+      if (!scale || typeof scale.getPointLabelPosition !== 'function') return;
+
+      var pos = scale.getPointLabelPosition(dominantIdx);
+      if (!pos) return;
+
+      var c  = chart.ctx;
+      var px = (pos.left + pos.right)  / 2;
+      var py = (pos.top  + pos.bottom) / 2;
+
+      c.save();
+      c.font         = '700 12px Inter, Segoe UI, system-ui, sans-serif';
+      c.textAlign    = 'center';
+      c.textBaseline = 'middle';
+      c.shadowBlur   = 14;
+      c.shadowColor  = 'rgba(80, 120, 255, 0.65)';
+      c.fillStyle    = '#4f46e5';
+      c.fillText(dominantName, px, py);
+      c.restore();
+    },
+  };
+
+  // ── Per-point styling (dominant vertex brighter + larger) ─
+  var pointBgColors = TYPES.map(function(_, i) {
+    return i === dominantIdx ? '#f43f5e' : '#4f46e5';
+  });
+  var pointRadii = TYPES.map(function(_, i) {
+    return i === dominantIdx ? 7 : 4;
+  });
+  var pointHoverRadii = TYPES.map(function(_, i) {
+    return i === dominantIdx ? 9 : 6;
+  });
+
+  // ── Render Chart.js radar ─────────────────────────
+  var ctx = canvas.getContext('2d');
+
+  /* global Chart */
+  window._resilienceRadarChart = new Chart(ctx, {
+    type: 'radar',
+    plugins: [balanceRingPlugin, compassPlugin, glowLabelPlugin],
+    data: {
+      labels: TYPES,
+      datasets: [{
+        label:                'Your Resilience Profile',
+        data:                 percentages,
+        backgroundColor:      'rgba(79, 70, 229, 0.25)',
+        borderColor:          '#4f46e5',
+        borderWidth:          3,
+        borderJoinStyle:      'round',
+        pointBackgroundColor: pointBgColors,
+        pointBorderColor:     '#fff',
+        pointBorderWidth:     2,
+        pointRadius:          pointRadii,
+        pointHoverRadius:     pointHoverRadii,
+        fill:                 true,
+        tension:              0.35,
+      }],
+    },
+    options: {
+      responsive:          true,
+      maintainAspectRatio: true,
+      animation: {
+        duration:      1200,
+        easing:        'easeOutQuart',
+        animateScale:  true,
+        animateRotate: true,
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          padding:         12,
+          titleFont: {
+            size: 13, weight: '600',
+            family: 'Inter, Segoe UI, system-ui, sans-serif',
+          },
+          bodyFont: {
+            size: 12,
+            family: 'Inter, Segoe UI, system-ui, sans-serif',
+          },
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              return ' ' + context.label + ': ' + context.parsed.r + '%';
+            },
+          },
+        },
+      },
+      scales: {
+        r: {
+          min:         0,
+          max:         100,
+          beginAtZero: true,
+          ticks: {
+            stepSize:      20,
+            font:          { size: 10 },
+            color:         'rgba(100, 116, 139, 0.55)',
+            backdropColor: 'transparent',
+            callback: function(value) {
+              return value + '%';
+            },
+          },
+          grid: {
+            circular:  true,
+            color:     'rgba(100, 116, 139, 0.15)',
+            lineWidth: 1,
+          },
+          angleLines: {
+            color:     'rgba(100, 116, 139, 0.15)',
+            lineWidth: 1,
+          },
+          pointLabels: {
+            font: {
+              size: 12, weight: '600',
+              family: 'Inter, Segoe UI, system-ui, sans-serif',
+            },
+            color: function(context) {
+              return context.index === dominantIdx ? '#4f46e5' : '#475569';
+            },
+            padding: 14,
+          },
+        },
+      },
+    },
+  });
+
+  // Trigger CSS entrance animation on the container
+  container.classList.add('radar-animated');
 }
 
 window.renderRadarChart = renderRadarChart;
