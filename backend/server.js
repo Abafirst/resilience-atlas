@@ -109,12 +109,38 @@ app.use("/api/org/:organizationId/leadership-report", require("./routes/leadersh
 app.use("/api/insights", require("./routes/insights"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/organizations", require("./routes/organizations"));
+app.use("/api/growth", require("./routes/growth"));
+app.use("/admin", require("./routes/admin"));
 
 // ==============================
 // Root API info
 // ==============================
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
+// ── Insight article routes ──────────────────────────────────
+app.get("/insights", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/insights.html"));
+});
+app.get("/insights/six-resilience-dimensions", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/insights/six-resilience-dimensions.html"));
+});
+app.get("/insights/resilience-under-pressure", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/insights/resilience-under-pressure.html"));
+});
+app.get("/insights/team-resilience", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/insights/team-resilience.html"));
+});
+
+// ── Team / B2B page ─────────────────────────────────────────
+app.get("/team", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/team.html"));
+});
+
+// ── Admin leads page ────────────────────────────────────────
+app.get("/admin/leads/ui", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/admin/leads.html"));
 });
 
 // ==============================

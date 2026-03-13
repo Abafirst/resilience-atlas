@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Lead Tracker | Resilience Atlas</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body { background:#f8fafc; }
+    .admin-wrap { max-width:1080px; margin:0 auto; padding:2rem 1.25rem; }
+    .admin-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:1rem; }
+    .admin-header h1 { font-size:1.6rem; color:#0f172a; }
+    .filter-row { display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center; }
+    .filter-row label { font-size:.88rem; font-weight:600; color:#334155; }
+    .filter-row select { padding:.45rem .9rem; border:1px solid #cbd5e1; border-radius:8px; font-size:.9rem; background:#fff; }
+    .leads-table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; font-size:.9rem; }
+    .leads-table th { background:#f1f5f9; text-align:left; padding:.75rem 1rem; font-size:.78rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#64748b; border-bottom:1px solid #e2e8f0; }
+    .leads-table td { padding:.75rem 1rem; border-bottom:1px solid #f1f5f9; color:#334155; vertical-align:middle; }
+    .leads-table tr:last-child td { border-bottom:none; }
+    .leads-table tr:hover td { background:#fafafe; }
+    .stage-badge { display:inline-block; font-size:.75rem; font-weight:700; padding:.2rem .6rem; border-radius:999px; text-transform:capitalize; }
+    .stage-lead { background:#fef3c7; color:#92400e; }
+    .stage-demo_scheduled { background:#dbeafe; color:#1e40af; }
+    .stage-pilot_running { background:#d1fae5; color:#065f46; }
+    .stage-customer { background:#ede9fe; color:#4c1d95; }
+    .stage-select { border:1px solid #cbd5e1; border-radius:6px; font-size:.85rem; padding:.3rem .6rem; background:#fff; cursor:pointer; }
+    .empty-state { text-align:center; padding:3rem 1rem; color:#94a3b8; }
+    .stats-bar { display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .stat-box { background:#fff; border:1px solid #e2e8f0; border-radius:10px; padding:1rem 1.25rem; }
+    .stat-box .val { font-size:1.8rem; font-weight:800; color:#4F46E5; line-height:1; }
+    .stat-box .lbl { font-size:.82rem; color:#64748b; margin-top:.25rem; }
+    .loading { text-align:center; padding:2rem; color:#94a3b8; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="Resilience Atlas" width="36" height="36">
+        </div>
+        Admin &mdash; Lead Tracker
+      </a>
+      <a href="/" class="btn btn-secondary" style="font-size:.88rem;">Back to Site</a>
+    </div>
+  </header>
+
+  <main class="admin-wrap">
+    <div class="admin-header">
+      <h1>B2B Leads</h1>
+      <button class="btn btn-primary" id="refreshBtn" onclick="loadLeads()">Refresh</button>
+    </div>
+
+    <div class="stats-bar" id="statsBar" aria-label="Lead statistics"></div>
+
+    <div class="filter-row">
+      <label for="stageFilter">Filter by stage:</label>
+      <select id="stageFilter" onchange="loadLeads()">
+        <option value="">All stages</option>
+        <option value="lead">Lead</option>
+        <option value="demo_scheduled">Demo Scheduled</option>
+        <option value="pilot_running">Pilot Running</option>
+        <option value="customer">Customer</option>
+      </select>
+    </div>
+
+    <div id="tableWrap">
+      <p class="loading">Loading leads&hellip;</p>
+    </div>
+  </main>
+
+  <script>
+    var allLeads = [];
+
+    function stageBadge(stage) {
+      var cls = 'stage-' + (stage || 'lead');
+      var label = (stage || 'lead').replace('_', ' ');
+      return '<span class="stage-badge ' + cls + '">' + label + '</span>';
+    }
+
+    function stageSelect(leadId, current) {
+      var stages = ['lead', 'demo_scheduled', 'pilot_running', 'customer'];
+      var opts = stages.map(function(s) {
+        return '<option value="' + s + '"' + (s === current ? ' selected' : '') + '>' + s.replace('_',' ') + '</option>';
+      }).join('');
+      return '<select class="stage-select" onchange="updateStage(\'' + leadId + '\', this.value)">' + opts + '</select>';
+    }
+
+    function renderTable(leads) {
+      var wrap = document.getElementById('tableWrap');
+      if (!leads || leads.length === 0) {
+        wrap.innerHTML = '<p class="empty-state">No leads found.</p>';
+        return;
+      }
+      var rows = leads.map(function(l) {
+        var date = l.createdAt ? new Date(l.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) : '-';
+        return '<tr>' +
+          '<td>' + escHtml(l.contact_name || '-') + '</td>' +
+          '<td>' + escHtml(l.company_name || '-') + '</td>' +
+          '<td><a href="mailto:' + escHtml(l.email||'') + '">' + escHtml(l.email||'-') + '</a></td>' +
+          '<td>' + escHtml(l.team_size || '-') + '</td>' +
+          '<td>' + stageSelect(l._id, l.stage) + '</td>' +
+          '<td>' + date + '</td>' +
+          '</tr>';
+      }).join('');
+
+      wrap.innerHTML = '<table class="leads-table" aria-label="Leads table">' +
+        '<thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Team Size</th><th>Stage</th><th>Date</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+        '</table>';
+    }
+
+    function renderStats(leads) {
+      var statsBar = document.getElementById('statsBar');
+      var counts = { lead:0, demo_scheduled:0, pilot_running:0, customer:0 };
+      leads.forEach(function(l) { if (counts[l.stage] !== undefined) counts[l.stage]++; });
+      statsBar.innerHTML =
+        '<div class="stat-box"><div class="val">' + leads.length + '</div><div class="lbl">Total Leads</div></div>' +
+        '<div class="stat-box"><div class="val">' + counts.lead + '</div><div class="lbl">New Leads</div></div>' +
+        '<div class="stat-box"><div class="val">' + counts.demo_scheduled + '</div><div class="lbl">Demo Scheduled</div></div>' +
+        '<div class="stat-box"><div class="val">' + counts.pilot_running + '</div><div class="lbl">Pilot Running</div></div>' +
+        '<div class="stat-box"><div class="val">' + counts.customer + '</div><div class="lbl">Customers</div></div>';
+    }
+
+    function loadLeads() {
+      var stage = document.getElementById('stageFilter').value;
+      var url = '/admin/leads' + (stage ? '?stage=' + encodeURIComponent(stage) : '');
+      document.getElementById('tableWrap').innerHTML = '<p class="loading">Loading&hellip;</p>';
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          allLeads = data.leads || [];
+          renderStats(allLeads);
+          renderTable(allLeads);
+        })
+        .catch(function(err) {
+          document.getElementById('tableWrap').innerHTML = '<p class="empty-state">Failed to load leads. ' + escHtml(err.message) + '</p>';
+        });
+    }
+
+    function updateStage(leadId, newStage) {
+      fetch('/admin/leads/' + leadId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage: newStage })
+      }).catch(function(err) { console.error('Stage update failed:', err); });
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    loadLeads();
+  </script>
+</body>
+</html>
