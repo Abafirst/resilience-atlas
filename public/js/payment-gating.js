@@ -65,6 +65,11 @@
                 if (overlay) overlay.hidden = false;
             }
         });
+
+        // Show "View on Team Dashboard" link for business users
+        document.querySelectorAll('.business-dashboard-link').forEach(function (el) {
+            el.hidden = !isBusiness();
+        });
     }
 
     // ── Post-payment verification ─────────────────────────────────────────────
@@ -109,6 +114,8 @@
             ? '🎉 Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
             : tier === 'atlas-premium'
             ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
+            : tier === 'business'
+            ? '🎉 Welcome to Business! Team analytics and dashboard are now unlocked.'
             : '🎉 Your Deep Resilience Report is now unlocked!';
 
         var banner = document.createElement('div');
@@ -133,7 +140,7 @@
     /**
      * Start a Stripe Checkout session for the given tier.
      * Prompts for email if not already stored.
-     * @param {'deep-report'|'atlas-premium'} tier
+     * @param {'deep-report'|'atlas-premium'|'business'} tier
      */
     async function startCheckout(tier) {
         var email = localStorage.getItem(EMAIL_KEY) ||
