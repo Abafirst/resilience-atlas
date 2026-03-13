@@ -49,7 +49,8 @@
         </section>
 
         <!-- Atlas Map (radar chart) -->
-        <section class="atlas-section card" aria-labelledby="radarHeading">
+
+<section class="atlas-section card locked" aria-labelledby="radarHeading" data-tier="atlas-premium">
           <h2 id="radarHeading">Your Resilience Atlas Map</h2>
           <p class="atlas-description">This map visualises the balance of your resilience system across six core dimensions.</p>
 <div id="radarChartContainer" aria-label="Resilience radar chart">
@@ -95,13 +96,12 @@
         </section>
 
         <!-- Personalised Report -->
-        <section class="report-text-section" aria-labelledby="reportHeading">
-          <h2 id="reportHeading">Your Personalised Report</h2>
-          <div id="reportText" class="report-text-card" role="region" aria-live="polite">
-            Loading your report&hellip;
-          </div>
-        </section>
-
+<section class="report-section card locked" data-tier="deep-report">
+  <h2 id="reportHeading">Your Personalised Report</h2>
+  <div id="reportText" class="report-text-card" role="region" aria-live="polite">
+    Loading your report…
+  </div>
+</section>
         <!-- Deep Analysis (locked for free users) -->
         <section
           class="premium-preview card locked"
