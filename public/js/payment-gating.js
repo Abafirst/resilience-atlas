@@ -30,11 +30,16 @@
 
     function isDeepReport() {
         const t = getTier();
-        return t === 'deep-report' || t === 'atlas-premium';
+        return t === 'deep-report' || t === 'atlas-premium' || t === 'business';
     }
 
     function isAtlasPremium() {
-        return getTier() === 'atlas-premium';
+        const t = getTier();
+        return t === 'atlas-premium' || t === 'business';
+    }
+
+    function isBusiness() {
+        return getTier() === 'business';
     }
 
     // ── Apply/remove locks ────────────────────────────────────────────────────
@@ -48,7 +53,8 @@
             const required = section.getAttribute('data-tier');
             const unlocked =
                 (required === 'deep-report'  && isDeepReport())  ||
-                (required === 'atlas-premium' && isAtlasPremium());
+                (required === 'atlas-premium' && isAtlasPremium()) ||
+                (required === 'business'      && isBusiness());
 
             const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
@@ -58,6 +64,11 @@
                 section.classList.add('locked');
                 if (overlay) overlay.hidden = false;
             }
+        });
+
+        // Show "View on Team Dashboard" link for business users
+        document.querySelectorAll('.business-dashboard-link').forEach(function (el) {
+            el.hidden = !isBusiness();
         });
     }
 
@@ -101,6 +112,8 @@
     function _showSuccessBanner(tier) {
         var msg = tier === 'atlas-premium'
             ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
+            : tier === 'business'
+            ? '🎉 Welcome to Business! Team analytics and dashboard are now unlocked.'
             : '🎉 Your Deep Resilience Report is now unlocked!';
 
         var banner = document.createElement('div');
@@ -125,7 +138,7 @@
     /**
      * Start a Stripe Checkout session for the given tier.
      * Prompts for email if not already stored.
-     * @param {'deep-report'|'atlas-premium'} tier
+     * @param {'deep-report'|'atlas-premium'|'business'} tier
      */
     async function startCheckout(tier) {
         var email = localStorage.getItem(EMAIL_KEY) ||
@@ -180,6 +193,7 @@
         setTier:              setTier,
         isDeepReport:         isDeepReport,
         isAtlasPremium:       isAtlasPremium,
+        isBusiness:           isBusiness,
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,

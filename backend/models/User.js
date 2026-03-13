@@ -40,7 +40,23 @@ const userSchema = new mongoose.Schema({
   purchaseDate: {
     type: Date,
     default: null
-  }
+  },
+
+  // ── Business tier fields (optional) ──────────────────────────────────────
+
+  // Link to the organisation this user belongs to
+  organization_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    default: null,
+  },
+
+  // Role within the organisation
+  role: {
+    type: String,
+    enum: ['member', 'admin'],
+    default: 'member',
+  },
 
 }, { timestamps: true });
 
