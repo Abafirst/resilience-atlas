@@ -130,188 +130,161 @@ function generatePersonalizedReport(results) {
 }
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  try {
-    // ── Download PDF button ────────────────────────────────
-const downloadButton = document.getElementById('btnDownload');
 
-if (downloadButton) {
-  downloadButton.addEventListener('click', () => {
-    try {
+  // ── Guard: require results ────────────────────────────
+  if (!results || !results.scores) {
+    showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
+    ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '—';
+    });
+    const reportText = document.getElementById('reportText');
+    if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
+    return;
+  }
 
-      const storedResults = localStorage.getItem('resilience_results');
-      const downloadResults = storedResults ? JSON.parse(storedResults) : null;
+  // ── Rank resilience types by percentage ─────────────
+  const ranked = Object.entries(results.scores)
+    .sort((a, b) => b[1].percentage - a[1].percentage);
 
-      if (!downloadResults) {
-        throw new Error('No results to download.');
-      }
+  const primaryStrength  = ranked[0][0];
+  const solidStrength    = ranked[1][0];
+  const emergingStrength = ranked[ranked.length - 1][0];
 
-      const email = localStorage.getItem('resilience_email') || downloadResults.email || '';
-      const scoresStr = encodeURIComponent(JSON.stringify(downloadResults.scores));
-      const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
+  // ── Greeting ─────────────────────────────────────────
+  const name = results.firstName || results.name || localStorage.getItem('resilience_name') || '';
+  const greetingEl = document.getElementById('greeting');
+  if (greetingEl && name) greetingEl.textContent = `Your Resilience Profile, ${name}`;
 
-      window.location.href =
-        `/api/report/download?overall=${downloadResults.overall}` +
-        `&dominantType=${encodeURIComponent(downloadResults.dominantType)}` +
-        `&scores=${scoresStr}${emailParam}`;
+  const subtitleEl = document.getElementById('resultsSubtitle');
+  if (subtitleEl) subtitleEl.textContent = `Overall Score: ${results.overall}% — Dominant Type: ${results.dominantType}`;
 
-    } catch (err) {
-      console.error(err);
+  // ── Strength cards ────────────────────────────────────
+  const primaryEl = document.getElementById('primaryStrength');
+  if (primaryEl) primaryEl.textContent = `${primaryStrength} (${results.scores[primaryStrength].percentage.toFixed(1)}%)`;
+
+  const solidEl = document.getElementById('solidStrength');
+  if (solidEl) solidEl.textContent = `${solidStrength} (${results.scores[solidStrength].percentage.toFixed(1)}%)`;
+
+  const emergingEl = document.getElementById('emergingStrength');
+  if (emergingEl) emergingEl.textContent = `${emergingStrength} (${results.scores[emergingStrength].percentage.toFixed(1)}%)`;
+
+  // ── Bar chart ─────────────────────────────────────────
+  const profileBars = document.getElementById('profileBars');
+  if (profileBars && typeof window.renderProfileBars === 'function') {
+    const items = Object.entries(results.scores).map(([label, s]) => ({
+      label,
+      score: s.raw,
+      maxScore: s.max,
+    }));
+    window.renderProfileBars(profileBars, items);
+  }
+
+  // ── Radar chart ───────────────────────────────────────
+  const radarContainer = document.getElementById('radarChartContainer');
+  if (radarContainer && typeof window.renderRadarChart === 'function') {
+    window.renderRadarChart(radarContainer, results.scores);
+  }
+
+  // ── Narrative report ──────────────────────────────────
+  const reportText = document.getElementById('reportText');
+  if (reportText) {
+    reportText.innerHTML = generateNarrativeReport(results, primaryStrength, solidStrength, emergingStrength);
+  }
+
+  // ── Evidence-Based Practices ──────────────────────────
+  const practicesContainer = document.getElementById('evidencePracticesContainer');
+  if (practicesContainer && window.EvidencePractices) {
+    practicesContainer.innerHTML = window.EvidencePractices.renderPracticesSection(emergingStrength);
+    window.EvidencePractices.initPracticeInteractions();
+  }
+
+  // ── Store email for payment gating ────────────────────
+  const storedEmail = results.email || '';
+  if (storedEmail && !localStorage.getItem('resilience_email')) {
+    localStorage.setItem('resilience_email', storedEmail);
+  }
+
+  // ── Render upgrade cards for free users ───────────────
+  const upgradeContainer = document.getElementById('upgradeCardsContainer');
+  if (upgradeContainer && window.UpgradeCards && window.PaymentGating) {
+    if (!window.PaymentGating.isDeepReport()) {
+      upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
     }
-  });
-}
-          // Gate PDF behind Deep Report purchase.
-          if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
-            showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', '🔒');
-            if (window.UpgradeCards) {
-              const upgradeContainer = document.getElementById('upgradeCardsContainer');
-              if (upgradeContainer && !upgradeContainer.innerHTML.trim()) {
-                upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
-              }
-              upgradeContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            return;
-          }
+  }
 
-          const email = localStorage.getItem('resilience_email') || results.email || '';
-          const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
-          const emailParam = email ? `&email=${encodeURIComponent(email)}` : '';
-          window.location.href =
-            `/api/report/download?overall=${results.overall}` +
-            `&dominantType=${encodeURIComponent(results.dominantType)}` +
-            `&scores=${scoresStr}${emailParam}`;
-        } catch (e) {
-          showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
-        }
-      });
+  // ── Re-apply gating after results render ──────────────
+  if (window.PaymentGating) {
+    window.PaymentGating.applyGating();
+  }
 
-    // ── Retake quiz button ─────────────────────────────────
-    const retakeButton = document.getElementById('btnRetake');
-    if (retakeButton) {
-      retakeButton.addEventListener('click', () => {
-        localStorage.removeItem('resilience_results');
-        window.location.href = 'quiz.html';
-      });
-    }
-
-    // ── Email report button ────────────────────────────────
-    const emailButton = document.getElementById('btnEmail');
-    if (emailButton) {
-      emailButton.addEventListener('click', async () => {
-        const emailInput = document.getElementById('emailInput');
-        const email = emailInput?.value.trim();
-        const validateEmail = (typeof window !== 'undefined' && typeof window.isValidEmail === 'function')
-          ? window.isValidEmail
-          : function(value) { return Boolean(value); };
-        const isValid = validateEmail(email || '');
-        if (!email || !isValid) {
-          showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
-          if (emailInput) emailInput.focus();
+  // ── Download PDF button ────────────────────────────────
+  const downloadButton = document.getElementById('btnDownload');
+  if (downloadButton) {
+    downloadButton.addEventListener('click', () => {
+      try {
+        if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
+          showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', '🔒');
+          const upgradeEl = document.getElementById('upgradeCardsContainer');
+          upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        showAlert('emailAlert', 'Sending your report to ' + email + '...', 'success', '✉️');
-        try {
-          const storedResults = localStorage.getItem('resilience_results');
-          const results = storedResults ? JSON.parse(storedResults) : null;
-          if (!results) throw new Error('No results to send. Please finish the assessment first.');
-
-          results.reportText = generatePersonalizedReport(results);
-
-          const url =
-            `/api/report/download?overall=${results.overall}` +
-            `&dominantType=${encodeURIComponent(results.dominantType)}` +
-            `&scores=${encodeURIComponent(JSON.stringify(results.scores))}` +
-            `&email=${encodeURIComponent(email)}`;
-          window.open(url, '_blank');
-
-          showAlert('emailAlert', 'Generating your report...', 'success', '📄');
-        } catch (e) {
-          showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
-        }
-      });
-
-if (!results || !results.scores) {
-  showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
-
-  ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = '—';
-  });
-
-  const reportText = document.getElementById('reportText');
-  if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
-}
-    // ── Rank resilience types by percentage ─────────────
-    const ranked = Object.entries(results.scores)
-      .sort((a, b) => b[1].percentage - a[1].percentage);
-
-    const primaryStrength  = ranked[0][0];
-    const solidStrength    = ranked[1][0];
-    const emergingStrength = ranked[ranked.length - 1][0];
-
-    console.log('Primary:',  primaryStrength,  results.scores[primaryStrength].percentage);
-    console.log('Solid:',    solidStrength,    results.scores[solidStrength].percentage);
-    console.log('Emerging:', emergingStrength, results.scores[emergingStrength].percentage);
-
-    // ── Greeting ─────────────────────────────────────────
-    const name = results.firstName || results.name || localStorage.getItem('resilience_name') || '';
-    const greetingEl = document.getElementById('greeting');
-    if (greetingEl && name) greetingEl.textContent = `Your Resilience Profile, ${name}`;
-
-    const subtitleEl = document.getElementById('resultsSubtitle');
-    if (subtitleEl) subtitleEl.textContent = `Overall Score: ${results.overall}% — Dominant Type: ${results.dominantType}`;
-
-    // ── Strength cards ────────────────────────────────────
-    const primaryEl = document.getElementById('primaryStrength');
-    if (primaryEl) primaryEl.textContent = `${primaryStrength} (${results.scores[primaryStrength].percentage.toFixed(1)}%)`;
-
-    const solidEl = document.getElementById('solidStrength');
-    if (solidEl) solidEl.textContent = `${solidStrength} (${results.scores[solidStrength].percentage.toFixed(1)}%)`;
-
-    const emergingEl = document.getElementById('emergingStrength');
-    if (emergingEl) emergingEl.textContent = `${emergingStrength} (${results.scores[emergingStrength].percentage.toFixed(1)}%)`;
-
-    // ── Bar chart ─────────────────────────────────────────
-    const profileBars = document.getElementById('profileBars');
-    const renderBars = (typeof window !== 'undefined') ? window.renderProfileBars : null;
-    if (profileBars && typeof renderBars === 'function') {
-      const items = Object.entries(results.scores).map(([label, s]) => ({
-        label,
-        score: s.raw,
-        maxScore: s.max,
-      }));
-      renderBars(profileBars, items);
-    }
-
-    // ── Narrative report ──────────────────────────────────
-    const reportText = document.getElementById('reportText');
-    if (reportText) {
-      reportText.innerHTML = generateNarrativeReport(results, primaryStrength, solidStrength, emergingStrength);
-    }
-
-    // ── Evidence-Based Practices ──────────────────────────
-    const practicesContainer = document.getElementById('evidencePracticesContainer');
-    if (practicesContainer && window.EvidencePractices) {
-      practicesContainer.innerHTML = window.EvidencePractices.renderPracticesSection(emergingStrength);
-      window.EvidencePractices.initPracticeInteractions();
-    }
-
-    // ── Store email for payment gating ────────────────────
-    const email = results.email || '';
-    if (email && !localStorage.getItem('resilience_email')) {
-      localStorage.setItem('resilience_email', email);
-    }
-
-    // ── Render upgrade cards for free users ───────────────
-    const upgradeContainer = document.getElementById('upgradeCardsContainer');
-    if (upgradeContainer && window.UpgradeCards && window.PaymentGating) {
-      if (!window.PaymentGating.isDeepReport()) {
-        upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
+        const dlEmail = localStorage.getItem('resilience_email') || results.email || '';
+        const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
+        const emailParam = dlEmail ? `&email=${encodeURIComponent(dlEmail)}` : '';
+        window.location.href =
+          `/api/report/download?overall=${results.overall}` +
+          `&dominantType=${encodeURIComponent(results.dominantType)}` +
+          `&scores=${scoresStr}${emailParam}`;
+      } catch (e) {
+        showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
       }
-    }
+    });
+  }
 
-    // ── Re-apply gating after results render ──────────────
-    if (window.PaymentGating) {
-      window.PaymentGating.applyGating();
-    }
+  // ── Retake quiz button ─────────────────────────────────
+  const retakeButton = document.getElementById('btnRetake');
+  if (retakeButton) {
+    retakeButton.addEventListener('click', () => {
+      localStorage.removeItem('resilience_results');
+      window.location.href = 'quiz.html';
+    });
+  }
 
-}
+  // ── Email report button ────────────────────────────────
+  const emailButton = document.getElementById('btnEmail');
+  if (emailButton) {
+    emailButton.addEventListener('click', async () => {
+      const emailInput = document.getElementById('emailInput');
+      const emailAddr = emailInput?.value.trim();
+      const validateEmail = (typeof window !== 'undefined' && typeof window.isValidEmail === 'function')
+        ? window.isValidEmail
+        : function(value) { return Boolean(value); };
+      const isValid = validateEmail(emailAddr || '');
+      if (!emailAddr || !isValid) {
+        showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
+        if (emailInput) emailInput.focus();
+        return;
+      }
+      showAlert('emailAlert', 'Sending your report to ' + emailAddr + '...', 'success', '✉️');
+      try {
+        const storedResults = localStorage.getItem('resilience_results');
+        const emailResults = storedResults ? JSON.parse(storedResults) : null;
+        if (!emailResults) throw new Error('No results to send. Please finish the assessment first.');
+
+        emailResults.reportText = generatePersonalizedReport(emailResults);
+
+        const url =
+          `/api/report/download?overall=${emailResults.overall}` +
+          `&dominantType=${encodeURIComponent(emailResults.dominantType)}` +
+          `&scores=${encodeURIComponent(JSON.stringify(emailResults.scores))}` +
+          `&email=${encodeURIComponent(emailAddr)}`;
+        window.open(url, '_blank');
+
+        showAlert('emailAlert', 'Generating your report...', 'success', '📄');
+      } catch (e) {
+        showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
+      }
+    });
+  }
+});
