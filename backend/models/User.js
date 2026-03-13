@@ -42,6 +42,8 @@ const userSchema = new mongoose.Schema({
     default: null
   },
 
+  // B2B organization fields (null for free-tier / individual users)
+  organizationId: {
   // ── Business tier fields (optional) ──────────────────────────────────────
 
   // Link to the organisation this user belongs to
@@ -51,11 +53,19 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 
+  // Role within the organization
   // Role within the organisation
   role: {
     type: String,
     enum: ['member', 'admin'],
     default: 'member',
+  },
+
+  // Optional team assignment within the organization
+  teamName: {
+    type: String,
+    default: null,
+    trim: true,
   },
 
 }, { timestamps: true });

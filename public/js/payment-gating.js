@@ -110,7 +110,9 @@
     }
 
     function _showSuccessBanner(tier) {
-        var msg = tier === 'atlas-premium'
+        var msg = tier === 'business'
+            ? '🎉 Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
+            : tier === 'atlas-premium'
             ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
             : tier === 'business'
             ? '🎉 Welcome to Business! Team analytics and dashboard are now unlocked.'
