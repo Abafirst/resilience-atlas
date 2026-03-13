@@ -290,7 +290,7 @@
       return [
         '<li class="dim-bar-item">',
         '  <span class="dim-bar-item__label">' + escHtml(label) + '</span>',
-        '  <div class="dim-bar-item__track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100" aria-label="' + escHtml(label) + ' ' + pct + '%">',
+        '  <div class="dim-bar-item__track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100" aria-label="' + escHtml(label) + '">',
         '    <div class="dim-bar-item__fill" style="width:' + pct + '%;background:' + color + '"></div>',
         '  </div>',
         '  <span class="dim-bar-item__pct">' + pct + '%</span>',

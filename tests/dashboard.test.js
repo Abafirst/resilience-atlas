@@ -169,7 +169,6 @@ describe('GET /api/dashboard/org-summary', () => {
     mockOrgModel.findById.mockReturnValue({ lean: jest.fn().mockResolvedValue(mockOrg) });
     setupResultFind(mockResults);
     mockUserModel.countDocuments.mockResolvedValue(2);
-    mockInviteModel.countDocuments.mockResolvedValue(2);
   });
 
   test('returns 401 without a token', async () => {

@@ -128,8 +128,9 @@ router.post('/:organizationId/invite', authenticateJWT, async (req, res) => {
       return res.status(400).json({ error: 'No valid email addresses provided.' });
     }
 
-    // INVITE_EXPIRY_DAYS defaults to 7
-    const expiryDays = parseInt(process.env.INVITE_EXPIRY_DAYS || '7', 10);
+    // INVITE_EXPIRY_DAYS defaults to 7; validate it's a positive integer
+    const parsedExpiry = parseInt(process.env.INVITE_EXPIRY_DAYS || '7', 10);
+    const expiryDays = (!isNaN(parsedExpiry) && parsedExpiry > 0) ? parsedExpiry : 7;
     const expiresAt = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000);
     const appUrl = process.env.APP_URL || 'http://localhost:3000';
 

@@ -169,19 +169,19 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
   try {
     const orgId = req.orgId;
 
-    const [org, results, totalMembers, totalInvites] = await Promise.all([
+    const [org, results, totalMembers] = await Promise.all([
       Organization.findById(orgId).lean(),
       ResilienceResult.find({ organizationId: orgId }).lean(),
       User.countDocuments({ organizationId: orgId }),
-      Invite.countDocuments({ organizationId: orgId }),
     ]);
 
     if (!org) return res.status(404).json({ error: 'Organization not found.' });
 
     const completedAssessments = results.length;
 
-    // Completion rate: unique users who completed vs total members (including invites)
-    const totalExpected = Math.max(totalMembers, totalInvites, 1);
+    // Completion rate: completed assessments / total members who have joined.
+    // Pending invites (not yet accepted) are excluded — they haven't joined yet.
+    const totalExpected = Math.max(totalMembers, 1);
     const completionRate = parseFloat((completedAssessments / totalExpected).toFixed(4));
 
     // Average overall score
