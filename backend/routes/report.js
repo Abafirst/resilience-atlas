@@ -61,16 +61,18 @@ router.get('/download', reportLimiter, async (req, res) => {
         }
         // ─────────────────────────────────────────────────────────────────────
 
-        let scoresObj;
-        try {
-            scoresObj = JSON.parse(scores);
-        } catch {
-            return res.status(400).json({ error: 'Invalid scores format' });
-        }
+let scoresObj;
+try {
+  scoresObj = JSON.parse(scores);
+} catch {
+  return res.status(400).json({ error: 'Invalid scores format' });
+}
 
-        const html = `
-      <!DOCTYPE html>
-      <html>
+const parsedScores = scoresObj;
+
+const html = `
+<!DOCTYPE html>
+<html>
         <head>
           <meta charset="UTF-8" />
           <style>
