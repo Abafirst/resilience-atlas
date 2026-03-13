@@ -129,15 +129,23 @@ function renderRadarChart(container, scores) {
   }
 
   // ── Balance ring colour (variance-based) ─────────
+  // Thresholds are calibrated for 0–100 percentage scores across 6 dimensions.
+  // With a max possible variance of ~2500 (all scores at extremes), the bands are:
+  //   < 200  → std-dev < ~14 pts  → well-balanced profile   → green
+  //   < 600  → std-dev < ~24 pts  → moderately varied       → blue
+  //   ≥ 600  → std-dev ≥ ~24 pts  → strongly peaked/spiky   → amber
+  var VARIANCE_BALANCED  = 200;
+  var VARIANCE_MODERATE  = 600;
+
   var mean = percentages.reduce(function(a, b) { return a + b; }, 0) / percentages.length;
   var variance = percentages.reduce(function(acc, v) {
     return acc + Math.pow(v - mean, 2);
   }, 0) / percentages.length;
 
   var ringColor;
-  if (variance < 200) {
+  if (variance < VARIANCE_BALANCED) {
     ringColor = 'rgba(16, 185, 129, 0.22)';   // green  — balanced
-  } else if (variance < 600) {
+  } else if (variance < VARIANCE_MODERATE) {
     ringColor = 'rgba(59, 130, 246, 0.20)';   // blue   — moderate
   } else {
     ringColor = 'rgba(245, 158, 11, 0.22)';   // amber  — spiky
@@ -219,7 +227,9 @@ function renderRadarChart(container, scores) {
 
       c.setLineDash([]);
 
-      // Compass direction labels (N NE SE S SW NW)
+      // Compass direction labels — 6 directions chosen to avoid overlapping
+      // the 6 axis labels of the radar chart (which sit at 0°, 60°, 120°, …).
+      // E (0°) and W (180°) are omitted because they coincide with axis labels.
       var dirs = [
         { label: 'N',  angle: -90  },
         { label: 'NE', angle: -30  },
