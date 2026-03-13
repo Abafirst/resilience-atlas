@@ -1,12 +1,25 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 const { calculateResilienceScores, generateReport } = require('../scoring');
 const emailService = require('../services/emailService');
 const logger = require('../utils/logger');
 const ResilienceResult = require('../models/ResilienceResult');
+const ResilienceAssessment = require('../models/ResilienceAssessment');
+const { calculateEvolution } = require('../services/evolution');
+const { generateNarrativeReport } = require('../services/reportGenerator');
 
 const router = express.Router();
+
+// Rate limit for quiz submission: 10 submissions per 15 minutes per IP
+const submitLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many quiz submissions. Please try again in a few minutes.' },
+});
 
 // Map question indices (0-based) to the six resilience type names
 const RESILIENCE_CATEGORIES = {
@@ -91,7 +104,7 @@ router.post('/', async (req, res) => {
  * POST /api/quiz/submit
  * Submit quiz answers and receive resilience scores
  */
-router.post('/submit', authenticateJWT, async (req, res) => {
+router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
     try {
         const { answers } = req.body;
 
@@ -101,6 +114,30 @@ router.post('/submit', authenticateJWT, async (req, res) => {
 
         const scores = calculateResilienceScores(answers);
         const report = generateReport(scores);
+
+        // Fetch previous assessment for evolution tracking
+        const userId = req.user && (req.user.userId || req.user.id);
+        let previousAssessment = null;
+        if (userId) {
+            try {
+                previousAssessment = await ResilienceAssessment.findOne({ userId })
+                    .sort({ assessmentDate: -1 })
+                    .lean();
+            } catch (err) {
+                logger.warn('Could not fetch previous assessment (non-fatal):', err.message);
+            }
+        }
+
+        // Calculate evolution compared to previous assessment
+        const evolution = calculateEvolution(scores, previousAssessment);
+
+        // Generate narrative report
+        const narrativeReport = generateNarrativeReport(
+            scores.categories,
+            scores.overall,
+            scores.dominantType,
+            evolution
+        );
 
         // Save results to user's profile
         const user = await User.findByIdAndUpdate(
@@ -134,7 +171,10 @@ router.post('/submit', authenticateJWT, async (req, res) => {
             scores: scores.categories,
             overall: scores.overall,
             dominantType: scores.dominantType,
-            report: report.summary
+            report: report.summary,
+            evolution,
+            narrativeReport,
+            retakeMessage: 'Return in 30 days to track your progress on The Resilience Atlas™ and see how your resilience evolves over time.',
         });
     } catch (err) {
         logger.error('Quiz submission error:', err);

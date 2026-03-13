@@ -42,6 +42,7 @@ jest.mock('mongoose', () => {
   class Schema {
     constructor() {}
     pre() { return this; }
+    index() { return this; }
     methods = {};
   }
   Schema.Types = { ObjectId: String, Mixed: {} };
@@ -140,6 +141,10 @@ jest.mock('../backend/models/PracticeCompletion', () => ({
     sort: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue([]) }),
   }),
   countDocuments: jest.fn().mockResolvedValue(0),
+}));
+
+jest.mock('../backend/models/Invite', () => ({
+  findOneAndUpdate: jest.fn().mockResolvedValue({ _id: 'invite001', email: 'c@example.com' }),
 }));
 
 jest.mock('../backend/models/User', () => {
@@ -296,7 +301,7 @@ describe('POST /api/org/:organizationId/invite', () => {
       .set('Authorization', `Bearer ${authToken('user001')}`)
       .send({ emails: ['c@example.com'] });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('emails');
+    expect(res.body).toHaveProperty('invites_sent');
   });
 });
 

@@ -11,12 +11,20 @@
 <body>
 
   <!-- ── Header ──────────────────────────────────────── -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="header-inner">
-      <a class="logo" href="index.html">
+      <a class="logo" href="/">
         <div class="logo-icon" aria-hidden="true"><img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36"></div>
         The Resilience Atlas&#8482;
       </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
+      </nav>
     </div>
   </header>
 
@@ -114,9 +122,31 @@
   </main>
 
   <!-- ── Footer ───────────────────────────────────────── -->
-  <footer class="site-footer">
-    <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-    <p class="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+    </div>
   </footer>
 
 <script src="/js/app.js"></script>

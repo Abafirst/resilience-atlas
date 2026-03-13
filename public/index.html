@@ -23,7 +23,7 @@
 <body>
 
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="header-inner">
       <a class="logo" href="/">
         <div class="logo-icon" aria-hidden="true">
@@ -31,9 +31,13 @@
         </div>
         The Resilience Atlas&#8482;
       </a>
-      <nav aria-label="Main navigation" style="display:flex;align-items:center;gap:1rem;">
-        <a href="/insights.html" style="font-size:.92rem;color:var(--slate-600);font-weight:500;">Insights</a>
-        <a href="/team.html" style="font-size:.92rem;color:var(--slate-600);font-weight:500;">For Teams</a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
         <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
       </nav>
     </div>
@@ -236,15 +240,34 @@
   </section>
 
   <!-- Footer -->
-  <footer class="site-footer">
-    <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-    <p class="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
-    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
-    <nav aria-label="Footer navigation" style="margin-top:1rem;display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap;">
-      <a href="/insights.html" style="color:var(--slate-400);font-size:.88rem;">Insights</a>
-      <a href="/team.html" style="color:var(--slate-400);font-size:.88rem;">For Teams</a>
-      <a href="/quiz.html" style="color:var(--slate-400);font-size:.88rem;">Take Assessment</a>
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+        <a href="/research.html#dimensions">Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
     </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>

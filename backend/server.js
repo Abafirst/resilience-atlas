@@ -110,6 +110,8 @@ app.use("/api/insights", require("./routes/insights"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/organizations", require("./routes/organizations"));
 app.use("/api/growth", require("./routes/growth"));
+app.use("/api/atlas", require("./routes/atlas"));
+app.use("/api/share", require("./routes/share"));
 app.use("/admin", require("./routes/admin"));
 
 // ==============================

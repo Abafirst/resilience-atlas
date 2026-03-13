@@ -37,10 +37,11 @@ const userSchema = new mongoose.Schema({
     default: false
   },
 
-purchaseDate: {
-  type: Date,
-  default: null
-},
+  purchaseDate: {
+    type: Date,
+    default: null,
+  },
+
   // B2B organization fields (optional, null for free-tier users)
   organization_id: {
     type: mongoose.Schema.Types.ObjectId,
