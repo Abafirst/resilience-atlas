@@ -75,31 +75,84 @@ const html = `
 <html>
         <head>
           <meta charset="UTF-8" />
-          <style>
-            body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
-            h1 { color: #667eea; margin-bottom: 4px; }
-            .subtitle { color: #888; font-size: 14px; margin-bottom: 24px; }
-            .score-section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; }
-            .score-section h2 { margin: 0 0 8px 0; color: #667eea; }
-            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-            th { background: #667eea; color: #fff; padding: 10px; text-align: left; }
-            td { padding: 10px; border-bottom: 1px solid #ddd; }
-            tr:nth-child(even) td { background: #f8f9fa; }
-            .bar-track { background: #e0e7ff; border-radius: 4px; height: 16px; }
-            .bar-fill { background: #667eea; height: 16px; border-radius: 4px; }
-            .footer { margin-top: 40px; font-size: 12px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
-          </style>
+<style>
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  margin: 50px;
+  color: #1e293b;
+}
+
+h1 {
+  font-size: 30px;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #64748b;
+  margin-bottom: 40px;
+}
+
+.hero-score {
+  text-align: center;
+  padding: 35px;
+  border-radius: 14px;
+  background: linear-gradient(135deg,#6366f1,#8b5cf6);
+  color: white;
+  margin-bottom: 40px;
+}
+
+.hero-score-number {
+  font-size: 58px;
+  font-weight: bold;
+}
+
+.section {
+  margin-top: 30px;
+}
+
+.dimension {
+  margin-bottom: 20px;
+}
+
+.dimension-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.bar-track {
+  background: #e2e8f0;
+  height: 16px;
+  border-radius: 10px;
+}
+
+.bar-fill {
+  background: linear-gradient(90deg,#6366f1,#8b5cf6);
+  height: 16px;
+  border-radius: 10px;
+}
+
+.footer {
+  margin-top: 40px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+</style>
         </head>
         <body>
           <h1>The Resilience Atlas™ Report</h1>
           <p class="subtitle">Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
 
-          <div class="score-section">
-            <h2>Overall Score: ${overall}%</h2>
-            <p>Dominant Type: <strong>${dominantType || '—'}</strong></p>
-          </div>
+<div class="hero-score">
+<div>Overall Resilience Score</div>
+<div class="hero-score-number">${overall}</div>
+</div>
 
-          <h3>Detailed Scores</h3>
+<div class="section">
+<h2>Dominant Dimension</h2>
+<p>The dimension that most strongly shapes your resilience profile:</p>
+<p><strong>${dominantType || '-'}</strong></p>
+<h2>Dimension Breakdown</h2>
           <table>
             <thead>
               <tr>
