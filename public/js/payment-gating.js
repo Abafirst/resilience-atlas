@@ -30,11 +30,16 @@
 
     function isDeepReport() {
         const t = getTier();
-        return t === 'deep-report' || t === 'atlas-premium';
+        return t === 'deep-report' || t === 'atlas-premium' || t === 'business';
     }
 
     function isAtlasPremium() {
-        return getTier() === 'atlas-premium';
+        const t = getTier();
+        return t === 'atlas-premium' || t === 'business';
+    }
+
+    function isBusiness() {
+        return getTier() === 'business';
     }
 
     // ── Apply/remove locks ────────────────────────────────────────────────────
@@ -48,7 +53,8 @@
             const required = section.getAttribute('data-tier');
             const unlocked =
                 (required === 'deep-report'  && isDeepReport())  ||
-                (required === 'atlas-premium' && isAtlasPremium());
+                (required === 'atlas-premium' && isAtlasPremium()) ||
+                (required === 'business'      && isBusiness());
 
             const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
@@ -99,7 +105,9 @@
     }
 
     function _showSuccessBanner(tier) {
-        var msg = tier === 'atlas-premium'
+        var msg = tier === 'business'
+            ? '🎉 Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
+            : tier === 'atlas-premium'
             ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
             : '🎉 Your Deep Resilience Report is now unlocked!';
 
@@ -180,6 +188,7 @@
         setTier:              setTier,
         isDeepReport:         isDeepReport,
         isAtlasPremium:       isAtlasPremium,
+        isBusiness:           isBusiness,
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,

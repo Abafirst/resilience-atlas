@@ -61,4 +61,50 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-module.exports = { sendQuizReport };
+/**
+ * Send an organization invite email with a join link.
+ * @param {string} to - Recipient email address
+ * @param {string} orgName - Name of the organization
+ * @param {string} joinLink - Full URL to the /join.html page with the invite token
+ */
+async function sendInviteEmail(to, orgName, joinLink) {
+    const subject = `🤝 You're invited to join ${orgName} on The Resilience Atlas™`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #2c5f8a;">The Resilience Atlas™</h1>
+            <h2>You've been invited! 🎉</h2>
+            <p>You have been invited to join <strong>${orgName}</strong> on The Resilience Atlas™ — a professional resilience assessment platform.</p>
+            <p>Click the link below to accept your invitation and complete a team resilience assessment:</p>
+            <p style="text-align: center; margin: 2rem 0;">
+                <a href="${joinLink}"
+                   style="background: #2c5f8a; color: #fff; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                    Accept Invitation
+                </a>
+            </p>
+            <p style="color: #666; font-size: 13px;">
+                Or copy and paste this link into your browser:<br/>
+                <a href="${joinLink}">${joinLink}</a>
+            </p>
+            <p style="color: #666; font-size: 13px;">This invitation link expires in 7 days.</p>
+            <hr/>
+            <p style="color: #888; font-size: 12px;">
+                This invitation was sent by ${orgName}.
+                Visit us at <a href="${process.env.APP_URL || 'https://resilience-atlas.app'}">resilience-atlas.app</a>
+            </p>
+        </div>
+    `;
+
+    const mailOptions = {
+        from: process.env.YAHOO_EMAIL,
+        to,
+        subject,
+        html,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    logger.info(`📧 Invite email sent to ${to}: ${info.messageId}`);
+    return info;
+}
+
+module.exports = { sendQuizReport, sendInviteEmail };

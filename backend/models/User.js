@@ -40,7 +40,28 @@ const userSchema = new mongoose.Schema({
   purchaseDate: {
     type: Date,
     default: null
-  }
+  },
+
+  // B2B organization fields (null for free-tier / individual users)
+  organizationId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    default: null,
+  },
+
+  // Role within the organization
+  role: {
+    type: String,
+    enum: ['member', 'admin'],
+    default: 'member',
+  },
+
+  // Optional team assignment within the organization
+  teamName: {
+    type: String,
+    default: null,
+    trim: true,
+  },
 
 }, { timestamps: true });
 
