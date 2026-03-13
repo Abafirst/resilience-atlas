@@ -100,7 +100,7 @@
           </div>
         </section>
 
-        <!-- Deep Analysis (locked for free users) — blurred preview -->
+        <!-- Deep Analysis (locked for free users) -->
         <section
           class="premium-preview card locked"
           data-tier="deep-report"
@@ -128,30 +128,6 @@
             </div>
           </div>
         </section>
-
-        <!-- Upgrade Offer -->
-        <section class="upgrade-offer card" aria-labelledby="upgradeOfferHeading">
-          <h2 id="upgradeOfferHeading">Unlock Your Full Resilience Atlas</h2>
-          <p class="upgrade-intro">
-            Your free report reveals the foundation of your resilience.
-            Go deeper to understand the full structure of your resilience system.
-          </p>
-          <div class="price" aria-label="Price: $14">$14</div>
-          <ul class="upgrade-benefits">
-            <li>Detailed explanation of all 6 resilience dimensions</li>
-            <li>Deeper interpretation of your strengths</li>
-            <li>Personalised narrative analysis</li>
-            <li>Recommended growth strategies</li>
-            <li>Expanded micro-practices for each dimension</li>
-            <li>Downloadable PDF report</li>
-          </ul>
-          <button class="upgrade-button" onclick="PaymentGating.startCheckout('deep-report')" aria-label="Unlock My Full Report for $14">
-            Unlock My Full Report
-          </button>
-        </section>
-
-        <!-- Upgrade Cards (hidden once user has a paid tier) -->
-        <div id="upgradeCardsContainer"></div>
 
         <!-- PDF Alert -->
         <div id="pdfAlert" class="alert" role="alert"></div>
@@ -195,6 +171,9 @@
 
         <!-- Resilience Affirmations Section -->
         <div id="affirmationsContainer"></div>
+
+        <!-- Upgrade Cards (at the bottom, after all free content) -->
+        <div id="upgradeCardsContainer"></div>
 
       </div><!-- /.results-wrapper -->
     </div><!-- /.results-page -->
