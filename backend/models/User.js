@@ -36,11 +36,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-
-  purchaseDate: {
-    type: Date,
-    default: null
-  }
+purchaseDate: {
+  type: Date,
+  default: null
+}
 
 }, { timestamps: true });
 
