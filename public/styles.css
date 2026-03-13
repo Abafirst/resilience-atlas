@@ -120,6 +120,73 @@ main { flex: 1; }
 .site-footer a { color: var(--slate-400); }
 .site-footer strong { color: var(--white); }
 
+/* ── Header Navigation ────────────────────────────── */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.nav-link {
+  font-size: .9rem;
+  color: var(--slate-600);
+  font-weight: 500;
+  text-decoration: none;
+  padding: .4rem .65rem;
+  border-radius: var(--radius-md);
+  transition: color var(--transition), background var(--transition);
+}
+
+.nav-link:hover {
+  color: var(--slate-900);
+  background: var(--slate-100);
+}
+
+.nav-link.active {
+  color: var(--blue-700, #1d4ed8);
+  font-weight: 600;
+}
+
+.header-nav .btn {
+  margin-left: .5rem;
+}
+
+/* ── Footer Navigation Grid ───────────────────────── */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+  text-align: left;
+}
+
+.footer-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  min-width: 130px;
+}
+
+.footer-nav-heading {
+  color: var(--white);
+  font-size: .8rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .25rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding-top: 1.25rem;
+  margin-top: .5rem;
+}
+
+.footer-bottom p {
+  margin: .25rem 0;
+}
+
 /* ── Buttons ──────────────────────────────────────── */
 .btn {
   display: inline-flex;

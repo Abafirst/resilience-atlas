@@ -106,14 +106,16 @@ router.post('/submit', authenticateJWT, async (req, res) => {
         const report = generateReport(scores);
 
         // Fetch previous assessment for evolution tracking
-        const userId = req.user.userId || req.user.id;
+        const userId = req.user && (req.user.userId || req.user.id);
         let previousAssessment = null;
-        try {
-            previousAssessment = await ResilienceAssessment.findOne({ userId })
-                .sort({ assessmentDate: -1 })
-                .lean();
-        } catch (err) {
-            logger.warn('Could not fetch previous assessment (non-fatal):', err.message);
+        if (userId) {
+            try {
+                previousAssessment = await ResilienceAssessment.findOne({ userId })
+                    .sort({ assessmentDate: -1 })
+                    .lean();
+            } catch (err) {
+                logger.warn('Could not fetch previous assessment (non-fatal):', err.message);
+            }
         }
 
         // Calculate evolution compared to previous assessment

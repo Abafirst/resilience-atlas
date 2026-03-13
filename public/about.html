@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — The Resilience Atlas™</title>
+  <meta name="description" content="Learn about Janeen Molchany, Ph.D., BCBA — founder of the Resilience Atlas. Discover the research origins, mission, and philosophy behind the Six Dimensions of Resilience." />
+  <meta name="author" content="Janeen Molchany, Ph.D., BCBA" />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <style>
+    .about-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
+      color: #fff;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .about-hero h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: .75rem; }
+    .about-hero p { color: #94a3b8; font-size: 1.05rem; max-width: 560px; margin: 0 auto; line-height: 1.65; }
+
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    .founder-block {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+      margin-bottom: 4rem;
+      padding: 2.5rem;
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .founder-avatar {
+      flex-shrink: 0;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4F46E5 0%, #7c3aed 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #fff;
+    }
+    .founder-info h2 { font-size: 1.4rem; margin-bottom: .25rem; }
+    .founder-credentials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin: .5rem 0 1rem;
+    }
+    .credential-tag {
+      background: #ede9fe;
+      color: #5b21b6;
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .25rem .65rem;
+      border-radius: 999px;
+    }
+    .founder-info p { color: var(--slate-600); line-height: 1.7; font-size: .95rem; }
+
+    .about-section {
+      margin-bottom: 3rem;
+    }
+    .about-section h2 {
+      font-size: 1.5rem;
+      color: var(--slate-900);
+      margin-bottom: 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid var(--slate-100);
+    }
+    .about-section p {
+      color: var(--slate-600);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .mission-callout {
+      background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    .mission-callout p {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #3730a3;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .framework-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: 1rem;
+    }
+    .framework-pill {
+      background: var(--slate-100);
+      color: var(--slate-700);
+      font-size: .85rem;
+      font-weight: 500;
+      padding: .35rem .85rem;
+      border-radius: 999px;
+    }
+
+    .cta-band {
+      background: #4F46E5;
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1.5rem;
+    }
+    .cta-band h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-bottom: 1rem; }
+    .cta-band p { color: rgba(255,255,255,.8); max-width: 500px; margin: 0 auto 2rem; line-height: 1.65; }
+    .cta-band .btn-white {
+      background: #fff;
+      color: #4F46E5;
+      font-weight: 700;
+      padding: .85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-block;
+      margin: .4rem;
+    }
+    .cta-band .btn-white:hover { background: #e8e7fe; }
+    .cta-band .btn-outline {
+      background: transparent;
+      color: #fff;
+      font-weight: 600;
+      padding: .85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,.5);
+      margin: .4rem;
+    }
+    .cta-band .btn-outline:hover { border-color: #fff; }
+
+    @media (max-width: 640px) {
+      .founder-block { flex-direction: column; }
+      .header-nav .nav-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link active">About</a>
+        <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="about-hero" aria-labelledby="about-heading">
+    <span class="hero-eyebrow">About the Resilience Atlas</span>
+    <h1 id="about-heading">Built on Research. Grounded in Purpose.</h1>
+    <p>
+      The Resilience Atlas grew from doctoral research into how people adapt, recover, and grow
+      under pressure — and a belief that resilience can be mapped, understood, and cultivated.
+    </p>
+  </section>
+
+  <!-- Content -->
+  <div class="about-content">
+
+    <!-- Founder -->
+    <div class="founder-block" aria-label="About the founder">
+      <div class="founder-avatar" aria-hidden="true">J</div>
+      <div class="founder-info">
+        <h2>Janeen Molchany</h2>
+        <div class="founder-credentials">
+          <span class="credential-tag">Ph.D.</span>
+          <span class="credential-tag">BCBA</span>
+          <span class="credential-tag">Researcher</span>
+          <span class="credential-tag">Author</span>
+        </div>
+        <p>
+          Janeen Molchany is a doctoral-level researcher, Board Certified Behavior Analyst (BCBA),
+          and the creator of the Resilience Atlas framework. Her work bridges positive psychology,
+          behavioral science, and resilience research to create practical tools for understanding
+          and building human resilience.
+        </p>
+      </div>
+    </div>
+
+    <!-- Founder Story -->
+    <section class="about-section" aria-labelledby="story-heading">
+      <h2 id="story-heading">The Founder Story</h2>
+      <p>
+        The Resilience Atlas began as a doctoral research project exploring how individuals navigate
+        adversity across multiple interacting dimensions. What started as an academic inquiry became
+        a framework — and then a platform — designed to make resilience science accessible to everyone.
+      </p>
+      <p>
+        Janeen observed that most resilience tools treated resilience as a single trait, or focused
+        only on one domain — psychology, spirituality, or physical wellness. The reality, her research
+        revealed, is that resilience is multidimensional: a constellation of capacities that interact
+        in complex and personal ways.
+      </p>
+      <p>
+        The Resilience Atlas was created to reflect that complexity — giving people a map, not just
+        a number, for understanding how they adapt under pressure.
+      </p>
+    </section>
+
+    <!-- Mission -->
+    <section class="about-section" aria-labelledby="mission-heading">
+      <h2 id="mission-heading">Our Mission</h2>
+      <div class="mission-callout">
+        <p>
+          "To make the science of resilience legible, personal, and actionable — so that every person
+          can understand, cultivate, and share their capacity to grow through adversity."
+        </p>
+      </div>
+      <p>
+        We believe resilience is not something you either have or don't have. It is a set of
+        learnable, developable capacities — and the first step is understanding where you already
+        are and where you have room to grow.
+      </p>
+    </section>
+
+    <!-- Framework -->
+    <section class="about-section" aria-labelledby="framework-heading">
+      <h2 id="framework-heading">The Framework</h2>
+      <p>
+        The Six Dimensions of Resilience framework integrates findings from multiple scientific
+        traditions. Each dimension reflects a distinct way that humans adapt to and recover from
+        adversity:
+      </p>
+      <div class="framework-pills">
+        <span class="framework-pill">&#129309; Relational — social support and connection</span>
+        <span class="framework-pill">&#129504; Cognitive — reframing and perspective-taking</span>
+        <span class="framework-pill">&#128154; Somatic — physical regulation and body awareness</span>
+        <span class="framework-pill">&#128149; Emotional — processing and moving through feelings</span>
+        <span class="framework-pill">&#127807; Spiritual — meaning, purpose, and values</span>
+        <span class="framework-pill">&#9889; Agentic — action, agency, and forward movement</span>
+      </div>
+      <p style="margin-top:1.5rem;">
+        The atlas metaphor is intentional: a map doesn't tell you where to go — it helps you understand
+        where you are and what paths are available. The Resilience Atlas does the same for your inner life.
+      </p>
+    </section>
+
+    <!-- Research Origins -->
+    <section class="about-section" aria-labelledby="research-heading">
+      <h2 id="research-heading">Research Origins</h2>
+      <p>
+        The Resilience Atlas framework is grounded in peer-reviewed research across:
+      </p>
+      <div class="framework-pills">
+        <span class="framework-pill">Positive Psychology</span>
+        <span class="framework-pill">Resilience Science</span>
+        <span class="framework-pill">Applied Behavior Analysis (ABA)</span>
+        <span class="framework-pill">Acceptance &amp; Commitment Therapy (ACT)</span>
+        <span class="framework-pill">Cross-Cultural Research</span>
+        <span class="framework-pill">Trauma-Informed Practice</span>
+      </div>
+      <p style="margin-top:1.5rem;">
+        The assessment instrument was developed through doctoral research and refined through
+        iterative testing to ensure it reflects the complexity of real human resilience.
+      </p>
+      <a href="/research.html" class="btn btn-secondary" style="margin-top:.5rem;">Read the Research Foundations &rarr;</a>
+    </section>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-band" aria-label="Next steps">
+    <h2>Explore the Resilience Atlas</h2>
+    <p>Take the assessment, learn about the research, or bring it to your team.</p>
+    <a class="btn-white" href="/quiz.html">Take the Assessment</a>
+    <a class="btn-outline" href="/research.html">Read the Research</a>
+  </section>
+
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+        <a href="/research.html#dimensions">Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kids Resilience Program — The Resilience Atlas™</title>
+  <meta name="description" content="Six Resilience Skills for children — a developmentally appropriate introduction to the Six Dimensions of Resilience. Stories, activities, and skills for young learners." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <style>
+    .kids-hero {
+      background: linear-gradient(135deg, #7c3aed 0%, #4F46E5 60%, #0f2942 100%);
+      color: #fff;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .kids-hero h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: .75rem; }
+    .kids-hero p { color: #ddd6fe; font-size: 1.05rem; max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.65; }
+
+    .skills-section {
+      max-width: 1040px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .skills-section .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s;
+    }
+    .skill-card:hover { box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,.1)); }
+    .skill-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .skill-name { font-size: 1.1rem; font-weight: 700; color: var(--slate-900); margin-bottom: .4rem; }
+    .skill-tag {
+      display: inline-block;
+      background: #ede9fe;
+      color: #5b21b6;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+      margin-bottom: .75rem;
+    }
+    .skill-card p { color: var(--slate-600); font-size: .9rem; line-height: 1.6; }
+
+    .explore-section {
+      background: var(--slate-50, #f8fafc);
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .explore-section h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-bottom: 1rem; }
+    .explore-section p { color: var(--slate-600); max-width: 560px; margin: 0 auto 2.5rem; line-height: 1.65; }
+    .explore-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      justify-content: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .explore-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      min-width: 180px;
+      text-decoration: none;
+      color: var(--slate-900);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .explore-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .explore-card .explore-icon { font-size: 2rem; margin-bottom: .75rem; }
+    .explore-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .3rem; }
+    .explore-card p { font-size: .85rem; color: var(--slate-500); }
+
+    .bridge-section {
+      background: #4F46E5;
+      color: #fff;
+      padding: 4rem 1.5rem;
+      text-align: center;
+    }
+    .bridge-section h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-bottom: 1rem; }
+    .bridge-section p { font-size: 1rem; color: rgba(255,255,255,.8); max-width: 540px; margin: 0 auto 2rem; line-height: 1.65; }
+    .bridge-section .btn-white {
+      background: #fff;
+      color: #4F46E5;
+      font-weight: 700;
+      padding: .85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .bridge-section .btn-white:hover { background: #e8e7fe; }
+
+    @media (max-width: 640px) {
+      .header-nav .nav-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link active">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="kids-hero" aria-labelledby="kids-heading">
+    <span class="hero-eyebrow">For Young Learners</span>
+    <h1 id="kids-heading">Six Resilience Skills for Children</h1>
+    <p>
+      Resilience isn't just for grown-ups. The Resilience Atlas for Kids introduces the six
+      dimensions of resilience in age-appropriate language — helping children name, understand,
+      and build their inner strengths.
+    </p>
+    <a class="btn-hero-primary" href="#skills">
+      <span aria-hidden="true">&#9733;</span> Explore the Six Skills
+    </a>
+  </section>
+
+  <!-- Six Skills -->
+  <section class="skills-section" id="skills" aria-labelledby="skills-heading">
+    <div class="section-header">
+      <span class="section-label">The Six Resilience Skills</span>
+      <h2 id="skills-heading">Building Inner Strength, One Skill at a Time</h2>
+      <p style="color:var(--slate-600);max-width:580px;margin:.75rem auto 0;">
+        Each skill maps directly to an adult dimension of resilience — so children build a foundation
+        that grows with them.
+      </p>
+    </div>
+    <div class="skills-grid">
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#129309;</div>
+        <div class="skill-name">Connection Skill</div>
+        <span class="skill-tag">Adults: Relational</span>
+        <p>Learning how to ask for help, share feelings with trusted people, and know that relationships make us stronger when things are hard.</p>
+      </article>
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#129504;</div>
+        <div class="skill-name">Thinking Skill</div>
+        <span class="skill-tag">Adults: Cognitive</span>
+        <p>Practicing "flip-it" thinking — finding new ways to look at problems, noticing what we can control, and telling a helpful story about what happened.</p>
+      </article>
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#128154;</div>
+        <div class="skill-name">Body Skill</div>
+        <span class="skill-tag">Adults: Somatic</span>
+        <p>Learning to listen to our bodies — noticing when we feel tense or calm, and using breathing, movement, or rest to feel steady again.</p>
+      </article>
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#128149;</div>
+        <div class="skill-name">Feelings Skill</div>
+        <span class="skill-tag">Adults: Emotional</span>
+        <p>Naming big feelings, understanding that all emotions are okay, and learning healthy ways to move through sadness, frustration, or worry.</p>
+      </article>
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#127807;</div>
+        <div class="skill-name">Meaning Skill</div>
+        <span class="skill-tag">Adults: Spiritual</span>
+        <p>Discovering what matters most to us — our values, our "why," and how finding meaning in hard times helps us keep going.</p>
+      </article>
+      <article class="skill-card">
+        <div class="skill-icon" aria-hidden="true">&#9889;</div>
+        <div class="skill-name">Action Skill</div>
+        <span class="skill-tag">Adults: Agentic</span>
+        <p>Practicing taking one small step when things feel big — building the confidence to make choices and move forward even when we feel unsure.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Explore Section -->
+  <section class="explore-section" aria-labelledby="explore-heading">
+    <h2 id="explore-heading">Explore the Program</h2>
+    <p>
+      The Kids Resilience Program includes stories, activities, and skill-building resources designed
+      for children ages 5–14 and the educators and caregivers who support them.
+    </p>
+    <div class="explore-cards">
+      <a href="#skills" class="explore-card" aria-label="Skills library">
+        <div class="explore-icon" aria-hidden="true">&#127775;</div>
+        <h3>Skills Library</h3>
+        <p>Interactive skill builders for each dimension — coming soon</p>
+      </a>
+      <a href="#skills" class="explore-card" aria-label="Resilience stories">
+        <div class="explore-icon" aria-hidden="true">&#128218;</div>
+        <h3>Resilience Stories</h3>
+        <p>Age-appropriate stories about navigating challenges — coming soon</p>
+      </a>
+      <a href="#skills" class="explore-card" aria-label="Activity guides">
+        <div class="explore-icon" aria-hidden="true">&#127912;</div>
+        <h3>Activity Guides</h3>
+        <p>Printable and digital activities for home and classroom — coming soon</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Bridge to Adult Assessment -->
+  <section class="bridge-section" aria-label="Connection to adult assessment">
+    <h2>Growing Up Resilient</h2>
+    <p>
+      The six skills children learn map directly to the adult dimensions measured in the Resilience Atlas
+      Assessment. Start the journey early, and grow with it.
+    </p>
+    <a class="btn-white" href="/quiz.html">Explore the Adult Assessment &rarr;</a>
+  </section>
+
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+        <a href="/research.html#dimensions">Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
