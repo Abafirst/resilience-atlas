@@ -51,8 +51,8 @@
 
     var ctx = canvas.getContext('2d');
 
-    // Size the canvas to its rendered CSS width (responsive)
-    var size = Math.min(canvas.offsetWidth || 420, 520);
+    // Size the canvas — fixed smaller size for landing page
+    var size = 280;
     canvas.width  = size;
     canvas.height = size;
 
@@ -72,32 +72,18 @@
     var maxPct      = Math.max.apply(null, percentages);
     var dominantIdx = percentages.indexOf(maxPct);
 
-    // ── Clear & light background ──────────────────────────────────────────────
+    // ── Clear transparent background ──────────────────────────────────────────
     ctx.clearRect(0, 0, size, size);
 
-    var bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.4);
-    bgGrad.addColorStop(0, '#f8fafc');
-    bgGrad.addColorStop(1, '#e2e8f0');
-    ctx.fillStyle = bgGrad;
-    ctx.beginPath();
-    ctx.arc(cx, cy, maxR * 1.45, 0, Math.PI * 2);
-    ctx.fill();
-
-    // ── Concentric circles (20 % steps) ──────────────────────────────────────
+    // ── Concentric circles (purple hue) ──────────────────────────────────────
     var scales = [0.2, 0.4, 0.6, 0.8, 1.0];
     scales.forEach(function (frac) {
       ctx.beginPath();
       ctx.arc(cx, cy, maxR * frac, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(148,163,184,0.35)';
+      ctx.strokeStyle = 'rgba(139,92,246,0.3)';  // Purple circles
       ctx.lineWidth   = 1;
       ctx.stroke();
-
-      // Scale label at right side of each ring
-      ctx.fillStyle    = 'rgba(100,116,139,0.7)';
-      ctx.font         = '10px system-ui, sans-serif';
-      ctx.textAlign    = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(Math.round(frac * 100) + '%', cx + maxR * frac + 3, cy - 4);
+      // NO percentage labels
     });
 
     // ── Tick marks around the outer ring ─────────────────────────────────────
@@ -130,7 +116,7 @@
       ctx.stroke();
     }
 
-    // ── User profile polygon ──────────────────────────────────────────────────
+    // ── User profile polygon (purple/blue gradient) ──────────────────────────
     ctx.beginPath();
     for (var j = 0; j < N; j++) {
       var a  = axisAngle(j);
@@ -141,9 +127,14 @@
       else         ctx.lineTo(px, py);
     }
     ctx.closePath();
-    ctx.fillStyle   = 'rgba(79,70,229,0.15)';
+    
+    // Purple to blue gradient fill
+    var polyGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+    polyGrad.addColorStop(0, 'rgba(168,85,247,0.25)');  // Purple center
+    polyGrad.addColorStop(1, 'rgba(59,130,246,0.15)');  // Blue edge
+    ctx.fillStyle = polyGrad;
     ctx.fill();
-    ctx.strokeStyle = 'rgba(79,70,229,0.6)';
+    ctx.strokeStyle = 'rgba(168,85,247,0.8)';  // Purple stroke
     ctx.lineWidth   = 2;
     ctx.lineJoin    = 'round';
     ctx.stroke();

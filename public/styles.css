@@ -2111,6 +2111,33 @@ body {
   color: #4f46e5;
 }
 
+/* ── Landing page compass sizing ────────────────────────────── */
+.hero-radar-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.hero-radar-preview canvas {
+  max-width: 280px;
+  max-height: 280px;
+  display: block;
+}
+
+.example-radar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 320px;
+}
+
+.example-radar canvas {
+  max-width: 280px;
+  max-height: 280px;
+  display: block;
+}
 /* ── Research page circular compass layout ────────── */
 .compass-layout {
   position: relative;
