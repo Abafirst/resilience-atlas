@@ -1,5 +1,5 @@
 {
   "watch": ["backend"],
-  "ignore": ["node_modules", ".git", "public"],
+  "ignore": ["node_modules", ".git", "public", "tests"],
   "ext": "js,json"
 }
