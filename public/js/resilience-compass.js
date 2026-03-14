@@ -177,7 +177,7 @@
         ctx.fillStyle   = dim.color;
       } else {
         ctx.font      = '12px system-ui, sans-serif';
-        ctx.fillStyle = '#475569';
+        ctx.fillStyle = 'DIMENSIONS[m].color'
       }
 
       var lineH  = 15;
