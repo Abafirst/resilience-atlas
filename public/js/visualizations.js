@@ -318,17 +318,17 @@ function renderRadarChart(container, scores) {
     data: {
       labels: TYPES,
       datasets: [{
-        label:                'Your Resilience Profile',
+        label:                'Your Resilience Compass',
         data:                 percentages,
-        backgroundColor:      'rgba(79, 70, 229, 0.25)',
-        borderColor:          '#4f46e5',
+        backgroundColor:      'rgba(91, 124, 255, 0.25)',
+        borderColor:          '#5B7CFF',
         borderWidth:          3,
         borderJoinStyle:      'round',
-        pointBackgroundColor: pointBgColors,
-        pointBorderColor:     '#fff',
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor:     '#5B7CFF',
         pointBorderWidth:     2,
-        pointRadius:          pointRadii,
-        pointHoverRadius:     pointHoverRadii,
+        pointRadius:          6,
+        pointHoverRadius:     8,
         fill:                 true,
         tension:              0.35,
       }],
@@ -345,20 +345,15 @@ function renderRadarChart(container, scores) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
           padding:         12,
-          titleFont: {
-            size: 13, weight: '600',
-            family: 'Inter, Segoe UI, system-ui, sans-serif',
-          },
-          bodyFont: {
-            size: 12,
-            family: 'Inter, Segoe UI, system-ui, sans-serif',
-          },
+          titleFont: { size: 14, weight: 'bold' },
+          bodyFont:  { size: 13 },
           cornerRadius: 8,
+          displayColors: false,
           callbacks: {
-            label: function(context) {
-              return ' ' + context.label + ': ' + context.parsed.r + '%';
+            label: function(ctx) {
+              return ctx.raw.toFixed(1) + '%';
             },
           },
         },
@@ -368,33 +363,20 @@ function renderRadarChart(container, scores) {
           min:         0,
           max:         100,
           beginAtZero: true,
-          ticks: {
-            stepSize:      20,
-            font:          { size: 10 },
-            color:         'rgba(100, 116, 139, 0.55)',
-            backdropColor: 'transparent',
-            callback: function(value) {
-              return value + '%';
-            },
-          },
+          ticks: { display: false },
           grid: {
             circular:  true,
-            color:     'rgba(100, 116, 139, 0.15)',
+            color:     'rgba(255, 255, 255, 0.15)',
             lineWidth: 1,
           },
           angleLines: {
-            color:     'rgba(100, 116, 139, 0.15)',
+            color:     'rgba(255, 255, 255, 0.25)',
             lineWidth: 1,
           },
           pointLabels: {
-            font: {
-              size: 12, weight: '600',
-              family: 'Inter, Segoe UI, system-ui, sans-serif',
-            },
-            color: function(context) {
-              return context.index === dominantIdx ? '#4f46e5' : '#475569';
-            },
-            padding: 14,
+            font:    { size: 14, weight: 'bold' },
+            color:   '#ffffff',
+            padding: 15,
           },
         },
       },

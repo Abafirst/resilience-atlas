@@ -322,7 +322,7 @@ describe('POST /api/quiz/submit', () => {
     test('returns 401 without a token', async () => {
         const res = await request(app)
             .post('/api/quiz/submit')
-            .send({ answers: Array(36).fill(3) });
+            .send({ answers: Array(72).fill(3) });
         expect(res.status).toBe(401);
     });
 
@@ -339,7 +339,7 @@ describe('POST /api/quiz/submit', () => {
         const res = await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(4) });
+            .send({ answers: Array(72).fill(4) });
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('scores');
         expect(res.body).toHaveProperty('overall');

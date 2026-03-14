@@ -22,19 +22,20 @@ const submitLimiter = rateLimit({
 });
 
 // Map question indices (0-based) to the six resilience type names
+// 72 questions total: 12 per dimension, grouped sequentially in QUESTIONS array
 const RESILIENCE_CATEGORIES = {
-  'Agentic-Generative': [0,1,2,3,4,5],
-  'Relational': [6,7,8,9,10,11],
-  'Spiritual-Existential': [12,13,14,15,16,17],
-  'Emotional-Adaptive': [18,19,20,21,22,23],
-  'Somatic-Regulative': [24,25,26,27,28,29],
-  'Cognitive-Narrative': [30,31,32,33,34,35]
+  'Agentic-Generative':   [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],
+  'Relational':           [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+  'Spiritual-Existential':[24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],
+  'Emotional-Adaptive':   [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
+  'Somatic-Regulative':   [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+  'Cognitive-Narrative':  [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71],
 };
 const MAX_PER_QUESTION = 5;
 
 /**
- * Calculate resilience scores from 36 answers grouped by the six types.
- * @param {number[]} answers - Array of 36 numeric answers (1–5)
+ * Calculate resilience scores from 72 answers grouped by the six types.
+ * @param {number[]} answers - Array of 72 numeric answers (1–5)
  * @returns {{ overall: number, dominantType: string, scores: Object }}
  */
 function scoreResilienceAnswers(answers) {
@@ -73,8 +74,8 @@ router.post('/', async (req, res) => {
     try {
         const { firstName, email, answers } = req.body;
 
-        if (!answers || !Array.isArray(answers) || answers.length !== 36) {
-            return res.status(400).json({ error: 'Please provide all 36 answers.' });
+        if (!answers || !Array.isArray(answers) || answers.length !== 72) {
+            return res.status(400).json({ error: 'Please provide all 72 answers.' });
         }
 
         if (!email) {
@@ -107,8 +108,8 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
     try {
         const { answers } = req.body;
 
-        if (!answers || !Array.isArray(answers) || answers.length !== 36) {
-            return res.status(400).json({ error: 'Please provide all 36 answers.' });
+        if (!answers || !Array.isArray(answers) || answers.length !== 72) {
+            return res.status(400).json({ error: 'Please provide all 72 answers.' });
         }
 
         const scores = calculateResilienceScores(answers);
