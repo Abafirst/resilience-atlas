@@ -32,7 +32,7 @@ canvas.height = size;
 
 const cx = size/2;
 const cy = size/2;
-const R = size * 0.50;
+const R = size * 0.35;  // REDUCED from 0.50 to fit better
 
 ctx.clearRect(0,0,size,size);
 
@@ -151,12 +151,50 @@ ctx.lineWidth=2;
 ctx.stroke();
 
 //////////////////////////////////
+// DIAL NEEDLE (NEW!)
+//////////////////////////////////
+
+// Find highest scoring dimension
+const maxIdx = data.indexOf(Math.max(...data));
+const needleAngle = -Math.PI/2 + maxIdx*angleStep;
+
+// Draw needle
+ctx.save();
+ctx.translate(cx, cy);
+ctx.rotate(needleAngle);
+
+// Needle body (gradient)
+const needleGrad = ctx.createLinearGradient(0, -R*0.3, 0, R*0.35);
+needleGrad.addColorStop(0, "rgba(100,200,255,0.8)");
+needleGrad.addColorStop(1, "rgba(200,100,255,0.8)");
+
+ctx.fillStyle = needleGrad;
+ctx.beginPath();
+ctx.moveTo(-4, -R*0.3);
+ctx.lineTo(4, -R*0.3);
+ctx.lineTo(3, R*0.35);
+ctx.lineTo(-3, R*0.35);
+ctx.closePath();
+ctx.fill();
+
+ctx.strokeStyle = "rgba(255,255,255,.9)";
+ctx.lineWidth = 1;
+ctx.stroke();
+
+ctx.restore();
+
+//////////////////////////////////
 // CENTER HUB
 //////////////////////////////////
 
 ctx.beginPath();
 ctx.arc(cx,cy,6,0,Math.PI*2);
 ctx.fillStyle="#818cf8";
+ctx.fill();
+
+ctx.beginPath();
+ctx.arc(cx,cy,3,0,Math.PI*2);
+ctx.fillStyle="rgba(255,255,255,.8)";
 ctx.fill();
 
 }
