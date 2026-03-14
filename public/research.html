@@ -108,62 +108,35 @@
           Every person has resilience — and every person has the potential to grow.
         </p>
 
-        <!-- Visual Hex Diagram -->
-        <div class="hex-diagram" role="img" aria-label="Hexagonal diagram showing the six dimensions of resilience: Relational, Cognitive, Somatic, Emotional, Spiritual-Meaning, and Agentic">
-          <svg viewBox="0 0 500 460" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-            <!-- Center label -->
-            <text x="250" y="218" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#0F172A">Resilience</text>
-            <text x="250" y="236" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Multidimensional</text>
-
-            <!-- Center hexagon -->
-            <polygon points="250,170 296,195 296,245 250,270 204,245 204,195"
-              fill="#E0E7FF" stroke="#4F46E5" stroke-width="2" />
-
-            <!-- Relational (top-left) -->
-            <polygon points="157,113 203,138 203,188 157,213 111,188 111,138"
-              fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5" opacity="0.9" />
-            <text x="157" y="163" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#5B21B6">Relational</text>
-            <text x="157" y="178" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22">🤝</text>
-
-            <!-- Cognitive (top-right) -->
-            <polygon points="343,113 389,138 389,188 343,213 297,188 297,138"
-              fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5" opacity="0.9" />
-            <text x="343" y="163" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#1D4ED8">Cognitive</text>
-            <text x="343" y="178" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22">🧠</text>
-
-            <!-- Somatic (right) -->
-            <polygon points="390,227 436,252 436,302 390,327 344,302 344,252"
-              fill="#D1FAE5" stroke="#059669" stroke-width="1.5" opacity="0.9" />
-            <text x="390" y="277" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#065F46">Somatic</text>
-            <text x="390" y="292" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22">🌿</text>
-
-            <!-- Emotional (bottom-right) -->
-            <polygon points="343,341 389,366 389,416 343,441 297,416 297,366"
-              fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5" opacity="0.9" />
-            <text x="343" y="391" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#991B1B">Emotional</text>
-            <text x="343" y="406" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22">💛</text>
-
-            <!-- Spiritual/Meaning (bottom-left) -->
-            <polygon points="157,341 203,366 203,416 157,441 111,416 111,366"
-              fill="#FEF3C7" stroke="#D97706" stroke-width="1.5" opacity="0.9" />
-            <text x="157" y="386" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#92400E">Spiritual /</text>
-            <text x="157" y="400" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#92400E">Meaning</text>
-            <text x="157" y="418" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20">✨</text>
-
-            <!-- Agentic (left) -->
-            <polygon points="110,227 156,252 156,302 110,327 64,302 64,252"
-              fill="#FCE7F3" stroke="#DB2777" stroke-width="1.5" opacity="0.9" />
-            <text x="110" y="277" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#9D174D">Agentic</text>
-            <text x="110" y="292" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22">⚡</text>
-
-            <!-- Connector lines from center to each hex -->
-            <line x1="204" y1="195" x2="203" y2="188" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-            <line x1="296" y1="195" x2="297" y2="188" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-            <line x1="296" y1="220" x2="344" y2="252" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-            <line x1="296" y1="245" x2="297" y2="366" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-            <line x1="204" y1="245" x2="203" y2="366" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-            <line x1="204" y1="220" x2="156" y2="252" stroke="#4F46E5" stroke-width="1" stroke-dasharray="4 3" opacity="0.4" />
-          </svg>
+        <!-- Circular Compass Layout -->
+        <div class="compass-layout" role="img" aria-label="Circular compass showing the six dimensions of resilience positioned around a center point">
+          <div class="compass-center" aria-hidden="true">
+            Resilience<br>Compass
+          </div>
+          <div class="compass-node node-relational" aria-hidden="true">
+            <span class="node-icon">🤝</span>
+            Relational
+          </div>
+          <div class="compass-node node-cognitive" aria-hidden="true">
+            <span class="node-icon">🧠</span>
+            Cognitive
+          </div>
+          <div class="compass-node node-somatic" aria-hidden="true">
+            <span class="node-icon">🌿</span>
+            Somatic
+          </div>
+          <div class="compass-node node-emotional" aria-hidden="true">
+            <span class="node-icon">💛</span>
+            Emotional
+          </div>
+          <div class="compass-node node-spiritual" aria-hidden="true">
+            <span class="node-icon">✨</span>
+            Spiritual
+          </div>
+          <div class="compass-node node-agentic" aria-hidden="true">
+            <span class="node-icon">⚡</span>
+            Agentic
+          </div>
         </div>
 
         <!-- Dimension Cards -->

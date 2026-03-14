@@ -2075,3 +2075,122 @@ body {
     padding: 0 1rem;
   }
 }
+
+/* ── Resilience Compass (canvas-based) ────────────── */
+#radarChartContainer canvas#radarChart {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+/* ── Dominant Dimension section ───────────────────── */
+.dominant-dimension-section {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(59, 130, 246, 0.06));
+  border: 1px solid rgba(79, 70, 229, 0.18);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.dominant-dimension-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin: 0 0 0.35rem;
+}
+
+.dominant-dimension-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+/* ── Research page circular compass layout ────────── */
+.compass-layout {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin: 2rem auto;
+}
+
+.compass-layout .compass-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #E0E7FF;
+  border: 2px solid #4F46E5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  line-height: 1.2;
+  z-index: 2;
+}
+
+.compass-layout .compass-node {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.3;
+  transform: translate(-50%, -50%);
+  transition: box-shadow 0.2s ease;
+}
+
+.compass-layout .compass-node:hover {
+  box-shadow: 0 0 18px rgba(79, 70, 229, 0.35);
+}
+
+.compass-layout .compass-node .node-icon {
+  font-size: 1.4rem;
+  margin-bottom: 2px;
+}
+
+/* Node positions (6 nodes at 60° intervals, radius ~130px) */
+.compass-layout .node-relational    { top: calc(50% - 130px); left: 50%; background: #EDE9FE; border: 1.5px solid #7C3AED; color: #5B21B6; }
+.compass-layout .node-cognitive     { top: calc(50% - 65px);  left: calc(50% + 113px); background: #DBEAFE; border: 1.5px solid #2563EB; color: #1D4ED8; }
+.compass-layout .node-somatic       { top: calc(50% + 65px);  left: calc(50% + 113px); background: #D1FAE5; border: 1.5px solid #059669; color: #065F46; }
+.compass-layout .node-emotional     { top: calc(50% + 130px); left: 50%; background: #FEE2E2; border: 1.5px solid #DC2626; color: #991B1B; }
+.compass-layout .node-spiritual     { top: calc(50% + 65px);  left: calc(50% - 113px); background: #FEF3C7; border: 1.5px solid #D97706; color: #92400E; }
+.compass-layout .node-agentic       { top: calc(50% - 65px);  left: calc(50% - 113px); background: #FCE7F3; border: 1.5px solid #DB2777; color: #9D174D; }
+
+@media (max-width: 480px) {
+  .compass-layout {
+    width: 280px;
+    height: 280px;
+  }
+
+  .compass-layout .compass-node {
+    width: 72px;
+    height: 72px;
+    font-size: 0.58rem;
+  }
+
+  .compass-layout .node-relational    { top: calc(50% - 107px); left: 50%; }
+  .compass-layout .node-cognitive     { top: calc(50% - 53px);  left: calc(50% + 93px); }
+  .compass-layout .node-somatic       { top: calc(50% + 53px);  left: calc(50% + 93px); }
+  .compass-layout .node-emotional     { top: calc(50% + 107px); left: 50%; }
+  .compass-layout .node-spiritual     { top: calc(50% + 53px);  left: calc(50% - 93px); }
+  .compass-layout .node-agentic       { top: calc(50% - 53px);  left: calc(50% - 93px); }
+}

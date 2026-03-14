@@ -63,13 +63,17 @@
         <!-- Atlas Map (radar chart) -->
 
 <section class="atlas-section card locked" aria-labelledby="radarHeading" data-tier="atlas-premium">
-          <h2 id="radarHeading">Your Resilience Atlas Map</h2>
-          <p class="atlas-description">This map visualises the balance of your resilience system across six core dimensions.</p>
-<div id="radarChartContainer" aria-label="Resilience radar chart">
+          <h2 id="radarHeading">Your Resilience Compass</h2>
+          <p class="atlas-description">This compass visualises the balance of your resilience system across six core dimensions.</p>
+<div id="radarChartContainer" aria-label="Resilience compass visualization">
   <canvas id="radarChart"></canvas>
 </div>
           <div class="atlas-highlight">
             Your strongest resilience system is: <span id="primaryDimensionLabel"></span>
+          </div>
+          <div class="dominant-dimension-section" id="dominantDimensionSection" aria-live="polite">
+            <h3 class="dominant-dimension-heading">Dominant Dimension</h3>
+            <div class="dominant-dimension-name" id="dominantDimensionName">—</div>
           </div>
         </section>
 
@@ -269,6 +273,7 @@
     </div>
   </footer>
 <script src="/js/chart.js"></script>
+<script src="/js/resilience-compass.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/visualizations.js"></script>
 <script src="/js/upgrade-cards.js"></script>
