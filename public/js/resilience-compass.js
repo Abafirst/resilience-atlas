@@ -100,6 +100,21 @@
       ctx.fillText(Math.round(frac * 100) + '%', cx + maxR * frac + 3, cy - 4);
     });
 
+    // ── Tick marks around the outer ring ─────────────────────────────────────
+    var tickCount = 24;
+    for (var t = 0; t < tickCount; t++) {
+      var tickAngle  = (t * 2 * Math.PI / tickCount) - Math.PI / 2;
+      var isMajor    = (t % 2 === 0);  // major tick every 30°
+      var tickInner  = maxR;
+      var tickOuter  = maxR + (isMajor ? 10 : 6);
+      ctx.beginPath();
+      ctx.moveTo(cx + tickInner * Math.cos(tickAngle), cy + tickInner * Math.sin(tickAngle));
+      ctx.lineTo(cx + tickOuter * Math.cos(tickAngle), cy + tickOuter * Math.sin(tickAngle));
+      ctx.strokeStyle = isMajor ? 'rgba(100,116,139,0.55)' : 'rgba(148,163,184,0.4)';
+      ctx.lineWidth   = isMajor ? 1.5 : 1;
+      ctx.stroke();
+    }
+
     // ── Axis lines ────────────────────────────────────────────────────────────
     for (var i = 0; i < N; i++) {
       var ang  = axisAngle(i);
@@ -177,7 +192,7 @@
         ctx.fillStyle   = dim.color;
       } else {
         ctx.font      = '12px system-ui, sans-serif';
-        ctx.fillStyle = '#475569';
+        ctx.fillStyle = DIMENSIONS[m].color;
       }
 
       var lineH  = 15;
@@ -188,7 +203,46 @@
       ctx.restore();
     }
 
-    // ── Center equilibrium point ──────────────────────────────────────────────
+    // ── Dial needle pointing toward the dominant dimension ────────────────────
+    var needleAngle     = axisAngle(dominantIdx);
+    var needleLength    = maxR * 0.70;   // tip reaches 70% of max radius
+    var needleTail      = maxR * 0.18;   // counter-weight tail
+    var needleHalfWidth = 5;             // half-width at the pivot
+    var domColor        = DIMENSIONS[dominantIdx].color;
+    var perpAngle       = needleAngle + Math.PI / 2;
+
+    ctx.save();
+    ctx.shadowBlur  = 14;
+    ctx.shadowColor = hexAlpha(domColor, 0.45);
+
+    // Pointed body (tip → base left → tail → base right)
+    ctx.beginPath();
+    ctx.moveTo(
+      cx + needleLength * Math.cos(needleAngle),
+      cy + needleLength * Math.sin(needleAngle)
+    );
+    ctx.lineTo(
+      cx + needleHalfWidth * Math.cos(perpAngle),
+      cy + needleHalfWidth * Math.sin(perpAngle)
+    );
+    ctx.lineTo(
+      cx - needleTail * Math.cos(needleAngle),
+      cy - needleTail * Math.sin(needleAngle)
+    );
+    ctx.lineTo(
+      cx - needleHalfWidth * Math.cos(perpAngle),
+      cy - needleHalfWidth * Math.sin(perpAngle)
+    );
+    ctx.closePath();
+    ctx.fillStyle = domColor;
+    ctx.fill();
+    ctx.shadowBlur  = 0;
+    ctx.strokeStyle = hexAlpha(domColor, 0.75);
+    ctx.lineWidth   = 1;
+    ctx.stroke();
+    ctx.restore();
+
+    // ── Center equilibrium point (drawn on top of needle) ────────────────────
     var hubGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
     hubGrad.addColorStop(0, 'rgba(79,70,229,0.9)');
     hubGrad.addColorStop(1, 'rgba(79,70,229,0)');
@@ -198,7 +252,15 @@
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fillStyle   = '#ffffff';
+    ctx.fill();
+    ctx.strokeStyle = DIMENSIONS[dominantIdx].color;
+    ctx.lineWidth   = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
     ctx.fillStyle = '#4f46e5';
     ctx.fill();
 
