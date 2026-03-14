@@ -9,8 +9,8 @@ results.js — Results page logic for Resilience Atlas
 const results = JSON.parse(localStorage.getItem('resilience_results')) || null;
 window.results = results;
 // Backward compatibility
-if (results && results.scores && results.scores["Somatic-Behavioral"]) {
-  results.scores["Somatic-Regulative"] = results.scores["Somatic-Behavioral"];
+if (results && results.scores && results.scores["Somatic-Regulative"]) {
+  results.scores["Somatic-Regulative"] = results.scores["Somatic-Regulative"];
 }
 // ── Type descriptions ──────────────────────────────────
 const TYPE_DESCRIPTIONS = {
@@ -114,7 +114,7 @@ function generateNarrativeReport(results, primaryStrength, solidStrength, emergi
   `;
 }
 
-// ── Personalised plain-text report (for email / PDF body) ─
+// ── Personalized plain-text report (for email / PDF body) ─
 function generatePersonalizedReport(results) {
   let text = `Dear ${results.firstName || results.name || 'Friend'},\n\n`;
   text += `Thank you for completing the Resilience Assessment.\n`;

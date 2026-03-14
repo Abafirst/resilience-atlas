@@ -648,11 +648,11 @@ const EVIDENCE_BASED_PRACTICES = [
     ]
   },
 
-  // ── Somatic-Behavioral ───────────────────────────────────────────────────
+  // ── Somatic-Regulative ───────────────────────────────────────────────────
   {
     id: 'sb-01',
     practiceTitle: 'Body Scan',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     duration: '7 minutes',
     emoji: '🧘',
     instructions: [
@@ -683,7 +683,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'sb-02',
     practiceTitle: 'Walking Meditation',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     duration: '10 minutes',
     emoji: '🚶',
     instructions: [
@@ -715,7 +715,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'sb-03',
     practiceTitle: 'Posture Awareness Reset',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     duration: '3 minutes',
     emoji: '🪑',
     instructions: [
@@ -746,7 +746,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'sb-04',
     practiceTitle: 'Grounding 5-4-3-2-1',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     duration: '5 minutes',
     emoji: '🌍',
     instructions: [
@@ -779,7 +779,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'sb-05',
     practiceTitle: 'Mindful Movement Break',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     duration: '5 minutes',
     emoji: '🤸',
     instructions: [

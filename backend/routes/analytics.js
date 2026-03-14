@@ -23,7 +23,7 @@ const TeamResult       = require('../models/TeamResult');
  *
  * ResilienceResult scores keys (from backend/routes/quiz.js):
  *   'Agentic-Generative', 'Relational', 'Spiritual-Existential',
- *   'Emotional-Adaptive', 'Somatic-Behavioral', 'Cognitive-Narrative'
+ *   'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'
  *
  * Canonical keys in TeamResult.averages:
  *   relational, cognitive, somatic, emotional, spiritual, agentic
@@ -32,7 +32,7 @@ const DIM_MAP = {
   relational:           'relational',
   'cognitive-narrative':'cognitive',
   cognitive:            'cognitive',
-  'somatic-behavioral': 'somatic',
+  'somatic-regulative': 'somatic',
   somatic:              'somatic',
   'emotional-adaptive': 'emotional',
   emotional:            'emotional',
@@ -49,12 +49,12 @@ function canonicalDim(key) {
 // ── Core computation ──────────────────────────────────────────────────────────
 
 /**
- * Compute (or refresh) the TeamResult for an organisation.
+ * Compute (or refresh) the TeamResult for an organization.
  *
  * Fetches all linked ResilienceResult documents, averages each dimension,
  * then upserts the TeamResult for the 'current' period.
  *
- * @param {Object} org  – Mongoose Organisation document (or plain object with _id + completedResultIds)
+ * @param {Object} org  – Mongoose Organization document (or plain object with _id + completedResultIds)
  * @returns {Promise<Object>} – the upserted TeamResult document
  */
 async function computeTeamAverages(org) {

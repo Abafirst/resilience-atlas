@@ -28,10 +28,10 @@ Minimalist compass-inspired visual mark for The Resilience Atlas platform.
 ```
 brand/symbol/
 ├── svg/
-│   ├── symbol.svg          Master — full colour (primary file)
-│   ├── symbol-color.svg    Explicit full-colour copy
+│   ├── symbol.svg          Master — full color (primary file)
+│   ├── symbol-color.svg    Explicit full-color copy
 │   ├── symbol-mono.svg     Monochrome dark (#212121) — light backgrounds
-│   └── symbol-outline.svg  White outline — dark/coloured backgrounds
+│   └── symbol-outline.svg  White outline — dark/colored backgrounds
 ├── web/
 │   └── favicon.svg         Optimised favicon variant (heavier strokes)
 └── css/
@@ -43,7 +43,7 @@ brand/symbol/
 
 ## SVG Elements
 
-Each master SVG (`viewBox="0 0 200 200"`, centre `100 100`) contains:
+Each master SVG (`viewBox="0 0 200 200"`, center `100 100`) contains:
 
 1. **Outer circle** — r 91, `#1565C0`, stroke-width 1.75, opacity 0.75
 2. **Inner ring** — r 58, `#0097A7`, stroke-width 1, opacity 0.22
@@ -124,8 +124,8 @@ Each master SVG (`viewBox="0 0 200 200"`, centre `100 100`) contains:
 
 - All SVG files include `role="img"` and `aria-label="Resilience Atlas"`.
 - `<title>` element provides screen-reader text inside each SVG.
-- Colour contrast: `#1565C0` on white = **4.6 : 1** (AA compliant).
-- Symbol is recognisable without colour (monochrome variant provided).
+- color contrast: `#1565C0` on white = **4.6 : 1** (AA compliant).
+- Symbol is recognisable without color (monochrome variant provided).
 
 ## Dark Mode
 

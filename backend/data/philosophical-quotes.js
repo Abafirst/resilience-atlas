@@ -4,7 +4,7 @@
  * philosophical-quotes.js
  *
  * A curated library of public-domain and properly attributed quotations
- * organised across the six resilience dimensions used by The Resilience Atlas.
+ * organized across the six resilience dimensions used by The Resilience Atlas.
  *
  * Each entry shape:
  * {
@@ -24,7 +24,7 @@ const DIMENSION_SUBTITLES = {
   'Relational':            'Support & Connection',
   'Emotional-Adaptive':    'Emotional Flexibility',
   'Spiritual-Existential': 'Purpose & Values',
-  'Somatic-Behavioral':    'Body & Habits',
+  'Somatic-Regulative':    'Body & Habits',
 };
 
 const PHILOSOPHICAL_QUOTES = [
@@ -371,7 +371,7 @@ const PHILOSOPHICAL_QUOTES = [
     quoteText: 'You don\'t have to control your thoughts. You just have to stop letting them control you.',
     quoteAuthor: 'Dan Millman',
     microPractice: 'Practise observing one thought or emotion without acting on it for 60 seconds. Simply notice it and let it pass.',
-    reflectionQuestion: 'Which thought or emotion most frequently drives your behaviour without your full awareness?',
+    reflectionQuestion: 'Which thought or emotion most frequently drives your behavior without your full awareness?',
   },
   {
     id: 'ea-005',
@@ -539,12 +539,12 @@ const PHILOSOPHICAL_QUOTES = [
     reflectionQuestion: 'How does your inner life shape the way you show up in the world?',
   },
 
-  // ── Somatic-Behavioral: Body & Habits ─────────────────────────────────────
+  // ── Somatic-Regulative: Body & Habits ─────────────────────────────────────
 
   {
     id: 'sb-001',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Take care of your body. It\'s the only place you have to live.',
     quoteAuthor: 'Jim Rohn',
     microPractice: 'Take a three-minute breathing pause: inhale for 4 counts, hold for 4, exhale for 6. Repeat four times.',
@@ -552,8 +552,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-002',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'A healthy outside starts from the inside.',
     quoteAuthor: 'Robert Urich',
     microPractice: 'Spend two minutes doing a head-to-toe body scan. Note areas of tension and consciously release them with your breath.',
@@ -561,8 +561,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-003',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Walking is the best possible exercise. Habituate yourself to walk very far.',
     quoteAuthor: 'Thomas Jefferson',
     microPractice: 'Take a five-minute walk today without a phone. Notice your surroundings and your breathing.',
@@ -570,8 +570,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-004',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Sleep is the golden chain that ties health and our bodies together.',
     quoteAuthor: 'Thomas Dekker',
     microPractice: 'Set a consistent wind-down routine tonight: screen-free 30 minutes before sleep, dim lights, slow breathing.',
@@ -579,8 +579,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-005',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'To keep the body in good health is a duty, otherwise we shall not be able to keep our mind strong and clear.',
     quoteAuthor: 'Buddha',
     microPractice: 'Eat at least one meal today without distractions. Chew slowly and notice the tastes, textures, and sensations.',
@@ -588,8 +588,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-006',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'We are what we repeatedly do. Excellence, then, is not an act, but a habit.',
     quoteAuthor: 'Aristotle (via Will Durant)',
     microPractice: 'Identify one healthy habit you want to reinforce. Pair it with an existing routine using the format: After I [existing habit], I will [new habit].',
@@ -597,8 +597,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-007',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Your body hears everything your mind says. Stay positive.',
     quoteAuthor: 'Naomi Judd',
     microPractice: 'Notice the physical sensation associated with a positive memory. Spend 90 seconds anchoring that sensation in your body.',
@@ -606,8 +606,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-008',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Breathing in, I calm body and mind. Breathing out, I smile.',
     quoteAuthor: 'Thich Nhat Hanh',
     microPractice: 'Practise mindful breathing for three minutes. On each exhale, consciously soften your face and shoulders.',
@@ -615,8 +615,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-009',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'In every walk with nature, one receives far more than he seeks.',
     quoteAuthor: 'John Muir',
     microPractice: 'Step outside today, even for five minutes. Leave your phone behind and pay attention to what you see, hear, and feel.',
@@ -624,8 +624,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-010',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'The body is your temple. Keep it pure and clean for the soul to reside in.',
     quoteAuthor: 'B.K.S. Iyengar',
     microPractice: 'Choose one way to nourish your body today: hydrate well, move gently, sleep adequately, or eat nourishing food. Do it with intention.',
@@ -633,8 +633,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'sb-011',
-    resilienceDimension: 'Somatic-Behavioral',
-    subtitle: DIMENSION_SUBTITLES['Somatic-Behavioral'],
+    resilienceDimension: 'Somatic-Regulative',
+    subtitle: DIMENSION_SUBTITLES['Somatic-Regulative'],
     quoteText: 'Almost everything will work again if you unplug it for a few minutes, including you.',
     quoteAuthor: 'Anne Lamott',
     microPractice: 'Take a deliberate three-minute technology break. Sit still, breathe, and let your mind rest without input.',

@@ -18,7 +18,7 @@ const DIMENSIONS = [
   'Agentic-Generative',
   'Emotional-Adaptive',
   'Spiritual-Existential',
-  'Somatic-Behavioral',
+  'Somatic-Regulative',
 ];
 
 // Dimension-level interpretation copy
@@ -53,7 +53,7 @@ const DIMENSION_COPY = {
     teamPattern: 'Team pattern: {level} development',
     recommendation: 'Facilitate values-alignment conversations and purpose-driven goal-setting.',
   },
-  'Somatic-Behavioral': {
+  'Somatic-Regulative': {
     high: 'Body-aware, physically grounded stress regulation and healthy behavioral habits.',
     low: 'Somatic stress responses may go unregulated; embodied practices can help.',
     teamPattern: 'Team pattern: {level} development',
@@ -203,7 +203,7 @@ async function generateLeadershipReport(organizationId, generatedByUserId = null
   const org = await Organization.findById(organizationId);
   if (!org) throw new Error('Organization not found');
 
-  // Fetch all completed results for this organisation
+  // Fetch all completed results for this organization
   const results = await ResilienceResult.find({
     _id: { $in: org.completedResultIds },
   });

@@ -7,7 +7,7 @@
  *
  * Implements the three-layer card design:
  *  1. Headline Layer  — top, emotion-resonant lead text
- *  2. Quote Layer     — centre, primary wisdom quote + author
+ *  2. Quote Layer     — center, primary wisdom quote + author
  *  3. Practice Layer  — bottom, micro-practice summary + duration
  *
  * All output is pure SVG markup (strings) that the image-generator.js
@@ -81,8 +81,8 @@ function renderBackground(W, H, gradId) {
 /**
  * Render a subtle compass-rose watermark.
  *
- * @param {number} cx - centre X
- * @param {number} cy - centre Y
+ * @param {number} cx - center X
+ * @param {number} cy - center Y
  * @param {number} r  - radius
  * @returns {string} SVG fragment
  */
@@ -96,7 +96,7 @@ function renderCompassWatermark(cx, cy, r) {
     <!-- inner ring -->
     <circle cx="${cx}" cy="${cy}" r="${r * 0.18}"
             fill="none" stroke="${COLORS.primary}" stroke-width="${r * 0.025}"/>
-    <!-- centre dot -->
+    <!-- center dot -->
     <circle cx="${cx}" cy="${cy}" r="${r * 0.05}" fill="${COLORS.primary}"/>
     <!-- N needle -->
     <polygon points="${cx},${cy - r * 0.9} ${cx - r * 0.09},${cy} ${cx},${cy - r * 0.15} ${cx + r * 0.09},${cy}"
@@ -141,7 +141,7 @@ function renderHeadline(headlineText, W, scale) {
 // ── Quote layer ────────────────────────────────────────────────────────────────
 
 /**
- * Render the quote + author attribution (centre layer).
+ * Render the quote + author attribution (center layer).
  *
  * @param {string} quoteText   - wisdom quote
  * @param {string} quoteAuthor - attribution string

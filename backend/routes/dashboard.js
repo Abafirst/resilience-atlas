@@ -51,7 +51,7 @@ const DIMENSION_KEYS = [
 const SCORE_KEY_MAP = {
   'Relational':           'relational',
   'Cognitive-Narrative':  'cognitive',
-  'Somatic-Behavioral':   'somatic',
+  'Somatic-Regulative':   'somatic',
   'Emotional-Adaptive':   'emotional',
   'Spiritual-Existential':'spiritual',
   'Agentic-Generative':   'agentic',

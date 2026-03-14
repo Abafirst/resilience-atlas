@@ -256,7 +256,7 @@ describe('POST /api/organizations', () => {
     expect(res.body.error).toMatch(/admin_email/i);
   });
 
-  it('returns 201 with organisation when required fields provided', async () => {
+  it('returns 201 with organization when required fields provided', async () => {
     const res = await request(app)
       .post('/api/organizations')
       .set('Authorization', `Bearer ${makeToken()}`)
@@ -273,7 +273,7 @@ describe('GET /api/organizations/:id', () => {
     expect(res.status).toBe(401);
   });
 
-  it('returns 200 with organisation for an admin', async () => {
+  it('returns 200 with organization for an admin', async () => {
     const res = await request(app)
       .get(`/api/organizations/${ORG_ID}`)
       .set('Authorization', `Bearer ${makeToken(ADMIN_ID)}`);
@@ -299,7 +299,7 @@ describe('PUT /api/organizations/:id', () => {
     expect(res.status).toBe(401);
   });
 
-  it('returns 200 and updates the organisation', async () => {
+  it('returns 200 and updates the organization', async () => {
     const res = await request(app)
       .put(`/api/organizations/${ORG_ID}`)
       .set('Authorization', `Bearer ${makeToken(ADMIN_ID)}`)

@@ -38,7 +38,7 @@ const dailyInsightSchema = new mongoose.Schema(
         'Relational',
         'Emotional-Adaptive',
         'Spiritual-Existential',
-        'Somatic-Behavioral',
+        'Somatic-Regulative',
       ],
       required: true,
     },

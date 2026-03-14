@@ -31,8 +31,8 @@ const DIR_ANGLE = { N: 0, NE: 45, E: 90, SE: 135, S: 180, SW: 225, W: 270, NW: 3
 /**
  * Generate SVG markup for a mini compass graphic.
  *
- * @param {number} cx        - Centre X
- * @param {number} cy        - Centre Y
+ * @param {number} cx        - Center X
+ * @param {number} cy        - Center Y
  * @param {number} r         - Radius
  * @param {string} direction - Compass bearing (N, NE, E, …)
  * @returns {string} SVG fragment
@@ -66,8 +66,8 @@ function compassSvg(cx, cy, r, direction) {
 /**
  * Generate SVG markup for a mini radar chart.
  *
- * @param {number} cx     - Centre X
- * @param {number} cy     - Centre Y
+ * @param {number} cx     - Center X
+ * @param {number} cy     - Center Y
  * @param {number} r      - Radius
  * @param {Object} scores - { emotional, mental, physical, social, spiritual, financial }
  * @returns {string} SVG fragment
@@ -183,7 +183,7 @@ function generateShareCard(opts) {
   <text x="68" y="492" font-family="Georgia, serif" font-size="28"
         fill="${COLORS.secondary}">${emergingLabel}</text>
 
-  <!-- Radar chart (centre-right) -->
+  <!-- Radar chart (center-right) -->
   <g>
     ${radarSvg(820, 310, 155, scores)}
   </g>

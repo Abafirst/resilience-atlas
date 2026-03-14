@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="compass-color-title compass-color-desc">
   <title id="compass-color-title">Resilience Atlas Compass — Full Color</title>
-  <desc id="compass-color-desc">Full-color six-point compass star for The Resilience Atlas. Blue arrows: Navigation domain (Cognitive-Narrative, Agentic-Generative). Teal arrows: Connection domain (Emotional-Adaptive, Relational). Purple arrows: Anchoring domain (Spiritual-Existential, Somatic-Behavioral).</desc>
+  <desc id="compass-color-desc">Full-color six-point compass star for The Resilience Atlas. Blue arrows: Navigation domain (Cognitive-Narrative, Agentic-Generative). Teal arrows: Connection domain (Emotional-Adaptive, Relational). Purple arrows: Anchoring domain (Spiritual-Existential, Somatic-Regulative).</desc>
 
   <defs>
     <filter id="arrow-shadow-c" x="-15%" y="-15%" width="130%" height="130%">

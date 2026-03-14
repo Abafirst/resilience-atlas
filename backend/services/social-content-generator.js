@@ -28,7 +28,7 @@ const DIMENSION_EMOJIS = {
   'Relational':            '🤝',
   'Emotional-Adaptive':    '💙',
   'Spiritual-Existential': '✨',
-  'Somatic-Behavioral':    '🧘',
+  'Somatic-Regulative':    '🧘',
 };
 
 const DEFAULT_EMOJI = '🌟';
@@ -41,7 +41,7 @@ const DIMENSION_HASHTAGS = {
   'Relational':            ['#Connection', '#Community', '#Relationships', '#SupportSystem'],
   'Emotional-Adaptive':    ['#EmotionalHealth', '#EmotionalIntelligence', '#Feelings', '#EQ'],
   'Spiritual-Existential': ['#Purpose', '#Meaning', '#SpiritualGrowth', '#Values'],
-  'Somatic-Behavioral':    ['#Mindfulness', '#BodyMind', '#Wellness', '#SelfCare'],
+  'Somatic-Regulative':    ['#Mindfulness', '#BodyMind', '#Wellness', '#SelfCare'],
 };
 
 const COMMON_HASHTAGS = [

@@ -63,7 +63,7 @@
 
     var orgId = getOrgId();
     if (!orgId) {
-      _showError('No organisation found. Please create or join an organisation.');
+      _showError('No organization found. Please create or join an organization.');
       return;
     }
 
@@ -95,7 +95,7 @@
     _results = results || [];
 
     // Org name
-    var orgName = (org && (org.company_name || org.name)) || 'Your Organisation';
+    var orgName = (org && (org.company_name || org.name)) || 'Your Organization';
     setText('org-name', orgName);
 
     // KPIs

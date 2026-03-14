@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="compass-title compass-desc">
   <title id="compass-title">Resilience Atlas Compass</title>
-  <desc id="compass-desc">A six-point compass star representing the six resilience dimensions of The Resilience Atlas: Cognitive-Narrative, Agentic-Generative, Spiritual-Existential, Somatic-Behavioral, Emotional-Adaptive, and Relational.</desc>
+  <desc id="compass-desc">A six-point compass star representing the six resilience dimensions of The Resilience Atlas: Cognitive-Narrative, Agentic-Generative, Spiritual-Existential, Somatic-Regulative, Emotional-Adaptive, and Relational.</desc>
 
   <defs>
     <!-- Drop shadow for arrows -->
@@ -101,13 +101,13 @@
     data-dimension="Spiritual-Existential"
     data-domain="Anchoring"/>
 
-  <!-- South (180°): Somatic-Behavioral — Anchoring Purple -->
+  <!-- South (180°): Somatic-Regulative — Anchoring Purple -->
   <path
     d="M 0,-78 L 7,-64 L 3,-64 L 3,-35 L -3,-35 L -3,-64 L -7,-64 Z"
     transform="translate(100,100) rotate(180)"
     fill="#6A4C93"
     filter="url(#arrow-shadow)"
-    data-dimension="Somatic-Behavioral"
+    data-dimension="Somatic-Regulative"
     data-domain="Anchoring"/>
 
   <!-- Southwest (240°): Emotional-Adaptive — Connection Teal -->

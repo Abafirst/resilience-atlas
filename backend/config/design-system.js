@@ -5,12 +5,12 @@
  *
  * Shared design tokens for the Resilience Atlas social media graphics system.
  *
- * All colour values, typography settings, layout constants and output format
+ * All color values, typography settings, layout constants and output format
  * definitions live here so that every graphics service draws from a single
  * source of truth.
  */
 
-// ── Colour palette ─────────────────────────────────────────────────────────────
+// ── color palette ─────────────────────────────────────────────────────────────
 
 const COLORS = {
   primary:    '#1565C0',  // Deep Navy
@@ -106,7 +106,7 @@ const LAYOUT = {
   padding:         60,    // horizontal margin on each side
   headlineTop:     80,    // y-start of headline text
   headlineHeight:  140,   // vertical space allocated to headline layer
-  compassY:        200,   // centre-y of compass watermark
+  compassY:        200,   // center-y of compass watermark
   compassR:        55,    // radius of compass watermark
   compassOpacity:  0.15,
   quoteTop:        280,   // y-start of quote block

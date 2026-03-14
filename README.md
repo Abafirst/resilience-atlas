@@ -2,7 +2,7 @@
 
 > **A longitudinal resilience navigation system** — track how your resilience profile evolves over time through comprehensive assessments, visual insights, and personalized guidance.
 
-Resilience Atlas is a full-stack web application that helps users discover and track their resilience profile through a comprehensive 36-question assessment, delivering personalized insights across six resilience dimensions: **Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, and Somatic-Behavioral**.
+Resilience Atlas is a full-stack web application that helps users discover and track their resilience profile through a comprehensive 36-question assessment, delivering personalized insights across six resilience dimensions: **Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, and Somatic-Regulative**.
 
 ---
 
@@ -10,7 +10,7 @@ Resilience Atlas is a full-stack web application that helps users discover and t
 
 ### Core Assessment
 - 🧠 **36-question Resilience Assessment** — six-category scoring algorithm
-- 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, Somatic-Behavioral
+- 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, Somatic-Regulative
 - 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
 
 ### Enhanced Results & Visualization
@@ -79,7 +79,7 @@ Each resilience type is scored on a scale of 1-5 (Never to Always/Excellent):
 | **Agentic-Generative** | You demonstrate resilience through purposeful action and forward momentum. Energized by creating change. |
 | **Emotional-Adaptive** | You show flexibility in managing emotions and adapting to stress. You work skillfully with emotional experiences. |
 | **Spiritual-Existential** | Your resilience is grounded in purpose, values, and meaning. You draw strength from a coherent worldview. |
-| **Somatic-Behavioral** | You rely on body awareness and behavioral habits to stabilize and recover. Physical practices provide foundation. |
+| **Somatic-Regulative** | You rely on body awareness and behavioral habits to stabilize and recover. Physical practices provide foundation. |
 
 ---
 

@@ -128,7 +128,7 @@ function renderRadarChart(container, scores) {
     labelEl.textContent = dominantName;
   }
 
-  // ── Balance ring colour (variance-based) ─────────
+  // ── Balance ring color (variance-based) ─────────
   // Thresholds are calibrated for 0–100 percentage scores across 6 dimensions.
   // With a max possible variance of ~2500 (all scores at extremes), the bands are:
   //   < 200  → std-dev < ~14 pts  → well-balanced profile   → green

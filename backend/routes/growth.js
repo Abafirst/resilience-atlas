@@ -4,7 +4,7 @@ const Lead = require('../models/Lead');
 const AnalyticsEvent = require('../models/Analytics');
 
 // ── POST /api/growth/team-lead ───────────────────────────────
-// Capture a B2B team/organisation lead from the /team page.
+// Capture a B2B team/organization lead from the /team page.
 router.post('/team-lead', async (req, res) => {
   try {
     const { company_name, contact_name, email, team_size, message } = req.body;

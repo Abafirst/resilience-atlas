@@ -9,7 +9,7 @@
     SE — Relational           (Support & Connection)
     S  — Emotional-Adaptive  (Emotional Flexibility)
     SW — Spiritual-Existential (Purpose & Values)
-    NW — Somatic-Behavioral  (Body & Habits)
+    NW — Somatic-Regulative  (Body & Habits)
 
   Designed for use as a subtle watermark (15% opacity) or standalone icon.
 -->
@@ -36,7 +36,7 @@
           stroke-width="1.2"
           opacity="0.5"/>
 
-  <!-- Centre dot -->
+  <!-- Center dot -->
   <circle cx="50" cy="50" r="2.5"
           fill="#1565C0"
           opacity="0.7"/>

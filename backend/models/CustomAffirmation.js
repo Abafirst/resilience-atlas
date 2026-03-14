@@ -24,7 +24,7 @@ const CustomAffirmationSchema = new mongoose.Schema({
       'Agentic-Generative',
       'Emotional-Adaptive',
       'Spiritual-Existential',
-      'Somatic-Behavioral',
+      'Somatic-Regulative',
     ],
     required: true,
   },

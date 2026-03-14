@@ -84,7 +84,7 @@ const leadershipReportSchema = new mongoose.Schema(
       'Agentic-Generative': dimensionStatsSchema,
       'Emotional-Adaptive': dimensionStatsSchema,
       'Spiritual-Existential': dimensionStatsSchema,
-      'Somatic-Behavioral': dimensionStatsSchema,
+      'Somatic-Regulative': dimensionStatsSchema,
     },
 
     // ── Primary strength distribution ──────────────────────────────────────

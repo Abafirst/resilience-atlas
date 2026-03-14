@@ -18,17 +18,17 @@
   --radius: 10px;
   --font-sans: 'Segoe UI', Roboto, Arial, sans-serif;
 
-  /* Risk/opportunity colours */
-  --colour-strength: #2c6e49;
-  --colour-risk: #c0392b;
-  --colour-opportunity: #e67e22;
-  --colour-balance: #2980b9;
-  --colour-demographic: #8e44ad;
+  /* Risk/opportunity colors */
+  --color-strength: #2c6e49;
+  --color-risk: #c0392b;
+  --color-opportunity: #e67e22;
+  --color-balance: #2980b9;
+  --color-demographic: #8e44ad;
 
-  /* Difficulty colours */
-  --colour-easy: #27ae60;
-  --colour-medium: #e67e22;
-  --colour-hard: #e74c3c;
+  /* Difficulty colors */
+  --color-easy: #27ae60;
+  --color-medium: #e67e22;
+  --color-hard: #e74c3c;
 }
 
 /* ── Reset / Base ──────────────────────────────────────────── */
@@ -157,7 +157,7 @@ body {
   padding: 4rem 1rem;
   color: var(--text-muted);
 }
-.state-error { color: var(--colour-risk); }
+.state-error { color: var(--color-risk); }
 
 .spinner {
   width: 40px;
@@ -376,11 +376,11 @@ body {
   border-left: 4px solid transparent;
 }
 
-.observation-item--strength   { border-color: var(--colour-strength); }
-.observation-item--risk       { border-color: var(--colour-risk); }
-.observation-item--opportunity{ border-color: var(--colour-opportunity); }
-.observation-item--balance    { border-color: var(--colour-balance); }
-.observation-item--demographic{ border-color: var(--colour-demographic); }
+.observation-item--strength   { border-color: var(--color-strength); }
+.observation-item--risk       { border-color: var(--color-risk); }
+.observation-item--opportunity{ border-color: var(--color-opportunity); }
+.observation-item--balance    { border-color: var(--color-balance); }
+.observation-item--demographic{ border-color: var(--color-demographic); }
 
 .observation-icon { font-size: 1.3rem; flex-shrink: 0; }
 .observation-text { font-size: 0.9rem; line-height: 1.55; }
@@ -430,9 +430,9 @@ body {
   border-radius: 10px;
   text-transform: uppercase;
 }
-.difficulty-badge--easy   { background: #d8f3dc; color: var(--colour-easy); }
-.difficulty-badge--medium { background: #fef3e2; color: var(--colour-medium); }
-.difficulty-badge--hard   { background: #fde8e8; color: var(--colour-hard); }
+.difficulty-badge--easy   { background: #d8f3dc; color: var(--color-easy); }
+.difficulty-badge--medium { background: #fef3e2; color: var(--color-medium); }
+.difficulty-badge--hard   { background: #fde8e8; color: var(--color-hard); }
 
 .recommendation-card__body {
   padding: 1rem;

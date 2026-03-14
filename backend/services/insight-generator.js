@@ -15,7 +15,7 @@ const DIMENSIONS = [
   'Agentic-Generative',
   'Emotional-Adaptive',
   'Spiritual-Existential',
-  'Somatic-Behavioral',
+  'Somatic-Regulative',
 ];
 
 // Thresholds for classification
@@ -174,11 +174,11 @@ function generateRecommendations(dimAnalysis) {
       }
     }
 
-    if (dim.name === 'Somatic-Behavioral' && (level === 'low' || level === 'moderate')) {
+    if (dim.name === 'Somatic-Regulative' && (level === 'low' || level === 'moderate')) {
       recs.push({
         title: 'Integrate movement breaks into team routines',
         action: 'Schedule daily 5-minute team stretching or breathing breaks',
-        rationale: `Somatic-Behavioral resilience (avg ${Math.round(dim.avg)}%) is among the lower scores — physical practices directly build stress regulation.`,
+        rationale: `Somatic-Regulative resilience (avg ${Math.round(dim.avg)}%) is among the lower scores — physical practices directly build stress regulation.`,
         timeline: 'Daily, starting next week',
         expectedImpact: 'Improve embodied awareness and stress regulation',
         difficulty: 'easy',

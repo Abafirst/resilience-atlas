@@ -196,7 +196,7 @@ function formatGraphicPrompt(insight) {
     `Create a calm, uplifting, minimalist social media graphic (1080×1080 px). ` +
     `Background: soft gradient in muted teal and deep navy. ` +
     `Top label: "${insight.dimension} — ${insight.subtitle}" in small uppercase sans-serif. ` +
-    `Centre: the quote "${insight.quoteText}" in elegant serif font. ` +
+    `Center: the quote "${insight.quoteText}" in elegant serif font. ` +
     `Below: "— ${insight.quoteAuthor}" in italics. ` +
     `Bottom: "The Resilience Atlas™" logo wordmark. ` +
     `Mood: reflective, hopeful, professional. No stock-photo people.`

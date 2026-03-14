@@ -20,14 +20,14 @@ The Resilience Atlas compass symbol is a six-point geometric star representing t
 
 ## Six Compass Points
 
-Each of the six arrows maps directly to a resilience dimension. Adjacent arrows share a colour domain.
+Each of the six arrows maps directly to a resilience dimension. Adjacent arrows share a color domain.
 
-| Direction | Degrees | Dimension | Domain | Colour |
+| Direction | Degrees | Dimension | Domain | color |
 |---|---|---|---|---|
 | North | 0° | Cognitive-Narrative | Navigation | `#1565C0` Deep Navy |
 | Northeast | 60° | Agentic-Generative | Navigation | `#1565C0` Deep Navy |
 | Southeast | 120° | Spiritual-Existential | Anchoring | `#6A4C93` Muted Purple |
-| South | 180° | Somatic-Behavioral | Anchoring | `#6A4C93` Muted Purple |
+| South | 180° | Somatic-Regulative | Anchoring | `#6A4C93` Muted Purple |
 | Southwest | 240° | Emotional-Adaptive | Connection | `#0097A7` Soft Teal |
 | Northwest | 300° | Relational | Connection | `#0097A7` Soft Teal |
 
@@ -48,21 +48,21 @@ Each of the six arrows maps directly to a resilience dimension. Adjacent arrows 
 
 ### 2. Six Minimalist Arrows
 - Clean geometric arrow shape (arrowhead + rectangular shaft)
-- Arrow tip radius: 78 units from centre
-- Arrow shaft base radius: 35 units from centre
+- Arrow tip radius: 78 units from center
+- Arrow shaft base radius: 35 units from center
 - Arrow shaft width: 6 units
 - Arrowhead width: 14 units
-- Colour-coded by domain (see table above)
+- color-coded by domain (see table above)
 - Subtle drop shadow for depth
 
 ### 3. Inner Hexagon (Structural Interconnection)
-- Vertices at 40 units from centre, one per arrow direction
+- Vertices at 40 units from center, one per arrow direction
 - Stroke: `#BDBDBD`, 1 px, 55% opacity
 - Represents structural interconnection between dimensions
 - Used for educational and explanatory contexts
 
 ### 4. Radial Connecting Lines
-- Six dashed lines from centre to each hexagon vertex
+- Six dashed lines from center to each hexagon vertex
 - Stroke: `#757575`, 0.75 px, 30% opacity, `stroke-dasharray="2,3"`
 - Represents the individual's relationship to each dimension
 
@@ -75,13 +75,13 @@ Each of the six arrows maps directly to a resilience dimension. Adjacent arrows 
 - Radius: 8 units
 - Fill: Radial gradient from `#5B9BD5` (highlight) → `#1565C0` → `#0D3E7A`
 - Small highlight circle (`r="2.5"`, white, 35% opacity) for depth
-- Represents the centred individual at the heart of the system
+- Represents the centerd individual at the heart of the system
 
 ---
 
-## Colour Palette
+## color Palette
 
-### Brand Colours
+### Brand colors
 
 | Name | Hex | Usage |
 |---|---|---|
@@ -89,7 +89,7 @@ Each of the six arrows maps directly to a resilience dimension. Adjacent arrows 
 | Muted Purple | `#6A4C93` | Anchoring domain |
 | Soft Teal | `#0097A7` | Connection domain |
 
-### Neutral Colours
+### Neutral colors
 
 | Name | Hex | Usage |
 |---|---|---|
@@ -107,9 +107,9 @@ Each of the six arrows maps directly to a resilience dimension. Adjacent arrows 
 
 | File | Description | Use Case |
 |---|---|---|
-| `compass-icon.svg` | Master full-colour version | Primary usage, all digital contexts |
-| `compass-icon-color.svg` | Explicit full-colour variant | Identical to master; for tooling that requires separate colour file |
-| `compass-icon-mono.svg` | Monochrome Deep Navy | Single-colour print, watermarks, simplified contexts |
+| `compass-icon.svg` | Master full-color version | Primary usage, all digital contexts |
+| `compass-icon-color.svg` | Explicit full-color variant | Identical to master; for tooling that requires separate color file |
+| `compass-icon-mono.svg` | Monochrome Deep Navy | Single-color print, watermarks, simplified contexts |
 | `compass-icon-outline.svg` | Stroke only, no fill | Embossing, laser engraving, reversed overlays |
 
 ---
@@ -167,7 +167,7 @@ The symbol must remain legible and distinctive at 16 × 16 px. The six arrows ar
 
 ### Accessibility
 - Minimum contrast ratio: 4.5:1 against white background for primary blue
-- All three domain colours are distinguishable under most common colour-vision deficiencies
+- All three domain colors are distinguishable under most common color-vision deficiencies
 - Monochrome version is available for full accessibility
 
 ### Scalability

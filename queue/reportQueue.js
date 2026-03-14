@@ -3,7 +3,7 @@
 /**
  * reportQueue.js — BullMQ queue for asynchronous report generation.
  *
- * The queue is only initialised when a REDIS_URL is configured.
+ * The queue is only initialized when a REDIS_URL is configured.
  * This allows the web server to start (and tests to run) without Redis.
  */
 

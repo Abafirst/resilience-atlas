@@ -15,13 +15,13 @@ const LIKERT_OPTIONS = [
 // ── Question bank (36 questions, 6 per resilience type) ─
 const QUESTIONS = [
 
-  // Somatic-Behavioral (Q1-6)
-  { id: 1, category: 'Somatic-Behavioral', text: 'Physical movement helps me regulate stress.' },
-  { id: 2, category: 'Somatic-Behavioral', text: 'I notice how my body reacts to stress.' },
-  { id: 3, category: 'Somatic-Behavioral', text: 'Healthy routines help me stay grounded.' },
-  { id: 4, category: 'Somatic-Behavioral', text: 'Breathing or physical grounding helps me reset.' },
-  { id: 5, category: 'Somatic-Behavioral', text: 'Sleep and rest influence my resilience.' },
-  { id: 6, category: 'Somatic-Behavioral', text: 'Exercise or movement improves my mood.' },
+  // Somatic-Regulative (Q1-6)
+  { id: 1, category: 'Somatic-Regulative', text: 'Physical movement helps me regulate stress.' },
+  { id: 2, category: 'Somatic-Regulative', text: 'I notice how my body reacts to stress.' },
+  { id: 3, category: 'Somatic-Regulative', text: 'Healthy routines help me stay grounded.' },
+  { id: 4, category: 'Somatic-Regulative', text: 'Breathing or physical grounding helps me reset.' },
+  { id: 5, category: 'Somatic-Regulative', text: 'Sleep and rest influence my resilience.' },
+  { id: 6, category: 'Somatic-Regulative', text: 'Exercise or movement improves my mood.' },
 
   // Cognitive-Narrative (Q7-12)
   { id: 7, category: 'Cognitive-Narrative', text: 'I reflect on difficult experiences to learn from them.' },

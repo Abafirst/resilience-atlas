@@ -23,14 +23,13 @@ const submitLimiter = rateLimit({
 
 // Map question indices (0-based) to the six resilience type names
 const RESILIENCE_CATEGORIES = {
-    'Agentic-Generative':   [0, 1, 2, 3, 4, 5],        // Q1–Q6
-    'Relational':           [6, 7, 8, 9, 10, 11],       // Q7–Q12
-    'Spiritual-Existential':[12, 13, 14, 15, 16, 17],   // Q13–Q18
-    'Emotional-Adaptive':   [18, 19, 20, 21, 22, 23],   // Q19–Q24
-    'Somatic-Behavioral':   [24, 25, 26, 27, 28, 29],   // Q25–Q30
-    'Cognitive-Narrative':  [30, 31, 32, 33, 34, 35],   // Q31–Q36
+  'Agentic-Generative': [0,1,2,3,4,5],
+  'Relational': [6,7,8,9,10,11],
+  'Spiritual-Existential': [12,13,14,15,16,17],
+  'Emotional-Adaptive': [18,19,20,21,22,23],
+  'Somatic-Regulative': [24,25,26,27,28,29],
+  'Cognitive-Narrative': [30,31,32,33,34,35]
 };
-
 const MAX_PER_QUESTION = 5;
 
 /**

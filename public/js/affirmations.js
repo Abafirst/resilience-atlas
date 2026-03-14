@@ -376,11 +376,11 @@ const AFFIRMATION_LIBRARY = [
     relatedPractices: ['se-02', 'se-04', 'se-05'],
   },
 
-  // ── Somatic-Behavioral ────────────────────────────────────────────────────
+  // ── Somatic-Regulative ────────────────────────────────────────────────────
   {
     affirmationId: 'sb-aff-01',
     text: 'My body is a source of wisdom and grounding.',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'both',
     actPrinciple: 'Present Moment Awareness',
     abaPrinciple: 'Interoceptive Awareness as Discriminative Stimulus',
@@ -390,7 +390,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-02',
     text: "I can trust my body's signals and respond with care.",
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'both',
     actPrinciple: 'Acceptance',
     abaPrinciple: 'Responding to Internal Discriminative Stimuli Adaptively',
@@ -400,7 +400,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-03',
     text: 'My physical practices strengthen my resilience.',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'ABA',
     actPrinciple: 'Committed Action',
     abaPrinciple: 'Behavioral Habit Stacking and Positive Reinforcement',
@@ -410,7 +410,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-04',
     text: 'I can move through the world with awareness and ease.',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'both',
     actPrinciple: 'Present Moment Awareness',
     abaPrinciple: 'Behavioral Fluency Through Consistent Practice',
@@ -420,7 +420,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-05',
     text: 'My body deserves attention, movement, and rest.',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'both',
     actPrinciple: 'Self-Compassion and Values',
     abaPrinciple: 'Differential Reinforcement of Self-Care Behaviors',
@@ -430,7 +430,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-06',
     text: "I am present in my body and its capabilities.",
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'ACT',
     actPrinciple: 'Present Moment Awareness',
     abaPrinciple: 'Mindfulness-Based Behavioral Activation',
@@ -440,7 +440,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'sb-aff-07',
     text: 'My embodied awareness is a foundation for resilience.',
-    resilience_type: 'Somatic-Behavioral',
+    resilience_type: 'Somatic-Regulative',
     framework: 'both',
     actPrinciple: 'Psychological Flexibility',
     abaPrinciple: 'Somatic Awareness as a Behavioral Regulatory Resource',

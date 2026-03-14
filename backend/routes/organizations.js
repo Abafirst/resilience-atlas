@@ -9,9 +9,9 @@
  *
  * Route summary
  * ─────────────
- * POST   /api/organizations               Create organisation (business tier)
- * GET    /api/organizations/:id           Get organisation details (admin)
- * PUT    /api/organizations/:id           Update organisation settings (admin)
+ * POST   /api/organizations               Create organization (business tier)
+ * GET    /api/organizations/:id           Get organization details (admin)
+ * PUT    /api/organizations/:id           Update organization settings (admin)
  * GET    /api/organizations/:id/users     List members (admin)
  * GET    /api/organizations/:id/analytics Team analytics (admin or member)
  * GET    /api/organizations/:id/results   Individual member results (admin)
@@ -69,11 +69,11 @@ function validId(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-// ── Create organisation ───────────────────────────────────────────────────────
+// ── Create organization ───────────────────────────────────────────────────────
 
 /**
  * POST /api/organizations
- * Create a new business-tier organisation.
+ * Create a new business-tier organization.
  * Body: { company_name, admin_email, plan }
  */
 router.post('/', authenticateJWT, async (req, res) => {
@@ -112,18 +112,18 @@ router.post('/', authenticateJWT, async (req, res) => {
   }
 });
 
-// ── Get organisation ──────────────────────────────────────────────────────────
+// ── Get organization ──────────────────────────────────────────────────────────
 
 /**
  * GET /api/organizations/:id
- * Returns organisation details. Admin only.
+ * Returns organization details. Admin only.
  */
 router.get('/:id', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     res.json({ organization: org });
@@ -133,19 +133,19 @@ router.get('/:id', authenticateJWT, async (req, res) => {
   }
 });
 
-// ── Update organisation ───────────────────────────────────────────────────────
+// ── Update organization ───────────────────────────────────────────────────────
 
 /**
  * PUT /api/organizations/:id
- * Update organisation settings. Admin only.
+ * Update organization settings. Admin only.
  * Body: { company_name?, admin_email?, settings? }
  */
 router.put('/:id', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const allowed = ['company_name', 'admin_email', 'settings', 'subscription_status'];
@@ -173,14 +173,14 @@ router.put('/:id', authenticateJWT, async (req, res) => {
 
 /**
  * GET /api/organizations/:id/users
- * List all users belonging to this organisation. Admin only.
+ * List all users belonging to this organization. Admin only.
  */
 router.get('/:id/users', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const users = await User.find(
@@ -204,10 +204,10 @@ router.get('/:id/users', authenticateJWT, async (req, res) => {
  */
 router.post('/:id/invite', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const { emails } = req.body;
@@ -239,10 +239,10 @@ router.post('/:id/invite', authenticateJWT, async (req, res) => {
  */
 router.get('/:id/analytics', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
 
     // Allow access to admins or members of this org
     const requestingUser = await User.findById(req.user.userId).lean();
@@ -275,14 +275,14 @@ router.get('/:id/analytics', authenticateJWT, async (req, res) => {
 
 /**
  * GET /api/organizations/:id/results
- * List all individual member results for this organisation. Admin only.
+ * List all individual member results for this organization. Admin only.
  */
 router.get('/:id/results', authenticateJWT, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const results = await ResilienceResult.find({
@@ -304,10 +304,10 @@ router.get('/:id/results', authenticateJWT, async (req, res) => {
  */
 router.post('/:id/export/csv', authenticateJWT, exportLimiter, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const results = await ResilienceResult.find({
@@ -334,10 +334,10 @@ router.post('/:id/export/csv', authenticateJWT, exportLimiter, async (req, res) 
  */
 router.post('/:id/export/pdf', authenticateJWT, exportLimiter, async (req, res) => {
   try {
-    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organisation ID.' });
+    if (!validId(req.params.id)) return res.status(400).json({ error: 'Invalid organization ID.' });
 
     const org = await Organization.findById(req.params.id);
-    if (!org) return res.status(404).json({ error: 'Organisation not found.' });
+    if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
     const [results, teamResult] = await Promise.all([

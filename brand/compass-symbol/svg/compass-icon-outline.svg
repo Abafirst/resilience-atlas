@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="compass-outline-title compass-outline-desc">
   <title id="compass-outline-title">Resilience Atlas Compass — Outline</title>
-  <desc id="compass-outline-desc">Outline-only version of the Resilience Atlas compass. Stroked arrows with no fill, suitable for use on coloured or photographic backgrounds and for laser engraving or embossing.</desc>
+  <desc id="compass-outline-desc">Outline-only version of the Resilience Atlas compass. Stroked arrows with no fill, suitable for use on colored or photographic backgrounds and for laser engraving or embossing.</desc>
 
   <!-- Outer circle boundary -->
   <circle cx="100" cy="100" r="88" fill="none" stroke="#1565C0" stroke-width="2"/>

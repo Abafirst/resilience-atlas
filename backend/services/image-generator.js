@@ -44,7 +44,7 @@ const DIMENSION_HEADLINES = {
   'Relational':            'When connection matters most',
   'Emotional-Adaptive':    'When emotions feel complex',
   'Spiritual-Existential': 'When searching for meaning',
-  'Somatic-Behavioral':    'When stress feels overwhelming',
+  'Somatic-Regulative':    'When stress feels overwhelming',
 };
 
 const DEFAULT_HEADLINE = 'A daily insight for your resilience journey';
@@ -75,7 +75,7 @@ function buildSvgCard(insight, format) {
   const scale    = W / 1080;
   const gradId   = `bgGrad_${format.key}`;
 
-  // Compass watermark centred in the upper area
+  // Compass watermark centerd in the upper area
   const compassCX = W / 2;
   const compassCY = Math.round(LAYOUT.compassY * scale);
   const compassR  = Math.round(LAYOUT.compassR  * scale);

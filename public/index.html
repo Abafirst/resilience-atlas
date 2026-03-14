@@ -111,7 +111,7 @@
     <div class="section-header">
       <span class="section-label">Example Profile</span>
       <h2 id="exampleHeading">What Your Results Look Like</h2>
-      <p>After completing the assessment you receive a personalised radar map and narrative profile across all six dimensions.</p>
+      <p>After completing the assessment you receive a personalized radar map and narrative profile across all six dimensions.</p>
     </div>
     <div class="example-results">
       <div class="example-radar" aria-label="Sample radar chart">
@@ -141,7 +141,7 @@
       </div>
       <div class="why-card">
         <h4>Strengths and growth edges</h4>
-        <p>Knowing which dimensions are strong and which need development gives you a targeted, personalised roadmap rather than generic advice.</p>
+        <p>Knowing which dimensions are strong and which need development gives you a targeted, personalized roadmap rather than generic advice.</p>
       </div>
       <div class="why-card">
         <h4>Contextual resilience</h4>
@@ -203,9 +203,9 @@
   <section class="landing-section business-section" aria-labelledby="businessHeading">
     <div class="business-inner">
       <div>
-        <span class="section-label" style="color:#a5b4fc;">For Organisations</span>
+        <span class="section-label" style="color:#a5b4fc;">For Organizations</span>
         <h2 id="businessHeading">Bring Resilience Atlas to Your Team</h2>
-        <p>Help your organisation understand collective resilience across the Six Dimensions. Spot team-wide patterns, support individuals, and build a culture of adaptive capacity.</p>
+        <p>Help your organization understand collective resilience across the Six Dimensions. Spot team-wide patterns, support individuals, and build a culture of adaptive capacity.</p>
         <ul class="business-benefits" aria-label="Business benefits">
           <li>Aggregated team radar chart across all six dimensions</li>
           <li>Individual and team-level reports</li>
@@ -273,7 +273,14 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script>
     (function () {
-      var dims = ['Relational', 'Cognitive', 'Somatic', 'Emotional', 'Spiritual', 'Agentic'];
+var dims = [
+  'Relational',
+  'Cognitive-Narrative',
+  'Somatic-Regulative',
+  'Emotional-Adaptive',
+  'Spiritual-Existential',
+  'Agentic-Generative'
+];
       var heroData = [78, 65, 58, 72, 82, 69];
       var sampleData = [85, 60, 52, 70, 80, 64];
 

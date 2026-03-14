@@ -1,7 +1,7 @@
 function calculateResilienceScores(answers, questions) {
 
   const dimensions = {
-    "Somatic-Behavioral": 0,
+    "Somatic-Regulative": 0,
     "Cognitive-Narrative": 0,
     "Emotional-Adaptive": 0,
     "Relational": 0,
@@ -10,7 +10,7 @@ function calculateResilienceScores(answers, questions) {
   };
 
   const counts = {
-    "Somatic-Behavioral": 0,
+    "Somatic-Regulative": 0,
     "Cognitive-Narrative": 0,
     "Emotional-Adaptive": 0,
     "Relational": 0,

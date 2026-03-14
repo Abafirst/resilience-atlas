@@ -24,7 +24,7 @@ const VALID_RESILIENCE_TYPES = new Set([
   'Agentic-Generative',
   'Emotional-Adaptive',
   'Spiritual-Existential',
-  'Somatic-Behavioral',
+  'Somatic-Regulative',
 ]);
 
 /**
@@ -204,7 +204,7 @@ router.get('/by-type', (req, res) => {
     'Agentic-Generative':  ['ag-aff-01','ag-aff-02','ag-aff-03','ag-aff-04','ag-aff-05','ag-aff-06','ag-aff-07'],
     'Emotional-Adaptive':  ['ea-aff-01','ea-aff-02','ea-aff-03','ea-aff-04','ea-aff-05','ea-aff-06','ea-aff-07'],
     'Spiritual-Existential':['se-aff-01','se-aff-02','se-aff-03','se-aff-04','se-aff-05','se-aff-06','se-aff-07'],
-    'Somatic-Behavioral':  ['sb-aff-01','sb-aff-02','sb-aff-03','sb-aff-04','sb-aff-05','sb-aff-06','sb-aff-07'],
+    'Somatic-Regulative':  ['sb-aff-01','sb-aff-02','sb-aff-03','sb-aff-04','sb-aff-05','sb-aff-06','sb-aff-07'],
   };
 
   res.status(200).json({

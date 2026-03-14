@@ -4,20 +4,20 @@
 
 ### Do ✅
 
-- Use the full-colour SVG master (`compass-icon.svg`) as the primary icon in all digital contexts
+- Use the full-color SVG master (`compass-icon.svg`) as the primary icon in all digital contexts
 - Maintain equal width and height (the symbol is square; never display it in a non-square bounding box)
 - Place on white (`#FFFFFF`), off-white (`#FAFAFA`), or very light neutral backgrounds for maximum clarity
-- Use the monochrome variant (`compass-icon-mono.svg`) in single-colour print contexts
-- Use the outline variant (`compass-icon-outline.svg`) for embossing, engraving, or reversed overlays on coloured backgrounds
+- Use the monochrome variant (`compass-icon-mono.svg`) in single-color print contexts
+- Use the outline variant (`compass-icon-outline.svg`) for embossing, engraving, or reversed overlays on colored backgrounds
 - Allow a minimum clear-space equal to 10% of the icon width on every side
 - Reference the `site.webmanifest` file from your HTML `<head>` for progressive web app icon support
 
 ### Don't ❌
 
 - Do not alter the proportions, rotation, or spacing of the six arrows
-- Do not change the assigned colours of individual arrows (colour is meaningful — each domain has a defined hue)
+- Do not change the assigned colors of individual arrows (color is meaningful — each domain has a defined hue)
 - Do not add extra arrows, remove arrows, or merge domains
-- Do not apply gradients, textures, or patterns to the arrows (domain colours are flat)
+- Do not apply gradients, textures, or patterns to the arrows (domain colors are flat)
 - Do not place the icon on busy photographic backgrounds without sufficient contrast
 - Do not display the icon smaller than 16 × 16 px in raster form; use SVG below 32 px for best quality
 - Do not apply drop shadows to the outer circle
@@ -25,13 +25,13 @@
 
 ---
 
-## Colour Contexts
+## color Contexts
 
 ### Light Backgrounds (Default)
-Use the full-colour master SVG. The light radial background gradient included in the master provides gentle separation from pure-white pages.
+Use the full-color master SVG. The light radial background gradient included in the master provides gentle separation from pure-white pages.
 
 ### Dark Backgrounds
-Use the outline variant with `stroke` colours changed to white (`#FFFFFF`) or light neutral (`#F5F5F5`). A white monochrome variant can be produced by overriding the SVG `fill` and `stroke` attributes via CSS:
+Use the outline variant with `stroke` colors changed to white (`#FFFFFF`) or light neutral (`#F5F5F5`). A white monochrome variant can be produced by overriding the SVG `fill` and `stroke` attributes via CSS:
 
 ```css
 .compass-icon path,
@@ -42,8 +42,8 @@ Use the outline variant with `stroke` colours changed to white (`#FFFFFF`) or li
 }
 ```
 
-### Coloured Backgrounds
-Use the outline variant (`compass-icon-outline.svg`). Ensure sufficient contrast between the stroke colour and the background colour (minimum 4.5:1 contrast ratio).
+### colored Backgrounds
+Use the outline variant (`compass-icon-outline.svg`). Ensure sufficient contrast between the stroke color and the background color (minimum 4.5:1 contrast ratio).
 
 ---
 
@@ -131,13 +131,13 @@ Use the outline variant (`compass-icon-outline.svg`). Ensure sufficient contrast
 ## Print Guidelines
 
 ### Minimum Print Size
-- Full-colour: 15 mm × 15 mm minimum
+- Full-color: 15 mm × 15 mm minimum
 - Monochrome: 10 mm × 10 mm minimum
 - Outline: 12 mm × 12 mm minimum
 
 ### CMYK Conversion (approximate)
 
-| Brand Colour | Hex | CMYK |
+| Brand color | Hex | CMYK |
 |---|---|---|
 | Deep Navy | `#1565C0` | C:89 M:67 Y:0 K:25 |
 | Muted Purple | `#6A4C93` | C:28 M:48 Y:0 K:42 |
@@ -153,7 +153,7 @@ Use `png/print/print-2400.png` (2400 × 2400 px, 300 DPI equivalent) for physica
 The Resilience Atlas compass symbol should always appear alongside the logotype "The Resilience Atlas" in primary brand contexts. Maintain the visual relationship:
 
 - **Website header:** Compass icon left of logotype, separated by 12 px minimum
-- **Social media profile:** Compass icon centred, no logotype required
+- **Social media profile:** Compass icon centerd, no logotype required
 - **Business cards:** Compass icon top-right or centered on reverse
 - **Report headers:** Compass icon top-left with logotype, consistent with website header
 
@@ -163,11 +163,11 @@ The Resilience Atlas compass symbol should always appear alongside the logotype 
 
 - The SVG master already includes `<title>`, `<desc>`, `role="img"`, and `aria-labelledby` attributes — preserve these when embedding the SVG inline
 - When using `<img src="...">` instead of inline SVG, add `alt="Resilience Atlas compass icon"` to the `<img>` tag
-- The three domain colours meet WCAG AA contrast requirements against white backgrounds
+- The three domain colors meet WCAG AA contrast requirements against white backgrounds
 - For critical UI contexts, use the Deep Navy (`#1565C0`) monochrome version which offers the highest contrast
 
 ---
 
 ## Questions and Brand Requests
 
-For variations not covered here (co-branding, white-label adaptations, animated versions), consult the design team before creating new variants. Unauthorised colour or structural modifications dilute brand consistency and compromise the symbol's semantic meaning.
+For variations not covered here (co-branding, white-label adaptations, animated versions), consult the design team before creating new variants. Unauthorised color or structural modifications dilute brand consistency and compromise the symbol's semantic meaning.

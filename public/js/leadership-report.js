@@ -57,7 +57,7 @@
     return node;
   }
 
-  // ── Observation icons / colours ───────────────────────────────
+  // ── Observation icons / colors ───────────────────────────────
 
   const OBS_META = {
     strength:    { icon: '💪', label: 'Strength' },
@@ -158,7 +158,7 @@
     'Agentic-Generative': 'Agentic-Generative',
     'Emotional-Adaptive': 'Emotional-Adaptive',
     'Spiritual-Existential': 'Spiritual-Existential',
-    'Somatic-Behavioral': 'Somatic-Behavioral',
+    'Somatic-Regulative': 'Somatic-Regulative',
   };
 
   function renderDimensionAnalysis(dimensionAnalysis) {
@@ -288,7 +288,7 @@
         body.appendChild(row);
       }
 
-      // Accordion behaviour
+      // Accordion behavior
       if (i !== 0) body.style.display = 'none';
 
       function toggleAccordion() {

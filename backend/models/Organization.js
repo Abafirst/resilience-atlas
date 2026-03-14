@@ -101,7 +101,7 @@ const organizationSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Primary contact / billing email for the organisation
+    // Primary contact / billing email for the organization
     admin_email: {
       type: String,
       lowercase: true,
