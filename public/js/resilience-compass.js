@@ -1,126 +1,123 @@
 /* ============================================================
-   resilience-compass.js — Canvas-based Resilience Compass
+   resilience-compass.js — Native Canvas Resilience Compass
    for The Resilience Atlas™
 
-   Renders an interactive canvas compass showing:
-   - Six axes for the six resilience dimensions
-   - A polygon representing the user's profile
-   - A center equilibrium point
-   - Glow effect on the dominant dimension
-   - Soft gradient colors
-
-   Attaches to: canvas#radarChart
+   Single entry point: window.renderCompass(canvas, scores)
+   No Chart.js dependency — pure canvas rendering only.
    ============================================================ */
 
 'use strict';
 
 (function (global) {
 
-  // ── Dimension metadata ──────────────────────────────────────────────────────
-  // Order matches visualizations.js TYPES array for consistency
-
+  // ── Dimension metadata — clockwise from top ─────────────────────────────────
   var DIMENSIONS = [
-    { key: 'Agentic-Generative',    label: ['Agentic', 'Generative'],   color: 'rgba(245, 158, 11, 0.8)',   glow: 'rgba(245, 158, 11, 0.6)'  },
-    { key: 'Relational',            label: ['Relational'],              color: 'rgba(59, 130, 246, 0.8)',   glow: 'rgba(59, 130, 246, 0.6)'  },
-    { key: 'Spiritual-Existential', label: ['Spiritual', 'Existential'], color: 'rgba(139, 92, 246, 0.8)', glow: 'rgba(139, 92, 246, 0.6)'  },
-    { key: 'Emotional-Adaptive',    label: ['Emotional', 'Adaptive'],   color: 'rgba(239, 68, 68, 0.8)',    glow: 'rgba(239, 68, 68, 0.6)'   },
-    { key: 'Somatic-Regulative',    label: ['Somatic', 'Regulative'],   color: 'rgba(16, 185, 129, 0.8)',   glow: 'rgba(16, 185, 129, 0.6)'  },
-    { key: 'Cognitive-Narrative',   label: ['Cognitive', 'Narrative'],  color: 'rgba(99, 102, 241, 0.8)',   glow: 'rgba(99, 102, 241, 0.6)'  },
+    { key: 'Relational',            label: ['Relational'],               color: '#3B82F6' },
+    { key: 'Cognitive-Narrative',   label: ['Cognitive', 'Narrative'],   color: '#6366F1' },
+    { key: 'Somatic-Regulative',    label: ['Somatic', 'Regulative'],    color: '#10B981' },
+    { key: 'Emotional-Adaptive',    label: ['Emotional', 'Adaptive'],    color: '#EF4444' },
+    { key: 'Spiritual-Existential', label: ['Spiritual', 'Existential'], color: '#8B5CF6' },
+    { key: 'Agentic-Generative',    label: ['Agentic', 'Generative'],    color: '#F59E0B' },
   ];
 
-  // ── Rendering ───────────────────────────────────────────────────────────────
+  var N = DIMENSIONS.length;
+
+  // Axis angle: index 0 → top (−90°), clockwise
+  function axisAngle(i) {
+    return (i * 2 * Math.PI / N) - Math.PI / 2;
+  }
+
+  // Hex color → rgba string with given opacity
+  function hexAlpha(hex, alpha) {
+    var r = parseInt(hex.slice(1, 3), 16);
+    var g = parseInt(hex.slice(3, 5), 16);
+    var b = parseInt(hex.slice(5, 7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
 
   /**
-   * Render the Resilience Compass onto the given canvas element.
+   * Render the Resilience Compass onto a canvas element.
    *
    * @param {HTMLCanvasElement} canvas
-   * @param {Object} scores - { typeName: { percentage: number } | number }
+   * @param {Object} scores  { dimensionName: { percentage: number } | number }
    */
   function renderCompass(canvas, scores) {
-    if (!canvas || !canvas.getContext) return;
+    if (!canvas || !canvas.getContext) {
+      if (canvas && canvas.parentNode) {
+        canvas.insertAdjacentText('beforebegin', 'Compass visualization unavailable');
+      }
+      return;
+    }
 
     var ctx = canvas.getContext('2d');
-    var size = Math.min(canvas.offsetWidth || 400, canvas.offsetHeight || 400, 480);
+
+    // Size the canvas to its rendered CSS width (responsive)
+    var size = Math.min(canvas.offsetWidth || 420, 520);
     canvas.width  = size;
     canvas.height = size;
 
-    var cx = size / 2;
-    var cy = size / 2;
-    var maxR = size * 0.36;   // radius for 100%
+    var cx   = size / 2;
+    var cy   = size / 2;
+    var maxR = size * 0.38;   // radius = 100%
 
-    // ── Extract percentages ──────────────────────────────────────────────────
+    // ── Extract percentages ───────────────────────────────────────────────────
     var percentages = DIMENSIONS.map(function (dim) {
       var s = scores[dim.key];
-      if (!s && s !== 0) return 0;
-      return Math.min(100, Math.max(0, Math.round(typeof s === 'object' ? s.percentage : s)));
+      if (s == null) return 0;
+      var val = (typeof s === 'object') ? s.percentage : s;
+      return Math.min(100, Math.max(0, Math.round(val)));
     });
 
-    // ── Dominant index ───────────────────────────────────────────────────────
-    var maxPct       = Math.max.apply(null, percentages);
-    var dominantIdx  = percentages.indexOf(maxPct);
+    // ── Dominant dimension ────────────────────────────────────────────────────
+    var maxPct      = Math.max.apply(null, percentages);
+    var dominantIdx = percentages.indexOf(maxPct);
 
-    // ── Clear ────────────────────────────────────────────────────────────────
+    // ── Clear & light background ──────────────────────────────────────────────
     ctx.clearRect(0, 0, size, size);
 
-    // ── Background ───────────────────────────────────────────────────────────
-    var bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.5);
-    bgGrad.addColorStop(0, 'rgba(15, 23, 42, 0.95)');
-    bgGrad.addColorStop(1, 'rgba(15, 23, 42, 0.75)');
+    var bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 1.4);
+    bgGrad.addColorStop(0, '#f8fafc');
+    bgGrad.addColorStop(1, '#e2e8f0');
     ctx.fillStyle = bgGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, maxR * 1.55, 0, Math.PI * 2);
+    ctx.arc(cx, cy, maxR * 1.45, 0, Math.PI * 2);
     ctx.fill();
 
-    var n = DIMENSIONS.length;
-
-    // ── Helper: axis angle (starting at top, going clockwise) ────────────────
-    function axisAngle(i) {
-      return (i * 2 * Math.PI / n) - Math.PI / 2;
-    }
-
-    // ── Concentric reference circles ─────────────────────────────────────────
-    var rings = [0.25, 0.5, 0.75, 1.0];
-    rings.forEach(function (frac) {
+    // ── Concentric circles (20 % steps) ──────────────────────────────────────
+    var scales = [0.2, 0.4, 0.6, 0.8, 1.0];
+    scales.forEach(function (frac) {
       ctx.beginPath();
       ctx.arc(cx, cy, maxR * frac, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
+      ctx.strokeStyle = 'rgba(148,163,184,0.35)';
       ctx.lineWidth   = 1;
       ctx.stroke();
 
-      if (frac < 1) {
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.35)';
-        ctx.font      = '10px Inter, system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(Math.round(frac * 100) + '%', cx + maxR * frac + 12, cy - 6);
-      }
+      // Scale label at right side of each ring
+      ctx.fillStyle    = 'rgba(100,116,139,0.7)';
+      ctx.font         = '10px system-ui, sans-serif';
+      ctx.textAlign    = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(Math.round(frac * 100) + '%', cx + maxR * frac + 3, cy - 4);
     });
 
     // ── Axis lines ────────────────────────────────────────────────────────────
-    for (var i = 0; i < n; i++) {
-      var ang = axisAngle(i);
+    for (var i = 0; i < N; i++) {
+      var ang  = axisAngle(i);
       var xEnd = cx + maxR * Math.cos(ang);
       var yEnd = cy + maxR * Math.sin(ang);
-
-      if (i === dominantIdx) {
-        ctx.save();
-        ctx.shadowBlur  = 18;
-        ctx.shadowColor = DIMENSIONS[i].glow;
-      }
+      var col  = DIMENSIONS[i].color;
 
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(xEnd, yEnd);
-      ctx.strokeStyle = i === dominantIdx ? DIMENSIONS[i].color : 'rgba(148, 163, 184, 0.25)';
-      ctx.lineWidth   = i === dominantIdx ? 2 : 1;
+      ctx.strokeStyle = (i === dominantIdx) ? hexAlpha(col, 0.6) : hexAlpha(col, 0.25);
+      ctx.lineWidth   = (i === dominantIdx) ? 2 : 1;
       ctx.stroke();
-
-      if (i === dominantIdx) ctx.restore();
     }
 
-    // ── Polygon (profile shape) ────────────────────────────────────────────────
+    // ── User profile polygon ──────────────────────────────────────────────────
     ctx.beginPath();
-    for (var j = 0; j < n; j++) {
+    for (var j = 0; j < N; j++) {
       var a  = axisAngle(j);
       var r  = maxR * (percentages[j] / 100);
       var px = cx + r * Math.cos(a);
@@ -129,88 +126,89 @@
       else         ctx.lineTo(px, py);
     }
     ctx.closePath();
-    ctx.fillStyle   = 'rgba(91, 124, 255, 0.18)';
+    ctx.fillStyle   = 'rgba(79,70,229,0.15)';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(91, 124, 255, 0.75)';
-    ctx.lineWidth   = 2.5;
+    ctx.strokeStyle = 'rgba(79,70,229,0.6)';
+    ctx.lineWidth   = 2;
     ctx.lineJoin    = 'round';
     ctx.stroke();
 
     // ── Data points ───────────────────────────────────────────────────────────
-    for (var k = 0; k < n; k++) {
+    for (var k = 0; k < N; k++) {
       var a2  = axisAngle(k);
       var r2  = maxR * (percentages[k] / 100);
       var dpx = cx + r2 * Math.cos(a2);
       var dpy = cy + r2 * Math.sin(a2);
+      var dc  = DIMENSIONS[k].color;
 
+      ctx.save();
       if (k === dominantIdx) {
-        ctx.save();
-        ctx.shadowBlur  = 20;
-        ctx.shadowColor = DIMENSIONS[k].glow;
+        ctx.shadowBlur  = 24;
+        ctx.shadowColor = hexAlpha(dc, 0.55);
       }
-
       ctx.beginPath();
       ctx.arc(dpx, dpy, k === dominantIdx ? 7 : 5, 0, Math.PI * 2);
-      ctx.fillStyle   = DIMENSIONS[k].color;
+      ctx.fillStyle   = dc;
       ctx.fill();
+      ctx.shadowBlur  = 0;
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth   = 1.5;
       ctx.stroke();
-
-      if (k === dominantIdx) ctx.restore();
+      ctx.restore();
     }
 
-    // ── Axis labels ────────────────────────────────────────────────────────────
-    var labelR = maxR + 32;
-    for (var m = 0; m < n; m++) {
-      var a3  = axisAngle(m);
-      var lx  = cx + labelR * Math.cos(a3);
-      var ly  = cy + labelR * Math.sin(a3);
-      var dim = DIMENSIONS[m];
+    // ── Dimension labels (outside compass) ────────────────────────────────────
+    var labelR = maxR + 28;
+    for (var m = 0; m < N; m++) {
+      var a3    = axisAngle(m);
+      var lx    = cx + labelR * Math.cos(a3);
+      var ly    = cy + labelR * Math.sin(a3);
+      var dim   = DIMENSIONS[m];
       var lines = dim.label;
+      var isDom = (m === dominantIdx);
 
       ctx.save();
       ctx.textAlign    = 'center';
       ctx.textBaseline = 'middle';
-
-      if (m === dominantIdx) {
-        ctx.shadowBlur  = 14;
-        ctx.shadowColor = dim.glow;
-        ctx.font        = 'bold 12px Inter, system-ui, sans-serif';
+      if (isDom) {
+        ctx.shadowBlur  = 10;
+        ctx.shadowColor = hexAlpha(dim.color, 0.5);
+        ctx.font        = 'bold 13px system-ui, sans-serif';
         ctx.fillStyle   = dim.color;
       } else {
-        ctx.font      = '11px Inter, system-ui, sans-serif';
-        ctx.fillStyle = 'rgba(203, 213, 225, 0.9)';
+        ctx.font      = '12px system-ui, sans-serif';
+        ctx.fillStyle = '#475569';
       }
 
-      var lineH = 14;
+      var lineH  = 15;
       var startY = ly - ((lines.length - 1) * lineH) / 2;
       lines.forEach(function (line, li) {
         ctx.fillText(line, lx, startY + li * lineH);
       });
-
       ctx.restore();
     }
 
     // ── Center equilibrium point ──────────────────────────────────────────────
-    var hubGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 12);
-    hubGrad.addColorStop(0, 'rgba(79, 70, 229, 1)');
-    hubGrad.addColorStop(1, 'rgba(79, 70, 229, 0)');
+    var hubGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10);
+    hubGrad.addColorStop(0, 'rgba(79,70,229,0.9)');
+    hubGrad.addColorStop(1, 'rgba(79,70,229,0)');
     ctx.beginPath();
-    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
     ctx.fillStyle = hubGrad;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#4f46e5';
     ctx.fill();
 
     return dominantIdx;
   }
 
   // ── Public API ──────────────────────────────────────────────────────────────
+  global.renderCompass = renderCompass;
 
+  // Legacy alias kept for backward compatibility
   global.ResilienceCompassCanvas = {
     dimensions: DIMENSIONS,
     render: renderCompass,

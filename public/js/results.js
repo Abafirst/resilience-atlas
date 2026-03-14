@@ -184,20 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const radarContainer = document.getElementById('radarChartContainer');
   if (radarContainer) {
     const compassCanvas = document.getElementById('radarChart');
-    // Prefer canvas-based Resilience Compass; fall back to Chart.js radar
-    if (compassCanvas && typeof window.ResilienceCompassCanvas !== 'undefined') {
+    if (compassCanvas && typeof window.renderCompass === 'function') {
       try {
         compassCanvas.style.width  = '100%';
         compassCanvas.style.height = '100%';
-        window.ResilienceCompassCanvas.render(compassCanvas, results.scores);
+        window.renderCompass(compassCanvas, results.scores);
       } catch (err) {
-        console.warn('[ResilienceCompass] Canvas render failed, falling back to Chart.js:', err);
-        if (typeof window.renderRadarChart === 'function') {
-          window.renderRadarChart(radarContainer, results.scores);
-        }
+        console.warn('[ResilienceCompass] Canvas render failed:', err);
       }
-    } else if (typeof window.renderRadarChart === 'function') {
-      window.renderRadarChart(radarContainer, results.scores);
     }
   }
 
