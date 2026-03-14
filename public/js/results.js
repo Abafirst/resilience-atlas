@@ -180,10 +180,31 @@ document.addEventListener('DOMContentLoaded', () => {
     window.renderProfileBars(profileBars, items);
   }
 
-  // ── Radar chart ───────────────────────────────────────
+  // ── Radar chart / Resilience Compass ─────────────────────
   const radarContainer = document.getElementById('radarChartContainer');
-  if (radarContainer && typeof window.renderRadarChart === 'function') {
-    window.renderRadarChart(radarContainer, results.scores);
+  if (radarContainer) {
+    const compassCanvas = document.getElementById('radarChart');
+    // Prefer canvas-based Resilience Compass; fall back to Chart.js radar
+    if (compassCanvas && typeof window.ResilienceCompassCanvas !== 'undefined') {
+      try {
+        compassCanvas.style.width  = '100%';
+        compassCanvas.style.height = '100%';
+        window.ResilienceCompassCanvas.render(compassCanvas, results.scores);
+      } catch (err) {
+        console.warn('[ResilienceCompass] Canvas render failed, falling back to Chart.js:', err);
+        if (typeof window.renderRadarChart === 'function') {
+          window.renderRadarChart(radarContainer, results.scores);
+        }
+      }
+    } else if (typeof window.renderRadarChart === 'function') {
+      window.renderRadarChart(radarContainer, results.scores);
+    }
+  }
+
+  // ── Dominant Dimension section ────────────────────────────
+  const dominantDimensionEl = document.getElementById('dominantDimensionName');
+  if (dominantDimensionEl) {
+    dominantDimensionEl.textContent = primaryStrength;
   }
 
   // ── Narrative report ──────────────────────────────────

@@ -111,6 +111,16 @@ function renderRadarChart(container, scores) {
     'Cognitive-Narrative',
   ];
 
+  // Multi-line labels to prevent truncation on radar axes
+  var LABELS = [
+    ['Agentic', 'Generative'],
+    ['Relational'],
+    ['Spiritual', 'Existential'],
+    ['Emotional', 'Adaptive'],
+    ['Somatic', 'Regulative'],
+    ['Cognitive', 'Narrative'],
+  ];
+
   var percentages = TYPES.map(function(type) {
     var s = scores[type];
     if (!s) return 0;
@@ -316,7 +326,7 @@ function renderRadarChart(container, scores) {
     type: 'radar',
     plugins: [balanceRingPlugin, compassPlugin, glowLabelPlugin],
     data: {
-      labels: TYPES,
+      labels: LABELS,
       datasets: [{
         label:                'Your Resilience Compass',
         data:                 percentages,
