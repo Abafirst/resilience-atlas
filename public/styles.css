@@ -2194,3 +2194,35 @@ body {
   .compass-layout .node-spiritual     { top: calc(50% + 53px);  left: calc(50% - 93px); }
   .compass-layout .node-agentic       { top: calc(50% - 53px);  left: calc(50% - 93px); }
 }
+
+/* Compass canvas scaling */
+#heroRadar,
+#exampleRadar{
+width:100%;
+max-width:420px;
+aspect-ratio:1/1;
+display:block;
+margin:auto;
+}
+.example-results{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:48px;
+align-items:center;
+}
+
+.example-radar{
+display:flex;
+justify-content:center;
+align-items:center;
+width:100%;
+max-width:420px;
+aspect-ratio:1/1;
+margin:auto;
+}
+/* Center canvas in cards */
+.results-card{
+display:flex;
+align-items:center;
+justify-content:center;
+}

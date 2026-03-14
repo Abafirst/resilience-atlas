@@ -60,7 +60,7 @@
         </a>
       </div>
       <div class="hero-radar-preview" aria-label="Sample resilience radar chart">
-        <canvas id="heroRadar" width="320" height="280"></canvas>
+<canvas id="heroRadar"></canvas>
       </div>
     </div>
   </section>
@@ -113,20 +113,23 @@
       <h2 id="exampleHeading">What Your Results Look Like</h2>
       <p>After completing the assessment you receive a personalized radar map and narrative profile across all six dimensions.</p>
     </div>
-    <div class="example-results">
-      <div class="example-radar" aria-label="Sample radar chart">
-        <canvas id="exampleRadar" width="300" height="260"></canvas>
-      </div>
-      <div class="example-profile-card">
-        <p class="profile-label">Sample Profile</p>
-        <span class="example-profile-badge">Dominant: Relational</span>
-        <h3>Sarah &mdash; Team Lead, Healthcare</h3>
-        <p>Sarah's profile shows strong Relational and Spiritual dimensions, indicating she draws deeply on community and purpose to navigate pressure. Her Somatic score suggests an opportunity to build greater body-based regulation practices.</p>
-        <p style="margin-top:1rem"><em style="font-size:.88rem;color:#94a3b8">"Understanding my six dimensions completely changed how I approach difficult moments at work."</em></p>
-      </div>
-    </div>
-  </section>
+<div class="example-results">
+  <div class="example-radar" aria-label="Sample radar chart">
+<canvas id="exampleRadar"></canvas>
+  </div>
 
+  <div class="example-profile-card">
+    <p class="profile-label">Sample Profile</p>
+    <span class="example-profile-badge">Dominant: Relational</span>
+    <h3>Sarah &mdash; Team Lead, Healthcare</h3>
+    <p>Sarah's profile shows strong Relational and Spiritual dimensions, indicating she draws deeply on community and purpose to navigate pressure.</p>
+    <p style="margin-top:1rem">
+      <em style="font-size:.88rem;color:#94a3b8">
+        "Understanding my six dimensions completely changed how I approach difficult moments at work."
+      </em>
+    </p>
+  </div>
+</div>
   <!-- Why Multiple Dimensions -->
   <section class="landing-section" aria-labelledby="whyHeading">
     <div class="section-header">
@@ -268,70 +271,228 @@
       <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
       <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
     </div>
-  </footer>
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  <script>
-    (function () {
-var dims = [
-  'Relational',
-  'Cognitive-Narrative',
-  'Somatic-Regulative',
-  'Emotional-Adaptive',
-  'Spiritual-Existential',
-  'Agentic-Generative'
+<script>
+(function () {
+
+const dims = [
+ "Relational",
+ "Cognitive",
+ "Somatic",
+ "Emotional",
+ "Spiritual",
+ "Agentic"
 ];
-      var heroData = [78, 65, 58, 72, 82, 69];
-      var sampleData = [85, 60, 52, 70, 80, 64];
 
-      var heroCanvas = document.getElementById('heroRadar');
-      if (heroCanvas && window.Chart) {
-        new Chart(heroCanvas, {
-          type: 'radar',
-          data: {
-            labels: dims,
-            datasets: [{ data: heroData, backgroundColor: 'rgba(79,70,229,.25)', borderColor: '#818cf8', borderWidth: 2, pointBackgroundColor: '#818cf8', pointRadius: 3 }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              r: {
-                min: 0, max: 100,
-                ticks: { stepSize: 25, color: 'rgba(255,255,255,.5)', font: { size: 10 }, backdropColor: 'transparent' },
-                grid: { color: 'rgba(255,255,255,.15)' },
-                pointLabels: { color: 'rgba(255,255,255,.85)', font: { size: 11, weight: '600' } },
-                angleLines: { color: 'rgba(255,255,255,.15)' }
-              }
-            },
-            plugins: { legend: { display: false } }
-          }
-        });
-      }
+const heroData = [78,65,58,72,82,69];
+const sampleData = [85,60,52,70,80,64];
 
-      var exampleCanvas = document.getElementById('exampleRadar');
-      if (exampleCanvas && window.Chart) {
-        new Chart(exampleCanvas, {
-          type: 'radar',
-          data: {
-            labels: dims,
-            datasets: [{ data: sampleData, backgroundColor: 'rgba(5,150,105,.18)', borderColor: '#059669', borderWidth: 2, pointBackgroundColor: '#059669', pointRadius: 3 }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              r: {
-                min: 0, max: 100,
-                ticks: { stepSize: 25, font: { size: 10 }, backdropColor: 'transparent' },
-                grid: { color: 'rgba(0,0,0,.08)' },
-                pointLabels: { color: '#334155', font: { size: 11, weight: '600' } },
-                angleLines: { color: 'rgba(0,0,0,.08)' }
-              }
-            },
-            plugins: { legend: { display: false } }
-          }
-        });
-      }
-    })();
-  </script>
+function drawCompass(id,data){
+
+const canvas = document.getElementById(id);
+if(!canvas) return;
+
+const ctx = canvas.getContext("2d");
+
+const size = canvas.getBoundingClientRect().width;
+canvas.width = size;
+canvas.height = size;
+
+const cx = size / 2;
+const cy = size / 2;
+const R = size * 0.38;
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+////////////////////////
+// OUTER COMPASS RING
+////////////////////////
+ctx.beginPath();
+ctx.arc(cx,cy,R,0,Math.PI*2);
+
+ctx.strokeStyle="rgba(255,255,255,.2)";
+ctx.lineWidth=2;
+ctx.stroke();
+
+////////////////////////
+// COMPASS TICKS
+////////////////////////
+
+for(let i=0;i<360;i+=15){
+
+const a=(i*Math.PI)/180;
+
+const inner=i%90===0 ? R-16 : R-8;
+const outer=R;
+
+const x1=cx+Math.cos(a)*inner;
+const y1=cy+Math.sin(a)*inner;
+
+const x2=cx+Math.cos(a)*outer;
+const y2=cy+Math.sin(a)*outer;
+
+ctx.beginPath();
+ctx.moveTo(x1,y1);
+ctx.lineTo(x2,y2);
+
+ctx.strokeStyle="rgba(255,255,255,.35)";
+ctx.lineWidth=i%90===0 ? 2 : 1;
+
+ctx.stroke();
+
+}
+
+////////////////////////
+// DIRECTION MARKERS
+////////////////////////
+
+ctx.fillStyle="rgba(255,255,255,.8)";
+ctx.font="14px system-ui";
+ctx.textAlign="center";
+
+ctx.fillText("N",cx,cy-R-8);
+ctx.fillText("S",cx,cy+R+18);
+ctx.fillText("E",cx+R+15,cy+4);
+ctx.fillText("W",cx-R-15,cy+4);
+
+////////////////////////
+// GRID RINGS
+////////////////////////
+
+for(let i=1;i<=4;i++){
+
+const r=(R/4)*i;
+
+ctx.beginPath();
+ctx.arc(cx,cy,r,0,Math.PI*2);
+ctx.strokeStyle="rgba(255,255,255,.08)";
+ctx.stroke();
+
+}
+
+////////////////////////
+// AXES
+////////////////////////
+
+dims.forEach((d,i)=>{
+
+const a=(Math.PI*2/dims.length)*i-Math.PI/2;
+
+const x=cx+Math.cos(a)*R;
+const y=cy+Math.sin(a)*R;
+
+ctx.beginPath();
+ctx.moveTo(cx,cy);
+ctx.lineTo(x,y);
+ctx.strokeStyle="rgba(255,255,255,.12)";
+ctx.stroke();
+
+ctx.fillStyle="rgba(255,255,255,.8)";
+ctx.font="11px system-ui";
+ctx.fillText(
+ d,
+ cx+Math.cos(a)*(R+26),
+ cy+Math.sin(a)*(R+26)
+);
+
+});
+
+////////////////////////
+// PROFILE POLYGON
+////////////////////////
+
+ctx.beginPath();
+
+data.forEach((v,i)=>{
+
+const a=(Math.PI*2/dims.length)*i-Math.PI/2;
+const r=R*(v/100);
+
+const x=cx+Math.cos(a)*r;
+const y=cy+Math.sin(a)*r;
+
+if(i===0) ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+
+});
+
+ctx.closePath();
+
+////////////////////////
+// SCORE GRADIENT
+////////////////////////
+
+const gradient = ctx.createRadialGradient(
+cx, cy, 10,
+cx, cy, R
+);
+
+gradient.addColorStop(0,"rgba(59,130,246,.25)");
+gradient.addColorStop(.5,"rgba(168,85,247,.35)");
+gradient.addColorStop(1,"rgba(239,68,68,.45)");
+
+ctx.fillStyle = gradient;
+ctx.fill();
+
+ctx.strokeStyle = "#818cf8";
+ctx.lineWidth = 2;
+ctx.stroke();
+////////////////////////
+// INNER DIAL
+////////////////////////
+
+ctx.beginPath();
+ctx.arc(cx,cy,60,0,Math.PI*2);
+ctx.strokeStyle="rgba(255,255,255,.15)";
+ctx.lineWidth=1;
+ctx.stroke();
+
+////////////////////////
+// COMPASS NEEDLE
+////////////////////////
+
+// north needle
+ctx.beginPath();
+ctx.moveTo(cx,cy-70);
+ctx.lineTo(cx-6,cy);
+ctx.lineTo(cx+6,cy);
+ctx.closePath();
+
+ctx.fillStyle="#60a5fa";
+ctx.fill();
+
+// south needle
+ctx.beginPath();
+ctx.moveTo(cx,cy+70);
+ctx.lineTo(cx-6,cy);
+ctx.lineTo(cx+6,cy);
+ctx.closePath();
+
+ctx.fillStyle="rgba(255,255,255,.5)";
+ctx.fill();
+////////////////////////
+// CENTER HUB
+////////////////////////
+
+ctx.beginPath();
+ctx.arc(cx,cy,6,0,Math.PI*2);
+ctx.fillStyle="#818cf8";
+ctx.fill();
+
+}
+window.addEventListener("load", function(){
+
+  drawCompass("heroRadar", heroData);
+  drawCompass("exampleRadar", sampleData);
+
+  // redraw after layout settles
+  setTimeout(() => {
+    drawCompass("heroRadar", heroData);
+    drawCompass("exampleRadar", sampleData);
+  }, 100);
+
+});
+})();
+</script>
 </body>
 </html>

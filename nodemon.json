@@ -1,5 +1,6 @@
 {
   "watch": ["backend"],
-  "ignore": ["node_modules", ".git", "public", "tests"],
-  "ext": "js,json"
+  "ignore": ["node_modules", ".git", "public"],
+  "ext": "js,json",
+  "legacyWatch": true
 }
