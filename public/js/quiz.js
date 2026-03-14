@@ -12,64 +12,116 @@ const LIKERT_OPTIONS = [
   { value: 4, label: "Often" },
   { value: 5, label: "Almost Always" }
 ];
-// ── Question bank (36 questions, 6 per resilience type) ─
+// ── Question bank (72 questions, 12 per resilience type) ─
+// Order matches backend RESILIENCE_CATEGORIES index groups:
+//   Agentic-Generative [0–11], Relational [12–23], Spiritual-Existential [24–35],
+//   Emotional-Adaptive [36–47], Somatic-Regulative [48–59], Cognitive-Narrative [60–71]
 const QUESTIONS = [
 
-  // Somatic-Regulative (Q1-6)
-  { id: 1, category: 'Somatic-Regulative', text: 'Physical movement helps me regulate stress.' },
-  { id: 2, category: 'Somatic-Regulative', text: 'I notice how my body reacts to stress.' },
-  { id: 3, category: 'Somatic-Regulative', text: 'Healthy routines help me stay grounded.' },
-  { id: 4, category: 'Somatic-Regulative', text: 'Breathing or physical grounding helps me reset.' },
-  { id: 5, category: 'Somatic-Regulative', text: 'Sleep and rest influence my resilience.' },
-  { id: 6, category: 'Somatic-Regulative', text: 'Exercise or movement improves my mood.' },
+  // Agentic-Generative (Q1-12)
+  { id: 1,  category: 'Agentic-Generative', text: 'I take action to improve difficult situations.' },
+  { id: 2,  category: 'Agentic-Generative', text: 'I pursue meaningful goals even during stress.' },
+  { id: 3,  category: 'Agentic-Generative', text: 'I create opportunities even when things are hard.' },
+  { id: 4,  category: 'Agentic-Generative', text: 'I stay motivated when facing adversity.' },
+  { id: 5,  category: 'Agentic-Generative', text: 'I generate new possibilities in challenging times.' },
+  { id: 6,  category: 'Agentic-Generative', text: 'I move forward with purpose after setbacks.' },
+  { id: 7,  category: 'Agentic-Generative', text: 'I take initiative even when outcomes are uncertain.' },
+  { id: 8,  category: 'Agentic-Generative', text: 'I can identify concrete steps to address challenges.' },
+  { id: 9,  category: 'Agentic-Generative', text: 'I feel empowered to create positive change in my life.' },
+  { id: 10, category: 'Agentic-Generative', text: 'I follow through on decisions even when they are difficult.' },
+  { id: 11, category: 'Agentic-Generative', text: 'I view obstacles as opportunities to demonstrate my capability.' },
+  { id: 12, category: 'Agentic-Generative', text: 'I take responsibility for my resilience journey.' },
 
-  // Cognitive-Narrative (Q7-12)
-  { id: 7, category: 'Cognitive-Narrative', text: 'I reflect on difficult experiences to learn from them.' },
-  { id: 8, category: 'Cognitive-Narrative', text: 'I can reframe setbacks in a constructive way.' },
-  { id: 9, category: 'Cognitive-Narrative', text: 'My personal story helps me understand challenges.' },
-  { id: 10, category: 'Cognitive-Narrative', text: 'I find meaning in difficult experiences.' },
-  { id: 11, category: 'Cognitive-Narrative', text: 'I actively interpret events in ways that support growth.' },
-  { id: 12, category: 'Cognitive-Narrative', text: 'Reflection helps me move forward after adversity.' },
+  // Relational (Q13-24)
+  { id: 13, category: 'Relational', text: 'I reach out to others when I need support.' },
+  { id: 14, category: 'Relational', text: 'I maintain supportive relationships.' },
+  { id: 15, category: 'Relational', text: 'I feel connected to my community.' },
+  { id: 16, category: 'Relational', text: 'I contribute to the well-being of others.' },
+  { id: 17, category: 'Relational', text: 'I communicate openly with people I trust.' },
+  { id: 18, category: 'Relational', text: 'My relationships help me through challenges.' },
+  { id: 19, category: 'Relational', text: 'I have people I can trust with my struggles.' },
+  { id: 20, category: 'Relational', text: 'I ask for help without shame or hesitation.' },
+  { id: 21, category: 'Relational', text: 'My relationships provide strength during difficult times.' },
+  { id: 22, category: 'Relational', text: 'I contribute meaningfully to my community.' },
+  { id: 23, category: 'Relational', text: 'I feel seen and understood by people close to me.' },
+  { id: 24, category: 'Relational', text: 'I invest time in nurturing important relationships.' },
 
-  // Emotional-Adaptive (Q13-18)
-  { id: 13, category: 'Emotional-Adaptive', text: 'I can adapt emotionally to stressful situations.' },
-  { id: 14, category: 'Emotional-Adaptive', text: 'I manage difficult emotions effectively.' },
-  { id: 15, category: 'Emotional-Adaptive', text: 'I recover emotionally after setbacks.' },
-  { id: 16, category: 'Emotional-Adaptive', text: 'I can tolerate emotional discomfort when needed.' },
-  { id: 17, category: 'Emotional-Adaptive', text: 'I regulate my emotional reactions well.' },
-  { id: 18, category: 'Emotional-Adaptive', text: 'My emotions help guide my decisions.' },
+  // Spiritual-Existential (Q25-36)
+  { id: 25, category: 'Spiritual-Existential', text: 'I have a sense of purpose that guides me.' },
+  { id: 26, category: 'Spiritual-Existential', text: 'My values help orient me during difficult times.' },
+  { id: 27, category: 'Spiritual-Existential', text: 'I reflect on deeper meaning in life events.' },
+  { id: 28, category: 'Spiritual-Existential', text: 'I feel connected to something larger than myself.' },
+  { id: 29, category: 'Spiritual-Existential', text: 'My beliefs help me stay grounded.' },
+  { id: 30, category: 'Spiritual-Existential', text: 'Purpose gives me strength during adversity.' },
+  { id: 31, category: 'Spiritual-Existential', text: 'I understand what gives my life meaning and purpose.' },
+  { id: 32, category: 'Spiritual-Existential', text: 'My values guide my resilience during hardship.' },
+  { id: 33, category: 'Spiritual-Existential', text: 'I can articulate my life purpose.' },
+  { id: 34, category: 'Spiritual-Existential', text: 'Adversity deepens my sense of what matters most.' },
+  { id: 35, category: 'Spiritual-Existential', text: 'I find resilience through spiritual or philosophical practice.' },
+  { id: 36, category: 'Spiritual-Existential', text: 'A clear sense of meaning helps me endure hardship.' },
 
-  // Relational (Q19-24)
-  { id: 19, category: 'Relational', text: 'I reach out to others when I need support.' },
-  { id: 20, category: 'Relational', text: 'I maintain supportive relationships.' },
-  { id: 21, category: 'Relational', text: 'I feel connected to my community.' },
-  { id: 22, category: 'Relational', text: 'I contribute to the well-being of others.' },
-  { id: 23, category: 'Relational', text: 'I communicate openly with people I trust.' },
-  { id: 24, category: 'Relational', text: 'My relationships help me through challenges.' },
+  // Emotional-Adaptive (Q37-48)
+  { id: 37, category: 'Emotional-Adaptive', text: 'I can adapt emotionally to stressful situations.' },
+  { id: 38, category: 'Emotional-Adaptive', text: 'I manage difficult emotions effectively.' },
+  { id: 39, category: 'Emotional-Adaptive', text: 'I recover emotionally after setbacks.' },
+  { id: 40, category: 'Emotional-Adaptive', text: 'I can tolerate emotional discomfort when needed.' },
+  { id: 41, category: 'Emotional-Adaptive', text: 'I regulate my emotional reactions well.' },
+  { id: 42, category: 'Emotional-Adaptive', text: 'My emotions help guide my decisions.' },
+  { id: 43, category: 'Emotional-Adaptive', text: 'I can sit with uncomfortable emotions without being overwhelmed.' },
+  { id: 44, category: 'Emotional-Adaptive', text: 'I understand the messages my emotions are sending.' },
+  { id: 45, category: 'Emotional-Adaptive', text: 'I recover emotionally from setbacks within a reasonable timeframe.' },
+  { id: 46, category: 'Emotional-Adaptive', text: 'I can express difficult emotions in healthy ways.' },
+  { id: 47, category: 'Emotional-Adaptive', text: 'My emotions provide valuable information about my needs.' },
+  { id: 48, category: 'Emotional-Adaptive', text: 'I maintain emotional balance during stressful periods.' },
 
-  // Agentic-Generative (Q25-30)
-  { id: 25, category: 'Agentic-Generative', text: 'I take action to improve difficult situations.' },
-  { id: 26, category: 'Agentic-Generative', text: 'I pursue meaningful goals even during stress.' },
-  { id: 27, category: 'Agentic-Generative', text: 'I create opportunities even when things are hard.' },
-  { id: 28, category: 'Agentic-Generative', text: 'I stay motivated when facing adversity.' },
-  { id: 29, category: 'Agentic-Generative', text: 'I generate new possibilities in challenging times.' },
-  { id: 30, category: 'Agentic-Generative', text: 'I move forward with purpose after setbacks.' },
+  // Somatic-Regulative (Q49-60)
+  { id: 49, category: 'Somatic-Regulative', text: 'Physical movement helps me regulate stress.' },
+  { id: 50, category: 'Somatic-Regulative', text: 'I notice how my body reacts to stress.' },
+  { id: 51, category: 'Somatic-Regulative', text: 'Healthy routines help me stay grounded.' },
+  { id: 52, category: 'Somatic-Regulative', text: 'Breathing or physical grounding helps me reset.' },
+  { id: 53, category: 'Somatic-Regulative', text: 'Sleep and rest influence my resilience.' },
+  { id: 54, category: 'Somatic-Regulative', text: 'Exercise or movement improves my mood.' },
+  { id: 55, category: 'Somatic-Regulative', text: 'I have physical practices that help me regulate stress.' },
+  { id: 56, category: 'Somatic-Regulative', text: 'My body is a resource I actively care for.' },
+  { id: 57, category: 'Somatic-Regulative', text: 'I notice and respond to signs of physical stress.' },
+  { id: 58, category: 'Somatic-Regulative', text: 'I maintain consistency in sleep, movement, and nutrition.' },
+  { id: 59, category: 'Somatic-Regulative', text: 'My physical well-being directly impacts my resilience.' },
+  { id: 60, category: 'Somatic-Regulative', text: 'I use somatic techniques (breathing, stretching, etc.) intentionally.' },
 
-  // Spiritual-Existential (Q31-36)
-  { id: 31, category: 'Spiritual-Existential', text: 'I have a sense of purpose that guides me.' },
-  { id: 32, category: 'Spiritual-Existential', text: 'My values help orient me during difficult times.' },
-  { id: 33, category: 'Spiritual-Existential', text: 'I reflect on deeper meaning in life events.' },
-  { id: 34, category: 'Spiritual-Existential', text: 'I feel connected to something larger than myself.' },
-  { id: 35, category: 'Spiritual-Existential', text: 'My beliefs help me stay grounded.' },
-  { id: 36, category: 'Spiritual-Existential', text: 'Purpose gives me strength during adversity.' }
+  // Cognitive-Narrative (Q61-72)
+  { id: 61, category: 'Cognitive-Narrative', text: 'I reflect on difficult experiences to learn from them.' },
+  { id: 62, category: 'Cognitive-Narrative', text: 'I can reframe setbacks in a constructive way.' },
+  { id: 63, category: 'Cognitive-Narrative', text: 'My personal story helps me understand challenges.' },
+  { id: 64, category: 'Cognitive-Narrative', text: 'I find meaning in difficult experiences.' },
+  { id: 65, category: 'Cognitive-Narrative', text: 'I actively interpret events in ways that support growth.' },
+  { id: 66, category: 'Cognitive-Narrative', text: 'Reflection helps me move forward after adversity.' },
+  { id: 67, category: 'Cognitive-Narrative', text: 'I actively construct meaningful narratives from my experiences.' },
+  { id: 68, category: 'Cognitive-Narrative', text: 'I can identify growth and learning from past difficulties.' },
+  { id: 69, category: 'Cognitive-Narrative', text: 'I use storytelling to make sense of challenges.' },
+  { id: 70, category: 'Cognitive-Narrative', text: 'I challenge unhelpful thinking patterns.' },
+  { id: 71, category: 'Cognitive-Narrative', text: 'I maintain perspective during adversity.' },
+  { id: 72, category: 'Cognitive-Narrative', text: 'I integrate difficult experiences into my life narrative.' },
 ];
+
+// ── Shuffle utility ────────────────────────────────────
+function shuffleArray(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 // ── State ──────────────────────────────────────────────
 const state = {
   firstName: '',
   email: '',
+  // answers[displayIdx] stores the user's response for the question shown at that position
   answers: new Array(QUESTIONS.length).fill(null),
-  currentStep: 'info', // 'info' | 0..35 | 'submit'
+  // questionOrder[displayIdx] = originalIdx in QUESTIONS (populated at init time)
+  questionOrder: [],
+  currentStep: 'info', // 'info' | 0..71 | 'submit'
 };
 
 // ── DOM refs ───────────────────────────────────────────
@@ -95,6 +147,9 @@ function init() {
   emailError        = document.getElementById('emailError');
   submitAlert       = document.getElementById('submitAlert');
 
+  // Generate a shuffled display order for question randomization
+  state.questionOrder = shuffleArray(QUESTIONS.map((_, i) => i));
+
   buildQuestionCards();
   attachNavListeners();
   showStep('info');
@@ -105,17 +160,18 @@ function buildQuestionCards() {
   if (!questionContainer) return;
   questionContainer.innerHTML = '';
 
-  QUESTIONS.forEach((q, idx) => {
+  state.questionOrder.forEach((origIdx, displayIdx) => {
+    const q = QUESTIONS[origIdx];
     const card = document.createElement('div');
     card.className = 'question-step card';
-    card.id = `question-${idx}`;
-    card.setAttribute('data-index', idx);
+    card.id = `question-${displayIdx}`;
+    card.setAttribute('data-index', displayIdx);
 
     const likertHtml = LIKERT_OPTIONS.map(opt => `
       <button type="button"
               class="likert-btn"
               data-value="${opt.value}"
-              data-question="${idx}"
+              data-question="${displayIdx}"
               aria-pressed="false"
               aria-label="${opt.label}">
         <span class="likert-dot" aria-hidden="true"></span>
@@ -131,8 +187,8 @@ function buildQuestionCards() {
     `;
 
     // Restore any previously selected answer
-    if (state.answers[idx] !== null) {
-      const btn = card.querySelector(`[data-value="${state.answers[idx]}"]`);
+    if (state.answers[displayIdx] !== null) {
+      const btn = card.querySelector(`[data-value="${state.answers[displayIdx]}"]`);
       if (btn) {
         btn.classList.add('selected');
         btn.setAttribute('aria-pressed', 'true');
@@ -331,10 +387,17 @@ async function submitQuiz() {
   if (submitAlert) Alert.hide(submitAlert);
 
   try {
+    // Reorder answers from display order back to original QUESTIONS order
+    // so the backend index-based scoring works correctly.
+    const orderedAnswers = new Array(QUESTIONS.length).fill(null);
+    state.questionOrder.forEach((origIdx, displayIdx) => {
+      orderedAnswers[origIdx] = state.answers[displayIdx];
+    });
+
     const payload = {
       firstName: state.firstName,
       email:     state.email,
-      answers:   state.answers,
+      answers:   orderedAnswers,
     };
 
     const data = await API.post('/api/quiz', payload);

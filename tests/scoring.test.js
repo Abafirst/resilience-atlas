@@ -9,11 +9,11 @@ describe('calculateResilienceScores', () => {
     const allOnes = Array(36).fill(1);
 
     test('throws when answers array is missing', () => {
-        expect(() => calculateResilienceScores()).toThrow('Expected exactly 36 answers.');
+        expect(() => calculateResilienceScores()).toThrow('Expected at least 36 answers.');
     });
 
     test('throws when answers array has wrong length', () => {
-        expect(() => calculateResilienceScores([1, 2, 3])).toThrow('Expected exactly 36 answers.');
+        expect(() => calculateResilienceScores([1, 2, 3])).toThrow('Expected at least 36 answers.');
     });
 
     test('returns 100% overall score for all-5 answers', () => {

@@ -32,8 +32,8 @@ const MAX_SCORE_PER_QUESTION = 5;
  * @returns {Object} - { categories, overall, dominantType }
  */
 function calculateResilienceScores(answers) {
-    if (!Array.isArray(answers) || answers.length !== 36) {
-        throw new Error('Expected exactly 36 answers.');
+    if (!Array.isArray(answers) || answers.length < 36) {
+        throw new Error('Expected at least 36 answers.');
     }
 
     const categories = {};
