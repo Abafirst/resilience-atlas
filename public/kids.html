@@ -106,6 +106,330 @@
     }
     .bridge-section .btn-white:hover { background: #e8e7fe; }
 
+    /* ── Character Gallery ── */
+    .characters-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+    .characters-section .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .character-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s, transform .2s;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .character-card:hover { box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,.1)); transform: translateY(-2px); }
+    .character-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: .25rem;
+      flex-shrink: 0;
+    }
+    .character-name { font-size: 1.2rem; font-weight: 800; color: var(--slate-900); margin: 0; }
+    .character-title { font-size: .85rem; font-weight: 600; color: var(--slate-500); text-transform: uppercase; letter-spacing: .04em; }
+    .character-skill-tag {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .character-desc { font-size: .9rem; color: var(--slate-600); line-height: 1.6; margin: 0; }
+    .character-skill { font-size: .88rem; color: var(--slate-700); line-height: 1.55; background: var(--slate-50, #f8fafc); border-radius: 10px; padding: .75rem 1rem; margin: 0; }
+    .character-skill strong { color: var(--slate-900); }
+
+    /* ── Stories Section ── */
+    .stories-section {
+      background: var(--slate-50, #f8fafc);
+      padding: 4rem 1.5rem;
+    }
+    .stories-section .section-inner { max-width: 1100px; margin: 0 auto; }
+    .stories-section .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .story-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .story-icon { font-size: 2rem; }
+    .story-title { font-size: 1rem; font-weight: 700; color: var(--slate-900); margin: 0; }
+    .story-subtitle { font-size: .8rem; font-weight: 600; color: var(--slate-500); margin: 0; text-transform: uppercase; letter-spacing: .04em; }
+    .story-preview { font-size: .88rem; color: var(--slate-600); line-height: 1.6; margin: 0; flex: 1; }
+    .btn-story {
+      display: inline-block;
+      background: #4F46E5;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: .6rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: background .2s;
+      width: fit-content;
+    }
+    .btn-story:hover { background: #4338ca; }
+
+    /* Story Modal */
+    .story-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .story-modal[hidden] { display: none; }
+    .story-modal-inner {
+      background: #fff;
+      border-radius: 16px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+    }
+    .story-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--slate-100, #f1f5f9);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .story-modal-close:hover { background: var(--slate-200); }
+    .story-modal-title { font-size: 1.4rem; font-weight: 800; color: var(--slate-900); margin: 0 2.5rem .25rem 0; }
+    .story-modal-meta { font-size: .8rem; color: var(--slate-500); margin-bottom: 1.5rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+    .story-modal-body { font-size: .95rem; color: var(--slate-700); line-height: 1.75; }
+    .story-modal-body p { margin: 0 0 1rem; }
+    .story-lesson {
+      background: #ede9fe;
+      border-left: 4px solid #7c3aed;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-top: 1.5rem;
+      font-size: .9rem;
+      color: #4c1d95;
+      font-weight: 500;
+    }
+
+    /* ── Skill Builders ── */
+    .skill-builders-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+    .skill-builders-section .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .skill-builder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-builder-card {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .sb-icon { font-size: 2rem; margin-bottom: .75rem; }
+    .sb-name { font-size: 1.05rem; font-weight: 700; color: var(--slate-900); margin-bottom: .3rem; }
+    .sb-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .18rem .6rem;
+      border-radius: 999px;
+      margin-bottom: .75rem;
+    }
+    .sb-desc { font-size: .88rem; color: var(--slate-600); line-height: 1.6; margin-bottom: 1rem; }
+    .activity-toggle {
+      background: #4F46E5;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .55rem 1.1rem;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .activity-toggle:hover { background: #4338ca; }
+    .activity-panel {
+      margin-top: 1.25rem;
+      padding: 1.25rem;
+      background: var(--slate-50, #f8fafc);
+      border-radius: 12px;
+      font-size: .88rem;
+      color: var(--slate-700);
+      line-height: 1.6;
+    }
+    .activity-panel[hidden] { display: none; }
+
+    /* Breathing exercise */
+    .breath-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .breath-ring {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #a78bfa, #7c3aed);
+      transition: transform 0s;
+    }
+    .breath-ring.expand { animation: expand 4s ease-in forwards; }
+    .breath-ring.hold { transform: scale(1.5); }
+    .breath-ring.contract { animation: contract 6s ease-out forwards; }
+    @keyframes expand { from { transform: scale(1); } to { transform: scale(1.5); } }
+    @keyframes contract { from { transform: scale(1.5); } to { transform: scale(1); } }
+    .breath-instruction { font-size: 1.1rem; font-weight: 700; color: #5b21b6; }
+    .breath-count { font-size: 2rem; font-weight: 800; color: #7c3aed; min-height: 2.5rem; }
+
+    /* Feelings finder */
+    .emotion-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0; }
+    .emotion-btn {
+      padding: .4rem .8rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 999px;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .emotion-btn:hover, .emotion-btn.selected { background: #ede9fe; border-color: #7c3aed; color: #5b21b6; }
+    .emotion-prompt {
+      margin-top: .75rem;
+      padding: .75rem;
+      background: #ede9fe;
+      border-radius: 8px;
+      font-size: .85rem;
+      color: #4c1d95;
+      font-weight: 500;
+    }
+    .emotion-prompt[hidden] { display: none; }
+
+    /* Values finder */
+    .value-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0; }
+    .value-chip {
+      padding: .4rem .85rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 999px;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .value-chip:hover { background: #f0fdf4; border-color: #16a34a; }
+    .value-chip.selected { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+    .value-result { margin-top: .75rem; font-size: .88rem; color: var(--slate-700); }
+
+    /* Reflection inputs */
+    .reflection-group { margin-bottom: .75rem; }
+    .reflection-label { display: block; font-size: .82rem; font-weight: 600; color: var(--slate-700); margin-bottom: .3rem; }
+    .reflection-input {
+      width: 100%;
+      padding: .5rem .75rem;
+      border: 1.5px solid var(--slate-200);
+      border-radius: 8px;
+      font-size: .88rem;
+      font-family: inherit;
+      background: #fff;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 56px;
+    }
+    .reflection-input:focus { outline: none; border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
+
+    /* ── Activity Guides ── */
+    .activity-guides-section {
+      background: var(--slate-50, #f8fafc);
+      padding: 4rem 1.5rem;
+    }
+    .activity-guides-section .section-inner { max-width: 900px; margin: 0 auto; }
+    .activity-guides-section .section-header { text-align: center; margin-bottom: 2rem; }
+    .age-tabs {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .age-tab {
+      padding: .55rem 1.4rem;
+      border: 2px solid var(--slate-200);
+      border-radius: 999px;
+      background: #fff;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--slate-600);
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .age-tab:hover { border-color: #7c3aed; color: #7c3aed; }
+    .age-tab[aria-selected="true"] { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+    .age-content { display: none; }
+    .age-content.active { display: block; }
+    .activity-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .activity-item {
+      background: #fff;
+      border: 1px solid var(--slate-200);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .activity-item-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+    .activity-item-title { font-size: .95rem; font-weight: 700; color: var(--slate-900); margin-bottom: .3rem; }
+    .activity-item-skill { font-size: .75rem; font-weight: 600; color: #7c3aed; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .5rem; }
+    .activity-item-desc { font-size: .85rem; color: var(--slate-600); line-height: 1.55; }
+
     @media (max-width: 640px) {
       .header-nav .nav-link { display: none; }
     }
@@ -197,29 +521,500 @@
     </div>
   </section>
 
-  <!-- Explore Section -->
-  <section class="explore-section" aria-labelledby="explore-heading">
-    <h2 id="explore-heading">Explore the Program</h2>
-    <p>
-      The Kids Resilience Program includes stories, activities, and skill-building resources designed
-      for children ages 5–14 and the educators and caregivers who support them.
-    </p>
-    <div class="explore-cards">
-      <a href="#skills" class="explore-card" aria-label="Skills library">
-        <div class="explore-icon" aria-hidden="true">&#127775;</div>
-        <h3>Skills Library</h3>
-        <p>Interactive skill builders for each dimension — coming soon</p>
-      </a>
-      <a href="#skills" class="explore-card" aria-label="Resilience stories">
-        <div class="explore-icon" aria-hidden="true">&#128218;</div>
-        <h3>Resilience Stories</h3>
-        <p>Age-appropriate stories about navigating challenges — coming soon</p>
-      </a>
-      <a href="#skills" class="explore-card" aria-label="Activity guides">
-        <div class="explore-icon" aria-hidden="true">&#127912;</div>
-        <h3>Activity Guides</h3>
-        <p>Printable and digital activities for home and classroom — coming soon</p>
-      </a>
+  <!-- Character Gallery -->
+  <section class="characters-section" id="characters" aria-labelledby="characters-heading">
+    <div class="section-header">
+      <span class="section-label">Meet the Characters</span>
+      <h2 id="characters-heading">Your Six Resilience Guides</h2>
+      <p style="color:var(--slate-600);max-width:560px;margin:.75rem auto 0;">
+        Each character represents one resilience skill and is here to help you learn, grow, and face challenges with confidence.
+      </p>
+    </div>
+    <div class="character-grid">
+
+      <!-- The Connector -->
+      <article class="character-card" aria-label="The Connector character">
+        <div class="character-avatar" style="background:#ede9fe;" aria-hidden="true">&#129309;</div>
+        <div>
+          <h3 class="character-name">Maya — The Connector</h3>
+          <p class="character-title">Connection Skill &nbsp;·&nbsp; Relational</p>
+        </div>
+        <span class="character-skill-tag" style="background:#ede9fe;color:#5b21b6;">Relational</span>
+        <p class="character-desc">
+          Maya is warm, caring, and always the first to notice when someone looks left out. She believes the best things in life happen between people — and she's always learning that asking for help is a sign of strength, not weakness.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> Maya teaches us that we don't have to face hard things alone. When life gets tough, reaching out to someone we trust — a friend, a family member, a teacher — is one of the most powerful things we can do.
+        </p>
+      </article>
+
+      <!-- The Thinker -->
+      <article class="character-card" aria-label="The Thinker character">
+        <div class="character-avatar" style="background:#e0f2fe;" aria-hidden="true">&#129504;</div>
+        <div>
+          <h3 class="character-name">Alex — The Thinker</h3>
+          <p class="character-title">Thinking Skill &nbsp;·&nbsp; Cognitive</p>
+        </div>
+        <span class="character-skill-tag" style="background:#e0f2fe;color:#075985;">Cognitive</span>
+        <p class="character-desc">
+          Alex loves puzzles, questions, and figuring things out. When a problem seems impossible, Alex slows down, looks at it from a new angle, and finds a way through. Curious and calm, Alex helps us see that most hard things have solutions.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> Alex shows us "flip-it thinking" — when something goes wrong, we can ask "What can I learn here?" or "What can I control?" Changing the way we look at a problem can change everything.
+        </p>
+      </article>
+
+      <!-- The Grounder -->
+      <article class="character-card" aria-label="The Grounder character">
+        <div class="character-avatar" style="background:#dcfce7;" aria-hidden="true">&#128154;</div>
+        <div>
+          <h3 class="character-name">Sam — The Grounder</h3>
+          <p class="character-title">Body Skill &nbsp;·&nbsp; Somatic</p>
+        </div>
+        <span class="character-skill-tag" style="background:#dcfce7;color:#15803d;">Somatic</span>
+        <p class="character-desc">
+          Sam is steady and grounded, even when big feelings swirl around. Sam knows that our bodies carry our emotions — and that the fastest way to feel calmer is to start with a breath, a slow walk, or feeling our feet on the floor.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> Sam teaches us to listen to our body's signals — like a tight chest or shaky hands — and use simple tools like breathing and movement to come back to calm.
+        </p>
+      </article>
+
+      <!-- The Feeler -->
+      <article class="character-card" aria-label="The Feeler character">
+        <div class="character-avatar" style="background:#ffe4e6;" aria-hidden="true">&#10084;&#65039;</div>
+        <div>
+          <h3 class="character-name">Jordan — The Feeler</h3>
+          <p class="character-title">Feelings Skill &nbsp;·&nbsp; Emotional</p>
+        </div>
+        <span class="character-skill-tag" style="background:#ffe4e6;color:#be123c;">Emotional</span>
+        <p class="character-desc">
+          Jordan feels everything deeply — joy, sadness, worry, and wonder. Instead of hiding feelings, Jordan has learned that naming them is the first step to understanding them. Jordan helps others know that all feelings are okay.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> Jordan shows us that when we name a feeling — "I feel lonely" or "I feel scared" — it loses some of its power over us. Feelings are messengers, not enemies.
+        </p>
+      </article>
+
+      <!-- The Guide -->
+      <article class="character-card" aria-label="The Guide character">
+        <div class="character-avatar" style="background:#f0fdf4;" aria-hidden="true">&#127807;</div>
+        <div>
+          <h3 class="character-name">River — The Guide</h3>
+          <p class="character-title">Meaning Skill &nbsp;·&nbsp; Spiritual</p>
+        </div>
+        <span class="character-skill-tag" style="background:#d1fae5;color:#065f46;">Spiritual</span>
+        <p class="character-desc">
+          River is thoughtful, curious about the world, and always looking for the deeper meaning in things. Even when life is confusing, River searches for what matters most — and follows it like a compass pointing north.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> River teaches us that knowing what we care about — our values, what brings us joy, what makes us feel like ourselves — can guide us through hard times and help us find our way back.
+        </p>
+      </article>
+
+      <!-- The Builder -->
+      <article class="character-card" aria-label="The Builder character">
+        <div class="character-avatar" style="background:#fef9c3;" aria-hidden="true">&#9889;</div>
+        <div>
+          <h3 class="character-name">Kai — The Builder</h3>
+          <p class="character-title">Action Skill &nbsp;·&nbsp; Agentic</p>
+        </div>
+        <span class="character-skill-tag" style="background:#fef9c3;color:#854d0e;">Agentic</span>
+        <p class="character-desc">
+          Kai is brave, determined, and always ready to try. Kai knows the secret to doing big things: start with one tiny step. Even when scared or unsure, Kai keeps moving — because action, however small, is always possible.
+        </p>
+        <p class="character-skill">
+          <strong>Resilience Skill:</strong> Kai teaches us that we don't need to have it all figured out before we begin. One small step, then another, is how every big journey starts. We have more power than we think.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Resilience Stories -->
+  <section class="stories-section" id="stories" aria-labelledby="stories-heading">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-label">Resilience Stories</span>
+        <h2 id="stories-heading">Read a Story</h2>
+        <p style="color:var(--slate-600);max-width:560px;margin:.75rem auto 0;">
+          Each character faces a real challenge and uses their resilience skill to find a way through. Ages 5–14.
+        </p>
+      </div>
+      <div class="story-grid">
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#129309;</div>
+          <p class="story-subtitle">Relational · The Connector</p>
+          <h3 class="story-title">Maya and the Mountain of Cardboard</h3>
+          <p class="story-preview">Maya loves drawing — but she always works alone. When a huge class project threatens to bury her, she discovers that asking for help might be the most powerful thing she can do.</p>
+          <button class="btn-story" onclick="openStory('connector')" aria-label="Read Maya's story">Read Story &#8594;</button>
+        </div>
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#129504;</div>
+          <p class="story-subtitle">Cognitive · The Thinker</p>
+          <h3 class="story-title">Alex and the Flooded Experiment</h3>
+          <p class="story-preview">Alex's perfectly planned science fair experiment gets wrecked by the wind. With three days left and no backup plan, can he flip the problem into a brand-new discovery?</p>
+          <button class="btn-story" onclick="openStory('thinker')" aria-label="Read Alex's story">Read Story &#8594;</button>
+        </div>
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#128154;</div>
+          <p class="story-subtitle">Somatic · The Grounder</p>
+          <h3 class="story-title">Sam and the Big Game</h3>
+          <p class="story-preview">Sam loves soccer, but before the championship game her body goes haywire — heart racing, hands cold, stomach in knots. Her coach knows a secret: calm starts in the body.</p>
+          <button class="btn-story" onclick="openStory('grounder')" aria-label="Read Sam's story">Read Story &#8594;</button>
+        </div>
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#10084;&#65039;</div>
+          <p class="story-subtitle">Emotional · The Feeler</p>
+          <h3 class="story-title">Jordan and the Invisible Knot</h3>
+          <p class="story-preview">Since Grandma Bea moved away, Jordan has a heavy feeling she can't name. When her teacher shows the class a Feelings Wheel, Jordan finds the words — and the knot begins to loosen.</p>
+          <button class="btn-story" onclick="openStory('feeler')" aria-label="Read Jordan's story">Read Story &#8594;</button>
+        </div>
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#127807;</div>
+          <p class="story-subtitle">Spiritual · The Guide</p>
+          <h3 class="story-title">River and the Compass</h3>
+          <p class="story-preview">After moving to a new city, River feels invisible and lost — like nothing matters. A quiet conversation with her dad and a packet of basil seeds help her find her way back to herself.</p>
+          <button class="btn-story" onclick="openStory('guide')" aria-label="Read River's story">Read Story &#8594;</button>
+        </div>
+
+        <div class="story-card">
+          <div class="story-icon" aria-hidden="true">&#9889;</div>
+          <p class="story-subtitle">Agentic · The Builder</p>
+          <h3 class="story-title">Kai and the Six-String Mountain</h3>
+          <p class="story-preview">Kai has wanted to play guitar for four years — but fear of failing has kept the guitar against the wall. One friend's blunt question changes everything: why not just be bad at it first?</p>
+          <button class="btn-story" onclick="openStory('builder')" aria-label="Read Kai's story">Read Story &#8594;</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Story Modal -->
+  <div id="story-modal" class="story-modal" role="dialog" aria-modal="true" aria-labelledby="story-modal-title" hidden>
+    <div class="story-modal-inner">
+      <button class="story-modal-close" onclick="closeStory()" aria-label="Close story">&times;</button>
+      <div id="story-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Skills Library -->
+  <section class="skill-builders-section" id="skill-builders" aria-labelledby="skill-builders-heading">
+    <div class="section-header">
+      <span class="section-label">Skills Library</span>
+      <h2 id="skill-builders-heading">Try a Skill Builder</h2>
+      <p style="color:var(--slate-600);max-width:560px;margin:.75rem auto 0;">
+        Each activity is a simple exercise you can do right now to practice one resilience skill. Click to get started.
+      </p>
+    </div>
+    <div class="skill-builder-grid">
+
+      <!-- Ask for Help — Relational -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#129309;</div>
+        <div class="sb-name">Ask for Help</div>
+        <span class="sb-tag" style="background:#ede9fe;color:#5b21b6;">Relational · The Connector</span>
+        <p class="sb-desc">Think of three people you could ask for help — one for schoolwork, one for feelings, and one for fun. Write their names and what makes them a good helper.</p>
+        <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Start Activity</button>
+        <div class="activity-panel" hidden>
+          <p style="margin:0 0 .75rem;font-weight:600;">My Help Map</p>
+          <div class="reflection-group">
+            <label class="reflection-label" for="help-school">Who helps me with schoolwork or hard problems?</label>
+            <textarea class="reflection-input" id="help-school" rows="2" placeholder="Name and why..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="help-feelings">Who can I talk to when I have big feelings?</label>
+            <textarea class="reflection-input" id="help-feelings" rows="2" placeholder="Name and why..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="help-fun">Who makes things feel better and more fun?</label>
+            <textarea class="reflection-input" id="help-fun" rows="2" placeholder="Name and why..."></textarea>
+          </div>
+          <p style="margin:.75rem 0 0;font-size:.82rem;color:#5b21b6;font-weight:600;">
+            &#128161; The Connector says: You have more helpers than you think. This week, reach out to one of them — even just to say hi.
+          </p>
+        </div>
+      </div>
+
+      <!-- Problem-Solving Challenge — Cognitive -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#129504;</div>
+        <div class="sb-name">Problem-Solving Challenge</div>
+        <span class="sb-tag" style="background:#e0f2fe;color:#075985;">Cognitive · The Thinker</span>
+        <p class="sb-desc">Think of something that isn't going the way you wanted. Use "flip-it" thinking to look at it from a new angle and find one step you can take.</p>
+        <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Start Activity</button>
+        <div class="activity-panel" hidden>
+          <p style="margin:0 0 .75rem;font-weight:600;">Flip-It Thinking</p>
+          <div class="reflection-group">
+            <label class="reflection-label" for="ps-problem">What is the problem?</label>
+            <textarea class="reflection-input" id="ps-problem" rows="2" placeholder="Describe it briefly..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="ps-control">What part of this CAN I control?</label>
+            <textarea class="reflection-input" id="ps-control" rows="2" placeholder="Even one small thing..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="ps-learn">What could I learn from this?</label>
+            <textarea class="reflection-input" id="ps-learn" rows="2" placeholder="What this situation teaches me..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="ps-step">One small step I can take today:</label>
+            <textarea class="reflection-input" id="ps-step" rows="2" placeholder="Just one thing..."></textarea>
+          </div>
+          <p style="margin:.75rem 0 0;font-size:.82rem;color:#075985;font-weight:600;">
+            &#128161; The Thinker says: You don't have to solve everything at once. One new angle at a time.
+          </p>
+        </div>
+      </div>
+
+      <!-- Grounding Breath — Somatic -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#128154;</div>
+        <div class="sb-name">Grounding Breath</div>
+        <span class="sb-tag" style="background:#dcfce7;color:#15803d;">Somatic · The Grounder</span>
+        <p class="sb-desc">A guided breathing exercise that helps your body move from "alarm mode" to calm. Three complete breath cycles, right now.</p>
+        <button class="activity-toggle" id="breath-start-btn" onclick="startBreathing(this)" aria-label="Start breathing exercise">Start Breathing</button>
+        <div class="activity-panel" id="breath-panel" hidden>
+          <div class="breath-visual">
+            <div class="breath-ring" id="breath-ring" aria-hidden="true"></div>
+            <div class="breath-instruction" id="breath-instruction" aria-live="polite">Get ready...</div>
+            <div class="breath-count" id="breath-count" aria-live="polite"></div>
+          </div>
+          <p style="margin:.5rem 0 0;font-size:.82rem;color:#15803d;font-weight:600;">Put your feet flat on the floor and breathe with the circle.</p>
+        </div>
+      </div>
+
+      <!-- Feelings Detective — Emotional -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#10084;&#65039;</div>
+        <div class="sb-name">Feelings Detective</div>
+        <span class="sb-tag" style="background:#ffe4e6;color:#be123c;">Emotional · The Feeler</span>
+        <p class="sb-desc">Pick the feeling that is closest to what you are feeling right now. Then get a reflection prompt to help you understand it a little better.</p>
+        <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Find My Feeling</button>
+        <div class="activity-panel" hidden>
+          <p style="margin:0 0 .5rem;font-weight:600;">How are you feeling right now?</p>
+          <div class="emotion-grid" role="group" aria-label="Emotion choices">
+            <button class="emotion-btn" onclick="selectEmotion(this,'happy')">Happy &#128512;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'sad')">Sad &#128546;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'angry')">Angry &#128545;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'worried')">Worried &#128552;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'lonely')">Lonely &#128096;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'excited')">Excited &#127775;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'confused')">Confused &#128533;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'proud')">Proud &#127942;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'scared')">Scared &#128561;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'calm')">Calm &#128524;</button>
+          </div>
+          <div class="emotion-prompt" id="emotion-prompt" hidden aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- What Matters Most — Spiritual -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#127807;</div>
+        <div class="sb-name">What Matters Most</div>
+        <span class="sb-tag" style="background:#d1fae5;color:#065f46;">Spiritual · The Guide</span>
+        <p class="sb-desc">Choose up to three values that feel most like you. Your values are your compass — they help you know what direction to go when things feel confusing.</p>
+        <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Find My Values</button>
+        <div class="activity-panel" hidden>
+          <p style="margin:0 0 .5rem;font-size:.82rem;color:var(--slate-600);">Pick up to 3 things that matter most to you:</p>
+          <div class="value-grid" role="group" aria-label="Values choices">
+            <button class="value-chip" onclick="toggleValue(this)">Kindness</button>
+            <button class="value-chip" onclick="toggleValue(this)">Family</button>
+            <button class="value-chip" onclick="toggleValue(this)">Creativity</button>
+            <button class="value-chip" onclick="toggleValue(this)">Nature</button>
+            <button class="value-chip" onclick="toggleValue(this)">Learning</button>
+            <button class="value-chip" onclick="toggleValue(this)">Fairness</button>
+            <button class="value-chip" onclick="toggleValue(this)">Friendship</button>
+            <button class="value-chip" onclick="toggleValue(this)">Courage</button>
+            <button class="value-chip" onclick="toggleValue(this)">Fun</button>
+            <button class="value-chip" onclick="toggleValue(this)">Honesty</button>
+            <button class="value-chip" onclick="toggleValue(this)">Adventure</button>
+            <button class="value-chip" onclick="toggleValue(this)">Helping Others</button>
+          </div>
+          <div class="value-result" id="value-result" aria-live="polite"></div>
+          <p style="margin:.75rem 0 0;font-size:.82rem;color:#065f46;font-weight:600;">
+            &#128161; The Guide says: When something feels hard or wrong, check it against your values. They'll help you know what to do.
+          </p>
+        </div>
+      </div>
+
+      <!-- One Small Step — Agentic -->
+      <div class="skill-builder-card">
+        <div class="sb-icon" aria-hidden="true">&#9889;</div>
+        <div class="sb-name">One Small Step</div>
+        <span class="sb-tag" style="background:#fef9c3;color:#854d0e;">Agentic · The Builder</span>
+        <p class="sb-desc">Think of something you've been wanting to do but haven't started. Break it into tiny steps. Then commit to just the first one — that's all you need.</p>
+        <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Plan My Step</button>
+        <div class="activity-panel" hidden>
+          <p style="margin:0 0 .75rem;font-weight:600;">My Action Plan</p>
+          <div class="reflection-group">
+            <label class="reflection-label" for="step-goal">What do I want to do or get better at?</label>
+            <textarea class="reflection-input" id="step-goal" rows="2" placeholder="My goal or dream..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="step-one">The tiniest first step I could take (even in 5 minutes):</label>
+            <textarea class="reflection-input" id="step-one" rows="2" placeholder="Just one tiny thing..."></textarea>
+          </div>
+          <div class="reflection-group">
+            <label class="reflection-label" for="step-when">When will I do it?</label>
+            <textarea class="reflection-input" id="step-when" rows="1" placeholder="Today, tomorrow, this week..."></textarea>
+          </div>
+          <p style="margin:.75rem 0 0;font-size:.82rem;color:#854d0e;font-weight:600;">
+            &#128161; The Builder says: You don't need to see the whole staircase. Just take the first step.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Activity Guides -->
+  <section class="activity-guides-section" id="activity-guides" aria-labelledby="activity-guides-heading">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-label">Activity Guides</span>
+        <h2 id="activity-guides-heading">Activities by Age</h2>
+        <p style="color:var(--slate-600);max-width:560px;margin:.75rem auto 0;">
+          Every resilience skill can be practiced at any age. These activities are tailored to help children at different stages of development.
+        </p>
+      </div>
+      <div class="age-tabs" role="tablist" aria-label="Age group activities">
+        <button class="age-tab" role="tab" aria-selected="true" aria-controls="age-5-7" onclick="switchAge(this,'age-5-7')">Ages 5–7</button>
+        <button class="age-tab" role="tab" aria-selected="false" aria-controls="age-8-10" onclick="switchAge(this,'age-8-10')">Ages 8–10</button>
+        <button class="age-tab" role="tab" aria-selected="false" aria-controls="age-11-14" onclick="switchAge(this,'age-11-14')">Ages 11–14</button>
+      </div>
+
+      <!-- Ages 5–7 -->
+      <div id="age-5-7" class="age-content active" role="tabpanel" aria-label="Activities for ages 5 to 7">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127774;</div>
+            <div class="activity-item-title">Feeling Faces Drawing</div>
+            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <p class="activity-item-desc">Draw a face showing how you feel right now. Give the feeling a color. Share it with a grown-up and tell them one thing about it.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#129504;</div>
+            <div class="activity-item-title">Bubble Breathing</div>
+            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <p class="activity-item-desc">Breathe in slowly like you're blowing up the biggest bubble in the world. Let it out even slower. Do it three times. Notice how your body feels after.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#129309;</div>
+            <div class="activity-item-title">My Helper List</div>
+            <div class="activity-item-skill">Relational · The Connector</div>
+            <p class="activity-item-desc">Draw or write the names of three people you trust. Practice saying "Can you help me?" out loud — it gets easier every time you try!</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#11088;</div>
+            <div class="activity-item-title">My Superhero Power</div>
+            <div class="activity-item-skill">Agentic · The Builder</div>
+            <p class="activity-item-desc">Draw yourself as a superhero. What is your special power? What challenge does your superhero solve? You get to choose!</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127807;</div>
+            <div class="activity-item-title">My Happy Thought Box</div>
+            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <p class="activity-item-desc">Decorate a small box or draw a picture of one. Put little notes inside with things that make you happy, things you love, and people who matter to you.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128073;</div>
+            <div class="activity-item-title">What Can I Change?</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">Draw a big circle. Inside, draw or write things you CAN change. Outside the circle, draw things you can't change. Focus on the inside!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ages 8–10 -->
+      <div id="age-8-10" class="age-content" role="tabpanel" aria-label="Activities for ages 8 to 10">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128221;</div>
+            <div class="activity-item-title">Feelings Journal</div>
+            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <p class="activity-item-desc">Each day for one week, write one feeling you had and what caused it. Notice patterns. Are there certain times or situations that bring up certain feelings?</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128337;</div>
+            <div class="activity-item-title">5-4-3-2-1 Grounding</div>
+            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <p class="activity-item-desc">When you feel anxious, name 5 things you see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. It brings you back to right now.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#129309;</div>
+            <div class="activity-item-title">Buddy Check-In</div>
+            <div class="activity-item-skill">Relational · The Connector</div>
+            <p class="activity-item-desc">Pick one friend or classmate to check in with this week. Ask them how they're really doing — and really listen. Then share something about your own week too.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127919;</div>
+            <div class="activity-item-title">Goal and Steps Map</div>
+            <div class="activity-item-skill">Agentic · The Builder</div>
+            <p class="activity-item-desc">Choose something you want to achieve. Draw a path with five stepping-stone shapes. Write one small action on each stone. Start with the first one this week.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128161;</div>
+            <div class="activity-item-title">Flip-It Challenge</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">Think of something that went wrong. Rewrite it as a learning story: "I used to think... but now I know..." How does the new version feel different?</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#129513;</div>
+            <div class="activity-item-title">Values Sorting</div>
+            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <p class="activity-item-desc">Write 10 things you care about on slips of paper. Sort them from most important to least. Talk with someone about why your top three matter so much to you.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ages 11–14 -->
+      <div id="age-11-14" class="age-content" role="tabpanel" aria-label="Activities for ages 11 to 14">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128247;</div>
+            <div class="activity-item-title">Resilience Interview</div>
+            <div class="activity-item-skill">Relational · The Connector</div>
+            <p class="activity-item-desc">Interview an adult you admire about a hard time in their life. Ask: What happened? How did you get through it? Who helped you? What did you learn? Reflect on what you hear.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128209;</div>
+            <div class="activity-item-title">Reframing Practice</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">Write about a current challenge. Then write three different perspectives on it: a friend's view, a future self's view, and a scientist's view. Which perspective opens up new solutions?</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#129517;</div>
+            <div class="activity-item-title">Body Scan Journal</div>
+            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <p class="activity-item-desc">Each morning for a week, do a 2-minute body scan: close your eyes and notice each body part from toes to head. Where is tension? Where is calm? Write what you notice.</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128203;</div>
+            <div class="activity-item-title">Emotion Mapping</div>
+            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <p class="activity-item-desc">For one week, track your emotions with a chart: time, feeling, intensity (1-10), what triggered it. At the end of the week, look for patterns. What do they tell you?</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128278;</div>
+            <div class="activity-item-title">Purpose Letter</div>
+            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <p class="activity-item-desc">Write a letter to your future self (5 years from now). What do you hope matters to you? What kind of person do you want to be? What will you have done that felt meaningful?</p>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128640;</div>
+            <div class="activity-item-title">30-Day Challenge</div>
+            <div class="activity-item-skill">Agentic · The Builder</div>
+            <p class="activity-item-desc">Choose one small habit to build over 30 days — something that takes just 5 minutes. Track it daily. At the end, reflect: How did starting small lead to something bigger?</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -262,6 +1057,267 @@
       <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
     </div>
   </footer>
+  <script>
+    /* ── Story data ── */
+    var STORIES = {
+      connector: {
+        title: 'Maya and the Mountain of Cardboard',
+        meta: 'Relational · The Connector · Ages 7–12',
+        body: [
+          "Maya had a secret: she was terrible at asking for help. It wasn't that she was proud. Well, maybe a little. But mostly she worried — what if people thought she wasn't smart enough? What if they said no and she felt even worse?",
+          "So when her teacher, Ms. Rivera, announced a huge project — build a model city out of recycled materials, in teams of three — Maya's stomach did a flip. Not because of the project. Because of the team part.",
+          "Maya ended up with Leo and Priya, two kids she barely knew. Leo was quiet and always had earbuds in. Priya carried a color-coded planner. Maya drew in her sketchbook. 'I'll handle the park area,' Maya said on day one, because it felt safest to work alone.",
+          "For two weeks, she worked at her kitchen table, surrounded by cardboard rolls, tissue paper, and glue. She made trees out of green pom-poms and benches out of Popsicle sticks. It looked beautiful — but it was only one section, and it was taking forever.",
+          "One night, Maya sat in the middle of her mess and cried. There was too much to do. The project was due Friday. She hadn't talked to Leo or Priya in five days.",
+          "Her grandmother sat down next to her. 'Tell me,' she said simply. Maya explained — the project, the team, the not-asking. Her grandmother was quiet for a moment. Then she said: 'You know, the strongest spider webs are woven by many threads. One thread alone breaks easily.'",
+          "The next morning, Maya texted Leo and Priya: 'Hey. I think I need help. Can we meet today?' Leo replied in two minutes: 'Yes! I've been designing the whole layout on my tablet. I didn't want to bother you.' Priya replied in one: 'FINALLY. I have a full schedule planned. Come over at 4?'",
+          "They met at Priya's house. Maya brought her park section. Leo brought his digital blueprint. Priya spread out her schedule on the kitchen table. 'We wasted two weeks not talking,' Leo said. 'We still have five days,' Priya said. 'We've got this.'",
+          "And they did. Leo's layout guided where everything went. Priya made sure they stayed on track. Maya's artwork covered every building, bridge, and street corner in color and life. On presentation day, Ms. Rivera paused in front of their city longer than any other. 'This one has a soul,' she told the class.",
+          "After school, Maya walked home smiling. She had built something beautiful — not alone, but together. That week, she started a new habit. Every time she felt stuck, she asked herself: Who could help me right now? And then — the scary part — she actually asked."
+        ],
+        lesson: '&#129309; The Connector\'s Lesson: We don\'t have to face hard things alone. When things feel too big, reaching out brings people together and makes you stronger than you\'d ever be on your own.'
+      },
+      thinker: {
+        title: 'Alex and the Flooded Experiment',
+        meta: 'Cognitive · The Thinker · Ages 8–13',
+        body: [
+          "Alex had been planning his science fair experiment for three weeks. His idea was simple and brilliant (he thought): test which type of soil holds the most water. He'd set up four cups with four different soils, pour the same amount of water into each, and measure how much drained through.",
+          "On the day of the experiment, Alex carefully arranged everything on his back porch. Sandy soil. Clay soil. Potting mix. Garden soil from the backyard. He labeled each cup, filled his measuring cup with exactly 100ml of water, and — a sudden gust of wind knocked everything off the table.",
+          "All four cups. All four soil samples. Mixed together on the porch floor. Alex stood very still. His science fair was in three days. He had no backup plan.",
+          "He went inside, sat on the couch, and stared at the ceiling. His older sister Lena found him there twenty minutes later. 'What happened?' 'Everything's ruined,' he said flatly.",
+          "'Okay. Worst case, what could you do?' 'Nothing. Start over. There's no time.' 'What's the fastest experiment you could do instead?' Alex said nothing. 'Come on,' she said. 'You're the problem-solver. What do you know about water and soil that you haven't tested yet?'",
+          "Something clicked. Alex sat up slowly. He'd been reading about how plants affect soil drainage. Could plant roots change how fast water drains? He ran to the backyard. He dug up two small plants — a grass clump and a weed — and replanted them in two cups of the same garden soil. He set up a third cup with just soil, no plant.",
+          "Then he poured 100ml of water into each and timed how long it took to drain. He ran the test three times. The results surprised him: the grass plant drained water fastest. The bare soil drained slowest. He had a new experiment. And honestly, it was more interesting than the first one.",
+          "At the science fair, his display board read: 'Do Plant Roots Change Soil Drainage?' One judge — a real soil scientist from the university — stopped at his table for fifteen minutes. 'What made you choose this angle?' she asked. Alex grinned. 'My first plan didn't work out.' She laughed and wrote something on her judging sheet.",
+          "He didn't win first place. But he got a Creativity Award, and the soil scientist gave him her business card. On the drive home, Alex thought about his sister's question: What do you know that you haven't tested yet? It was just a new way of looking at the same problem.",
+          "He started keeping that question in his back pocket — for science, for school, for life. When things fall apart, flip the angle."
+        ],
+        lesson: '&#129504; The Thinker\'s Lesson: When something goes wrong, ask yourself: What can I control? What can I learn? What haven\'t I tried yet? Changing the angle can turn a problem into a discovery.'
+      },
+      grounder: {
+        title: 'Sam and the Big Game',
+        meta: 'Somatic · The Grounder · Ages 6–12',
+        body: [
+          "Sam had been playing soccer since she was five years old. She loved the game — the running, the teamwork, the way time seemed to stop when the ball was at her feet. But today was different. Today was the regional championship, and Sam's body would not cooperate.",
+          "From the moment she woke up, something felt wrong. Her heart was beating too fast. Her hands were cold even inside the house. When she ate breakfast, her stomach clenched and she could only manage half a piece of toast. Just nerves, she told herself. Everyone gets nervous.",
+          "But by the time the team van pulled into the stadium parking lot, Sam felt dizzy. Her coach, Dani, noticed her sitting apart from the others, staring at the ground. 'Talk to me,' Coach Dani said, sitting beside her. 'I feel sick. Not sick-sick. But like... everything is tight. And shaky.'",
+          "Coach Dani nodded. 'Your body is on high alert. It thinks something dangerous is coming. We're going to tell it the truth.' She led Sam to a quiet corner of the locker room and sat across from her.",
+          "'Put your feet flat on the floor,' she said. Sam did. 'Feel the ground under your feet. Really feel it. Solid.' Sam pressed her feet down. The floor was cold and real.",
+          "'Now breathe in slowly. Count with me: one, two, three, four.' Sam breathed in. 'Hold: one, two. Out slowly: one, two, three, four, five, six.' They did it three times.",
+          "'Now,' Coach Dani said, 'notice three things you can see.' Sam looked around. Yellow lockers. A water bottle with a smiley sticker. A poster of the World Cup. 'Three things you can hear.' Sam listened. Distant cheering from outside. Her teammates talking. The hum of the lights.",
+          "'Three things you can feel.' The floor under her feet. The bench against the back of her legs. Her own heartbeat — which was slower now. Sam blinked. The dizziness was almost gone. 'What just happened?' she asked.",
+          "'You came back into your body,' Coach Dani said. 'Anxiety pulls your mind into the future — all the what-ifs. Grounding brings you back to right now.'",
+          "Sam played that game. Their team lost by one goal. But in the second half, when the pressure was highest, she noticed herself starting to spiral — and she did it on her own: feet on the ground, slow breath, look around. She came back every time. On the drive home, her teammate leaned over. 'You looked so calm out there in the second half. How?' Sam smiled. 'I remembered where I was.'"
+        ],
+        lesson: '&#128154; The Grounder\'s Lesson: When your body feels out of control, you can bring it back. Feel your feet on the ground. Breathe slowly. Look around. Your body knows how to calm down — you just have to remind it.'
+      },
+      feeler: {
+        title: 'Jordan and the Invisible Knot',
+        meta: 'Emotional · The Feeler · Ages 5–10',
+        body: [
+          "Jordan was seven, and something was wrong. She just didn't know what to call it.",
+          "It started after Grandma Bea moved to Florida. Grandma Bea was the person Jordan called every day after school. She always asked about Jordan's day like it was the most important news in the world. She made the best cocoa with tiny marshmallows and let Jordan stay up an extra hour when she visited.",
+          "Now she was far away. And Jordan had a knot in her chest that wouldn't go away. Jordan's mom noticed. 'Are you sad about Grandma?' 'Maybe,' Jordan said. But it didn't feel like just sad. It was more tangled than that.",
+          "One afternoon, Jordan's teacher Ms. Okafor pulled out a big colorful chart during circle time. It was called the Feelings Wheel. In the middle was a simple word: sad. Then it branched out into other feelings: lonely, disappointed, heartbroken, left out, empty, lost.",
+          "'Sometimes,' Ms. Okafor said, 'we feel something big and we can't find the right word. But feelings need names. When we name a feeling, we're not trapped inside it anymore. We can look at it.' Jordan stared at the wheel. Her finger moved across it slowly.",
+          "Lonely. Yes. Disappointed. Yes. Missing. Also yes — but that one wasn't on the chart.",
+          "After school, Jordan sat with the chart her teacher had photocopied for everyone and circled three words: lonely, missing, and a little bit scared. That night, her mom found her in her room, still looking at the chart. 'What did you find?' her mom asked.",
+          "'I'm not just sad,' Jordan said. 'I'm lonely because Grandma isn't close anymore. And I'm missing — like, missing-her missing. And also a little scared that she might not... be here forever.' Her mom was quiet for a moment. Then she pulled Jordan into a hug. 'Those are real feelings,' she said. 'And they make sense. Want to call Grandma right now and tell her?'",
+          "They called Grandma Bea on video. Jordan told her about the Feelings Wheel. 'Oh my sweet girl,' Grandma said, her face filling the screen. 'I have that knot too. Let's not let it stay secret, okay? Let's name it every time.'",
+          "They started a new ritual: every Sunday call, they each named one feeling they'd had that week. Jordan still missed Grandma. But the knot loosened a little. Because it had a name. And names, she learned, were the beginning of understanding."
+        ],
+        lesson: '&#10084;&#65039; The Feeler\'s Lesson: All feelings are okay — even the hard ones. When we give a feeling a name, it loses some of its power over us. Feelings are messages, not enemies.'
+      },
+      guide: {
+        title: 'River and the Compass',
+        meta: 'Spiritual · The Guide · Ages 9–14',
+        body: [
+          "River was eleven when her family moved from a small town in Oregon to a busy city in Texas. Everything was different. The school was three times bigger. The streets were loud and unfamiliar. The kids already had their groups, their inside jokes, their routines.",
+          "River had none of that. She sat at the end of long lunch tables feeling invisible. She went through the school days like a gray fog — going where she was told, learning things she couldn't care about, waiting for something to feel like it meant something.",
+          "One evening, her dad found her staring out the window. 'What are you looking for?' he asked. 'I don't know,' she said honestly. Her dad sat down. He was quiet for a while. Then he said, 'When explorers were lost at sea, they didn't wait for the land to find them. They looked for a compass point — one true thing to navigate by.'",
+          "'That sounds like something from a book.' He smiled. 'It is. But it's also real. What's one thing that, no matter where you are, still feels like you?' River thought about it. For a long time, nothing came. Then: 'Watching things grow. Like plants. I used to grow tomatoes at the old house.' 'Could you do that here?'",
+          "She shrugged. 'Maybe.' The next Saturday, River went to a garden center with her dad. She bought a packet of basil seeds and a small clay pot. She set it on her windowsill.",
+          "It didn't fix everything. But watching for the first green sprout each morning gave her something to come back to. A tiny anchor.",
+          "A few weeks later, she noticed a school flyer for a garden club that met Thursday afternoons. She almost threw it away. Then she thought of the basil. She went. Nervously. Sat near the edge of the group. But the girl next to her leaned over and whispered, 'Have you ever grown anything before?'",
+          "'Tomatoes,' River said. 'And basil. You?' 'Sunflowers,' the girl said. 'I'm Deja.' River smiled. Slow. Careful. Real.",
+          "She didn't find herself in the new city all at once. But she found a thread — something she cared about — and followed it. That thread led to a club. The club led to Deja. Deja led to other things.",
+          "Her dad had been right. You don't find your compass. You look for the one true thing, and it points the way."
+        ],
+        lesson: '&#127807; The Guide\'s Lesson: When everything feels unfamiliar and hard, look for the one thing that still feels like you. Your values and what you love are your compass — they\'ll show you which way to go.'
+      },
+      builder: {
+        title: 'Kai and the Six-String Mountain',
+        meta: 'Agentic · The Builder · Ages 8–14',
+        body: [
+          "Kai was twelve years old and had wanted to play guitar since he was eight. He knew what it felt like to want something for a long time without doing anything about it. The guitar sat in his uncle's garage — an old acoustic with scratched wood and six real strings — and every time Kai visited, he looked at it. But he never picked it up.",
+          "Because what if he was bad at it? What if he tried and failed and everyone knew? The day his uncle said, 'That guitar's yours if you want it,' Kai carried it home, propped it against his bedroom wall, and then went to do homework.",
+          "For two weeks, the guitar just stood there. Then one day Kai's friend Abby came over and spotted it. 'You play?' she asked. 'No.' 'Why not?' 'I don't know how.' She picked it up and strummed it randomly. It made a screechy, untuned sound and she laughed. 'You learn by being bad first,' she said. 'That's how everything works.'",
+          "That night, Kai looked up 'beginner guitar, very first lesson' on his tablet. The video was eleven minutes long. He watched it twice. It showed exactly one thing: how to make a G chord. Just one chord. Three fingers on three strings.",
+          "He picked up the guitar. His fingers didn't reach right. The strings hurt his fingertips. The sound was buzzy and muted. He tried for fifteen minutes. Then his fingers were sore, so he stopped. But he had made something close to a G chord.",
+          "The next day, he tried again. And the day after that. On day five, his G chord finally rang clear. He played it over and over just to hear the sound. 'ONE small step,' he texted Abby. She sent back a hundred fire emojis.",
+          "He added a second chord that weekend. Then a third. By the end of the month, he could play a very slow, very imperfect version of his favorite song.",
+          "His mom heard it from the kitchen and came to the doorway. 'Was that real?' she asked. 'Kind of,' he said. 'Almost.' She smiled. 'That\'s how everything starts.'",
+          "Kai thought about the guitar standing against the wall for two weeks. All that time, he'd thought he needed to know how to play before he could begin. But that wasn't it. You just needed one chord. One small step. The next one comes after.",
+          "He still wasn't very good. But he was better than yesterday. And that, he decided, was exactly enough."
+        ],
+        lesson: '&#9889; The Builder\'s Lesson: You don\'t need to be ready before you begin. You just need one small step. The next step will come after — but only if you start.'
+      }
+    };
 
+    /* ── Emotion prompts ── */
+    var EMOTION_PROMPTS = {
+      happy:   'That\'s wonderful! &#127775; What made you feel happy today? Can you do more of that this week?',
+      sad:     'It\'s okay to feel sad. &#128149; Sadness means something mattered to you. Who is one person you could talk to right now?',
+      angry:   'Anger has energy in it. &#128293; Before you act on it, try three slow breaths. Then ask: what do I actually need right now?',
+      worried: 'Worry often lives in the future. &#128161; Ask yourself: what is real right now, in this moment? What is one thing I can do today?',
+      lonely:  'Loneliness is hard. &#128149; Is there one person you could reach out to — a text, a wave, or a knock on a door?',
+      excited: 'Excitement is energy for good things! &#127775; What are you excited about? How can you use this feeling to do something you love?',
+      confused:'Confusion means your brain is working hard. &#129504; It\'s okay not to have all the answers. What is one question you could ask someone you trust?',
+      proud:   'You should be proud! &#127942; What did you do to earn this feeling? Take a moment to really celebrate it.',
+      scared:  'Being scared is brave — because you feel it and keep going. &#128274; Take a breath. You are safe right now. What is one tiny safe thing around you?',
+      calm:    'Calm is a superpower. &#128524; This is a great time to think, plan, or just rest. Enjoy it — you\'ve earned it.'
+    };
+
+    /* ── Story modal ── */
+    function openStory(key) {
+      var story = STORIES[key];
+      if (!story) return;
+      var modal = document.getElementById('story-modal');
+      var content = document.getElementById('story-modal-content');
+      var html = '<p class="story-modal-title" id="story-modal-title">' + story.title + '</p>';
+      html += '<p class="story-modal-meta">' + story.meta + '</p>';
+      html += '<div class="story-modal-body">';
+      story.body.forEach(function(para) { html += '<p>' + para + '</p>'; });
+      html += '</div>';
+      html += '<div class="story-lesson">' + story.lesson + '</div>';
+      content.innerHTML = html;
+      modal.removeAttribute('hidden');
+      modal.focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeStory() {
+      var modal = document.getElementById('story-modal');
+      modal.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeStory();
+    });
+
+    document.getElementById('story-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeStory();
+    });
+
+    /* ── Activity toggle ── */
+    function toggleActivity(btn) {
+      var panel = btn.nextElementSibling;
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        panel.setAttribute('hidden', '');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = btn.textContent.replace('Hide', 'Start').replace('Close', 'Start');
+      } else {
+        panel.removeAttribute('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    /* ── Breathing exercise ── */
+    var breathTimer = null;
+    function startBreathing(btn) {
+      var card = btn.closest('.skill-builder-card');
+      var panel = card.querySelector('#breath-panel');
+      var ring = card.querySelector('#breath-ring');
+      var instruction = card.querySelector('#breath-instruction');
+      var countEl = card.querySelector('#breath-count');
+
+      btn.setAttribute('hidden', '');
+      panel.removeAttribute('hidden');
+
+      var phases = [
+        { name: 'Breathe In', duration: 4, cls: 'expand' },
+        { name: 'Hold', duration: 2, cls: 'hold' },
+        { name: 'Breathe Out', duration: 6, cls: 'contract' }
+      ];
+      var totalCycles = 3;
+      var step = 0;
+      var maxSteps = phases.length * totalCycles;
+
+      function runStep() {
+        if (step >= maxSteps) {
+          instruction.textContent = 'Great job! \u2B50';
+          countEl.textContent = '';
+          ring.className = 'breath-ring';
+          setTimeout(function() {
+            panel.setAttribute('hidden', '');
+            btn.removeAttribute('hidden');
+            step = 0;
+          }, 2000);
+          return;
+        }
+        var p = phases[step % phases.length];
+        instruction.textContent = p.name;
+        ring.className = 'breath-ring ' + p.cls;
+        var remaining = p.duration;
+        countEl.textContent = remaining;
+        if (breathTimer) clearInterval(breathTimer);
+        breathTimer = setInterval(function() {
+          remaining--;
+          countEl.textContent = remaining > 0 ? remaining : '';
+          if (remaining <= 0) {
+            clearInterval(breathTimer);
+            step++;
+            setTimeout(runStep, 400);
+          }
+        }, 1000);
+      }
+
+      runStep();
+    }
+
+    /* ── Feelings detective ── */
+    function selectEmotion(btn, key) {
+      var grid = btn.closest('.emotion-grid');
+      grid.querySelectorAll('.emotion-btn').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      var prompt = btn.closest('.activity-panel').querySelector('#emotion-prompt');
+      prompt.innerHTML = EMOTION_PROMPTS[key] || '';
+      prompt.removeAttribute('hidden');
+    }
+
+    /* ── Values finder ── */
+    function toggleValue(chip) {
+      var grid = chip.closest('.value-grid');
+      var selected = grid.querySelectorAll('.value-chip.selected');
+      if (chip.classList.contains('selected')) {
+        chip.classList.remove('selected');
+      } else if (selected.length < 3) {
+        chip.classList.add('selected');
+      }
+      var now = grid.querySelectorAll('.value-chip.selected');
+      var result = chip.closest('.activity-panel').querySelector('#value-result');
+      if (now.length === 0) {
+        result.textContent = '';
+      } else {
+        var names = Array.from(now).map(function(c) { return c.textContent; });
+        var label = document.createElement('strong');
+        label.textContent = 'My top value' + (names.length > 1 ? 's' : '') + ':';
+        result.textContent = '';
+        result.appendChild(label);
+        result.appendChild(document.createTextNode(' ' + names.join(', ') + (now.length === 3 ? ' \u2713' : '')));
+      }
+    }
+
+    /* ── Age tabs ── */
+    function switchAge(tab, panelId) {
+      var tabs = document.querySelectorAll('.age-tab');
+      var panels = document.querySelectorAll('.age-content');
+      tabs.forEach(function(t) { t.setAttribute('aria-selected', 'false'); });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      tab.setAttribute('aria-selected', 'true');
+      document.getElementById(panelId).classList.add('active');
+    }
+  </script>
 </body>
-</html>
