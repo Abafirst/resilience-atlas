@@ -181,7 +181,7 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN  * Math.cos(mAngle), CY + TICK_IN  * Math.sin(mAngle));
       ctx.lineTo(CX + mOuter   * Math.cos(mAngle), CY + mOuter   * Math.sin(mAngle));
-      ctx.strokeStyle = 'rgba(103,232,249,0.25)';
+      ctx.strokeStyle = 'rgba(40,40,40,0.06)';
       ctx.lineWidth   = 0.25;
       ctx.stroke();
     }
@@ -196,14 +196,14 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-      ctx.strokeStyle = isMain ? 'rgba(40,40,40,0.9)' : 'rgba(103,232,249,0.45)';
+      ctx.strokeStyle = isMain ? 'rgba(40,40,40,0.1)' : 'rgba(40,40,40,0.7)';
       ctx.lineWidth   = isMain ? .50 : 0.25;
       ctx.stroke();
 
       // Label
       ctx.font      = isMain ? 'bold 9px Inter,system-ui,sans-serif'
                               : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(40,40,40,0.95)' : 'rgba(103,232,249,0.6)';
+      ctx.fillStyle = isMain ? 'rgba(40,40,40,0.95)' : 'rgba(40,40,40,0.6)';
       ctx.fillText(
         CARDINALS[i],
         CX + LABEL_R * Math.cos(angle),
@@ -223,8 +223,8 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-? 'rgba(40,40,40,0.9)'
-: 'rgba(40,40,40,0.8)';
+? 'rgba(40,40,40,0.1)'
+: 'rgba(40,40,40,0.95)';
       ctx.stroke();
     });
 
@@ -431,6 +431,7 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
       var img = _iconImages[i];
       if (!img || !img.complete || !img.naturalWidth) { continue; }
       var a = dimAngle(i);
+ctx.globalAlpha = 0.4;
       ctx.drawImage(
         img,
         CX + ICON_R * Math.cos(a) - size / 2,
@@ -438,6 +439,7 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
         size,
         size
       );
+ctx.globalAlpha = 1.0;
     }
   }
 
