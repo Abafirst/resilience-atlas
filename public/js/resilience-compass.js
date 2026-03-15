@@ -167,7 +167,7 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
     ctx.fill();
-
+}
   function drawTicks(ctx) {
     ctx.save();
     ctx.textAlign    = 'center';
