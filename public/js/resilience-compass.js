@@ -56,6 +56,10 @@
   var WOBBLE_AMP        = 0.018;  // rad   – wobble amplitude (~1 degree)
   var PULSE_FREQ        = 0.0021; // rad/ms – gradient pulse cycle rate
 
+  // Grid ring positions (fraction of R). Also used for crosshair arm length.
+  var GRID_RINGS        = [0.25, 0.5, 0.75, 1.0];
+  var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
+
   // ── Helpers ────────────────────────────────────────────────────────────────
   /** Quadratic ease-in-out: slow start, fast middle, slow end. */
   function easeInOut(t) {
@@ -131,6 +135,7 @@
       drawBackground(ctx, pulse);
       drawTicks(ctx);
       drawGrid(ctx);
+      drawCrosshairs(ctx);
       drawAxes(ctx, dominantIdx, pulse);
       drawEquilibriumRing(ctx, avg, equilibrium);
       drawDataPolygon(ctx, values, dominantIdx, pulse);
@@ -202,19 +207,36 @@
     ctx.save();
     ctx.lineWidth = 1;
 
-    [0.25, 0.5, 0.75, 1.0].forEach(function (pct) {
+    // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
+    GRID_RINGS.forEach(function (pct) {
       ctx.beginPath();
-      for (var i = 0; i <= 6; i++) {
-        var a = dimAngle(i % 6);
-        var x = CX + R * pct * Math.cos(a);
-        var y = CY + R * pct * Math.sin(a);
-        if (i === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
-      }
+      ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
         ? 'rgba(21,101,192,0.35)'
         : 'rgba(21,101,192,0.18)';
       ctx.stroke();
     });
+
+    ctx.restore();
+  }
+
+  function drawCrosshairs(ctx) {
+    // Clean + crosshairs at the compass centre, inside the innermost ring
+    ctx.save();
+    ctx.strokeStyle = 'rgba(21,101,192,0.22)';
+    ctx.lineWidth   = 1;
+
+    var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
+
+    ctx.beginPath();
+    ctx.moveTo(CX - arm, CY);
+    ctx.lineTo(CX + arm, CY);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY - arm);
+    ctx.lineTo(CX, CY + arm);
+    ctx.stroke();
 
     ctx.restore();
   }
@@ -268,15 +290,35 @@
   function drawDataPolygon(ctx, values, dominantIdx, pulse) {
     ctx.save();
 
-    // Build polygon path
-    ctx.beginPath();
-    for (var i = 0; i <= 6; i++) {
-      var idx = i % 6;
-      var a   = dimAngle(idx);
-      var x   = CX + R * values[idx] * Math.cos(a);
-      var y   = CY + R * values[idx] * Math.sin(a);
-      if (i === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
+    // Compute the 6 radial data points
+    var points = [];
+    for (var i = 0; i < 6; i++) {
+      var a = dimAngle(i);
+      points.push({
+        x: CX + R * values[i] * Math.cos(a),
+        y: CY + R * values[i] * Math.sin(a)
+      });
     }
+
+    // Draw a smooth closed Catmull-Rom spline through the data points
+    // (no straight-edged polygon – only curves)
+    var n = points.length;
+    ctx.beginPath();
+    for (var k = 0; k < n; k++) {
+      var p0 = points[(k - 1 + n) % n];
+      var p1 = points[k];
+      var p2 = points[(k + 1) % n];
+      var p3 = points[(k + 2) % n];
+
+      var cp1x = p1.x + (p2.x - p0.x) / SPLINE_TENSION;
+      var cp1y = p1.y + (p2.y - p0.y) / SPLINE_TENSION;
+      var cp2x = p2.x - (p3.x - p1.x) / SPLINE_TENSION;
+      var cp2y = p2.y - (p3.y - p1.y) / SPLINE_TENSION;
+
+      if (k === 0) { ctx.moveTo(p1.x, p1.y); }
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+    ctx.closePath();
 
     // Animated gradient fill
     var alpha    = 0.28 + 0.08 * Math.sin(pulse);
