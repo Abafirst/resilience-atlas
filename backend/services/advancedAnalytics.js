@@ -11,8 +11,6 @@
  *  - Dimension heatmap data (strength/weakness matrix)
  */
 
-'use strict';
-
 const ResilienceResult = require('../models/ResilienceResult');
 const TeamResult       = require('../models/TeamResult');
 
