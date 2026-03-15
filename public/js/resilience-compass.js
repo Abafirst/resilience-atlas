@@ -203,7 +203,7 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       // Label
       ctx.font      = isMain ? 'bold 9px Inter,system-ui,sans-serif'
                               : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(224,242,254,0.95)' : 'rgba(103,232,249,0.6)';
+      ctx.fillStyle = isMain ? 'rgba(40,40,40,0.95)' : 'rgba(103,232,249,0.6)';
       ctx.fillText(
         CARDINALS[i],
         CX + LABEL_R * Math.cos(angle),
@@ -223,8 +223,8 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-? 'rgba(40,40,40,0.7)'
-: 'rgba(40,40,40,0.6)';
+? 'rgba(40,40,40,0.9)'
+: 'rgba(40,40,40,0.8)';
       ctx.stroke();
     });
 
@@ -341,7 +341,7 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
     ctx.fill();
 
     ctx.strokeStyle = 'rgba(40,40,40,0.7)';
-    ctx.lineWidth   = 1.5;
+    ctx.lineWidth   = .75;
     ctx.stroke();
 
     // Data-point dots
