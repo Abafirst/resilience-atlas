@@ -172,9 +172,22 @@
 }
 
 .dimension-icon {
-  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   margin-bottom: .75rem;
 }
+
+.dimension-icon--relational  { background: #EDE9FE; }
+.dimension-icon--cognitive   { background: #DBEAFE; }
+.dimension-icon--somatic     { background: #D1FAE5; }
+.dimension-icon--emotional   { background: #FEE2E2; }
+.dimension-icon--spiritual   { background: #FEF3C7; }
+.dimension-icon--agentic     { background: #FCE7F3; }
 
 .dimension-card h3 {
   font-size: 1.15rem;

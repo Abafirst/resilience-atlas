@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="/icons/icons.css" />
   <style>
     .assessment-hero {
       background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
@@ -96,7 +97,21 @@
       box-shadow: var(--shadow-sm);
     }
     .dim-card-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
-    .dim-icon { font-size: 1.6rem; }
+    .dim-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dim-icon--relational  { background: #EDE9FE; }
+    .dim-icon--cognitive   { background: #DBEAFE; }
+    .dim-icon--somatic     { background: #D1FAE5; }
+    .dim-icon--emotional   { background: #FEE2E2; }
+    .dim-icon--spiritual   { background: #FEF3C7; }
+    .dim-icon--agentic     { background: #FCE7F3; }
     .dim-card h3 { font-size: 1rem; font-weight: 700; color: var(--slate-900); }
     .dim-card p { color: var(--slate-600); font-size: .9rem; line-height: 1.55; }
 
@@ -205,43 +220,55 @@
     <div class="dim-cards">
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#129309;</span>
-          <h3>Relational</h3>
+          <div class="dim-icon dim-icon--relational" aria-hidden="true">
+            <img src="/icons/relational-connective.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Relational-Connective</h3>
         </div>
         <p>Your capacity to access and draw on support from others, maintain connections, and seek help when facing adversity.</p>
       </div>
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#129504;</span>
-          <h3>Cognitive</h3>
+          <div class="dim-icon dim-icon--cognitive" aria-hidden="true">
+            <img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Cognitive-Narrative</h3>
         </div>
         <p>How you interpret and reframe challenges. Your ability to shift perspective, find meaning, and construct narratives of growth.</p>
       </div>
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#128154;</span>
-          <h3>Somatic</h3>
+          <div class="dim-icon dim-icon--somatic" aria-hidden="true">
+            <img src="/icons/somatic-regulative.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Somatic-Regulative</h3>
         </div>
         <p>How your body regulates stress. Your physiological capacity to move through tension, restore calm, and sustain energy.</p>
       </div>
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#128149;</span>
-          <h3>Emotional</h3>
+          <div class="dim-icon dim-icon--emotional" aria-hidden="true">
+            <img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Emotional-Adaptive</h3>
         </div>
         <p>Your capacity to acknowledge, experience, and move through challenging emotional states without becoming overwhelmed.</p>
       </div>
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#127807;</span>
-          <h3>Spiritual</h3>
+          <div class="dim-icon dim-icon--spiritual" aria-hidden="true">
+            <img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Spiritual-Reflective</h3>
         </div>
         <p>How meaning and purpose shape your resilience. Your connection to values and beliefs that sustain you through difficulty.</p>
       </div>
       <div class="dim-card">
         <div class="dim-card-header">
-          <span class="dim-icon" aria-hidden="true">&#9889;</span>
-          <h3>Agentic</h3>
+          <div class="dim-icon dim-icon--agentic" aria-hidden="true">
+            <img src="/icons/agentic-generative.svg" alt="" class="icon icon-md">
+          </div>
+          <h3>Agentic-Generative</h3>
         </div>
         <p>Your capacity to take action in adversity, make decisions, and assert agency even in uncertainty.</p>
       </div>
