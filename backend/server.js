@@ -97,23 +97,41 @@ app.get("/config", (req, res) => {
 // ==============================
 
 app.use("/auth", require("./routes/auth"));
+console.log("✅ Mounted route: /auth");
 app.use("/api/auth", require("./routes/auth"));
+console.log("✅ Mounted route: /api/auth");
 app.use("/api/quiz", require("./routes/quiz"));
+console.log("✅ Mounted route: /api/quiz");
 app.use("/api/affiliates", require("./routes/affiliates"));
+console.log("✅ Mounted route: /api/affiliates");
 app.use("/api/stripe", require("./routes/stripe"));
+console.log("✅ Mounted route: /api/stripe");
 app.use("/api/payments", require("./routes/payments"));
+console.log("✅ Mounted route: /api/payments");
 app.use("/api/report", require("./routes/report"));
+console.log("✅ Mounted route: /api/report");
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));
+console.log("✅ Mounted route: /api/evidence-practices");
 app.use("/api/org", require("./routes/organization"));
+console.log("✅ Mounted route: /api/org");
 app.use("/api/org/:organizationId/leadership-report", require("./routes/leadership-report"));
+console.log("✅ Mounted route: /api/org/:organizationId/leadership-report");
 app.use("/api/insights", require("./routes/insights"));
+console.log("✅ Mounted route: /api/insights");
 app.use("/api/dashboard", require("./routes/dashboard"));
+console.log("✅ Mounted route: /api/dashboard");
 app.use("/api/organizations", require("./routes/organizations"));
+console.log("✅ Mounted route: /api/organizations");
 app.use("/api/orgs-advanced", require("./routes/org-advanced"));
+console.log("✅ Mounted route: /api/orgs-advanced");
 app.use("/api/growth", require("./routes/growth"));
+console.log("✅ Mounted route: /api/growth");
 app.use("/api/atlas", require("./routes/atlas"));
+console.log("✅ Mounted route: /api/atlas");
 app.use("/api/share", require("./routes/share"));
+console.log("✅ Mounted route: /api/share");
 app.use("/admin", require("./routes/admin"));
+console.log("✅ Mounted route: /admin");
 
 // ==============================
 // Root API info
