@@ -1,0 +1,56 @@
+/* =============================================================
+   styles.css — Core styles for Resilience Atlas results page
+   ============================================================= */
+
+/* ── Narrative Report ─────────────────────────────────────────── */
+
+.report-text-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.narrative-report {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.narrative-report section {
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.narrative-report section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.narrative-report h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+}
+
+.narrative-report p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.narrative-report ul {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+}
+
+.narrative-report li {
+  margin: 0.25rem 0;
+}
+
+.score-badge {
+  display: inline-block;
+  background: #f1f5f9;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}

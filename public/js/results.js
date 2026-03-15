@@ -8,6 +8,8 @@ results.js — Results page logic for Resilience Atlas
 // Load saved quiz results FIRST
 const results = JSON.parse(localStorage.getItem('resilience_results')) || null;
 window.results = results;
+// Expose as window.resilience_results for payment-gating.js to access
+window.resilience_results = results;
 // Backward compatibility
 if (results && results.scores && results.scores["Somatic-Regulative"]) {
   results.scores["Somatic-Regulative"] = results.scores["Somatic-Regulative"];
@@ -148,6 +150,15 @@ function generatePersonalizedReport(results) {
   text += '\nKeep building your resilience journey!\n';
   return text;
 }
+// ── Persist results for payment redirect ─────────────────────
+function persistResults(data) {
+  try {
+    localStorage.setItem('resilience_results', JSON.stringify(data));
+  } catch (err) {
+    console.warn('⚠️ Could not persist results:', err);
+  }
+}
+
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -162,6 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reportText) reportText.textContent = 'No report available. Please finish the assessment.';
     return;
   }
+
+  // ── Ensure results are persisted for payment redirect ────────
+  persistResults(results);
 
   // ── Rank resilience types by percentage ─────────────
   const ranked = Object.entries(results.scores)
@@ -225,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const reportText = document.getElementById('reportText');
   if (reportText) {
     reportText.innerHTML = generateNarrativeReport(results, primaryStrength, solidStrength, emergingStrength);
+    reportText.removeAttribute('aria-busy');
   }
 
   // ── Evidence-Based Practices ──────────────────────────
