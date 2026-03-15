@@ -19,11 +19,11 @@
   var CARDINALS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
   // Canvas dimensions (physical pixels – CSS scales the element)
-  var CW = 400; // canvas width
-  var CH = 440; // canvas height (extra 40 px for dominant-dimension label)
-  var CX = 200; // compass centre x
-  var CY = 205; // compass centre y (slight upward offset)
-  var R  = 128; // max chart data radius
+  var CW = 360; // canvas width
+  var CH = 400; // canvas height (extra 40 px for dominant-dimension label)
+  var CX = 180; // compass centre x
+  var CY = 185; // compass centre y (slight upward offset)
+  var R  = 115; // max chart data radius
 
   // Derived radii (all relative to R)
   var OUTER_R    = R * 1.09; // 139 – outer compass ring
@@ -129,21 +129,12 @@
   // ── Drawing helpers ────────────────────────────────────────────────────────
 
   function drawBackground(ctx, pulse) {
-    // Dark radial background
-    var bgGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R);
-    bgGrad.addColorStop(0, '#1d1040');
-    bgGrad.addColorStop(1, '#0c1a30');
-    ctx.beginPath();
-    ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.fillStyle = bgGrad;
-    ctx.fill();
-
-    // Softly pulsing inner glow
-    var gAlpha   = 0.12 + 0.06 * Math.sin(pulse);
+    // Softly pulsing inner glow (transparent background – no dark fill)
+    var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
     var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.75);
-    glowGrad.addColorStop(0,   'rgba(99,102,241,' + (gAlpha + 0.18) + ')');
-    glowGrad.addColorStop(0.6, 'rgba(99,102,241,' + gAlpha + ')');
-    glowGrad.addColorStop(1,   'rgba(99,102,241,0)');
+    glowGrad.addColorStop(0,   'rgba(21,101,192,' + (gAlpha + 0.14) + ')');
+    glowGrad.addColorStop(0.6, 'rgba(21,101,192,' + gAlpha + ')');
+    glowGrad.addColorStop(1,   'rgba(21,101,192,0)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
@@ -152,7 +143,7 @@
     // Outer border ring
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(99,102,241,0.55)';
+    ctx.strokeStyle = 'rgba(21,101,192,0.55)';
     ctx.lineWidth   = 1.5;
     ctx.stroke();
   }
@@ -171,14 +162,14 @@
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-      ctx.strokeStyle = isMain ? 'rgba(165,180,252,0.85)' : 'rgba(165,180,252,0.4)';
+      ctx.strokeStyle = isMain ? 'rgba(21,101,192,0.85)' : 'rgba(21,101,192,0.4)';
       ctx.lineWidth   = isMain ? 1.5 : 1;
       ctx.stroke();
 
       // Label
       ctx.font      = isMain ? 'bold 9px Inter,system-ui,sans-serif'
                               : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(165,180,252,0.92)' : 'rgba(165,180,252,0.55)';
+      ctx.fillStyle = isMain ? 'rgba(21,101,192,0.92)' : 'rgba(21,101,192,0.55)';
       ctx.fillText(
         CARDINALS[i],
         CX + LABEL_R * Math.cos(angle),
@@ -202,8 +193,8 @@
         if (i === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
       }
       ctx.strokeStyle = pct === 1.0
-        ? 'rgba(99,102,241,0.35)'
-        : 'rgba(99,102,241,0.18)';
+        ? 'rgba(21,101,192,0.35)'
+        : 'rgba(21,101,192,0.18)';
       ctx.stroke();
     });
 
@@ -219,13 +210,13 @@
 
       if (isDom) {
         var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(167,139,250,' + glowAlpha + ')';
+        ctx.shadowColor = 'rgba(21,101,192,' + glowAlpha + ')';
         ctx.shadowBlur  = 12;
-        ctx.strokeStyle = 'rgba(167,139,250,0.95)';
+        ctx.strokeStyle = 'rgba(21,101,192,0.95)';
         ctx.lineWidth   = 2.5;
       } else {
         ctx.shadowBlur  = 0;
-        ctx.strokeStyle = 'rgba(99,102,241,0.45)';
+        ctx.strokeStyle = 'rgba(21,101,192,0.45)';
         ctx.lineWidth   = 1;
       }
 
@@ -272,13 +263,13 @@
     // Animated gradient fill
     var alpha    = 0.28 + 0.08 * Math.sin(pulse);
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    fillGrad.addColorStop(0,    'rgba(129,140,248,' + (alpha + 0.18) + ')');
-    fillGrad.addColorStop(0.55, 'rgba(99,102,241,'  + alpha + ')');
-    fillGrad.addColorStop(1,    'rgba(59,130,246,'  + (alpha * 0.55) + ')');
+    fillGrad.addColorStop(0,    'rgba(91,155,213,' + (alpha + 0.18) + ')');
+    fillGrad.addColorStop(0.55, 'rgba(21,101,192,'  + alpha + ')');
+    fillGrad.addColorStop(1,    'rgba(13,62,122,'  + (alpha * 0.55) + ')');
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(165,180,252,0.8)';
+    ctx.strokeStyle = 'rgba(21,101,192,0.8)';
     ctx.lineWidth   = 2;
     ctx.stroke();
 
@@ -293,12 +284,12 @@
       ctx.arc(px, py, isDom ? 5.5 : 3.5, 0, Math.PI * 2);
 
       if (isDom) {
-        ctx.shadowColor = 'rgba(196,181,253,0.9)';
+        ctx.shadowColor = 'rgba(21,101,192,0.9)';
         ctx.shadowBlur  = 12;
-        ctx.fillStyle   = '#c4b5fd';
+        ctx.fillStyle   = '#1565C0';
       } else {
         ctx.shadowBlur = 0;
-        ctx.fillStyle  = '#818cf8';
+        ctx.fillStyle  = '#4a90d9';
       }
 
       ctx.fill();
@@ -314,32 +305,41 @@
   function drawNeedle(ctx, angle) {
     ctx.save();
 
-    var len = R * 0.62;
-    var nx  = CX + len * Math.cos(angle);
-    var ny  = CY + len * Math.sin(angle);
+    var len = R * 0.65; // needle forward length
 
-    // Needle line with glow
-    ctx.shadowColor = 'rgba(251,113,133,0.6)';
-    ctx.shadowBlur  = 8;
-    ctx.beginPath();
-    ctx.moveTo(CX, CY);
-    ctx.lineTo(nx, ny);
-    ctx.strokeStyle = '#fb7185';
-    ctx.lineWidth   = 2.5;
-    ctx.lineCap     = 'round';
-    ctx.stroke();
+    // Arrow proportions matching compass-icon.svg arrow shape
+    var wb  = len * (14 / 78); // how far back from tip the wings flare
+    var ww  = len * (7  / 78); // half-width at wings
+    var iw  = len * (3  / 78); // half-width of shaft
+    var sb  = len * (43 / 78); // total depth from tip to shaft base
 
-    // Arrowhead dot
+    // Needle glow
+    ctx.shadowColor = 'rgba(21,101,192,0.65)';
+    ctx.shadowBlur  = 10;
+
+    // Rotate canvas so arrow points toward target angle
+    // (local coords have tip at (0, -len), i.e., pointing "up")
+    ctx.translate(CX, CY);
+    ctx.rotate(angle + Math.PI / 2);
+
     ctx.beginPath();
-    ctx.arc(nx, ny, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#fb7185';
+    ctx.moveTo(0,  -len);         // tip
+    ctx.lineTo(ww, -(len - wb));  // right wing outer
+    ctx.lineTo(iw, -(len - wb));  // right wing inner
+    ctx.lineTo(iw, -(len - sb));  // right shaft base
+    ctx.lineTo(-iw, -(len - sb)); // left shaft base
+    ctx.lineTo(-iw, -(len - wb)); // left wing inner
+    ctx.lineTo(-ww, -(len - wb)); // left wing outer
+    ctx.closePath();
+
+    ctx.fillStyle = '#1565C0';
     ctx.fill();
 
-    // Centre pivot
+    // Centre pivot circle
     ctx.shadowBlur = 0;
     ctx.beginPath();
-    ctx.arc(CX, CY, 5, 0, Math.PI * 2);
-    ctx.fillStyle   = '#a5b4fc';
+    ctx.arc(0, 0, 5, 0, Math.PI * 2);
+    ctx.fillStyle   = '#1565C0';
     ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.6)';
     ctx.lineWidth   = 1;
@@ -372,7 +372,7 @@
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.font         = '500 12px Inter,system-ui,sans-serif';
-    ctx.fillStyle    = 'rgba(165,180,252,0.92)';
+    ctx.fillStyle    = 'rgba(21,101,192,0.92)';
     ctx.fillText(text, CX, labelY);
 
     ctx.restore();
