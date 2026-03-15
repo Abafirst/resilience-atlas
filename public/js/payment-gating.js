@@ -53,7 +53,7 @@
             const required = section.getAttribute('data-tier');
             const unlocked =
                 (required === 'deep-report'  && isDeepReport())  ||
-                (required === 'atlas-premium' && isAtlasPremium()) ||
+                (required === 'atlas-premium' && isDeepReport()) ||
                 (required === 'business'      && isBusiness());
 
             const overlay = section.querySelector('.payment-overlay');
@@ -114,8 +114,6 @@
             ? '🎉 Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
             : tier === 'atlas-premium'
             ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
-            : tier === 'business'
-            ? '🎉 Welcome to Business! Team analytics and dashboard are now unlocked.'
             : '🎉 Your Deep Resilience Report is now unlocked!';
 
         var banner = document.createElement('div');
