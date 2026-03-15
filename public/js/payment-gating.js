@@ -30,16 +30,41 @@
 
     function isDeepReport() {
         const t = getTier();
-        return t === 'deep-report' || t === 'atlas-premium' || t === 'business';
+        return t === 'deep-report' || t === 'atlas-premium' || t === 'business' ||
+               t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
     }
 
     function isAtlasPremium() {
         const t = getTier();
-        return t === 'atlas-premium' || t === 'business';
+        return t === 'atlas-premium' || t === 'business' ||
+               t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
     }
 
     function isBusiness() {
-        return getTier() === 'business';
+        const t = getTier();
+        return t === 'business' || t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+    }
+
+    // ── Teams tier helpers ────────────────────────────────────────────────────
+
+    /** Teams Starter ($99/mo): up to 25 users, 1 team, basic dashboard + CSV. */
+    function isTeamsStarter() {
+        const t = getTier();
+        return t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+    }
+
+    /**
+     * Teams Pro ($299/mo): up to 250 users, unlimited teams.
+     * Advanced analytics, auto-reports, facilitation tools, team management.
+     */
+    function isTeamsPro() {
+        const t = getTier();
+        return t === 'teams-pro' || t === 'enterprise';
+    }
+
+    /** Enterprise (custom): unlimited users/teams, branding, webhooks, SSO. */
+    function isEnterprise() {
+        return getTier() === 'enterprise';
     }
 
     // ── Apply/remove locks ────────────────────────────────────────────────────
@@ -52,9 +77,12 @@
         document.querySelectorAll('[data-tier]').forEach(function (section) {
             const required = section.getAttribute('data-tier');
             const unlocked =
-                (required === 'deep-report'  && isDeepReport())  ||
-                (required === 'atlas-premium' && isDeepReport()) ||
-                (required === 'business'      && isBusiness());
+                (required === 'deep-report'     && isDeepReport())    ||
+                (required === 'atlas-premium'    && isDeepReport())    ||
+                (required === 'business'         && isBusiness())      ||
+                (required === 'teams-starter'    && isTeamsStarter())  ||
+                (required === 'teams-pro'        && isTeamsPro())      ||
+                (required === 'enterprise'       && isEnterprise());
 
             const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
@@ -66,9 +94,19 @@
             }
         });
 
-        // Show "View on Team Dashboard" link for business users
+        // Show "View on Team Dashboard" link for business/teams users
         document.querySelectorAll('.business-dashboard-link').forEach(function (el) {
             el.hidden = !isBusiness();
+        });
+
+        // Show advanced analytics sections for Teams Pro+
+        document.querySelectorAll('.teams-pro-feature').forEach(function (el) {
+            el.hidden = !isTeamsPro();
+        });
+
+        // Show Enterprise-only features
+        document.querySelectorAll('.enterprise-feature').forEach(function (el) {
+            el.hidden = !isEnterprise();
         });
     }
 
@@ -110,11 +148,14 @@
     }
 
     function _showSuccessBanner(tier) {
-        var msg = tier === 'business'
-            ? 'Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
-            : tier === 'atlas-premium'
-            ? 'Welcome to Atlas Premium! All premium features are now unlocked.'
-            : 'Your Deep Resilience Report is now unlocked!';
+        var messages = {
+            'enterprise':     'Welcome to Enterprise! All features including custom branding and webhooks are unlocked.',
+            'teams-pro':      'Welcome to Teams Pro! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
+            'teams-starter':  'Welcome to Teams Starter! Your team dashboard and core features are now unlocked.',
+            'business':       'Welcome to the Business tier! Team analytics and dashboard are now unlocked.',
+            'atlas-premium':  'Welcome to Atlas Premium! All premium features are now unlocked.',
+        };
+        var msg = messages[tier] || 'Your Deep Resilience Report is now unlocked!';
 
         var banner = document.createElement('div');
         banner.className = 'payment-success-banner';
@@ -203,6 +244,9 @@
         isDeepReport:         isDeepReport,
         isAtlasPremium:       isAtlasPremium,
         isBusiness:           isBusiness,
+        isTeamsStarter:       isTeamsStarter,
+        isTeamsPro:           isTeamsPro,
+        isEnterprise:         isEnterprise,
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,
