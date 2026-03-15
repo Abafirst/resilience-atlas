@@ -40,7 +40,7 @@
   var CH = 400; // canvas height (extra 40 px for dominant-dimension label)
   var CX = 180; // compass centre x
   var CY = 185; // compass centre y (slight upward offset)
-  var R  = 115; // max chart data radius
+  var R  = 60; // max chart data radius
 
   // Derived radii (all relative to R)
   var OUTER_R    = R * 1.09; // 139 – outer compass ring
@@ -176,15 +176,15 @@
     // Outer border ring – turquoise
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(6,182,212,0.55)';
-    ctx.lineWidth   = 1;
+    ctx.strokeStyle = 'rgba(6,182,212,0.35)';
+    ctx.lineWidth   = .75;
     ctx.stroke();
 
     // Inner decorative ring – purple accent
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R - INNER_RING_OFFSET, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(124,58,237,0.3)';
-    ctx.lineWidth   = 0.5;
+    ctx.strokeStyle = 'rgba(124,58,237,0.2)';
+    ctx.lineWidth   = 0.25;
     ctx.stroke();
   }
 
@@ -202,7 +202,7 @@
       ctx.moveTo(CX + TICK_IN  * Math.cos(mAngle), CY + TICK_IN  * Math.sin(mAngle));
       ctx.lineTo(CX + mOuter   * Math.cos(mAngle), CY + mOuter   * Math.sin(mAngle));
       ctx.strokeStyle = 'rgba(103,232,249,0.25)';
-      ctx.lineWidth   = 0.5;
+      ctx.lineWidth   = 0.25;
       ctx.stroke();
     }
 
@@ -217,7 +217,7 @@
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
       ctx.strokeStyle = isMain ? 'rgba(6,182,212,0.9)' : 'rgba(103,232,249,0.45)';
-      ctx.lineWidth   = isMain ? 1 : 0.5;
+      ctx.lineWidth   = isMain ? .50 : 0.25;
       ctx.stroke();
 
       // Label
@@ -236,15 +236,15 @@
 
   function drawGrid(ctx) {
     ctx.save();
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 0.25;
 
     // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
     GRID_RINGS.forEach(function (pct) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-        ? 'rgba(6,182,212,0.3)'
-        : 'rgba(103,232,249,0.12)';
+        ? 'rgba(6,182,212,0.2)'
+        : 'rgba(103,232,249,0.06)';
       ctx.stroke();
     });
 
