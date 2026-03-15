@@ -57,7 +57,7 @@
   var PULSE_FREQ        = 0.0021; // rad/ms – gradient pulse cycle rate
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
-  var GRID_RINGS        = [0.25, 0.5, 0.75, 1.0];
+var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
   var INNER_RING_OFFSET = 4;      // px – inner decorative ring inset from outer ring
