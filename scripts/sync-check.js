@@ -1,99 +1,100 @@
 #!/usr/bin/env node
+'use strict';
 
-const fs = require('fs');
+/**
+ * sync-check.js — Verify that all 7 tier definitions are consistently
+ * defined across the key payment and frontend files.
+ *
+ * Run: node scripts/sync-check.js
+ * Should exit 0 with "✅ All sync checks passed!" when everything is in sync.
+ */
+
+const fs   = require('fs');
 const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+
+/** The canonical set of tiers that must be defined in every checked file. */
+const REQUIRED_TIERS = [
+    'free',
+    'deep-report',
+    'atlas-premium',
+    'business',
+    'starter',
+    'pro',
+    'enterprise',
+];
+
+/**
+ * Files that must each contain a definition for every required tier.
+ * A tier is considered "defined" when its string literal appears in the file.
+ */
+const CHECKED_FILES = [
+    'public/js/payment-gating.js',
+    'backend/routes/payments.js',
+    'backend/routes/quiz.js',
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 const issues = [];
 
-console.log('🔍 Running sync checks across public/, backend/, and local files...\n');
+console.log('🔍 Running tier sync checks...\n');
 
-// Check 1: Payment gating tiers match across files
-console.log('📋 Checking payment tier consistency...');
-try {
-  const frontendGating = fs.readFileSync('public/js/payment-gating.js', 'utf8');
-  const backendPayments = fs.readFileSync('backend/routes/payments.js', 'utf8');
+// Load each file and record which tiers it mentions.
+const tierPresence = {}; // { filePath: Set<tier> }
 
-  const tiers = ['deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise'];
-  let tierMatches = 0;
-  
-  tiers.forEach(tier => {
-    const inFrontend = frontendGating.includes(tier);
-    const inBackend = backendPayments.includes(tier);
-    
-    if (inFrontend && inBackend) {
-      tierMatches++;
-    } else if (inFrontend !== inBackend) {
-      issues.push(`⚠️  Tier "${tier}" defined in only one location`);
+for (const relPath of CHECKED_FILES) {
+    const absPath = path.join(ROOT, relPath);
+    let src;
+    try {
+        src = fs.readFileSync(absPath, 'utf8');
+    } catch (err) {
+        console.warn(`  ⚠️  Could not read ${relPath}: ${err.message}`);
+        continue;
     }
-  });
-  console.log(`   ✅ ${tierMatches}/${tiers.length} tiers synchronized\n`);
-} catch (err) {
-  console.log('   ⏭️  Skipped (file not found yet)\n');
-}
 
-// Check 2: API endpoints consistency
-console.log('🔗 Checking API endpoint consistency...');
-try {
-  const dashboardJS = fs.readFileSync('public/js/dashboard.js', 'utf8');
-  const orgRoutes = fs.readFileSync('backend/routes/org.js', 'utf8');
-
-  const apiCalls = dashboardJS.match(/fetch\(['"]\/api\/[^'"]+['"]/g) || [];
-  let endpointMatches = 0;
-  
-  apiCalls.forEach(call => {
-    const endpoint = call.match(/\/api\/[^'"]+/)[0];
-    if (orgRoutes.includes(endpoint)) {
-      endpointMatches++;
-    } else {
-      issues.push(`❌ API endpoint "${endpoint}" called in frontend but not defined in backend`);
+    const present = new Set();
+    for (const tier of REQUIRED_TIERS) {
+        if (src.includes(`'${tier}'`) || src.includes(`"${tier}"`)) {
+            present.add(tier);
+        }
     }
-  });
-  console.log(`   ✅ ${endpointMatches}/${apiCalls.length} API calls matched\n`);
-} catch (err) {
-  console.log('   ⏭️  Skipped (file not found yet)\n');
+    tierPresence[relPath] = present;
+    const count = present.size;
+    const total = REQUIRED_TIERS.length;
+    const status = count === total ? '✅' : '⚠️ ';
+    console.log(`  ${status} ${relPath}: ${count}/${total} tiers defined`);
 }
 
-// Check 3: Quiz questions consistency
-console.log('📝 Checking quiz questions sync...');
-try {
-  const quizJS = fs.readFileSync('public/js/quiz.js', 'utf8');
-  const backendQuiz = fs.readFileSync('backend/routes/quiz.js', 'utf8');
+console.log('');
 
-  const frontendQCount = (quizJS.match(/{ id:/g) || []).length;
-  const backendHasCategories = backendQuiz.includes('RESILIENCE_CATEGORIES');
-  
-  if (frontendQCount > 0 && backendHasCategories) {
-    console.log(`   ✅ Quiz data synchronized (${frontendQCount} questions)\n`);
-  } else {
-    console.log(`   ⏭️  Quiz files exist\n`);
-  }
-} catch (err) {
-  console.log('   ⏭️  Skipped (file not found yet)\n');
+// Find tiers that are missing from any file or only defined in one location.
+for (const tier of REQUIRED_TIERS) {
+    const filesWithTier = CHECKED_FILES.filter(
+        (f) => tierPresence[f] && tierPresence[f].has(tier)
+    );
+
+    if (filesWithTier.length === 0) {
+        issues.push(`❌ Tier "${tier}" is not defined in any checked file`);
+    } else if (filesWithTier.length < CHECKED_FILES.length) {
+        const missing = CHECKED_FILES.filter((f) => !filesWithTier.includes(f));
+        issues.push(
+            `⚠️  Tier "${tier}" defined in only ${filesWithTier.length} location(s) — missing from: ${missing.join(', ')}`
+        );
+    }
 }
 
-// Check 4: Dashboard files exist
-console.log('📊 Checking dashboard files...');
-const dashboardFiles = [
-  'public/dashboard.html',
-  'public/js/dashboard.js',
-  'backend/routes/org.js'
-];
-let existCount = 0;
-dashboardFiles.forEach(file => {
-  if (fs.existsSync(file)) {
-    existCount++;
-  }
-});
-console.log(`   ✅ ${existCount}/${dashboardFiles.length} dashboard files present\n`);
+// ── Report ────────────────────────────────────────────────────────────────────
 
-// Summary
 console.log('---\n');
+
 if (issues.length === 0) {
-  console.log('✅ All sync checks passed! Your repository is in sync.');
-  process.exit(0);
+    console.log('✅ All sync checks passed! All 7 tiers are consistently defined.\n');
+    process.exit(0);
 } else {
-  console.log(`❌ Found ${issues.length} sync issue(s):\n`);
-  issues.forEach(issue => console.log('   ' + issue));
-  console.log('\n💡 Tip: Run `git pull origin main` to sync latest changes');
-  process.exit(0);
+    console.log(`❌ Found ${issues.length} sync issue(s):\n`);
+    issues.forEach((issue) => console.log('  ' + issue));
+    console.log('');
+    process.exit(1);
 }

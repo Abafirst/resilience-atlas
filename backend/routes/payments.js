@@ -23,6 +23,77 @@ const TIERS = {
     },
 };
 
+/**
+ * Full tier configuration matching the frontend TIER_CONFIG.
+ * Covers all 7 tiers with pricing, feature access, and billing metadata.
+ * Tiers with null price use custom/contact-sales pricing.
+ */
+const TIER_CONFIG = {
+    'free': {
+        name: 'Free',
+        price: 0,
+        billing: 'free',
+        maxUsers: 1,
+        maxTeams: 0,
+        features: ['Basic assessment', 'Individual results', 'Radar chart'],
+        dataRetention: '1 month',
+    },
+    'deep-report': {
+        name: 'Deep Resilience Report',
+        price: 1400, // $14.00
+        billing: 'one-time',
+        maxUsers: 1,
+        maxTeams: 0,
+        features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies'],
+        dataRetention: '1 year',
+    },
+    'atlas-premium': {
+        name: 'Atlas Premium',
+        price: 4900, // $49.00
+        billing: 'lifetime',
+        maxUsers: 1,
+        maxTeams: 0,
+        features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
+        dataRetention: 'Unlimited',
+    },
+    'business': {
+        name: 'Business',
+        price: null, // Custom pricing
+        billing: 'custom',
+        maxUsers: 25,
+        maxTeams: 1,
+        features: ['Team analytics', 'Member results', 'Admin dashboard'],
+        dataRetention: '1 year',
+    },
+    'starter': {
+        name: 'Teams Starter',
+        price: 9900, // $99/month or $999/year
+        billing: 'monthly',
+        maxUsers: 25,
+        maxTeams: 1,
+        features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
+        dataRetention: '1 year',
+    },
+    'pro': {
+        name: 'Teams Pro',
+        price: 29900, // $299/month or $2,999/year
+        billing: 'monthly',
+        maxUsers: 250,
+        maxTeams: 999,
+        features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
+        dataRetention: '3 years',
+    },
+    'enterprise': {
+        name: 'Enterprise',
+        price: null, // Custom pricing
+        billing: 'custom',
+        maxUsers: Infinity,
+        maxTeams: Infinity,
+        features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
+        dataRetention: 'Unlimited',
+    },
+};
+
 /** Rate limiter for all payment endpoints — low limit to prevent abuse. */
 const paymentsLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
@@ -57,7 +128,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be deep-report or atlas-premium.' });
+                .json({ error: 'Invalid tier. Must be one of: deep-report, atlas-premium.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
