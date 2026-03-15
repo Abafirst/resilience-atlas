@@ -879,6 +879,23 @@ function getPracticesForType(resilienceType) {
   return EVIDENCE_BASED_PRACTICES.filter(p => p.resilience_type === resilienceType);
 }
 
+// ── Dimension icon helper ─────────────────────────────────────────────────────
+const DIMENSION_ICON_MAP = {
+  'Cognitive-Narrative':   '/icons/cognitive-narrative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Agentic-Generative':    '/icons/agentic-generative.svg',
+  'Emotional-Adaptive':    '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective':  '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':    '/icons/somatic-regulative.svg',
+};
+
+function getDimensionIconHtml(resilienceType, sizeClass) {
+  const src = DIMENSION_ICON_MAP[resilienceType];
+  if (!src) return '';
+  const cls = sizeClass || 'icon icon-md';
+  return `<img src="${src}" alt="" aria-hidden="true" class="${cls}">`;
+}
+
 // ── UI: Render practice card ──────────────────────────────────────────────────
 function renderPracticeCard(practice) {
   const completed = isCompleted(practice.id);
@@ -892,13 +909,13 @@ function renderPracticeCard(practice) {
   return `
     <article class="ep-card${completed ? ' ep-card--completed' : ''}" data-practice-id="${escHtml(practice.id)}" aria-label="Practice: ${escHtml(practice.practiceTitle)}">
       <div class="ep-card__header">
-        <span class="ep-card__emoji" aria-hidden="true">${escHtml(practice.emoji)}</span>
+        <span class="ep-card__emoji" aria-hidden="true">${getDimensionIconHtml(practice.resilience_type, 'icon icon-md')}</span>
         <div class="ep-card__meta">
           <h4 class="ep-card__title">${escHtml(practice.practiceTitle)}</h4>
           <div class="ep-card__tags">
             <span class="ep-tag ep-tag--duration" aria-label="Duration">⏱ ${escHtml(practice.duration)}</span>
             <span class="ep-tag ep-tag--difficulty ep-tag--${escHtml(practice.difficulty)}">${escHtml(practice.difficulty)}</span>
-            ${completed ? '<span class="ep-tag ep-tag--done" aria-label="Completed">✅ Completed</span>' : ''}
+            ${completed ? '<span class="ep-tag ep-tag--done" aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" class="icon icon-xs"> Completed</span>' : ''}
           </div>
         </div>
       </div>
@@ -922,12 +939,12 @@ function renderPracticeCard(practice) {
 
           <div class="ep-principles">
             <div class="ep-principle ep-principle--act">
-              <h6><span aria-hidden="true">🌿</span> ACT Principle: ${escHtml(practice.actPrinciple.name)}</h6>
+              <h6><img src="/icons/somatic-regulative.svg" alt="" aria-hidden="true" class="icon icon-xs"> ACT Principle: ${escHtml(practice.actPrinciple.name)}</h6>
               <p>${escHtml(practice.actPrinciple.description)}</p>
               <p class="ep-principle__detail"><strong>Target area:</strong> ${escHtml(practice.actPrinciple.targetArea)}</p>
             </div>
             <div class="ep-principle ep-principle--aba">
-              <h6><span aria-hidden="true">🔬</span> ABA Principle: ${escHtml(practice.abaPrinciple.name)}</h6>
+              <h6><img src="/icons/cognitive-narrative.svg" alt="" aria-hidden="true" class="icon icon-xs"> ABA Principle: ${escHtml(practice.abaPrinciple.name)}</h6>
               <p>${escHtml(practice.abaPrinciple.description)}</p>
               <p class="ep-principle__detail"><strong>Mechanism:</strong> ${escHtml(practice.abaPrinciple.mechanism)}</p>
             </div>
@@ -948,7 +965,7 @@ function renderPracticeCard(practice) {
           data-practice-id="${escHtml(practice.id)}"
           aria-label="${completed ? 'Practice completed' : 'Mark practice as complete'}"
           ${completed ? 'disabled' : ''}>
-          ${completed ? '✅ Practice Complete' : '▶ Practice Now'}
+          ${completed ? '<img src="/icons/checkmark.svg" alt="" aria-hidden="true" class="icon icon-xs"> Practice Complete' : '&#9654; Practice Now'}
         </button>
       </div>
     </article>
@@ -964,7 +981,7 @@ function renderReflectionModal(practice) {
   return `
     <div class="ep-modal-overlay" id="ep-modal" role="dialog" aria-modal="true" aria-labelledby="ep-modal-title">
       <div class="ep-modal">
-        <h4 id="ep-modal-title">${escHtml(practice.emoji)} Reflection: ${escHtml(practice.practiceTitle)}</h4>
+        <h4 id="ep-modal-title">${getDimensionIconHtml(practice.resilience_type, 'icon icon-sm')} Reflection: ${escHtml(practice.practiceTitle)}</h4>
         ${affirmationHtml}
         <p class="ep-modal__prompt">${escHtml(practice.reflectionQuestion)}</p>
         <label for="ep-reflection-input" class="hidden">Your reflection</label>

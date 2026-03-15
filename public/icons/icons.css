@@ -1,0 +1,64 @@
+/*
+ * icons.css — Resilience Atlas Custom SVG Icon System
+ *
+ * Usage examples:
+ *
+ *   HTML (inline image):
+ *     <img src="/icons/relational-connective.svg" alt="" aria-hidden="true" class="icon icon-md">
+ *
+ *   HTML (background image via class):
+ *     <span class="icon-img icon-relational-connective icon-lg" aria-hidden="true"></span>
+ *
+ *   In JavaScript (template literal):
+ *     `<img src="/icons/lock.svg" alt="" aria-hidden="true" class="icon icon-sm">`
+ *
+ * Dimensions:
+ *   .icon-xs  — 16px  (inline, tight spaces)
+ *   .icon-sm  — 24px  (button labels, small UI)
+ *   .icon-md  — 40px  (default, cards, lists)
+ *   .icon-lg  — 56px  (section headers)
+ *   .icon-xl  — 80px  (hero, splash)
+ */
+
+/* ── Base sizing ───────────────────────────────────────────────────────────── */
+
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+  width: 2.5rem;   /* 40px default */
+  height: 2.5rem;
+}
+
+.icon-xs { width: 1rem;    height: 1rem; }
+.icon-sm { width: 1.5rem;  height: 1.5rem; }
+.icon-md { width: 2.5rem;  height: 2.5rem; }
+.icon-lg { width: 3.5rem;  height: 3.5rem; }
+.icon-xl { width: 5rem;    height: 5rem; }
+
+/* ── Background-image icon helper ─────────────────────────────────────────── */
+
+.icon-img {
+  display: inline-block;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Dimension icons */
+.icon-relational-connective  { background-image: url('/icons/relational-connective.svg'); }
+.icon-cognitive-narrative    { background-image: url('/icons/cognitive-narrative.svg'); }
+.icon-somatic-regulative     { background-image: url('/icons/somatic-regulative.svg'); }
+.icon-emotional-adaptive     { background-image: url('/icons/emotional-adaptive.svg'); }
+.icon-spiritual-reflective   { background-image: url('/icons/spiritual-reflective.svg'); }
+.icon-agentic-generative     { background-image: url('/icons/agentic-generative.svg'); }
+
+/* Utility icons */
+.icon-lock      { background-image: url('/icons/lock.svg'); }
+.icon-unlock    { background-image: url('/icons/unlock.svg'); }
+.icon-compass   { background-image: url('/icons/compass.svg'); }
+.icon-checkmark { background-image: url('/icons/checkmark.svg'); }
+.icon-success   { background-image: url('/icons/success.svg'); }
