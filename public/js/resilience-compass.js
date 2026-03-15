@@ -213,29 +213,25 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
 
     ctx.restore();
   }
+function drawGrid(ctx) {
+  ctx.save();
 
-  function drawGrid(ctx) {
-    ctx.save();
-    ctx.lineWidth = 0.25;
+  // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
+  GRID_RINGS.forEach(function (pct) {
+    ctx.beginPath();
+    ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(40,40,40,1.0)';  // Dark grey for all
+    ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;  // Outer ring thicker
+    ctx.stroke();
+  });
 
-    // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
-    GRID_RINGS.forEach(function (pct) {
-      ctx.beginPath();
-      ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-      ctx.strokeStyle = pct === 1.0
-? 'rgba(40,40,40,0.1)'
-: 'rgba(40,40,40,0.95)';
-      ctx.stroke();
-    });
-
-    ctx.restore();
-  }
-
+  ctx.restore();
+}
   function drawCrosshairs(ctx) {
     // Clean + crosshairs at the compass centre, inside the innermost ring
     ctx.save();
-ctx.strokeStyle = 'rgba(40,40,40,0.5)';
-    ctx.lineWidth   = 0.5;
+ctx.strokeStyle = 'rgba(40,40,40,1)';
+ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
 
     var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
 
