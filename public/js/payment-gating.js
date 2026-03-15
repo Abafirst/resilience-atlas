@@ -18,6 +18,78 @@
     const TIER_KEY  = 'resilience_tier';
     const EMAIL_KEY = 'resilience_email';
 
+    /**
+     * Tier hierarchy (lowest → highest access):
+     *   free → deep-report → atlas-premium → business → starter → pro → enterprise
+     *
+     * Each tier inherits all features of the tiers below it.
+     */
+    const TIER_CONFIG = {
+        'free': {
+            name: 'Free',
+            price: 0,
+            billing: 'free',
+            maxUsers: 1,
+            maxTeams: 0,
+            features: ['Basic assessment', 'Individual results', 'Radar chart'],
+            dataRetention: '1 month',
+        },
+        'deep-report': {
+            name: 'Deep Resilience Report',
+            price: 1400, // $14.00
+            billing: 'one-time',
+            maxUsers: 1,
+            maxTeams: 0,
+            features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies'],
+            dataRetention: '1 year',
+        },
+        'atlas-premium': {
+            name: 'Atlas Premium',
+            price: 4900, // $49.00
+            billing: 'lifetime',
+            maxUsers: 1,
+            maxTeams: 0,
+            features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
+            dataRetention: 'Unlimited',
+        },
+        'business': {
+            name: 'Business',
+            price: null, // Custom pricing
+            billing: 'custom',
+            maxUsers: 25,
+            maxTeams: 1,
+            features: ['Team analytics', 'Member results', 'Admin dashboard'],
+            dataRetention: '1 year',
+        },
+        'starter': {
+            name: 'Teams Starter',
+            price: 9900, // $99/month or $999/year
+            billing: 'monthly',
+            maxUsers: 25,
+            maxTeams: 1,
+            features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
+            dataRetention: '1 year',
+        },
+        'pro': {
+            name: 'Teams Pro',
+            price: 29900, // $299/month or $2,999/year
+            billing: 'monthly',
+            maxUsers: 250,
+            maxTeams: 999,
+            features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
+            dataRetention: '3 years',
+        },
+        'enterprise': {
+            name: 'Enterprise',
+            price: null, // Custom pricing
+            billing: 'custom',
+            maxUsers: Infinity,
+            maxTeams: Infinity,
+            features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
+            dataRetention: 'Unlimited',
+        },
+    };
+
     // ── Tier helpers ──────────────────────────────────────────────────────────
 
     function getTier() {
@@ -31,18 +103,18 @@
     function isDeepReport() {
         const t = getTier();
         return t === 'deep-report' || t === 'atlas-premium' || t === 'business' ||
-               t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+               t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     function isAtlasPremium() {
         const t = getTier();
         return t === 'atlas-premium' || t === 'business' ||
-               t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+               t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     function isBusiness() {
         const t = getTier();
-        return t === 'business' || t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+        return t === 'business' || t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     // ── Teams tier helpers ────────────────────────────────────────────────────
@@ -50,7 +122,7 @@
     /** Teams Starter ($99/mo): up to 25 users, 1 team, basic dashboard + CSV. */
     function isTeamsStarter() {
         const t = getTier();
-        return t === 'teams-starter' || t === 'teams-pro' || t === 'enterprise';
+        return t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     /**
@@ -59,7 +131,7 @@
      */
     function isTeamsPro() {
         const t = getTier();
-        return t === 'teams-pro' || t === 'enterprise';
+        return t === 'pro' || t === 'enterprise';
     }
 
     /** Enterprise (custom): unlimited users/teams, branding, webhooks, SSO. */
@@ -77,12 +149,14 @@
         document.querySelectorAll('[data-tier]').forEach(function (section) {
             const required = section.getAttribute('data-tier');
             const unlocked =
-                (required === 'deep-report'     && isDeepReport())    ||
-                (required === 'atlas-premium'    && isDeepReport())    ||
-                (required === 'business'         && isBusiness())      ||
-                (required === 'teams-starter'    && isTeamsStarter())  ||
-                (required === 'teams-pro'        && isTeamsPro())      ||
-                (required === 'enterprise'       && isEnterprise());
+                (required === 'deep-report'                                           && isDeepReport())    ||
+                // atlas-premium sections are intentionally unlocked for all deep-report+ users
+                // (deep-report tier grants access to all individual report content)
+                (required === 'atlas-premium'                                         && isDeepReport())    ||
+                (required === 'business'                                              && isBusiness())      ||
+                ((required === 'starter' || required === 'teams-starter')             && isTeamsStarter())  ||
+                ((required === 'pro'     || required === 'teams-pro')                 && isTeamsPro())      ||
+                (required === 'enterprise'                                            && isEnterprise());
 
             const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
@@ -239,6 +313,7 @@
     // ── Public API ────────────────────────────────────────────────────────────
 
     window.PaymentGating = {
+        TIER_CONFIG:          TIER_CONFIG,
         getTier:              getTier,
         setTier:              setTier,
         isDeepReport:         isDeepReport,

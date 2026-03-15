@@ -21,6 +21,15 @@ const submitLimiter = rateLimit({
     message: { error: 'Too many quiz submissions. Please try again in a few minutes.' },
 });
 
+/**
+ * All 7 tiers have access to the quiz assessment.
+ * Tier hierarchy (lowest → highest access):
+ *   free → deep-report → atlas-premium → business → starter → pro → enterprise
+ */
+const VALID_TIERS = new Set([
+    'free', 'deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise',
+]);
+
 // Map question indices (0-based) to the six resilience type names
 // 72 questions total: 12 per dimension, grouped sequentially in QUESTIONS array
 const RESILIENCE_CATEGORIES = {
@@ -69,10 +78,11 @@ function scoreResilienceAnswers(answers) {
  * POST /api/quiz
  * Submit quiz answers (no authentication required).
  * Calculates resilience scores, persists to MongoDB, and returns results.
+ * All tiers (free through enterprise) can access this endpoint.
  */
 router.post('/', async (req, res) => {
     try {
-        const { firstName, email, answers } = req.body;
+        const { firstName, email, answers, tier } = req.body;
 
         if (!answers || !Array.isArray(answers) || answers.length !== 72) {
             return res.status(400).json({ error: 'Please provide all 72 answers.' });
@@ -80,6 +90,11 @@ router.post('/', async (req, res) => {
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required.' });
+        }
+
+        // Tier is optional; if provided, it must be one of the 7 known tiers.
+        if (tier !== undefined && !VALID_TIERS.has(tier)) {
+            return res.status(400).json({ error: `Invalid tier: "${tier}".` });
         }
 
         const result = scoreResilienceAnswers(answers);
