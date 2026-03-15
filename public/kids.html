@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kids Resilience Program — The Resilience Atlas™</title>
-  <meta name="description" content="Six Resilience Skills for children — a developmentally appropriate introduction to the Six Dimensions of Resilience. Stories, activities, and skills for young learners." />
+  <title>Kids &amp; Teen Resilience Program — The Resilience Atlas™</title>
+  <meta name="description" content="Resilience Grows With You — a developmentally appropriate program for ages 5–18+. Activities, stories, and skills mapped to the Six Dimensions of Resilience." />
   <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/kids.css" />
   <style>
     .kids-hero {
       background: linear-gradient(135deg, #7c3aed 0%, #4F46E5 60%, #0f2942 100%);
@@ -459,15 +460,15 @@
 
   <!-- Hero -->
   <section class="kids-hero" aria-labelledby="kids-heading">
-    <span class="hero-eyebrow">For Young Learners</span>
-    <h1 id="kids-heading">Six Resilience Skills for Children</h1>
+    <span class="hero-eyebrow">For Ages 5–18+</span>
+    <h1 id="kids-heading">Resilience Grows With You</h1>
     <p>
-      Resilience isn't just for grown-ups. The Resilience Atlas for Kids introduces the six
-      dimensions of resilience in age-appropriate language — helping children name, understand,
-      and build their inner strengths.
+      From early childhood to young adulthood, resilience looks different at every stage.
+      The Resilience Atlas for Kids &amp; Teens introduces the six dimensions of resilience
+      in age-appropriate ways — helping young people name, understand, and build their inner strengths.
     </p>
-    <a class="btn-hero-primary" href="#skills">
-      <span aria-hidden="true">&#9733;</span> Explore the Six Skills
+    <a class="btn-hero-primary" href="#activity-guides">
+      <span aria-hidden="true">&#9733;</span> Find Activities for Your Age
     </a>
   </section>
 
@@ -881,13 +882,16 @@
         <span class="section-label">Activity Guides</span>
         <h2 id="activity-guides-heading">Activities by Age</h2>
         <p style="color:var(--slate-600);max-width:560px;margin:.75rem auto 0;">
-          Every resilience skill can be practiced at any age. These activities are tailored to help children at different stages of development.
+          Every resilience skill can be practiced at any age. Choose your age group to see
+          activities designed for your stage of development.
         </p>
       </div>
       <div class="age-tabs" role="tablist" aria-label="Age group activities">
-        <button class="age-tab" role="tab" aria-selected="true" aria-controls="age-5-7" onclick="switchAge(this,'age-5-7')">Ages 5–7</button>
-        <button class="age-tab" role="tab" aria-selected="false" aria-controls="age-8-10" onclick="switchAge(this,'age-8-10')">Ages 8–10</button>
-        <button class="age-tab" role="tab" aria-selected="false" aria-controls="age-11-14" onclick="switchAge(this,'age-11-14')">Ages 11–14</button>
+        <button class="age-tab" role="tab" aria-selected="true"  data-group="age-5-7"   aria-controls="age-5-7"   onclick="switchAge(this,'age-5-7')">Ages 5–7</button>
+        <button class="age-tab" role="tab" aria-selected="false" data-group="age-8-10"  aria-controls="age-8-10"  onclick="switchAge(this,'age-8-10')">Ages 8–10</button>
+        <button class="age-tab" role="tab" aria-selected="false" data-group="age-11-14" aria-controls="age-11-14" onclick="switchAge(this,'age-11-14')">Ages 11–14</button>
+        <button class="age-tab" role="tab" aria-selected="false" data-group="age-15-18" aria-controls="age-15-18" onclick="switchAge(this,'age-15-18')">Ages 15–18</button>
+        <button class="age-tab" role="tab" aria-selected="false" data-group="age-18plus" aria-controls="age-18plus" onclick="switchAge(this,'age-18plus')">Ages 18+</button>
       </div>
 
       <!-- Ages 5–7 -->
@@ -1013,8 +1017,123 @@
             <div class="activity-item-skill">Agentic · The Builder</div>
             <p class="activity-item-desc">Choose one small habit to build over 30 days — something that takes just 5 minutes. Track it daily. At the end, reflect: How did starting small lead to something bigger?</p>
           </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128100;</div>
+            <div class="activity-item-title">Strengths Inventory</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">Ask three people who know you well to name two strengths they see in you. Compare their answers with your own list. Which strengths surprise you? How can you use them more often?</p>
+          </div>
         </div>
       </div>
+
+      <!-- Ages 15–18 -->
+      <div id="age-15-18" class="age-content" role="tabpanel" aria-label="Activities for ages 15 to 18">
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127912;</div>
+            <div class="activity-item-title">Identity Collage</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">Create a visual collage — digital or physical — that represents the different parts of who you are: roles, interests, values, questions, and contradictions. Notice which parts feel most and least like "you."</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">15 min</span>
+              <span class="activity-meta-tag intermediate">Intermediate</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127777;</div>
+            <div class="activity-item-title">Feelings Temperature Check</div>
+            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <p class="activity-item-desc">Rate your emotional intensity on a scale of 1–10 three times a day for a week. Note the time, the feeling, and what was happening. Track patterns: when are your highs? Your lows? What shifts your temperature?</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">5 min</span>
+              <span class="activity-meta-tag beginner">Beginner</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127911;</div>
+            <div class="activity-item-title">Movement Playlist</div>
+            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <p class="activity-item-desc">Build three playlists: one for high-energy moments, one for calm and focus, one for processing hard feelings. Notice how music changes how your body and mood feel — then use it intentionally, not just as background noise.</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">15 min</span>
+              <span class="activity-meta-tag beginner">Beginner</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128101;</div>
+            <div class="activity-item-title">Relationship Map</div>
+            <div class="activity-item-skill">Relational · The Connector</div>
+            <p class="activity-item-desc">Draw yourself in the center of a page. Place the people in your life at different distances around you. Ask: who energizes you? Who drains you? Which relationships support your growth, and which feel one-sided?</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">15 min</span>
+              <span class="activity-meta-tag intermediate">Intermediate</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127757;</div>
+            <div class="activity-item-title">Values Compass</div>
+            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <p class="activity-item-desc">List 15 things you care about, then narrow to your top 5. For each one, write: how does this value show up in how I spend my time? Where is there a gap between what I value and how I actually live?</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">15 min</span>
+              <span class="activity-meta-tag intermediate">Intermediate</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#127942;</div>
+            <div class="activity-item-title">Small Wins Tracker</div>
+            <div class="activity-item-skill">Agentic · The Builder</div>
+            <p class="activity-item-desc">Each night for two weeks, write one thing you did that moved you forward — however small. Review at the end of the week. Progress is often invisible day to day but undeniable week to week.</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">5 min</span>
+              <span class="activity-meta-tag beginner">Beginner</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128241;</div>
+            <div class="activity-item-title">Digital Audit</div>
+            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <p class="activity-item-desc">Check your screen time data for the past week. Ask: which apps leave you energized? Which leave you anxious or empty? Try a 24-hour intentional-use experiment — only pick up your phone with a clear purpose — and journal what changes.</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">10 min</span>
+              <span class="activity-meta-tag intermediate">Intermediate</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-item-icon" aria-hidden="true">&#128202;</div>
+            <div class="activity-item-title">Stress Audit</div>
+            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <p class="activity-item-desc">List every stressor in your life right now. Sort them into three columns: Can Control, Can Influence, Can't Control. Focus 80% of your energy on what you can control or influence — and let the rest go with intention.</p>
+            <div class="activity-item-meta">
+              <span class="activity-meta-tag">15 min</span>
+              <span class="activity-meta-tag intermediate">Intermediate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ages 18+ -->
+      <div id="age-18plus" class="age-content" role="tabpanel" aria-label="Pathway for ages 18 and older">
+        <div class="age-18plus-panel">
+          <div style="font-size:3rem;margin-bottom:1rem;" aria-hidden="true">&#129513;</div>
+          <h3>Ready for the Full Assessment?</h3>
+          <p>
+            You've grown through all six resilience skills. Now it's time to discover your unique
+            resilience profile — see which of the six dimensions is your natural strength, where
+            you have opportunities to grow, and get a personalized report you can actually use.
+          </p>
+          <div class="dimension-pills">
+            <span class="dim-pill">Relational-Connective</span>
+            <span class="dim-pill">Cognitive-Narrative</span>
+            <span class="dim-pill">Somatic-Regulative</span>
+            <span class="dim-pill">Emotional-Adaptive</span>
+            <span class="dim-pill">Spiritual-Reflective</span>
+            <span class="dim-pill">Agentic-Generative</span>
+          </div>
+          <a class="btn-cta" href="/quiz.html">Take the Resilience Assessment &rarr;</a>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1044,7 +1163,7 @@
       <div class="footer-nav-group">
         <strong class="footer-nav-heading">Programs</strong>
         <a href="/team.html">For Teams</a>
-        <a href="/kids.html">For Kids</a>
+        <a href="/kids.html">For Kids &amp; Teens</a>
       </div>
       <div class="footer-nav-group">
         <strong class="footer-nav-heading">Company</strong>
@@ -1057,6 +1176,7 @@
       <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
     </div>
   </footer>
+  <script src="/js/kids-activities.js"></script>
   <script>
     /* ── Story data ── */
     var STORIES = {

@@ -1,0 +1,161 @@
+/**
+ * Resilience Atlas — Kids Program Styles
+ * Age-group specific colors, teen section styles, and responsive layout enhancements.
+ */
+
+/* ── Age-group color tokens ── */
+:root {
+  --age-5-7-color:   #7c3aed; /* purple  */
+  --age-8-10-color:  #2563eb; /* blue    */
+  --age-11-14-color: #059669; /* green   */
+  --age-15-18-color: #d97706; /* amber   */
+}
+
+/* ── Age tabs ── */
+.age-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.age-tab {
+  padding: .5rem 1.25rem;
+  border: 2px solid var(--slate-200, #e2e8f0);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--slate-600, #475569);
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+  white-space: nowrap;
+}
+
+.age-tab:hover {
+  background: #ede9fe;
+  border-color: var(--age-5-7-color);
+  color: var(--age-5-7-color);
+}
+
+.age-tab[aria-selected="true"] {
+  background: var(--age-5-7-color);
+  border-color: var(--age-5-7-color);
+  color: #fff;
+}
+
+/* Per-group active tab colors */
+.age-tab[data-group="age-8-10"][aria-selected="true"]  { background: var(--age-8-10-color);  border-color: var(--age-8-10-color); }
+.age-tab[data-group="age-11-14"][aria-selected="true"] { background: var(--age-11-14-color); border-color: var(--age-11-14-color); }
+.age-tab[data-group="age-15-18"][aria-selected="true"] { background: var(--age-15-18-color); border-color: var(--age-15-18-color); }
+.age-tab[data-group="age-18plus"][aria-selected="true"]{ background: #0f172a; border-color: #0f172a; }
+
+/* ── Activity items ── */
+.activity-item {
+  border-left: 4px solid var(--slate-200, #e2e8f0);
+  padding-left: 1rem;
+  transition: border-color .2s;
+}
+
+#age-5-7   .activity-item { border-left-color: var(--age-5-7-color); }
+#age-8-10  .activity-item { border-left-color: var(--age-8-10-color); }
+#age-11-14 .activity-item { border-left-color: var(--age-11-14-color); }
+#age-15-18 .activity-item { border-left-color: var(--age-15-18-color); }
+
+/* ── Activity meta row (time + level) ── */
+.activity-item-meta {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  margin-top: .35rem;
+  flex-wrap: wrap;
+}
+
+.activity-meta-tag {
+  display: inline-block;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 600;
+  background: var(--slate-100, #f1f5f9);
+  color: var(--slate-600, #475569);
+}
+
+.activity-meta-tag.beginner     { background: #dcfce7; color: #15803d; }
+.activity-meta-tag.intermediate { background: #fef9c3; color: #a16207; }
+
+/* ── Teen (15-18) panel accent ── */
+#age-15-18 .activity-item-skill { color: var(--age-15-18-color); }
+
+/* ── 18+ CTA panel ── */
+.age-18plus-panel {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  border-radius: 16px;
+  color: #fff;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.age-18plus-panel h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  color: #fff;
+}
+
+.age-18plus-panel p {
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 auto 1.75rem;
+}
+
+.age-18plus-panel .btn-cta {
+  display: inline-block;
+  padding: .8rem 2rem;
+  background: #7c3aed;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background .2s, transform .15s;
+}
+
+.age-18plus-panel .btn-cta:hover {
+  background: #6d28d9;
+  transform: translateY(-2px);
+}
+
+.age-18plus-panel .dimension-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.age-18plus-panel .dim-pill {
+  padding: .3rem .85rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,.12);
+  color: #e2e8f0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .age-tab {
+    font-size: .8rem;
+    padding: .4rem .9rem;
+  }
+
+  .age-18plus-panel h3 {
+    font-size: 1.3rem;
+  }
+}
