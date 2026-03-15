@@ -196,7 +196,7 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-      ctx.strokeStyle = isMain ? 'rgba(40,40,40,0.1)' : 'rgba(40,40,40,0.7)';
+ctx.strokeStyle = isMain ? 'rgba(40,40,40,1.0)' : 'rgba(40,40,40,0.7)';
       ctx.lineWidth   = isMain ? .50 : 0.25;
       ctx.stroke();
 
@@ -216,37 +216,34 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
 function drawGrid(ctx) {
   ctx.save();
 
-  // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
   GRID_RINGS.forEach(function (pct) {
     ctx.beginPath();
     ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,1.0)';  // Dark grey for all
-    ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;  // Outer ring thicker
+    ctx.strokeStyle = 'rgba(40,40,40,1.0)';
+    ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
     ctx.stroke();
   });
+ 
+function drawCrosshairs(ctx) {
+  // Clean + crosshairs at the compass centre, inside the innermost ring
+  ctx.save();
+  ctx.strokeStyle = 'rgba(40,40,40,1.0)';
+  ctx.lineWidth = 0.5;
+
+  var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
+
+  ctx.beginPath();
+  ctx.moveTo(CX - arm, CY);
+  ctx.lineTo(CX + arm, CY);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(CX, CY - arm);
+  ctx.lineTo(CX, CY + arm);
+  ctx.stroke();
 
   ctx.restore();
 }
-  function drawCrosshairs(ctx) {
-    // Clean + crosshairs at the compass centre, inside the innermost ring
-    ctx.save();
-ctx.strokeStyle = 'rgba(40,40,40,1)';
-ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
-
-    var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
-
-    ctx.beginPath();
-    ctx.moveTo(CX - arm, CY);
-    ctx.lineTo(CX + arm, CY);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(CX, CY - arm);
-    ctx.lineTo(CX, CY + arm);
-    ctx.stroke();
-
-    ctx.restore();
-  }
 
   function drawAxes(ctx, dominantIdx, pulse) {
     ctx.save();
@@ -257,7 +254,7 @@ ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
 
       if (isDom) {
         var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(40,40,40,' + glowAlpha + ')';
+        ctx.shadowColor = 'rgba(40,40,40,'+ glowAlpha +')';
         ctx.shadowBlur  = 10;
         ctx.strokeStyle = 'rgba(40,40,40,0.95)';
         ctx.lineWidth   = 1.5;
