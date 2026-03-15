@@ -454,3 +454,4 @@ ctx.globalAlpha = 1.0;
 
   // ── Expose globally ────────────────────────────────────────────────────────
   window.renderCompass = renderCompass;
+})();
