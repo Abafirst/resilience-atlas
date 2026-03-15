@@ -20,9 +20,9 @@
   const DIMENSIONS = [
     { key: 'relational', label: 'Relational-Connective' },
     { key: 'cognitive',  label: 'Cognitive-Narrative' },
-    { key: 'somatic',    label: 'Somatic-Behavioral' },
+    { key: 'somatic',    label: 'Somatic-Regulative' },
     { key: 'emotional',  label: 'Emotional-Adaptive' },
-    { key: 'spiritual',  label: 'Spiritual-Existential' },
+    { key: 'spiritual',  label: 'Spiritual-Reflective' },
     { key: 'agentic',    label: 'Agentic-Generative' },
   ];
 

@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="css/landing.css" />
   <link rel="stylesheet" href="css/kids.css" />
+  <link rel="stylesheet" href="/icons/icons.css" />
   <style>
     .kids-hero {
       background: linear-gradient(135deg, #7c3aed 0%, #4F46E5 60%, #0f2942 100%);
@@ -42,7 +43,7 @@
       transition: box-shadow .2s;
     }
     .skill-card:hover { box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,.1)); }
-    .skill-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .skill-icon { display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
     .skill-name { font-size: 1.1rem; font-weight: 700; color: var(--slate-900); margin-bottom: .4rem; }
     .skill-tag {
       display: inline-block;
@@ -138,7 +139,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
       margin-bottom: .25rem;
       flex-shrink: 0;
     }
@@ -178,7 +178,7 @@
       flex-direction: column;
       gap: .75rem;
     }
-    .story-icon { font-size: 2rem; }
+    .story-icon { display: flex; align-items: center; }
     .story-title { font-size: 1rem; font-weight: 700; color: var(--slate-900); margin: 0; }
     .story-subtitle { font-size: .8rem; font-weight: 600; color: var(--slate-500); margin: 0; text-transform: uppercase; letter-spacing: .04em; }
     .story-preview { font-size: .88rem; color: var(--slate-600); line-height: 1.6; margin: 0; flex: 1; }
@@ -271,7 +271,7 @@
       padding: 1.75rem;
       box-shadow: var(--shadow-sm);
     }
-    .sb-icon { font-size: 2rem; margin-bottom: .75rem; }
+    .sb-icon { display: flex; align-items: center; margin-bottom: .75rem; }
     .sb-name { font-size: 1.05rem; font-weight: 700; color: var(--slate-900); margin-bottom: .3rem; }
     .sb-tag {
       display: inline-block;
@@ -426,7 +426,7 @@
       padding: 1.25rem;
       box-shadow: var(--shadow-sm);
     }
-    .activity-item-icon { font-size: 1.5rem; margin-bottom: .5rem; }
+    .activity-item-icon { display: flex; align-items: center; margin-bottom: .5rem; }
     .activity-item-title { font-size: .95rem; font-weight: 700; color: var(--slate-900); margin-bottom: .3rem; }
     .activity-item-skill { font-size: .75rem; font-weight: 600; color: #7c3aed; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .5rem; }
     .activity-item-desc { font-size: .85rem; color: var(--slate-600); line-height: 1.55; }
@@ -468,7 +468,7 @@
       in age-appropriate ways — helping young people name, understand, and build their inner strengths.
     </p>
     <a class="btn-hero-primary" href="#activity-guides">
-      <span aria-hidden="true">&#9733;</span> Find Activities for Your Age
+      Find Activities for Your Age
     </a>
   </section>
 
@@ -484,39 +484,39 @@
     </div>
     <div class="skills-grid">
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#129309;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Connection Skill</div>
-        <span class="skill-tag">Adults: Relational</span>
+        <span class="skill-tag">Adults: Relational-Connective</span>
         <p>Learning how to ask for help, share feelings with trusted people, and know that relationships make us stronger when things are hard.</p>
       </article>
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#129504;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Thinking Skill</div>
-        <span class="skill-tag">Adults: Cognitive</span>
+        <span class="skill-tag">Adults: Cognitive-Narrative</span>
         <p>Practicing "flip-it" thinking — finding new ways to look at problems, noticing what we can control, and telling a helpful story about what happened.</p>
       </article>
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#128154;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Body Skill</div>
-        <span class="skill-tag">Adults: Somatic</span>
+        <span class="skill-tag">Adults: Somatic-Regulative</span>
         <p>Learning to listen to our bodies — noticing when we feel tense or calm, and using breathing, movement, or rest to feel steady again.</p>
       </article>
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#128149;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Feelings Skill</div>
-        <span class="skill-tag">Adults: Emotional</span>
+        <span class="skill-tag">Adults: Emotional-Adaptive</span>
         <p>Naming big feelings, understanding that all emotions are okay, and learning healthy ways to move through sadness, frustration, or worry.</p>
       </article>
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#127807;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Meaning Skill</div>
-        <span class="skill-tag">Adults: Spiritual</span>
+        <span class="skill-tag">Adults: Spiritual-Reflective</span>
         <p>Discovering what matters most to us — our values, our "why," and how finding meaning in hard times helps us keep going.</p>
       </article>
       <article class="skill-card">
-        <div class="skill-icon" aria-hidden="true">&#9889;</div>
+        <div class="skill-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-md"></div>
         <div class="skill-name">Action Skill</div>
-        <span class="skill-tag">Adults: Agentic</span>
+        <span class="skill-tag">Adults: Agentic-Generative</span>
         <p>Practicing taking one small step when things feel big — building the confidence to make choices and move forward even when we feel unsure.</p>
       </article>
     </div>
@@ -535,12 +535,12 @@
 
       <!-- The Connector -->
       <article class="character-card" aria-label="The Connector character">
-        <div class="character-avatar" style="background:#ede9fe;" aria-hidden="true">&#129309;</div>
+        <div class="character-avatar" style="background:#ede9fe;" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">Maya — The Connector</h3>
-          <p class="character-title">Connection Skill &nbsp;·&nbsp; Relational</p>
+          <p class="character-title">Connection Skill &nbsp;·&nbsp; Relational-Connective</p>
         </div>
-        <span class="character-skill-tag" style="background:#ede9fe;color:#5b21b6;">Relational</span>
+        <span class="character-skill-tag" style="background:#ede9fe;color:#5b21b6;">Relational-Connective</span>
         <p class="character-desc">
           Maya is warm, caring, and always the first to notice when someone looks left out. She believes the best things in life happen between people — and she's always learning that asking for help is a sign of strength, not weakness.
         </p>
@@ -551,12 +551,12 @@
 
       <!-- The Thinker -->
       <article class="character-card" aria-label="The Thinker character">
-        <div class="character-avatar" style="background:#e0f2fe;" aria-hidden="true">&#129504;</div>
+        <div class="character-avatar" style="background:#e0f2fe;" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">Alex — The Thinker</h3>
-          <p class="character-title">Thinking Skill &nbsp;·&nbsp; Cognitive</p>
+          <p class="character-title">Thinking Skill &nbsp;·&nbsp; Cognitive-Narrative</p>
         </div>
-        <span class="character-skill-tag" style="background:#e0f2fe;color:#075985;">Cognitive</span>
+        <span class="character-skill-tag" style="background:#e0f2fe;color:#075985;">Cognitive-Narrative</span>
         <p class="character-desc">
           Alex loves puzzles, questions, and figuring things out. When a problem seems impossible, Alex slows down, looks at it from a new angle, and finds a way through. Curious and calm, Alex helps us see that most hard things have solutions.
         </p>
@@ -567,12 +567,12 @@
 
       <!-- The Grounder -->
       <article class="character-card" aria-label="The Grounder character">
-        <div class="character-avatar" style="background:#dcfce7;" aria-hidden="true">&#128154;</div>
+        <div class="character-avatar" style="background:#dcfce7;" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">Sam — The Grounder</h3>
-          <p class="character-title">Body Skill &nbsp;·&nbsp; Somatic</p>
+          <p class="character-title">Body Skill &nbsp;·&nbsp; Somatic-Regulative</p>
         </div>
-        <span class="character-skill-tag" style="background:#dcfce7;color:#15803d;">Somatic</span>
+        <span class="character-skill-tag" style="background:#dcfce7;color:#15803d;">Somatic-Regulative</span>
         <p class="character-desc">
           Sam is steady and grounded, even when big feelings swirl around. Sam knows that our bodies carry our emotions — and that the fastest way to feel calmer is to start with a breath, a slow walk, or feeling our feet on the floor.
         </p>
@@ -583,12 +583,12 @@
 
       <!-- The Feeler -->
       <article class="character-card" aria-label="The Feeler character">
-        <div class="character-avatar" style="background:#ffe4e6;" aria-hidden="true">&#10084;&#65039;</div>
+        <div class="character-avatar" style="background:#ffe4e6;" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">Jordan — The Feeler</h3>
-          <p class="character-title">Feelings Skill &nbsp;·&nbsp; Emotional</p>
+          <p class="character-title">Feelings Skill &nbsp;·&nbsp; Emotional-Adaptive</p>
         </div>
-        <span class="character-skill-tag" style="background:#ffe4e6;color:#be123c;">Emotional</span>
+        <span class="character-skill-tag" style="background:#ffe4e6;color:#be123c;">Emotional-Adaptive</span>
         <p class="character-desc">
           Jordan feels everything deeply — joy, sadness, worry, and wonder. Instead of hiding feelings, Jordan has learned that naming them is the first step to understanding them. Jordan helps others know that all feelings are okay.
         </p>
@@ -599,12 +599,12 @@
 
       <!-- The Guide -->
       <article class="character-card" aria-label="The Guide character">
-        <div class="character-avatar" style="background:#f0fdf4;" aria-hidden="true">&#127807;</div>
+        <div class="character-avatar" style="background:#f0fdf4;" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">River — The Guide</h3>
-          <p class="character-title">Meaning Skill &nbsp;·&nbsp; Spiritual</p>
+          <p class="character-title">Meaning Skill &nbsp;·&nbsp; Spiritual-Reflective</p>
         </div>
-        <span class="character-skill-tag" style="background:#d1fae5;color:#065f46;">Spiritual</span>
+        <span class="character-skill-tag" style="background:#d1fae5;color:#065f46;">Spiritual-Reflective</span>
         <p class="character-desc">
           River is thoughtful, curious about the world, and always looking for the deeper meaning in things. Even when life is confusing, River searches for what matters most — and follows it like a compass pointing north.
         </p>
@@ -615,12 +615,12 @@
 
       <!-- The Builder -->
       <article class="character-card" aria-label="The Builder character">
-        <div class="character-avatar" style="background:#fef9c3;" aria-hidden="true">&#9889;</div>
+        <div class="character-avatar" style="background:#fef9c3;" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-md"></div>
         <div>
           <h3 class="character-name">Kai — The Builder</h3>
-          <p class="character-title">Action Skill &nbsp;·&nbsp; Agentic</p>
+          <p class="character-title">Action Skill &nbsp;·&nbsp; Agentic-Generative</p>
         </div>
-        <span class="character-skill-tag" style="background:#fef9c3;color:#854d0e;">Agentic</span>
+        <span class="character-skill-tag" style="background:#fef9c3;color:#854d0e;">Agentic-Generative</span>
         <p class="character-desc">
           Kai is brave, determined, and always ready to try. Kai knows the secret to doing big things: start with one tiny step. Even when scared or unsure, Kai keeps moving — because action, however small, is always possible.
         </p>
@@ -645,48 +645,48 @@
       <div class="story-grid">
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#129309;</div>
-          <p class="story-subtitle">Relational · The Connector</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Relational-Connective · The Connector</p>
           <h3 class="story-title">Maya and the Mountain of Cardboard</h3>
           <p class="story-preview">Maya loves drawing — but she always works alone. When a huge class project threatens to bury her, she discovers that asking for help might be the most powerful thing she can do.</p>
           <button class="btn-story" onclick="openStory('connector')" aria-label="Read Maya's story">Read Story &#8594;</button>
         </div>
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#129504;</div>
-          <p class="story-subtitle">Cognitive · The Thinker</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Cognitive-Narrative · The Thinker</p>
           <h3 class="story-title">Alex and the Flooded Experiment</h3>
           <p class="story-preview">Alex's perfectly planned science fair experiment gets wrecked by the wind. With three days left and no backup plan, can he flip the problem into a brand-new discovery?</p>
           <button class="btn-story" onclick="openStory('thinker')" aria-label="Read Alex's story">Read Story &#8594;</button>
         </div>
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#128154;</div>
-          <p class="story-subtitle">Somatic · The Grounder</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Somatic-Regulative · The Grounder</p>
           <h3 class="story-title">Sam and the Big Game</h3>
           <p class="story-preview">Sam loves soccer, but before the championship game her body goes haywire — heart racing, hands cold, stomach in knots. Her coach knows a secret: calm starts in the body.</p>
           <button class="btn-story" onclick="openStory('grounder')" aria-label="Read Sam's story">Read Story &#8594;</button>
         </div>
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#10084;&#65039;</div>
-          <p class="story-subtitle">Emotional · The Feeler</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Emotional-Adaptive · The Feeler</p>
           <h3 class="story-title">Jordan and the Invisible Knot</h3>
           <p class="story-preview">Since Grandma Bea moved away, Jordan has a heavy feeling she can't name. When her teacher shows the class a Feelings Wheel, Jordan finds the words — and the knot begins to loosen.</p>
           <button class="btn-story" onclick="openStory('feeler')" aria-label="Read Jordan's story">Read Story &#8594;</button>
         </div>
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#127807;</div>
-          <p class="story-subtitle">Spiritual · The Guide</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Spiritual-Reflective · The Guide</p>
           <h3 class="story-title">River and the Compass</h3>
           <p class="story-preview">After moving to a new city, River feels invisible and lost — like nothing matters. A quiet conversation with her dad and a packet of basil seeds help her find her way back to herself.</p>
           <button class="btn-story" onclick="openStory('guide')" aria-label="Read River's story">Read Story &#8594;</button>
         </div>
 
         <div class="story-card">
-          <div class="story-icon" aria-hidden="true">&#9889;</div>
-          <p class="story-subtitle">Agentic · The Builder</p>
+          <div class="story-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-sm"></div>
+          <p class="story-subtitle">Agentic-Generative · The Builder</p>
           <h3 class="story-title">Kai and the Six-String Mountain</h3>
           <p class="story-preview">Kai has wanted to play guitar for four years — but fear of failing has kept the guitar against the wall. One friend's blunt question changes everything: why not just be bad at it first?</p>
           <button class="btn-story" onclick="openStory('builder')" aria-label="Read Kai's story">Read Story &#8594;</button>
@@ -715,11 +715,11 @@
     </div>
     <div class="skill-builder-grid">
 
-      <!-- Ask for Help — Relational -->
+      <!-- Ask for Help — Relational-Connective -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#129309;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">Ask for Help</div>
-        <span class="sb-tag" style="background:#ede9fe;color:#5b21b6;">Relational · The Connector</span>
+        <span class="sb-tag" style="background:#ede9fe;color:#5b21b6;">Relational-Connective · The Connector</span>
         <p class="sb-desc">Think of three people you could ask for help — one for schoolwork, one for feelings, and one for fun. Write their names and what makes them a good helper.</p>
         <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Start Activity</button>
         <div class="activity-panel" hidden>
@@ -737,16 +737,16 @@
             <textarea class="reflection-input" id="help-fun" rows="2" placeholder="Name and why..."></textarea>
           </div>
           <p style="margin:.75rem 0 0;font-size:.82rem;color:#5b21b6;font-weight:600;">
-            &#128161; The Connector says: You have more helpers than you think. This week, reach out to one of them — even just to say hi.
+            The Connector says: You have more helpers than you think. This week, reach out to one of them — even just to say hi.
           </p>
         </div>
       </div>
 
-      <!-- Problem-Solving Challenge — Cognitive -->
+      <!-- Problem-Solving Challenge — Cognitive-Narrative -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#129504;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">Problem-Solving Challenge</div>
-        <span class="sb-tag" style="background:#e0f2fe;color:#075985;">Cognitive · The Thinker</span>
+        <span class="sb-tag" style="background:#e0f2fe;color:#075985;">Cognitive-Narrative · The Thinker</span>
         <p class="sb-desc">Think of something that isn't going the way you wanted. Use "flip-it" thinking to look at it from a new angle and find one step you can take.</p>
         <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Start Activity</button>
         <div class="activity-panel" hidden>
@@ -768,16 +768,16 @@
             <textarea class="reflection-input" id="ps-step" rows="2" placeholder="Just one thing..."></textarea>
           </div>
           <p style="margin:.75rem 0 0;font-size:.82rem;color:#075985;font-weight:600;">
-            &#128161; The Thinker says: You don't have to solve everything at once. One new angle at a time.
+            The Thinker says: You don't have to solve everything at once. One new angle at a time.
           </p>
         </div>
       </div>
 
-      <!-- Grounding Breath — Somatic -->
+      <!-- Grounding Breath — Somatic-Regulative -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#128154;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">Grounding Breath</div>
-        <span class="sb-tag" style="background:#dcfce7;color:#15803d;">Somatic · The Grounder</span>
+        <span class="sb-tag" style="background:#dcfce7;color:#15803d;">Somatic-Regulative · The Grounder</span>
         <p class="sb-desc">A guided breathing exercise that helps your body move from "alarm mode" to calm. Three complete breath cycles, right now.</p>
         <button class="activity-toggle" id="breath-start-btn" onclick="startBreathing(this)" aria-label="Start breathing exercise">Start Breathing</button>
         <div class="activity-panel" id="breath-panel" hidden>
@@ -790,36 +790,36 @@
         </div>
       </div>
 
-      <!-- Feelings Detective — Emotional -->
+      <!-- Feelings Detective — Emotional-Adaptive -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#10084;&#65039;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">Feelings Detective</div>
-        <span class="sb-tag" style="background:#ffe4e6;color:#be123c;">Emotional · The Feeler</span>
+        <span class="sb-tag" style="background:#ffe4e6;color:#be123c;">Emotional-Adaptive · The Feeler</span>
         <p class="sb-desc">Pick the feeling that is closest to what you are feeling right now. Then get a reflection prompt to help you understand it a little better.</p>
         <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Find My Feeling</button>
         <div class="activity-panel" hidden>
           <p style="margin:0 0 .5rem;font-weight:600;">How are you feeling right now?</p>
           <div class="emotion-grid" role="group" aria-label="Emotion choices">
-            <button class="emotion-btn" onclick="selectEmotion(this,'happy')">Happy &#128512;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'sad')">Sad &#128546;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'angry')">Angry &#128545;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'worried')">Worried &#128552;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'lonely')">Lonely &#128096;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'excited')">Excited &#127775;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'confused')">Confused &#128533;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'proud')">Proud &#127942;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'scared')">Scared &#128561;</button>
-            <button class="emotion-btn" onclick="selectEmotion(this,'calm')">Calm &#128524;</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'happy')">Happy</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'sad')">Sad</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'angry')">Angry</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'worried')">Worried</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'lonely')">Lonely</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'excited')">Excited</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'confused')">Confused</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'proud')">Proud</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'scared')">Scared</button>
+            <button class="emotion-btn" onclick="selectEmotion(this,'calm')">Calm</button>
           </div>
           <div class="emotion-prompt" id="emotion-prompt" hidden aria-live="polite"></div>
         </div>
       </div>
 
-      <!-- What Matters Most — Spiritual -->
+      <!-- What Matters Most — Spiritual-Reflective -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#127807;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">What Matters Most</div>
-        <span class="sb-tag" style="background:#d1fae5;color:#065f46;">Spiritual · The Guide</span>
+        <span class="sb-tag" style="background:#d1fae5;color:#065f46;">Spiritual-Reflective · The Guide</span>
         <p class="sb-desc">Choose up to three values that feel most like you. Your values are your compass — they help you know what direction to go when things feel confusing.</p>
         <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Find My Values</button>
         <div class="activity-panel" hidden>
@@ -840,16 +840,16 @@
           </div>
           <div class="value-result" id="value-result" aria-live="polite"></div>
           <p style="margin:.75rem 0 0;font-size:.82rem;color:#065f46;font-weight:600;">
-            &#128161; The Guide says: When something feels hard or wrong, check it against your values. They'll help you know what to do.
+            The Guide says: When something feels hard or wrong, check it against your values. They'll help you know what to do.
           </p>
         </div>
       </div>
 
-      <!-- One Small Step — Agentic -->
+      <!-- One Small Step — Agentic-Generative -->
       <div class="skill-builder-card">
-        <div class="sb-icon" aria-hidden="true">&#9889;</div>
+        <div class="sb-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-md"></div>
         <div class="sb-name">One Small Step</div>
-        <span class="sb-tag" style="background:#fef9c3;color:#854d0e;">Agentic · The Builder</span>
+        <span class="sb-tag" style="background:#fef9c3;color:#854d0e;">Agentic-Generative · The Builder</span>
         <p class="sb-desc">Think of something you've been wanting to do but haven't started. Break it into tiny steps. Then commit to just the first one — that's all you need.</p>
         <button class="activity-toggle" onclick="toggleActivity(this)" aria-expanded="false">Plan My Step</button>
         <div class="activity-panel" hidden>
@@ -867,7 +867,7 @@
             <textarea class="reflection-input" id="step-when" rows="1" placeholder="Today, tomorrow, this week..."></textarea>
           </div>
           <p style="margin:.75rem 0 0;font-size:.82rem;color:#854d0e;font-weight:600;">
-            &#128161; The Builder says: You don't need to see the whole staircase. Just take the first step.
+            The Builder says: You don't need to see the whole staircase. Just take the first step.
           </p>
         </div>
       </div>
@@ -898,39 +898,39 @@
       <div id="age-5-7" class="age-content active" role="tabpanel" aria-label="Activities for ages 5 to 7">
         <div class="activity-list">
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127774;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Feeling Faces Drawing</div>
-            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <div class="activity-item-skill">Emotional-Adaptive · The Feeler</div>
             <p class="activity-item-desc">Draw a face showing how you feel right now. Give the feeling a color. Share it with a grown-up and tell them one thing about it.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#129504;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Bubble Breathing</div>
-            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <div class="activity-item-skill">Somatic-Regulative · The Grounder</div>
             <p class="activity-item-desc">Breathe in slowly like you're blowing up the biggest bubble in the world. Let it out even slower. Do it three times. Notice how your body feels after.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#129309;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">My Helper List</div>
-            <div class="activity-item-skill">Relational · The Connector</div>
+            <div class="activity-item-skill">Relational-Connective · The Connector</div>
             <p class="activity-item-desc">Draw or write the names of three people you trust. Practice saying "Can you help me?" out loud — it gets easier every time you try!</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#11088;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">My Superhero Power</div>
-            <div class="activity-item-skill">Agentic · The Builder</div>
+            <div class="activity-item-skill">Agentic-Generative · The Builder</div>
             <p class="activity-item-desc">Draw yourself as a superhero. What is your special power? What challenge does your superhero solve? You get to choose!</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127807;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">My Happy Thought Box</div>
-            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <div class="activity-item-skill">Spiritual-Reflective · The Guide</div>
             <p class="activity-item-desc">Decorate a small box or draw a picture of one. Put little notes inside with things that make you happy, things you love, and people who matter to you.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128073;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">What Can I Change?</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">Draw a big circle. Inside, draw or write things you CAN change. Outside the circle, draw things you can't change. Focus on the inside!</p>
           </div>
         </div>
@@ -940,39 +940,39 @@
       <div id="age-8-10" class="age-content" role="tabpanel" aria-label="Activities for ages 8 to 10">
         <div class="activity-list">
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128221;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Feelings Journal</div>
-            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <div class="activity-item-skill">Emotional-Adaptive · The Feeler</div>
             <p class="activity-item-desc">Each day for one week, write one feeling you had and what caused it. Notice patterns. Are there certain times or situations that bring up certain feelings?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128337;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">5-4-3-2-1 Grounding</div>
-            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <div class="activity-item-skill">Somatic-Regulative · The Grounder</div>
             <p class="activity-item-desc">When you feel anxious, name 5 things you see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. It brings you back to right now.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#129309;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Buddy Check-In</div>
-            <div class="activity-item-skill">Relational · The Connector</div>
+            <div class="activity-item-skill">Relational-Connective · The Connector</div>
             <p class="activity-item-desc">Pick one friend or classmate to check in with this week. Ask them how they're really doing — and really listen. Then share something about your own week too.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127919;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Goal and Steps Map</div>
-            <div class="activity-item-skill">Agentic · The Builder</div>
+            <div class="activity-item-skill">Agentic-Generative · The Builder</div>
             <p class="activity-item-desc">Choose something you want to achieve. Draw a path with five stepping-stone shapes. Write one small action on each stone. Start with the first one this week.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128161;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Flip-It Challenge</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">Think of something that went wrong. Rewrite it as a learning story: "I used to think... but now I know..." How does the new version feel different?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#129513;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Values Sorting</div>
-            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <div class="activity-item-skill">Spiritual-Reflective · The Guide</div>
             <p class="activity-item-desc">Write 10 things you care about on slips of paper. Sort them from most important to least. Talk with someone about why your top three matter so much to you.</p>
           </div>
         </div>
@@ -982,45 +982,45 @@
       <div id="age-11-14" class="age-content" role="tabpanel" aria-label="Activities for ages 11 to 14">
         <div class="activity-list">
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128247;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Resilience Interview</div>
-            <div class="activity-item-skill">Relational · The Connector</div>
+            <div class="activity-item-skill">Relational-Connective · The Connector</div>
             <p class="activity-item-desc">Interview an adult you admire about a hard time in their life. Ask: What happened? How did you get through it? Who helped you? What did you learn? Reflect on what you hear.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128209;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Reframing Practice</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">Write about a current challenge. Then write three different perspectives on it: a friend's view, a future self's view, and a scientist's view. Which perspective opens up new solutions?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#129517;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Body Scan Journal</div>
-            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <div class="activity-item-skill">Somatic-Regulative · The Grounder</div>
             <p class="activity-item-desc">Each morning for a week, do a 2-minute body scan: close your eyes and notice each body part from toes to head. Where is tension? Where is calm? Write what you notice.</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128203;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Emotion Mapping</div>
-            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <div class="activity-item-skill">Emotional-Adaptive · The Feeler</div>
             <p class="activity-item-desc">For one week, track your emotions with a chart: time, feeling, intensity (1-10), what triggered it. At the end of the week, look for patterns. What do they tell you?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128278;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Purpose Letter</div>
-            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <div class="activity-item-skill">Spiritual-Reflective · The Guide</div>
             <p class="activity-item-desc">Write a letter to your future self (5 years from now). What do you hope matters to you? What kind of person do you want to be? What will you have done that felt meaningful?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128640;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">30-Day Challenge</div>
-            <div class="activity-item-skill">Agentic · The Builder</div>
+            <div class="activity-item-skill">Agentic-Generative · The Builder</div>
             <p class="activity-item-desc">Choose one small habit to build over 30 days — something that takes just 5 minutes. Track it daily. At the end, reflect: How did starting small lead to something bigger?</p>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128100;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Strengths Inventory</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">Ask three people who know you well to name two strengths they see in you. Compare their answers with your own list. Which strengths surprise you? How can you use them more often?</p>
           </div>
         </div>
@@ -1030,9 +1030,9 @@
       <div id="age-15-18" class="age-content" role="tabpanel" aria-label="Activities for ages 15 to 18">
         <div class="activity-list">
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127912;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Identity Collage</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">Create a visual collage — digital or physical — that represents the different parts of who you are: roles, interests, values, questions, and contradictions. Notice which parts feel most and least like "you."</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">15 min</span>
@@ -1040,9 +1040,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127777;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Feelings Temperature Check</div>
-            <div class="activity-item-skill">Emotional · The Feeler</div>
+            <div class="activity-item-skill">Emotional-Adaptive · The Feeler</div>
             <p class="activity-item-desc">Rate your emotional intensity on a scale of 1–10 three times a day for a week. Note the time, the feeling, and what was happening. Track patterns: when are your highs? Your lows? What shifts your temperature?</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">5 min</span>
@@ -1050,9 +1050,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127911;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Movement Playlist</div>
-            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <div class="activity-item-skill">Somatic-Regulative · The Grounder</div>
             <p class="activity-item-desc">Build three playlists: one for high-energy moments, one for calm and focus, one for processing hard feelings. Notice how music changes how your body and mood feel — then use it intentionally, not just as background noise.</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">15 min</span>
@@ -1060,9 +1060,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128101;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Relationship Map</div>
-            <div class="activity-item-skill">Relational · The Connector</div>
+            <div class="activity-item-skill">Relational-Connective · The Connector</div>
             <p class="activity-item-desc">Draw yourself in the center of a page. Place the people in your life at different distances around you. Ask: who energizes you? Who drains you? Which relationships support your growth, and which feel one-sided?</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">15 min</span>
@@ -1070,9 +1070,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127757;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Values Compass</div>
-            <div class="activity-item-skill">Spiritual · The Guide</div>
+            <div class="activity-item-skill">Spiritual-Reflective · The Guide</div>
             <p class="activity-item-desc">List 15 things you care about, then narrow to your top 5. For each one, write: how does this value show up in how I spend my time? Where is there a gap between what I value and how I actually live?</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">15 min</span>
@@ -1080,9 +1080,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#127942;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Small Wins Tracker</div>
-            <div class="activity-item-skill">Agentic · The Builder</div>
+            <div class="activity-item-skill">Agentic-Generative · The Builder</div>
             <p class="activity-item-desc">Each night for two weeks, write one thing you did that moved you forward — however small. Review at the end of the week. Progress is often invisible day to day but undeniable week to week.</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">5 min</span>
@@ -1090,9 +1090,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128241;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/somatic-regulative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Digital Audit</div>
-            <div class="activity-item-skill">Somatic · The Grounder</div>
+            <div class="activity-item-skill">Somatic-Regulative · The Grounder</div>
             <p class="activity-item-desc">Check your screen time data for the past week. Ask: which apps leave you energized? Which leave you anxious or empty? Try a 24-hour intentional-use experiment — only pick up your phone with a clear purpose — and journal what changes.</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">10 min</span>
@@ -1100,9 +1100,9 @@
             </div>
           </div>
           <div class="activity-item">
-            <div class="activity-item-icon" aria-hidden="true">&#128202;</div>
+            <div class="activity-item-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-sm"></div>
             <div class="activity-item-title">Stress Audit</div>
-            <div class="activity-item-skill">Cognitive · The Thinker</div>
+            <div class="activity-item-skill">Cognitive-Narrative · The Thinker</div>
             <p class="activity-item-desc">List every stressor in your life right now. Sort them into three columns: Can Control, Can Influence, Can't Control. Focus 80% of your energy on what you can control or influence — and let the rest go with intention.</p>
             <div class="activity-item-meta">
               <span class="activity-meta-tag">15 min</span>
@@ -1115,7 +1115,7 @@
       <!-- Ages 18+ -->
       <div id="age-18plus" class="age-content" role="tabpanel" aria-label="Pathway for ages 18 and older">
         <div class="age-18plus-panel">
-          <div style="font-size:3rem;margin-bottom:1rem;" aria-hidden="true">&#129513;</div>
+          <div style="margin-bottom:1rem;" aria-hidden="true"><img src="/icons/compass.svg" alt="" class="icon icon-lg"></div>
           <h3>Ready for the Full Assessment?</h3>
           <p>
             You've grown through all six resilience skills. Now it's time to discover your unique
@@ -1182,7 +1182,7 @@
     var STORIES = {
       connector: {
         title: 'Maya and the Mountain of Cardboard',
-        meta: 'Relational · The Connector · Ages 7–12',
+        meta: 'Relational-Connective · The Connector · Ages 7–12',
         body: [
           "Maya had a secret: she was terrible at asking for help. It wasn't that she was proud. Well, maybe a little. But mostly she worried — what if people thought she wasn't smart enough? What if they said no and she felt even worse?",
           "So when her teacher, Ms. Rivera, announced a huge project — build a model city out of recycled materials, in teams of three — Maya's stomach did a flip. Not because of the project. Because of the team part.",
@@ -1195,11 +1195,11 @@
           "And they did. Leo's layout guided where everything went. Priya made sure they stayed on track. Maya's artwork covered every building, bridge, and street corner in color and life. On presentation day, Ms. Rivera paused in front of their city longer than any other. 'This one has a soul,' she told the class.",
           "After school, Maya walked home smiling. She had built something beautiful — not alone, but together. That week, she started a new habit. Every time she felt stuck, she asked herself: Who could help me right now? And then — the scary part — she actually asked."
         ],
-        lesson: '&#129309; The Connector\'s Lesson: We don\'t have to face hard things alone. When things feel too big, reaching out brings people together and makes you stronger than you\'d ever be on your own.'
+        lesson: 'The Connector\'s Lesson: We don\'t have to face hard things alone. When things feel too big, reaching out brings people together and makes you stronger than you\'d ever be on your own.'
       },
       thinker: {
         title: 'Alex and the Flooded Experiment',
-        meta: 'Cognitive · The Thinker · Ages 8–13',
+        meta: 'Cognitive-Narrative · The Thinker · Ages 8–13',
         body: [
           "Alex had been planning his science fair experiment for three weeks. His idea was simple and brilliant (he thought): test which type of soil holds the most water. He'd set up four cups with four different soils, pour the same amount of water into each, and measure how much drained through.",
           "On the day of the experiment, Alex carefully arranged everything on his back porch. Sandy soil. Clay soil. Potting mix. Garden soil from the backyard. He labeled each cup, filled his measuring cup with exactly 100ml of water, and — a sudden gust of wind knocked everything off the table.",
@@ -1212,11 +1212,11 @@
           "He didn't win first place. But he got a Creativity Award, and the soil scientist gave him her business card. On the drive home, Alex thought about his sister's question: What do you know that you haven't tested yet? It was just a new way of looking at the same problem.",
           "He started keeping that question in his back pocket — for science, for school, for life. When things fall apart, flip the angle."
         ],
-        lesson: '&#129504; The Thinker\'s Lesson: When something goes wrong, ask yourself: What can I control? What can I learn? What haven\'t I tried yet? Changing the angle can turn a problem into a discovery.'
+        lesson: 'The Thinker\'s Lesson: When something goes wrong, ask yourself: What can I control? What can I learn? What haven\'t I tried yet? Changing the angle can turn a problem into a discovery.'
       },
       grounder: {
         title: 'Sam and the Big Game',
-        meta: 'Somatic · The Grounder · Ages 6–12',
+        meta: 'Somatic-Regulative · The Grounder · Ages 6–12',
         body: [
           "Sam had been playing soccer since she was five years old. She loved the game — the running, the teamwork, the way time seemed to stop when the ball was at her feet. But today was different. Today was the regional championship, and Sam's body would not cooperate.",
           "From the moment she woke up, something felt wrong. Her heart was beating too fast. Her hands were cold even inside the house. When she ate breakfast, her stomach clenched and she could only manage half a piece of toast. Just nerves, she told herself. Everyone gets nervous.",
@@ -1229,11 +1229,11 @@
           "'You came back into your body,' Coach Dani said. 'Anxiety pulls your mind into the future — all the what-ifs. Grounding brings you back to right now.'",
           "Sam played that game. Their team lost by one goal. But in the second half, when the pressure was highest, she noticed herself starting to spiral — and she did it on her own: feet on the ground, slow breath, look around. She came back every time. On the drive home, her teammate leaned over. 'You looked so calm out there in the second half. How?' Sam smiled. 'I remembered where I was.'"
         ],
-        lesson: '&#128154; The Grounder\'s Lesson: When your body feels out of control, you can bring it back. Feel your feet on the ground. Breathe slowly. Look around. Your body knows how to calm down — you just have to remind it.'
+        lesson: 'The Grounder\'s Lesson: When your body feels out of control, you can bring it back. Feel your feet on the ground. Breathe slowly. Look around. Your body knows how to calm down — you just have to remind it.'
       },
       feeler: {
         title: 'Jordan and the Invisible Knot',
-        meta: 'Emotional · The Feeler · Ages 5–10',
+        meta: 'Emotional-Adaptive · The Feeler · Ages 5–10',
         body: [
           "Jordan was seven, and something was wrong. She just didn't know what to call it.",
           "It started after Grandma Bea moved to Florida. Grandma Bea was the person Jordan called every day after school. She always asked about Jordan's day like it was the most important news in the world. She made the best cocoa with tiny marshmallows and let Jordan stay up an extra hour when she visited.",
@@ -1246,11 +1246,11 @@
           "They called Grandma Bea on video. Jordan told her about the Feelings Wheel. 'Oh my sweet girl,' Grandma said, her face filling the screen. 'I have that knot too. Let's not let it stay secret, okay? Let's name it every time.'",
           "They started a new ritual: every Sunday call, they each named one feeling they'd had that week. Jordan still missed Grandma. But the knot loosened a little. Because it had a name. And names, she learned, were the beginning of understanding."
         ],
-        lesson: '&#10084;&#65039; The Feeler\'s Lesson: All feelings are okay — even the hard ones. When we give a feeling a name, it loses some of its power over us. Feelings are messages, not enemies.'
+        lesson: 'The Feeler\'s Lesson: All feelings are okay — even the hard ones. When we give a feeling a name, it loses some of its power over us. Feelings are messages, not enemies.'
       },
       guide: {
         title: 'River and the Compass',
-        meta: 'Spiritual · The Guide · Ages 9–14',
+        meta: 'Spiritual-Reflective · The Guide · Ages 9–14',
         body: [
           "River was eleven when her family moved from a small town in Oregon to a busy city in Texas. Everything was different. The school was three times bigger. The streets were loud and unfamiliar. The kids already had their groups, their inside jokes, their routines.",
           "River had none of that. She sat at the end of long lunch tables feeling invisible. She went through the school days like a gray fog — going where she was told, learning things she couldn't care about, waiting for something to feel like it meant something.",
@@ -1263,11 +1263,11 @@
           "She didn't find herself in the new city all at once. But she found a thread — something she cared about — and followed it. That thread led to a club. The club led to Deja. Deja led to other things.",
           "Her dad had been right. You don't find your compass. You look for the one true thing, and it points the way."
         ],
-        lesson: '&#127807; The Guide\'s Lesson: When everything feels unfamiliar and hard, look for the one thing that still feels like you. Your values and what you love are your compass — they\'ll show you which way to go.'
+        lesson: 'The Guide\'s Lesson: When everything feels unfamiliar and hard, look for the one thing that still feels like you. Your values and what you love are your compass — they\'ll show you which way to go.'
       },
       builder: {
         title: 'Kai and the Six-String Mountain',
-        meta: 'Agentic · The Builder · Ages 8–14',
+        meta: 'Agentic-Generative · The Builder · Ages 8–14',
         body: [
           "Kai was twelve years old and had wanted to play guitar since he was eight. He knew what it felt like to want something for a long time without doing anything about it. The guitar sat in his uncle's garage — an old acoustic with scratched wood and six real strings — and every time Kai visited, he looked at it. But he never picked it up.",
           "Because what if he was bad at it? What if he tried and failed and everyone knew? The day his uncle said, 'That guitar's yours if you want it,' Kai carried it home, propped it against his bedroom wall, and then went to do homework.",
@@ -1280,22 +1280,22 @@
           "Kai thought about the guitar standing against the wall for two weeks. All that time, he'd thought he needed to know how to play before he could begin. But that wasn't it. You just needed one chord. One small step. The next one comes after.",
           "He still wasn't very good. But he was better than yesterday. And that, he decided, was exactly enough."
         ],
-        lesson: '&#9889; The Builder\'s Lesson: You don\'t need to be ready before you begin. You just need one small step. The next step will come after — but only if you start.'
+        lesson: 'The Builder\'s Lesson: You don\'t need to be ready before you begin. You just need one small step. The next step will come after — but only if you start.'
       }
     };
 
     /* ── Emotion prompts ── */
     var EMOTION_PROMPTS = {
-      happy:   'That\'s wonderful! &#127775; What made you feel happy today? Can you do more of that this week?',
-      sad:     'It\'s okay to feel sad. &#128149; Sadness means something mattered to you. Who is one person you could talk to right now?',
-      angry:   'Anger has energy in it. &#128293; Before you act on it, try three slow breaths. Then ask: what do I actually need right now?',
-      worried: 'Worry often lives in the future. &#128161; Ask yourself: what is real right now, in this moment? What is one thing I can do today?',
-      lonely:  'Loneliness is hard. &#128149; Is there one person you could reach out to — a text, a wave, or a knock on a door?',
-      excited: 'Excitement is energy for good things! &#127775; What are you excited about? How can you use this feeling to do something you love?',
-      confused:'Confusion means your brain is working hard. &#129504; It\'s okay not to have all the answers. What is one question you could ask someone you trust?',
-      proud:   'You should be proud! &#127942; What did you do to earn this feeling? Take a moment to really celebrate it.',
-      scared:  'Being scared is brave — because you feel it and keep going. &#128274; Take a breath. You are safe right now. What is one tiny safe thing around you?',
-      calm:    'Calm is a superpower. &#128524; This is a great time to think, plan, or just rest. Enjoy it — you\'ve earned it.'
+      happy:   'That\'s wonderful! What made you feel happy today? Can you do more of that this week?',
+      sad:     'It\'s okay to feel sad. Sadness means something mattered to you. Who is one person you could talk to right now?',
+      angry:   'Anger has energy in it. Before you act on it, try three slow breaths. Then ask: what do I actually need right now?',
+      worried: 'Worry often lives in the future. Ask yourself: what is real right now, in this moment? What is one thing I can do today?',
+      lonely:  'Loneliness is hard. Is there one person you could reach out to — a text, a wave, or a knock on a door?',
+      excited: 'Excitement is energy for good things! What are you excited about? How can you use this feeling to do something you love?',
+      confused:'Confusion means your brain is working hard. It\'s okay not to have all the answers. What is one question you could ask someone you trust?',
+      proud:   'You should be proud! What did you do to earn this feeling? Take a moment to really celebrate it.',
+      scared:  'Being scared is brave — because you feel it and keep going. Take a breath. You are safe right now. What is one tiny safe thing around you?',
+      calm:    'Calm is a superpower. This is a great time to think, plan, or just rest. Enjoy it — you\'ve earned it.'
     };
 
     /* ── Story modal ── */
