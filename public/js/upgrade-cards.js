@@ -63,7 +63,7 @@
                     ${escapeHtml(btnLabel)}
                 </button>
                 <p class="upgrade-card__trust">
-                    <span aria-hidden="true">&#128274;</span> Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
+                    <img src="/icons/lock.svg" alt="" aria-hidden="true" class="icon icon-xs"> Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
                 </p>
             </div>
         `;
@@ -102,7 +102,7 @@
         return `
             <div class="payment-overlay" role="region" aria-label="Premium content — locked">
                 <div class="payment-overlay__inner">
-                    <span class="payment-overlay__icon" aria-hidden="true">&#128274;</span>
+                    <span class="payment-overlay__icon" aria-hidden="true"><img src="/icons/lock.svg" alt="" class="icon icon-md"></span>
                     <p class="payment-overlay__message">
                         Unlock with <strong>${escapeHtml(label)}</strong>
                     </p>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Background -->
+  <circle cx="32" cy="32" r="30" fill="#F3EEFF"/>
+  <!-- Three flowing waves suggesting emotional adaptation -->
+  <!-- Wave 1 (inner, most prominent) -->
+  <path d="M14 36 C19 28 25 44 32 36 C39 28 45 44 50 36" stroke="#8B5CF6" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Wave 2 (middle) -->
+  <path d="M10 42 C16 32 23 50 32 40 C41 30 48 46 54 36" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <!-- Wave 3 (outer, subtle) -->
+  <path d="M8 48 C15 36 22 54 32 44 C42 34 49 50 56 40" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.35"/>
+  <!-- Heart dot at center top -->
+  <path d="M32 20 C32 20 26 14 26 19 C26 24 32 28 32 28 C32 28 38 24 38 19 C38 14 32 20 32 20Z" fill="#8B5CF6"/>
+</svg>

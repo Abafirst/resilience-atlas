@@ -111,16 +111,25 @@
 
     function _showSuccessBanner(tier) {
         var msg = tier === 'business'
-            ? '🎉 Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
+            ? 'Welcome to the Business tier! Team analytics and dashboard are now unlocked.'
             : tier === 'atlas-premium'
-            ? '🎉 Welcome to Atlas Premium! All premium features are now unlocked.'
-            : '🎉 Your Deep Resilience Report is now unlocked!';
+            ? 'Welcome to Atlas Premium! All premium features are now unlocked.'
+            : 'Your Deep Resilience Report is now unlocked!';
 
         var banner = document.createElement('div');
         banner.className = 'payment-success-banner';
         banner.setAttribute('role', 'alert');
         banner.setAttribute('aria-live', 'polite');
-        banner.textContent = msg;
+
+        var iconImg = document.createElement('img');
+        iconImg.src = '/icons/success.svg';
+        iconImg.alt = '';
+        iconImg.setAttribute('aria-hidden', 'true');
+        iconImg.className = 'icon icon-sm';
+
+        var textNode = document.createTextNode(' ' + msg);
+        banner.appendChild(iconImg);
+        banner.appendChild(textNode);
         document.body.insertBefore(banner, document.body.firstChild);
         setTimeout(function () { banner.remove(); }, 7000);
     }

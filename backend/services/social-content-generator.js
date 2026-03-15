@@ -20,7 +20,7 @@
 const BRANDING_URL  = 'resilienceatlas.com';
 const BRANDING_NAME = 'The Resilience Atlas™';
 
-// ── Dimension-to-emoji mapping ─────────────────────────────────────────────────
+// ── Dimension-to-emoji mapping (used for social media platform posts only) ────
 
 const DIMENSION_EMOJIS = {
   'Cognitive-Narrative':   '🧠',

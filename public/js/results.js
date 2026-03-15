@@ -37,10 +37,30 @@ const TYPE_DESCRIPTIONS = {
     'stress. Your physical practices and consistent routines provide a reliable foundation.',
 };
 // ── Utility: show feedback alert ───────────────────────
-function showAlert(elID, message, type, emoji) {
+const ALERT_ICON_MAP = {
+  'warning': '/icons/checkmark.svg',
+  'lock':    '/icons/lock.svg',
+  'error':   '/icons/lock.svg',
+  'email':   '/icons/compass.svg',
+  'success': '/icons/checkmark.svg',
+  'report':  '/icons/cognitive-narrative.svg',
+};
+
+function showAlert(elID, message, type, iconKey) {
   const el = document.getElementById(elID);
   if (!el) return;
-  el.textContent = (emoji ? emoji + ' ' : '') + message;
+  el.innerHTML = '';
+  const iconSrc = iconKey ? ALERT_ICON_MAP[iconKey] : null;
+  if (iconSrc) {
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    img.alt = '';
+    img.setAttribute('aria-hidden', 'true');
+    img.className = 'icon icon-xs';
+    img.style.marginRight = '0.35em';
+    el.appendChild(img);
+  }
+  el.appendChild(document.createTextNode(message));
   el.classList.remove('alert-success', 'alert-error');
   el.classList.add(type === 'success' ? 'alert-success' : 'alert-error');
 }
@@ -133,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Guard: require results ────────────────────────────
   if (!results || !results.scores) {
-    showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', '⚠️');
+    showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', 'warning');
     ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = '—';
@@ -239,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.addEventListener('click', () => {
       try {
         if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
-          showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', '🔒');
+          showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
           const upgradeEl = document.getElementById('upgradeCardsContainer');
           upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
@@ -252,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `&dominantType=${encodeURIComponent(results.dominantType)}` +
           `&scores=${scoresStr}${emailParam}`;
       } catch (e) {
-        showAlert('pdfAlert', e.message || 'Download failed!', 'error', '❌');
+        showAlert('pdfAlert', e.message || 'Download failed!', 'error', 'error');
       }
     });
   }
@@ -277,11 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
         : function(value) { return Boolean(value); };
       const isValid = validateEmail(inputEmail || '');
       if (!inputEmail || !isValid) {
-        showAlert('emailAlert', 'Please enter a valid email address.', 'error', '📧');
+        showAlert('emailAlert', 'Please enter a valid email address.', 'error', 'email');
         if (emailInput) emailInput.focus();
         return;
       }
-      showAlert('emailAlert', 'Sending your report to ' + inputEmail + '...', 'success', '✉️');
+      showAlert('emailAlert', 'Sending your report to ' + inputEmail + '...', 'success', 'email');
       try {
         const storedResults = localStorage.getItem('resilience_results');
         const emailResults = storedResults ? JSON.parse(storedResults) : null;
@@ -296,9 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
           `&email=${encodeURIComponent(inputEmail)}`;
         window.open(url, '_blank');
 
-        showAlert('emailAlert', 'Generating your report...', 'success', '📄');
+        showAlert('emailAlert', 'Generating your report...', 'success', 'report');
       } catch (e) {
-        showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', '❌');
+        showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', 'error');
       }
     });
   }

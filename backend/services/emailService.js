@@ -16,12 +16,12 @@ const transporter = nodemailer.createTransport({
  * @param {Object} report - Report object containing summary and scores
  */
 async function sendQuizReport(to, name, report) {
-    const subject = '🌟 Your Resilience Profile from The Resilience Atlas™';
+    const subject = 'Your Resilience Profile from The Resilience Atlas\u2122';
 
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h1 style="color: #2c5f8a;">The Resilience Atlas™</h1>
-            <h2>Hello, ${name}! 👋</h2>
+            <h2>Hello, ${name}!</h2>
             <p>Thank you for completing The Resilience Atlas™ assessment. Here are your results:</p>
 
             <h3>Overall Resilience Score: <strong>${report.overall}%</strong></h3>
@@ -53,7 +53,7 @@ async function sendQuizReport(to, name, report) {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    logger.info(`📧 Quiz report email sent to ${to}: ${info.messageId}`);
+    logger.info(`Quiz report email sent to ${to}: ${info.messageId}`);
     return info;
 }
 
@@ -68,12 +68,12 @@ function capitalize(str) {
  * @param {string} joinLink - Full URL to the /join.html page with the invite token
  */
 async function sendInviteEmail(to, orgName, joinLink) {
-    const subject = `🤝 You're invited to join ${orgName} on The Resilience Atlas™`;
+    const subject = `You're invited to join ${orgName} on The Resilience Atlas\u2122`;
 
     const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h1 style="color: #2c5f8a;">The Resilience Atlas™</h1>
-            <h2>You've been invited! 🎉</h2>
+            <h2>You've been invited!</h2>
             <p>You have been invited to join <strong>${orgName}</strong> on The Resilience Atlas™ — a professional resilience assessment platform.</p>
             <p>Click the link below to accept your invitation and complete a team resilience assessment:</p>
             <p style="text-align: center; margin: 2rem 0;">
@@ -103,7 +103,7 @@ async function sendInviteEmail(to, orgName, joinLink) {
     };
 
     const info = await transporter.sendMail(mailOptions);
-    logger.info(`📧 Invite email sent to ${to}: ${info.messageId}`);
+    logger.info(`Invite email sent to ${to}: ${info.messageId}`);
     return info;
 }
 
