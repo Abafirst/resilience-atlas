@@ -238,8 +238,8 @@ ctx.strokeStyle = 'rgba(6,182,212,0.55)';
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-? 'rgba(64,64,64,0.4)'
-: 'rgba(64,64,64,0.2)';
+? 'rgba(40,40,40,0.5)'
+: 'rgba(40,40,40,0.4)';
       ctx.stroke();
     });
 
@@ -249,7 +249,7 @@ ctx.strokeStyle = 'rgba(6,182,212,0.55)';
   function drawCrosshairs(ctx) {
     // Clean + crosshairs at the compass centre, inside the innermost ring
     ctx.save();
-ctx.strokeStyle = 'rgba(64,64,64,0.5)';
+ctx.strokeStyle = 'rgba(40,40,40,0.5)';
     ctx.lineWidth   = 0.5;
 
     var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
