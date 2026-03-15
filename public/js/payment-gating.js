@@ -195,7 +195,10 @@
         const upgrade   = params.get('upgrade');
         const sessionId = params.get('session_id');
 
-        if (upgrade !== 'success' || !sessionId) {
+        // Accept both 'success' (standard Stripe redirect) and tier names as upgrade param.
+        const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'deep-report' || upgrade === 'atlas-premium') && sessionId;
+
+        if (!isUpgradeRedirect) {
             // Show cancelled notice if needed.
             if (upgrade === 'cancelled') {
                 _cleanUrl();
@@ -210,6 +213,17 @@
                 setTier(data.tier);
                 if (data.email) {
                     localStorage.setItem(EMAIL_KEY, data.email);
+                }
+                // Restore results from localStorage into window so the page can render them.
+                if (!window.resilience_results) {
+                    try {
+                        const stored = localStorage.getItem('resilience_results');
+                        if (stored) {
+                            window.resilience_results = JSON.parse(stored);
+                        }
+                    } catch (e) {
+                        console.warn('[PaymentGating] Could not restore results:', e);
+                    }
                 }
                 _showSuccessBanner(data.tier);
                 applyGating();
