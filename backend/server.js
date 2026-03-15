@@ -109,6 +109,7 @@ app.use("/api/org/:organizationId/leadership-report", require("./routes/leadersh
 app.use("/api/insights", require("./routes/insights"));
 app.use("/api/dashboard", require("./routes/dashboard"));
 app.use("/api/organizations", require("./routes/organizations"));
+app.use("/api/orgs-advanced", require("./routes/org-advanced"));
 app.use("/api/growth", require("./routes/growth"));
 app.use("/api/atlas", require("./routes/atlas"));
 app.use("/api/share", require("./routes/share"));

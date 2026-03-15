@@ -109,9 +109,12 @@ const organizationSchema = new mongoose.Schema(
     },
 
     // Subscription plan level
+    // teams-starter: up to 25 users, 1 team
+    // teams-pro:     up to 250 users, unlimited teams
+    // enterprise:    unlimited users/teams + branding + SSO
     plan: {
       type: String,
-      enum: ['free', 'business', 'enterprise'],
+      enum: ['free', 'business', 'teams-starter', 'teams-pro', 'enterprise'],
       default: 'free',
     },
 
@@ -128,6 +131,24 @@ const organizationSchema = new mongoose.Schema(
       max_users:  { type: Number, default: 100 },
       custom_branding: { type: Boolean, default: false },
     },
+
+    // Sub-team references (multi-team support for Pro/Enterprise)
+    teamIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Team',
+      },
+    ],
+
+    // Custom branding — logo URL and primary color (Enterprise)
+    branding: {
+      logoUrl:      { type: String, trim: true, default: null },
+      primaryColor: { type: String, trim: true, default: null },
+      accentColor:  { type: String, trim: true, default: null },
+    },
+
+    // Webhook endpoints registered for this org
+    webhookUrls: [{ type: String, trim: true }],
   },
   { timestamps: true }
 );
