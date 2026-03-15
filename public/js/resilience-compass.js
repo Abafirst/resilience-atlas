@@ -460,4 +460,3 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
   // ── Expose globally ────────────────────────────────────────────────────────
   window.renderCompass = renderCompass;
 
-}());
