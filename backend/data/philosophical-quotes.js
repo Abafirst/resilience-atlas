@@ -21,9 +21,9 @@
 const DIMENSION_SUBTITLES = {
   'Cognitive-Narrative':   'Meaning & Perspective',
   'Agentic-Generative':    'Action & Growth',
-  'Relational':            'Support & Connection',
+  'Relational-Connective':            'Support & Connection',
   'Emotional-Adaptive':    'Emotional Flexibility',
-  'Spiritual-Existential': 'Purpose & Values',
+  'Spiritual-Reflective': 'Purpose & Values',
   'Somatic-Regulative':    'Body & Habits',
 };
 
@@ -237,8 +237,8 @@ const PHILOSOPHICAL_QUOTES = [
 
   {
     id: 'rel-001',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'No man is an island, entire of itself; every man is a piece of the continent, a part of the main.',
     quoteAuthor: 'John Donne',
     microPractice: 'Send a short, genuine message of appreciation to someone who supports your resilience.',
@@ -246,8 +246,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-002',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'The meeting of two personalities is like the contact of two chemical substances: if there is any reaction, both are transformed.',
     quoteAuthor: 'Carl Jung',
     microPractice: 'Reach out to one person you have been meaning to reconnect with, even for a brief check-in.',
@@ -255,8 +255,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-003',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'If you want to go fast, go alone. If you want to go far, go together.',
     quoteAuthor: 'African Proverb',
     microPractice: 'Identify one goal or challenge where asking for support could accelerate your progress. Name who you could ask.',
@@ -264,8 +264,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-004',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'Compassion is not a relationship between the healer and the wounded. It is a relationship between equals.',
     quoteAuthor: 'Pema Chödrön',
     microPractice: 'Practise listening to someone today without offering advice. Simply acknowledge their experience with full attention.',
@@ -273,8 +273,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-005',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'Out beyond ideas of wrongdoing and rightdoing, there is a field. I will meet you there.',
     quoteAuthor: 'Rumi',
     microPractice: 'Think of a relationship with tension. Write a brief note — even unsent — from a place of curiosity rather than judgement.',
@@ -282,8 +282,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-006',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'The purpose of human life is to serve, and to show compassion and the will to help others.',
     quoteAuthor: 'Albert Schweitzer',
     microPractice: 'Do one small act of service or kindness for someone today without expectation of recognition.',
@@ -291,8 +291,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-007',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'Love and compassion are necessities, not luxuries. Without them, humanity cannot survive.',
     quoteAuthor: 'The Dalai Lama',
     microPractice: 'Write the names of three people you are grateful for. Send at least one of them a brief message today.',
@@ -300,8 +300,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-008',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'We are made for cooperation, like feet, like hands, like eyelids, like the rows of the upper and lower teeth.',
     quoteAuthor: 'Marcus Aurelius',
     microPractice: 'Identify one way you can collaborate or offer support to a colleague or family member today.',
@@ -309,8 +309,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-009',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'A single arrow is easily broken, but not ten in a bundle.',
     quoteAuthor: 'Japanese Proverb',
     microPractice: 'Reflect on your support network. Identify one relationship you would like to strengthen and plan one step to do so.',
@@ -318,8 +318,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-010',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'The greatest thing in the world is to know how to belong to oneself.',
     quoteAuthor: 'Michel de Montaigne',
     microPractice: 'Spend two minutes in quiet, noticing what you genuinely need in a relationship right now.',
@@ -327,8 +327,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'rel-011',
-    resilienceDimension: 'Relational',
-    subtitle: DIMENSION_SUBTITLES['Relational'],
+    resilienceDimension: 'Relational-Connective',
+    subtitle: DIMENSION_SUBTITLES['Relational-Connective'],
     quoteText: 'Wherever you are, be there totally.',
     quoteAuthor: 'Eckhart Tolle',
     microPractice: 'Put aside your phone during the next conversation you have. Offer complete, unhurried presence.',
@@ -441,8 +441,8 @@ const PHILOSOPHICAL_QUOTES = [
 
   {
     id: 'se-001',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'He who has a why to live can bear almost any how.',
     quoteAuthor: 'Friedrich Nietzsche',
     microPractice: 'Write one to three sentences about why you are here — your personal "why" that guides your daily choices.',
@@ -450,8 +450,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-002',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'Man\'s search for meaning is the primary motivation in his life.',
     quoteAuthor: 'Viktor Frankl',
     microPractice: 'Reflect on a value that guided a recent decision. Write one sentence about how that value shapes who you are.',
@@ -459,8 +459,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-003',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'The life of the spirit is lived in mystery. But mystery is not darkness. Mystery is what the light itself is made of.',
     quoteAuthor: 'Rainer Maria Rilke',
     microPractice: 'Spend five minutes reflecting on one question: What would my life look like if it fully expressed my deepest values?',
@@ -468,8 +468,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-004',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'The privilege of a lifetime is to become who you truly are.',
     quoteAuthor: 'Carl Jung',
     microPractice: 'Identify one lesson this week — from a conversation, a setback, or an observation — and reflect on what it taught you about your values.',
@@ -477,8 +477,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-005',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'Be yourself; everyone else is already taken.',
     quoteAuthor: 'Oscar Wilde',
     microPractice: 'List three qualities that are uniquely yours. Reflect on how living from those qualities expresses your purpose.',
@@ -486,8 +486,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-006',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'Do not seek to follow in the footsteps of the wise. Seek what they sought.',
     quoteAuthor: 'Matsuo Basho',
     microPractice: 'Name one spiritual or philosophical teacher whose outlook inspires you. Write what they sought, and how that connects to your own longing.',
@@ -495,8 +495,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-007',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'The two most important days in your life are the day you are born and the day you find out why.',
     quoteAuthor: 'Attributed to Mark Twain',
     microPractice: 'Write a brief purpose statement — one or two sentences — beginning with: "I am here to…"',
@@ -504,8 +504,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-008',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.',
     quoteAuthor: 'Rumi',
     microPractice: 'Identify one inner shift — in attitude, belief, or habit — that would have a greater impact than an external change you are chasing.',
@@ -513,8 +513,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-009',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'Life has meaning only in the struggle. Triumph or defeat is in the hands of the gods. So let us celebrate the struggle.',
     quoteAuthor: 'Stevie Wonder',
     microPractice: 'Reflect on a current struggle. Write three ways this struggle is building something meaningful in you.',
@@ -522,8 +522,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-010',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'To see a world in a grain of sand and heaven in a wildflower, hold infinity in the palm of your hand and eternity in an hour.',
     quoteAuthor: 'William Blake',
     microPractice: 'Spend three minutes in focused awareness of one ordinary thing — a cup of tea, a leaf, the light. Notice what opens when you look deeply.',
@@ -531,8 +531,8 @@ const PHILOSOPHICAL_QUOTES = [
   },
   {
     id: 'se-011',
-    resilienceDimension: 'Spiritual-Existential',
-    subtitle: DIMENSION_SUBTITLES['Spiritual-Existential'],
+    resilienceDimension: 'Spiritual-Reflective',
+    subtitle: DIMENSION_SUBTITLES['Spiritual-Reflective'],
     quoteText: 'The spiritual life does not remove us from the world but leads us deeper into it.',
     quoteAuthor: 'Henri Nouwen',
     microPractice: 'Reflect on how your spiritual or philosophical life connects to your daily relationships and work. Write one concrete example.',

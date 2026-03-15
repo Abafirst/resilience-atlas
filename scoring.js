@@ -4,18 +4,18 @@ function calculateResilienceScores(answers, questions) {
     "Somatic-Regulative": 0,
     "Cognitive-Narrative": 0,
     "Emotional-Adaptive": 0,
-    "Relational": 0,
+    "Relational-Connective": 0,
     "Agentic-Generative": 0,
-    "Spiritual-Existential": 0
+    "Spiritual-Reflective": 0
   };
 
   const counts = {
     "Somatic-Regulative": 0,
     "Cognitive-Narrative": 0,
     "Emotional-Adaptive": 0,
-    "Relational": 0,
+    "Relational-Connective": 0,
     "Agentic-Generative": 0,
-    "Spiritual-Existential": 0
+    "Spiritual-Reflective": 0
   };
 
   answers.forEach((value, index) => {

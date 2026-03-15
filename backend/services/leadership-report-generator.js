@@ -14,10 +14,10 @@ const { generateObservations, generateRecommendations } = require('./insight-gen
 
 const DIMENSIONS = [
   'Cognitive-Narrative',
-  'Relational',
+  'Relational-Connective',
   'Agentic-Generative',
   'Emotional-Adaptive',
-  'Spiritual-Existential',
+  'Spiritual-Reflective',
   'Somatic-Regulative',
 ];
 
@@ -47,7 +47,7 @@ const DIMENSION_COPY = {
     teamPattern: 'Team pattern: {level} development',
     recommendation: 'Introduce emotional literacy training and coping skills workshops.',
   },
-  'Spiritual-Existential': {
+  'Spiritual-Reflective': {
     high: 'Strong sense of purpose, values alignment, and meaning-making capacity.',
     low: 'Disconnection from purpose may reduce motivation and long-term resilience.',
     teamPattern: 'Team pattern: {level} development',

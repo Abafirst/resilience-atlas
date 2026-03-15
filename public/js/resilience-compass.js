@@ -6,11 +6,11 @@
 
   // ── Configuration ──────────────────────────────────────────────────────────
   var DIMENSIONS = [
-    'Relational',
+    'Relational-Connective',
     'Cognitive-Narrative',
     'Somatic-Regulative',
     'Emotional-Adaptive',
-    'Spiritual-Existential',
+    'Spiritual-Reflective',
     'Agentic-Generative'
   ];
 

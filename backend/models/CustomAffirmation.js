@@ -20,10 +20,10 @@ const CustomAffirmationSchema = new mongoose.Schema({
     type: String,
     enum: [
       'Cognitive-Narrative',
-      'Relational',
+      'Relational-Connective',
       'Agentic-Generative',
       'Emotional-Adaptive',
-      'Spiritual-Existential',
+      'Spiritual-Reflective',
       'Somatic-Regulative',
     ],
     required: true,

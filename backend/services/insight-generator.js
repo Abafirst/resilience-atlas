@@ -11,10 +11,10 @@
 
 const DIMENSIONS = [
   'Cognitive-Narrative',
-  'Relational',
+  'Relational-Connective',
   'Agentic-Generative',
   'Emotional-Adaptive',
-  'Spiritual-Existential',
+  'Spiritual-Reflective',
   'Somatic-Regulative',
 ];
 
@@ -152,7 +152,7 @@ function generateRecommendations(dimAnalysis) {
       }
     }
 
-    if (dim.name === 'Relational') {
+    if (dim.name === 'Relational-Connective') {
       if (level === 'high') {
         recs.push({
           title: 'Establish peer support accountability partnerships',
@@ -196,7 +196,7 @@ function generateRecommendations(dimAnalysis) {
       });
     }
 
-    if (dim.name === 'Spiritual-Existential' && (level === 'low' || level === 'moderate')) {
+    if (dim.name === 'Spiritual-Reflective' && (level === 'low' || level === 'moderate')) {
       recs.push({
         title: 'Facilitate values-alignment conversations',
         action: 'Host quarterly team sessions to revisit shared purpose and values',

@@ -49,11 +49,11 @@ const DIMENSION_KEYS = [
 
 // Map from quiz score keys → dashboard dimension keys
 const SCORE_KEY_MAP = {
-  'Relational':           'relational',
+  'Relational-Connective':           'relational',
   'Cognitive-Narrative':  'cognitive',
   'Somatic-Regulative':   'somatic',
   'Emotional-Adaptive':   'emotional',
-  'Spiritual-Existential':'spiritual',
+  'Spiritual-Reflective':'spiritual',
   'Agentic-Generative':   'agentic',
 };
 
@@ -380,7 +380,7 @@ router.get('/export/csv', authenticateJWT, requireOrgMember, async (req, res) =>
       'Email',
       'Team',
       'Overall_Score',
-      'Relational',
+      'Relational-Connective',
       'Cognitive',
       'Somatic',
       'Emotional',

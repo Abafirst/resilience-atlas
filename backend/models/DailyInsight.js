@@ -35,9 +35,9 @@ const dailyInsightSchema = new mongoose.Schema(
       enum: [
         'Cognitive-Narrative',
         'Agentic-Generative',
-        'Relational',
+        'Relational-Connective',
         'Emotional-Adaptive',
-        'Spiritual-Existential',
+        'Spiritual-Reflective',
         'Somatic-Regulative',
       ],
       required: true,

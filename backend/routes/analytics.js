@@ -22,7 +22,7 @@ const TeamResult       = require('../models/TeamResult');
  * to the canonical six-key set used in TeamResult.averages.
  *
  * ResilienceResult scores keys (from backend/routes/quiz.js):
- *   'Agentic-Generative', 'Relational', 'Spiritual-Existential',
+ *   'Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective',
  *   'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'
  *
  * Canonical keys in TeamResult.averages:

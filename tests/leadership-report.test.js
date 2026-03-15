@@ -92,7 +92,7 @@ const mockReport = {
   dimensionAnalysis: {},
   strengthDistribution: {},
   keyObservations: [
-    { type: 'strength', dimension: 'Relational', observation: 'Test obs', confidence: 90 },
+    { type: 'strength', dimension: 'Relational-Connective', observation: 'Test obs', confidence: 90 },
   ],
   recommendations: [
     {

@@ -18,7 +18,7 @@ const TYPE_DESCRIPTIONS = {
     'Your resilience is driven by meaning-making and reframing life experiences. ' +
     'You find strength in narrative coherence and the ability to construct meaningful ' +
     'stories from challenging events.',
-  'Relational':
+  'Relational-Connective':
     'Your resilience is strengthened through connection, trust, and supportive ' +
     'relationships. You thrive when you have people to lean on and meaningful bonds ' +
     'that sustain you.',
@@ -29,7 +29,7 @@ const TYPE_DESCRIPTIONS = {
   'Emotional-Adaptive':
     'You show flexibility in managing emotions and adapting to stress. You can ' +
     'recognize, tolerate, and work skillfully with a wide range of emotional experiences.',
-  'Spiritual-Existential':
+  'Spiritual-Reflective':
     'Your resilience is grounded in purpose, values, and a sense of meaning beyond ' +
     'yourself. You draw strength from a coherent worldview and connection to something larger.',
 'Somatic-Regulative':

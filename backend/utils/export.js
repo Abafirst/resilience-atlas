@@ -23,7 +23,7 @@ function buildCsv(results) {
     'Name',
     'Email',
     'Overall Score',
-    'Relational',
+    'Relational-Connective',
     'Cognitive',
     'Somatic',
     'Emotional',
@@ -114,7 +114,7 @@ function renderPdfHtml(org, teamResult, results) {
   });
 
   const dimensionRows = [
-    ['Relational', avgScores.relational],
+    ['Relational-Connective', avgScores.relational],
     ['Cognitive', avgScores.cognitive],
     ['Somatic', avgScores.somatic],
     ['Emotional', avgScores.emotional],

@@ -8,29 +8,29 @@
   'use strict';
 
   var DIMENSIONS = [
-    'Relational',
+    'Relational-Connective',
     'Cognitive-Narrative',
     'Somatic-Regulative',
     'Emotional-Adaptive',
-    'Spiritual-Existential',
+    'Spiritual-Reflective',
     'Agentic-Generative'
   ];
 
   var HERO_SCORES = {
-    'Relational':            78,
+    'Relational-Connective':            78,
     'Cognitive-Narrative':   65,
     'Somatic-Regulative':    58,
     'Emotional-Adaptive':    72,
-    'Spiritual-Existential': 82,
+    'Spiritual-Reflective': 82,
     'Agentic-Generative':    69
   };
 
   var EXAMPLE_SCORES = {
-    'Relational':            85,
+    'Relational-Connective':            85,
     'Cognitive-Narrative':   60,
     'Somatic-Regulative':    52,
     'Emotional-Adaptive':    70,
-    'Spiritual-Existential': 80,
+    'Spiritual-Reflective': 80,
     'Agentic-Generative':    64
   };
 

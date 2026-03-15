@@ -154,10 +154,10 @@
 
   const DIMENSION_LABELS = {
     'Cognitive-Narrative': 'Cognitive-Narrative',
-    'Relational': 'Relational',
+    'Relational-Connective': 'Relational-Connective',
     'Agentic-Generative': 'Agentic-Generative',
     'Emotional-Adaptive': 'Emotional-Adaptive',
-    'Spiritual-Existential': 'Spiritual-Existential',
+    'Spiritual-Reflective': 'Spiritual-Reflective',
     'Somatic-Regulative': 'Somatic-Regulative',
   };
 

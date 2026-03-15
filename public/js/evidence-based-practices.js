@@ -145,7 +145,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 're-01',
     practiceTitle: 'Gratitude Outreach',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     duration: '5 minutes',
     emoji: '💌',
     instructions: [
@@ -176,7 +176,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 're-02',
     practiceTitle: 'Active Listening Practice',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     duration: '10 minutes',
     emoji: '👂',
     instructions: [
@@ -207,7 +207,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 're-03',
     practiceTitle: 'Self-Compassion Break',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     duration: '5 minutes',
     emoji: '🤲',
     instructions: [
@@ -238,7 +238,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 're-04',
     practiceTitle: 'Connection Ritual',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     duration: '7 minutes',
     emoji: '🌐',
     instructions: [
@@ -526,7 +526,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'se-01',
     practiceTitle: 'Values Reflection',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     duration: '7 minutes',
     emoji: '🌟',
     instructions: [
@@ -557,7 +557,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'se-02',
     practiceTitle: 'Purpose Journaling',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     duration: '8 minutes',
     emoji: '🌱',
     instructions: [
@@ -588,7 +588,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'se-03',
     practiceTitle: 'Gratitude and Meaning Practice',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     duration: '5 minutes',
     emoji: '🙏',
     instructions: [
@@ -619,7 +619,7 @@ const EVIDENCE_BASED_PRACTICES = [
   {
     id: 'se-04',
     practiceTitle: 'Morning Intention Setting',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     duration: '4 minutes',
     emoji: '🌅',
     instructions: [

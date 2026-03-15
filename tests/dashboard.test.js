@@ -79,7 +79,7 @@ const mockResults = [
     userId: 'user001',
     organizationId: 'org001',
     overall: 82,
-    dominantType: 'Relational',
+    dominantType: 'Relational-Connective',
     dimension_scores: { relational: 85, cognitive: 78, somatic: 72, emotional: 80, spiritual: 88, agentic: 81 },
     scores: null,
     createdAt: new Date('2026-03-10'),

@@ -119,7 +119,7 @@ const mockResult = {
   email: 'alice@test.com',
   firstName: 'Alice',
   overall: 82,
-  dominantType: 'Relational',
+  dominantType: 'Relational-Connective',
   scores: { relational: 85, cognitive: 70, somatic: 60, emotional: 75, spiritual: 80, agentic: 72 },
   createdAt: new Date('2026-03-10'),
 };

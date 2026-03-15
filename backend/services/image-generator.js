@@ -41,9 +41,9 @@ const {
 const DIMENSION_HEADLINES = {
   'Cognitive-Narrative':   'When you need a fresh perspective',
   'Agentic-Generative':    'When you need to move forward',
-  'Relational':            'When connection matters most',
+  'Relational-Connective':            'When connection matters most',
   'Emotional-Adaptive':    'When emotions feel complex',
-  'Spiritual-Existential': 'When searching for meaning',
+  'Spiritual-Reflective': 'When searching for meaning',
   'Somatic-Regulative':    'When stress feels overwhelming',
 };
 

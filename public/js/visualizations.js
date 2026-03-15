@@ -104,8 +104,8 @@ function renderRadarChart(container, scores) {
   // ── Dimension metadata ────────────────────────────
   var TYPES = [
     'Agentic-Generative',
-    'Relational',
-    'Spiritual-Existential',
+    'Relational-Connective',
+    'Spiritual-Reflective',
     'Emotional-Adaptive',
     'Somatic-Regulative',
     'Cognitive-Narrative',
@@ -114,7 +114,7 @@ function renderRadarChart(container, scores) {
   // Multi-line labels to prevent truncation on radar axes
   var LABELS = [
     ['Agentic', 'Generative'],
-    ['Relational'],
+    ['Relational-Connective'],
     ['Spiritual', 'Existential'],
     ['Emotional', 'Adaptive'],
     ['Somatic', 'Regulative'],

@@ -82,8 +82,8 @@ app.get('/', (req, res) => {
 // 6 questions per type, max raw score 30 per type (5 per question).
 const RESILIENCE_TYPE_MAP = {
   'Agentic-Generative':    [0, 1, 2, 3, 4, 5],    // Q1–6:  Adaptive/Agentic
-  'Relational':            [6, 7, 8, 9, 10, 11],   // Q7–12: Relational
-  'Spiritual-Existential': [12, 13, 14, 15, 16, 17], // Q13–18: Existential
+  'Relational-Connective':            [6, 7, 8, 9, 10, 11],   // Q7–12: Relational
+  'Spiritual-Reflective': [12, 13, 14, 15, 16, 17], // Q13–18: Existential
   'Emotional-Adaptive':    [18, 19, 20, 21, 22, 23], // Q19–24: Emotional
   'Somatic-Regulative':    [24, 25, 26, 27, 28, 29], // Q25–30: Physical/Somatic
   'Cognitive-Narrative':   [30, 31, 32, 33, 34, 35], // Q31–36: Cognitive
@@ -98,10 +98,10 @@ app.use('/api/payments', require('./routes/payments'));
 // ── Quiz submission: compute 6-type resilience scores ─────────────────────────
 const QUIZ_TYPE_MAP = {
     'Cognitive-Narrative':  [30, 31, 32, 33, 34, 35], // Q31–Q36
-    'Relational':           [6,  7,  8,  9,  10, 11], // Q7–Q12
+    'Relational-Connective':           [6,  7,  8,  9,  10, 11], // Q7–Q12
     'Agentic-Generative':   [0,  1,  2,  3,  4,  5],  // Q1–Q6
     'Emotional-Adaptive':   [18, 19, 20, 21, 22, 23], // Q19–Q24
-    'Spiritual-Existential':[12, 13, 14, 15, 16, 17], // Q13–Q18
+    'Spiritual-Reflective':[12, 13, 14, 15, 16, 17], // Q13–Q18
     'Somatic-Regulative':   [24, 25, 26, 27, 28, 29], // Q25–Q30
 };
 const MAX_ANSWER = 5;

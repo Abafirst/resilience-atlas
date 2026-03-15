@@ -20,10 +20,10 @@ router.use(affirmationsLimiter);
 
 const VALID_RESILIENCE_TYPES = new Set([
   'Cognitive-Narrative',
-  'Relational',
+  'Relational-Connective',
   'Agentic-Generative',
   'Emotional-Adaptive',
-  'Spiritual-Existential',
+  'Spiritual-Reflective',
   'Somatic-Regulative',
 ]);
 
@@ -200,10 +200,10 @@ router.get('/by-type', (req, res) => {
   // this endpoint returns metadata for server-side use or API consumers.
   const AFFIRMATION_IDS_BY_TYPE = {
     'Cognitive-Narrative': ['cn-aff-01','cn-aff-02','cn-aff-03','cn-aff-04','cn-aff-05','cn-aff-06','cn-aff-07'],
-    'Relational':          ['re-aff-01','re-aff-02','re-aff-03','re-aff-04','re-aff-05','re-aff-06','re-aff-07'],
+    'Relational-Connective':          ['re-aff-01','re-aff-02','re-aff-03','re-aff-04','re-aff-05','re-aff-06','re-aff-07'],
     'Agentic-Generative':  ['ag-aff-01','ag-aff-02','ag-aff-03','ag-aff-04','ag-aff-05','ag-aff-06','ag-aff-07'],
     'Emotional-Adaptive':  ['ea-aff-01','ea-aff-02','ea-aff-03','ea-aff-04','ea-aff-05','ea-aff-06','ea-aff-07'],
-    'Spiritual-Existential':['se-aff-01','se-aff-02','se-aff-03','se-aff-04','se-aff-05','se-aff-06','se-aff-07'],
+    'Spiritual-Reflective':['se-aff-01','se-aff-02','se-aff-03','se-aff-04','se-aff-05','se-aff-06','se-aff-07'],
     'Somatic-Regulative':  ['sb-aff-01','sb-aff-02','sb-aff-03','sb-aff-04','sb-aff-05','sb-aff-06','sb-aff-07'],
   };
 

@@ -92,7 +92,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-01',
     text: 'I feel comfortable reaching out to others when I need support.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'both',
     actPrinciple: 'Values Clarification',
     abaPrinciple: 'Social Reinforcement and Help-Seeking Behavior',
@@ -102,7 +102,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-02',
     text: 'I maintain strong relationships during stressful times.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'both',
     actPrinciple: 'Committed Action',
     abaPrinciple: 'Behavioral Maintenance Through Social Contingencies',
@@ -112,7 +112,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-03',
     text: 'Talking with trusted people helps me regain perspective.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'both',
     actPrinciple: 'Acceptance',
     abaPrinciple: 'Social Reinforcement of Help-Seeking Behavior',
@@ -122,7 +122,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-04',
     text: 'I am worthy of love and connection.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'ACT',
     actPrinciple: 'Self-Compassion and Values',
     abaPrinciple: 'Self-Efficacy Statements and Emotional Regulation',
@@ -132,7 +132,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-05',
     text: 'My relationships are a source of strength.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'both',
     actPrinciple: 'Values Clarification',
     abaPrinciple: 'Identifying Social Motivating Operations',
@@ -142,7 +142,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-06',
     text: 'I can be vulnerable without losing my dignity.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'ACT',
     actPrinciple: 'Acceptance',
     abaPrinciple: 'Differential Reinforcement of Authentic Disclosure',
@@ -152,7 +152,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 're-aff-07',
     text: 'I contribute positively to the relationships that matter to me.',
-    resilience_type: 'Relational',
+    resilience_type: 'Relational-Connective',
     framework: 'both',
     actPrinciple: 'Committed Action',
     abaPrinciple: 'Positive Reinforcement of Prosocial Contributions',
@@ -308,7 +308,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-01',
     text: 'My life has meaning and purpose.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'ACT',
     actPrinciple: 'Values Clarification',
     abaPrinciple: 'Values as Motivating Operations for Behavior',
@@ -318,7 +318,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-02',
     text: 'I am connected to something larger than myself.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'ACT',
     actPrinciple: 'Self-as-Context',
     abaPrinciple: 'Identifying Community and Social Reinforcers',
@@ -328,7 +328,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-03',
     text: 'My values guide me through uncertainty.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'ACT',
     actPrinciple: 'Values as Compass',
     abaPrinciple: 'Rule-Governed Behavior Aligned with Personal Values',
@@ -338,7 +338,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-04',
     text: 'I can find meaning even in difficult experiences.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'both',
     actPrinciple: 'Acceptance and Meaning-Making',
     abaPrinciple: 'Conditioned Reinforcers in Adversity',
@@ -348,7 +348,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-05',
     text: 'My existence matters and contributes to the world.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'both',
     actPrinciple: 'Self-as-Context',
     abaPrinciple: 'Social Reinforcement of Contribution Behaviors',
@@ -358,7 +358,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-06',
     text: 'I am aligned with what truly matters to me.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'ACT',
     actPrinciple: 'Values-Based Living',
     abaPrinciple: 'Behavioral Consistency with Conditioned Motivating Operations',
@@ -368,7 +368,7 @@ const AFFIRMATION_LIBRARY = [
   {
     affirmationId: 'se-aff-07',
     text: 'My purpose gives me resilience and direction.',
-    resilience_type: 'Spiritual-Existential',
+    resilience_type: 'Spiritual-Reflective',
     framework: 'both',
     actPrinciple: 'Committed Action',
     abaPrinciple: 'Purpose as a Motivating Operation for Sustained Behavior',

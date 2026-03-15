@@ -83,7 +83,7 @@ const leadershipReportSchema = new mongoose.Schema(
       Relational: dimensionStatsSchema,
       'Agentic-Generative': dimensionStatsSchema,
       'Emotional-Adaptive': dimensionStatsSchema,
-      'Spiritual-Existential': dimensionStatsSchema,
+      'Spiritual-Reflective': dimensionStatsSchema,
       'Somatic-Regulative': dimensionStatsSchema,
     },
 

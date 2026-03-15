@@ -25,9 +25,9 @@ const BRANDING_NAME = 'The Resilience Atlas™';
 const DIMENSION_EMOJIS = {
   'Cognitive-Narrative':   '🧠',
   'Agentic-Generative':    '🌱',
-  'Relational':            '🤝',
+  'Relational-Connective':            '🤝',
   'Emotional-Adaptive':    '💙',
-  'Spiritual-Existential': '✨',
+  'Spiritual-Reflective': '✨',
   'Somatic-Regulative':    '🧘',
 };
 
@@ -38,9 +38,9 @@ const DEFAULT_EMOJI = '🌟';
 const DIMENSION_HASHTAGS = {
   'Cognitive-Narrative':   ['#MindsetShift', '#GrowthMindset', '#CognitiveFlex', '#Perspective'],
   'Agentic-Generative':    ['#TakeAction', '#PersonalGrowth', '#Momentum', '#GrowthMindset'],
-  'Relational':            ['#Connection', '#Community', '#Relationships', '#SupportSystem'],
+  'Relational-Connective':            ['#Connection', '#Community', '#Relationships', '#SupportSystem'],
   'Emotional-Adaptive':    ['#EmotionalHealth', '#EmotionalIntelligence', '#Feelings', '#EQ'],
-  'Spiritual-Existential': ['#Purpose', '#Meaning', '#SpiritualGrowth', '#Values'],
+  'Spiritual-Reflective': ['#Purpose', '#Meaning', '#SpiritualGrowth', '#Values'],
   'Somatic-Regulative':    ['#Mindfulness', '#BodyMind', '#Wellness', '#SelfCare'],
 };
 

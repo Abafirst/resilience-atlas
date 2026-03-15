@@ -150,8 +150,8 @@ describe('philosophical-content-engine — selectors', () => {
   });
 
   it('getQuoteForDimension returns a quote for the given dimension', () => {
-    const q = getQuoteForDimension('Relational', 1);
-    expect(q.resilienceDimension).toBe('Relational');
+    const q = getQuoteForDimension('Relational-Connective', 1);
+    expect(q.resilienceDimension).toBe('Relational-Connective');
   });
 
   it('getQuoteForDimension returns null for unknown dimension', () => {
@@ -336,7 +336,7 @@ describe('GET /api/insights/quotes', () => {
   it('respects the dimension filter', async () => {
     const res = await request(app).get('/api/insights/quotes?dimension=Relational');
     expect(res.status).toBe(200);
-    res.body.data.quotes.forEach(q => expect(q.resilienceDimension).toBe('Relational'));
+    res.body.data.quotes.forEach(q => expect(q.resilienceDimension).toBe('Relational-Connective'));
   });
 
   it('returns an empty array for an unknown dimension filter', async () => {
@@ -370,7 +370,7 @@ describe('GET /api/insights/dimension/:name', () => {
   it('returns an insight for a valid dimension', async () => {
     const res = await request(app).get('/api/insights/dimension/Relational');
     expect(res.status).toBe(200);
-    expect(res.body.data.insight.dimension).toBe('Relational');
+    expect(res.body.data.insight.dimension).toBe('Relational-Connective');
   });
 
   it('returns 400 for an unknown dimension', async () => {
