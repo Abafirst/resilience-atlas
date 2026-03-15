@@ -161,27 +161,12 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
     var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
     var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.85);
     glowGrad.addColorStop(0,   'rgba(147,51,234,' + (gAlpha + 0.10) + ')');
-    glowGrad.addColorStop(0.5, 'rgba(6,182,212,'  + gAlpha + ')');
-    glowGrad.addColorStop(1,   'rgba(6,182,212,0)');
+    glowGrad.addColorStop(0.5, 'rgba(40,40,40,'  + gAlpha + ')');
+    glowGrad.addColorStop(1,   'rgba(40,40,40,0)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
     ctx.fill();
-
-    // Outer border ring – turquoise
-    ctx.beginPath();
-    ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(6,182,212,0.35)';
-    ctx.lineWidth   = .75;
-    ctx.stroke();
-
-    // Inner decorative ring – purple accent
-    ctx.beginPath();
-    ctx.arc(CX, CY, OUTER_R - INNER_RING_OFFSET, 0, Math.PI * 2);
-ctx.strokeStyle = 'rgba(6,182,212,0.55)';
-    ctx.lineWidth   = 0.25;
-    ctx.stroke();
-  }
 
   function drawTicks(ctx) {
     ctx.save();
@@ -211,7 +196,7 @@ ctx.strokeStyle = 'rgba(6,182,212,0.55)';
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-      ctx.strokeStyle = isMain ? 'rgba(6,182,212,0.9)' : 'rgba(103,232,249,0.45)';
+      ctx.strokeStyle = isMain ? 'rgba(40,40,40,0.9)' : 'rgba(103,232,249,0.45)';
       ctx.lineWidth   = isMain ? .50 : 0.25;
       ctx.stroke();
 
@@ -238,8 +223,8 @@ ctx.strokeStyle = 'rgba(6,182,212,0.55)';
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-? 'rgba(40,40,40,0.5)'
-: 'rgba(40,40,40,0.4)';
+? 'rgba(40,40,40,0.7)'
+: 'rgba(40,40,40,0.6)';
       ctx.stroke();
     });
 
@@ -276,9 +261,9 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
 
       if (isDom) {
         var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(6,182,212,' + glowAlpha + ')';
+        ctx.shadowColor = 'rgba(40,40,40,' + glowAlpha + ')';
         ctx.shadowBlur  = 10;
-        ctx.strokeStyle = 'rgba(6,182,212,0.95)';
+        ctx.strokeStyle = 'rgba(40,40,40,0.95)';
         ctx.lineWidth   = 1.5;
       } else {
         ctx.shadowBlur  = 0;
@@ -305,7 +290,7 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
     ctx.beginPath();
     ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
     ctx.setLineDash([4, 5]);
-    ctx.strokeStyle = 'rgba(6,182,212,' + (0.2 + 0.45 * equilibrium) + ')';
+    ctx.strokeStyle = 'rgba(40,40,40,' + (0.2 + 0.45 * equilibrium) + ')';
     ctx.lineWidth   = 1;
     ctx.stroke();
     ctx.setLineDash([]);
@@ -351,11 +336,11 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
     fillGrad.addColorStop(0,    'rgba(167,139,250,' + (alpha + 0.15) + ')'); // light purple
     fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // purple
-    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + (alpha * 0.7) + ')');  // turquoise
+    fillGrad.addColorStop(1,    'rgba(40,40,40,'   + (alpha * 0.7) + ')');  // turquoise
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(6,182,212,0.7)';
+    ctx.strokeStyle = 'rgba(40,40,40,0.7)';
     ctx.lineWidth   = 1.5;
     ctx.stroke();
 
@@ -370,7 +355,7 @@ ctx.strokeStyle = 'rgba(40,40,40,0.5)';
       ctx.arc(px, py, isDom ? 5 : 3, 0, Math.PI * 2);
 
       if (isDom) {
-        ctx.shadowColor = 'rgba(6,182,212,0.9)';
+        ctx.shadowColor = 'rgba(40,40,40,0.9)';
         ctx.shadowBlur  = 12;
         ctx.fillStyle   = '#06B6D4';
       } else {
