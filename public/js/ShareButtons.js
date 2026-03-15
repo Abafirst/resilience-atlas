@@ -161,7 +161,7 @@
         wrapper.appendChild(dlBtn);
 
         // ── Copy link ────────────────────────────────────────────────────────
-        var copyBtn = createButton('Copy Share Link', '&#128279;', 'share-btn-copy', function () {
+        var copyBtn = createButton('Copy Share Link', '', 'share-btn-copy', function () {
             copyToClipboard(url).then(function () {
                 copyBtn.querySelector('.share-label').textContent = 'Copied!';
                 setTimeout(function () {

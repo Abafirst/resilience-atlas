@@ -12,12 +12,12 @@
   // ── Dimension configuration ─────────────────────────────────────────────────
 
   var DIMENSIONS = [
-    { key: 'relational', label: 'Relational-Connective',  color: 'rgba(99, 102, 241, 0.8)' },
-    { key: 'cognitive',  label: 'Cognitive',   color: 'rgba(16, 185, 129, 0.8)' },
-    { key: 'somatic',    label: 'Somatic',     color: 'rgba(245, 158, 11, 0.8)' },
-    { key: 'emotional',  label: 'Emotional',   color: 'rgba(239, 68, 68, 0.8)'  },
-    { key: 'spiritual',  label: 'Spiritual',   color: 'rgba(139, 92, 246, 0.8)' },
-    { key: 'agentic',    label: 'Agentic',     color: 'rgba(59, 130, 246, 0.8)' },
+    { key: 'relational', label: 'Relational-Connective', color: 'rgba(99, 102, 241, 0.8)' },
+    { key: 'cognitive',  label: 'Cognitive-Narrative',   color: 'rgba(16, 185, 129, 0.8)' },
+    { key: 'somatic',    label: 'Somatic-Regulative',    color: 'rgba(245, 158, 11, 0.8)' },
+    { key: 'emotional',  label: 'Emotional-Adaptive',    color: 'rgba(239, 68, 68, 0.8)'  },
+    { key: 'spiritual',  label: 'Spiritual-Reflective',  color: 'rgba(139, 92, 246, 0.8)' },
+    { key: 'agentic',    label: 'Agentic-Generative',    color: 'rgba(59, 130, 246, 0.8)' },
   ];
 
   // ── Radar chart ────────────────────────────────────────────────────────────

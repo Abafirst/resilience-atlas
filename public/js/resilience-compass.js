@@ -14,7 +14,24 @@
     'Agentic-Generative'
   ];
 
-  var ICONS = ['👥', '🧠', '💪', '❤️', '✨', '⚡'];
+  var ICON_SRCS = [
+    '/icons/relational-connective.svg',
+    '/icons/cognitive-narrative.svg',
+    '/icons/somatic-regulative.svg',
+    '/icons/emotional-adaptive.svg',
+    '/icons/spiritual-reflective.svg',
+    '/icons/agentic-generative.svg',
+  ];
+
+  // Preload SVG icons so they are ready when the animation renders them
+  var _iconImages = ICON_SRCS.map(function (src) {
+    var img = new Image();
+    img.onerror = function () {
+      console.warn('[resilience-compass] Failed to load icon:', src);
+    };
+    img.src = src;
+    return img;
+  });
 
   var CARDINALS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
@@ -32,6 +49,7 @@
   var TICK_OUT_L = R * 1.22; // 156 – cardinal tick outer edge
   var LABEL_R    = R * 1.32; // 169 – cardinal / inter-cardinal label radius
   var ICON_R     = R * 1.06; // 136 – dimension-icon radius (inside ring)
+  var ICON_SIZE  = 20;        // dimension-icon display size in canvas pixels
 
   var NEEDLE_DURATION   = 2500;  // ms – needle travel time
   var WOBBLE_FREQ       = 0.0012; // rad/ms – subtle post-settle needle wobble
@@ -349,17 +367,19 @@
   }
 
   function drawIcons(ctx) {
-    ctx.save();
-    ctx.font         = '14px sans-serif';
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-
+    var size = ICON_SIZE;
     for (var i = 0; i < 6; i++) {
-      var a  = dimAngle(i);
-      ctx.fillText(ICONS[i], CX + ICON_R * Math.cos(a), CY + ICON_R * Math.sin(a));
+      var img = _iconImages[i];
+      if (!img || !img.complete || !img.naturalWidth) { continue; }
+      var a = dimAngle(i);
+      ctx.drawImage(
+        img,
+        CX + ICON_R * Math.cos(a) - size / 2,
+        CY + ICON_R * Math.sin(a) - size / 2,
+        size,
+        size
+      );
     }
-
-    ctx.restore();
   }
 
   function drawDominantLabel(ctx, dominantIdx, maxVal) {
@@ -367,7 +387,7 @@
 
     var labelY = CH - 20;
     var pct    = Math.round(maxVal * 100);
-    var text   = ICONS[dominantIdx] + '  Dominant: ' + DIMENSIONS[dominantIdx] + '  (' + pct + '%)';
+    var text   = 'Dominant: ' + DIMENSIONS[dominantIdx] + '  (' + pct + '%)';
 
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
