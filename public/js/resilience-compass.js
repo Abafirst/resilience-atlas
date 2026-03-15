@@ -59,6 +59,10 @@
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS        = [0.25, 0.5, 0.75, 1.0];
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
+  var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
+  var INNER_RING_OFFSET = 4;      // px – inner decorative ring inset from outer ring
+  var MINOR_TICK_RATIO  = 0.45;   // fraction of the gap [TICK_IN, TICK_OUT_S] for minor ticks
+  var NEEDLE_WIDTH_RATIO = 0.09;  // half-width of needle at pivot, as fraction of forward length
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   /** Quadratic ease-in-out: slow start, fast middle, slow end. */
@@ -152,22 +156,35 @@
   // ── Drawing helpers ────────────────────────────────────────────────────────
 
   function drawBackground(ctx, pulse) {
-    // Softly pulsing inner glow (transparent background – no dark fill)
+    // Deep navy background fill
+    ctx.beginPath();
+    ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
+    ctx.fillStyle = '#0F172A';
+    ctx.fill();
+
+    // Softly pulsing inner glow – purple → turquoise
     var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
-    var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.75);
-    glowGrad.addColorStop(0,   'rgba(21,101,192,' + (gAlpha + 0.14) + ')');
-    glowGrad.addColorStop(0.6, 'rgba(21,101,192,' + gAlpha + ')');
-    glowGrad.addColorStop(1,   'rgba(21,101,192,0)');
+    var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.85);
+    glowGrad.addColorStop(0,   'rgba(147,51,234,' + (gAlpha + 0.10) + ')');
+    glowGrad.addColorStop(0.5, 'rgba(6,182,212,'  + gAlpha + ')');
+    glowGrad.addColorStop(1,   'rgba(6,182,212,0)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
     ctx.fill();
 
-    // Outer border ring
+    // Outer border ring – turquoise
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(21,101,192,0.55)';
-    ctx.lineWidth   = 1.5;
+    ctx.strokeStyle = 'rgba(6,182,212,0.55)';
+    ctx.lineWidth   = 1;
+    ctx.stroke();
+
+    // Inner decorative ring – purple accent
+    ctx.beginPath();
+    ctx.arc(CX, CY, OUTER_R - INNER_RING_OFFSET, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(124,58,237,0.3)';
+    ctx.lineWidth   = 0.5;
     ctx.stroke();
   }
 
@@ -176,6 +193,20 @@
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
 
+    // Minor tick marks (every 22.5° – 16 total, no labels)
+    for (var m = 0; m < 16; m++) {
+      if (m % 2 === 0) { continue; } // skip positions used by main ticks
+      var mAngle   = (m / 16) * Math.PI * 2 - Math.PI / 2;
+      var mOuter   = TICK_IN + (TICK_OUT_S - TICK_IN) * MINOR_TICK_RATIO;
+      ctx.beginPath();
+      ctx.moveTo(CX + TICK_IN  * Math.cos(mAngle), CY + TICK_IN  * Math.sin(mAngle));
+      ctx.lineTo(CX + mOuter   * Math.cos(mAngle), CY + mOuter   * Math.sin(mAngle));
+      ctx.strokeStyle = 'rgba(103,232,249,0.25)';
+      ctx.lineWidth   = 0.5;
+      ctx.stroke();
+    }
+
+    // Main 8 cardinal / inter-cardinal ticks + labels
     for (var i = 0; i < 8; i++) {
       var angle  = (i / 8) * Math.PI * 2 - Math.PI / 2;
       var isMain = (i % 2 === 0); // N, E, S, W
@@ -185,14 +216,14 @@
       ctx.beginPath();
       ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
       ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-      ctx.strokeStyle = isMain ? 'rgba(21,101,192,0.85)' : 'rgba(21,101,192,0.4)';
-      ctx.lineWidth   = isMain ? 1.5 : 1;
+      ctx.strokeStyle = isMain ? 'rgba(6,182,212,0.9)' : 'rgba(103,232,249,0.45)';
+      ctx.lineWidth   = isMain ? 1 : 0.5;
       ctx.stroke();
 
       // Label
       ctx.font      = isMain ? 'bold 9px Inter,system-ui,sans-serif'
                               : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(21,101,192,0.92)' : 'rgba(21,101,192,0.55)';
+      ctx.fillStyle = isMain ? 'rgba(224,242,254,0.95)' : 'rgba(103,232,249,0.6)';
       ctx.fillText(
         CARDINALS[i],
         CX + LABEL_R * Math.cos(angle),
@@ -205,15 +236,15 @@
 
   function drawGrid(ctx) {
     ctx.save();
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 0.5;
 
     // Concentric circles at 25 %, 50 %, 75 %, 100 % of R (no polygons)
     GRID_RINGS.forEach(function (pct) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-        ? 'rgba(21,101,192,0.35)'
-        : 'rgba(21,101,192,0.18)';
+        ? 'rgba(6,182,212,0.3)'
+        : 'rgba(103,232,249,0.12)';
       ctx.stroke();
     });
 
@@ -223,8 +254,8 @@
   function drawCrosshairs(ctx) {
     // Clean + crosshairs at the compass centre, inside the innermost ring
     ctx.save();
-    ctx.strokeStyle = 'rgba(21,101,192,0.22)';
-    ctx.lineWidth   = 1;
+    ctx.strokeStyle = 'rgba(103,232,249,0.15)';
+    ctx.lineWidth   = 0.5;
 
     var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
 
@@ -250,14 +281,14 @@
 
       if (isDom) {
         var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(21,101,192,' + glowAlpha + ')';
-        ctx.shadowBlur  = 12;
-        ctx.strokeStyle = 'rgba(21,101,192,0.95)';
-        ctx.lineWidth   = 2.5;
+        ctx.shadowColor = 'rgba(6,182,212,' + glowAlpha + ')';
+        ctx.shadowBlur  = 10;
+        ctx.strokeStyle = 'rgba(6,182,212,0.95)';
+        ctx.lineWidth   = 1.5;
       } else {
         ctx.shadowBlur  = 0;
-        ctx.strokeStyle = 'rgba(21,101,192,0.45)';
-        ctx.lineWidth   = 1;
+        ctx.strokeStyle = 'rgba(124,58,237,0.35)';
+        ctx.lineWidth   = 0.75;
       }
 
       ctx.beginPath();
@@ -278,9 +309,9 @@
 
     ctx.beginPath();
     ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
-    ctx.setLineDash([5, 5]);
-    ctx.strokeStyle = 'rgba(52,211,153,' + (0.25 + 0.5 * equilibrium) + ')';
-    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([4, 5]);
+    ctx.strokeStyle = 'rgba(6,182,212,' + (0.2 + 0.45 * equilibrium) + ')';
+    ctx.lineWidth   = 1;
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -320,17 +351,17 @@
     }
     ctx.closePath();
 
-    // Animated gradient fill
+    // Animated gradient fill – purple (centre) → turquoise (edge)
     var alpha    = 0.28 + 0.08 * Math.sin(pulse);
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    fillGrad.addColorStop(0,    'rgba(91,155,213,' + (alpha + 0.18) + ')');
-    fillGrad.addColorStop(0.55, 'rgba(21,101,192,'  + alpha + ')');
-    fillGrad.addColorStop(1,    'rgba(13,62,122,'  + (alpha * 0.55) + ')');
+    fillGrad.addColorStop(0,    'rgba(167,139,250,' + (alpha + 0.15) + ')'); // light purple
+    fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // purple
+    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + (alpha * 0.7) + ')');  // turquoise
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(21,101,192,0.8)';
-    ctx.lineWidth   = 2;
+    ctx.strokeStyle = 'rgba(6,182,212,0.7)';
+    ctx.lineWidth   = 1.5;
     ctx.stroke();
 
     // Data-point dots
@@ -341,20 +372,20 @@
       var isDom = (j === dominantIdx);
 
       ctx.beginPath();
-      ctx.arc(px, py, isDom ? 5.5 : 3.5, 0, Math.PI * 2);
+      ctx.arc(px, py, isDom ? 5 : 3, 0, Math.PI * 2);
 
       if (isDom) {
-        ctx.shadowColor = 'rgba(21,101,192,0.9)';
+        ctx.shadowColor = 'rgba(6,182,212,0.9)';
         ctx.shadowBlur  = 12;
-        ctx.fillStyle   = '#1565C0';
+        ctx.fillStyle   = '#06B6D4';
       } else {
         ctx.shadowBlur = 0;
-        ctx.fillStyle  = '#4a90d9';
+        ctx.fillStyle  = '#9333EA';
       }
 
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-      ctx.lineWidth   = 1;
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth   = 0.75;
       ctx.stroke();
     }
 
@@ -365,44 +396,50 @@
   function drawNeedle(ctx, angle) {
     ctx.save();
 
-    var len = R * 0.65; // needle forward length
+    var lenFwd  = R * 0.62; // forward needle length (points to dominant)
+    var lenBack = R * 0.28; // backward tail length (opposite end)
+    var maxHW   = lenFwd * NEEDLE_WIDTH_RATIO; // max half-width at the centre pivot
 
-    // Arrow proportions matching compass-icon.svg arrow shape
-    var wb  = len * (14 / 78); // how far back from tip the wings flare
-    var ww  = len * (7  / 78); // half-width at wings
-    var iw  = len * (3  / 78); // half-width of shaft
-    var sb  = len * (43 / 78); // total depth from tip to shaft base
-
-    // Needle glow
-    ctx.shadowColor = 'rgba(21,101,192,0.65)';
-    ctx.shadowBlur  = 10;
-
-    // Rotate canvas so arrow points toward target angle
-    // (local coords have tip at (0, -len), i.e., pointing "up")
+    // Rotate canvas so forward tip points toward target angle
     ctx.translate(CX, CY);
     ctx.rotate(angle + Math.PI / 2);
 
+    // Needle glow
+    ctx.shadowColor = 'rgba(124,58,237,0.75)';
+    ctx.shadowBlur  = 14;
+
+    // Linear gradient: turquoise at tail → purple at tip
+    var grad = ctx.createLinearGradient(0, lenBack, 0, -lenFwd);
+    grad.addColorStop(0,    '#06B6D4'); // turquoise tail
+    grad.addColorStop(0.42, '#9333EA'); // purple mid-forward
+    grad.addColorStop(1,    '#7C3AED'); // deep purple tip
+
+    // Diamond (rhombus) needle body with two pointed ends
     ctx.beginPath();
-    ctx.moveTo(0,  -len);         // tip
-    ctx.lineTo(ww, -(len - wb));  // right wing outer
-    ctx.lineTo(iw, -(len - wb));  // right wing inner
-    ctx.lineTo(iw, -(len - sb));  // right shaft base
-    ctx.lineTo(-iw, -(len - sb)); // left shaft base
-    ctx.lineTo(-iw, -(len - wb)); // left wing inner
-    ctx.lineTo(-ww, -(len - wb)); // left wing outer
+    ctx.moveTo(0,      -lenFwd);   // forward tip
+    ctx.lineTo(maxHW,  0);         // widest point right
+    ctx.lineTo(0,      lenBack);   // backward tip
+    ctx.lineTo(-maxHW, 0);         // widest point left
     ctx.closePath();
 
-    ctx.fillStyle = '#1565C0';
+    ctx.fillStyle = grad;
     ctx.fill();
 
-    // Centre pivot circle
-    ctx.shadowBlur = 0;
+    ctx.shadowBlur  = 0;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth   = 0.5;
+    ctx.stroke();
+
+    // Centre pivot circle – small bright dot
     ctx.beginPath();
-    ctx.arc(0, 0, 5, 0, Math.PI * 2);
-    ctx.fillStyle   = '#1565C0';
+    ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+    var pivotGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, 3.5);
+    pivotGrad.addColorStop(0, '#E0F2FE');
+    pivotGrad.addColorStop(1, '#06B6D4');
+    ctx.fillStyle   = pivotGrad;
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-    ctx.lineWidth   = 1;
+    ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+    ctx.lineWidth   = 0.5;
     ctx.stroke();
 
     ctx.restore();
@@ -434,7 +471,7 @@
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.font         = '500 12px Inter,system-ui,sans-serif';
-    ctx.fillStyle    = 'rgba(21,101,192,0.92)';
+    ctx.fillStyle    = 'rgba(103,232,249,0.9)';
     ctx.fillText(text, CX, labelY);
 
     ctx.restore();
