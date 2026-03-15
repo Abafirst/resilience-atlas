@@ -110,18 +110,6 @@
   text-decoration: none;
 }
 
-/* ── Sample radar chart preview ───────────────────────────── */
-.hero-radar-preview {
-  max-width: 340px;
-  margin: 0 auto;
-  opacity: .92;
-}
-
-.hero-radar-preview canvas {
-  width: 100% !important;
-  height: auto !important;
-}
-
 /* ── Section base ─────────────────────────────────────────── */
 .landing-section {
   padding: 5rem 1.5rem;
@@ -223,11 +211,6 @@
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 4px 14px rgba(0,0,0,.07);
-}
-
-.example-radar canvas {
-  width: 100% !important;
-  height: auto !important;
 }
 
 .example-profile-card {
@@ -513,4 +496,33 @@
   font-size: .92rem;
   color: #475569;
   line-height: 1.6;
+}
+
+/* ── Responsive compass canvas ────────────────────────────── */
+.hero-radar-preview canvas,
+.example-radar canvas {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.hero-radar-preview {
+  max-width: 360px;
+  margin: 0 auto;
+  opacity: .95;
+  /* ensure canvas is never clipped by the hero overflow:hidden */
+  overflow: visible;
+}
+
+/* ── Compass dominant-dimension label (HTML fallback) ─────── */
+.compass-dominant-label {
+  display: block;
+  text-align: center;
+  margin-top: .6rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  letter-spacing: .02em;
 }
