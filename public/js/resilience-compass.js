@@ -40,7 +40,7 @@
   var CH = 400; // canvas height (extra 40 px for dominant-dimension label)
   var CX = 180; // compass centre x
   var CY = 185; // compass centre y (slight upward offset)
-  var R  = 60; // max chart data radius
+  var R  = 75; // max chart data radius
 
   // Derived radii (all relative to R)
   var OUTER_R    = R * 1.09; // 139 – outer compass ring
@@ -156,11 +156,6 @@
   // ── Drawing helpers ────────────────────────────────────────────────────────
 
   function drawBackground(ctx, pulse) {
-    // Deep navy background fill
-    ctx.beginPath();
-    ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
-    ctx.fillStyle = '#0F172A';
-    ctx.fill();
 
     // Softly pulsing inner glow – purple → turquoise
     var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
@@ -183,7 +178,7 @@
     // Inner decorative ring – purple accent
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R - INNER_RING_OFFSET, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(124,58,237,0.2)';
+ctx.strokeStyle = 'rgba(6,182,212,0.55)';
     ctx.lineWidth   = 0.25;
     ctx.stroke();
   }
@@ -243,8 +238,8 @@
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       ctx.strokeStyle = pct === 1.0
-        ? 'rgba(6,182,212,0.2)'
-        : 'rgba(103,232,249,0.06)';
+? 'rgba(15,23,42,0.4)'
+: 'rgba(15,23,42,0.2)';
       ctx.stroke();
     });
 
@@ -254,7 +249,7 @@
   function drawCrosshairs(ctx) {
     // Clean + crosshairs at the compass centre, inside the innermost ring
     ctx.save();
-    ctx.strokeStyle = 'rgba(103,232,249,0.15)';
+ctx.strokeStyle = 'rgba(15,23,42,0.5)';
     ctx.lineWidth   = 0.5;
 
     var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
