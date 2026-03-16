@@ -344,9 +344,10 @@
 
     canvas.width  = CW;
     canvas.height = CH;
-
-    var ctx = canvas.getContext('2d');
-
+var ctx = canvas.getContext('2d');
+if (!_isLightBackground) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
     var rawValues = DIMENSIONS.map(function (d) {
       var scoreValue = normalizeScore(scores && scores[d]);
       return Math.min(100, Math.max(0, scoreValue));
