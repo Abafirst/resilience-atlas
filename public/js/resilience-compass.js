@@ -374,9 +374,9 @@
 
     // Subtle radial gradient: lighter center → darker edges (depth / 3-D effect)
     var depthGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
-    depthGrad.addColorStop(0,   'rgba(255,255,255,0.08)');
+    depthGrad.addColorStop(0,   'rgba(255,255,255,0.25)');
     depthGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
-    depthGrad.addColorStop(1,   'rgba(0,0,0,0.20)');
+    depthGrad.addColorStop(1,   'rgba(0,0,0,0.05)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
     ctx.fillStyle = depthGrad;
@@ -662,8 +662,8 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, 0, Math.PI, false);
     ctx.closePath();
 
     var nubGrad = ctx.createLinearGradient(CX, bezelTop - nubH, CX, bezelTop);
-    nubGrad.addColorStop(0, 'rgba(224,231,255,0.28)');
-    nubGrad.addColorStop(1, 'rgba(147,51,234,0.16)');
+    nubGrad.addColorStop(0, 'rgba(224,231,255,0.5)');
+    nubGrad.addColorStop(1, 'rgba(147,51,234,0.3)');
     ctx.fillStyle = nubGrad;
     ctx.fill();
 
