@@ -236,8 +236,10 @@
     labelMain:      'rgba(255,255,255,0.45)',
     labelSec:       'rgba(255,255,255,0.3)',
     axisBase:       'rgba(56,189,248,',
+    glassRingFill:  'rgba(255,255,255,0.03)',
+    glassRingStroke:'rgba(255,255,255,0.10)',
     polyStroke:     '#A78BFA',
-    polyFill:       'rgba(139,92,246,0.35)',
+    polyFill:       'rgba(139,92,246,0.40)',
     polyShadow:     'rgba(139,92,246,0.5)',
     polyShadowBlur: 14,
     haloStop0:      'rgba(139,92,246,0.25)',
@@ -262,12 +264,14 @@
     bezel:          'rgba(100,116,139,0.35)',
     bezelHighlight: 'rgba(100,116,139,0.12)',
     bezelShadow:    'rgba(124,58,237,0.15)',
-    tickMain:       'rgba(71,85,105,0.5)',
-    tickMinor:      'rgba(71,85,105,0.3)',
+    tickMain:       'rgba(71,85,105,0.55)',
+    tickMinor:      'rgba(71,85,105,0.35)',
     tickCardinal:   'rgba(71,85,105,0.6)',
     labelMain:      'rgba(71,85,105,0.6)',
     labelSec:       'rgba(71,85,105,0.45)',
     axisBase:       'rgba(100,116,139,',
+    glassRingFill:  'rgba(255,255,255,0.35)',
+    glassRingStroke:'rgba(148,163,184,0.18)',
     polyStroke:     '#7c3aed',
     polyFill:       'rgba(124,58,237,0.25)',
     polyShadow:     'rgba(124,58,237,0.3)',
@@ -326,6 +330,11 @@
 
     // Detect background brightness once so drawing helpers can adapt colors
     _isLightBackground = detectBackground(canvas);
+
+    // Apply instrument shadow only on dark backgrounds
+    canvas.style.filter = _isLightBackground
+      ? ''
+      : 'drop-shadow(0 0 18px rgba(56,189,248,0.12))';
 
     // Cancel any previous animation loop on this canvas element
     if (canvas._compassRafId) {
@@ -411,6 +420,7 @@
       drawDoubleRing(ctx);
       drawCompassNub(ctx);
       drawTicks(ctx);
+      drawGlassRing(ctx);
       drawGrid(ctx, gridIn);
       drawAxes(ctx, dominantIdx, pulse, gridIn);
       drawEnergyField(ctx, breathing, fieldIn);
@@ -535,6 +545,21 @@
     ctx.lineTo(CX, CY + arm);
     ctx.stroke();
 
+    ctx.restore();
+  }
+
+  function drawGlassRing(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
+    // Thin glass-style ring sitting between tick marks and the radar polygon area
+    var radius = R * 1.05;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX, CY, radius, 0, Math.PI * 2);
+    ctx.fillStyle = pal.glassRingFill;
+    ctx.fill();
+    ctx.strokeStyle = pal.glassRingStroke;
+    ctx.lineWidth = 0.75;
+    ctx.stroke();
     ctx.restore();
   }
 
