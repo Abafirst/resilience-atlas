@@ -59,7 +59,7 @@
   var ICON_SIZE   = 20;
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
-  var BAND_ANGLE   = 8 * Math.PI / 180;
+  var BAND_ARC_ANGLE   = 8 * Math.PI / 180;
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_SMOOTHING_RATE  = 0.1;
@@ -76,6 +76,7 @@
   var GRID_OPACITY_FALLBACK = 0.05;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
   var EQUILIBRIUM_RING_MAX_ALPHA = 0.6;
+  var EQUILIBRIUM_DASH_PATTERN = [4, 6];
 
   var GRID_FADE_START    = 0;
   var GRID_FADE_DURATION = 240;
@@ -120,7 +121,7 @@
   }
 
   function normalizeScore(value) {
-    if (value == null) { return 0; }
+    if (value === null || value === undefined) { return 0; }
     if (typeof value === 'object') {
       if (typeof value.percentage === 'number') { return value.percentage; }
       if (typeof value.score === 'number') { return value.score; }
@@ -132,33 +133,33 @@
     return parseFloat(value) || 0;
   }
 
-  var _needleAngles = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
-  var _needleAnglesFallback = _needleAngles ? null : [];
+  var needleAnglesMap = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  var needleAnglesFallback = needleAnglesMap ? null : [];
 
   function getStoredNeedleAngle(canvas) {
-    if (_needleAngles) {
-      return _needleAngles.has(canvas) ? _needleAngles.get(canvas) : null;
+    if (needleAnglesMap) {
+      return needleAnglesMap.has(canvas) ? needleAnglesMap.get(canvas) : null;
     }
-    for (var i = 0; i < _needleAnglesFallback.length; i++) {
-      if (_needleAnglesFallback[i].canvas === canvas) {
-        return _needleAnglesFallback[i].angle;
+    for (var i = 0; i < needleAnglesFallback.length; i++) {
+      if (needleAnglesFallback[i].canvas === canvas) {
+        return needleAnglesFallback[i].angle;
       }
     }
     return null;
   }
 
   function setStoredNeedleAngle(canvas, angle) {
-    if (_needleAngles) {
-      _needleAngles.set(canvas, angle);
+    if (needleAnglesMap) {
+      needleAnglesMap.set(canvas, angle);
       return;
     }
-    for (var i = 0; i < _needleAnglesFallback.length; i++) {
-      if (_needleAnglesFallback[i].canvas === canvas) {
-        _needleAnglesFallback[i].angle = angle;
+    for (var i = 0; i < needleAnglesFallback.length; i++) {
+      if (needleAnglesFallback[i].canvas === canvas) {
+        needleAnglesFallback[i].angle = angle;
         return;
       }
     }
-    _needleAnglesFallback.push({ canvas: canvas, angle: angle });
+    needleAnglesFallback.push({ canvas: canvas, angle: angle });
   }
 
   function drawSpacedText(ctx, text, x, y, spacing) {
@@ -261,7 +262,7 @@
     }
     if (dominantIdx < 0) {
       if (typeof console !== 'undefined' && console.warn) {
-        console.warn('[resilience-compass] Dominant dimension not found. Defaulting to index 0.');
+        console.warn('[resilience-compass] Dominant dimension not found in scores. Defaulting to first dimension.');
       }
       dominantIdx = 0;
     }
@@ -497,7 +498,7 @@
     ctx.beginPath();
     ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
     if (equilibrium < 0.5) {
-      ctx.setLineDash([4, 6]);
+      ctx.setLineDash(EQUILIBRIUM_DASH_PATTERN);
     }
     ctx.strokeStyle = 'rgba(34,211,238,' + clamp(alpha, 0, EQUILIBRIUM_RING_MAX_ALPHA) + ')';
     ctx.lineWidth   = 3;
@@ -517,7 +518,7 @@
 
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -BAND_ANGLE / 2, BAND_ANGLE / 2);
+    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -BAND_ARC_ANGLE / 2, BAND_ARC_ANGLE / 2);
     ctx.closePath();
 
     ctx.globalAlpha = progress;
