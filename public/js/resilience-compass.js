@@ -925,7 +925,11 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
 
     ctx.beginPath();
     ctx.arc(0, 0, 6, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+if (_isLightBackground) {
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+} else {
+  ctx.fillStyle = 'rgba(0,0,0,0)';
+}
     ctx.fill();
 
     ctx.beginPath();
