@@ -517,12 +517,12 @@
   display: block;
   width: 100% !important;
   height: auto !important;
-  max-width: 320px;
+  max-width: 360px;
   margin: 0 auto;
 }
 
 .hero-radar-preview {
-  max-width: 300px;
+  max-width: 360px;
   margin: 0 auto;
   opacity: .95;
   /* ensure canvas is never clipped by the hero overflow:hidden */
