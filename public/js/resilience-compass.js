@@ -62,7 +62,7 @@
   var BAND_ANGLE   = 8 * Math.PI / 180;
 
   var NEEDLE_DURATION        = 900;
-  var NEEDLE_STABILIZE       = 0.1;
+  var NEEDLE_SMOOTHING_RATE  = 0.1;
   var NEEDLE_OSC_FREQ        = 0.010;
   var NEEDLE_OSC_AMP         = 0.012;
   var NEEDLE_OSC_DECAY       = 1800;
@@ -74,6 +74,21 @@
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
   var GRID_OPACITY_FALLBACK = 0.05;
+  var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
+  var EQUILIBRIUM_RING_MAX_ALPHA = 0.6;
+
+  var GRID_FADE_START    = 0;
+  var GRID_FADE_DURATION = 240;
+  var FIELD_FADE_START   = 120;
+  var FIELD_FADE_DURATION = 360;
+  var POLYGON_START      = 180;
+  var POLYGON_DURATION   = 420;
+  var RING_START         = 420;
+  var RING_DURATION      = 240;
+  var BAND_START         = 520;
+  var BAND_DURATION      = 240;
+  var HUB_START          = 600;
+  var HUB_DURATION       = 200;
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
 
@@ -98,6 +113,9 @@
   }
 
   function phaseProgress(elapsed, start, duration) {
+    if (duration <= 0) {
+      return elapsed >= start ? 1 : 0;
+    }
     return clamp((elapsed - start) / duration, 0, 1);
   }
 
@@ -115,20 +133,32 @@
   }
 
   var _needleAngles = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+  var _needleAnglesFallback = _needleAngles ? null : [];
 
   function getStoredNeedleAngle(canvas) {
-    if (_needleAngles && _needleAngles.has(canvas)) {
-      return _needleAngles.get(canvas);
+    if (_needleAngles) {
+      return _needleAngles.has(canvas) ? _needleAngles.get(canvas) : null;
     }
-    return typeof canvas._compassNeedleAngle === 'number' ? canvas._compassNeedleAngle : null;
+    for (var i = 0; i < _needleAnglesFallback.length; i++) {
+      if (_needleAnglesFallback[i].canvas === canvas) {
+        return _needleAnglesFallback[i].angle;
+      }
+    }
+    return null;
   }
 
   function setStoredNeedleAngle(canvas, angle) {
     if (_needleAngles) {
       _needleAngles.set(canvas, angle);
-    } else {
-      canvas._compassNeedleAngle = angle;
+      return;
     }
+    for (var i = 0; i < _needleAnglesFallback.length; i++) {
+      if (_needleAnglesFallback[i].canvas === canvas) {
+        _needleAnglesFallback[i].angle = angle;
+        return;
+      }
+    }
+    _needleAnglesFallback.push({ canvas: canvas, angle: angle });
   }
 
   function drawSpacedText(ctx, text, x, y, spacing) {
@@ -229,7 +259,12 @@
         maxVal = clamp(sorted[0][1] / 100, 0, 1);
       }
     }
-    if (dominantIdx < 0) { dominantIdx = 0; }
+    if (dominantIdx < 0) {
+      if (typeof console !== 'undefined' && console.warn) {
+        console.warn('[resilience-compass] Dominant dimension not found. Defaulting to index 0.');
+      }
+      dominantIdx = 0;
+    }
 
     // Needle travels from North (start) to dominant dimension (target)
     var targetAngle = dimAngle(dominantIdx);
@@ -257,7 +292,7 @@
       if (sweepProgress < 1) {
         currentAngle = startAngle + angleDiff * easeOutBack(sweepProgress);
       } else {
-        currentAngle += (targetAngle - currentAngle) * NEEDLE_STABILIZE;
+        currentAngle += (targetAngle - currentAngle) * NEEDLE_SMOOTHING_RATE;
         var oscillation = Math.sin(elapsed * NEEDLE_OSC_FREQ) * NEEDLE_OSC_AMP;
         currentAngle += oscillation * Math.exp(-elapsed / NEEDLE_OSC_DECAY);
       }
@@ -265,12 +300,12 @@
       var pulse = elapsed * PULSE_FREQ;
       var breathing = (Math.sin(elapsed * BREATHING_FREQ - Math.PI / 2) + 1) / 2;
 
-      var gridIn       = phaseProgress(elapsed, 0, 240);
-      var fieldIn      = phaseProgress(elapsed, 120, 360);
-      var polygonIn    = phaseProgress(elapsed, 180, 420);
-      var ringIn       = phaseProgress(elapsed, 420, 240);
-      var bandIn       = phaseProgress(elapsed, 520, 240);
-      var hubIn        = phaseProgress(elapsed, 600, 200);
+      var gridIn       = phaseProgress(elapsed, GRID_FADE_START, GRID_FADE_DURATION);
+      var fieldIn      = phaseProgress(elapsed, FIELD_FADE_START, FIELD_FADE_DURATION);
+      var polygonIn    = phaseProgress(elapsed, POLYGON_START, POLYGON_DURATION);
+      var ringIn       = phaseProgress(elapsed, RING_START, RING_DURATION);
+      var bandIn       = phaseProgress(elapsed, BAND_START, BAND_DURATION);
+      var hubIn        = phaseProgress(elapsed, HUB_START, HUB_DURATION);
 
       ctx.clearRect(0, 0, CW, CH);
 
@@ -456,7 +491,7 @@
     ctx.globalAlpha = progress;
 
     var ringR = R * 0.7;
-    var pulseBoost = equilibrium > 0.75 ? 0.08 * Math.sin(pulse * 2) : 0;
+    var pulseBoost = equilibrium > EQUILIBRIUM_PULSE_THRESHOLD ? 0.08 * Math.sin(pulse * 2) : 0;
     var alpha = 0.08 + 0.32 * equilibrium + pulseBoost;
 
     ctx.beginPath();
@@ -464,7 +499,7 @@
     if (equilibrium < 0.5) {
       ctx.setLineDash([4, 6]);
     }
-    ctx.strokeStyle = 'rgba(34,211,238,' + clamp(alpha, 0, 0.6) + ')';
+    ctx.strokeStyle = 'rgba(34,211,238,' + clamp(alpha, 0, EQUILIBRIUM_RING_MAX_ALPHA) + ')';
     ctx.lineWidth   = 3;
     ctx.shadowBlur  = 8;
     ctx.shadowColor = 'rgba(34,211,238,0.35)';
