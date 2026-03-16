@@ -287,39 +287,53 @@
   };
 
   // ── Background brightness detection ────────────────────────────────────────
-  var _isLightBackground = false;
+var _isLightBackground = false;
 
-  /**
-   * Relative luminance using ITU-R BT.601 luma coefficients (0–1).
-   * Values > 0.5 are perceived as "light".
-   */
-  function calcLuminance(r, g, b) {
-    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+/**
+ * Relative luminance using ITU-R BT.601 luma coefficients (0–1).
+ * Values > 0.5 are perceived as "light".
+ */
+function calcLuminance(r, g, b) {
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+}
+
+/** Returns true if the canvas sits on a light (white/near-white) background. */
+function detectBackground(canvas) {
+  // First priority: check document.body (actual page background)
+  var bodyBg = window.getComputedStyle(document.body).backgroundColor;
+  var htmlBg = window.getComputedStyle(document.documentElement).backgroundColor;
+  
+  // Check body background first
+  if (bodyBg && bodyBg !== 'rgba(0, 0, 0, 0)' && bodyBg !== 'transparent') {
+    var m = bodyBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (m) {
+      return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
+    }
   }
-
-  /** Returns true if the canvas sits on a light (white/near-white) background. */
-  function detectBackground(canvas) {
-    var el = canvas && canvas.parentElement;
-    while (el) {
-      var bg = window.getComputedStyle(el).backgroundColor;
-      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-        var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-        if (m) {
-          return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
-        }
+  
+  // Check html background
+  if (htmlBg && htmlBg !== 'rgba(0, 0, 0, 0)' && htmlBg !== 'transparent') {
+    var m = htmlBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (m) {
+      return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
+    }
+  }
+  
+  // Fallback: walk up from canvas parent (original logic)
+  var el = canvas && canvas.parentElement;
+  while (el) {
+    var bg = window.getComputedStyle(el).backgroundColor;
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+      var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      if (m) {
+        return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
       }
-      el = el.parentElement;
     }
-    // Fallback: check document.body
-    var bodyBg = window.getComputedStyle(document.body).backgroundColor;
-    var bm = bodyBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (bm) {
-      return calcLuminance(+bm[1], +bm[2], +bm[3]) > 0.5;
-    }
-    return false;
+    el = el.parentElement;
   }
+    return false; // Default to dark
 
-  // ── Public API ─────────────────────────────────────────────────────────────
+ // ── Public API ─────────────────────────────────────────────────────────────
   /**
    * Render an animated resilience compass onto a <canvas> element.
    * @param {HTMLCanvasElement} canvas
