@@ -16,6 +16,7 @@
         'Recommended growth strategies',
         'Expanded micro-practices for each dimension',
         'Downloadable PDF report',
+        '1 year data retention',
     ];
 
     const ATLAS_PREMIUM_FEATURES = [
@@ -24,7 +25,10 @@
         'Unlimited reassessments',
         'Personalized growth pathway',
         'Micro-practice progress tracking',
+        'Unlimited data retention',
     ];
+
+    const FEATURED_BADGE_TEXT = 'Most Popular';
 
     /**
      * Render a single upgrade card for the given tier.
@@ -38,14 +42,16 @@
         const features    = isDeep ? DEEP_REPORT_FEATURES : ATLAS_PREMIUM_FEATURES;
         const badgeText   = isDeep ? 'One-Time Purchase' : 'Lifetime Access';
         const badgeClass  = isDeep ? 'badge-blue' : 'badge-gold';
-        const btnLabel    = isDeep ? 'Unlock Deep Report' : 'Upgrade to Atlas Premium';
+        const btnLabel    = isDeep ? 'Unlock Deep Report' : 'Go Atlas Premium';
         const description = isDeep
             ? 'Go deeper into your resilience profile with full dimension analysis and personalized strategies.'
             : 'Track your resilience journey over time and unlock all premium features.';
+        const featuredBadge = isDeep ? '' : `<span class="upgrade-badge badge-recommended" aria-label="${escapeHtml(FEATURED_BADGE_TEXT)} — recommended option">${escapeHtml(FEATURED_BADGE_TEXT)}</span>`;
 
         return `
-            <div class="upgrade-card upgrade-card--${tier}" role="article" aria-labelledby="upgrade-title-${tier}">
+            <div class="upgrade-card upgrade-card--${tier}${isDeep ? '' : ' upgrade-card--featured'}" role="article" aria-labelledby="upgrade-title-${tier}">
                 <div class="upgrade-card__header">
+                    ${featuredBadge}
                     <span class="upgrade-badge ${badgeClass}">${badgeText}</span>
                     <h3 id="upgrade-title-${tier}" class="upgrade-card__title">${escapeHtml(title)}</h3>
                     <p class="upgrade-card__price">${escapeHtml(price)}</p>
