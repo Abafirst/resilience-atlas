@@ -57,7 +57,7 @@
   var PULSE_FREQ        = 0.0021; // rad/ms – gradient pulse cycle rate
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
-var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
+var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
   var INNER_RING_OFFSET = 4;      // px – inner decorative ring inset from outer ring
@@ -79,6 +79,39 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
     return (i / DIMENSIONS.length) * Math.PI * 2 - Math.PI / 2;
   }
 
+  // ── Background brightness detection ────────────────────────────────────────
+  var _isLightBackground = false;
+
+  /**
+   * Relative luminance using ITU-R BT.601 luma coefficients (0–1).
+   * Values > 0.5 are perceived as "light".
+   */
+  function calcLuminance(r, g, b) {
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  }
+
+  /** Returns true if the canvas sits on a light (white/near-white) background. */
+  function detectBackground(canvas) {
+    var el = canvas && canvas.parentElement;
+    while (el) {
+      var bg = window.getComputedStyle(el).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+        var m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        if (m) {
+          return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
+        }
+      }
+      el = el.parentElement;
+    }
+    // Fallback: check document.body
+    var bodyBg = window.getComputedStyle(document.body).backgroundColor;
+    var bm = bodyBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (bm) {
+      return calcLuminance(+bm[1], +bm[2], +bm[3]) > 0.5;
+    }
+    return false;
+  }
+
   // ── Public API ─────────────────────────────────────────────────────────────
   /**
    * Render an animated resilience compass onto a <canvas> element.
@@ -87,6 +120,9 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
    */
   function renderCompass(canvas, scores) {
     if (!canvas || typeof canvas.getContext !== 'function') { return; }
+
+    // Detect background brightness once so drawing helpers can adapt colors
+    _isLightBackground = detectBackground(canvas);
 
     // Cancel any previous animation loop on this canvas element
     if (canvas._compassRafId) {
@@ -141,6 +177,7 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.clearRect(0, 0, CW, CH);
 
       drawBackground(ctx, pulse);
+      drawCompassNub(ctx);
       drawBezel(ctx);
       drawDoubleRing(ctx);
       drawTicks(ctx);
@@ -238,7 +275,12 @@ function drawGrid(ctx) {
   GRID_RINGS.forEach(function (pct) {
     ctx.beginPath();
     ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(99,102,241,0.20)';
+    if (_isLightBackground) {
+      // Vibrant, saturated ring colors for white/light page backgrounds
+      ctx.strokeStyle = pct === 1.0 ? 'rgba(99,102,241,0.60)' : 'rgba(99,102,241,0.42)';
+    } else {
+      ctx.strokeStyle = 'rgba(99,102,241,0.20)';
+    }
     ctx.lineWidth = pct === 1.0 ? 0.75 : 0.5;
     ctx.stroke();
   });
@@ -392,6 +434,34 @@ function drawCrosshairs(ctx) {
     }
 
     ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  function drawCompassNub(ctx) {
+    ctx.save();
+
+    // Small semi-ellipse dome at the very top of the compass, centered on CX.
+    // It sits above the bezel ring – minimalistic and semi-transparent.
+    var bezelTop = CY - BEZEL_R;
+    var nubW     = 14;  // total width of the nub
+    var nubH     = 9;   // how many px it protrudes above the bezel top
+
+    ctx.beginPath();
+    ctx.moveTo(CX - nubW / 2, bezelTop);
+    // Upper semi-ellipse: anticlockwise from Math.PI → 0 passes through the top
+    ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, 0, true);
+    ctx.closePath();
+
+    var nubGrad = ctx.createLinearGradient(CX, bezelTop - nubH, CX, bezelTop);
+    nubGrad.addColorStop(0, 'rgba(224,231,255,0.28)');
+    nubGrad.addColorStop(1, 'rgba(147,51,234,0.16)');
+    ctx.fillStyle = nubGrad;
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(40,40,40,0.20)';
+    ctx.lineWidth   = 0.75;
+    ctx.stroke();
+
     ctx.restore();
   }
 
