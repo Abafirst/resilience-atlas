@@ -332,6 +332,7 @@ function detectBackground(canvas) {
 	    el = el.parentElement;
   }
     return false; // Default to dark
+}
 
  // ── Public API ─────────────────────────────────────────────────────────────
   /**
