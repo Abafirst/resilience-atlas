@@ -5,14 +5,18 @@
   'use strict';
 
   // ── Configuration ──────────────────────────────────────────────────────────
-  var DIMENSIONS = [
-    'Relational-Connective',
-    'Cognitive-Narrative',
-    'Somatic-Regulative',
-    'Emotional-Adaptive',
-    'Spiritual-Reflective',
-    'Agentic-Generative'
-  ];
+  var DIMENSIONS = (typeof window !== 'undefined' &&
+    Array.isArray(window.ResilienceCompassDimensions) &&
+    window.ResilienceCompassDimensions.length)
+    ? window.ResilienceCompassDimensions.slice()
+    : [
+      'Relational-Connective',
+      'Cognitive-Narrative',
+      'Somatic-Regulative',
+      'Emotional-Adaptive',
+      'Spiritual-Reflective',
+      'Agentic-Generative'
+    ];
 
   var ICON_SRCS = [
     '/icons/relational-connective.svg',
@@ -34,6 +38,9 @@
   });
 
   var CARDINALS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  if (typeof window !== 'undefined') {
+    window.ResilienceCompassDimensions = DIMENSIONS.slice();
+  }
 
   // Canvas dimensions (physical pixels – CSS scales the element)
   var CW = 360; // canvas width
@@ -43,35 +50,83 @@
   var R  = 75; // max chart data radius
 
   // Derived radii (all relative to R)
-  var OUTER_R    = R * 1.09; // 139 – outer compass ring
-  var TICK_IN    = R * 1.09; // 139 – tick mark inner edge (at ring)
-  var TICK_OUT_S = R * 1.17; // 150 – inter-cardinal tick outer edge
-  var TICK_OUT_L = R * 1.22; // 156 – cardinal tick outer edge
-  var LABEL_R    = R * 1.32; // 169 – cardinal / inter-cardinal label radius
-  var ICON_R     = R * 1.06; // 136 – dimension-icon radius (inside ring)
-  var ICON_SIZE  = 20;        // dimension-icon display size in canvas pixels
+  var OUTER_R     = R * 1.11; // outer compass ring
+  var TICK_START  = OUTER_R - 1;
+  var MAJOR_TICK  = 10;
+  var MINOR_TICK  = 4;
+  var LABEL_R     = OUTER_R + 18;
+  var ICON_R      = R * 1.06;
+  var ICON_SIZE   = 20;
 
-  var NEEDLE_DURATION   = 2500;  // ms – needle travel time
-  var WOBBLE_FREQ       = 0.0012; // rad/ms – subtle post-settle needle wobble
-  var WOBBLE_AMP        = 0.018;  // rad   – wobble amplitude (~1 degree)
-  var PULSE_FREQ        = 0.0021; // rad/ms – gradient pulse cycle rate
+  var NEEDLE_DURATION        = 900;
+  var NEEDLE_STABILIZE       = 0.1;
+  var NEEDLE_OSC_FREQ        = 0.010;
+  var NEEDLE_OSC_AMP         = 0.012;
+  var NEEDLE_OSC_DECAY       = 1800;
+  var NEEDLE_HALF_WIDTH      = 5;
+  var BREATHING_FREQ         = (Math.PI * 2) / 6000;
+  var PULSE_FREQ             = (Math.PI * 2) / 2800;
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
-var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
+  var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
+  var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
-  var INNER_RING_OFFSET = 4;      // px – inner decorative ring inset from outer ring
-  var MINOR_TICK_RATIO  = 0.45;   // fraction of the gap [TICK_IN, TICK_OUT_S] for minor ticks
-  var NEEDLE_WIDTH_RATIO = 0.09;  // half-width of needle at pivot, as fraction of forward length
 
-  var DEGREE_LABEL_R = R * 1.47; // ~110px – degree number labels, just outside cardinal letters
-  var BEZEL_R        = R * 1.62; // ~122px – decorative bezel ring, 12px beyond degree labels
-  var DOUBLE_RING_GAP = 7;       // px – gap between thin inner ring and thick outer ring
+  var DEGREE_LABEL_R = R * 1.44;
+  var BEZEL_R        = R * 1.62;
+  var DOUBLE_RING_GAP = 7;
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   /** Quadratic ease-in-out: slow start, fast middle, slow end. */
   function easeInOut(t) {
     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  function easeOutBack(t) {
+    var c1 = 1.70158;
+    var c3 = c1 + 1;
+    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+  }
+
+  function clamp(val, min, max) {
+    return Math.min(max, Math.max(min, val));
+  }
+
+  function phaseProgress(elapsed, start, duration) {
+    return clamp((elapsed - start) / duration, 0, 1);
+  }
+
+  function normaliseScore(value) {
+    if (value == null) { return 0; }
+    if (typeof value === 'object') {
+      if (typeof value.percentage === 'number') { return value.percentage; }
+      if (typeof value.score === 'number') { return value.score; }
+      if (typeof value.value === 'number') { return value.value; }
+      if (typeof value.raw === 'number' && typeof value.max === 'number') {
+        return (value.raw / value.max) * 100;
+      }
+    }
+    return parseFloat(value) || 0;
+  }
+
+  function drawSpacedText(ctx, text, x, y, spacing) {
+    if (!spacing || spacing <= 0) {
+      ctx.fillText(text, x, y);
+      return;
+    }
+    var chars = text.split('');
+    var totalWidth = 0;
+    chars.forEach(function (char) {
+      totalWidth += ctx.measureText(char).width + spacing;
+    });
+    totalWidth -= spacing;
+    var start = x - totalWidth / 2;
+    chars.forEach(function (char) {
+      var w = ctx.measureText(char).width;
+      ctx.fillText(char, start + w / 2, y);
+      start += w + spacing;
+    });
   }
 
   /** Angle (radians) for dimension i, clockwise from North (top). */
@@ -135,18 +190,31 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
 
     var ctx = canvas.getContext('2d');
 
-    // Normalise scores to [0, 1]
-    var values = DIMENSIONS.map(function (d) {
-      var v = parseFloat(scores[d]) || 0;
-      return Math.min(1, Math.max(0, v / 100));
+    var rawValues = DIMENSIONS.map(function (d) {
+      var v = normaliseScore(scores && scores[d]);
+      return Math.min(100, Math.max(0, v));
     });
+    var values = rawValues.map(function (v) { return v / 100; });
 
     var maxVal      = Math.max.apply(null, values);
     var dominantIdx = values.indexOf(maxVal);
+    if (scores && typeof scores === 'object') {
+      var sorted = Object.entries(scores)
+        .filter(function (entry) { return DIMENSIONS.indexOf(entry[0]) !== -1; })
+        .map(function (entry) { return [entry[0], normaliseScore(entry[1])]; })
+        .sort(function (a, b) { return b[1] - a[1]; });
+      if (sorted.length) {
+        dominantIdx = DIMENSIONS.indexOf(sorted[0][0]);
+        maxVal = clamp(sorted[0][1] / 100, 0, 1);
+      }
+    }
+    if (dominantIdx < 0) { dominantIdx = 0; }
 
     // Needle travels from North (start) to dominant dimension (target)
     var targetAngle = dimAngle(dominantIdx);
-    var startAngle  = -Math.PI / 2; // North
+    var startAngle  = (typeof canvas._compassNeedleAngle === 'number')
+      ? canvas._compassNeedleAngle
+      : -Math.PI / 2;
 
     // Shortest-path angle delta
     var angleDiff = ((targetAngle - startAngle) % (Math.PI * 2));
@@ -159,39 +227,53 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
     var equilibrium = Math.max(0, 1 - Math.sqrt(variance) * 2.5);
 
     var startTime = null;
+    var currentAngle = startAngle;
 
     function frame(ts) {
       if (!startTime) { startTime = ts; }
       var elapsed = ts - startTime;
 
-      // Needle position
-      var p           = Math.min(1, elapsed / NEEDLE_DURATION);
-      var needleAngle = startAngle + angleDiff * easeInOut(p);
-      // Subtle wobble once the needle has settled
-      if (p >= 1) {
-        needleAngle = targetAngle + Math.sin(elapsed * WOBBLE_FREQ) * WOBBLE_AMP;
+      var sweepProgress = Math.min(1, elapsed / NEEDLE_DURATION);
+      if (sweepProgress < 1) {
+        currentAngle = startAngle + angleDiff * easeOutBack(sweepProgress);
+      } else {
+        currentAngle += (targetAngle - currentAngle) * NEEDLE_STABILIZE;
+        var oscillation = Math.sin(elapsed * NEEDLE_OSC_FREQ) * NEEDLE_OSC_AMP;
+        currentAngle += oscillation * Math.exp(-elapsed / NEEDLE_OSC_DECAY);
       }
 
       var pulse = elapsed * PULSE_FREQ;
+      var breathing = (Math.sin(elapsed * BREATHING_FREQ - Math.PI / 2) + 1) / 2;
+
+      var gridIn       = phaseProgress(elapsed, 0, 240);
+      var fieldIn      = phaseProgress(elapsed, 120, 360);
+      var polygonIn    = phaseProgress(elapsed, 180, 420);
+      var ringIn       = phaseProgress(elapsed, 420, 240);
+      var bandIn       = phaseProgress(elapsed, 520, 240);
+      var hubIn        = phaseProgress(elapsed, 600, 200);
 
       ctx.clearRect(0, 0, CW, CH);
 
       drawBackground(ctx, pulse);
-      drawCompassNub(ctx);
       drawBezel(ctx);
       drawDoubleRing(ctx);
+      drawCompassNub(ctx);
       drawTicks(ctx);
       drawDegreeMarkers(ctx);
-      drawGrid(ctx);
-      drawCrosshairs(ctx);
-      drawAxes(ctx, dominantIdx, pulse);
-      drawEquilibriumRing(ctx, avg, equilibrium);
-      drawDataPolygon(ctx, values, dominantIdx, pulse);
-      drawNeedle(ctx, needleAngle);
-      drawCompassRose(ctx);
+      drawGrid(ctx, gridIn);
+      drawAxes(ctx, dominantIdx, pulse, gridIn);
+      drawEnergyField(ctx, breathing, fieldIn);
+      drawDataPolygon(ctx, values, dominantIdx, pulse, polygonIn);
+      drawDimensionNodes(ctx, values, dominantIdx, polygonIn);
       drawIcons(ctx);
+      drawEquilibriumRing(ctx, equilibrium, ringIn, pulse);
+      drawDominantGlowBand(ctx, dominantIdx, bandIn);
+      drawCompassRose(ctx);
+      drawNeedle(ctx, currentAngle);
+      drawCenterHub(ctx, hubIn, pulse);
       drawDominantLabel(ctx, dominantIdx, maxVal);
 
+      canvas._compassNeedleAngle = currentAngle;
       canvas._compassRafId = requestAnimationFrame(frame);
     }
 
@@ -204,127 +286,118 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 0.9, 1.0];
 
     // Subtle radial gradient: lighter center → darker edges (depth / 3-D effect)
     var depthGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
-    depthGrad.addColorStop(0,   'rgba(255,255,255,0.05)');
+    depthGrad.addColorStop(0,   'rgba(255,255,255,0.08)');
     depthGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
-    depthGrad.addColorStop(1,   'rgba(0,0,0,0.22)');
+    depthGrad.addColorStop(1,   'rgba(0,0,0,0.20)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
     ctx.fillStyle = depthGrad;
     ctx.fill();
 
-    // Softly pulsing inner glow – purple → turquoise
-    var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
-    var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.85);
-    glowGrad.addColorStop(0,   'rgba(147,51,234,' + (gAlpha + 0.10) + ')');
-    glowGrad.addColorStop(0.5, 'rgba(6,182,212,'  + gAlpha + ')');
-    glowGrad.addColorStop(1,   'rgba(6,182,212,0)');
+    var gAlpha   = 0.08 + 0.04 * Math.sin(pulse);
+    var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.9);
+    glowGrad.addColorStop(0,   'rgba(139,92,246,' + (gAlpha + 0.06) + ')');
+    glowGrad.addColorStop(0.6, 'rgba(139,92,246,' + gAlpha + ')');
+    glowGrad.addColorStop(1,   'rgba(139,92,246,0)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
     ctx.fill();
-}
+ }
   function drawTicks(ctx) {
     ctx.save();
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
 
-    // Minor tick marks (every 22.5° – 16 total, no labels)
-    for (var m = 0; m < 16; m++) {
-      if (m % 2 === 0) { continue; } // skip positions used by main ticks
-      var mAngle   = (m / 16) * Math.PI * 2 - Math.PI / 2;
-      var mOuter   = TICK_IN + (TICK_OUT_S - TICK_IN) * MINOR_TICK_RATIO;
+    for (var deg = 0; deg < 360; deg += 10) {
+      var isMajor = deg % 45 === 0;
+      var isCardinal = deg % 90 === 0;
+      var len = isMajor ? MAJOR_TICK : MINOR_TICK;
+      var angle = (deg * Math.PI / 180) - Math.PI / 2;
+
       ctx.beginPath();
-      ctx.moveTo(CX + TICK_IN  * Math.cos(mAngle), CY + TICK_IN  * Math.sin(mAngle));
-      ctx.lineTo(CX + mOuter   * Math.cos(mAngle), CY + mOuter   * Math.sin(mAngle));
-      ctx.strokeStyle = 'rgba(40,40,40,0.06)';
-      ctx.lineWidth   = 0.25;
+      ctx.moveTo(
+        CX + TICK_START * Math.cos(angle),
+        CY + TICK_START * Math.sin(angle)
+      );
+      ctx.lineTo(
+        CX + (TICK_START + len) * Math.cos(angle),
+        CY + (TICK_START + len) * Math.sin(angle)
+      );
+      var tickAlpha = isMajor ? 0.35 : 0.2;
+      if (isCardinal) { tickAlpha = 0.55; }
+      ctx.strokeStyle = 'rgba(0,0,0,' + tickAlpha + ')';
+      ctx.lineWidth   = isMajor ? 1 : 0.7;
       ctx.stroke();
     }
 
-    // Main 8 cardinal / inter-cardinal ticks + labels
     for (var i = 0; i < 8; i++) {
-      var angle  = (i / 8) * Math.PI * 2 - Math.PI / 2;
-      var isMain = (i % 2 === 0); // N, E, S, W
-
-      // Tick line
-      var outerTick = isMain ? TICK_OUT_L : TICK_OUT_S;
-      ctx.beginPath();
-      ctx.moveTo(CX + TICK_IN    * Math.cos(angle), CY + TICK_IN    * Math.sin(angle));
-      ctx.lineTo(CX + outerTick  * Math.cos(angle), CY + outerTick  * Math.sin(angle));
-ctx.strokeStyle = isMain ? 'rgba(40,40,40,1.0)' : 'rgba(40,40,40,0.7)';
-      ctx.lineWidth   = isMain ? .50 : 0.25;
-      ctx.stroke();
-
-      // Label
-      // Main/minor visual hierarchy: cardinal N/E/S/W are 13px bold, intercardinals 8px regular
-      ctx.font      = isMain ? 'bold 13px Inter,system-ui,sans-serif'
-                              : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(40,40,40,1.0)' : 'rgba(40,40,40,0.6)';
-      ctx.fillText(
+      var labelAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+      var isMain = i % 2 === 0;
+      var fontSize = isMain ? 12 : 10;
+      var spacing = fontSize * 0.08;
+      ctx.font      = '600 ' + fontSize + 'px Inter,system-ui,sans-serif';
+      ctx.fillStyle = '#444';
+      drawSpacedText(
+        ctx,
         CARDINALS[i],
-        CX + LABEL_R * Math.cos(angle),
-        CY + LABEL_R * Math.sin(angle)
+        CX + LABEL_R * Math.cos(labelAngle),
+        CY + LABEL_R * Math.sin(labelAngle),
+        spacing
       );
     }
 
     ctx.restore();
   }
-function drawGrid(ctx) {
-  ctx.save();
-
-  GRID_RINGS.forEach(function (pct) {
-    ctx.beginPath();
-    ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-    if (_isLightBackground) {
-      // Vibrant, saturated ring colors for white/light page backgrounds
-      ctx.strokeStyle = pct === 1.0 ? 'rgba(99,102,241,0.60)' : 'rgba(99,102,241,0.42)';
-    } else {
-      ctx.strokeStyle = 'rgba(99,102,241,0.20)';
-    }
-    ctx.lineWidth = pct === 1.0 ? 0.75 : 0.5;
-    ctx.stroke();
-  });
-  ctx.restore();
-} 
-function drawCrosshairs(ctx) {
-  // Clean + crosshairs at the compass centre, inside the innermost ring
-  ctx.save();
-  ctx.strokeStyle = 'rgba(99,102,241,0.30)';
-  ctx.lineWidth = 0.5;
-
-  var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
-
-  ctx.beginPath();
-  ctx.moveTo(CX - arm, CY);
-  ctx.lineTo(CX + arm, CY);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(CX, CY - arm);
-  ctx.lineTo(CX, CY + arm);
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-  function drawAxes(ctx, dominantIdx, pulse) {
+  function drawGrid(ctx, fade) {
     ctx.save();
+    ctx.globalAlpha = fade;
 
-    for (var i = 0; i < 6; i++) {
+    GRID_RINGS.forEach(function (pct, idx) {
+      ctx.beginPath();
+      ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
+      var opacity = GRID_OPACITY[idx] || 0.05;
+      ctx.strokeStyle = 'rgba(0,0,0,' + opacity + ')';
+      ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
+      ctx.stroke();
+    });
+
+    drawCrosshairs(ctx);
+    ctx.restore();
+  } 
+  function drawCrosshairs(ctx) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.lineWidth = 0.6;
+
+    var arm = R * GRID_RINGS[0];
+
+    ctx.beginPath();
+    ctx.moveTo(CX - arm, CY);
+    ctx.lineTo(CX + arm, CY);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY - arm);
+    ctx.lineTo(CX, CY + arm);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawAxes(ctx, dominantIdx, pulse, fade) {
+    ctx.save();
+    ctx.globalAlpha = fade;
+
+    var pulseVal = (Math.sin(pulse) + 1) / 2;
+    for (var i = 0; i < DIMENSIONS.length; i++) {
       var angle = dimAngle(i);
       var isDom = (i === dominantIdx);
+      var baseAlpha = isDom ? 0.16 + 0.04 * pulseVal : 0.08;
 
-      if (isDom) {
-        var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(124,58,237,'+ glowAlpha +')';
-        ctx.shadowBlur  = 10;
-        ctx.strokeStyle = 'rgba(124,58,237,0.90)';
-        ctx.lineWidth   = 1.5;
-      } else {
-        ctx.shadowBlur  = 0;
-        ctx.strokeStyle = 'rgba(124,58,237,0.35)';
-        ctx.lineWidth   = 0.75;
-      }
+      ctx.shadowBlur  = 0;
+      ctx.strokeStyle = 'rgba(0,0,0,' + baseAlpha + ')';
+      ctx.lineWidth   = isDom ? 0.9 : 0.6;
 
       ctx.beginPath();
       ctx.moveTo(CX, CY);
@@ -332,37 +405,89 @@ function drawCrosshairs(ctx) {
       ctx.stroke();
     }
 
-    ctx.shadowBlur = 0;
     ctx.restore();
   }
 
-  function drawEquilibriumRing(ctx, avg, equilibrium) {
-    if (avg <= 0) { return; }
+  function drawEnergyField(ctx, breathing, progress) {
+    if (progress <= 0) { return; }
     ctx.save();
+    var scale = 0.95 + breathing * 0.1;
+    var opacity = (0.7 + breathing * 0.3) * progress;
 
-    var ringR = R * avg * (0.65 + 0.35 * equilibrium);
+    ctx.translate(CX, CY);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = opacity;
+
+    var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, R * 1.1);
+    grad.addColorStop(0,   'rgba(139,92,246,0.25)');
+    grad.addColorStop(0.55,'rgba(139,92,246,0.10)');
+    grad.addColorStop(1,   'rgba(139,92,246,0)');
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 1.05, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawEquilibriumRing(ctx, equilibrium, progress, pulse) {
+    if (equilibrium <= 0 || progress <= 0) { return; }
+    ctx.save();
+    ctx.globalAlpha = progress;
+
+    var ringR = R * 0.7;
+    var pulseBoost = equilibrium > 0.75 ? 0.08 * Math.sin(pulse * 2) : 0;
+    var alpha = 0.08 + 0.32 * equilibrium + pulseBoost;
 
     ctx.beginPath();
     ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
-    ctx.setLineDash([4, 5]);
-    ctx.strokeStyle = 'rgba(99,102,241,' + (0.2 + 0.45 * equilibrium) + ')';
-    ctx.lineWidth   = 1;
+    if (equilibrium < 0.5) {
+      ctx.setLineDash([4, 6]);
+    }
+    ctx.strokeStyle = 'rgba(34,211,238,' + clamp(alpha, 0, 0.6) + ')';
+    ctx.lineWidth   = 3;
+    ctx.shadowBlur  = 8;
+    ctx.shadowColor = 'rgba(34,211,238,0.35)';
     ctx.stroke();
     ctx.setLineDash([]);
 
     ctx.restore();
   }
 
-  function drawDataPolygon(ctx, values, dominantIdx, pulse) {
+  function drawDominantGlowBand(ctx, dominantIdx, progress) {
+    if (progress <= 0) { return; }
     ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(dimAngle(dominantIdx));
 
-    // Compute the 6 radial data points
+    var bandAngle = 8 * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - 1, -bandAngle / 2, bandAngle / 2);
+    ctx.closePath();
+
+    ctx.globalAlpha = progress;
+    ctx.fillStyle   = 'rgba(139,92,246,0.35)';
+    ctx.shadowColor = 'rgba(139,92,246,0.6)';
+    ctx.shadowBlur  = 16;
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawDataPolygon(ctx, values, dominantIdx, pulse, progress) {
+    if (progress <= 0) { return; }
+    ctx.save();
+    ctx.globalAlpha = progress;
+
+    var scale = easeInOut(progress);
     var points = [];
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < DIMENSIONS.length; i++) {
       var a = dimAngle(i);
+      var value = values[i] * scale;
       points.push({
-        x: CX + R * values[i] * Math.cos(a),
-        y: CY + R * values[i] * Math.sin(a)
+        x: CX + R * value * Math.cos(a),
+        y: CY + R * value * Math.sin(a)
       });
     }
 
@@ -386,54 +511,50 @@ function drawCrosshairs(ctx) {
     }
     ctx.closePath();
 
-    // Animated gradient fill – vibrant purple (centre) → turquoise (edge)
-    // Drop shadow for depth
-    ctx.shadowColor   = 'rgba(0,0,0,0.45)';
-    ctx.shadowBlur    = 10;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-    var alpha    = 0.42 + 0.08 * Math.sin(pulse);
+    ctx.shadowColor = 'rgba(124,58,237,0.35)';
+    ctx.shadowBlur  = 12;
+    var alpha    = 0.45 + 0.04 * Math.sin(pulse);
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    fillGrad.addColorStop(0,    'rgba(216,180,254,' + (alpha + 0.15) + ')'); // vivid lavender
-    fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // deep purple
-    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + alpha + ')');          // vibrant turquoise
+    fillGrad.addColorStop(0, 'rgba(124,58,237,' + alpha + ')');
+    fillGrad.addColorStop(1, 'rgba(124,58,237,0.05)');
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    // Clear shadow before stroke so it doesn't double-apply
-    ctx.shadowBlur    = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.strokeStyle = 'rgba(124,58,237,0.9)';
-    ctx.lineWidth   = 1.5;
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#7c3aed';
+    ctx.lineWidth   = 2;
     ctx.stroke();
 
-    // Data-point dots
-    for (var j = 0; j < 6; j++) {
-      var a2  = dimAngle(j);
-      var px  = CX + R * values[j] * Math.cos(a2);
-      var py  = CY + R * values[j] * Math.sin(a2);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  function drawDimensionNodes(ctx, values, dominantIdx, progress) {
+    if (progress <= 0) { return; }
+    ctx.save();
+    ctx.globalAlpha = progress;
+
+    var scale = easeInOut(progress);
+    for (var j = 0; j < DIMENSIONS.length; j++) {
+      var a  = dimAngle(j);
+      var px = CX + R * values[j] * scale * Math.cos(a);
+      var py = CY + R * values[j] * scale * Math.sin(a);
       var isDom = (j === dominantIdx);
 
       ctx.beginPath();
-      ctx.arc(px, py, isDom ? 5 : 3, 0, Math.PI * 2);
+      ctx.arc(px, py, isDom ? 4.5 : 3, 0, Math.PI * 2);
 
-      if (isDom) {
-        ctx.shadowColor = 'rgba(40,40,40,0.9)';
-        ctx.shadowBlur  = 12;
-        ctx.fillStyle   = '#06B6D4';
-      } else {
-        ctx.shadowBlur = 0;
-        ctx.fillStyle  = '#9333EA';
-      }
-
+      ctx.shadowColor = isDom ? 'rgba(34,211,238,0.5)' : 'rgba(124,58,237,0.25)';
+      ctx.shadowBlur  = isDom ? 10 : 6;
+      ctx.fillStyle   = isDom ? '#22d3ee' : '#7c3aed';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-      ctx.lineWidth   = 0.75;
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth   = 0.8;
       ctx.stroke();
     }
 
-    ctx.shadowBlur = 0;
     ctx.restore();
   }
 
@@ -569,66 +690,84 @@ function drawCrosshairs(ctx) {
   function drawNeedle(ctx, angle) {
     ctx.save();
 
-    var lenFwd  = R * 0.62; // forward needle length (points to dominant)
-    var lenBack = R * 0.28; // backward tail length (opposite end)
-    var maxHW   = lenFwd * NEEDLE_WIDTH_RATIO; // max half-width at the centre pivot
+    var lenFwd  = R * 0.65;
+    var lenBack = R * 0.28;
+    var maxHW   = NEEDLE_HALF_WIDTH;
 
     // Rotate canvas so forward tip points toward target angle
     ctx.translate(CX, CY);
     ctx.rotate(angle + Math.PI / 2);
 
     // Needle glow / drop shadow
-    ctx.shadowColor   = 'rgba(80,20,180,0.70)';
-    ctx.shadowBlur    = 16;
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
-
-    // Linear gradient: turquoise at tail → purple at tip
-    var grad = ctx.createLinearGradient(0, lenBack, 0, -lenFwd);
-    grad.addColorStop(0,    '#06B6D4'); // turquoise tail
-    grad.addColorStop(0.42, '#9333EA'); // purple mid-forward
-    grad.addColorStop(1,    '#7C3AED'); // deep purple tip
-
-    // Diamond (rhombus) needle body with two pointed ends
-    ctx.beginPath();
-    ctx.moveTo(0,      -lenFwd);   // forward tip
-    ctx.lineTo(maxHW,  0);         // widest point right
-    ctx.lineTo(0,      lenBack);   // backward tip
-    ctx.lineTo(-maxHW, 0);         // widest point left
-    ctx.closePath();
-
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.shadowBlur    = 0;
+    ctx.shadowColor   = 'rgba(34,211,238,0.45)';
+    ctx.shadowBlur    = 14;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-    ctx.lineWidth   = 0.5;
+
+    ctx.beginPath();
+    ctx.moveTo(0, -lenFwd);
+    ctx.lineTo(maxHW, 0);
+    ctx.lineTo(-maxHW, 0);
+    ctx.closePath();
+    ctx.fillStyle = '#22d3ee';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(0, lenBack);
+    ctx.lineTo(maxHW, 0);
+    ctx.lineTo(-maxHW, 0);
+    ctx.closePath();
+    ctx.fillStyle = '#0891b2';
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.moveTo(0, -lenFwd);
+    ctx.lineTo(maxHW, 0);
+    ctx.lineTo(0, lenBack);
+    ctx.lineTo(-maxHW, 0);
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth   = 0.4;
     ctx.stroke();
 
-    // Centre pivot circle – small bright dot
+    ctx.restore();
+  }
+
+  function drawCenterHub(ctx, progress, pulse) {
+    if (progress <= 0) { return; }
+    ctx.save();
+    ctx.globalAlpha = progress;
+    ctx.translate(CX, CY);
+
+    var pulseScale = 1 + 0.04 * Math.sin(pulse) * progress;
+    ctx.scale(pulseScale, pulseScale);
+
     ctx.beginPath();
-    ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
-    var pivotGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, 3.5);
-    pivotGrad.addColorStop(0, '#E0F2FE');
-    pivotGrad.addColorStop(1, '#06B6D4');
-    ctx.fillStyle   = pivotGrad;
+    ctx.arc(0, 0, 6, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.08)';
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.65)';
-    ctx.lineWidth   = 0.5;
-    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#22d3ee';
+    ctx.fill();
 
     ctx.restore();
   }
 
   function drawIcons(ctx) {
     var size = ICON_SIZE;
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < DIMENSIONS.length; i++) {
       var img = _iconImages[i];
       if (!img || !img.complete || !img.naturalWidth) { continue; }
       var a = dimAngle(i);
-ctx.globalAlpha = 0.4;
+      ctx.globalAlpha = 0.4;
       ctx.drawImage(
         img,
         CX + ICON_R * Math.cos(a) - size / 2,
@@ -636,7 +775,7 @@ ctx.globalAlpha = 0.4;
         size,
         size
       );
-ctx.globalAlpha = 1.0;
+      ctx.globalAlpha = 1.0;
     }
   }
 
