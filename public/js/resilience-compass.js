@@ -103,7 +103,6 @@
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
 
-  var DEGREE_LABEL_R = R * 1.44;
   var BEZEL_R        = R * 1.62;
   var DOUBLE_RING_GAP = 7;
 
@@ -217,6 +216,71 @@
   function dimAngle(i) {
     return (i / DIMENSIONS.length) * Math.PI * 2 - Math.PI / 2;
   }
+
+  // ── Theme color palettes ───────────────────────────────────────────────────
+  var DARK_PALETTE = {
+    bgStop0:        'rgba(30,41,59,0.85)',
+    bgStop1:        'rgba(15,23,42,0.95)',
+    bgStop2:        'rgba(2,6,23,1)',
+    gridBase:       'rgba(56,189,248,',
+    crosshair:      'rgba(56,189,248,0.12)',
+    ringInner:      'rgba(255,255,255,0.12)',
+    ringOuter:      'rgba(255,255,255,0.18)',
+    ringShadow:     'rgba(56,189,248,0.25)',
+    bezel:          'rgba(255,255,255,0.18)',
+    bezelHighlight: 'rgba(255,255,255,0.06)',
+    bezelShadow:    'rgba(56,189,248,0.25)',
+    tickMain:       'rgba(255,255,255,0.45)',
+    tickMinor:      'rgba(255,255,255,0.3)',
+    tickCardinal:   'rgba(255,255,255,0.55)',
+    labelMain:      'rgba(255,255,255,0.45)',
+    labelSec:       'rgba(255,255,255,0.3)',
+    axisBase:       'rgba(56,189,248,',
+    polyStroke:     '#A78BFA',
+    polyFill:       'rgba(139,92,246,0.35)',
+    polyShadow:     'rgba(139,92,246,0.5)',
+    polyShadowBlur: 14,
+    haloStop0:      'rgba(139,92,246,0.25)',
+    haloStop1:      'rgba(139,92,246,0.08)',
+    needleFwd:      '#22d3ee',
+    needleBack:     '#0e7490',
+    needleGlow:     'rgba(34,211,238,0.6)',
+    needleGlowBlur: 14,
+    nubStroke:      'rgba(40,40,40,0.35)',
+    labelText:      'rgba(103,232,249,0.9)'
+  };
+
+  var LIGHT_PALETTE = {
+    bgStop0:        '#ffffff',
+    bgStop1:        '#f1f5f9',
+    bgStop2:        '#e2e8f0',
+    gridBase:       'rgba(100,116,139,',
+    crosshair:      'rgba(100,116,139,0.18)',
+    ringInner:      'rgba(100,116,139,0.2)',
+    ringOuter:      'rgba(100,116,139,0.35)',
+    ringShadow:     'rgba(124,58,237,0.15)',
+    bezel:          'rgba(100,116,139,0.35)',
+    bezelHighlight: 'rgba(100,116,139,0.12)',
+    bezelShadow:    'rgba(124,58,237,0.15)',
+    tickMain:       'rgba(71,85,105,0.5)',
+    tickMinor:      'rgba(71,85,105,0.3)',
+    tickCardinal:   'rgba(71,85,105,0.6)',
+    labelMain:      'rgba(71,85,105,0.6)',
+    labelSec:       'rgba(71,85,105,0.45)',
+    axisBase:       'rgba(100,116,139,',
+    polyStroke:     '#7c3aed',
+    polyFill:       'rgba(124,58,237,0.25)',
+    polyShadow:     'rgba(124,58,237,0.3)',
+    polyShadowBlur: 10,
+    haloStop0:      'rgba(124,58,237,0.2)',
+    haloStop1:      'rgba(124,58,237,0.06)',
+    needleFwd:      '#06b6d4',
+    needleBack:     '#0e7490',
+    needleGlow:     'rgba(6,182,212,0.3)',
+    needleGlowBlur: 8,
+    nubStroke:      'rgba(100,116,139,0.3)',
+    labelText:      'rgba(79,70,229,0.85)'
+  };
 
   // ── Background brightness detection ────────────────────────────────────────
   var _isLightBackground = false;
@@ -347,7 +411,6 @@
       drawDoubleRing(ctx);
       drawCompassNub(ctx);
       drawTicks(ctx);
-      drawDegreeMarkers(ctx);
       drawGrid(ctx, gridIn);
       drawAxes(ctx, dominantIdx, pulse, gridIn);
       drawEnergyField(ctx, breathing, fieldIn);
@@ -371,12 +434,13 @@
   // ── Drawing helpers ────────────────────────────────────────────────────────
 
   function drawBackground(ctx, pulse) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
 
-    // Dark instrument panel backplate: radial gradient from center to outer edge
+    // Instrument panel backplate: radial gradient from center to outer edge
     var backplate = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
-    backplate.addColorStop(0,   'rgba(30,41,59,0.85)');
-    backplate.addColorStop(0.6, 'rgba(15,23,42,0.95)');
-    backplate.addColorStop(1,   'rgba(2,6,23,1)');
+    backplate.addColorStop(0,   pal.bgStop0);
+    backplate.addColorStop(0.6, pal.bgStop1);
+    backplate.addColorStop(1,   pal.bgStop2);
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
     ctx.fillStyle = backplate;
@@ -391,8 +455,9 @@
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
     ctx.fill();
- }
+  }
   function drawTicks(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
@@ -412,9 +477,7 @@
         CX + (TICK_START + len) * Math.cos(angle),
         CY + (TICK_START + len) * Math.sin(angle)
       );
-      var tickAlpha = isMajor ? 0.45 : 0.3;
-      if (isCardinal) { tickAlpha = 0.55; }
-      ctx.strokeStyle = 'rgba(255,255,255,' + tickAlpha + ')';
+      ctx.strokeStyle = isCardinal ? pal.tickCardinal : (isMajor ? pal.tickMain : pal.tickMinor);
       ctx.lineWidth   = isMajor ? 2 : 1;
       ctx.stroke();
     }
@@ -422,10 +485,10 @@
     for (var i = 0; i < 8; i++) {
       var labelAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
       var isMain = i % 2 === 0;
-      var fontSize = isMain ? 11 : 9;
+      var fontSize = isMain ? 10 : 9;
       var spacing = fontSize * LABEL_LETTER_SPACING_RATIO;
       ctx.font      = '400 ' + fontSize + 'px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.3)';
+      ctx.fillStyle = isMain ? pal.labelMain : pal.labelSec;
       drawSpacedText(
         ctx,
         CARDINALS[i],
@@ -438,6 +501,7 @@
     ctx.restore();
   }
   function drawGrid(ctx, fade) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
     ctx.globalAlpha = fade;
 
@@ -445,17 +509,18 @@
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       var opacity = typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK;
-      ctx.strokeStyle = GRID_BASE_COLOR + opacity + ')';
+      ctx.strokeStyle = pal.gridBase + opacity + ')';
       ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
       ctx.stroke();
     });
 
     drawCrosshairs(ctx);
     ctx.restore();
-  } 
+  }
   function drawCrosshairs(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
-    ctx.strokeStyle = CROSSHAIR_COLOR;
+    ctx.strokeStyle = pal.crosshair;
     ctx.lineWidth = 0.6;
 
     var arm = R * GRID_RINGS[0];
@@ -474,6 +539,7 @@
   }
 
   function drawAxes(ctx, dominantIdx, pulse, fade) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
     ctx.globalAlpha = fade;
 
@@ -484,7 +550,7 @@
       var baseAlpha = isDom ? 0.28 + 0.08 * pulseVal : 0.14;
 
       ctx.shadowBlur  = 0;
-      ctx.strokeStyle = 'rgba(56,189,248,' + baseAlpha + ')';
+      ctx.strokeStyle = pal.axisBase + baseAlpha + ')';
       ctx.lineWidth   = isDom ? 0.9 : 0.6;
 
       ctx.beginPath();
@@ -591,6 +657,7 @@
 
   function drawDataPolygon(ctx, values, dominantIdx, pulse, progress) {
     if (progress <= 0) { return; }
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
     ctx.globalAlpha = progress;
 
@@ -609,8 +676,8 @@
     ctx.beginPath();
     traceSplinePath(ctx, points);
     var haloGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    haloGrad.addColorStop(0,   'rgba(139,92,246,0.25)');
-    haloGrad.addColorStop(0.6, 'rgba(139,92,246,0.08)');
+    haloGrad.addColorStop(0,   pal.haloStop0);
+    haloGrad.addColorStop(0.6, pal.haloStop1);
     haloGrad.addColorStop(1,   'rgba(139,92,246,0)');
     ctx.fillStyle = haloGrad;
     ctx.fill();
@@ -618,12 +685,12 @@
     // Fill + stroke with glow
     ctx.beginPath();
     traceSplinePath(ctx, points);
-    ctx.shadowColor = 'rgba(139,92,246,0.5)';
-    ctx.shadowBlur  = 14;
-    ctx.fillStyle   = 'rgba(139,92,246,0.35)';
+    ctx.shadowColor = pal.polyShadow;
+    ctx.shadowBlur  = pal.polyShadowBlur;
+    ctx.fillStyle   = pal.polyFill;
     ctx.fill();
 
-    ctx.strokeStyle = '#A78BFA';
+    ctx.strokeStyle = pal.polyStroke;
     ctx.lineWidth   = 2;
     ctx.stroke();
     ctx.restore();
@@ -659,6 +726,7 @@
   }
 
   function drawCompassNub(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
 
     // Small semi-ellipse dome at the very top of the compass, centered on CX.
@@ -673,13 +741,10 @@
 ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.closePath();
 
-    var nubGrad = ctx.createLinearGradient(CX, bezelTop - nubH, CX, bezelTop);
-    nubGrad.addColorStop(0, 'rgba(224,231,255,0.5)');
-    nubGrad.addColorStop(1, 'rgba(147,51,234,0.3)');
     ctx.fillStyle = 'transparent';
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(40,40,40,0.35)';
+    ctx.strokeStyle = pal.nubStroke;
     ctx.lineWidth   = 0.75;
     ctx.stroke();
 
@@ -687,21 +752,22 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
   }
 
   function drawDoubleRing(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
 
     // Thin inner ring at OUTER_R
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.strokeStyle = pal.ringInner;
     ctx.lineWidth   = 0.5;
     ctx.stroke();
 
     // Outer ring just beyond OUTER_R – creates double-line border effect
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + DOUBLE_RING_GAP, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.strokeStyle = pal.ringOuter;
     ctx.lineWidth   = 3.0;
-    ctx.shadowColor = 'rgba(56,189,248,0.25)';
+    ctx.shadowColor = pal.ringShadow;
     ctx.shadowBlur  = 6;
     ctx.stroke();
     ctx.shadowBlur  = 0;
@@ -710,14 +776,15 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
   }
 
   function drawBezel(ctx) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
 
     // Outer ring of decorative bezel frame
     ctx.beginPath();
     ctx.arc(CX, CY, BEZEL_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.strokeStyle = pal.bezel;
     ctx.lineWidth   = 3;
-    ctx.shadowColor = 'rgba(56,189,248,0.25)';
+    ctx.shadowColor = pal.bezelShadow;
     ctx.shadowBlur  = 6;
     ctx.stroke();
     ctx.shadowBlur  = 0;
@@ -725,29 +792,9 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     // Subtle inner highlight ring for framed appearance
     ctx.beginPath();
     ctx.arc(CX, CY, BEZEL_R - 5, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.strokeStyle = pal.bezelHighlight;
     ctx.lineWidth   = 1.0;
     ctx.stroke();
-
-    ctx.restore();
-  }
-
-  function drawDegreeMarkers(ctx) {
-    ctx.save();
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font         = '6px Inter,system-ui,sans-serif';
-    ctx.fillStyle    = 'rgba(255,255,255,0.35)';
-
-    var degrees = [0, 45, 90, 135, 180, 225, 270, 315];
-    for (var i = 0; i < degrees.length; i++) {
-      var angle = (degrees[i] * Math.PI / 180) - Math.PI / 2; // clockwise from North
-      ctx.fillText(
-        degrees[i] + '\u00B0',
-        CX + DEGREE_LABEL_R * Math.cos(angle),
-        CY + DEGREE_LABEL_R * Math.sin(angle)
-      );
-    }
 
     ctx.restore();
   }
@@ -794,6 +841,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
   }
 
   function drawNeedle(ctx, angle) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
 
     var lenFwd  = R * 0.65;
@@ -805,8 +853,8 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.rotate(angle + Math.PI / 2);
 
     // Needle glow / drop shadow
-    ctx.shadowColor   = ACCENT_CYAN_RGBA + '0.45)';
-    ctx.shadowBlur    = 14;
+    ctx.shadowColor   = pal.needleGlow;
+    ctx.shadowBlur    = pal.needleGlowBlur;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
@@ -815,7 +863,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.lineTo(maxHW, 0);
     ctx.lineTo(-maxHW, 0);
     ctx.closePath();
-    ctx.fillStyle = ACCENT_CYAN;
+    ctx.fillStyle = pal.needleFwd;
     ctx.fill();
 
     ctx.beginPath();
@@ -823,7 +871,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.lineTo(maxHW, 0);
     ctx.lineTo(-maxHW, 0);
     ctx.closePath();
-    ctx.fillStyle = '#0e7490';
+    ctx.fillStyle = pal.needleBack;
     ctx.fill();
 
     ctx.shadowBlur = 0;
@@ -889,6 +937,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
   }
 
   function drawDominantLabel(ctx, dominantIdx, maxVal) {
+    var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
 
     var labelY = CH - 20;
@@ -898,7 +947,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.font         = '500 12px Inter,system-ui,sans-serif';
-    ctx.fillStyle    = 'rgba(103,232,249,0.9)';
+    ctx.fillStyle    = pal.labelText;
     ctx.fillText(text, CX, labelY);
 
     ctx.restore();
