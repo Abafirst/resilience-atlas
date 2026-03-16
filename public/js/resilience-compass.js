@@ -60,6 +60,8 @@
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
   var DOMINANT_BAND_ARC_ANGLE = 8 * Math.PI / 180;
+  var ACCENT_CYAN = '#22d3ee';
+  var ACCENT_CYAN_RGBA = 'rgba(34,211,238,';
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_SMOOTHING_RATE  = 0.1;
@@ -287,7 +289,7 @@
     }
     if (dominantIdx < 0) {
       if (typeof console !== 'undefined' && console.warn) {
-        console.warn('[resilience-compass] Dominant dimension unresolved from scores or dimensions. Defaulting to first dimension.');
+        console.warn('[resilience-compass] Dominant dimension could not be determined from the provided scores. Defaulting to first dimension.');
       }
       dominantIdx = 0;
     }
@@ -527,10 +529,10 @@
     if (equilibrium < 0.5) {
       ctx.setLineDash(EQUILIBRIUM_DASH_PATTERN);
     }
-    ctx.strokeStyle = 'rgba(34,211,238,' + clamp(alpha, 0, EQUILIBRIUM_RING_MAX_ALPHA) + ')';
+    ctx.strokeStyle = ACCENT_CYAN_RGBA + clamp(alpha, 0, EQUILIBRIUM_RING_MAX_ALPHA) + ')';
     ctx.lineWidth   = 3;
     ctx.shadowBlur  = 8;
-    ctx.shadowColor = 'rgba(34,211,238,0.35)';
+    ctx.shadowColor = ACCENT_CYAN_RGBA + '0.35)';
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -543,9 +545,11 @@
     ctx.translate(CX, CY);
     ctx.rotate(dimAngle(dominantIdx));
 
+    var dominantBandRadius = OUTER_R + DOUBLE_RING_GAP - BAND_INSET;
+
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -DOMINANT_BAND_ARC_ANGLE / 2, DOMINANT_BAND_ARC_ANGLE / 2);
+    ctx.arc(0, 0, dominantBandRadius, -DOMINANT_BAND_ARC_ANGLE / 2, DOMINANT_BAND_ARC_ANGLE / 2);
     ctx.closePath();
 
     ctx.globalAlpha = progress;
@@ -623,9 +627,9 @@
       ctx.beginPath();
       ctx.arc(px, py, isDom ? 4.5 : 3, 0, Math.PI * 2);
 
-      ctx.shadowColor = isDom ? 'rgba(34,211,238,0.5)' : 'rgba(124,58,237,0.25)';
+      ctx.shadowColor = isDom ? ACCENT_CYAN_RGBA + '0.5)' : 'rgba(124,58,237,0.25)';
       ctx.shadowBlur  = isDom ? 10 : 6;
-      ctx.fillStyle   = isDom ? '#22d3ee' : '#7c3aed';
+      ctx.fillStyle   = isDom ? ACCENT_CYAN : '#7c3aed';
       ctx.fill();
 
       ctx.shadowBlur = 0;
@@ -778,7 +782,7 @@
     ctx.rotate(angle + Math.PI / 2);
 
     // Needle glow / drop shadow
-    ctx.shadowColor   = 'rgba(34,211,238,0.45)';
+    ctx.shadowColor   = ACCENT_CYAN_RGBA + '0.45)';
     ctx.shadowBlur    = 14;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
@@ -788,7 +792,7 @@
     ctx.lineTo(maxHW, 0);
     ctx.lineTo(-maxHW, 0);
     ctx.closePath();
-    ctx.fillStyle = '#22d3ee';
+    ctx.fillStyle = ACCENT_CYAN;
     ctx.fill();
 
     ctx.beginPath();
@@ -834,7 +838,7 @@
 
     ctx.beginPath();
     ctx.arc(0, 0, 2, 0, Math.PI * 2);
-    ctx.fillStyle = '#22d3ee';
+    ctx.fillStyle = ACCENT_CYAN;
     ctx.fill();
 
     ctx.restore();
