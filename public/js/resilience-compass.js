@@ -247,7 +247,7 @@ function drawGrid(ctx) {
 function drawCrosshairs(ctx) {
   // Clean + crosshairs at the compass centre, inside the innermost ring
   ctx.save();
-  ctx.strokeStyle = 'rgba(40,40,40,1.0)';
+  ctx.strokeStyle = 'rgba(99,102,241,0.30)';
   ctx.lineWidth = 0.5;
 
   var arm = R * GRID_RINGS[0]; // length matches innermost concentric ring
@@ -274,9 +274,9 @@ function drawCrosshairs(ctx) {
 
       if (isDom) {
         var glowAlpha   = 0.55 + 0.30 * Math.sin(pulse * 1.6);
-        ctx.shadowColor = 'rgba(40,40,40,'+ glowAlpha +')';
+        ctx.shadowColor = 'rgba(124,58,237,'+ glowAlpha +')';
         ctx.shadowBlur  = 10;
-        ctx.strokeStyle = 'rgba(40,40,40,0.95)';
+        ctx.strokeStyle = 'rgba(124,58,237,0.90)';
         ctx.lineWidth   = 1.5;
       } else {
         ctx.shadowBlur  = 0;
@@ -303,7 +303,7 @@ function drawCrosshairs(ctx) {
     ctx.beginPath();
     ctx.arc(CX, CY, ringR, 0, Math.PI * 2);
     ctx.setLineDash([4, 5]);
-    ctx.strokeStyle = 'rgba(40,40,40,' + (0.2 + 0.45 * equilibrium) + ')';
+    ctx.strokeStyle = 'rgba(99,102,241,' + (0.2 + 0.45 * equilibrium) + ')';
     ctx.lineWidth   = 1;
     ctx.stroke();
     ctx.setLineDash([]);
