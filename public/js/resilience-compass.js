@@ -59,6 +59,7 @@
   var ICON_SIZE   = 20;
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
+  var BAND_ANGLE   = 8 * Math.PI / 180;
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_STABILIZE       = 0.1;
@@ -72,6 +73,7 @@
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
+  var GRID_OPACITY_FALLBACK = 0.05;
   var SPLINE_TENSION    = 6;      // Catmull-Rom tension divisor (higher = tighter curves)
   var BG_BLEED          = 6;      // px – navy background extends beyond outer ring
 
@@ -105,11 +107,28 @@
       if (typeof value.percentage === 'number') { return value.percentage; }
       if (typeof value.score === 'number') { return value.score; }
       if (typeof value.value === 'number') { return value.value; }
-      if (typeof value.raw === 'number' && typeof value.max === 'number') {
+      if (typeof value.raw === 'number' && typeof value.max === 'number' && value.max > 0) {
         return (value.raw / value.max) * 100;
       }
     }
     return parseFloat(value) || 0;
+  }
+
+  var _needleAngles = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
+
+  function getStoredNeedleAngle(canvas) {
+    if (_needleAngles && _needleAngles.has(canvas)) {
+      return _needleAngles.get(canvas);
+    }
+    return typeof canvas._compassNeedleAngle === 'number' ? canvas._compassNeedleAngle : null;
+  }
+
+  function setStoredNeedleAngle(canvas, angle) {
+    if (_needleAngles) {
+      _needleAngles.set(canvas, angle);
+    } else {
+      canvas._compassNeedleAngle = angle;
+    }
   }
 
   function drawSpacedText(ctx, text, x, y, spacing) {
@@ -214,9 +233,8 @@
 
     // Needle travels from North (start) to dominant dimension (target)
     var targetAngle = dimAngle(dominantIdx);
-    var startAngle  = (typeof canvas._compassNeedleAngle === 'number')
-      ? canvas._compassNeedleAngle
-      : -Math.PI / 2;
+    var previousAngle = getStoredNeedleAngle(canvas);
+    var startAngle  = (typeof previousAngle === 'number') ? previousAngle : -Math.PI / 2;
 
     // Shortest-path angle delta
     var angleDiff = ((targetAngle - startAngle) % (Math.PI * 2));
@@ -275,7 +293,7 @@
       drawCenterHub(ctx, hubIn, pulse);
       drawDominantLabel(ctx, dominantIdx, maxVal);
 
-      canvas._compassNeedleAngle = currentAngle;
+      setStoredNeedleAngle(canvas, currentAngle);
       canvas._compassRafId = requestAnimationFrame(frame);
     }
 
@@ -358,7 +376,7 @@
     GRID_RINGS.forEach(function (pct, idx) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-      var opacity = GRID_OPACITY[idx] || 0.05;
+      var opacity = GRID_OPACITY[idx] || GRID_OPACITY_FALLBACK;
       ctx.strokeStyle = 'rgba(0,0,0,' + opacity + ')';
       ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
       ctx.stroke();
@@ -462,10 +480,9 @@
     ctx.translate(CX, CY);
     ctx.rotate(dimAngle(dominantIdx));
 
-    var bandAngle = 8 * Math.PI / 180;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -bandAngle / 2, bandAngle / 2);
+    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -BAND_ANGLE / 2, BAND_ANGLE / 2);
     ctx.closePath();
 
     ctx.globalAlpha = progress;
