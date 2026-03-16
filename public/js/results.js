@@ -257,8 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Render upgrade cards for free users ───────────────
   const upgradeContainer = document.getElementById('upgradeCardsContainer');
-  if (upgradeContainer && window.UpgradeCards && window.PaymentGating) {
-    if (!window.PaymentGating.isDeepReport()) {
+  if (upgradeContainer && window.UpgradeCards) {
+    const hasDeepReport = window.PaymentGating && window.PaymentGating.isDeepReport();
+    if (!hasDeepReport) {
       upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
     }
   }
