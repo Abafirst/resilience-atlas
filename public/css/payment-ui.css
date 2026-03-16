@@ -282,3 +282,252 @@
   margin-bottom: 0.75rem;
   line-height: 1.55;
 }
+
+/* ── Free Brief Report Snapshot Card ────────────────────────── */
+.free-brief-report {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+.fbr-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fbr-score-circle {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+  padding-top: 22px;
+}
+
+.fbr-score-num {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fbr-score-sym {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-left: 1px;
+}
+
+.fbr-hero-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.3rem 0;
+}
+
+.fbr-hero-level {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0 0 0.2rem 0;
+}
+
+.fbr-hero-strength {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.fbr-dims-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6b7280;
+  margin: 0 0 0.6rem 0;
+}
+
+.fbr-dim-row {
+  display: grid;
+  grid-template-columns: 10.5rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+
+.fbr-dim-name {
+  font-size: 0.8rem;
+  color: #374151;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fbr-dim-bar-wrap {
+  background: #f3f4f6;
+  border-radius: 999px;
+  height: 7px;
+  overflow: hidden;
+}
+
+.fbr-dim-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.fbr-dim-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+  text-align: right;
+}
+
+.fbr-hint {
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  color: #9ca3af;
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  .fbr-hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .fbr-dim-row {
+    grid-template-columns: 7.5rem 1fr 2.25rem;
+    gap: 0.4rem;
+  }
+
+  .fbr-dim-name {
+    font-size: 0.74rem;
+  }
+}
+
+/* ── Narrative Report Sections (paid users) ─────────────────── */
+.narrative-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nr-overview {
+  background: #f8fafc;
+  border-left: 3px solid #667eea;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.nr-overview p {
+  margin: 0;
+}
+
+.nr-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+.nr-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.nr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6b7280;
+}
+
+.nr-score {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nr-dim-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.4rem 0;
+}
+
+.nr-description {
+  font-size: 0.88rem;
+  color: #475569;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.5;
+}
+
+.nr-insight {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+}
+
+.nr-primary { border-left: 3px solid #667eea; }
+.nr-solid   { border-left: 3px solid #059669; }
+.nr-emerging { border-left: 3px solid #f59e0b; }
+
+.nr-suggestions {
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.nr-suggestions-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.6rem 0;
+}
+
+.nr-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nr-suggestions-list li {
+  font-size: 0.85rem;
+  color: #475569;
+  padding: 0.3rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.45;
+}
+
+.nr-suggestions-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #22c55e;
+  font-weight: 700;
+  font-size: 0.8rem;
+}

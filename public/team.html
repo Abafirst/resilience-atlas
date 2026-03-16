@@ -98,6 +98,145 @@
     .feature-icon { font-size:1.5rem; margin-bottom:.6rem; }
     .feature-item h4 { font-size:1rem; font-weight:700; color:#0f172a; margin-bottom:.3rem; }
     .feature-item p { font-size:.9rem; color:#475569; line-height:1.55; }
+
+    /* ── Team Pricing Grid ──────────────────────────────────── */
+    .team-pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1020px;
+      margin: 0 auto;
+    }
+
+    .team-tier-card {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .team-tier-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,.10);
+    }
+
+    .team-tier-card--featured {
+      border-color: #4F46E5;
+      box-shadow: 0 4px 20px rgba(79,70,229,.14);
+      position: relative;
+    }
+
+    .ttc-header { margin-bottom: 1.25rem; }
+
+    .ttc-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.65rem;
+    }
+
+    .ttc-badge--blue  { background: #dbeafe; color: #1e40af; }
+    .ttc-badge--gold  { background: #fef3c7; color: #92400e; }
+    .ttc-badge--slate { background: #f1f5f9; color: #334155; }
+
+    .ttc-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .ttc-price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ttc-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4F46E5;
+    }
+
+    .ttc-period {
+      font-size: 0.9rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .ttc-desc {
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .ttc-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem 0;
+      flex: 1;
+    }
+
+    .ttc-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.87rem;
+      color: #374151;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .ttc-features li:last-child { border-bottom: none; }
+
+    .ttc-features li span[aria-hidden] {
+      color: #22c55e;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .ttc-btn {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.97rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .ttc-btn--primary {
+      background: #4F46E5;
+      color: #fff;
+    }
+
+    .ttc-btn--featured {
+      background: linear-gradient(135deg, #4F46E5, #7c3aed);
+      color: #fff;
+    }
+
+    .ttc-btn:hover { opacity: 0.9; }
+    .ttc-btn:active { transform: scale(0.98); }
+
+    @media (max-width: 860px) {
+      .team-pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 440px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -126,6 +265,89 @@
     <span class="hero-eyebrow">Business Tier</span>
     <h1>Resilience Atlas for Teams</h1>
     <p>Bring the Six Dimensions of Resilience to your organization. Aggregate insights, team dashboards, and tools for HR and L&amp;D professionals.</p>
+  </section>
+
+  <!-- Team Pricing Tiers -->
+  <section class="landing-section" aria-labelledby="pricingHeading" style="padding-top: 3.5rem; padding-bottom: 3.5rem;">
+    <div class="section-header" style="margin-bottom:2.5rem">
+      <span class="section-label">Pricing</span>
+      <h2 id="pricingHeading">Plans for Every Team</h2>
+      <p style="color:#475569;margin:0.5rem auto 0;max-width:520px;font-size:1rem;line-height:1.6;">Choose the plan that fits your organization. All plans include the full Six Dimensions assessment for every team member.</p>
+    </div>
+    <div class="team-pricing-grid">
+
+      <!-- Starter -->
+      <div class="team-tier-card">
+        <div class="ttc-header">
+          <span class="ttc-badge ttc-badge--blue">Most Popular</span>
+          <h3 class="ttc-name">Teams Starter</h3>
+          <div class="ttc-price">
+            <span class="ttc-amount">$99</span>
+            <span class="ttc-period">/month</span>
+          </div>
+          <p class="ttc-desc">Perfect for small teams starting their resilience journey.</p>
+        </div>
+        <ul class="ttc-features" aria-label="Teams Starter features">
+          <li><span aria-hidden="true">&#10003;</span> Up to 25 users</li>
+          <li><span aria-hidden="true">&#10003;</span> 1 team</li>
+          <li><span aria-hidden="true">&#10003;</span> Team dashboard</li>
+          <li><span aria-hidden="true">&#10003;</span> Aggregated radar chart</li>
+          <li><span aria-hidden="true">&#10003;</span> CSV export</li>
+          <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
+        </ul>
+        <a href="#teamLeadForm" class="ttc-btn ttc-btn--primary" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
+          Get Started
+        </a>
+      </div>
+
+      <!-- Pro -->
+      <div class="team-tier-card team-tier-card--featured">
+        <div class="ttc-header">
+          <span class="ttc-badge ttc-badge--gold">Best Value</span>
+          <h3 class="ttc-name">Teams Pro</h3>
+          <div class="ttc-price">
+            <span class="ttc-amount">$299</span>
+            <span class="ttc-period">/month</span>
+          </div>
+          <p class="ttc-desc">For growing organizations with multiple teams and deeper analytics needs.</p>
+        </div>
+        <ul class="ttc-features" aria-label="Teams Pro features">
+          <li><span aria-hidden="true">&#10003;</span> Up to 250 users</li>
+          <li><span aria-hidden="true">&#10003;</span> Multiple teams</li>
+          <li><span aria-hidden="true">&#10003;</span> Advanced analytics</li>
+          <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports</li>
+          <li><span aria-hidden="true">&#10003;</span> Facilitation tools</li>
+          <li><span aria-hidden="true">&#10003;</span> Everything in Starter</li>
+        </ul>
+        <a href="#teamLeadForm" class="ttc-btn ttc-btn--featured" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
+          Get Started
+        </a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="team-tier-card">
+        <div class="ttc-header">
+          <span class="ttc-badge ttc-badge--slate">Enterprise</span>
+          <h3 class="ttc-name">Enterprise</h3>
+          <div class="ttc-price">
+            <span class="ttc-amount">Custom</span>
+          </div>
+          <p class="ttc-desc">Tailored for large organizations with custom requirements and dedicated support.</p>
+        </div>
+        <ul class="ttc-features" aria-label="Enterprise features">
+          <li><span aria-hidden="true">&#10003;</span> Unlimited users &amp; teams</li>
+          <li><span aria-hidden="true">&#10003;</span> Custom branding</li>
+          <li><span aria-hidden="true">&#10003;</span> SSO / SAML integration</li>
+          <li><span aria-hidden="true">&#10003;</span> Dedicated support</li>
+          <li><span aria-hidden="true">&#10003;</span> Everything in Pro</li>
+          <li><span aria-hidden="true">&#10003;</span> Data retention: Unlimited</li>
+        </ul>
+        <a href="#teamLeadForm" class="ttc-btn ttc-btn--primary" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
+          Contact Sales
+        </a>
+      </div>
+
+    </div>
   </section>
 
   <!-- Lead Capture Form -->
