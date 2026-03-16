@@ -223,7 +223,8 @@ function drawGrid(ctx) {
     ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
     ctx.stroke();
   });
- 
+  ctx.restore();
+} 
 function drawCrosshairs(ctx) {
   // Clean + crosshairs at the compass centre, inside the innermost ring
   ctx.save();
