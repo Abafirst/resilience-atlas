@@ -55,9 +55,9 @@
   var MAJOR_TICK  = 10;
   var MINOR_TICK  = 4;
   var LABEL_R     = OUTER_R + 18;
-  var ICON_R      = R * 1.06;
+  var ICON_R      = R * 1.35;
   var ICON_SIZE   = 20;
-  var ICON_OPACITY = 0.4;
+  var ICON_OPACITY = 0.7;
   var BAND_INSET   = 1;
   var DOMINANT_BAND_DEGREES = 8;
   var DOMINANT_BAND_ARC_ANGLE = DOMINANT_BAND_DEGREES * Math.PI / 180;
@@ -424,8 +424,8 @@
       var isMain = i % 2 === 0;
       var fontSize = isMain ? 12 : 10;
       var spacing = fontSize * LABEL_LETTER_SPACING_RATIO;
-      ctx.font      = '600 ' + fontSize + 'px Inter,system-ui,sans-serif';
-      ctx.fillStyle = '#444';
+      ctx.font      = '400 ' + fontSize + 'px Inter,system-ui,sans-serif';
+      ctx.fillStyle = '#888';
       drawSpacedText(
         ctx,
         CARDINALS[i],
