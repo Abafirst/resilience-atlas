@@ -329,8 +329,7 @@
     if (!canvas || typeof canvas.getContext !== 'function') { return; }
 
     // Detect background brightness once so drawing helpers can adapt colors
-    _isLightBackground = detectBackground(canvas);
-
+_isLightBackground = false;
     // Apply instrument shadow only on dark backgrounds
     canvas.style.filter = _isLightBackground
       ? ''
