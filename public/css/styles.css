@@ -54,3 +54,8 @@
   font-weight: 600;
   margin: 0.5rem 0;
 }
+/* Transparent compass canvas on all backgrounds */
+canvas {
+  background: transparent !important;
+  image-rendering: crisp-edges;
+}
