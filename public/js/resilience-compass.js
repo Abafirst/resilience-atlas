@@ -845,9 +845,15 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.closePath();
 
     var roseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
-    roseGrad.addColorStop(0,   'rgba(255,255,255,1.0)');
-    roseGrad.addColorStop(0.5, 'rgba(224,242,254,0.95)');
-    roseGrad.addColorStop(1,   'rgba(6,182,212,0.90)');
+if (_isLightBackground) {
+  roseGrad.addColorStop(0,   'rgba(255,255,255,1.0)');
+  roseGrad.addColorStop(0.5, 'rgba(224,242,254,0.95)');
+  roseGrad.addColorStop(1,   'rgba(6,182,212,0.90)');
+} else {
+  roseGrad.addColorStop(0,   'rgba(0,0,0,0)');
+  roseGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
+  roseGrad.addColorStop(1,   'rgba(0,0,0,0)');
+}
     ctx.fillStyle = roseGrad;
 
     ctx.shadowColor   = 'rgba(0,0,0,0.40)';
