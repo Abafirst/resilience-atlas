@@ -64,6 +64,10 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var MINOR_TICK_RATIO  = 0.45;   // fraction of the gap [TICK_IN, TICK_OUT_S] for minor ticks
   var NEEDLE_WIDTH_RATIO = 0.09;  // half-width of needle at pivot, as fraction of forward length
 
+  var DEGREE_LABEL_R = R * 1.47; // ~110px – degree number labels, just outside cardinal letters
+  var BEZEL_R        = R * 1.62; // ~122px – decorative bezel ring, 12px beyond degree labels
+  var DOUBLE_RING_GAP = 7;       // px – gap between thin inner ring and thick outer ring
+
   // ── Helpers ────────────────────────────────────────────────────────────────
   /** Quadratic ease-in-out: slow start, fast middle, slow end. */
   function easeInOut(t) {
@@ -137,13 +141,17 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
       ctx.clearRect(0, 0, CW, CH);
 
       drawBackground(ctx, pulse);
+      drawBezel(ctx);
+      drawDoubleRing(ctx);
       drawTicks(ctx);
+      drawDegreeMarkers(ctx);
       drawGrid(ctx);
       drawCrosshairs(ctx);
       drawAxes(ctx, dominantIdx, pulse);
       drawEquilibriumRing(ctx, avg, equilibrium);
       drawDataPolygon(ctx, values, dominantIdx, pulse);
       drawNeedle(ctx, needleAngle);
+      drawCompassRose(ctx);
       drawIcons(ctx);
       drawDominantLabel(ctx, dominantIdx, maxVal);
 
@@ -156,6 +164,16 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   // ── Drawing helpers ────────────────────────────────────────────────────────
 
   function drawBackground(ctx, pulse) {
+
+    // Subtle radial gradient: lighter center → darker edges (depth / 3-D effect)
+    var depthGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
+    depthGrad.addColorStop(0,   'rgba(255,255,255,0.05)');
+    depthGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
+    depthGrad.addColorStop(1,   'rgba(0,0,0,0.22)');
+    ctx.beginPath();
+    ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
+    ctx.fillStyle = depthGrad;
+    ctx.fill();
 
     // Softly pulsing inner glow – purple → turquoise
     var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
@@ -201,9 +219,10 @@ ctx.strokeStyle = isMain ? 'rgba(40,40,40,1.0)' : 'rgba(40,40,40,0.7)';
       ctx.stroke();
 
       // Label
-      ctx.font      = isMain ? 'bold 9px Inter,system-ui,sans-serif'
+      // Main/minor visual hierarchy: cardinal N/E/S/W are 13px bold, intercardinals 8px regular
+      ctx.font      = isMain ? 'bold 13px Inter,system-ui,sans-serif'
                               : '8px Inter,system-ui,sans-serif';
-      ctx.fillStyle = isMain ? 'rgba(40,40,40,0.95)' : 'rgba(40,40,40,0.6)';
+      ctx.fillStyle = isMain ? 'rgba(40,40,40,1.0)' : 'rgba(40,40,40,0.6)';
       ctx.fillText(
         CARDINALS[i],
         CX + LABEL_R * Math.cos(angle),
@@ -326,6 +345,11 @@ function drawCrosshairs(ctx) {
     ctx.closePath();
 
     // Animated gradient fill – purple (centre) → turquoise (edge)
+    // Drop shadow for depth
+    ctx.shadowColor   = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur    = 10;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 3;
     var alpha    = 0.28 + 0.08 * Math.sin(pulse);
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
     fillGrad.addColorStop(0,    'rgba(167,139,250,' + (alpha + 0.15) + ')'); // light purple
@@ -334,6 +358,10 @@ function drawCrosshairs(ctx) {
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
+    // Clear shadow before stroke so it doesn't double-apply
+    ctx.shadowBlur    = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
     ctx.strokeStyle = 'rgba(124,58,237,0.9)';
     ctx.lineWidth   = 1.5;
     ctx.stroke();
@@ -367,6 +395,107 @@ function drawCrosshairs(ctx) {
     ctx.restore();
   }
 
+  function drawDoubleRing(ctx) {
+    ctx.save();
+
+    // Thin inner ring at OUTER_R
+    ctx.beginPath();
+    ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(40,40,40,0.80)';
+    ctx.lineWidth   = 1.0;
+    ctx.stroke();
+
+    // Thick outer ring just beyond OUTER_R – creates double-line border effect
+    ctx.beginPath();
+    ctx.arc(CX, CY, OUTER_R + DOUBLE_RING_GAP, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(40,40,40,1.0)';
+    ctx.lineWidth   = 2.5;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawBezel(ctx) {
+    ctx.save();
+
+    // Outer ring of decorative bezel frame
+    ctx.beginPath();
+    ctx.arc(CX, CY, BEZEL_R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(40,40,40,0.90)';
+    ctx.lineWidth   = 3.5;
+    ctx.stroke();
+
+    // Subtle inner highlight ring for framed appearance
+    ctx.beginPath();
+    ctx.arc(CX, CY, BEZEL_R - 5, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth   = 1.0;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawDegreeMarkers(ctx) {
+    ctx.save();
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font         = '6px Inter,system-ui,sans-serif';
+    ctx.fillStyle    = 'rgba(40,40,40,0.65)';
+
+    var degrees = [0, 45, 90, 135, 180, 225, 270, 315];
+    for (var i = 0; i < degrees.length; i++) {
+      var angle = (degrees[i] * Math.PI / 180) - Math.PI / 2; // clockwise from North
+      ctx.fillText(
+        degrees[i] + '\u00B0',
+        CX + DEGREE_LABEL_R * Math.cos(angle),
+        CY + DEGREE_LABEL_R * Math.sin(angle)
+      );
+    }
+
+    ctx.restore();
+  }
+
+  function drawCompassRose(ctx) {
+    ctx.save();
+    ctx.translate(CX, CY);
+
+    var outerPt = 9;   // outer point radius of 8-pointed star
+    var innerPt = 3.5; // inner valley radius
+
+    ctx.beginPath();
+    for (var i = 0; i < 16; i++) {
+      var r     = (i % 2 === 0) ? outerPt : innerPt;
+      var angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
+      if (i === 0) {
+        ctx.moveTo(r * Math.cos(angle), r * Math.sin(angle));
+      } else {
+        ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
+      }
+    }
+    ctx.closePath();
+
+    var roseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
+    roseGrad.addColorStop(0,   'rgba(255,255,255,1.0)');
+    roseGrad.addColorStop(0.5, 'rgba(224,242,254,0.95)');
+    roseGrad.addColorStop(1,   'rgba(6,182,212,0.90)');
+    ctx.fillStyle = roseGrad;
+
+    ctx.shadowColor   = 'rgba(0,0,0,0.40)';
+    ctx.shadowBlur    = 4;
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
+    ctx.fill();
+
+    ctx.shadowBlur    = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.strokeStyle = 'rgba(124,58,237,0.55)';
+    ctx.lineWidth   = 0.75;
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
   function drawNeedle(ctx, angle) {
     ctx.save();
 
@@ -378,9 +507,11 @@ function drawCrosshairs(ctx) {
     ctx.translate(CX, CY);
     ctx.rotate(angle + Math.PI / 2);
 
-    // Needle glow
-    ctx.shadowColor = 'rgba(124,58,237,0.75)';
-    ctx.shadowBlur  = 14;
+    // Needle glow / drop shadow
+    ctx.shadowColor   = 'rgba(80,20,180,0.70)';
+    ctx.shadowBlur    = 16;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
 
     // Linear gradient: turquoise at tail → purple at tip
     var grad = ctx.createLinearGradient(0, lenBack, 0, -lenFwd);
@@ -399,7 +530,9 @@ function drawCrosshairs(ctx) {
     ctx.fillStyle = grad;
     ctx.fill();
 
-    ctx.shadowBlur  = 0;
+    ctx.shadowBlur    = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
     ctx.strokeStyle = 'rgba(255,255,255,0.18)';
     ctx.lineWidth   = 0.5;
     ctx.stroke();
