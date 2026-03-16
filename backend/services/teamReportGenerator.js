@@ -107,7 +107,7 @@ function buildIntroduction(analytics, orgName) {
 
   return {
     heading: 'Team Resilience Overview',
-    text: `This report summarises the resilience profile of ${orgName ? `the ${orgName} team` : 'your team'} ` +
+    text: `This report summarizes the resilience profile of ${orgName ? `the ${orgName} team` : 'your team'} ` +
       `based on responses from ${memberCount} member${memberCount !== 1 ? 's' : ''}. ` +
       `The team's overall resilience score is ${Math.round(overall)}%, placing it in the ` +
       `"${overallLabel}" range. ` +

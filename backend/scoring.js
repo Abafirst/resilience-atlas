@@ -79,8 +79,8 @@ function generateReport(scores) {
     const recommendations = {
         emotional:  'Practice daily journaling, mindfulness, or speak with a therapist to strengthen emotional resilience.',
         mental:     'Engage in brain-stimulating activities, set structured goals, and practice cognitive reframing.',
-        physical:   'Build a consistent exercise routine, prioritise sleep, and maintain a balanced diet.',
-        social:     'Nurture relationships, join community groups, and practise active listening.',
+        physical:   'Build a consistent exercise routine, prioritize sleep, and maintain a balanced diet.',
+        social:     'Nurture relationships, join community groups, and practice active listening.',
         spiritual:  'Explore values-based practices such as meditation, gratitude journaling, or community service.',
         financial:  'Create a budget, build an emergency fund, and seek financial literacy resources.'
     };

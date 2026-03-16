@@ -115,11 +115,11 @@ function estimatePercentile(avg) {
 }
 
 /**
- * Analyse per-dimension scores from an array of ResilienceResult score maps.
+ * Analyze per-dimension scores from an array of ResilienceResult score maps.
  * @param {Array<Object>} results - raw ResilienceResult documents
  * @returns {Object} dimensionAnalysis map
  */
-function analyseDimensions(results) {
+function analyzeDimensions(results) {
   const perDim = {};
 
   for (const dim of DIMENSIONS) {
@@ -241,7 +241,7 @@ async function generateLeadershipReport(organizationId, generatedByUserId = null
       : null;
 
   // Dimension analysis
-  const dimensionAnalysis = analyseDimensions(results);
+  const dimensionAnalysis = analyzeDimensions(results);
 
   // Strength distribution
   const strengthDistribution = buildStrengthDistribution(results);

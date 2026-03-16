@@ -158,7 +158,7 @@ function generateRecommendations(dimAnalysis) {
           title: 'Establish peer support accountability partnerships',
           action: 'Pair team members in 3-month mutual-support cohorts',
           rationale: `High Relational strength (avg ${Math.round(dim.avg)}%) is the team's biggest asset — formalise it into structured peer support.`,
-          timeline: '3-month rotating cohort programme',
+          timeline: '3-month rotating cohort program',
           expectedImpact: 'Strengthen team cohesion and mutual support',
           difficulty: 'medium',
         });
