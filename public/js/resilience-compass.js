@@ -56,8 +56,8 @@
   var MINOR_TICK  = 4;
   var LABEL_R     = OUTER_R + 18;
   var ICON_R      = R * 1.35;
-  var ICON_SIZE   = 20;
-  var ICON_OPACITY = 0.7;
+  var ICON_SIZE   = 24;
+  var ICON_OPACITY = 0.95;
   var BAND_INSET   = 1;
   var DOMINANT_BAND_DEGREES = 8;
   var DOMINANT_BAND_ARC_ANGLE = DOMINANT_BAND_DEGREES * Math.PI / 180;
@@ -77,10 +77,10 @@
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
-  var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
-  var GRID_OPACITY_FALLBACK = 0.05;
-  var GRID_BASE_COLOR = 'rgba(0,0,0,';
-  var CROSSHAIR_COLOR = 'rgba(0,0,0,0.08)';
+  var GRID_OPACITY = [0.12, 0.12, 0.18, 0.18, 0.24];
+  var GRID_OPACITY_FALLBACK = 0.14;
+  var GRID_BASE_COLOR = 'rgba(56,189,248,';
+  var CROSSHAIR_COLOR = 'rgba(56,189,248,0.12)';
   var LABEL_LETTER_SPACING_RATIO = 0.08;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
   var EQUILIBRIUM_PULSE_FREQ_MULTIPLIER = 2;
@@ -372,14 +372,14 @@
 
   function drawBackground(ctx, pulse) {
 
-    // Subtle radial gradient: lighter center → darker edges (depth / 3-D effect)
-    var depthGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
-    depthGrad.addColorStop(0,   'rgba(255,255,255,0.25)');
-    depthGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
-    depthGrad.addColorStop(1,   'rgba(0,0,0,0.05)');
+    // Dark instrument panel backplate: radial gradient from center to outer edge
+    var backplate = ctx.createRadialGradient(CX, CY, 0, CX, CY, OUTER_R + BG_BLEED);
+    backplate.addColorStop(0,   'rgba(30,41,59,0.85)');
+    backplate.addColorStop(0.6, 'rgba(15,23,42,0.95)');
+    backplate.addColorStop(1,   'rgba(2,6,23,1)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + BG_BLEED, 0, Math.PI * 2);
-    ctx.fillStyle = depthGrad;
+    ctx.fillStyle = backplate;
     ctx.fill();
 
     var gAlpha   = 0.08 + 0.04 * Math.sin(pulse);
@@ -412,20 +412,20 @@
         CX + (TICK_START + len) * Math.cos(angle),
         CY + (TICK_START + len) * Math.sin(angle)
       );
-      var tickAlpha = isMajor ? 0.35 : 0.2;
+      var tickAlpha = isMajor ? 0.45 : 0.3;
       if (isCardinal) { tickAlpha = 0.55; }
-      ctx.strokeStyle = 'rgba(0,0,0,' + tickAlpha + ')';
-      ctx.lineWidth   = isMajor ? 1 : 0.7;
+      ctx.strokeStyle = 'rgba(255,255,255,' + tickAlpha + ')';
+      ctx.lineWidth   = isMajor ? 2 : 1;
       ctx.stroke();
     }
 
     for (var i = 0; i < 8; i++) {
       var labelAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
       var isMain = i % 2 === 0;
-      var fontSize = isMain ? 12 : 10;
+      var fontSize = isMain ? 11 : 9;
       var spacing = fontSize * LABEL_LETTER_SPACING_RATIO;
       ctx.font      = '400 ' + fontSize + 'px Inter,system-ui,sans-serif';
-      ctx.fillStyle = '#888';
+      ctx.fillStyle = isMain ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.3)';
       drawSpacedText(
         ctx,
         CARDINALS[i],
@@ -481,10 +481,10 @@
     for (var i = 0; i < DIMENSIONS.length; i++) {
       var angle = dimAngle(i);
       var isDom = (i === dominantIdx);
-      var baseAlpha = isDom ? 0.16 + 0.04 * pulseVal : 0.08;
+      var baseAlpha = isDom ? 0.28 + 0.08 * pulseVal : 0.14;
 
       ctx.shadowBlur  = 0;
-      ctx.strokeStyle = 'rgba(0,0,0,' + baseAlpha + ')';
+      ctx.strokeStyle = 'rgba(56,189,248,' + baseAlpha + ')';
       ctx.lineWidth   = isDom ? 0.9 : 0.6;
 
       ctx.beginPath();
@@ -558,12 +558,35 @@
     ctx.closePath();
 
     ctx.globalAlpha = progress;
-    ctx.fillStyle   = 'rgba(139,92,246,0.35)';
+    ctx.fillStyle   = 'rgba(139,92,246,0.45)';
     ctx.shadowColor = 'rgba(139,92,246,0.6)';
-    ctx.shadowBlur  = 16;
+    ctx.shadowBlur  = 18;
     ctx.fill();
 
     ctx.restore();
+  }
+
+  /**
+   * Trace a closed Catmull-Rom spline path through an array of {x,y} points.
+   * Does NOT call beginPath() – caller must do that first.
+   */
+  function traceSplinePath(ctx, points) {
+    var n = points.length;
+    for (var k = 0; k < n; k++) {
+      var p0 = points[(k - 1 + n) % n];
+      var p1 = points[k];
+      var p2 = points[(k + 1) % n];
+      var p3 = points[(k + 2) % n];
+
+      var cp1x = p1.x + (p2.x - p0.x) / SPLINE_TENSION;
+      var cp1y = p1.y + (p2.y - p0.y) / SPLINE_TENSION;
+      var cp2x = p2.x - (p3.x - p1.x) / SPLINE_TENSION;
+      var cp2y = p2.y - (p3.y - p1.y) / SPLINE_TENSION;
+
+      if (k === 0) { ctx.moveTo(p1.x, p1.y); }
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+    ctx.closePath();
   }
 
   function drawDataPolygon(ctx, values, dominantIdx, pulse, progress) {
@@ -582,36 +605,25 @@
       });
     }
 
-    // Draw a smooth closed Catmull-Rom spline through the data points
-    // (no straight-edged polygon – only curves)
-    var n = points.length;
+    // Polygon halo: radial glow behind the shape
     ctx.beginPath();
-    for (var k = 0; k < n; k++) {
-      var p0 = points[(k - 1 + n) % n];
-      var p1 = points[k];
-      var p2 = points[(k + 1) % n];
-      var p3 = points[(k + 2) % n];
-
-      var cp1x = p1.x + (p2.x - p0.x) / SPLINE_TENSION;
-      var cp1y = p1.y + (p2.y - p0.y) / SPLINE_TENSION;
-      var cp2x = p2.x - (p3.x - p1.x) / SPLINE_TENSION;
-      var cp2y = p2.y - (p3.y - p1.y) / SPLINE_TENSION;
-
-      if (k === 0) { ctx.moveTo(p1.x, p1.y); }
-      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
-    }
-    ctx.closePath();
-
-    ctx.shadowColor = 'rgba(124,58,237,0.35)';
-    ctx.shadowBlur  = 12;
-    var alpha    = 0.45 + 0.04 * Math.sin(pulse);
-    var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    fillGrad.addColorStop(0, 'rgba(124,58,237,' + alpha + ')');
-    fillGrad.addColorStop(1, 'rgba(124,58,237,0.05)');
-    ctx.fillStyle = fillGrad;
+    traceSplinePath(ctx, points);
+    var haloGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
+    haloGrad.addColorStop(0,   'rgba(139,92,246,0.25)');
+    haloGrad.addColorStop(0.6, 'rgba(139,92,246,0.08)');
+    haloGrad.addColorStop(1,   'rgba(139,92,246,0)');
+    ctx.fillStyle = haloGrad;
     ctx.fill();
 
-    ctx.strokeStyle = '#7c3aed';
+    // Fill + stroke with glow
+    ctx.beginPath();
+    traceSplinePath(ctx, points);
+    ctx.shadowColor = 'rgba(139,92,246,0.5)';
+    ctx.shadowBlur  = 14;
+    ctx.fillStyle   = 'rgba(139,92,246,0.35)';
+    ctx.fill();
+
+    ctx.strokeStyle = '#A78BFA';
     ctx.lineWidth   = 2;
     ctx.stroke();
     ctx.restore();
@@ -680,16 +692,19 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     // Thin inner ring at OUTER_R
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,0.25)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
     ctx.lineWidth   = 0.5;
     ctx.stroke();
 
     // Outer ring just beyond OUTER_R – creates double-line border effect
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + DOUBLE_RING_GAP, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,0.35)';
-    ctx.lineWidth   = 1.0;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth   = 3.0;
+    ctx.shadowColor = 'rgba(56,189,248,0.25)';
+    ctx.shadowBlur  = 6;
     ctx.stroke();
+    ctx.shadowBlur  = 0;
 
     ctx.restore();
   }
@@ -700,14 +715,17 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     // Outer ring of decorative bezel frame
     ctx.beginPath();
     ctx.arc(CX, CY, BEZEL_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,0.30)';
-    ctx.lineWidth   = 1.5;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth   = 3;
+    ctx.shadowColor = 'rgba(56,189,248,0.25)';
+    ctx.shadowBlur  = 6;
     ctx.stroke();
+    ctx.shadowBlur  = 0;
 
     // Subtle inner highlight ring for framed appearance
     ctx.beginPath();
     ctx.arc(CX, CY, BEZEL_R - 5, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth   = 1.0;
     ctx.stroke();
 
@@ -719,7 +737,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.textAlign    = 'center';
     ctx.textBaseline = 'middle';
     ctx.font         = '6px Inter,system-ui,sans-serif';
-    ctx.fillStyle    = 'rgba(40,40,40,0.65)';
+    ctx.fillStyle    = 'rgba(255,255,255,0.35)';
 
     var degrees = [0, 45, 90, 135, 180, 225, 270, 315];
     for (var i = 0; i < degrees.length; i++) {
@@ -805,7 +823,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.lineTo(maxHW, 0);
     ctx.lineTo(-maxHW, 0);
     ctx.closePath();
-    ctx.fillStyle = '#0891b2';
+    ctx.fillStyle = '#0e7490';
     ctx.fill();
 
     ctx.shadowBlur = 0;
@@ -833,12 +851,12 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
 
     ctx.beginPath();
     ctx.arc(0, 0, 6, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(0, 0, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#0f172a';
     ctx.fill();
 
     ctx.beginPath();
@@ -855,7 +873,10 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
       var img = _iconImages[i];
       if (!img || !img.complete || !img.naturalWidth) { continue; }
       var a = dimAngle(i);
+      ctx.save();
       ctx.globalAlpha = ICON_OPACITY;
+      ctx.shadowColor = 'rgba(139,92,246,0.5)';
+      ctx.shadowBlur  = 6;
       ctx.drawImage(
         img,
         CX + ICON_R * Math.cos(a) - size / 2,
@@ -863,7 +884,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
         size,
         size
       );
-      ctx.globalAlpha = 1.0;
+      ctx.restore();
     }
   }
 
