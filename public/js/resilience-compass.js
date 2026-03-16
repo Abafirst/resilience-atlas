@@ -59,7 +59,7 @@
   var ICON_SIZE   = 20;
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
-  var DOMINANT_BAND_ARC_ANGLE   = 8 * Math.PI / 180;
+  var DOMINANT_BAND_ARC_ANGLE = 8 * Math.PI / 180;
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_SMOOTHING_RATE  = 0.1;
@@ -74,8 +74,10 @@
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
   var GRID_OPACITY_FALLBACK = 0.05;
+  var LABEL_LETTER_SPACING_RATIO = 0.08;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
   var EQUILIBRIUM_PULSE_FREQ_MULTIPLIER = 2;
+  var EQUILIBRIUM_PULSE_AMPLITUDE = 0.08;
   var EQUILIBRIUM_RING_MAX_ALPHA = 0.6;
   var EQUILIBRIUM_DASH_PATTERN = [4, 6];
 
@@ -105,6 +107,7 @@
   }
 
   function easeOutBack(t) {
+    // Standard overshoot constant for back easing.
     var c1 = 1.70158;
     var c3 = c1 + 1;
     return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
@@ -121,6 +124,10 @@
     return clamp((elapsed - start) / duration, 0, 1);
   }
 
+  /**
+   * Normalize score inputs into a 0–100 numeric value.
+   * Accepts numbers or objects with percentage/score/value/raw+max.
+   */
   function normalizeScore(value) {
     if (value === null || value === undefined) { return 0; }
     if (typeof value === 'object') {
@@ -177,6 +184,9 @@
     needleAnglesFallback.push({ canvas: canvas, angle: angle });
   }
 
+  /**
+   * Draw text centered at (x, y) with optional letter spacing.
+   */
   function drawSpacedText(ctx, text, x, y, spacing) {
     if (!spacing || spacing <= 0) {
       ctx.fillText(text, x, y);
@@ -258,8 +268,8 @@
     var ctx = canvas.getContext('2d');
 
     var rawValues = DIMENSIONS.map(function (d) {
-      var v = normalizeScore(scores && scores[d]);
-      return Math.min(100, Math.max(0, v));
+      var scoreValue = normalizeScore(scores && scores[d]);
+      return Math.min(100, Math.max(0, scoreValue));
     });
     var values = rawValues.map(function (v) { return v / 100; });
 
@@ -406,7 +416,7 @@
       var labelAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
       var isMain = i % 2 === 0;
       var fontSize = isMain ? 12 : 10;
-      var spacing = fontSize * 0.08;
+      var spacing = fontSize * LABEL_LETTER_SPACING_RATIO;
       ctx.font      = '600 ' + fontSize + 'px Inter,system-ui,sans-serif';
       ctx.fillStyle = '#444';
       drawSpacedText(
@@ -508,7 +518,7 @@
 
     var ringR = R * 0.7;
     var pulseBoost = equilibrium > EQUILIBRIUM_PULSE_THRESHOLD
-      ? 0.08 * Math.sin(pulse * EQUILIBRIUM_PULSE_FREQ_MULTIPLIER)
+      ? EQUILIBRIUM_PULSE_AMPLITUDE * Math.sin(pulse * EQUILIBRIUM_PULSE_FREQ_MULTIPLIER)
       : 0;
     var alpha = 0.08 + 0.32 * equilibrium + pulseBoost;
 
