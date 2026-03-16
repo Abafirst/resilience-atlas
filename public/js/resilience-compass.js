@@ -59,7 +59,8 @@
   var ICON_SIZE   = 20;
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
-  var DOMINANT_BAND_ARC_ANGLE = 8 * Math.PI / 180;
+  var DOMINANT_BAND_DEGREES = 8;
+  var DOMINANT_BAND_ARC_ANGLE = DOMINANT_BAND_DEGREES * Math.PI / 180;
   var ACCENT_CYAN = '#22d3ee';
   var ACCENT_CYAN_RGBA = 'rgba(34,211,238,';
 
@@ -69,13 +70,17 @@
   var NEEDLE_OSC_AMP         = 0.012;
   var NEEDLE_OSC_DECAY       = 1800;
   var NEEDLE_HALF_WIDTH      = 5;
-  var BREATHING_FREQ         = (Math.PI * 2) / 6000;
-  var PULSE_FREQ             = (Math.PI * 2) / 2800;
+  var BREATHING_PERIOD_MS    = 6000;
+  var PULSE_PERIOD_MS        = 2800;
+  var BREATHING_FREQ         = (Math.PI * 2) / BREATHING_PERIOD_MS;
+  var PULSE_FREQ             = (Math.PI * 2) / PULSE_PERIOD_MS;
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
   var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
   var GRID_OPACITY_FALLBACK = 0.05;
+  var GRID_BASE_COLOR = 'rgba(0,0,0,';
+  var CROSSHAIR_COLOR = 'rgba(0,0,0,0.08)';
   var LABEL_LETTER_SPACING_RATIO = 0.08;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
   var EQUILIBRIUM_PULSE_FREQ_MULTIPLIER = 2;
@@ -440,7 +445,7 @@
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
       var opacity = typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK;
-      ctx.strokeStyle = 'rgba(0,0,0,' + opacity + ')';
+      ctx.strokeStyle = GRID_BASE_COLOR + opacity + ')';
       ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
       ctx.stroke();
     });
@@ -450,7 +455,7 @@
   } 
   function drawCrosshairs(ctx) {
     ctx.save();
-    ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+    ctx.strokeStyle = CROSSHAIR_COLOR;
     ctx.lineWidth = 0.6;
 
     var arm = R * GRID_RINGS[0];
