@@ -24,7 +24,7 @@ function escapeHtml(str) {
     .replace(/'/g, '&#39;');
 }
 
-// ── Dimension accent colours ──────────────────────────
+// ── Dimension accent colors ──────────────────────────
 const DIM_COLORS = {
   'Cognitive-Narrative':   '#4F46E5',
   'Relational-Connective': '#059669',

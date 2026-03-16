@@ -1,7 +1,7 @@
 <!--
   Resilience Atlas — Favicon SVG
   ================================
-  Optimised for tiny render sizes (16 × 16 → 64 × 64).
+  Optimized for tiny render sizes (16 × 16 → 64 × 64).
   Strokes are intentionally heavier so they remain crisp
   when the browser scales this down to 16 px.
   viewBox: 0 0 200 200 (scalable, no hard-coded px size)

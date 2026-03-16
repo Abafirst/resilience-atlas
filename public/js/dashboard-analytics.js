@@ -21,7 +21,7 @@
 
   const DIMS = Object.keys(DIMENSION_LABELS);
 
-  // ── Chart Colour Palette ────────────────────────────────────────────────────
+  // ── Chart Color Palette ────────────────────────────────────────────────────
 
   const COLORS = {
     high:     '#16a34a',

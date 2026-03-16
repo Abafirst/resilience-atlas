@@ -33,7 +33,7 @@ brand/symbol/
 │   ├── symbol-mono.svg     Monochrome dark (#212121) — light backgrounds
 │   └── symbol-outline.svg  White outline — dark/colored backgrounds
 ├── web/
-│   └── favicon.svg         Optimised favicon variant (heavier strokes)
+│   └── favicon.svg         Optimized favicon variant (heavier strokes)
 └── css/
     └── symbol-styles.css   Base styles & utility classes
 ```
