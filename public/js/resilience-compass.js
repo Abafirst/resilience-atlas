@@ -652,7 +652,7 @@
     // Small semi-ellipse dome at the very top of the compass, centered on CX.
     // It sits above the bezel ring – minimalistic and semi-transparent.
     var bezelTop = CY - BEZEL_R;
-    var nubW     = 24;  // total width of the nub
+    var nubW     = 30;  // total width of the nub
     var nubH     = 16;   // how many px it protrudes above the bezel top
 
     ctx.beginPath();
@@ -664,7 +664,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     var nubGrad = ctx.createLinearGradient(CX, bezelTop - nubH, CX, bezelTop);
     nubGrad.addColorStop(0, 'rgba(224,231,255,0.5)');
     nubGrad.addColorStop(1, 'rgba(147,51,234,0.3)');
-    ctx.fillStyle = nubGrad;
+    ctx.fillStyle = 'transparent';
     ctx.fill();
 
     ctx.strokeStyle = 'rgba(40,40,40,0.35)';
