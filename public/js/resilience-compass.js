@@ -330,12 +330,12 @@ function drawCrosshairs(ctx) {
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
     fillGrad.addColorStop(0,    'rgba(167,139,250,' + (alpha + 0.15) + ')'); // light purple
     fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // purple
-    fillGrad.addColorStop(1,    'rgba(40,40,40,'   + (alpha * 0.7) + ')');  // turquoise
+    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + (alpha * 0.5) + ')');  // vibrant turquoise
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(40,40,40,0.7)';
-    ctx.lineWidth   = .75;
+    ctx.strokeStyle = 'rgba(124,58,237,0.9)';
+    ctx.lineWidth   = 1.5;
     ctx.stroke();
 
     // Data-point dots
