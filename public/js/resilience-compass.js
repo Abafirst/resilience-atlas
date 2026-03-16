@@ -57,6 +57,8 @@
   var LABEL_R     = OUTER_R + 18;
   var ICON_R      = R * 1.06;
   var ICON_SIZE   = 20;
+  var ICON_OPACITY = 0.4;
+  var BAND_INSET   = 1;
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_STABILIZE       = 0.1;
@@ -97,7 +99,7 @@
     return clamp((elapsed - start) / duration, 0, 1);
   }
 
-  function normaliseScore(value) {
+  function normalizeScore(value) {
     if (value == null) { return 0; }
     if (typeof value === 'object') {
       if (typeof value.percentage === 'number') { return value.percentage; }
@@ -191,7 +193,7 @@
     var ctx = canvas.getContext('2d');
 
     var rawValues = DIMENSIONS.map(function (d) {
-      var v = normaliseScore(scores && scores[d]);
+      var v = normalizeScore(scores && scores[d]);
       return Math.min(100, Math.max(0, v));
     });
     var values = rawValues.map(function (v) { return v / 100; });
@@ -201,7 +203,7 @@
     if (scores && typeof scores === 'object') {
       var sorted = Object.entries(scores)
         .filter(function (entry) { return DIMENSIONS.indexOf(entry[0]) !== -1; })
-        .map(function (entry) { return [entry[0], normaliseScore(entry[1])]; })
+        .map(function (entry) { return [entry[0], normalizeScore(entry[1])]; })
         .sort(function (a, b) { return b[1] - a[1]; });
       if (sorted.length) {
         dominantIdx = DIMENSIONS.indexOf(sorted[0][0]);
@@ -463,7 +465,7 @@
     var bandAngle = 8 * Math.PI / 180;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - 1, -bandAngle / 2, bandAngle / 2);
+    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -bandAngle / 2, bandAngle / 2);
     ctx.closePath();
 
     ctx.globalAlpha = progress;
@@ -767,7 +769,7 @@
       var img = _iconImages[i];
       if (!img || !img.complete || !img.naturalWidth) { continue; }
       var a = dimAngle(i);
-      ctx.globalAlpha = 0.4;
+      ctx.globalAlpha = ICON_OPACITY;
       ctx.drawImage(
         img,
         CX + ICON_R * Math.cos(a) - size / 2,
