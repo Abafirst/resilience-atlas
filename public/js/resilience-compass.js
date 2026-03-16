@@ -59,7 +59,7 @@
   var ICON_SIZE   = 20;
   var ICON_OPACITY = 0.4;
   var BAND_INSET   = 1;
-  var BAND_ARC_ANGLE   = 8 * Math.PI / 180;
+  var DOMINANT_BAND_ARC_ANGLE   = 8 * Math.PI / 180;
 
   var NEEDLE_DURATION        = 900;
   var NEEDLE_SMOOTHING_RATE  = 0.1;
@@ -75,6 +75,7 @@
   var GRID_OPACITY = [0.03, 0.03, 0.08, 0.03, 0.12];
   var GRID_OPACITY_FALLBACK = 0.05;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
+  var EQUILIBRIUM_PULSE_FREQ_MULTIPLIER = 2;
   var EQUILIBRIUM_RING_MAX_ALPHA = 0.6;
   var EQUILIBRIUM_DASH_PATTERN = [4, 6];
 
@@ -134,11 +135,21 @@
   }
 
   var needleAnglesMap = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
-  var needleAnglesFallback = needleAnglesMap ? null : [];
+  var needleAnglesFallbackIsMap = false;
+  var needleAnglesFallback = null;
+  if (!needleAnglesMap && typeof Map !== 'undefined') {
+    needleAnglesFallback = new Map();
+    needleAnglesFallbackIsMap = true;
+  } else if (!needleAnglesMap) {
+    needleAnglesFallback = [];
+  }
 
   function getStoredNeedleAngle(canvas) {
     if (needleAnglesMap) {
       return needleAnglesMap.has(canvas) ? needleAnglesMap.get(canvas) : null;
+    }
+    if (needleAnglesFallbackIsMap) {
+      return needleAnglesFallback.has(canvas) ? needleAnglesFallback.get(canvas) : null;
     }
     for (var i = 0; i < needleAnglesFallback.length; i++) {
       if (needleAnglesFallback[i].canvas === canvas) {
@@ -151,6 +162,10 @@
   function setStoredNeedleAngle(canvas, angle) {
     if (needleAnglesMap) {
       needleAnglesMap.set(canvas, angle);
+      return;
+    }
+    if (needleAnglesFallbackIsMap) {
+      needleAnglesFallback.set(canvas, angle);
       return;
     }
     for (var i = 0; i < needleAnglesFallback.length; i++) {
@@ -262,7 +277,7 @@
     }
     if (dominantIdx < 0) {
       if (typeof console !== 'undefined' && console.warn) {
-        console.warn('[resilience-compass] Dominant dimension not found in scores. Defaulting to first dimension.');
+        console.warn('[resilience-compass] Dominant dimension unresolved from scores or dimensions. Defaulting to first dimension.');
       }
       dominantIdx = 0;
     }
@@ -412,7 +427,7 @@
     GRID_RINGS.forEach(function (pct, idx) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-      var opacity = GRID_OPACITY[idx] || GRID_OPACITY_FALLBACK;
+      var opacity = typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK;
       ctx.strokeStyle = 'rgba(0,0,0,' + opacity + ')';
       ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
       ctx.stroke();
@@ -492,7 +507,9 @@
     ctx.globalAlpha = progress;
 
     var ringR = R * 0.7;
-    var pulseBoost = equilibrium > EQUILIBRIUM_PULSE_THRESHOLD ? 0.08 * Math.sin(pulse * 2) : 0;
+    var pulseBoost = equilibrium > EQUILIBRIUM_PULSE_THRESHOLD
+      ? 0.08 * Math.sin(pulse * EQUILIBRIUM_PULSE_FREQ_MULTIPLIER)
+      : 0;
     var alpha = 0.08 + 0.32 * equilibrium + pulseBoost;
 
     ctx.beginPath();
@@ -518,7 +535,7 @@
 
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -BAND_ARC_ANGLE / 2, BAND_ARC_ANGLE / 2);
+    ctx.arc(0, 0, OUTER_R + DOUBLE_RING_GAP - BAND_INSET, -DOMINANT_BAND_ARC_ANGLE / 2, DOMINANT_BAND_ARC_ANGLE / 2);
     ctx.closePath();
 
     ctx.globalAlpha = progress;
@@ -575,12 +592,9 @@
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
-    ctx.shadowBlur = 0;
     ctx.strokeStyle = '#7c3aed';
     ctx.lineWidth   = 2;
     ctx.stroke();
-
-    ctx.shadowBlur = 0;
     ctx.restore();
   }
 
