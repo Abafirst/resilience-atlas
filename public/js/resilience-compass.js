@@ -219,9 +219,9 @@
 
   // ── Theme color palettes ───────────────────────────────────────────────────
   var DARK_PALETTE = {
-    bgStop0:        'rgba(30,41,59,0.85)',
-    bgStop1:        'rgba(15,23,42,0.95)',
-    bgStop2:        'rgba(2,6,23,1)',
+    bgStop0:        'rgba(30,41,59,0)',
+    bgStop1:        'rgba(15,23,42,0)',
+    bgStop2:        'rgba(2,6,23,0)',
     gridBase:       'rgba(56,189,248,',
     crosshair:      'rgba(56,189,248,0.12)',
     ringInner:      'rgba(56,189,248,0.12)',
