@@ -1,6 +1,6 @@
 # The Resilience Atlas™ — Understand. Strengthen. Transform.
 
-> **An evidence-based resilience assessment platform** founded on published 2013 doctoral research — mapping six dimensions of resilience for individuals, teams, and organizations. Grounded in science. Designed for impact.
+> **A research-based resilience assessment platform** founded on published 2013 doctoral research — mapping six dimensions of resilience for individuals, teams, and organizations. Grounded in science. Designed for impact.
 
 ---
 
