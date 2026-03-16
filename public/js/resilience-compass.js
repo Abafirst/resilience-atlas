@@ -179,8 +179,8 @@ var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
     var gAlpha   = 0.10 + 0.05 * Math.sin(pulse);
     var glowGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.85);
     glowGrad.addColorStop(0,   'rgba(147,51,234,' + (gAlpha + 0.10) + ')');
-    glowGrad.addColorStop(0.5, 'rgba(40,40,40,'  + gAlpha + ')');
-    glowGrad.addColorStop(1,   'rgba(40,40,40,0)');
+    glowGrad.addColorStop(0.5, 'rgba(6,182,212,'  + gAlpha + ')');
+    glowGrad.addColorStop(1,   'rgba(6,182,212,0)');
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.fillStyle = glowGrad;
@@ -238,8 +238,8 @@ function drawGrid(ctx) {
   GRID_RINGS.forEach(function (pct) {
     ctx.beginPath();
     ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,1.0)';
-    ctx.lineWidth = pct === 1.0 ? 1.0 : 0.75;
+    ctx.strokeStyle = 'rgba(99,102,241,0.20)';
+    ctx.lineWidth = pct === 1.0 ? 0.75 : 0.5;
     ctx.stroke();
   });
   ctx.restore();
@@ -344,17 +344,17 @@ function drawCrosshairs(ctx) {
     }
     ctx.closePath();
 
-    // Animated gradient fill – purple (centre) → turquoise (edge)
+    // Animated gradient fill – vibrant purple (centre) → turquoise (edge)
     // Drop shadow for depth
     ctx.shadowColor   = 'rgba(0,0,0,0.45)';
     ctx.shadowBlur    = 10;
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 3;
-    var alpha    = 0.28 + 0.08 * Math.sin(pulse);
+    var alpha    = 0.42 + 0.08 * Math.sin(pulse);
     var fillGrad = ctx.createRadialGradient(CX, CY, 0, CX, CY, R);
-    fillGrad.addColorStop(0,    'rgba(167,139,250,' + (alpha + 0.15) + ')'); // light purple
-    fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // purple
-    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + (alpha * 0.5) + ')');  // vibrant turquoise
+    fillGrad.addColorStop(0,    'rgba(216,180,254,' + (alpha + 0.15) + ')'); // vivid lavender
+    fillGrad.addColorStop(0.45, 'rgba(124,58,237,'  + alpha + ')');          // deep purple
+    fillGrad.addColorStop(1,    'rgba(6,182,212,'   + alpha + ')');          // vibrant turquoise
     ctx.fillStyle = fillGrad;
     ctx.fill();
 
@@ -401,15 +401,15 @@ function drawCrosshairs(ctx) {
     // Thin inner ring at OUTER_R
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,0.80)';
-    ctx.lineWidth   = 1.0;
+    ctx.strokeStyle = 'rgba(40,40,40,0.25)';
+    ctx.lineWidth   = 0.5;
     ctx.stroke();
 
-    // Thick outer ring just beyond OUTER_R – creates double-line border effect
+    // Outer ring just beyond OUTER_R – creates double-line border effect
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + DOUBLE_RING_GAP, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,1.0)';
-    ctx.lineWidth   = 2.5;
+    ctx.strokeStyle = 'rgba(40,40,40,0.35)';
+    ctx.lineWidth   = 1.0;
     ctx.stroke();
 
     ctx.restore();
@@ -421,8 +421,8 @@ function drawCrosshairs(ctx) {
     // Outer ring of decorative bezel frame
     ctx.beginPath();
     ctx.arc(CX, CY, BEZEL_R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(40,40,40,0.90)';
-    ctx.lineWidth   = 3.5;
+    ctx.strokeStyle = 'rgba(40,40,40,0.30)';
+    ctx.lineWidth   = 1.5;
     ctx.stroke();
 
     // Subtle inner highlight ring for framed appearance
