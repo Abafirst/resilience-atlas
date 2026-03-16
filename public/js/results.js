@@ -14,6 +14,26 @@ window.resilience_results = results;
 if (results && results.scores && results.scores["Somatic-Regulative"]) {
   results.scores["Somatic-Regulative"] = results.scores["Somatic-Regulative"];
 }
+// ── HTML escaper (used for safe interpolation) ─────────
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ── Dimension accent colours ──────────────────────────
+const DIM_COLORS = {
+  'Cognitive-Narrative':   '#4F46E5',
+  'Relational-Connective': '#059669',
+  'Agentic-Generative':    '#D97706',
+  'Emotional-Adaptive':    '#DC2626',
+  'Spiritual-Reflective':  '#7C3AED',
+  'Somatic-Regulative':    '#0891B2',
+};
+
 // ── Type descriptions ──────────────────────────────────
 const TYPE_DESCRIPTIONS = {
   'Cognitive-Narrative':
@@ -67,6 +87,51 @@ function showAlert(elID, message, type, iconKey) {
   el.classList.add(type === 'success' ? 'alert-success' : 'alert-error');
 }
 
+// ── Free brief report (compact snapshot card) ──────────
+function renderFreeBriefReport(results, primaryStrength, solidStrength, emergingStrength) {
+  const overall = results.overall;
+  const level =
+    overall >= 80 ? 'strong' :
+    overall >= 60 ? 'solid'  :
+    overall >= 40 ? 'developing' :
+    'emerging';
+
+  const dimRows = Object.entries(results.scores)
+    .sort((a, b) => b[1].percentage - a[1].percentage)
+    .map(function (entry) {
+      var dim   = entry[0];
+      var score = entry[1];
+      var pct   = Math.round(score.percentage);
+      var color = DIM_COLORS[dim] || '#667eea';
+      return '<div class="fbr-dim-row">' +
+        '<span class="fbr-dim-name">' + escapeHtml(dim) + '</span>' +
+        '<div class="fbr-dim-bar-wrap" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100" aria-label="' + escapeHtml(dim) + ' ' + pct + '%">' +
+          '<div class="fbr-dim-bar-fill" style="width:' + pct + '%;background:' + escapeHtml(color) + '"></div>' +
+        '</div>' +
+        '<span class="fbr-dim-pct">' + pct + '%</span>' +
+        '</div>';
+    }).join('');
+
+  return '<div class="free-brief-report" role="region" aria-label="Your Resilience Snapshot">' +
+    '<div class="fbr-hero">' +
+      '<div class="fbr-score-circle" aria-label="Overall resilience score ' + overall + '%">' +
+        '<span class="fbr-score-num">' + overall + '</span>' +
+        '<span class="fbr-score-sym">%</span>' +
+      '</div>' +
+      '<div class="fbr-hero-info">' +
+        '<h2 class="fbr-hero-title">Your Resilience Snapshot</h2>' +
+        '<p class="fbr-hero-level">You demonstrate a <strong>' + level + '</strong> resilience foundation.</p>' +
+        '<p class="fbr-hero-strength">Primary strength: <strong>' + escapeHtml(primaryStrength) + '</strong></p>' +
+      '</div>' +
+    '</div>' +
+    '<div class="fbr-dims">' +
+      '<p class="fbr-dims-label">Six Dimensions — Ranked by Score</p>' +
+      dimRows +
+    '</div>' +
+    '<p class="fbr-hint">Unlock your full report for personalized insights &amp; growth strategies.</p>' +
+  '</div>';
+}
+
 // ── Narrative report generator ─────────────────────────
 function generateNarrativeReport(results, primaryStrength, solidStrength, emergingStrength) {
   const primary  = results.scores[primaryStrength];
@@ -82,55 +147,49 @@ function generateNarrativeReport(results, primaryStrength, solidStrength, emergi
   return `
     <div class="narrative-report">
 
-      <section class="report-overview">
-        <h3>Your Resilience Profile Overview</h3>
-        <p>
-          Your overall resilience score is <strong>${results.overall}%</strong>.
-          This indicates a ${level} of resilience across six key dimensions.
-        </p>
-      </section>
+      <div class="nr-overview">
+        <p>Your overall resilience score is <strong>${results.overall}%</strong> — a ${level} across six key dimensions.</p>
+      </div>
 
-      <section class="report-primary">
-        <h3>Your Primary Strength: ${escapeHtml(primaryStrength)}</h3>
-        <p class="score-badge">${primary.percentage.toFixed(1)}%</p>
-        <p>${TYPE_DESCRIPTIONS[primaryStrength] || ''}</p>
-        <p>
-          Your highest score in ${escapeHtml(primaryStrength)} suggests this is your most
-          developed resilience capacity. Leverage this strength as a foundation for growth
-          in other dimensions.
-        </p>
-      </section>
+      <div class="nr-section nr-primary">
+        <div class="nr-section-header">
+          <span class="nr-label">Primary Strength</span>
+          <span class="nr-score" style="background:${DIM_COLORS[primaryStrength] || '#667eea'}">${primary.percentage.toFixed(0)}%</span>
+        </div>
+        <h3 class="nr-dim-name">${escapeHtml(primaryStrength)}</h3>
+        <p class="nr-description">${TYPE_DESCRIPTIONS[primaryStrength] || ''}</p>
+        <p class="nr-insight">Leverage this strength as a foundation for growth across other dimensions.</p>
+      </div>
 
-      <section class="report-solid">
-        <h3>Your Solid Strength: ${escapeHtml(solidStrength)}</h3>
-        <p class="score-badge">${solid.percentage.toFixed(1)}%</p>
-        <p>${TYPE_DESCRIPTIONS[solidStrength] || ''}</p>
-        <p>
-          Your strong performance in ${escapeHtml(solidStrength)} complements your primary
-          strength and creates a robust foundation for resilience.
-        </p>
-      </section>
+      <div class="nr-section nr-solid">
+        <div class="nr-section-header">
+          <span class="nr-label">Solid Strength</span>
+          <span class="nr-score" style="background:${DIM_COLORS[solidStrength] || '#059669'}">${solid.percentage.toFixed(0)}%</span>
+        </div>
+        <h3 class="nr-dim-name">${escapeHtml(solidStrength)}</h3>
+        <p class="nr-description">${TYPE_DESCRIPTIONS[solidStrength] || ''}</p>
+        <p class="nr-insight">This complements your primary strength and creates a robust resilience foundation.</p>
+      </div>
 
-      <section class="report-emerging">
-        <h3>Your Growth Opportunity: ${escapeHtml(emergingStrength)}</h3>
-        <p class="score-badge">${emerging.percentage.toFixed(1)}%</p>
-        <p>${TYPE_DESCRIPTIONS[emergingStrength] || ''}</p>
-        <p>
-          While ${escapeHtml(emergingStrength)} is your lowest-scoring dimension, it also
-          represents your greatest opportunity for growth. Intentionally developing this
-          area can significantly expand your overall resilience capacity.
-        </p>
-      </section>
+      <div class="nr-section nr-emerging">
+        <div class="nr-section-header">
+          <span class="nr-label">Growth Opportunity</span>
+          <span class="nr-score nr-score--growth" style="background:${DIM_COLORS[emergingStrength] || '#DC2626'}">${emerging.percentage.toFixed(0)}%</span>
+        </div>
+        <h3 class="nr-dim-name">${escapeHtml(emergingStrength)}</h3>
+        <p class="nr-description">${TYPE_DESCRIPTIONS[emergingStrength] || ''}</p>
+        <p class="nr-insight">Intentionally developing this area can significantly expand your overall resilience capacity.</p>
+      </div>
 
-      <section class="report-development">
-        <h3>Growth Suggestions</h3>
-        <ul>
+      <div class="nr-suggestions">
+        <h3 class="nr-suggestions-title">Growth Suggestions</h3>
+        <ul class="nr-suggestions-list">
           <li>Build on your <strong>${escapeHtml(primaryStrength)}</strong> strength by helping others develop it</li>
           <li>Practice integrating <strong>${escapeHtml(solidStrength)}</strong> with <strong>${escapeHtml(emergingStrength)}</strong></li>
-          <li>Start small with one habit that develops <strong>${escapeHtml(emergingStrength)}</strong></li>
+          <li>Start small with one daily habit that develops <strong>${escapeHtml(emergingStrength)}</strong></li>
           <li>Track your progress monthly to recognize growth patterns</li>
         </ul>
-      </section>
+      </div>
 
     </div>
   `;
@@ -203,7 +262,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const emergingEl = document.getElementById('emergingStrength');
   if (emergingEl) emergingEl.textContent = `${emergingStrength} (${results.scores[emergingStrength].percentage.toFixed(1)}%)`;
 
-  // ── Bar chart ─────────────────────────────────────────
+  // ── Free brief report (compact snapshot) ─────────────
+  const freeBriefEl = document.getElementById('freeBriefReport');
+  if (freeBriefEl) {
+    freeBriefEl.innerHTML = renderFreeBriefReport(results, primaryStrength, solidStrength, emergingStrength);
+  }
+
+
   const profileBars = document.getElementById('profileBars');
   if (profileBars && typeof window.renderProfileBars === 'function') {
     const items = Object.entries(results.scores).map(([label, s]) => ({
