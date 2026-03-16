@@ -253,9 +253,9 @@
   };
 
   var LIGHT_PALETTE = {
-    bgStop0:        '#ffffff',
-    bgStop1:        '#f1f5f9',
-    bgStop2:        '#e2e8f0',
+    bgStop0:        'rgba(255,255,255,0)',
+    bgStop1:        'rgba(241,245,249,0)',
+    bgStop2:        'rgba(226,232,240,0)',
     gridBase:       'rgba(100,116,139,',
     crosshair:      'rgba(100,116,139,0.18)',
     ringInner:      'rgba(100,116,139,0.2)',
@@ -287,7 +287,7 @@
   };
 
   // ── Background brightness detection ────────────────────────────────────────
-var _isLightBackground = false;
+var _isLightBackground = detectBackground(canvas);
 
 /**
  * Relative luminance using ITU-R BT.601 luma coefficients (0–1).
