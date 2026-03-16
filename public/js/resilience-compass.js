@@ -658,7 +658,7 @@
     ctx.beginPath();
     ctx.moveTo(CX - nubW / 2, bezelTop);
     // Upper semi-ellipse: anticlockwise from Math.PI → 0 passes through the top
-ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, 0, Math.PI, false);
+ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.closePath();
 
     var nubGrad = ctx.createLinearGradient(CX, bezelTop - nubH, CX, bezelTop);
@@ -667,7 +667,7 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, 0, Math.PI, false);
     ctx.fillStyle = nubGrad;
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(40,40,40,0.20)';
+    ctx.strokeStyle = 'rgba(40,40,40,0.35)';
     ctx.lineWidth   = 0.75;
     ctx.stroke();
 
