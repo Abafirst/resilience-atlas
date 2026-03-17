@@ -77,10 +77,6 @@
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
-  var GRID_OPACITY = [0.12, 0.12, 0.18, 0.18, 0.24];
-  var GRID_OPACITY_FALLBACK = 0.14;
-  var GRID_BASE_COLOR = 'rgba(56,189,248,';
-  var CROSSHAIR_COLOR = 'rgba(56,189,248,0.12)';
   var LABEL_LETTER_SPACING_RATIO = 0.08;
   var EQUILIBRIUM_PULSE_THRESHOLD = 0.75;
   var EQUILIBRIUM_PULSE_FREQ_MULTIPLIER = 2;
@@ -222,8 +218,7 @@
     bgStop0:        'rgba(30,41,59,1)',
     bgStop1:        'rgba(15,23,42,1)',
     bgStop2:        'rgba(2,6,23,1)',
-    gridBase:       'rgba(56,189,248,',
-    gridOpacity:    0.20,
+    gridRingStroke: 'rgba(148,163,184,0.14)',
     crosshair:      'rgba(56,189,248,0.25)',
     ringInner:      'rgba(255,255,255,0.15)',
     ringOuter:      'rgba(255,255,255,0.25)',
@@ -238,7 +233,7 @@
     labelSec:       'rgba(255,255,255,0.60)',
     axisBase:       'rgba(56,189,248,',
     glassRingFill:  'rgba(0,0,0,0)',
-    glassRingStroke:'rgba(255,255,255,0.12)',
+    glassRingStroke:'rgba(255,255,255,0.07)',
     polyStroke:     '#A78BFA',
     polyFill:       'rgba(139,92,246,0.40)',
     polyShadow:     'rgba(139,92,246,0.5)',
@@ -257,8 +252,7 @@
     bgStop0:        'rgba(255,255,255,1)',
     bgStop1:        'rgba(241,245,249,1)',
     bgStop2:        'rgba(226,232,240,1)',
-    gridBase:       'rgba(100,116,139,',
-    gridOpacity:    0.30,
+    gridRingStroke: 'rgba(100,116,139,0.25)',
     crosshair:      'rgba(100,116,139,0.18)',
     ringInner:      'rgba(71,85,105,0.20)',
     ringOuter:      'rgba(71,85,105,0.35)',
@@ -273,7 +267,7 @@
     labelSec:       'rgba(30,41,59,0.55)',
     axisBase:       'rgba(100,116,139,',
     glassRingFill:  'rgba(0,0,0,0)',
-    glassRingStroke:'rgba(148,163,184,0.22)',
+    glassRingStroke:'rgba(99,102,241,0.15)',
     polyStroke:     '#7c3aed',
     polyFill:       'rgba(124,58,237,0.25)',
     polyShadow:     'rgba(124,58,237,0.3)',
@@ -538,13 +532,18 @@ return false; // Default to dark
     ctx.save();
     ctx.globalAlpha = fade;
 
-    GRID_RINGS.forEach(function (pct, idx) {
+    GRID_RINGS.forEach(function (pct) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-      var opacity = pal.gridOpacity !== undefined ? pal.gridOpacity
-        : (typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK);
-      ctx.strokeStyle = pal.gridBase + opacity + ')';
-      ctx.lineWidth = 0.8;
+
+      // Subtle indigo fill only in light mode; no fill in dark mode (avoids white haze)
+      if (_isLightBackground) {
+        ctx.fillStyle = 'rgba(99,102,241,0.04)';
+        ctx.fill();
+      }
+
+      ctx.strokeStyle = pal.gridRingStroke;
+      ctx.lineWidth = 1;
       ctx.stroke();
     });
 
@@ -580,7 +579,7 @@ return false; // Default to dark
     ctx.beginPath();
     ctx.arc(CX, CY, radius, 0, Math.PI * 2);
     ctx.strokeStyle = pal.glassRingStroke;
-    ctx.lineWidth = 0.75;
+    ctx.lineWidth = 1;
     ctx.stroke();
     ctx.restore();
   }
