@@ -223,18 +223,18 @@
     bgStop1:        'rgba(15,23,42,0)',
     bgStop2:        'rgba(2,6,23,0)',
     gridBase:       'rgba(56,189,248,',
-    crosshair:      'rgba(56,189,248,0.12)',
-    ringInner:      'rgba(56,189,248,0.12)',
-    ringOuter:      'rgba(56,189,248,0.18)',
-    ringShadow:     'rgba(56,189,248,0.25)',
+    crosshair:      'rgba(56,189,248,0.25)',
+    ringInner:      'rgba(56,189,248,0.25)',
+    ringOuter:      'rgba(56,189,248,0.25)',
+    ringShadow:     'rgba(56,189,248,0)',
     bezel:          'rgba(0,0,0,0)',
     bezelHighlight: 'rgba(0,0,0,0)',
     bezelShadow:    'rgba(0,0,0,0)',
-    tickMain:       'rgba(255,255,255,0.45)',
-    tickMinor:      'rgba(255,255,255,0.3)',
-    tickCardinal:   'rgba(255,255,255,0.55)',
-    labelMain:      'rgba(255,255,255,0.45)',
-    labelSec:       'rgba(255,255,255,0.3)',
+    tickMain:       'rgba(255,255,255,1.2)',
+    tickMinor:      'rgba(255,255,255,0.9)',
+    tickCardinal:   'rgba(255,255,255,1.3)',
+    labelMain:      'rgba(255,255,255,1.2)',
+    labelSec:       'rgba(255,255,255,0.9)',
     axisBase:       'rgba(56,189,248,',
     glassRingFill:  'rgba(0,0,0,0)',
     glassRingStroke:'rgba(0,0,0,0)',
@@ -249,7 +249,7 @@
     needleGlow:     'rgba(34,211,238,0.6)',
     needleGlowBlur: 14,
     nubStroke:      'rgba(40,40,40,0.35)',
-    labelText:      'rgba(103,232,249,0.9)'
+    labelText:      'rgba(103,232,249,1.3)'
   };
 
   var LIGHT_PALETTE = {
@@ -283,7 +283,7 @@
     needleGlow:     'rgba(6,182,212,0.3)',
     needleGlowBlur: 8,
     nubStroke:      'rgba(100,116,139,0.3)',
-    labelText:      'rgba(79,70,229,0.85)'
+    labelText:      'rgba(79,70,229,0.8)'
   };
 
   // ── Background brightness detection ────────────────────────────────────────
@@ -857,35 +857,26 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
       }
     }
     ctx.closePath();
-
-    var roseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
 if (_isLightBackground) {
+  ctx.save(); 
+
+  const roseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
+
   roseGrad.addColorStop(0,   'rgba(255,255,255,1.0)');
   roseGrad.addColorStop(0.5, 'rgba(224,242,254,0.95)');
   roseGrad.addColorStop(1,   'rgba(6,182,212,0.90)');
-} else {
-  roseGrad.addColorStop(0,   'rgba(0,0,0,0)');
-  roseGrad.addColorStop(0.5, 'rgba(0,0,0,0)');
-  roseGrad.addColorStop(1,   'rgba(0,0,0,0)');
+
+  ctx.fillStyle = roseGrad;
+
+  ctx.shadowColor = 'rgba(0,0,0,0.40)';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 1;
+
+  ctx.fill();
+
+  ctx.restore(); 
 }
-    ctx.fillStyle = roseGrad;
-
-    ctx.shadowColor   = 'rgba(0,0,0,0.40)';
-    ctx.shadowBlur    = 4;
-    ctx.shadowOffsetX = 1;
-    ctx.shadowOffsetY = 1;
-    ctx.fill();
-
-    ctx.shadowBlur    = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
-    ctx.strokeStyle = 'rgba(124,58,237,0.55)';
-    ctx.lineWidth   = 0.75;
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
   function drawNeedle(ctx, angle) {
     var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
