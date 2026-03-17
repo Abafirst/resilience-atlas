@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handouts &amp; Visual Resources — The Resilience Atlas™</title>
+  <meta name="description" content="Download workshop guides, templates, activity cards, visual infographics, and posters for team resilience programs." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/css/landing.css" />
+  <link rel="stylesheet" href="/css/teams-enhanced.css" />
+  <style>
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .tr-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 50%, #1e3a8a 100%);
+      color: #fff; padding: 4.5rem 1.5rem 3.5rem; text-align: center;
+    }
+    .tr-hero h1 { color: #fff; font-size: clamp(1.8rem,4vw,2.6rem); margin-bottom: .6rem; }
+    .tr-hero p  { color: #94a3b8; font-size: 1.05rem; max-width: 580px; margin: 0 auto 1.5rem; line-height: 1.65; }
+    .tr-hero__nav {
+      display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;
+    }
+    .tr-hero__nav a {
+      background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px; padding: .5rem 1.1rem; font-size: .9rem; font-weight: 600;
+      text-decoration: none; transition: background .2s;
+    }
+    .tr-hero__nav a:hover, .tr-hero__nav a.active { background: rgba(255,255,255,.22); }
+
+    /* ── Filters ────────────────────────────────────────────────────────── */
+    .tr-filters {
+      background: #fff; border-bottom: 1px solid #e2e8f0;
+      padding: 1.25rem 1.5rem; position: sticky; top: 0; z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .tr-filters__inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+    }
+    .tr-filters label { font-size: .8rem; font-weight: 600; color: #475569; display: flex; flex-direction: column; gap: .25rem; flex: 1; min-width: 160px; }
+    .tr-filters select, .tr-filters input[type="search"] {
+      border: 1px solid #cbd5e1; border-radius: 8px; padding: .5rem .75rem;
+      font-size: .9rem; background: #f8fafc; color: #1e293b; outline: none;
+      transition: border-color .15s; font-family: inherit;
+    }
+    .tr-filters select:focus, .tr-filters input[type="search"]:focus { border-color: #4F46E5; }
+    .tr-clear-btn {
+      background: none; border: 1px solid #cbd5e1; border-radius: 8px;
+      padding: .5rem 1rem; font-size: .85rem; color: #64748b; cursor: pointer;
+      transition: background .15s; white-space: nowrap; align-self: flex-end;
+    }
+    .tr-clear-btn:hover { background: #f1f5f9; }
+    .tr-result-count { font-size: .85rem; color: #64748b; align-self: flex-end; white-space: nowrap; }
+
+    /* ── Main layout ────────────────────────────────────────────────────── */
+    .tr-main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .tr-section { margin-bottom: 3rem; }
+    .tr-section__heading {
+      font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 1.25rem;
+      padding-bottom: .6rem; border-bottom: 2px solid #e2e8f0;
+      display: flex; align-items: center; gap: .6rem;
+    }
+
+    /* ── Resource Cards ─────────────────────────────────────────────────── */
+    .tr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .tr-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 1.5rem; display: flex; gap: 1rem; align-items: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05); transition: box-shadow .2s, transform .2s;
+    }
+    .tr-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-1px); }
+    .tr-card__icon { font-size: 2rem; flex-shrink: 0; line-height: 1; }
+    .tr-card__body { display: flex; flex-direction: column; gap: .5rem; flex: 1; min-width: 0; }
+    .tr-card__type-badge {
+      display: inline-block; font-size: .72rem; font-weight: 700; padding: .2rem .65rem;
+      border-radius: 999px; border: 1px solid; text-transform: uppercase;
+      letter-spacing: .04em; width: fit-content;
+    }
+    .tr-card__title { font-size: .98rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.35; }
+    .tr-card__desc { font-size: .87rem; color: #475569; line-height: 1.55; margin: 0; }
+    .tr-card__meta { display: flex; gap: .75rem; flex-wrap: wrap; }
+    .tr-card__meta-item { font-size: .8rem; color: #64748b; }
+    .tr-card__download-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #4F46E5; color: #fff; border: none; border-radius: 7px;
+      padding: .5rem 1rem; font-size: .85rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: background .15s; width: fit-content; margin-top: .25rem;
+    }
+    .tr-card__download-btn:hover { background: #4338ca; }
+    .tr-card__download-btn--soon { background: #94a3b8; cursor: default; }
+    .tr-card__download-btn--soon:hover { background: #94a3b8; }
+
+    /* ── Coming soon banner ─────────────────────────────────────────────── */
+    .tr-coming-soon-banner {
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px;
+      padding: .85rem 1.25rem; margin-bottom: 2rem; font-size: .9rem; color: #92400e;
+      display: flex; gap: .75rem; align-items: center;
+    }
+
+    /* ── Empty / no-match ───────────────────────────────────────────────── */
+    #tr-empty {
+      text-align: center; padding: 4rem 2rem; color: #64748b;
+    }
+    #tr-empty h3 { font-size: 1.1rem; color: #334155; margin-bottom: .5rem; }
+    .tr-none { color: #94a3b8; font-size: .9rem; font-style: italic; padding: 1rem 0; }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .tr-grid { grid-template-columns: 1fr; }
+      .tr-filters__inner { flex-direction: column; }
+      .tr-filters label { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Skip to main content</a>
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header style="background:#0f2942;padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+    <a href="/" style="color:#fff;font-weight:700;font-size:1rem;text-decoration:none">The Resilience Atlas™</a>
+    <nav aria-label="Main navigation" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+      <a href="/quiz.html" style="color:#94a3b8;font-size:.9rem;text-decoration:none">Assessment</a>
+      <a href="/team.html" style="color:#94a3b8;font-size:.9rem;text-decoration:none">For Teams</a>
+      <a href="/kids.html" style="color:#94a3b8;font-size:.9rem;text-decoration:none">For Kids</a>
+      <a href="/quiz.html" class="btn btn-primary" style="font-size:.85rem;padding:.5rem 1.1rem">Take Assessment</a>
+    </nav>
+  </header>
+
+  <!-- ── Hero ────────────────────────────────────────────────────────────── -->
+  <section class="tr-hero" aria-label="Page hero">
+    <span style="color:#818cf8;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.6rem">Teams Resource Library</span>
+    <h1>Handouts &amp; Visual Resources</h1>
+    <p>Workshop guides, activity cards, templates, posters, and infographics — everything you need to run great team resilience sessions.</p>
+    <div class="tr-hero__nav" role="navigation" aria-label="Team resources navigation">
+      <a href="/teams-activities.html">🎯 Activities</a>
+      <a href="/teams-resources.html" class="active">📥 Handouts &amp; Visuals</a>
+      <a href="/teams-facilitation.html">📋 Facilitation Guide</a>
+      <a href="/team.html">← Team Home</a>
+    </div>
+  </section>
+
+  <!-- ── Filters ─────────────────────────────────────────────────────────── -->
+  <div class="tr-filters" role="search" aria-label="Filter resources">
+    <div class="tr-filters__inner">
+      <label>
+        Search
+        <input type="search" id="tr-search" placeholder="Search resources…" aria-label="Search resources">
+      </label>
+      <label>
+        Category
+        <select id="tr-filter-category" aria-label="Filter by category">
+          <option value="all">All Types</option>
+          <optgroup label="Handouts">
+            <option value="workshop-guide">Workshop Guides</option>
+            <option value="template">Templates</option>
+            <option value="prompt-sheet">Discussion Prompts</option>
+            <option value="activity-cards">Activity Cards</option>
+            <option value="facilitation">Facilitation Resources</option>
+          </optgroup>
+          <optgroup label="Visual Resources">
+            <option value="dimension-card">Dimension Cards</option>
+            <option value="infographic">Infographics</option>
+            <option value="timeline">Planning Timelines</option>
+            <option value="pathway">Development Maps</option>
+            <option value="matrix">Decision Matrices</option>
+            <option value="poster">Workshop Posters</option>
+            <option value="reference-card">Quick Reference Cards</option>
+          </optgroup>
+        </select>
+      </label>
+      <label>
+        Dimension
+        <select id="tr-filter-dimension" aria-label="Filter by dimension">
+          <option value="all">All Dimensions</option>
+          <option value="connection">🤝 Connection</option>
+          <option value="thinking">🧠 Thinking</option>
+          <option value="action">⚡ Action</option>
+          <option value="feeling">💙 Feeling</option>
+          <option value="hope">🌟 Hope</option>
+          <option value="meaning">✨ Meaning</option>
+        </select>
+      </label>
+      <span class="tr-result-count"><span id="tr-count">—</span> resources</span>
+      <button type="button" id="tr-clear-filters" class="tr-clear-btn">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- ── Main Content ─────────────────────────────────────────────────────── -->
+  <main id="main-content" class="tr-main">
+
+    <div class="tr-coming-soon-banner" role="note">
+      <span aria-hidden="true">📬</span>
+      <span>PDF downloads are being finalized. All resources shown below will be available for download when your team dashboard is active. <a href="/team.html#teamLeadForm" style="color:#92400e;font-weight:600">Get early access →</a></span>
+    </div>
+
+    <!-- Handouts section -->
+    <section id="tr-handouts-section" class="tr-section" aria-labelledby="handouts-heading">
+      <h2 id="handouts-heading" class="tr-section__heading">
+        📄 Handouts &amp; Templates
+        <span style="font-size:.85rem;font-weight:400;color:#64748b;margin-left:auto">Workshop guides, templates, cards</span>
+      </h2>
+      <div id="tr-handouts-grid" class="tr-grid" aria-live="polite">
+        <!-- Populated by teams-resources.js -->
+      </div>
+    </section>
+
+    <!-- Visuals section -->
+    <section id="tr-visuals-section" class="tr-section" aria-labelledby="visuals-heading">
+      <h2 id="visuals-heading" class="tr-section__heading">
+        🖼️ Visual Resources
+        <span style="font-size:.85rem;font-weight:400;color:#64748b;margin-left:auto">Infographics, posters, reference cards</span>
+      </h2>
+      <div id="tr-visuals-grid" class="tr-grid" aria-live="polite">
+        <!-- Populated by teams-resources.js -->
+      </div>
+    </section>
+
+    <div id="tr-empty" hidden>
+      <h3>No resources found</h3>
+      <p>Try adjusting your filters or clearing the search to see all resources.</p>
+      <button type="button" onclick="document.getElementById('tr-clear-filters').click()" style="margin-top:1rem;background:#4F46E5;color:#fff;border:none;border-radius:8px;padding:.65rem 1.5rem;font-size:.95rem;font-weight:600;cursor:pointer">Clear All Filters</button>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Teams</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/teams-activities.html">Activities</a>
+        <a href="/teams-resources.html">Resources</a>
+        <a href="/teams-facilitation.html">Facilitation</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+    </div>
+  </footer>
+
+  <script src="/js/teams-content.js"></script>
+  <script src="/js/teams-resources.js"></script>
+</body>
+</html>
