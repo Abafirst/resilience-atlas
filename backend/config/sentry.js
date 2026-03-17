@@ -8,6 +8,8 @@
  * module degrades gracefully so the rest of the application still functions.
  */
 
+const logger = require('../utils/logger');
+
 let Sentry = null;
 let sentryInitialised = false;
 
@@ -25,13 +27,13 @@ try {
             enabled: process.env.NODE_ENV !== 'test',
         });
         sentryInitialised = true;
-        console.log('✅ Sentry error tracking initialised');
+        logger.info('✅ Sentry error tracking initialised');
     } else {
-        console.warn('⚠️  SENTRY_DSN not set — error tracking disabled');
+        logger.warn('⚠️  SENTRY_DSN not set — error tracking disabled');
     }
 } catch (err) {
     // @sentry/node is an optional dependency; swallow the error.
-    console.warn('⚠️  Sentry package not available — error tracking disabled:', err.message);
+    logger.warn('⚠️  Sentry package not available — error tracking disabled', { message: err.message });
 }
 
 /**

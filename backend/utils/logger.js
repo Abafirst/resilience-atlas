@@ -19,11 +19,7 @@ const logger = createLogger({
                 ? format.combine(
                     format.colorize(),
                     format.printf(({ timestamp, level, message, ...meta }) => {
-                        // Remove internal Winston symbol keys
-                        const clean = Object.fromEntries(
-                            Object.entries(meta).filter(([k]) => !k.startsWith('Symbol('))
-                        );
-                        const extra = Object.keys(clean).length ? ' ' + JSON.stringify(clean) : '';
+                        const extra = Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '';
                         return `[${timestamp}] ${level}: ${message}${extra}`;
                     })
                 )

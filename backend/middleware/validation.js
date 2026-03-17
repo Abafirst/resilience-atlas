@@ -194,8 +194,8 @@ function validateSchema(data, schema) {
                 errors.push(`"${field}" must be a valid email address.`);
             }
         } else if (rules.type) {
-            // eslint-disable-next-line valid-typeof
-            if (typeof value !== rules.type) {
+            const allowedTypes = ['string', 'number', 'boolean', 'object'];
+            if (allowedTypes.includes(rules.type) && typeof value !== rules.type) {
                 errors.push(`"${field}" must be of type ${rules.type}.`);
             }
         }
