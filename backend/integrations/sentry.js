@@ -22,7 +22,10 @@ if (process.env.SENTRY_DSN && !process.env.JEST_WORKER_ID) {
             dsn: process.env.SENTRY_DSN,
             environment: process.env.NODE_ENV || 'development',
             // Capture 100 % of transactions in production; tune as needed.
-            tracesSampleRate: parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE) || 1.0,
+            tracesSampleRate: (() => {
+                const rate = parseFloat(process.env.SENTRY_TRACES_SAMPLE_RATE);
+                return Number.isNaN(rate) ? 1.0 : rate;
+            })(),
             // Capture session replays (requires @sentry/replay) when configured.
             replaysSessionSampleRate: 0.1,
             replaysOnErrorSampleRate: 1.0,

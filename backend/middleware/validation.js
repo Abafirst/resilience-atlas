@@ -6,19 +6,23 @@ const { ValidationError } = require('../utils/customErrors');
 
 /**
  * Strip HTML tags and trim whitespace to prevent stored XSS.
+ * Applies the tag-stripping regex repeatedly until the result stabilises so
+ * that nested/split tags (e.g. `<scri<script>pt>`) are fully removed.
+ * HTML entities are intentionally NOT decoded so that encoded payloads
+ * (e.g. &lt;script&gt;) remain as harmless escaped text.
  *
  * @param {string} str
  * @returns {string}
  */
 function sanitiseString(str) {
     if (typeof str !== 'string') return str;
-    return str
-        .replace(/<[^>]*>/g, '') // remove HTML tags
-        .replace(/&(?:amp|lt|gt|quot|#x27|#x2F);/g, (entity) => {
-            const map = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#x27;': "'", '&#x2F;': '/' };
-            return map[entity] || entity;
-        })
-        .trim();
+    let result = str;
+    let previous;
+    do {
+        previous = result;
+        result = result.replace(/<[^>]*>/g, '');
+    } while (result !== previous);
+    return result.trim();
 }
 
 /** Basic RFC 5322 email format check. */

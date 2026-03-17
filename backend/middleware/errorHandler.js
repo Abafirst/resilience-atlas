@@ -69,7 +69,7 @@ function buildResponseBody(err, isDev) {
  * @param {object}   res
  * @param {Function} next
  */
-function errorHandler(err, req, res, next) { // eslint-disable-line no-unused-vars
+function errorHandler(err, req, res, _next) {
     const isDev      = (process.env.NODE_ENV || 'development') !== 'production';
     const statusCode = err.statusCode || 500;
     const category   = categorise(err, statusCode);
@@ -115,7 +115,7 @@ function errorHandler(err, req, res, next) { // eslint-disable-line no-unused-va
     // ── Response ─────────────────────────────────────────────────────────────
     if (res.headersSent) {
         // Can't send another response — just close the connection.
-        return next(err);
+        return _next(err);
     }
 
     res.status(statusCode).json(buildResponseBody(err, isDev));

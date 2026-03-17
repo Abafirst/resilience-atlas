@@ -271,6 +271,16 @@ describe('sanitiseString', () => {
         expect(sanitiseString('<em><strong>bold</strong></em>')).toBe('bold');
     });
 
+    test('strips split/nested attack tags — remaining fragments have no leading <', () => {
+        // The looping regex fully removes any complete tags.
+        // Fragments like "pt>" are left but cannot form HTML elements (no leading <).
+        const result = sanitiseString('<scri<script>pt>evil</scri</script>pt>');
+        // No complete <tag> patterns remain
+        expect(result).not.toMatch(/<[^>]+>/);
+        // The literal word "evil" is preserved
+        expect(result).toContain('evil');
+    });
+
     test('trims whitespace', () => {
         expect(sanitiseString('  hi  ')).toBe('hi');
     });
@@ -278,6 +288,12 @@ describe('sanitiseString', () => {
     test('returns non-string values unchanged', () => {
         expect(sanitiseString(42)).toBe(42);
         expect(sanitiseString(null)).toBe(null);
+    });
+
+    test('does NOT decode HTML entities — encoded payloads remain escaped', () => {
+        // &lt;script&gt; must remain as-is, not be decoded to <script>
+        const input = '&lt;script&gt;alert(1)&lt;/script&gt;';
+        expect(sanitiseString(input)).toBe(input);
     });
 });
 
