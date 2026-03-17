@@ -126,6 +126,8 @@ app.use("/api/orgs-advanced", require("./routes/org-advanced"));
 console.log("✅ Mounted route: /api/orgs-advanced");
 app.use("/api/growth", require("./routes/growth"));
 console.log("✅ Mounted route: /api/growth");
+app.use("/api/gamification", require("./routes/gamification"));
+console.log("✅ Mounted route: /api/gamification");
 app.use("/api/atlas", require("./routes/atlas"));
 console.log("✅ Mounted route: /api/atlas");
 app.use("/api/share", require("./routes/share"));
