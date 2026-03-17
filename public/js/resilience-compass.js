@@ -230,11 +230,11 @@
     bezel:          'rgba(0,0,0,0)',
     bezelHighlight: 'rgba(0,0,0,0)',
     bezelShadow:    'rgba(0,0,0,0)',
-    tickMain:       'rgba(255,255,255,1.2)',
-    tickMinor:      'rgba(255,255,255,0.9)',
-    tickCardinal:   'rgba(255,255,255,1.3)',
-    labelMain:      'rgba(255,255,255,1.2)',
-    labelSec:       'rgba(255,255,255,0.9)',
+    tickMain:       'rgba(255,255,255,.95)',
+    tickMinor:      'rgba(255,255,255,.85)',
+    tickCardinal:   'rgba(255,255,255,1.0)',
+    labelMain:      'rgba(255,255,255,.95)',
+    labelSec:       'rgba(255,255,255,.85)',
     axisBase:       'rgba(56,189,248,',
     glassRingFill:  'rgba(0,0,0,0)',
     glassRingStroke:'rgba(0,0,0,0)',
@@ -249,7 +249,7 @@
     needleGlow:     'rgba(34,211,238,0.6)',
     needleGlowBlur: 14,
     nubStroke:      'rgba(40,40,40,0.35)',
-    labelText:      'rgba(103,232,249,1.3)'
+    labelText:      'rgba(103,232,249,1.0)'
   };
 
   var LIGHT_PALETTE = {
@@ -329,9 +329,10 @@ function detectBackground(canvas) {
         return calcLuminance(+m[1], +m[2], +m[3]) > 0.5;
       }
     }
-	    el = el.parentElement;
+	el = el.parentElement;
   }
-    return false; // Default to dark
+
+return false; // Default to dark
 }
 
  // ── Public API ─────────────────────────────────────────────────────────────
@@ -854,9 +855,9 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
         ctx.moveTo(r * Math.cos(angle), r * Math.sin(angle));
       } else {
         ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
-      }
-    }
-    ctx.closePath();
+}
+}
+ctx.closePath();
 if (_isLightBackground) {
   ctx.save(); 
 
@@ -993,7 +994,6 @@ if (_isLightBackground) {
 
     ctx.restore();
   }
-
   // ── Expose globally ────────────────────────────────────────────────────────
   window.renderCompass = renderCompass;
 })();
