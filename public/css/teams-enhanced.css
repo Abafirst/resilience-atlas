@@ -851,3 +851,25 @@
 .items-center { align-items: center; }
 .justify-between { justify-content: space-between; }
 .w-full       { width: 100%; }
+
+/* ── Extended Teams Pages (activities, resources, facilitation) ──────────── */
+
+/* teams-grid--3 for activity tracker stats */
+.teams-grid--3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .teams-grid--3 { grid-template-columns: 1fr; }
+}
+
+/* Ensure tab-activities pane is styled consistently */
+#tab-activities .teams-card {
+  background: var(--teams-surface);
+  border: 1px solid var(--teams-border);
+  border-radius: var(--teams-radius);
+  padding: 1.5rem;
+  box-shadow: var(--teams-shadow);
+}

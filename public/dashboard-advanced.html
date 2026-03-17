@@ -85,6 +85,7 @@
     <!-- ── Tabs ────────────────────────────────────────────────────────────── -->
     <nav class="teams-tabs" id="dashboard-tabs" role="tablist" hidden>
       <button class="teams-tab active" data-tab="analytics" role="tab" aria-selected="true">📊 Analytics</button>
+      <button class="teams-tab" data-tab="activities" role="tab" aria-selected="false">🎯 Activities</button>
       <button class="teams-tab" data-tab="facilitation" role="tab" aria-selected="false">📋 Facilitation</button>
       <button class="teams-tab" data-tab="action-plans" role="tab" aria-selected="false">🎯 Action Plans</button>
       <button class="teams-tab" data-tab="team-mgmt" role="tab" aria-selected="false">👥 Team Management</button>
@@ -154,6 +155,91 @@
         <h2 class="teams-card__title">Wellbeing Considerations</h2>
         <p class="teams-card__subtitle">Members with overall score below the risk threshold</p>
         <div id="risk-container"></div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Activities                                                         -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-activities" class="teams-tab-pane" role="tabpanel" hidden>
+
+      <!-- Activity Tracker Stats -->
+      <div class="teams-grid teams-grid--3" style="margin-bottom:1.25rem">
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-total-count" style="font-size:2rem;font-weight:800;color:#4F46E5">0</div>
+          <div class="teams-kpi__lbl">Activities Logged</div>
+        </div>
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-top-dimension" style="font-size:1.5rem;font-weight:800;color:#16a34a">—</div>
+          <div class="teams-kpi__lbl">Most-Used Dimension</div>
+        </div>
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-this-month" style="font-size:2rem;font-weight:800;color:#d97706">0</div>
+          <div class="teams-kpi__lbl">This Month</div>
+        </div>
+      </div>
+
+      <!-- Log an Activity -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <h2 class="teams-card__title">Log a Completed Activity</h2>
+        <p class="teams-card__subtitle">Track which activities your team has run and capture key notes.</p>
+        <form id="log-activity-form" style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:680px" novalidate>
+          <div style="grid-column:1/-1">
+            <label for="log-activity-select" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Activity</label>
+            <select id="log-activity-select" required style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none">
+              <option value="">— Select an activity —</option>
+              <!-- Populated by teams-tracker.js -->
+            </select>
+          </div>
+          <div>
+            <label for="log-attendees" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Attendees</label>
+            <input type="number" id="log-attendees" min="1" max="500" placeholder="e.g. 12"
+              style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none;box-sizing:border-box">
+          </div>
+          <div>
+            <label for="log-notes" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Notes (optional)</label>
+            <input type="text" id="log-notes" maxlength="200" placeholder="Key takeaway or observation…"
+              style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none;box-sizing:border-box">
+          </div>
+          <div style="grid-column:1/-1;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <button type="submit" class="btn btn--primary" style="background:#4F46E5;color:#fff;border:none;border-radius:8px;padding:.65rem 1.5rem;font-size:.93rem;font-weight:600;cursor:pointer">Log Activity</button>
+            <span id="log-success-msg" hidden style="color:#16a34a;font-size:.9rem;font-weight:600">✓ Activity logged!</span>
+          </div>
+        </form>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
+          <h2 class="teams-card__title" style="margin:0">Activity Log</h2>
+          <a href="/teams-activities.html" style="font-size:.87rem;color:#4F46E5;font-weight:600;text-decoration:none">Browse all activities →</a>
+        </div>
+        <div id="activity-log-list">
+          <!-- Populated by teams-tracker.js -->
+        </div>
+        <style>
+          .at-empty { color:#94a3b8;font-size:.9rem;font-style:italic;padding:1rem 0; }
+          .at-entry { display:flex;align-items:flex-start;gap:1rem;justify-content:space-between;padding:.9rem 0;border-bottom:1px solid #f1f5f9; }
+          .at-entry:last-child { border-bottom:none; }
+          .at-entry__info { display:flex;flex-direction:column;gap:.2rem;flex:1;min-width:0; }
+          .at-entry__title { font-size:.95rem;font-weight:600;color:#0f172a; }
+          .at-entry__meta { font-size:.82rem;color:#64748b; }
+          .at-entry__notes { font-size:.87rem;color:#475569;margin:.2rem 0 0;font-style:italic; }
+          .at-entry__remove { background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.1rem;flex-shrink:0;padding:.2rem .4rem;border-radius:4px;transition:color .15s; }
+          .at-entry__remove:hover { color:#ef4444; }
+        </style>
+      </div>
+
+      <!-- Quick links to resource library -->
+      <div class="teams-card">
+        <h2 class="teams-card__title">Resource Library</h2>
+        <p class="teams-card__subtitle">Access handouts, guides, and visual resources for your team sessions.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem">
+          <a href="/teams-activities.html" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">🎯 All Activities</a>
+          <a href="/teams-resources.html" style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">📥 Handouts &amp; Visuals</a>
+          <a href="/teams-facilitation.html" style="background:#fdf4ff;color:#7e22ce;border:1px solid #e9d5ff;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">📋 Facilitation Guide</a>
+        </div>
       </div>
 
     </section>
@@ -375,6 +461,8 @@
   <script src="/js/payment-gating.js"></script>
   <script src="/js/dashboard-analytics.js"></script>
   <script src="/js/team-plan-builder.js"></script>
+  <script src="/js/teams-content.js"></script>
+  <script src="/js/teams-tracker.js"></script>
 
   <script>
   'use strict';
