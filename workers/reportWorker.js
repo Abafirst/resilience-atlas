@@ -47,7 +47,7 @@ async function connectDB() {
  * @param {import('bullmq').Job} job
  */
 async function processJob(job) {
-    const { userId, scores, username, email, resultsHash } = job.data;
+    const { userId, scores, username, email, resultsHash, overall, dominantType } = job.data;
 
     logger.info(`Processing report job ${job.id} for user ${userId}`);
 
@@ -69,14 +69,23 @@ async function processJob(job) {
         // 3. Compute the structured report once and reuse it for narrative, PDF, and email.
         const report = generateReport(scores);
 
-        // 4. Generate narrative text.
+        // 4. Build comprehensive enriched report for deeper content.
+        const comprehensiveReport = reportService.buildComprehensiveReport({
+            userId,
+            overall: overall || report.overall,
+            dominantType: dominantType || report.dominantType,
+            scores: scores.categories || scores,
+            resultsHash,
+        });
+
+        // 5. Generate narrative text.
         const reportText = reportService.generateNarrativeReport(scores);
 
-        // 5. Generate PDF.
+        // 6. Generate PDF.
         const pdfBuffer = await reportService.generatePDFReport(scores, username);
         const pdfUrl = reportService.savePDF(pdfBuffer, userId, resultsHash);
 
-        // 6. Persist to MongoDB.
+        // 7. Persist to MongoDB.
         reportDoc = await ResilienceReport.findOneAndUpdate(
             { _id: reportDoc._id },
             { $set: { reportText, pdfUrl, status: 'ready', errorMessage: null } },
@@ -85,10 +94,10 @@ async function processJob(job) {
 
         logger.info(`Report ${reportDoc._id} ready for user ${userId}`);
 
-        // 7. Optional email delivery (reuses the already-computed report object).
+        // 8. Optional email delivery (reuses the already-computed report object).
         if (email) {
             try {
-                await emailService.sendQuizReport(email, username, report);
+                await emailService.sendQuizReport(email, username, comprehensiveReport);
                 logger.info(`Email sent to ${email}`);
             } catch (emailErr) {
                 logger.warn(`Email delivery failed (non-fatal): ${emailErr.message}`);
