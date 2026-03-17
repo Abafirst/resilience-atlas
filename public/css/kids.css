@@ -84,6 +84,7 @@
 
 .activity-meta-tag.beginner     { background: #dcfce7; color: #15803d; }
 .activity-meta-tag.intermediate { background: #fef9c3; color: #a16207; }
+.activity-meta-tag.advanced     { background: #ede9fe; color: #5b21b6; }
 
 /* ── Teen (15-18) panel accent ── */
 #age-15-18 .activity-item-skill { color: var(--age-15-18-color); }

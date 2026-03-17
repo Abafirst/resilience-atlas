@@ -70,6 +70,60 @@ var KIDS_ACTIVITIES = {
       desc: 'Draw a big circle. Inside, draw or write things you CAN change. Outside the circle, draw things you can\'t change. Focus on the inside!',
       time: '10 min',
       level: 'beginner'
+    },
+    {
+      icon: '/icons/relational-connective.svg',
+      title: 'Support Circle Drawing',
+      dimension: 'Relational-Connective',
+      subtype: 'The Connector',
+      desc: 'Draw yourself in the middle of the page. Around you, draw the faces or names of people who help you — family, friends, teachers. You have more helpers than you think!',
+      time: '10 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/spiritual-reflective.svg',
+      title: 'Gratitude Jar',
+      dimension: 'Spiritual-Reflective',
+      subtype: 'The Guide',
+      desc: 'Find a jar or draw one. Each day, write or draw one good thing that happened and put it inside. When you feel sad, open the jar and remember the good things.',
+      time: '5 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/agentic-generative.svg',
+      title: 'Star of the Day',
+      dimension: 'Agentic-Generative',
+      subtype: 'The Builder',
+      desc: 'Draw a big star. Inside each point, write or draw one thing you did today that you\'re proud of — big or small! Every small step makes you a star.',
+      time: '5 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/emotional-adaptive.svg',
+      title: 'Feelings Color Wheel',
+      dimension: 'Emotional-Adaptive',
+      subtype: 'The Feeler',
+      desc: 'Draw a circle and divide it into six slices like a pie. Color each slice a different color for a different feeling — happy, sad, angry, scared, excited, calm. Which colors fill your wheel today?',
+      time: '10 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/somatic-regulative.svg',
+      title: 'Butterfly Hug',
+      dimension: 'Somatic-Regulative',
+      subtype: 'The Grounder',
+      desc: 'Cross your arms over your chest like butterfly wings. Gently tap left, right, left, right — slowly. Breathe in and out. This calms your body when feelings get too big.',
+      time: '5 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/cognitive-narrative.svg',
+      title: 'Different Perspectives Game',
+      dimension: 'Cognitive-Narrative',
+      subtype: 'The Thinker',
+      desc: 'Think of something at home — like the family dog or your favorite toy. Now imagine: how does it see the world? Draw or tell a story from that different point of view!',
+      time: '10 min',
+      level: 'beginner'
     }
   ],
 
@@ -128,6 +182,60 @@ var KIDS_ACTIVITIES = {
       desc: 'Write 10 things you care about on slips of paper. Sort them from most important to least. Talk with someone about why your top three matter so much to you.',
       time: '15 min',
       level: 'intermediate'
+    },
+    {
+      icon: '/icons/relational-connective.svg',
+      title: 'My Help Menu',
+      dimension: 'Relational-Connective',
+      subtype: 'The Connector',
+      desc: 'Create a "Help Menu" like a restaurant menu. List different ways people can support you — a listening ear, homework help, a fun distraction, a pep talk. Share it with a trusted adult.',
+      time: '15 min',
+      level: 'intermediate'
+    },
+    {
+      icon: '/icons/cognitive-narrative.svg',
+      title: 'Thought Journal',
+      dimension: 'Cognitive-Narrative',
+      subtype: 'The Thinker',
+      desc: 'Write down a thought you had today. Now ask: Is this thought true? Is it helpful? What would I tell a friend who had this thought? Practice being your own kind coach.',
+      time: '10 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/somatic-regulative.svg',
+      title: 'Breathing Ladder',
+      dimension: 'Somatic-Regulative',
+      subtype: 'The Grounder',
+      desc: 'Try three different breathing patterns this week: (1) 4 counts in, 4 out. (2) 4 in, hold 4, 8 out. (3) Belly breathing for 2 minutes. Which one works best for you?',
+      time: '10 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/agentic-generative.svg',
+      title: 'Habit Tracker',
+      dimension: 'Agentic-Generative',
+      subtype: 'The Builder',
+      desc: 'Pick one good habit to practice for 5 days — reading, exercising, drawing, or something you want to get better at. Track it on a chart. Celebrate every checkmark!',
+      time: '5 min/day',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/emotional-adaptive.svg',
+      title: 'Emotions Scale',
+      dimension: 'Emotional-Adaptive',
+      subtype: 'The Feeler',
+      desc: 'Draw a scale from 1–10. 1 is super calm, 10 is very intense. When you feel a big emotion today, where on the scale is it? What number feels manageable?',
+      time: '5 min',
+      level: 'beginner'
+    },
+    {
+      icon: '/icons/spiritual-reflective.svg',
+      title: 'Inspiration Board',
+      dimension: 'Spiritual-Reflective',
+      subtype: 'The Guide',
+      desc: 'Start an inspiration journal. Collect quotes, words, or pictures that make you feel hopeful and strong. Look at it when you need a boost.',
+      time: '15 min',
+      level: 'beginner'
     }
   ],
 
@@ -195,6 +303,51 @@ var KIDS_ACTIVITIES = {
       desc: 'Ask three people who know you well to name two strengths they see in you. Compare their answers with your own list. Which strengths surprise you? How can you use them more often?',
       time: '15 min',
       level: 'intermediate'
+    },
+    {
+      icon: '/icons/relational-connective.svg',
+      title: 'Support Plan',
+      dimension: 'Relational-Connective',
+      subtype: 'The Connector',
+      desc: 'Create a personal support plan: who do you go to for school help? For emotional support? For fun? For big life decisions? Write a name next to each category — then reach out to one person this week.',
+      time: '15 min',
+      level: 'intermediate'
+    },
+    {
+      icon: '/icons/spiritual-reflective.svg',
+      title: 'Values Debate',
+      dimension: 'Spiritual-Reflective',
+      subtype: 'The Guide',
+      desc: 'Pick two values that sometimes feel like they conflict — like "loyalty" and "honesty." Write about a time when they pulled in opposite directions. How did you decide what to do?',
+      time: '15 min',
+      level: 'intermediate'
+    },
+    {
+      icon: '/icons/emotional-adaptive.svg',
+      title: 'Trigger Journal',
+      dimension: 'Emotional-Adaptive',
+      subtype: 'The Feeler',
+      desc: 'Keep track of moments when you felt a strong emotion suddenly shift. What was happening just before? Identifying your triggers is the first step to responding instead of reacting.',
+      time: '10 min',
+      level: 'intermediate'
+    },
+    {
+      icon: '/icons/agentic-generative.svg',
+      title: 'Accountability Partner',
+      dimension: 'Agentic-Generative',
+      subtype: 'The Builder',
+      desc: 'Find a classmate or friend. Share one goal each. Check in with each other twice this week. Accountability makes goals three times more likely to happen — science says so!',
+      time: '10 min',
+      level: 'intermediate'
+    },
+    {
+      icon: '/icons/somatic-regulative.svg',
+      title: 'Movement Reset',
+      dimension: 'Somatic-Regulative',
+      subtype: 'The Grounder',
+      desc: 'When stress builds up, do a 5-minute movement reset: walk, stretch, shake your hands, roll your shoulders. Notice how your mind clears when your body moves.',
+      time: '5 min',
+      level: 'beginner'
     }
   ],
 
@@ -271,6 +424,51 @@ var KIDS_ACTIVITIES = {
       desc: 'List every stressor in your life right now. Sort them into three columns: Can Control, Can Influence, Can\'t Control. Focus 80% of your energy on what you can control or influence — and let the rest go with intention.',
       time: '15 min',
       level: 'intermediate'
+    },
+    {
+      icon: '/icons/agentic-generative.svg',
+      title: 'Personal Leadership Plan',
+      dimension: 'Agentic-Generative',
+      subtype: 'The Builder',
+      desc: 'Identify one area where you want to lead — in school, at home, or in your community. Define what leadership looks like there. Write 3 actions you\'ll take this month to step up.',
+      time: '20 min',
+      level: 'advanced'
+    },
+    {
+      icon: '/icons/emotional-adaptive.svg',
+      title: 'Emotional Cycle Tracker',
+      dimension: 'Emotional-Adaptive',
+      subtype: 'The Feeler',
+      desc: 'For two weeks, track not just your emotions but the full cycle: trigger → feeling → response → outcome. Look for patterns. Where could you shift the cycle to get a better outcome?',
+      time: '10 min',
+      level: 'advanced'
+    },
+    {
+      icon: '/icons/cognitive-narrative.svg',
+      title: 'Personal Philosophy Statement',
+      dimension: 'Cognitive-Narrative',
+      subtype: 'The Thinker',
+      desc: 'Draft a one-paragraph personal philosophy: what do you believe about how people should treat each other, how to handle failure, and what makes life worth living? Revise it until it feels authentically yours.',
+      time: '20 min',
+      level: 'advanced'
+    },
+    {
+      icon: '/icons/relational-connective.svg',
+      title: 'Vulnerability as Strength',
+      dimension: 'Relational-Connective',
+      subtype: 'The Connector',
+      desc: 'Reflect on a time you showed vulnerability — admitted a mistake, asked for help, or shared a fear — and it deepened a relationship. Write about what happened. What did it cost you? What did it gain you?',
+      time: '15 min',
+      level: 'advanced'
+    },
+    {
+      icon: '/icons/spiritual-reflective.svg',
+      title: 'Contribution Map',
+      dimension: 'Spiritual-Reflective',
+      subtype: 'The Guide',
+      desc: 'Draw a map of the different circles of your life — school, home, community, world. Where can your unique strengths contribute something meaningful? Plan one action to contribute in each circle this month.',
+      time: '20 min',
+      level: 'advanced'
     }
   ]
 
