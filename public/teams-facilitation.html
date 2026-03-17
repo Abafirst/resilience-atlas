@@ -120,6 +120,8 @@
       .tf-expandable__body { display: block !important; }
     }
   </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -133,7 +135,9 @@
       <a href="/team.html" style="color:#94a3b8;font-size:.9rem;text-decoration:none">For Teams</a>
       <a href="/kids.html" style="color:#94a3b8;font-size:.9rem;text-decoration:none">For Kids</a>
       <a href="/quiz.html" class="btn btn-primary" style="font-size:.85rem;padding:.5rem 1.1rem">Take Assessment</a>
-    </nav>
+    
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+      </nav>
   </header>
 
   <!-- ── Hero ────────────────────────────────────────────────────────────── -->
@@ -654,5 +658,6 @@
   </footer>
 
   <script src="/js/teams-facilitation.js"></script>
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>
