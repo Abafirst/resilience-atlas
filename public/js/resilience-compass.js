@@ -219,22 +219,22 @@
 
   // ── Theme color palettes ───────────────────────────────────────────────────
   var DARK_PALETTE = {
-    bgStop0:        'rgba(30,41,59,0)',
-    bgStop1:        'rgba(15,23,42,0)',
-    bgStop2:        'rgba(2,6,23,0)',
+    bgStop0:        'rgba(30,41,59,0.85)',
+    bgStop1:        'rgba(15,23,42,0.95)',
+    bgStop2:        'rgba(2,6,23,1)',
     gridBase:       'rgba(56,189,248,0.1)',
     crosshair:      'rgba(56,189,248,0.25)',
-    ringInner:      'rgba(56,189,248,0.25)',
-    ringOuter:      'rgba(56,189,248,0.25)',
-    ringShadow:     'rgba(56,189,248,0)',
+    ringInner:      'rgba(255,255,255,0.18)',
+    ringOuter:      'rgba(255,255,255,0.18)',
+    ringShadow:     'rgba(56,189,248,0.25)',
     bezel:          'rgba(0,0,0,0)',
     bezelHighlight: 'rgba(0,0,0,0)',
     bezelShadow:    'rgba(0,0,0,0)',
-    tickMain:       'rgba(255,255,255,.95)',
-    tickMinor:      'rgba(255,255,255,.85)',
-    tickCardinal:   'rgba(255,255,255,1.0)',
-    labelMain:      'rgba(255,255,255,.95)',
-    labelSec:       'rgba(255,255,255,.85)',
+    tickMain:       'rgba(255,255,255,0.45)',
+    tickMinor:      'rgba(255,255,255,0.27)',
+    tickCardinal:   'rgba(255,255,255,0.55)',
+    labelMain:      'rgba(255,255,255,0.45)',
+    labelSec:       'rgba(255,255,255,0.25)',
     axisBase:       'rgba(56,189,248,0.1)',
     glassRingFill:  'rgba(0,0,0,0)',
     glassRingStroke:'rgba(0,0,0,0)',
@@ -938,11 +938,7 @@ if (_isLightBackground) {
 
     ctx.beginPath();
     ctx.arc(0, 0, 6, 0, Math.PI * 2);
-if (_isLightBackground) {
-  ctx.fillStyle = 'rgba(255,255,255,0.12)';
-} else {
-  ctx.fillStyle = 'rgba(0,0,0,0)';
-}
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
     ctx.fill();
 
     ctx.beginPath();
