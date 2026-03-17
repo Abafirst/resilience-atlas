@@ -13,6 +13,7 @@ const rateLimit = require('express-rate-limit');
 const mongoose  = require('mongoose');
 const { authenticateJWT } = require('../middleware/auth');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
+const AssessmentHistory    = require('../models/AssessmentHistory');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -74,7 +75,7 @@ function detectMilestones(assessment, history) {
 
     // 100-point cumulative overall improvement (vs oldest)
     const oldest = history[history.length - 1];
-    if (oldest && oldest._id.toString() !== assessment._id.toString()) {
+    if (oldest && String(oldest._id) !== String(assessment._id)) {
         if ((assessment.overall - oldest.overall) >= 100) {
             badges.push('100pt_improvement');
         }
@@ -364,18 +365,11 @@ router.patch('/:id/note', authenticateJWT, async (req, res) => {
             return res.status(400).json({ error: 'Invalid assessment ID.' });
         }
 
-        // Try AssessmentHistory first; fall back to ResilienceAssessment
-        let AssessmentHistory;
-        try { AssessmentHistory = require('../models/AssessmentHistory'); } catch (_) { AssessmentHistory = null; }
-
-        let updated = null;
-        if (AssessmentHistory) {
-            updated = await AssessmentHistory.findOneAndUpdate(
-                { _id: id, userId },
-                { $set: { notes: note } },
-                { new: true, select: '_id notes assessmentDate' }
-            );
-        }
+        const updated = await AssessmentHistory.findOneAndUpdate(
+            { _id: id, userId },
+            { $set: { notes: note } },
+            { new: true, select: '_id notes assessmentDate' }
+        );
         if (!updated) {
             return res.status(404).json({ error: 'Assessment not found.' });
         }

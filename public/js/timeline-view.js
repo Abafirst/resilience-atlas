@@ -175,7 +175,7 @@
             function select() { if (onSelect) onSelect(a, idx, assessments); }
             li.addEventListener('click', select);
             li.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') select();
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
             });
 
             container.appendChild(li);
