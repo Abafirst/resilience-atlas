@@ -16,6 +16,11 @@ const compression = require("compression");
 dotenv.config();
 
 // ==============================
+// Integrations (must be initialised before routes)
+// ==============================
+const sentry = require("./integrations/sentry");
+
+// ==============================
 // Express app
 // ==============================
 const app = express();
@@ -23,6 +28,9 @@ app.use(express.static(path.join(__dirname, "../public")));
 // ==============================
 // Middleware
 // ==============================
+
+// Sentry request / tracing handler (no-op when DSN is not configured)
+app.use(sentry.Handlers.requestHandler());
 
 // Security headers
 app.use(helmet());
@@ -190,16 +198,8 @@ app.get("*", (req, res) => {
 // Global Error Handler
 // ==============================
 
-app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err);
-
-  const isDev = (process.env.NODE_ENV || "development") === "development";
-
-  res.status(err.status || 500).json({
-    error: isDev ? err.message : "Internal server error",
-    ...(isDev && err.stack ? { stack: err.stack } : {}),
-  });
-});
+const { errorHandler } = require("./middleware/errorHandler");
+app.use(errorHandler);
 
 // ==============================
 // Start Server
