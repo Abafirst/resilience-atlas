@@ -126,12 +126,11 @@ router.post('/', authenticateJWT, async (req, res) => {
             user2 = participantFromAssessment(assessment2, name2);
 
         } else if (type === 'growth') {
-            const prevId = previousAssessmentId;
-            if (!prevId || !mongoose.Types.ObjectId.isValid(prevId)) {
+            if (!previousAssessmentId || !mongoose.Types.ObjectId.isValid(previousAssessmentId)) {
                 return res.status(400).json({ error: 'previousAssessmentId is required for growth comparisons.' });
             }
 
-            const prevAssessment = await ResilienceAssessment.findById(prevId).lean();
+            const prevAssessment = await ResilienceAssessment.findById(previousAssessmentId).lean();
             if (!prevAssessment) {
                 return res.status(404).json({ error: 'Previous assessment not found.' });
             }

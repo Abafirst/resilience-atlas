@@ -204,8 +204,8 @@
     document.getElementById('ind-type2').textContent  = comparison.user2.dominantType || '';
 
     // Radar chart labels
-    document.getElementById('radarLabel1').textContent = comparison.user1.displayName + ''s Profile';
-    document.getElementById('radarLabel2').textContent = comparison.user2.displayName + ''s Profile';
+    document.getElementById('radarLabel1').textContent = comparison.user1.displayName + "'s Profile";
+    document.getElementById('radarLabel2').textContent = comparison.user2.displayName + "'s Profile";
 
     // Team score banner
     document.getElementById('ind-teamScore').textContent =
@@ -269,11 +269,19 @@
     if (copyBtn) {
       copyBtn.addEventListener('click', function () {
         var input = document.getElementById('shareUrlInput');
-        if (input) {
+        if (!input) return;
+        var url = input.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            copyBtn.textContent = 'Copied!';
+            setTimeout(function () { copyBtn.textContent = 'Copy Link'; }, 2000);
+          }).catch(function () {
+            input.select();
+            copyBtn.textContent = 'Copy Link';
+          });
+        } else {
           input.select();
-          document.execCommand('copy');
-          copyBtn.textContent = 'Copied!';
-          setTimeout(function () { copyBtn.textContent = 'Copy Link'; }, 2000);
+          copyBtn.textContent = 'Copy Link';
         }
       });
     }
