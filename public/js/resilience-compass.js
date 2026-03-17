@@ -222,7 +222,7 @@
     bgStop0:        'rgba(30,41,59,0)',
     bgStop1:        'rgba(15,23,42,0)',
     bgStop2:        'rgba(2,6,23,0)',
-    gridBase:       'rgba(56,189,248,',
+    gridBase:       'rgba(56,189,248,0.1)',
     crosshair:      'rgba(56,189,248,0.25)',
     ringInner:      'rgba(56,189,248,0.25)',
     ringOuter:      'rgba(56,189,248,0.25)',
@@ -235,7 +235,7 @@
     tickCardinal:   'rgba(255,255,255,1.0)',
     labelMain:      'rgba(255,255,255,.95)',
     labelSec:       'rgba(255,255,255,.85)',
-    axisBase:       'rgba(56,189,248,',
+    axisBase:       'rgba(56,189,248,0.1)',
     glassRingFill:  'rgba(0,0,0,0)',
     glassRingStroke:'rgba(0,0,0,0)',
     polyStroke:     '#A78BFA',
@@ -256,7 +256,7 @@
     bgStop0:        'rgba(255,255,255,0)',
     bgStop1:        'rgba(241,245,249,0)',
     bgStop2:        'rgba(226,232,240,0)',
-    gridBase:       'rgba(100,116,139,',
+    gridBase:       'rgba(100,116,139,0.1)',
     crosshair:      'rgba(100,116,139,0.18)',
     ringInner:      'rgba(100,116,139,0.2)',
     ringOuter:      'rgba(100,116,139,0.35)',
@@ -269,7 +269,7 @@
     tickCardinal:   'rgba(71,85,105,0.6)',
     labelMain:      'rgba(71,85,105,0.6)',
     labelSec:       'rgba(71,85,105,0.45)',
-    axisBase:       'rgba(100,116,139,',
+    axisBase:       'rgba(100,116,139,0.1)',
     glassRingFill:  'rgba(255,255,255,0.35)',
     glassRingStroke:'rgba(148,163,184,0.18)',
     polyStroke:     '#7c3aed',
@@ -345,7 +345,7 @@ return false; // Default to dark
     if (!canvas || typeof canvas.getContext !== 'function') { return; }
 
     // Detect background brightness once so drawing helpers can adapt colors
-_isLightBackground = canvas ? detectBackground(canvas) : false;
+    _isLightBackground = canvas ? detectBackground(canvas) : false;
     // Apply instrument shadow only on dark backgrounds
     canvas.style.filter = _isLightBackground
       ? ''
@@ -359,8 +359,8 @@ _isLightBackground = canvas ? detectBackground(canvas) : false;
 
     canvas.width  = CW;
     canvas.height = CH;
-var ctx = canvas.getContext('2d');
-if (!_isLightBackground) {
+    var ctx = canvas.getContext('2d');
+    if (!_isLightBackground) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
     var rawValues = DIMENSIONS.map(function (d) {
@@ -877,6 +877,7 @@ if (_isLightBackground) {
   ctx.fill();
 
   ctx.restore(); 
+}
 }
   function drawNeedle(ctx, angle) {
     var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
