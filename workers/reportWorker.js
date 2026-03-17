@@ -97,7 +97,7 @@ async function processJob(job) {
         // 8. Optional email delivery (reuses the already-computed report object).
         if (email) {
             try {
-                await emailService.sendQuizReport(email, username, comprehensiveReport || report);
+                await emailService.sendQuizReport(email, username, comprehensiveReport);
                 logger.info(`Email sent to ${email}`);
             } catch (emailErr) {
                 logger.warn(`Email delivery failed (non-fatal): ${emailErr.message}`);

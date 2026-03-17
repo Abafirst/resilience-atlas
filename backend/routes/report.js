@@ -54,10 +54,6 @@ function renderDimensionCard(dimName, analysis) {
         .map((w) => `<li>${esc(w)}</li>`)
         .join('');
 
-    const benchmarkPct = analysis.benchmark
-        ? Math.round((analysis.benchmark.yourScore / 100) * 100)
-        : analysis.percentage;
-
     return `
 <div class="dim-card">
   <div class="dim-header" style="border-left:5px solid ${color}">
@@ -234,7 +230,7 @@ function buildReportHtml(report, overallRaw, dominantTypeRaw, scoresObj) {
   <div class="hero">
     <div class="hero-label">Overall Resilience Score</div>
     <div class="hero-score-number">${esc(String(overallRaw))}%</div>
-    <div class="hero-archetype">${esc(report.profileArchetype || '')} ${esc((report.profileArchetype && report.profileArchetype !== '' && '') || '')}</div>
+    <div class="hero-archetype">${esc(report.profileArchetype || '')}</div>
     <div class="hero-dominant">Primary Strength: ${esc(dominantTypeRaw || '-')}</div>
   </div>
 
