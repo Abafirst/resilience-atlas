@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
 const { buildComprehensiveReport } = require('../services/reportService');
+const { buildReportHTML } = require('../templates/reportTemplate');
 
 /** Rate limiter — PDF generation is expensive, so keep this conservative. */
 const reportLimiter = rateLimit({
@@ -386,6 +387,19 @@ router.get('/download', reportLimiter, async (req, res) => {
             dominantType,
             scoresObj
         );
+let scoresObj;
+try {
+    scoresObj = JSON.parse(scores);
+} catch {
+    return res.status(400).json({ error: 'Invalid scores format' });
+}
+
+const html = buildReportHTML(
+    Number(overall),
+    dominantType || '',
+    scoresObj,
+    email ? String(email).split('@')[0] : undefined
+);
 
         console.log('Launching Puppeteer browser...');
         const browser = await puppeteer.launch({
@@ -405,13 +419,18 @@ router.get('/download', reportLimiter, async (req, res) => {
         try {
             const page = await browser.newPage();
             await page.setContent(html, { waitUntil: 'networkidle0' });
-            pdf = await page.pdf({ format: 'A4', printBackground: true });
+            pdf = await page.pdf({
+                format: 'A4',
+                printBackground: true,
+                margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
+                preferCSSPageSize: true,
+            });
         } finally {
             await browser.close();
         }
 
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename="resilience-report.pdf"');
+        res.setHeader('Content-Disposition', 'attachment; filename="resilience-atlas-report.pdf"');
         res.send(pdf);
     } catch (error) {
         console.error('PDF generation failed:', error.message, error.stack);
