@@ -184,9 +184,18 @@ h1 {
       </html>
     `;
 
+        console.log('Launching Puppeteer browser...');
         const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            headless: 'new',
+            timeout: 30000,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+            ],
         });
 
         let pdf;
@@ -202,7 +211,7 @@ h1 {
         res.setHeader('Content-Disposition', 'attachment; filename="resilience-report.pdf"');
         res.send(pdf);
     } catch (error) {
-        console.error('PDF generation failed:', error);
+        console.error('PDF generation failed:', error.message, error.stack);
         res.status(500).json({ error: 'Failed to generate PDF' });
     }
 });
