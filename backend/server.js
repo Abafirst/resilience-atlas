@@ -128,6 +128,8 @@ app.use("/api/growth", require("./routes/growth"));
 console.log("✅ Mounted route: /api/growth");
 app.use("/api/atlas", require("./routes/atlas"));
 console.log("✅ Mounted route: /api/atlas");
+app.use("/api/history", require("./routes/history"));
+console.log("✅ Mounted route: /api/history");
 app.use("/api/share", require("./routes/share"));
 console.log("✅ Mounted route: /api/share");
 app.use("/admin", require("./routes/admin"));
