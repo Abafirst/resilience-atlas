@@ -287,7 +287,7 @@
   };
 
   // ── Background brightness detection ────────────────────────────────────────
-var _isLightBackground = detectBackground(canvas);
+var _isLightBackground = false;
 
 /**
  * Relative luminance using ITU-R BT.601 luma coefficients (0–1).

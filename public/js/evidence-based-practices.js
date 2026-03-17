@@ -1071,7 +1071,7 @@ function renderPracticesSection(emergingStrength) {
         <p>
           <span aria-hidden="true">🔄</span>
           Return to The Resilience Atlas in <strong>30 days</strong> to see how your resilience
-          profile evolves as you practise.
+          profile evolves as you practice.
         </p>
         <a href="quiz.html" class="ep-btn-secondary ep-reassessment-link">Retake Assessment</a>
       </div>

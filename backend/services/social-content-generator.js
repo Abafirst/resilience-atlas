@@ -60,7 +60,7 @@ const COMMON_HASHTAGS = [
 // ── Instagram caption ──────────────────────────────────────────────────────────
 
 /**
- * Generate an Instagram-optimised caption.
+ * Generate an Instagram-optimized caption.
  *
  * Format:
  *  [emoji + dimension header]
@@ -128,7 +128,7 @@ function formatInstagramAltText(insight) {
 // ── Facebook post ─────────────────────────────────────────────────────────────
 
 /**
- * Generate a Facebook-optimised post.
+ * Generate a Facebook-optimized post.
  *
  * Format:
  *  [headline + dimension]
