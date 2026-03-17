@@ -222,7 +222,7 @@
     bgStop0:        'rgba(30,41,59,0.85)',
     bgStop1:        'rgba(15,23,42,0.95)',
     bgStop2:        'rgba(2,6,23,1)',
-    gridBase:       'rgba(56,189,248,0.1)',
+    gridBase:       'rgba(56,189,248,',
     crosshair:      'rgba(56,189,248,0.25)',
     ringInner:      'rgba(255,255,255,0.18)',
     ringOuter:      'rgba(255,255,255,0.18)',
@@ -235,9 +235,9 @@
     tickCardinal:   'rgba(255,255,255,0.55)',
     labelMain:      'rgba(255,255,255,0.45)',
     labelSec:       'rgba(255,255,255,0.25)',
-    axisBase:       'rgba(56,189,248,0.1)',
+    axisBase:       'rgba(56,189,248,',
     glassRingFill:  'rgba(0,0,0,0)',
-    glassRingStroke:'rgba(0,0,0,0)',
+    glassRingStroke:'rgba(255,255,255,0.10)',
     polyStroke:     '#A78BFA',
     polyFill:       'rgba(139,92,246,0.40)',
     polyShadow:     'rgba(139,92,246,0.5)',
@@ -253,10 +253,10 @@
   };
 
   var LIGHT_PALETTE = {
-    bgStop0:        'rgba(255,255,255,0)',
-    bgStop1:        'rgba(241,245,249,0)',
-    bgStop2:        'rgba(226,232,240,0)',
-    gridBase:       'rgba(100,116,139,0.1)',
+    bgStop0:        'rgba(255,255,255,1)',
+    bgStop1:        'rgba(241,245,249,1)',
+    bgStop2:        'rgba(226,232,240,1)',
+    gridBase:       'rgba(100,116,139,',
     crosshair:      'rgba(100,116,139,0.18)',
     ringInner:      'rgba(100,116,139,0.2)',
     ringOuter:      'rgba(100,116,139,0.35)',
@@ -269,7 +269,7 @@
     tickCardinal:   'rgba(71,85,105,0.6)',
     labelMain:      'rgba(71,85,105,0.6)',
     labelSec:       'rgba(71,85,105,0.45)',
-    axisBase:       'rgba(100,116,139,0.1)',
+    axisBase:       'rgba(100,116,139,',
     glassRingFill:  'rgba(255,255,255,0.35)',
     glassRingStroke:'rgba(148,163,184,0.18)',
     polyStroke:     '#7c3aed',
@@ -857,28 +857,36 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
         ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
 }
 }
-ctx.closePath();
-if (_isLightBackground) {
-  ctx.save(); 
-
-  const roseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
-
-  roseGrad.addColorStop(0,   'rgba(255,255,255,1.0)');
-  roseGrad.addColorStop(0.5, 'rgba(224,242,254,0.95)');
-  roseGrad.addColorStop(1,   'rgba(6,182,212,0.90)');
-
-  ctx.fillStyle = roseGrad;
-
-  ctx.shadowColor = 'rgba(0,0,0,0.40)';
-  ctx.shadowBlur = 4;
-  ctx.shadowOffsetX = 1;
-  ctx.shadowOffsetY = 1;
-
-  ctx.fill();
-
-  ctx.restore(); 
-}
-}
+    ctx.closePath();
+    if (_isLightBackground) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.40)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      var roseGradLight = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
+      roseGradLight.addColorStop(0,   'rgba(255,255,255,1.0)');
+      roseGradLight.addColorStop(0.5, 'rgba(224,242,254,0.95)');
+      roseGradLight.addColorStop(1,   'rgba(6,182,212,0.90)');
+      ctx.fillStyle = roseGradLight;
+      ctx.fill();
+      ctx.restore();
+    } else {
+      ctx.save();
+      ctx.shadowColor = 'rgba(34,211,238,0.5)';
+      ctx.shadowBlur = 6;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      var roseGradDark = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
+      roseGradDark.addColorStop(0,   'rgba(255,255,255,0.95)');
+      roseGradDark.addColorStop(0.5, 'rgba(103,232,249,0.85)');
+      roseGradDark.addColorStop(1,   'rgba(34,211,238,0.70)');
+      ctx.fillStyle = roseGradDark;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
   function drawNeedle(ctx, angle) {
     var pal = _isLightBackground ? LIGHT_PALETTE : DARK_PALETTE;
     ctx.save();
