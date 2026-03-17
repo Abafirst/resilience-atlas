@@ -219,25 +219,26 @@
 
   // ── Theme color palettes ───────────────────────────────────────────────────
   var DARK_PALETTE = {
-    bgStop0:        'rgba(30,41,59,0.85)',
-    bgStop1:        'rgba(15,23,42,0.95)',
+    bgStop0:        'rgba(30,41,59,1)',
+    bgStop1:        'rgba(15,23,42,1)',
     bgStop2:        'rgba(2,6,23,1)',
     gridBase:       'rgba(56,189,248,',
+    gridOpacity:    0.20,
     crosshair:      'rgba(56,189,248,0.25)',
-    ringInner:      'rgba(255,255,255,0.18)',
-    ringOuter:      'rgba(255,255,255,0.18)',
+    ringInner:      'rgba(255,255,255,0.15)',
+    ringOuter:      'rgba(255,255,255,0.25)',
     ringShadow:     'rgba(56,189,248,0.25)',
-    bezel:          'rgba(0,0,0,0)',
-    bezelHighlight: 'rgba(0,0,0,0)',
-    bezelShadow:    'rgba(0,0,0,0)',
-    tickMain:       'rgba(255,255,255,0.45)',
-    tickMinor:      'rgba(255,255,255,0.27)',
-    tickCardinal:   'rgba(255,255,255,0.55)',
-    labelMain:      'rgba(255,255,255,0.45)',
-    labelSec:       'rgba(255,255,255,0.25)',
+    bezel:          'rgba(255,255,255,0.25)',
+    bezelHighlight: 'rgba(255,255,255,0.15)',
+    bezelShadow:    'rgba(56,189,248,0.25)',
+    tickMain:       'rgba(255,255,255,0.70)',
+    tickMinor:      'rgba(255,255,255,0.50)',
+    tickCardinal:   'rgba(255,255,255,0.75)',
+    labelMain:      'rgba(255,255,255,0.75)',
+    labelSec:       'rgba(255,255,255,0.60)',
     axisBase:       'rgba(56,189,248,',
     glassRingFill:  'rgba(0,0,0,0)',
-    glassRingStroke:'rgba(255,255,255,0.10)',
+    glassRingStroke:'rgba(255,255,255,0.12)',
     polyStroke:     '#A78BFA',
     polyFill:       'rgba(139,92,246,0.40)',
     polyShadow:     'rgba(139,92,246,0.5)',
@@ -257,21 +258,22 @@
     bgStop1:        'rgba(241,245,249,1)',
     bgStop2:        'rgba(226,232,240,1)',
     gridBase:       'rgba(100,116,139,',
+    gridOpacity:    0.30,
     crosshair:      'rgba(100,116,139,0.18)',
-    ringInner:      'rgba(100,116,139,0.2)',
-    ringOuter:      'rgba(100,116,139,0.35)',
+    ringInner:      'rgba(71,85,105,0.20)',
+    ringOuter:      'rgba(71,85,105,0.35)',
     ringShadow:     'rgba(124,58,237,0.15)',
-    bezel:          'rgba(100,116,139,0.35)',
+    bezel:          'rgba(71,85,105,0.35)',
     bezelHighlight: 'rgba(100,116,139,0.12)',
     bezelShadow:    'rgba(124,58,237,0.15)',
-    tickMain:       'rgba(71,85,105,0.55)',
-    tickMinor:      'rgba(71,85,105,0.35)',
-    tickCardinal:   'rgba(71,85,105,0.6)',
-    labelMain:      'rgba(71,85,105,0.6)',
-    labelSec:       'rgba(71,85,105,0.45)',
+    tickMain:       'rgba(71,85,105,0.65)',
+    tickMinor:      'rgba(71,85,105,0.45)',
+    tickCardinal:   'rgba(71,85,105,0.65)',
+    labelMain:      'rgba(30,41,59,0.70)',
+    labelSec:       'rgba(30,41,59,0.55)',
     axisBase:       'rgba(100,116,139,',
-    glassRingFill:  'rgba(255,255,255,0.35)',
-    glassRingStroke:'rgba(148,163,184,0.18)',
+    glassRingFill:  'rgba(0,0,0,0)',
+    glassRingStroke:'rgba(148,163,184,0.22)',
     polyStroke:     '#7c3aed',
     polyFill:       'rgba(124,58,237,0.25)',
     polyShadow:     'rgba(124,58,237,0.3)',
@@ -504,16 +506,21 @@ return false; // Default to dark
         CY + (TICK_START + len) * Math.sin(angle)
       );
       ctx.strokeStyle = isCardinal ? pal.tickCardinal : (isMajor ? pal.tickMain : pal.tickMinor);
-      ctx.lineWidth   = isMajor ? 2 : 1;
+      if (_isLightBackground) {
+        ctx.lineWidth = isMajor ? 2 : 1;
+      } else {
+        ctx.lineWidth = isMajor ? 2.5 : 1.5;
+      }
       ctx.stroke();
     }
 
     for (var i = 0; i < 8; i++) {
       var labelAngle = (i / 8) * Math.PI * 2 - Math.PI / 2;
       var isMain = i % 2 === 0;
-      var fontSize = isMain ? 10 : 9;
+      var fontSize   = isMain ? (_isLightBackground ? 10 : 12) : (_isLightBackground ? 9 : 11);
+      var fontWeight = (!_isLightBackground && isMain) ? '500' : '400';
       var spacing = fontSize * LABEL_LETTER_SPACING_RATIO;
-      ctx.font      = '400 ' + fontSize + 'px Inter,system-ui,sans-serif';
+      ctx.font      = fontWeight + ' ' + fontSize + 'px Inter,system-ui,sans-serif';
       ctx.fillStyle = isMain ? pal.labelMain : pal.labelSec;
       drawSpacedText(
         ctx,
@@ -534,9 +541,10 @@ return false; // Default to dark
     GRID_RINGS.forEach(function (pct, idx) {
       ctx.beginPath();
       ctx.arc(CX, CY, R * pct, 0, Math.PI * 2);
-      var opacity = typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK;
+      var opacity = pal.gridOpacity !== undefined ? pal.gridOpacity
+        : (typeof GRID_OPACITY[idx] === 'number' ? GRID_OPACITY[idx] : GRID_OPACITY_FALLBACK);
       ctx.strokeStyle = pal.gridBase + opacity + ')';
-      ctx.lineWidth = pct === 1.0 ? 0.9 : 0.6;
+      ctx.lineWidth = 0.8;
       ctx.stroke();
     });
 
@@ -571,8 +579,6 @@ return false; // Default to dark
     ctx.save();
     ctx.beginPath();
     ctx.arc(CX, CY, radius, 0, Math.PI * 2);
-    ctx.fillStyle = pal.glassRingFill;
-    ctx.fill();
     ctx.strokeStyle = pal.glassRingStroke;
     ctx.lineWidth = 0.75;
     ctx.stroke();
@@ -800,14 +806,14 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R, 0, Math.PI * 2);
     ctx.strokeStyle = pal.ringInner;
-    ctx.lineWidth   = 0.5;
+    ctx.lineWidth   = 1.5;
     ctx.stroke();
 
     // Outer ring just beyond OUTER_R – creates double-line border effect
     ctx.beginPath();
     ctx.arc(CX, CY, OUTER_R + DOUBLE_RING_GAP, 0, Math.PI * 2);
     ctx.strokeStyle = pal.ringOuter;
-    ctx.lineWidth   = 3.0;
+    ctx.lineWidth   = 1.5;
     ctx.shadowColor = pal.ringShadow;
     ctx.shadowBlur  = 6;
     ctx.stroke();
