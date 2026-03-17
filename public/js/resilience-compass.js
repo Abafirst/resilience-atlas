@@ -877,18 +877,9 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
       ctx.fill();
       ctx.restore();
     } else {
-      ctx.save();
-      ctx.shadowColor = 'rgba(34,211,238,0.5)';
-      ctx.shadowBlur = 6;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      var roseGradDark = ctx.createRadialGradient(0, 0, 0, 0, 0, outerPt);
-      roseGradDark.addColorStop(0,   'rgba(255,255,255,0.95)');
-      roseGradDark.addColorStop(0.5, 'rgba(103,232,249,0.85)');
-      roseGradDark.addColorStop(1,   'rgba(34,211,238,0.70)');
-      ctx.fillStyle = roseGradDark;
-      ctx.fill();
-      ctx.restore();
+      ctx.strokeStyle = 'rgba(34,211,238,0.35)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
     }
     ctx.restore();
   }
@@ -949,15 +940,27 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     var pulseScale = 1 + 0.04 * Math.sin(pulse) * progress;
     ctx.scale(pulseScale, pulseScale);
 
-    ctx.beginPath();
-    ctx.arc(0, 0, 6, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.fill();
+    if (_isLightBackground) {
+      ctx.beginPath();
+      ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.fill();
 
-    ctx.beginPath();
-    ctx.arc(0, 0, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#0f172a';
-    ctx.fill();
+      ctx.beginPath();
+      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(0, 0, 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.04)';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(0, 0, 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(34,211,238,0.08)';
+      ctx.fill();
+    }
 
     ctx.beginPath();
     ctx.arc(0, 0, 2, 0, Math.PI * 2);
