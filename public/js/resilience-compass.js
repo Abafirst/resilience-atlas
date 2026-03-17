@@ -340,8 +340,11 @@ return false; // Default to dark
   function renderCompass(canvas, scores) {
     if (!canvas || typeof canvas.getContext !== 'function') { return; }
 
-    // Detect background brightness once so drawing helpers can adapt colors
+    // Detect background brightness once so drawing helpers can adapt colors.
+    // Capture per-canvas so multiple compass instances on the same page do not
+    // overwrite each other's state via the shared module-level variable.
     _isLightBackground = canvas ? detectBackground(canvas) : false;
+    var _canvasIsLight = _isLightBackground;
     // Apply instrument shadow only on dark backgrounds
     canvas.style.filter = _isLightBackground
       ? ''
@@ -403,6 +406,9 @@ return false; // Default to dark
     var currentAngle = startAngle;
 
     function frame(ts) {
+      // Restore per-canvas light/dark state so concurrent compass instances
+      // on the same page don't inherit each other's background detection.
+      _isLightBackground = _canvasIsLight;
       if (!startTime) { startTime = ts; }
       var elapsed = ts - startTime;
 
