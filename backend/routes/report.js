@@ -3,6 +3,8 @@ const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
+const pdfCacheService = require('../services/pdfCacheService');
+const { authenticateJWT } = require('../middleware/auth');
 
 /** Rate limiter — PDF generation is expensive, so keep this conservative. */
 const reportLimiter = rateLimit({
@@ -61,12 +63,29 @@ router.get('/download', reportLimiter, async (req, res) => {
         }
         // ─────────────────────────────────────────────────────────────────────
 
-let scoresObj;
+        let scoresObj;
 try {
   scoresObj = JSON.parse(scores);
 } catch {
   return res.status(400).json({ error: 'Invalid scores format' });
 }
+
+        // ── Cache check ────────────────────────────────────────────────────────
+        // Compute a hash from the request parameters so identical inputs reuse
+        // the same cached PDF instead of spinning up Puppeteer again.
+        const resultsHash = pdfCacheService.buildResultsHash(overall, dominantType, scoresObj);
+
+        const cachedPdf = await pdfCacheService.getCachedPdf(resultsHash);
+        if (cachedPdf) {
+            console.log(`[report] Cache HIT for hash ${resultsHash.slice(0, 8)}…`);
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'attachment; filename="resilience-report.pdf"');
+            res.setHeader('X-Cache', 'HIT');
+            return res.send(cachedPdf);
+        }
+
+        console.log(`[report] Cache MISS for hash ${resultsHash.slice(0, 8)}… — generating PDF`);
+        // ──────────────────────────────────────────────────────────────────────
 
 const parsedScores = scoresObj;
 
@@ -185,6 +204,7 @@ h1 {
     `;
 
         console.log('Launching Puppeteer browser...');
+        const genStart = Date.now();
         const browser = await puppeteer.launch({
             headless: 'new',
             timeout: 30000,
@@ -207,13 +227,29 @@ h1 {
             await browser.close();
         }
 
+        const generationMs = Date.now() - genStart;
+        console.log(`[report] PDF generated in ${generationMs}ms`);
+
+        // Store in cache for future requests with the same inputs.
+        await pdfCacheService.storePdf(resultsHash, pdf, generationMs);
+
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename="resilience-report.pdf"');
+        res.setHeader('X-Cache', 'MISS');
         res.send(pdf);
     } catch (error) {
         console.error('PDF generation failed:', error.message, error.stack);
         res.status(500).json({ error: 'Failed to generate PDF' });
     }
+});
+
+/**
+ * GET /api/report/cache-stats
+ * Returns in-process cache hit/miss metrics.
+ * Requires a valid JWT (admin-only in production).
+ */
+router.get('/cache-stats', reportLimiter, authenticateJWT, (req, res) => {
+    res.json(pdfCacheService.getCacheStats());
 });
 
 module.exports = router;
