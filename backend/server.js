@@ -135,6 +135,8 @@ app.use("/api/stripe", require("./routes/stripe"));
 console.log("✅ Mounted route: /api/stripe");
 app.use("/api/payments", require("./routes/payments"));
 console.log("✅ Mounted route: /api/payments");
+app.use("/api/upsell", require("./routes/upsell"));
+console.log("✅ Mounted route: /api/upsell");
 app.use("/api/report", require("./routes/report"));
 console.log("✅ Mounted route: /api/report");
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));
