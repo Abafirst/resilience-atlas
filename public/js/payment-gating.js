@@ -90,7 +90,7 @@
         },
     };
 
-    // ── Tier helpers ──────────────────────────────────────────────────────────
+    // -- Tier helpers ----------------------------------------------------------
 
     function getTier() {
         return localStorage.getItem(TIER_KEY) || 'free';
@@ -117,7 +117,7 @@
         return t === 'business' || t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
-    // ── Teams tier helpers ────────────────────────────────────────────────────
+    // -- Teams tier helpers ----------------------------------------------------
 
     /** Atlas Team Starter ($299 one-time): up to 15 users, 1 team, basic dashboard + CSV. */
     function isTeamsStarter() {
@@ -139,7 +139,7 @@
         return getTier() === 'enterprise';
     }
 
-    // ── Apply/remove locks ────────────────────────────────────────────────────
+    // -- Apply/remove locks ----------------------------------------------------
 
     /**
      * Walk every element with a data-tier attribute and show or hide its
@@ -184,7 +184,7 @@
         });
     }
 
-    // ── Post-payment verification ─────────────────────────────────────────────
+    // -- Post-payment verification ---------------------------------------------
 
     /**
      * If the current URL contains ?upgrade=success&session_id=<id>, call the
@@ -273,7 +273,7 @@
         window.history.replaceState({}, '', newUrl);
     }
 
-    // ── Checkout ──────────────────────────────────────────────────────────────
+    // -- Checkout --------------------------------------------------------------
 
     /**
      * Start a Stripe Checkout session for the given tier.
@@ -318,7 +318,7 @@
         }
     }
 
-    // ── Auto-init ─────────────────────────────────────────────────────────────
+    // -- Auto-init -------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
         handleUpgradeSuccess().then(function () {
@@ -326,7 +326,7 @@
         });
     });
 
-    // ── Public API ────────────────────────────────────────────────────────────
+    // -- Public API ------------------------------------------------------------
 
     window.PaymentGating = {
         TIER_CONFIG:          TIER_CONFIG,
