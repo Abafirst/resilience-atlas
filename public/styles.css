@@ -622,7 +622,7 @@ main { flex: 1; }
   cursor: pointer;
   font-family: inherit;
   font-size: .97rem;
-  color: var(--slate-700);
+  color: var(--slate-900);
   text-align: left;
   transition: border-color var(--transition), background var(--transition), transform var(--transition);
   width: 100%;
@@ -2405,7 +2405,7 @@ justify-content:center;
 }
 
 [data-theme="dark"] .question-text {
-  color: var(--slate-900);
+  color: #0f172a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2419,7 +2419,7 @@ justify-content:center;
   }
 
   :root:not([data-theme="light"]) .question-text {
-    color: var(--slate-900);
+    color: #0f172a;
   }
 
   /* Footer: explicitly keep dark so variable remapping doesn't invert it */
@@ -2526,7 +2526,7 @@ justify-content:center;
 [data-theme="dark"] .likert-btn {
   background: #1e293b;
   border-color: #334155;
-  color: var(--slate-600);
+  color: var(--slate-800);
 }
 
 [data-theme="dark"] .likert-btn:hover,
