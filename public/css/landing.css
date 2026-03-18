@@ -546,8 +546,8 @@
 [data-theme="dark"] .testimonial-card,
 [data-theme="dark"] .why-card,
 [data-theme="dark"] .example-radar {
-  background: #1e293b;
-  border-color: #334155;
+  background: #ffffff;
+  border-color: #e2e8f0;
 }
 
 [data-theme="dark"] .landing-section.alt-bg {
@@ -558,7 +558,7 @@
 [data-theme="dark"] .example-profile-card p,
 [data-theme="dark"] .testimonial-card p,
 [data-theme="dark"] .why-card p {
-  color: var(--slate-600, #94a3b8);
+  color: #475569;
 }
 
 [data-theme="dark"] .section-header p,
@@ -576,8 +576,8 @@
   :root:not([data-theme="light"]) .testimonial-card,
   :root:not([data-theme="light"]) .why-card,
   :root:not([data-theme="light"]) .example-radar {
-    background: #1e293b;
-    border-color: #334155;
+    background: #ffffff;
+    border-color: #e2e8f0;
   }
 
   :root:not([data-theme="light"]) .landing-section.alt-bg {
