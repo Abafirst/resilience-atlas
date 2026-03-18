@@ -369,9 +369,9 @@
 
         <!-- Evolution compass -->
         <div class="compass-card">
-          <h3>Evolution Compass</h3>
-          <p>Direction and magnitude of your resilience change since your last assessment.</p>
-          <div id="compassContainer" aria-label="Resilience evolution compass"></div>
+          <h3>Resilience Compass</h3>
+          <p>Your current resilience profile. See the evolution narrative below for changes since your last assessment.</p>
+          <canvas id="compassContainer" aria-label="Resilience compass"></canvas>
           <div id="changesContainer" aria-label="Dimension changes"></div>
         </div>
 
@@ -407,7 +407,7 @@
 
   <script src="js/app.js"></script>
   <script src="js/visualizations.js"></script>
-  <script src="js/ResilienceCompass.js"></script>
+  <script src="js/brand-compass.js"></script>
   <script src="js/timeline-view.js"></script>
   <script src="js/growth-charts.js"></script>
   <script>
@@ -488,26 +488,28 @@
     }
 
     function renderCompass(current, previous) {
-      if (!previous) {
-        if (typeof ResilienceCompass !== 'undefined') {
-          ResilienceCompass.render(compassContainer, { direction: 'N', magnitude: 0, changes: {} });
-          changesContainer.innerHTML = '';
-        }
+      if (typeof window.renderBrandCompass !== 'function') return;
+      if (!current || !current.scores) {
+        changesContainer.innerHTML = '';
         evolutionText.textContent = "You\u2019ve mapped the first point on The Resilience Atlas\u2122. Return in 30 days to see how your resilience evolves.";
         evolutionBox.hidden = false;
         return;
       }
-      var evo  = calculateSimpleEvolution(current, previous);
-      var dir  = pickDirection(evo.changes);
-      var sign = evo.overallChange > 0 ? '+' : '';
-      if (typeof ResilienceCompass !== 'undefined') {
-        ResilienceCompass.render(compassContainer, { direction: dir.primary, magnitude: dir.magnitude, changes: evo.changes });
-        ResilienceCompass.renderChanges(changesContainer, evo.changes);
+      try {
+        window.renderBrandCompass(compassContainer, current.scores);
+      } catch (err) {
+        console.warn('[BrandCompass] Render failed:', err);
       }
-      var text = evo.overallChange !== 0
-        ? 'Overall change: ' + sign + evo.overallChange + ' points since this assessment.'
-        : 'Your overall score was stable between these assessments.';
-      evolutionText.textContent = text;
+      if (previous) {
+        var evo  = calculateSimpleEvolution(current, previous);
+        var sign = evo.overallChange > 0 ? '+' : '';
+        var text = evo.overallChange !== 0
+          ? 'Overall change: ' + sign + evo.overallChange + ' points since this assessment.'
+          : 'Your overall score was stable between these assessments.';
+        evolutionText.textContent = text;
+      } else {
+        evolutionText.textContent = "You\u2019ve mapped the first point on The Resilience Atlas\u2122. Return in 30 days to see how your resilience evolves.";
+      }
       evolutionBox.hidden = false;
     }
 

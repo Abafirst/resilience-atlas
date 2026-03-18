@@ -1,8 +1,6 @@
-/* hero-radar-chart.js – Standalone animated resilience compass
- * Self-contained: includes full rendering logic and auto-initialises
- * the heroRadar and exampleRadar canvases on the landing page.
- * Delegates to window.renderCompass if already defined, otherwise
- * provides its own implementation.
+/* hero-radar-chart.js – Animated resilience compass for the hero/landing page.
+ * Delegates to window.renderBrandCompass (brand-compass.js).
+ * Ensure brand-compass.js is loaded before this file.
  */
 (function () {
   'use strict';
@@ -35,13 +33,13 @@
   };
 
   function init() {
-    var render = typeof window.renderCompass === 'function'
-      ? window.renderCompass
+    var render = typeof window.renderBrandCompass === 'function'
+      ? window.renderBrandCompass
       : null;
 
     if (!render) {
-      console.warn('[hero-radar-chart] window.renderCompass not available. ' +
-        'Ensure resilience-compass.js is loaded before hero-radar-chart.js ' +
+      console.warn('[hero-radar-chart] window.renderBrandCompass not available. ' +
+        'Ensure brand-compass.js is loaded before hero-radar-chart.js ' +
         'in your <script> tags.');
       return;
     }
