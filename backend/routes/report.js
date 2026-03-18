@@ -527,5 +527,3 @@ router.get('/generate', reportLimiter, async (req, res) => {
 });
 
 module.exports = router;
-module.exports.jobStore = jobStore;
-module.exports.buildJobHash = buildJobHash;
