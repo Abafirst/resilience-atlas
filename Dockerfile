@@ -1,6 +1,7 @@
 # Stage 1: Build React client
-FROM node:20-alpine as builder
-WORKDIR /app/client
+FROM node:20-alpine AS builder
+WORKDIR /app/clientO
+
 COPY client/package*.json ./
 RUN npm install
 COPY client/ ./
