@@ -287,7 +287,7 @@
     </div>
 </footer>
 
-<script src="/js/resilience-compass.js"></script>
+<script src="/js/brand-compass.js"></script>
 <script>
 (function () {
   var heroScores = {
@@ -311,9 +311,9 @@
   function initializeCompass(canvasId, scores) {
     var canvas = document.getElementById(canvasId);
     if (!canvas) { console.warn('Compass canvas not found:', canvasId); return; }
-    if (typeof window.renderCompass !== 'function') { console.warn('renderCompass not available'); return; }
+    if (typeof window.renderBrandCompass !== 'function') { console.warn('renderBrandCompass not available'); return; }
     try {
-      window.renderCompass(canvas, scores);
+      window.renderBrandCompass(canvas, scores);
     } catch (err) {
       console.warn('Compass render failed (' + canvasId + '):', err);
     }

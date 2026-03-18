@@ -283,13 +283,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const radarContainer = document.getElementById('radarChartContainer');
   if (radarContainer) {
     const compassCanvas = document.getElementById('radarChart');
-    if (compassCanvas && typeof window.renderCompass === 'function') {
+    if (compassCanvas && typeof window.renderBrandCompass === 'function') {
       try {
         compassCanvas.style.width  = '100%';
         compassCanvas.style.height = '100%';
-        window.renderCompass(compassCanvas, results.scores);
+        window.renderBrandCompass(compassCanvas, results.scores);
       } catch (err) {
-        console.warn('[ResilienceCompass] Canvas render failed:', err);
+        console.warn('[BrandCompass] Canvas render failed:', err);
       }
     }
   }
