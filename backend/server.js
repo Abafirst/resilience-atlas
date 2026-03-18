@@ -166,6 +166,8 @@ app.use("/api/comparisons", require("./routes/comparisons"));
 console.log("✅ Mounted route: /api/share");
 app.use("/admin", require("./routes/admin"));
 console.log("✅ Mounted route: /admin");
+app.use("/api/resources", require("./routes/resources"));
+console.log("✅ Mounted route: /api/resources");
 
 // ==============================
 // Root API info
