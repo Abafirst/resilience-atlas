@@ -488,19 +488,6 @@ router.get('/generate', reportLimiter, async (req, res) => {
             dominantType,
             scoresObj
         );
-let scoresObj;
-try {
-    scoresObj = JSON.parse(scores);
-} catch {
-    return res.status(400).json({ error: 'Invalid scores format' });
-}
-
-const html = buildReportHTML(
-    Number(overall),
-    dominantType || '',
-    scoresObj,
-    email ? String(email).split('@')[0] : undefined
-);
 
         console.log('Launching Puppeteer browser...');
         const browser = await puppeteer.launch({
