@@ -45,6 +45,9 @@ app.use(sentry.requestHandler());
 // Middleware
 // ==============================
 
+// Sentry request / tracing handler (no-op when DSN is not configured)
+app.use(sentry.Handlers.requestHandler());
+
 // Security headers
 app.use(helmet());
 
