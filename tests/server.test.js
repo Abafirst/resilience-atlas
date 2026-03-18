@@ -155,7 +155,7 @@ jest.mock('stripe', () => function Stripe() {
           id: 'cs_test',
           payment_status: 'paid',
           customer_email: 'test@example.com',
-          metadata: { tier: 'deep-report', email: 'test@example.com' },
+          metadata: { tier: 'atlas-navigator', email: 'test@example.com' },
         }),
       },
     },
@@ -362,6 +362,32 @@ describe('GET /api/quiz/results', () => {
             .set('Authorization', `Bearer ${authToken()}`);
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('results');
+    });
+});
+
+// ── Payments tiers route ──────────────────────────────────────────────────────
+
+describe('GET /api/payments/tiers', () => {
+    test('returns 200 with tiers array containing atlas-navigator and atlas-premium', async () => {
+        const res = await request(app).get('/api/payments/tiers');
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('tiers');
+        expect(Array.isArray(res.body.tiers)).toBe(true);
+        expect(res.body.tiers).toHaveLength(2);
+
+        const navigatorTier = res.body.tiers.find(t => t.id === 'atlas-navigator');
+        expect(navigatorTier).toBeDefined();
+        expect(navigatorTier.name).toBe('Atlas Navigator');
+        expect(navigatorTier.price).toBe(9.99);
+        expect(navigatorTier.currency).toBe('USD');
+        expect(navigatorTier.billing).toBe('one-time');
+
+        const premiumTier = res.body.tiers.find(t => t.id === 'atlas-premium');
+        expect(premiumTier).toBeDefined();
+        expect(premiumTier.name).toBe('Atlas Premium');
+        expect(premiumTier.price).toBe(99);
+        expect(premiumTier.currency).toBe('USD');
+        expect(premiumTier.billing).toBe('one-time');
     });
 });
 

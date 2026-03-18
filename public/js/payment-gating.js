@@ -20,7 +20,7 @@
 
     /**
      * Tier hierarchy (lowest → highest access):
-     *   free → deep-report → atlas-premium → business → starter → pro → enterprise
+     *   free → atlas-navigator → atlas-premium → business → starter → pro → enterprise
      *
      * Each tier inherits all features of the tiers below it.
      */
@@ -34,9 +34,9 @@
             features: ['Basic assessment', 'Individual results', 'Radar chart'],
             dataRetention: '1 month',
         },
-        'deep-report': {
-            name: 'Deep Resilience Report',
-            price: 1400, // $14.00
+        'atlas-navigator': {
+            name: 'Atlas Navigator',
+            price: 999, // $9.99
             billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
@@ -45,8 +45,8 @@
         },
         'atlas-premium': {
             name: 'Atlas Premium',
-            price: 4900, // $49.00
-            billing: 'lifetime',
+            price: 9900, // $99.00
+            billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
             features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
@@ -102,7 +102,7 @@
 
     function isDeepReport() {
         const t = getTier();
-        return t === 'deep-report' || t === 'atlas-premium' || t === 'business' ||
+        return t === 'atlas-navigator' || t === 'atlas-premium' || t === 'business' ||
                t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
@@ -149,9 +149,9 @@
         document.querySelectorAll('[data-tier]').forEach(function (section) {
             const required = section.getAttribute('data-tier');
             const unlocked =
-                (required === 'deep-report'                                           && isDeepReport())    ||
-                // atlas-premium sections are intentionally unlocked for all deep-report+ users
-                // (deep-report tier grants access to all individual report content)
+                (required === 'atlas-navigator'                                        && isDeepReport())    ||
+                // atlas-premium sections are intentionally unlocked for all atlas-navigator+ users
+                // (atlas-navigator tier grants access to all individual report content)
                 (required === 'atlas-premium'                                         && isDeepReport())    ||
                 (required === 'business'                                              && isBusiness())      ||
                 ((required === 'starter' || required === 'teams-starter')             && isTeamsStarter())  ||
@@ -196,7 +196,7 @@
         const sessionId = params.get('session_id');
 
         // Accept both 'success' (standard Stripe redirect) and tier names as upgrade param.
-        const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'deep-report' || upgrade === 'atlas-premium') && sessionId;
+        const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'atlas-navigator' || upgrade === 'atlas-premium') && sessionId;
 
         if (!isUpgradeRedirect) {
             // Show cancelled notice if needed.
@@ -278,7 +278,7 @@
     /**
      * Start a Stripe Checkout session for the given tier.
      * Prompts for email if not already stored.
-     * @param {'deep-report'|'atlas-premium'|'business'} tier
+     * @param {'atlas-navigator'|'atlas-premium'|'business'} tier
      */
     async function startCheckout(tier) {
         var email = localStorage.getItem(EMAIL_KEY) ||

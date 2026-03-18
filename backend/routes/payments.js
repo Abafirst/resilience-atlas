@@ -11,14 +11,14 @@ const logger = require('../utils/logger');
 
 /** Tier definitions: name, price in cents, currency. */
 const TIERS = {
-    'deep-report': {
-        name: 'Deep Resilience Report',
-        amount: 1400, // $14
+    'atlas-navigator': {
+        name: 'Atlas Navigator',
+        amount: 999, // $9.99
         currency: 'usd',
     },
     'atlas-premium': {
         name: 'Atlas Premium',
-        amount: 4900, // $49
+        amount: 9900, // $99.00
         currency: 'usd',
     },
 };
@@ -38,9 +38,9 @@ const TIER_CONFIG = {
         features: ['Basic assessment', 'Individual results', 'Radar chart'],
         dataRetention: '1 month',
     },
-    'deep-report': {
-        name: 'Deep Resilience Report',
-        price: 1400, // $14.00
+    'atlas-navigator': {
+        name: 'Atlas Navigator',
+        price: 999, // $9.99
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
@@ -49,8 +49,8 @@ const TIER_CONFIG = {
     },
     'atlas-premium': {
         name: 'Atlas Premium',
-        price: 4900, // $49.00
-        billing: 'lifetime',
+        price: 9900, // $99.00
+        billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
         features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
@@ -117,9 +117,35 @@ const webhookLimiter = rateLimit({
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// GET /api/payments/tiers
+// Return public pricing for the two purchasable tiers (atlas-navigator, atlas-premium).
+// No authentication required — used by the frontend to display current prices.
+// ─────────────────────────────────────────────────────────────────────────────
+router.get('/tiers', paymentsLimiter, (req, res) => {
+    res.json({
+        tiers: [
+            {
+                id: 'atlas-navigator',
+                name: TIERS['atlas-navigator'].name,
+                price: TIERS['atlas-navigator'].amount / 100,
+                currency: TIERS['atlas-navigator'].currency.toUpperCase(),
+                billing: 'one-time',
+            },
+            {
+                id: 'atlas-premium',
+                name: TIERS['atlas-premium'].name,
+                price: TIERS['atlas-premium'].amount / 100,
+                currency: TIERS['atlas-premium'].currency.toUpperCase(),
+                billing: 'one-time',
+            },
+        ],
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/payments/checkout
 // Create a Stripe Checkout session for the requested tier.
-// Body: { tier: 'deep-report' | 'atlas-premium', email: string }
+// Body: { tier: 'atlas-navigator' | 'atlas-premium', email: string }
 // ─────────────────────────────────────────────────────────────────────────────
 router.post('/checkout', paymentsLimiter, async (req, res) => {
     try {
@@ -128,7 +154,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be one of: deep-report, atlas-premium.' });
+                .json({ error: 'Invalid tier. Must be one of: atlas-navigator, atlas-premium.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
@@ -242,7 +268,7 @@ router.get('/status', paymentsLimiter, async (req, res) => {
             return res.status(400).json({ error: 'Email is required.' });
         }
 
-        // Atlas Premium supersedes Deep Report — return the best available tier.
+        // Atlas Premium supersedes Atlas Navigator — return the best available tier.
         const premiumPurchase = await Purchase.findOne({
             email: email.toLowerCase().trim(),
             status: 'completed',
@@ -255,10 +281,10 @@ router.get('/status', paymentsLimiter, async (req, res) => {
         const deepPurchase = await Purchase.findOne({
             email: email.toLowerCase().trim(),
             status: 'completed',
-            tier: 'deep-report',
+            tier: 'atlas-navigator',
         });
         if (deepPurchase) {
-            return res.json({ tier: 'deep-report', purchasedAt: deepPurchase.purchasedAt });
+            return res.json({ tier: 'atlas-navigator', purchasedAt: deepPurchase.purchasedAt });
         }
 
         res.json({ tier: 'free' });
