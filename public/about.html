@@ -428,6 +428,59 @@
       .founder-credentials { justify-content: center; }
       .about-hero .hero-stats { gap: 1rem; }
     }
+
+    /* ── Dark Mode ─────────────────────────────────────────── */
+    [data-theme="dark"] .founder-block,
+    [data-theme="dark"] .assessment-card,
+    [data-theme="dark"] .step-card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    [data-theme="dark"] .highlight-card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    [data-theme="dark"] .founder-info h2 { color: var(--slate-900, #f1f5f9); }
+    [data-theme="dark"] .founder-title { color: #94a3b8; }
+    [data-theme="dark"] .founder-info p { color: var(--slate-600, #94a3b8); }
+    [data-theme="dark"] .about-section h2 { color: var(--slate-900, #f1f5f9); border-bottom-color: var(--slate-200, #334155); }
+    [data-theme="dark"] .about-section p,
+    [data-theme="dark"] .about-section ul { color: var(--slate-600, #94a3b8); }
+    [data-theme="dark"] .assessment-card h4 { color: var(--slate-800, #e2e8f0); }
+    [data-theme="dark"] .assessment-card p { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .timeline-item-body h4 { color: var(--slate-800, #e2e8f0); }
+    [data-theme="dark"] .timeline-item-body p { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .timeline-list::before { background: #334155; }
+    [data-theme="dark"] .step-card h4 { color: var(--slate-800, #e2e8f0); }
+    [data-theme="dark"] .step-card p { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .highlight-card .highlight-label { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .framework-pill { background: #1e293b; color: #94a3b8; }
+    [data-theme="dark"] .mission-callout { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
+    [data-theme="dark"] .mission-callout p { color: #a5b4fc; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .founder-block,
+      :root:not([data-theme="light"]) .assessment-card,
+      :root:not([data-theme="light"]) .step-card { background: #1e293b; border-color: #334155; }
+      :root:not([data-theme="light"]) .highlight-card { background: #1e293b; border-color: #334155; }
+      :root:not([data-theme="light"]) .founder-info h2 { color: #f1f5f9; }
+      :root:not([data-theme="light"]) .founder-title { color: #94a3b8; }
+      :root:not([data-theme="light"]) .founder-info p { color: #94a3b8; }
+      :root:not([data-theme="light"]) .about-section h2 { color: #f1f5f9; border-bottom-color: #334155; }
+      :root:not([data-theme="light"]) .about-section p,
+      :root:not([data-theme="light"]) .about-section ul { color: #94a3b8; }
+      :root:not([data-theme="light"]) .assessment-card h4 { color: #e2e8f0; }
+      :root:not([data-theme="light"]) .assessment-card p { color: #64748b; }
+      :root:not([data-theme="light"]) .timeline-item-body h4 { color: #e2e8f0; }
+      :root:not([data-theme="light"]) .timeline-item-body p { color: #64748b; }
+      :root:not([data-theme="light"]) .timeline-list::before { background: #334155; }
+      :root:not([data-theme="light"]) .step-card h4 { color: #e2e8f0; }
+      :root:not([data-theme="light"]) .step-card p { color: #64748b; }
+      :root:not([data-theme="light"]) .highlight-card .highlight-label { color: #64748b; }
+      :root:not([data-theme="light"]) .framework-pill { background: #1e293b; color: #94a3b8; }
+      :root:not([data-theme="light"]) .mission-callout { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
+      :root:not([data-theme="light"]) .mission-callout p { color: #a5b4fc; }
+    }
   </style>
   <!-- Prevent flash of unstyled theme -->
   <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>

@@ -503,3 +503,122 @@ a:hover { text-decoration: underline; }
 @media (max-width: 400px) {
   .header-nav .btn-secondary { display: none; }
 }
+
+/* ── Dark Mode ────────────────────────────────────────────────── */
+[data-theme="dark"] body,
+[data-theme="dark"] .research-main {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .site-header {
+  background: #1e293b;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .logo { color: #f1f5f9; }
+
+[data-theme="dark"] .btn-secondary {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+[data-theme="dark"] .btn-secondary:hover { background: #334155; }
+
+[data-theme="dark"] .research-section + .research-section {
+  border-top-color: #334155;
+}
+
+[data-theme="dark"] .section-label {
+  background: rgba(129,140,248,.15);
+  color: #a5b4fc;
+}
+
+[data-theme="dark"] .section-headline { color: #f1f5f9; }
+
+[data-theme="dark"] .section-intro { color: #94a3b8; }
+
+[data-theme="dark"] .alt-bg {
+  background: #1e293b;
+}
+
+[data-theme="dark"] .dimension-card,
+[data-theme="dark"] .implication-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .dimension-name { color: #f1f5f9; }
+[data-theme="dark"] .dimension-desc { color: #94a3b8; }
+[data-theme="dark"] .implication-title { color: #f1f5f9; }
+[data-theme="dark"] .implication-text { color: #94a3b8; }
+
+[data-theme="dark"] .key-concepts {
+  background: #0f172a;
+  border-left-color: #818cf8;
+}
+[data-theme="dark"] .key-concepts h4 { color: #a5b4fc; }
+[data-theme="dark"] .key-concepts li { color: #cbd5e1; }
+[data-theme="dark"] .key-concepts li::before { color: #818cf8; }
+
+[data-theme="dark"] .foundation-body { color: #94a3b8; }
+[data-theme="dark"] .dimensions-intro { color: #94a3b8; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body,
+  :root:not([data-theme="light"]) .research-main {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+
+  :root:not([data-theme="light"]) .site-header {
+    background: #1e293b;
+    border-bottom-color: #334155;
+  }
+
+  :root:not([data-theme="light"]) .logo { color: #f1f5f9; }
+
+  :root:not([data-theme="light"]) .btn-secondary {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+  }
+
+  :root:not([data-theme="light"]) .research-section + .research-section {
+    border-top-color: #334155;
+  }
+
+  :root:not([data-theme="light"]) .section-label {
+    background: rgba(129,140,248,.15);
+    color: #a5b4fc;
+  }
+
+  :root:not([data-theme="light"]) .section-headline { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .section-intro { color: #94a3b8; }
+
+  :root:not([data-theme="light"]) .alt-bg {
+    background: #1e293b;
+  }
+
+  :root:not([data-theme="light"]) .dimension-card,
+  :root:not([data-theme="light"]) .implication-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+
+  :root:not([data-theme="light"]) .dimension-name { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .dimension-desc { color: #94a3b8; }
+  :root:not([data-theme="light"]) .implication-title { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .implication-text { color: #94a3b8; }
+
+  :root:not([data-theme="light"]) .key-concepts {
+    background: #0f172a;
+    border-left-color: #818cf8;
+  }
+  :root:not([data-theme="light"]) .key-concepts h4 { color: #a5b4fc; }
+  :root:not([data-theme="light"]) .key-concepts li { color: #cbd5e1; }
+  :root:not([data-theme="light"]) .key-concepts li::before { color: #818cf8; }
+
+  :root:not([data-theme="light"]) .foundation-body { color: #94a3b8; }
+  :root:not([data-theme="light"]) .dimensions-intro { color: #94a3b8; }
+}
