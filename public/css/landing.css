@@ -541,6 +541,14 @@
 }
 
 /* ── Dark Mode ────────────────────────────────────────────── */
+
+/* Card headings must stay dark since cards are forced to white background in dark mode */
+[data-theme="dark"] .dimension-card h3,
+[data-theme="dark"] .example-profile-card h3,
+[data-theme="dark"] .why-card h4 {
+  color: #0f172a;
+}
+
 [data-theme="dark"] .dimension-card,
 [data-theme="dark"] .example-profile-card,
 [data-theme="dark"] .testimonial-card,
@@ -582,6 +590,12 @@
 
   :root:not([data-theme="light"]) .landing-section.alt-bg {
     background: #0f172a;
+  }
+
+  :root:not([data-theme="light"]) .dimension-card h3,
+  :root:not([data-theme="light"]) .example-profile-card h3,
+  :root:not([data-theme="light"]) .why-card h4 {
+    color: #0f172a;
   }
 
   :root:not([data-theme="light"]) .dimension-card p,
