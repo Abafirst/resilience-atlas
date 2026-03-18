@@ -306,7 +306,7 @@
     ctx.restore();
   }
 
-  // Cardinal tick marks N/E/S/W (logo cardinal markers)
+  // Cardinal tick marks N/E/S/W (logo cardinal markers — inside the outer ring)
   function drawCardinalTicks(ctx, pal, alpha) {
     ctx.save();
     ctx.strokeStyle = pal.cardinalTick;
@@ -314,13 +314,13 @@
     var cardAngles = [0, Math.PI / 2, Math.PI, -Math.PI / 2]; // E, S, W, N
     for (var i = 0; i < 4; i++) {
       var a = cardAngles[i];
-      var isMajor = true;
-      var innerR = R_OUTER - 1;
-      var outerR = R_OUTER + 16;
-      var x1 = CX + Math.cos(a) * innerR;
-      var y1 = CY + Math.sin(a) * innerR;
-      var x2 = CX + Math.cos(a) * outerR;
-      var y2 = CY + Math.sin(a) * outerR;
+      // Ticks start just inside the outer ring boundary and point inward
+      var outerR = R_OUTER - 2;
+      var innerR = R_OUTER - 18;
+      var x1 = CX + Math.cos(a) * outerR;
+      var y1 = CY + Math.sin(a) * outerR;
+      var x2 = CX + Math.cos(a) * innerR;
+      var y2 = CY + Math.sin(a) * innerR;
       ctx.globalAlpha = alpha * 0.70;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -328,12 +328,12 @@
       ctx.lineTo(x2, y2);
       ctx.stroke();
     }
-    // Ordinal dots (NE / SE / SW / NW — logo ordinal markers)
+    // Ordinal dots (NE / SE / SW / NW — logo ordinal markers, inside the outer ring)
     var ordAngles = [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4];
     for (var j = 0; j < 4; j++) {
       var oa = ordAngles[j];
-      var ox = CX + Math.cos(oa) * R_OUTER;
-      var oy = CY + Math.sin(oa) * R_OUTER;
+      var ox = CX + Math.cos(oa) * (R_OUTER - 8);
+      var oy = CY + Math.sin(oa) * (R_OUTER - 8);
       ctx.globalAlpha = alpha * 0.55;
       ctx.fillStyle = pal.ordinalDot;
       ctx.beginPath();
@@ -343,7 +343,7 @@
     ctx.restore();
   }
 
-  // Minor tick marks around the outer ring (every 30°)
+  // Minor tick marks around the outer ring (every 30°) — pointing inward
   function drawMinorTicks(ctx, pal, alpha) {
     ctx.save();
     ctx.strokeStyle = pal.cardinalTick;
@@ -353,8 +353,9 @@
       var a = (deg * Math.PI) / 180 - Math.PI / 2;
       // Skip cardinal positions (already drawn as major ticks)
       if (deg % 90 === 0) continue;
-      var i1 = R_OUTER - 1;
-      var i2 = R_OUTER + 7;
+      // Ticks start just inside the outer ring boundary and point inward
+      var i1 = R_OUTER - 2;
+      var i2 = R_OUTER - 9;
       ctx.globalAlpha = alpha * 0.40;
       ctx.beginPath();
       ctx.moveTo(CX + Math.cos(a) * i1, CY + Math.sin(a) * i1);
@@ -482,24 +483,25 @@
 
   // Diamond-shaped needle that points toward the dominant dimension.
   // Matches the logo's compass needle aesthetic (deep navy forward tip, teal back tip).
+  // Elongated on both ends to echo the logo's prominent diamond design.
   function drawNeedle(ctx, angle, pal, pulse) {
     ctx.save();
     ctx.translate(CX, CY);
     // angle 0 = East; adding PI/2 rotates so that angle -PI/2 (North) points up
     ctx.rotate(angle + Math.PI / 2);
 
-    var lenFwd  = R_OUTER * 0.60;  // forward tip (points to dominant dim)
-    var lenBack = R_OUTER * 0.28;  // back tip
-    var halfW   = 6;               // half-width at widest point
+    var lenFwd  = R_OUTER * 0.78;  // forward tip — elongated to match logo
+    var lenBack = R_OUTER * 0.45;  // back tip — elongated tail
+    var halfW   = 9;               // half-width at widest point (wider for prominence)
 
     // Subtle breathing scale on the needle
     var breathScale = 1 + 0.02 * Math.sin(pulse);
 
     ctx.scale(breathScale, breathScale);
 
-    // Glow / shadow
+    // Glow / shadow — stronger for prominence
     ctx.shadowColor   = pal.needleGlow;
-    ctx.shadowBlur    = 12;
+    ctx.shadowBlur    = 20;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
@@ -507,10 +509,10 @@
     ctx.beginPath();
     ctx.moveTo(0, -lenFwd);     // forward tip
     ctx.lineTo(halfW, 0);       // right equator
-    ctx.lineTo(0, 4);           // slight notch at centre
+    ctx.lineTo(0, 5);           // slight notch at centre
     ctx.lineTo(-halfW, 0);      // left equator
     ctx.closePath();
-    var gradFwd = ctx.createLinearGradient(0, -lenFwd, 0, 4);
+    var gradFwd = ctx.createLinearGradient(0, -lenFwd, 0, 5);
     gradFwd.addColorStop(0, pal.needleFwd);
     gradFwd.addColorStop(1, pal.needleMid);
     ctx.fillStyle = gradFwd;
@@ -521,14 +523,14 @@
     ctx.beginPath();
     ctx.moveTo(0, lenBack);     // back tip
     ctx.lineTo(halfW, 0);       // right equator
-    ctx.lineTo(0, 4);           // slight notch at centre
+    ctx.lineTo(0, 5);           // slight notch at centre
     ctx.lineTo(-halfW, 0);      // left equator
     ctx.closePath();
-    var gradBack = ctx.createLinearGradient(0, 4, 0, lenBack);
+    var gradBack = ctx.createLinearGradient(0, 5, 0, lenBack);
     gradBack.addColorStop(0, pal.needleMid);
     gradBack.addColorStop(1, pal.needleBack);
     ctx.fillStyle = gradBack;
-    ctx.globalAlpha = 0.85;
+    ctx.globalAlpha = 0.90;
     ctx.fill();
     ctx.globalAlpha = 1;
 
@@ -539,8 +541,8 @@
     ctx.lineTo(0, lenBack);
     ctx.lineTo(-halfW, 0);
     ctx.closePath();
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-    ctx.lineWidth   = 0.8;
+    ctx.strokeStyle = 'rgba(255,255,255,0.30)';
+    ctx.lineWidth   = 1;
     ctx.stroke();
 
     ctx.restore();
