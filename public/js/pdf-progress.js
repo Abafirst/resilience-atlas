@@ -5,8 +5,8 @@
  *
  * Usage:
  *   PdfProgress.start({ overall, dominantType, scores, email })
- *     .then(hash => { /* PDF is ready, download triggered automatically */ })
- *     .catch(err => { /* user cancelled or timeout */ });
+ *     .then(hash => { /* PDF is ready, download triggered automatically * / })
+ *     .catch(err => { /* user cancelled or timeout * / });
  *
  * The modal injects its own HTML/CSS the first time it is shown, so no
  * extra markup is required in the page.

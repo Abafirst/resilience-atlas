@@ -117,6 +117,30 @@ const webhookLimiter = rateLimit({
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// GET /api/payments/tiers
+// Return public pricing for the two purchasable tiers (deep-report, atlas-premium).
+// No authentication required — used by the frontend to display current prices.
+// ─────────────────────────────────────────────────────────────────────────────
+router.get('/tiers', paymentsLimiter, (req, res) => {
+    res.json({
+        tiers: [
+            {
+                id: 'deep-report',
+                name: TIERS['deep-report'].name,
+                price: TIERS['deep-report'].amount / 100,
+                currency: TIERS['deep-report'].currency.toUpperCase(),
+            },
+            {
+                id: 'atlas-premium',
+                name: TIERS['atlas-premium'].name,
+                price: TIERS['atlas-premium'].amount / 100,
+                currency: TIERS['atlas-premium'].currency.toUpperCase(),
+            },
+        ],
+    });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // POST /api/payments/checkout
 // Create a Stripe Checkout session for the requested tier.
 // Body: { tier: 'deep-report' | 'atlas-premium', email: string }

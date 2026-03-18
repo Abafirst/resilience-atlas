@@ -6,6 +6,9 @@
  *
  * Renders tier comparison cards, locked-section overlays, and upgrade prompts.
  * Depends on payment-gating.js being loaded first (for PaymentGating.startCheckout).
+ *
+ * Pricing is fetched dynamically from /api/payments/tiers on initialisation.
+ * Cards display a loading placeholder until prices arrive, then update in place.
  */
 (function (window) {
 
@@ -26,6 +29,65 @@
         'Micro-practice progress tracking',
     ];
 
+    /** Human-readable tier titles keyed by tier id. */
+    var TIER_TITLES = {
+        'deep-report':   'Deep Resilience Report',
+        'atlas-premium': 'Atlas Premium',
+    };
+
+    /** Fallback prices used when the backend is unreachable or fetch is unavailable. */
+    var FALLBACK_PRICES = { 'deep-report': '$14', 'atlas-premium': '$49' };
+
+    /** Cache of fetched prices: { 'deep-report': '$14', 'atlas-premium': '$49' } */
+    var _prices = null;
+
+    /**
+     * Fetch pricing from the backend and update any rendered price elements.
+     * Silently falls back to hardcoded defaults if the request fails.
+     */
+    function _fetchPrices() {
+        return fetch('/api/payments/tiers')
+            .then(function (res) {
+                if (!res.ok) { throw new Error('HTTP ' + res.status); }
+                return res.json();
+            })
+            .then(function (data) {
+                var map = {};
+                (data.tiers || []).forEach(function (tier) {
+                    var dollars = Math.floor(tier.price);
+                    map[tier.id] = '$' + dollars;
+                });
+                _prices = map;
+                _updatePriceElements();
+            })
+            .catch(function () {
+                // Fall back to hardcoded defaults so the UI remains usable.
+                _prices = FALLBACK_PRICES;
+                _updatePriceElements();
+            });
+    }
+
+    /**
+     * Update all price display elements and button aria-labels already in the
+     * DOM once the prices have been loaded.
+     */
+    function _updatePriceElements() {
+        if (!_prices) { return; }
+        document.querySelectorAll('[data-price-tier]').forEach(function (el) {
+            var tier = el.getAttribute('data-price-tier');
+            if (_prices[tier]) {
+                el.textContent = _prices[tier];
+            }
+        });
+        document.querySelectorAll('button[data-tier]').forEach(function (btn) {
+            var tier = btn.getAttribute('data-tier');
+            if (_prices && _prices[tier]) {
+                var title = TIER_TITLES[tier] || tier;
+                btn.setAttribute('aria-label', 'Unlock ' + title + ' for ' + _prices[tier]);
+            }
+        });
+    }
+
     /**
      * Render a single upgrade card for the given tier.
      * @param {'deep-report'|'atlas-premium'} tier
@@ -33,8 +95,8 @@
      */
     function renderUpgradeCard(tier) {
         const isDeep = tier === 'deep-report';
-        const title       = isDeep ? 'Deep Resilience Report' : 'Atlas Premium';
-        const price       = isDeep ? '$14' : '$49';
+        const title       = TIER_TITLES[tier] || tier;
+        const price       = (_prices && _prices[tier]) ? _prices[tier] : '\u2026'; // '…' while loading
         const features    = isDeep ? DEEP_REPORT_FEATURES : ATLAS_PREMIUM_FEATURES;
         const badgeText   = isDeep ? 'One-Time Purchase' : 'Lifetime Access';
         const badgeClass  = isDeep ? 'badge-blue' : 'badge-gold';
@@ -48,7 +110,7 @@
                 <div class="upgrade-card__header">
                     <span class="upgrade-badge ${badgeClass}">${badgeText}</span>
                     <h3 id="upgrade-title-${tier}" class="upgrade-card__title">${escapeHtml(title)}</h3>
-                    <p class="upgrade-card__price">${escapeHtml(price)}</p>
+                    <p class="upgrade-card__price" data-price-tier="${escapeHtml(tier)}">${escapeHtml(price)}</p>
                     <p class="upgrade-card__description">${escapeHtml(description)}</p>
                 </div>
                 <ul class="upgrade-card__features" aria-label="Features included in ${escapeHtml(title)}">
@@ -126,6 +188,15 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+    }
+
+    // Kick off the price fetch immediately so prices are ready by the time the
+    // results page renders the upgrade cards (or update them if already rendered).
+    // If fetch is unavailable, apply fallback prices immediately.
+    if (typeof window.fetch === 'function') {
+        _fetchPrices();
+    } else {
+        _prices = FALLBACK_PRICES;
     }
 
     window.UpgradeCards = {
