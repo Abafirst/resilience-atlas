@@ -12,7 +12,7 @@
  */
 (function (window) {
 
-    const DEEP_REPORT_FEATURES = [
+    const ATLAS_NAVIGATOR_FEATURES = [
         'Detailed explanation of all 6 resilience dimensions',
         'Deeper interpretation of your strengths',
         'Personalized narrative analysis',
@@ -22,7 +22,7 @@
     ];
 
     const ATLAS_PREMIUM_FEATURES = [
-        'Everything in Deep Report',
+        'Everything in Atlas Navigator',
         'Resilience evolution tracking (historical comparison)',
         'Unlimited reassessments',
         'Personalized growth pathway',
@@ -31,14 +31,14 @@
 
     /** Human-readable tier titles keyed by tier id. */
     var TIER_TITLES = {
-        'deep-report':   'Deep Resilience Report',
-        'atlas-premium': 'Atlas Premium',
+        'atlas-navigator': 'Atlas Navigator',
+        'atlas-premium':   'Atlas Premium',
     };
 
     /** Fallback prices used when the backend is unreachable or fetch is unavailable. */
-    var FALLBACK_PRICES = { 'deep-report': '$14', 'atlas-premium': '$49' };
+    var FALLBACK_PRICES = { 'atlas-navigator': '$9.99', 'atlas-premium': '$99' };
 
-    /** Cache of fetched prices: { 'deep-report': '$14', 'atlas-premium': '$49' } */
+    /** Cache of fetched prices: { 'atlas-navigator': '$9.99', 'atlas-premium': '$99' } */
     var _prices = null;
 
     /**
@@ -54,8 +54,11 @@
             .then(function (data) {
                 var map = {};
                 (data.tiers || []).forEach(function (tier) {
-                    var dollars = Math.floor(tier.price);
-                    map[tier.id] = '$' + dollars;
+                    var price = Number(tier.price);
+                    var formatted = Number.isInteger(price)
+                        ? '$' + price
+                        : '$' + price.toFixed(2);
+                    map[tier.id] = formatted;
                 });
                 _prices = map;
                 _updatePriceElements();
@@ -90,18 +93,18 @@
 
     /**
      * Render a single upgrade card for the given tier.
-     * @param {'deep-report'|'atlas-premium'} tier
+     * @param {'atlas-navigator'|'atlas-premium'} tier
      * @returns {string} HTML string
      */
     function renderUpgradeCard(tier) {
-        const isDeep = tier === 'deep-report';
+        const isNavigator = tier === 'atlas-navigator';
         const title       = TIER_TITLES[tier] || tier;
         const price       = (_prices && _prices[tier]) ? _prices[tier] : '\u2026'; // '…' while loading
-        const features    = isDeep ? DEEP_REPORT_FEATURES : ATLAS_PREMIUM_FEATURES;
-        const badgeText   = isDeep ? 'One-Time Purchase' : 'Lifetime Access';
-        const badgeClass  = isDeep ? 'badge-blue' : 'badge-gold';
-        const btnLabel    = isDeep ? 'Unlock Deep Report' : 'Upgrade to Atlas Premium';
-        const description = isDeep
+        const features    = isNavigator ? ATLAS_NAVIGATOR_FEATURES : ATLAS_PREMIUM_FEATURES;
+        const badgeText   = 'One-Time Purchase';
+        const badgeClass  = isNavigator ? 'badge-blue' : 'badge-gold';
+        const btnLabel    = isNavigator ? 'Unlock Atlas Navigator' : 'Upgrade to Atlas Premium';
+        const description = isNavigator
             ? 'Go deeper into your resilience profile with full dimension analysis and personalized strategies.'
             : 'Track your resilience journey over time and unlock all premium features.';
 
@@ -144,7 +147,7 @@
                     Go deeper to transform your resilience journey.
                 </p>
                 <div class="upgrade-cards-grid">
-                    ${renderUpgradeCard('deep-report')}
+                    ${renderUpgradeCard('atlas-navigator')}
                     ${renderUpgradeCard('atlas-premium')}
                 </div>
                 <p class="upgrade-comparison__disclaimer">
@@ -156,11 +159,11 @@
 
     /**
      * Render a small locked-overlay element to inject into premium sections.
-     * @param {'deep-report'|'atlas-premium'} tier
+     * @param {'atlas-navigator'|'atlas-premium'} tier
      * @returns {string} HTML string
      */
     function renderLockedOverlay(tier) {
-        const label = tier === 'atlas-premium' ? 'Atlas Premium' : 'Deep Report';
+        const label = tier === 'atlas-premium' ? 'Atlas Premium' : 'Atlas Navigator';
         return `
             <div class="payment-overlay" role="region" aria-label="Premium content — locked">
                 <div class="payment-overlay__inner">
