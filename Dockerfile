@@ -1,5 +1,5 @@
 # Stage 1: Build React client
-FROM node:20 as client-build
+FROM node:20 AS client-build
 WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
