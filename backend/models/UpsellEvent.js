@@ -59,7 +59,7 @@ const upsellEventSchema = new mongoose.Schema(
         /** Tier being promoted. */
         targetTier: {
             type: String,
-            enum: ['deep-report', 'atlas-premium'],
+            enum: ['atlas-navigator', 'atlas-premium'],
             required: true,
         },
 

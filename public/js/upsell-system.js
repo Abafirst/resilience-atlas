@@ -37,7 +37,7 @@
      */
     const VARIANT_COPY = {
         control: {
-            'deep-report': {
+            'atlas-navigator': {
                 headline:  'Unlock Your Full Resilience Analysis',
                 subtext:   'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment.',
                 ctaLabel:  'Get Deep Report — $14',
@@ -51,7 +51,7 @@
             },
         },
         variant_a: {
-            'deep-report': {
+            'atlas-navigator': {
                 headline:  'You\'re in the Top 20% — Unlock What\'s Holding You Back',
                 subtext:   'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
                 ctaLabel:  'Unlock My Deep Report ($14)',
@@ -65,7 +65,7 @@
             },
         },
         variant_b: {
-            'deep-report': {
+            'atlas-navigator': {
                 headline:  '🎉 Complete Your Resilience Atlas',
                 subtext:   'You\'ve completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep.',
                 ctaLabel:  'Get the Full Report — $14 One-Time',
@@ -79,7 +79,7 @@
             },
         },
         variant_c: {
-            'deep-report': {
+            'atlas-navigator': {
                 headline:  'Your Resilience Profile Is Only Half Complete',
                 subtext:   'The free report covers the basics. Upgrade to uncover the full picture: all 6 dimensions, your stress profile, and a 30-day action plan.',
                 ctaLabel:  'Complete My Profile — $14',
@@ -214,15 +214,15 @@
 
     /**
      * Build and inject the upsell modal into the DOM.
-     * @param {'deep-report'|'atlas-premium'} targetTier
+     * @param {'atlas-navigator'|'atlas-premium'} targetTier
      * @param {string} trigger  — for analytics
      * @param {string[]} [highlightProps]  — keys from VALUE_PROPS to emphasise
      */
     function showModal(targetTier, trigger, highlightProps) {
-        // Only show to free users (or deep-report upgrading to atlas-premium).
+        // Only show to free users (or atlas-navigator upgrading to atlas-premium).
         if (window.PaymentGating) {
             const tier = window.PaymentGating.getTier();
-            if (targetTier === 'deep-report' && window.PaymentGating.isDeepReport()) return;
+            if (targetTier === 'atlas-navigator' && window.PaymentGating.isDeepReport()) return;
             if (targetTier === 'atlas-premium' && window.PaymentGating.isAtlasPremium()) return;
         }
 
@@ -348,7 +348,7 @@
      * @param {object} opts
      * @param {string} opts.message
      * @param {string} opts.ctaLabel
-     * @param {'deep-report'|'atlas-premium'} opts.targetTier
+     * @param {'atlas-navigator'|'atlas-premium'} opts.targetTier
      * @param {string} [opts.trigger]
      */
     function showBanner(opts) {
@@ -391,7 +391,7 @@
     /**
      * Inject a "Upgrade to unlock" overlay into a locked element.
      * @param {Element} element  — the container element to overlay
-     * @param {'deep-report'|'atlas-premium'} targetTier
+     * @param {'atlas-navigator'|'atlas-premium'} targetTier
      * @param {string} featureLabel  — short description of the locked feature
      */
     function attachFeatureLock(element, targetTier, featureLabel) {
@@ -434,7 +434,7 @@
         // 1. Assessment complete — listen for a custom event fired by the quiz.
         document.addEventListener('assessmentComplete', function () {
             setTimeout(function () {
-                showModal('deep-report', 'assessment_complete', [
+                showModal('atlas-navigator', 'assessment_complete', [
                     'detailed_analytics',
                     'pdf_download',
                     'growth_roadmap',
@@ -447,7 +447,7 @@
         document.addEventListener('pdfDownloadAttempt', function (e) {
             const tier = window.PaymentGating ? window.PaymentGating.getTier() : 'free';
             if (tier === 'free') {
-                showModal('deep-report', 'pdf_download_attempt', [
+                showModal('atlas-navigator', 'pdf_download_attempt', [
                     'pdf_download',
                     'detailed_analytics',
                     'growth_roadmap',
@@ -491,7 +491,7 @@
                 showBanner({
                     message:    '🎉 Limited Time: Get your Deep Resilience Report for just $14 (was $17.50)',
                     ctaLabel:   'Claim Offer',
-                    targetTier: 'deep-report',
+                    targetTier: 'atlas-navigator',
                     trigger:    'timer',
                 });
             }, 5000);
@@ -510,7 +510,7 @@
                 fired = true;
                 observer.disconnect();
                 setTimeout(function () {
-                    showModal('deep-report', 'top_results_view', [
+                    showModal('atlas-navigator', 'top_results_view', [
                         'detailed_analytics',
                         'benchmarking',
                         'pdf_download',
@@ -528,7 +528,7 @@
             document.addEventListener('mouseleave', function _onMouseLeave(e) {
                 if (e.clientY < 20) {
                     document.removeEventListener('mouseleave', _onMouseLeave);
-                    showModal('deep-report', 'exit_intent', [
+                    showModal('atlas-navigator', 'exit_intent', [
                         'pdf_download',
                         'detailed_analytics',
                         'growth_roadmap',
@@ -541,7 +541,7 @@
 
     function _initTimerTrigger() {
         setTimeout(function () {
-            showModal('deep-report', 'timer', [
+            showModal('atlas-navigator', 'timer', [
                 'detailed_analytics',
                 'pdf_download',
                 'benchmarking',
@@ -554,12 +554,12 @@
 
     /**
      * Render a premium badge element.
-     * @param {'deep-report'|'atlas-premium'|'premium'} type
+     * @param {'atlas-navigator'|'atlas-premium'|'premium'} type
      * @returns {string} HTML
      */
     function renderPremiumBadge(type) {
         const labels = {
-            'deep-report':  'Deep Report',
+            'atlas-navigator':  'Deep Report',
             'atlas-premium': 'Atlas Premium',
             'premium':       'Premium',
         };
@@ -583,7 +583,7 @@
             const label = el.getAttribute('data-upsell-label') || 'Premium feature';
             if (window.PaymentGating) {
                 const unlocked =
-                    (tier === 'deep-report'   && window.PaymentGating.isDeepReport()) ||
+                    (tier === 'atlas-navigator'   && window.PaymentGating.isDeepReport()) ||
                     (tier === 'atlas-premium' && window.PaymentGating.isAtlasPremium());
                 if (!unlocked) {
                     attachFeatureLock(el, tier, label);
