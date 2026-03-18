@@ -544,9 +544,14 @@
 [data-theme="dark"] .dimension-card,
 [data-theme="dark"] .example-profile-card,
 [data-theme="dark"] .testimonial-card,
-[data-theme="dark"] .why-card {
+[data-theme="dark"] .why-card,
+[data-theme="dark"] .example-radar {
   background: #1e293b;
   border-color: #334155;
+}
+
+[data-theme="dark"] .landing-section.alt-bg {
+  background: #0f172a;
 }
 
 [data-theme="dark"] .dimension-card p,
@@ -561,13 +566,22 @@
   color: var(--slate-600, #94a3b8);
 }
 
+[data-theme="dark"] .section-label {
+  color: var(--blue, #818cf8);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .dimension-card,
   :root:not([data-theme="light"]) .example-profile-card,
   :root:not([data-theme="light"]) .testimonial-card,
-  :root:not([data-theme="light"]) .why-card {
+  :root:not([data-theme="light"]) .why-card,
+  :root:not([data-theme="light"]) .example-radar {
     background: #1e293b;
     border-color: #334155;
+  }
+
+  :root:not([data-theme="light"]) .landing-section.alt-bg {
+    background: #0f172a;
   }
 
   :root:not([data-theme="light"]) .dimension-card p,
@@ -577,5 +591,9 @@
   :root:not([data-theme="light"]) .section-header p,
   :root:not([data-theme="light"]) .final-cta p {
     color: var(--slate-600, #94a3b8);
+  }
+
+  :root:not([data-theme="light"]) .section-label {
+    color: var(--blue, #818cf8);
   }
 }
