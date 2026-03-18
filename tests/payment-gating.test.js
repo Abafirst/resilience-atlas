@@ -7,10 +7,10 @@
  * Tests for public/js/payment-gating.js
  *
  * Verifies the tier-hierarchy logic in applyGating():
- *  - free            → no sections unlocked
- *  - deep-report     → deep-report AND atlas-premium sections unlocked
- *  - atlas-premium   → deep-report AND atlas-premium sections unlocked
- *  - business        → all sections (deep-report, atlas-premium, business) unlocked
+ *  - free             → no sections unlocked
+ *  - atlas-navigator  → atlas-navigator AND atlas-premium sections unlocked
+ *  - atlas-premium    → atlas-navigator AND atlas-premium sections unlocked
+ *  - business         → all sections (atlas-navigator, atlas-premium, business) unlocked
  */
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -37,7 +37,7 @@ function loadGatingScript() {
  */
 function buildDOM() {
     document.body.innerHTML = `
-        <section id="s-deep"    class="locked" data-tier="deep-report">
+        <section id="s-deep"    class="locked" data-tier="atlas-navigator">
             <div class="payment-overlay"></div>
         </section>
         <section id="s-atlas"   class="locked" data-tier="atlas-premium">
@@ -81,8 +81,8 @@ describe('applyGating() tier hierarchy', () => {
         expect(bizSection.classList.contains('locked')).toBe(true);
     });
 
-    test('deep-report tier: deep-report AND atlas-premium sections unlocked; business still locked', () => {
-        localStorage.setItem('resilience_tier', 'deep-report');
+    test('atlas-navigator tier: atlas-navigator AND atlas-premium sections unlocked; business still locked', () => {
+        localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
         const { deepSection, atlasSection, bizSection } = buildDOM();
 
@@ -93,7 +93,7 @@ describe('applyGating() tier hierarchy', () => {
         expect(bizSection.classList.contains('locked')).toBe(true);
     });
 
-    test('atlas-premium tier: deep-report AND atlas-premium sections unlocked; business still locked', () => {
+    test('atlas-premium tier: atlas-navigator AND atlas-premium sections unlocked; business still locked', () => {
         localStorage.setItem('resilience_tier', 'atlas-premium');
         loadGatingScript();
         const { deepSection, atlasSection, bizSection } = buildDOM();
@@ -117,8 +117,8 @@ describe('applyGating() tier hierarchy', () => {
         expect(bizSection.classList.contains('locked')).toBe(false);
     });
 
-    test('deep-report tier: payment overlays hidden for unlocked sections', () => {
-        localStorage.setItem('resilience_tier', 'deep-report');
+    test('atlas-navigator tier: payment overlays hidden for unlocked sections', () => {
+        localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
         const { deepSection, atlasSection, bizSection } = buildDOM();
 
@@ -134,7 +134,7 @@ describe('applyGating() tier hierarchy', () => {
     });
 
     test('business dashboard link shown only for business tier', () => {
-        localStorage.setItem('resilience_tier', 'deep-report');
+        localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
         const { dashboardLink } = buildDOM();
 
@@ -148,10 +148,10 @@ describe('applyGating() tier hierarchy', () => {
 });
 
 describe('tier helper functions', () => {
-    test('isDeepReport() returns true for deep-report, atlas-premium, and business', () => {
+    test('isDeepReport() returns true for atlas-navigator, atlas-premium, and business', () => {
         loadGatingScript();
 
-        ['deep-report', 'atlas-premium', 'business'].forEach(tier => {
+        ['atlas-navigator', 'atlas-premium', 'business'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isDeepReport()).toBe(true);
         });
@@ -169,7 +169,7 @@ describe('tier helper functions', () => {
         localStorage.setItem('resilience_tier', 'business');
         expect(window.PaymentGating.isAtlasPremium()).toBe(true);
 
-        localStorage.setItem('resilience_tier', 'deep-report');
+        localStorage.setItem('resilience_tier', 'atlas-navigator');
         expect(window.PaymentGating.isAtlasPremium()).toBe(false);
 
         localStorage.setItem('resilience_tier', 'free');
@@ -182,7 +182,7 @@ describe('tier helper functions', () => {
         localStorage.setItem('resilience_tier', 'business');
         expect(window.PaymentGating.isBusiness()).toBe(true);
 
-        ['deep-report', 'atlas-premium', 'free'].forEach(tier => {
+        ['atlas-navigator', 'atlas-premium', 'free'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isBusiness()).toBe(false);
         });
