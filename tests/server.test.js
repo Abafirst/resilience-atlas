@@ -365,6 +365,30 @@ describe('GET /api/quiz/results', () => {
     });
 });
 
+// ── Payments tiers route ──────────────────────────────────────────────────────
+
+describe('GET /api/payments/tiers', () => {
+    test('returns 200 with tiers array containing deep-report and atlas-premium', async () => {
+        const res = await request(app).get('/api/payments/tiers');
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('tiers');
+        expect(Array.isArray(res.body.tiers)).toBe(true);
+        expect(res.body.tiers).toHaveLength(2);
+
+        const deepTier = res.body.tiers.find(t => t.id === 'deep-report');
+        expect(deepTier).toBeDefined();
+        expect(deepTier.name).toBe('Deep Resilience Report');
+        expect(deepTier.price).toBe(14);
+        expect(deepTier.currency).toBe('USD');
+
+        const premiumTier = res.body.tiers.find(t => t.id === 'atlas-premium');
+        expect(premiumTier).toBeDefined();
+        expect(premiumTier.name).toBe('Atlas Premium');
+        expect(premiumTier.price).toBe(49);
+        expect(premiumTier.currency).toBe('USD');
+    });
+});
+
 // ── Affiliate routes ──────────────────────────────────────────────────────────
 
 describe('GET /api/affiliates/dashboard', () => {
