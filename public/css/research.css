@@ -544,14 +544,14 @@ a:hover { text-decoration: underline; }
 
 [data-theme="dark"] .dimension-card,
 [data-theme="dark"] .implication-card {
-  background: #1e293b;
-  border-color: #334155;
+  background: #ffffff;
+  border-color: #e2e8f0;
 }
 
-[data-theme="dark"] .dimension-name { color: #f1f5f9; }
-[data-theme="dark"] .dimension-desc { color: #94a3b8; }
-[data-theme="dark"] .implication-title { color: #f1f5f9; }
-[data-theme="dark"] .implication-text { color: #94a3b8; }
+[data-theme="dark"] .dimension-name { color: #0f172a; }
+[data-theme="dark"] .dimension-desc { color: #475569; }
+[data-theme="dark"] .implication-title { color: #0f172a; }
+[data-theme="dark"] .implication-text { color: #475569; }
 
 [data-theme="dark"] .key-concepts {
   background: #0f172a;
@@ -602,14 +602,14 @@ a:hover { text-decoration: underline; }
 
   :root:not([data-theme="light"]) .dimension-card,
   :root:not([data-theme="light"]) .implication-card {
-    background: #1e293b;
-    border-color: #334155;
+    background: #ffffff;
+    border-color: #e2e8f0;
   }
 
-  :root:not([data-theme="light"]) .dimension-name { color: #f1f5f9; }
-  :root:not([data-theme="light"]) .dimension-desc { color: #94a3b8; }
-  :root:not([data-theme="light"]) .implication-title { color: #f1f5f9; }
-  :root:not([data-theme="light"]) .implication-text { color: #94a3b8; }
+  :root:not([data-theme="light"]) .dimension-name { color: #0f172a; }
+  :root:not([data-theme="light"]) .dimension-desc { color: #475569; }
+  :root:not([data-theme="light"]) .implication-title { color: #0f172a; }
+  :root:not([data-theme="light"]) .implication-text { color: #475569; }
 
   :root:not([data-theme="light"]) .key-concepts {
     background: #0f172a;

@@ -2455,16 +2455,17 @@ justify-content:center;
   background: transparent;
 }
 
-/* Cards */
+/* Cards — always white for clean, consistent appearance */
 [data-theme="dark"] .card {
-  background: #1e293b;
-  border-color: #334155;
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #0f172a;
 }
 
 [data-theme="dark"] .report-text-card {
-  background: #1e293b;
-  border-color: #334155;
-  color: var(--slate-600);
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #475569;
 }
 
 /* Hero */
