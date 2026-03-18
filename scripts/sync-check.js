@@ -17,7 +17,7 @@ const ROOT = path.resolve(__dirname, '..');
 /** The canonical set of tiers that must be defined in every checked file. */
 const REQUIRED_TIERS = [
     'free',
-    'deep-report',
+    'atlas-navigator',
     'atlas-premium',
     'business',
     'starter',

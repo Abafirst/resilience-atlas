@@ -7,7 +7,7 @@
  *  1. Read the user's current tier from localStorage.
  *  2. Handle post-payment redirect (?upgrade=success&session_id=...) by
  *     verifying the Stripe session with the backend and storing the tier.
- *  3. Apply or remove CSS locks on sections marked data-tier="deep-report"
+ *  3. Apply or remove CSS locks on sections marked data-tier="atlas-navigator"
  *     or data-tier="atlas-premium".
  *  4. Initiate a Stripe Checkout session when the user clicks an upgrade button.
  *

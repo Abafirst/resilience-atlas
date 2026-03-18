@@ -79,7 +79,7 @@ describe('POST /api/upsell/event', () => {
         sessionId:  'sess_abc123',
         trigger:    'assessment_complete',
         variant:    'control',
-        targetTier: 'deep-report',
+        targetTier: 'atlas-navigator',
         eventType:  'impression',
     };
 
