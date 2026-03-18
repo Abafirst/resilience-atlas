@@ -907,29 +907,17 @@ ctx.ellipse(CX, bezelTop, nubW / 2, nubH, 0, Math.PI, Math.PI * 2, false);
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    ctx.beginPath();
-    ctx.moveTo(0, -lenFwd);
-    ctx.lineTo(maxHW, 0);
-    ctx.lineTo(-maxHW, 0);
-    ctx.closePath();
-    ctx.fillStyle = pal.needleFwd;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.moveTo(0, lenBack);
-    ctx.lineTo(maxHW, 0);
-    ctx.lineTo(-maxHW, 0);
-    ctx.closePath();
-    ctx.fillStyle = pal.needleBack;
-    ctx.fill();
-
-    ctx.shadowBlur = 0;
+    // Diamond shape: top → right → bottom → left
     ctx.beginPath();
     ctx.moveTo(0, -lenFwd);
     ctx.lineTo(maxHW, 0);
     ctx.lineTo(0, lenBack);
     ctx.lineTo(-maxHW, 0);
     ctx.closePath();
+    ctx.fillStyle = pal.needleFwd;
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
     ctx.lineWidth   = 0.4;
     ctx.stroke();
