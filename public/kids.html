@@ -435,6 +435,8 @@
       .header-nav .nav-link { display: none; }
     }
   </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -453,6 +455,7 @@
         <a href="/team.html" class="nav-link">Teams</a>
         <a href="/kids.html" class="nav-link active">Kids</a>
         <a href="/about.html" class="nav-link">About</a>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
         <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
       </nav>
     </div>
@@ -1924,4 +1927,5 @@
       document.getElementById(panelId).classList.add('active');
     }
   </script>
+<script src="/js/theme-toggle.js"></script>
 </body>
