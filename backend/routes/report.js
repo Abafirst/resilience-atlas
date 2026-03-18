@@ -24,6 +24,47 @@ const reportLimiter = rateLimit({
 const JOB_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
+ * In-memory store mapping job hash → job state.
+ * Exported for testing and introspection.
+ */
+const jobStore = new Map();
+
+/**
+ * Build a deterministic 32-char MD5-style hex hash from the report inputs.
+ * Using MD5 (via Node crypto) for a compact, URL-safe key — not for security.
+ * @param {string} overall
+ * @param {string} dominantType
+ * @param {string} scores  Raw JSON string
+ * @returns {string} 32-character hex hash
+ */
+function buildJobHash(overall, dominantType, scores) {
+    return crypto
+        .createHash('md5')
+        .update(`${overall}|${dominantType}|${scores}`)
+        .digest('hex');
+}
+
+/**
+ * Merge partial updates into an existing job record.
+ * @param {string} hash
+ * @param {Object} patch
+ */
+function updateJob(hash, patch) {
+    const existing = jobStore.get(hash) || {};
+    jobStore.set(hash, { ...existing, ...patch });
+}
+
+// Periodically remove expired jobs to prevent memory leaks.
+setInterval(() => {
+    const cutoff = Date.now() - JOB_TTL_MS;
+    for (const [key, job] of jobStore.entries()) {
+        if (job.createdAt && job.createdAt.getTime() < cutoff) {
+            jobStore.delete(key);
+        }
+    }
+}, 60 * 1000).unref();
+
+/**
  * Escape HTML special characters to prevent injection in the PDF template.
  * @param {*} value
  * @returns {string}
