@@ -384,7 +384,7 @@ details[open] > .ep-card__summary::before {
 
 .ep-principle__detail {
   font-size: 0.75rem;
-  color: var(--slate-400);
+  color: var(--slate-600);
 }
 
 .ep-principle--act {
