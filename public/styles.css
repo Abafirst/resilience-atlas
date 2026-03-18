@@ -2099,7 +2099,7 @@ body {
 .primary-type-card h2 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #94a3b8;
+  color: #374151;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-bottom: 0.75rem;
@@ -2251,7 +2251,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: #374151;
   margin: 0 0 0.35rem;
 }
 
@@ -2421,6 +2421,26 @@ justify-content:center;
   :root:not([data-theme="light"]) .question-text {
     color: var(--slate-900);
   }
+
+  /* Footer: explicitly keep dark so variable remapping doesn't invert it */
+  :root:not([data-theme="light"]) .site-footer {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+  :root:not([data-theme="light"]) .site-footer a { color: #94a3b8; }
+  :root:not([data-theme="light"]) .site-footer strong { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .footer-nav-heading { color: #f1f5f9; }
+  :root:not([data-theme="light"]) .footer-bottom p { color: #94a3b8; }
+
+  /* btn-secondary: keep readable in system dark mode */
+  :root:not([data-theme="light"]) .btn-secondary {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+  }
+  :root:not([data-theme="light"]) .btn-secondary:hover {
+    background: #334155;
+  }
 }
 
 /* Header */
@@ -2446,7 +2466,15 @@ justify-content:center;
   color: var(--blue);
 }
 
-/* Footer stays dark (already dark) */
+/* Footer: explicitly keep dark in dark mode (variable remapping would invert its colors) */
+[data-theme="dark"] .site-footer {
+  background: #0f172a;
+  color: #94a3b8;
+}
+[data-theme="dark"] .site-footer a { color: #94a3b8; }
+[data-theme="dark"] .site-footer strong { color: #f1f5f9; }
+[data-theme="dark"] .footer-nav-heading { color: #f1f5f9; }
+[data-theme="dark"] .footer-bottom p { color: #94a3b8; }
 
 /* General section backgrounds */
 [data-theme="dark"] .how-it-works,
