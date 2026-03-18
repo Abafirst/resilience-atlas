@@ -1,0 +1,323 @@
+'use strict';
+
+/**
+ * Tests for the report progress/polling endpoints:
+ *   GET /api/report/generate — starts async PDF generation, returns a hash
+ *   GET /api/report/status  — returns job progress by hash
+ *   GET /api/report/download?hash=... — serves the ready PDF by hash
+ */
+
+jest.mock('winston', () => {
+    const loggerInstance = {
+        info: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
+        debug: jest.fn(),
+        add: jest.fn(),
+    };
+    return {
+        createLogger: jest.fn(() => loggerInstance),
+        format: {
+            combine: jest.fn((...args) => args),
+            timestamp: jest.fn(() => ({})),
+            errors: jest.fn(() => ({})),
+            splat: jest.fn(() => ({})),
+            json: jest.fn(() => ({})),
+            colorize: jest.fn(() => ({})),
+            printf: jest.fn((fn) => fn),
+        },
+        transports: {
+            Console: function ConsoleTransport() {},
+            File: function FileTransport() {},
+        },
+    };
+});
+
+jest.mock('mongoose', () => {
+    class Schema {
+        constructor() {}
+        pre() { return this; }
+        index() { return this; }
+        methods = {};
+    }
+    Schema.Types = { ObjectId: String, Mixed: {} };
+    return {
+        connect: jest.fn().mockResolvedValue({}),
+        Schema,
+        model: jest.fn(),
+    };
+});
+
+jest.mock('../backend/models/Purchase', () => ({
+    create: jest.fn().mockResolvedValue({ _id: 'purchase001' }),
+    findOne: jest.fn().mockResolvedValue(null),
+    findOneAndUpdate: jest.fn().mockResolvedValue({}),
+}));
+
+// Mock puppeteer so tests don't try to launch a browser.
+jest.mock('puppeteer', () => ({
+    launch: jest.fn().mockResolvedValue({
+        newPage: jest.fn().mockResolvedValue({
+            setContent: jest.fn().mockResolvedValue(undefined),
+            pdf: jest.fn().mockResolvedValue(Buffer.from('%PDF-1.4 mock')),
+        }),
+        close: jest.fn().mockResolvedValue(undefined),
+    }),
+}));
+
+// Mock all other models referenced by server.js routes.
+jest.mock('../backend/models/User', () => {
+    const MockUser = jest.fn().mockImplementation(() => ({}));
+    MockUser.findOne = jest.fn().mockResolvedValue(null);
+    MockUser.findById = jest.fn().mockResolvedValue(null);
+    MockUser.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+    MockUser.countDocuments = jest.fn().mockResolvedValue(0);
+    MockUser.find = jest.fn().mockResolvedValue([]);
+    return MockUser;
+});
+jest.mock('../backend/models/ResilienceResult', () => ({ create: jest.fn().mockResolvedValue({}) }));
+jest.mock('../backend/models/PracticeCompletion', () => ({
+    create: jest.fn().mockResolvedValue({ _id: 'comp001' }),
+    find: jest.fn().mockReturnValue({ sort: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue([]) }) }),
+    countDocuments: jest.fn().mockResolvedValue(0),
+}));
+jest.mock('stripe', () => function Stripe() {
+    return {
+        paymentIntents: { create: jest.fn(), retrieve: jest.fn() },
+        customers: { create: jest.fn() },
+        checkout: { sessions: { create: jest.fn(), retrieve: jest.fn() } },
+        webhooks: { constructEvent: jest.fn() },
+    };
+});
+jest.mock('nodemailer', () => ({
+    createTransport: jest.fn(() => ({ sendMail: jest.fn().mockResolvedValue({ messageId: 'mock-id' }) })),
+}));
+
+const request = require('supertest');
+
+// Remove STRIPE_SECRET_KEY so tier-gating is bypassed in tests.
+delete process.env.STRIPE_SECRET_KEY;
+process.env.JWT_SECRET = 'test-secret';
+process.env.MONGODB_URI = 'mongodb://localhost/test';
+
+const app = require('../backend/server');
+const { jobStore, buildJobHash } = require('../backend/routes/report');
+
+const SAMPLE_SCORES = JSON.stringify({
+    'Agentic-Generative': { raw: 24, max: 30, percentage: 80 },
+    'Relational':          { raw: 18, max: 30, percentage: 60 },
+});
+
+// ── /api/report/generate ─────────────────────────────────────────────────────
+
+describe('GET /api/report/generate', () => {
+    afterEach(() => jobStore.clear());
+
+    test('returns 400 when overall is missing', async () => {
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ scores: SAMPLE_SCORES });
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('returns 400 when scores is missing', async () => {
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75' });
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('returns 200 with a hash when params are valid', async () => {
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', dominantType: 'Relational', scores: SAMPLE_SCORES });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('hash');
+        expect(typeof res.body.hash).toBe('string');
+        expect(res.body.hash.length).toBeGreaterThan(0);
+    });
+
+    test('returns same hash for identical params (idempotent)', async () => {
+        const params = { overall: '75', dominantType: 'Relational', scores: SAMPLE_SCORES };
+        const res1 = await request(app).get('/api/report/generate').query(params);
+        const res2 = await request(app).get('/api/report/generate').query(params);
+        expect(res1.status).toBe(200);
+        expect(res2.status).toBe(200);
+        expect(res1.body.hash).toBe(res2.body.hash);
+    });
+
+    test('creates a job in the store with pending or processing status', async () => {
+        const params = { overall: '80', dominantType: 'Agentic-Generative', scores: SAMPLE_SCORES };
+        const res = await request(app).get('/api/report/generate').query(params);
+        expect(res.status).toBe(200);
+        const hash = res.body.hash;
+        const job = jobStore.get(hash);
+        expect(job).toBeDefined();
+        expect(['pending', 'processing']).toContain(job.status);
+    });
+
+    test('returns 402 when STRIPE_SECRET_KEY is set and no email is provided', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', scores: SAMPLE_SCORES });
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+});
+
+// ── /api/report/status ───────────────────────────────────────────────────────
+
+describe('GET /api/report/status', () => {
+    afterEach(() => jobStore.clear());
+
+    test('returns 400 when hash is missing', async () => {
+        const res = await request(app).get('/api/report/status');
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    test('returns 404 for an unknown hash', async () => {
+        const res = await request(app).get('/api/report/status').query({ hash: 'nonexistent' });
+        expect(res.status).toBe(404);
+    });
+
+    test('returns job data for a known hash', async () => {
+        const hash = 'testhash123';
+        jobStore.set(hash, {
+            status: 'processing',
+            progress: 50,
+            message: 'Building layout…',
+            estimatedSeconds: 5,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: null,
+            error: null,
+            pdfBuffer: null,
+        });
+
+        const res = await request(app).get('/api/report/status').query({ hash });
+        expect(res.status).toBe(200);
+        expect(res.body.status).toBe('processing');
+        expect(res.body.progress).toBe(50);
+        expect(res.body.message).toBe('Building layout…');
+        expect(res.body).not.toHaveProperty('pdfBuffer'); // buffer must NOT be exposed
+    });
+
+    test('returns ready status and 100% progress for a completed job', async () => {
+        const hash = 'readyhash456';
+        jobStore.set(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: null,
+            pdfBuffer: Buffer.from('%PDF-1.4 mock'),
+        });
+
+        const res = await request(app).get('/api/report/status').query({ hash });
+        expect(res.status).toBe(200);
+        expect(res.body.status).toBe('ready');
+        expect(res.body.progress).toBe(100);
+    });
+
+    test('returns failed status when job failed', async () => {
+        const hash = 'failedhash789';
+        jobStore.set(hash, {
+            status: 'failed',
+            progress: 0,
+            message: 'Report generation failed.',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: 'Puppeteer crash',
+            pdfBuffer: null,
+        });
+
+        const res = await request(app).get('/api/report/status').query({ hash });
+        expect(res.status).toBe(200);
+        expect(res.body.status).toBe('failed');
+        expect(res.body.error).toBe('Puppeteer crash');
+    });
+});
+
+// ── /api/report/download (hash mode) ─────────────────────────────────────────
+
+describe('GET /api/report/download (hash mode)', () => {
+    afterEach(() => jobStore.clear());
+
+    test('returns 404 for unknown hash', async () => {
+        const res = await request(app).get('/api/report/download').query({ hash: 'unknown' });
+        expect(res.status).toBe(404);
+    });
+
+    test('returns 409 when job is still processing', async () => {
+        const hash = 'processinghash';
+        jobStore.set(hash, {
+            status: 'processing',
+            progress: 50,
+            message: 'Generating…',
+            estimatedSeconds: 5,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: null,
+            error: null,
+            pdfBuffer: null,
+        });
+
+        const res = await request(app).get('/api/report/download').query({ hash });
+        expect(res.status).toBe(409);
+    });
+
+    test('returns PDF when job is ready', async () => {
+        const hash = 'readydownloadhash';
+        const mockPdf = Buffer.from('%PDF-1.4 mock content');
+        jobStore.set(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: null,
+            pdfBuffer: mockPdf,
+        });
+
+        const res = await request(app).get('/api/report/download').query({ hash });
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/application\/pdf/);
+    });
+});
+
+// ── buildJobHash helper ───────────────────────────────────────────────────────
+
+describe('buildJobHash', () => {
+    test('returns a string', () => {
+        expect(typeof buildJobHash('75', 'Relational', SAMPLE_SCORES)).toBe('string');
+    });
+
+    test('is deterministic for identical inputs', () => {
+        const h1 = buildJobHash('75', 'Relational', SAMPLE_SCORES);
+        const h2 = buildJobHash('75', 'Relational', SAMPLE_SCORES);
+        expect(h1).toBe(h2);
+    });
+
+    test('differs for different inputs', () => {
+        const h1 = buildJobHash('75', 'Relational', SAMPLE_SCORES);
+        const h2 = buildJobHash('80', 'Agentic-Generative', SAMPLE_SCORES);
+        expect(h1).not.toBe(h2);
+    });
+
+    test('returns a 32-character hex string', () => {
+        const h = buildJobHash('75', 'Relational', SAMPLE_SCORES);
+        expect(h).toMatch(/^[0-9a-f]{32}$/);
+    });
+});

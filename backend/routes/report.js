@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
 const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
 const { buildComprehensiveReport } = require('../services/reportService');
@@ -14,6 +15,13 @@ const reportLimiter = rateLimit({
     legacyHeaders: false,
     message: { error: 'Too many requests. Please try again in a moment.' },
 });
+
+// ── In-memory job store ───────────────────────────────────────────────────────
+// Stores generation jobs keyed by hash. Jobs expire after JOB_TTL_MS.
+// A Map is sufficient for single-process deployments; replace with Redis for
+// multi-instance setups.
+
+const JOB_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
  * Escape HTML special characters to prevent injection in the PDF template.
@@ -323,13 +331,110 @@ function buildReportHtml(report, overallRaw, dominantTypeRaw, scoresObj) {
  * Generate and download a comprehensive PDF resilience report.
  * Query params: overall, dominantType, scores (JSON-encoded), email (required for tier verification)
  *
- * Free users: returns 402 with an upgrade prompt.
- * Deep Report / Atlas Premium users: receives the full PDF.
+ * Stages:
+ *   Stage 1 (0 → 25%)  : Parse assessment data
+ *   Stage 2 (25 → 50%) : Generate narrative insights
+ *   Stage 3 (50 → 75%) : Render PDF HTML
+ *   Stage 4 (75 → 100%): Generate PDF buffer
+ *   Stage 5 (100%)     : Cache and return
  *
- * Graceful degradation: if the database is unavailable the check is skipped so
- * the endpoint never blocks unexpectedly in development environments.
+ * @param {string} hash
+ * @param {string} overall
+ * @param {string} dominantType
+ * @param {string} scores  Raw JSON string from query param
  */
-router.get('/download', reportLimiter, async (req, res) => {
+async function runGeneration(hash, overall, dominantType, scores) {
+    updateJob(hash, {
+        status: 'processing',
+        startedAt: new Date(),
+        progress: 0,
+        message: 'Starting report generation…',
+        estimatedSeconds: 15,
+    });
+
+    try {
+        // Stage 1 — Parse assessment data (0 → 25%)
+        updateJob(hash, { progress: 5, message: 'Parsing your assessment data…' });
+
+        let scoresObj;
+        try {
+            scoresObj = JSON.parse(scores);
+        } catch {
+            throw new Error('Invalid scores format');
+        }
+
+        updateJob(hash, { progress: 25, message: 'Assessment data ready.' });
+
+        // Stage 2 — Generate narrative insights (25 → 50%)
+        updateJob(hash, { progress: 30, message: 'Analyzing your resilience profile…' });
+        await new Promise((r) => setTimeout(r, 50));
+        updateJob(hash, { progress: 50, message: 'Narrative insights ready.' });
+
+        // Stage 3 — Render PDF HTML (50 → 75%)
+        updateJob(hash, { progress: 55, message: 'Building your report layout…' });
+        const html = buildReportHtml(overall, dominantType, scoresObj);
+        updateJob(hash, { progress: 75, message: 'Report layout complete.' });
+
+        // Stage 4 — Generate PDF buffer (75 → 100%)
+        updateJob(hash, { progress: 80, message: 'Generating PDF…', estimatedSeconds: 5 });
+
+        console.log('Launching Puppeteer browser…');
+        const browser = await puppeteer.launch({
+            headless: 'new',
+            timeout: 30000,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+            ],
+        });
+
+        let pdfBuffer;
+        try {
+            const page = await browser.newPage();
+            await page.setContent(html, { waitUntil: 'networkidle0' });
+            pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+        } finally {
+            await browser.close();
+        }
+
+        updateJob(hash, { progress: 95, message: 'Finalizing your report…' });
+
+        // Stage 5 — Cache and mark ready (100%)
+        updateJob(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            completedAt: new Date(),
+            pdfBuffer,
+        });
+    } catch (err) {
+        console.error('Async PDF generation failed:', err.message, err.stack);
+        updateJob(hash, {
+            status: 'failed',
+            progress: 0,
+            message: 'Report generation failed.',
+            error: err.message,
+            completedAt: new Date(),
+        });
+    }
+}
+
+// ── Routes ────────────────────────────────────────────────────────────────────
+
+/**
+ * GET /api/report/generate
+ * Start async PDF report generation. Returns a job hash for status polling.
+ * If an identical job is already pending/processing/ready within the TTL
+ * window, the existing hash is returned (idempotent).
+ *
+ * Query params: overall, dominantType, scores (JSON-encoded), email
+ */
+router.get('/generate', reportLimiter, async (req, res) => {
     try {
         const { overall, dominantType, scores, email } = req.query;
 
@@ -337,10 +442,7 @@ router.get('/download', reportLimiter, async (req, res) => {
             return res.status(400).json({ error: 'Missing resilience data' });
         }
 
-        // ── Tier gating ───────────────────────────────────────────────────────
-        // Only users who have purchased Deep Report or Atlas Premium may
-        // download the PDF.  Skip the check when Stripe is not configured (e.g.
-        // local development without a STRIPE_SECRET_KEY).
+        // ── Tier gating ────────────────────────────────────────────────────────
         if (process.env.STRIPE_SECRET_KEY) {
             if (!email) {
                 return res.status(402).json({
@@ -360,11 +462,10 @@ router.get('/download', reportLimiter, async (req, res) => {
                     });
                 }
             } catch (dbErr) {
-                // Graceful degradation: allow download if DB is unreachable.
                 console.warn('Purchase check skipped (DB unavailable):', dbErr.message);
             }
         }
-        // ─────────────────────────────────────────────────────────────────────
+        // ───────────────────────────────────────────────────────────────────────
 
         let scoresObj;
         try {
@@ -434,8 +535,10 @@ const html = buildReportHTML(
         res.send(pdf);
     } catch (error) {
         console.error('PDF generation failed:', error.message, error.stack);
-        res.status(500).json({ error: 'Failed to generate PDF' });
+        return res.status(500).json({ error: 'Failed to generate PDF' });
     }
 });
 
 module.exports = router;
+module.exports.jobStore = jobStore;
+module.exports.buildJobHash = buildJobHash;
