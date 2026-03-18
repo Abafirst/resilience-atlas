@@ -14,7 +14,7 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 RUN npm ci
 COPY . .
-COPY --from=client-build /app/client/dist ./client/dist
+COPY --from=builder /app/client/dist ./client/dist
 
 EXPOSE 3000
 CMD ["node", "backend/server.js"]
