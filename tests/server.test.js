@@ -155,7 +155,7 @@ jest.mock('stripe', () => function Stripe() {
           id: 'cs_test',
           payment_status: 'paid',
           customer_email: 'test@example.com',
-          metadata: { tier: 'deep-report', email: 'test@example.com' },
+          metadata: { tier: 'atlas-navigator', email: 'test@example.com' },
         }),
       },
     },
