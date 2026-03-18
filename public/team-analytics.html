@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Analytics Dashboard — The Resilience Atlas™</title>
+  <meta name="description" content="Real-time team analytics with live member indicators, dimension trends, risk flagging, and auto-generated narrative reports." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+  <style>
+    /* ── Layout ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a202c; }
+    .ta-header { background: #1a365d; color: #fff; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .ta-header__logo { font-size: 1.1rem; font-weight: 700; color: #fff; text-decoration: none; }
+    .ta-header__org  { font-size: 0.875rem; opacity: 0.8; }
+    .ta-header__nav  { display: flex; gap: 0.75rem; align-items: center; }
+    .ta-header__nav a, .ta-header__nav button { color: #fff; font-size: 0.8rem; text-decoration: none; background: transparent; border: 1px solid rgba(255,255,255,.35); border-radius: 6px; padding: 4px 12px; cursor: pointer; }
+    .ta-header__nav button:hover { background: rgba(255,255,255,.15); }
+    .btn--danger { border-color: #fc8181 !important; color: #fc8181 !important; }
+    .ta-main { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem; }
+    .section-title { font-size: 1rem; font-weight: 700; color: #2d3748; margin: 0 0 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* ── Loading / Error ─────────────────────────────────────────────── */
+    .ta-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 1rem; color: #718096; }
+    .ta-spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: #3182ce; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ta-error { padding: 2rem; text-align: center; color: #dc2626; }
+
+    /* ── KPI Row ─────────────────────────────────────────────────────── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .kpi-card { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+    .kpi-card__val  { font-size: 2rem; font-weight: 700; color: #3182ce; line-height: 1; }
+    .kpi-card__label{ font-size: 0.75rem; color: #718096; margin-top: 4px; }
+    .kpi-card__trend{ font-size: 0.75rem; margin-top: 6px; }
+    .trend-up   { color: #38a169; }
+    .trend-down { color: #e53e3e; }
+    .trend-stable{ color: #718096; }
+
+    /* ── Panel wrapper ───────────────────────────────────────────────── */
+    .panel { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 1.5rem; }
+
+    /* ── Member status grid ──────────────────────────────────────────── */
+    .member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .member-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    .member-card__avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; background: #ebf4ff; color: #2b6cb0; }
+    .member-card__name  { font-weight: 600; font-size: 0.9rem; }
+    .member-card__role  { font-size: 0.75rem; color: #718096; }
+    .member-card__score { font-size: 1.4rem; font-weight: 700; }
+    .score-strong    { color: #2f855a; }
+    .score-solid     { color: #2b6cb0; }
+    .score-developing{ color: #c05621; }
+    .score-emerging  { color: #c53030; }
+    .score-na        { color: #a0aec0; }
+    .status-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
+    .status-assessed  { background: #c6f6d5; color: #276749; }
+    .status-pending   { background: #fefcbf; color: #975a16; }
+    .status-overdue   { background: #fed7d7; color: #9b2c2c; }
+    .member-card__flags { font-size: 0.7rem; color: #e53e3e; line-height: 1.5; }
+
+    /* ── Heatmap ─────────────────────────────────────────────────────── */
+    .heatmap-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .heatmap-table th { background: #ebf4ff; padding: 6px 8px; text-align: center; font-weight: 600; color: #2b6cb0; white-space: nowrap; }
+    .heatmap-table td { padding: 6px 8px; text-align: center; border: 1px solid #e2e8f0; }
+    .heatmap-table .name-col { text-align: left; font-weight: 500; white-space: nowrap; }
+    .hm-strong    { background: #c6f6d5; color: #276749; }
+    .hm-solid     { background: #bee3f8; color: #2b6cb0; }
+    .hm-developing{ background: #fefcbf; color: #975a16; }
+    .hm-emerging  { background: #fed7d7; color: #9b2c2c; }
+    .hm-na        { background: #f7fafc; color: #a0aec0; }
+    .heatmap-avg-row td { font-weight: 700; background: #f0f4f8; }
+
+    /* ── Risk panel ──────────────────────────────────────────────────── */
+    .risk-list { list-style: none; padding: 0; margin: 0; }
+    .risk-item { border-left: 4px solid #e53e3e; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: #fff5f5; border-radius: 0 8px 8px 0; }
+    .risk-item__name  { font-weight: 600; }
+    .risk-item__flags { font-size: 0.8rem; color: #c53030; margin-top: 2px; }
+
+    /* ── Strength panel ──────────────────────────────────────────────── */
+    .strength-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .strength-list { list-style: none; padding: 0; margin: 0; }
+    .strength-list li { padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; font-size: 0.875rem; }
+    .strength-list li:last-child { border-bottom: none; }
+
+    /* ── Trend charts ────────────────────────────────────────────────── */
+    .trends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .trend-chart-wrap { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .trend-chart-wrap h4 { margin: 0 0 0.5rem; font-size: 0.85rem; color: #4a5568; }
+    .trend-canvas { height: 140px !important; }
+
+    /* ── Report section ──────────────────────────────────────────────── */
+    .report-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 8px 16px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; }
+    .btn--primary { background: #3182ce; color: #fff; }
+    .btn--primary:hover { background: #2b6cb0; }
+    .btn--outline { background: transparent; color: #3182ce; border: 1px solid #3182ce; }
+    .btn--outline:hover { background: #ebf4ff; }
+
+    /* ── Mentoring pairs ─────────────────────────────────────────────── */
+    .pairs-list { list-style: none; padding: 0; margin: 0; }
+    .pairs-list li { padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; font-size: 0.875rem; }
+    .pairs-list li:last-child { border-bottom: none; }
+
+    /* ── Section tabs ────────────────────────────────────────────────── */
+    .tab-bar { display: flex; gap: 0; border-bottom: 2px solid #e2e8f0; margin-bottom: 1.5rem; overflow-x: auto; }
+    .tab-btn { padding: 8px 16px; font-size: 0.875rem; font-weight: 600; border: none; background: transparent; cursor: pointer; color: #718096; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; }
+    .tab-btn.active { color: #3182ce; border-bottom-color: #3182ce; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    @media (max-width: 600px) {
+      .strength-grid { grid-template-columns: 1fr; }
+      .trends-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <header class="ta-header" role="banner">
+    <a href="/" class="ta-header__logo">The Resilience Atlas™</a>
+    <span class="ta-header__org" id="header-org-name">Team Analytics</span>
+    <nav class="ta-header__nav" aria-label="Dashboard navigation">
+      <a href="/dashboard.html">Overview</a>
+      <a href="/results.html">My Results</a>
+      <button type="button" id="btn-generate">🔄 Refresh Analytics</button>
+      <button type="button" id="btn-report">📄 Download Report</button>
+      <button type="button" id="btn-logout" class="btn--danger">Sign Out</button>
+    </nav>
+  </header>
+
+  <!-- ── Main ────────────────────────────────────────────────────────── -->
+  <main class="ta-main" id="main-content">
+
+    <!-- Loading -->
+    <div id="ta-loading" class="ta-loading">
+      <div class="ta-spinner"></div>
+      <span>Loading team analytics…</span>
+    </div>
+
+    <!-- Error -->
+    <div id="ta-error" class="ta-error" hidden>
+      <p id="ta-error-msg">Unable to load team analytics.</p>
+      <button class="btn btn--outline" type="button" onclick="TeamAnalytics.load()">Retry</button>
+    </div>
+
+    <!-- ── Dashboard content (revealed after load) ─────────────────── -->
+    <div id="ta-content" hidden>
+
+      <!-- ── Team Overview KPIs ──────────────────────────────────────── -->
+      <section aria-label="Team overview">
+        <div class="kpi-grid" id="kpi-grid"></div>
+      </section>
+
+      <!-- ── Tab navigation ─────────────────────────────────────────── -->
+      <div class="tab-bar" role="tablist" aria-label="Analytics sections">
+        <button class="tab-btn active" role="tab" data-tab="members">👥 Members</button>
+        <button class="tab-btn" role="tab" data-tab="heatmap">🔥 Heatmap</button>
+        <button class="tab-btn" role="tab" data-tab="trends">📈 Trends</button>
+        <button class="tab-btn" role="tab" data-tab="risk">⚠️ Risk</button>
+        <button class="tab-btn" role="tab" data-tab="strengths">💪 Strengths</button>
+        <button class="tab-btn" role="tab" data-tab="recommendations">💡 Recommendations</button>
+      </div>
+
+      <!-- ── Tab: Members ────────────────────────────────────────────── -->
+      <div class="tab-panel active" id="tab-members" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">👥 Live Member Status</h2>
+          <div class="member-grid" id="member-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── Tab: Heatmap ────────────────────────────────────────────── -->
+      <div class="tab-panel" id="tab-heatmap" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">🔥 Team Dimension Heatmap</h2>
+          <p style="font-size:0.8rem;color:#718096;margin-bottom:0.75rem;">Color scale: <span class="status-badge status-assessed">Strong ≥80</span> <span class="status-badge" style="background:#bee3f8;color:#2b6cb0">Solid ≥65</span> <span class="status-badge status-pending">Developing ≥45</span> <span class="status-badge status-overdue">Emerging &lt;45</span></p>
+          <div style="overflow-x:auto;"><table class="heatmap-table" id="heatmap-table"></table></div>
+        </div>
+      </div>
+
+      <!-- ── Tab: Trends ─────────────────────────────────────────────── -->
+      <div class="tab-panel" id="tab-trends" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">📈 Dimension Trends</h2>
+          <div class="trends-grid" id="trends-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── Tab: Risk ───────────────────────────────────────────────── -->
+      <div class="tab-panel" id="tab-risk" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">⚠️ Risk Flagging</h2>
+          <div id="risk-summary"></div>
+          <ul class="risk-list" id="risk-list"></ul>
+        </div>
+      </div>
+
+      <!-- ── Tab: Strengths ──────────────────────────────────────────── -->
+      <div class="tab-panel" id="tab-strengths" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">💪 Strength Identification</h2>
+          <div class="strength-grid" id="strength-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── Tab: Recommendations ────────────────────────────────────── -->
+      <div class="tab-panel" id="tab-recommendations" role="tabpanel">
+        <div class="panel">
+          <h2 class="section-title">💡 Recommendations &amp; Workshops</h2>
+          <div id="recommendations-content"></div>
+          <h3 style="font-size:0.9rem;color:#4a5568;margin-top:1.25rem;">🤝 Peer Mentoring Pairs</h3>
+          <ul class="pairs-list" id="pairs-list"></ul>
+        </div>
+      </div>
+
+    </div><!-- /ta-content -->
+  </main>
+
+  <script src="/js/team-charts.js" defer></script>
+  <script>
+  // ── Bootstrap: wait for team-charts.js to load then kick off ─────
+  document.addEventListener('DOMContentLoaded', () => {
+    const orgId = new URLSearchParams(window.location.search).get('orgId') ||
+                  localStorage.getItem('currentOrgId');
+    if (orgId) {
+      TeamAnalytics.init(orgId);
+    } else {
+      document.getElementById('ta-loading').hidden = true;
+      document.getElementById('ta-error').hidden   = false;
+      document.getElementById('ta-error-msg').textContent =
+        'No organization ID found. Please access this dashboard through your organization link.';
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      localStorage.removeItem('authToken');
+      window.location.href = '/';
+    });
+  });
+  </script>
+</body>
+</html>
