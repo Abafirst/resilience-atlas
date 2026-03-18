@@ -2422,6 +2422,16 @@ justify-content:center;
     color: #0f172a;
   }
 
+  :root:not([data-theme="light"]) .likert-btn {
+    color: #0f172a;
+  }
+
+  :root:not([data-theme="light"]) .likert-btn:hover,
+  :root:not([data-theme="light"]) .likert-btn.selected,
+  :root:not([data-theme="light"]) .likert-btn[aria-pressed="true"] {
+    color: #0f172a;
+  }
+
   /* Footer: explicitly keep dark so variable remapping doesn't invert it */
   :root:not([data-theme="light"]) .site-footer {
     background: #0f172a;
@@ -2526,7 +2536,7 @@ justify-content:center;
 [data-theme="dark"] .likert-btn {
   background: #1e293b;
   border-color: #334155;
-  color: var(--slate-800);
+  color: #0f172a;
 }
 
 [data-theme="dark"] .likert-btn:hover,
@@ -2534,7 +2544,7 @@ justify-content:center;
 [data-theme="dark"] .likert-btn[aria-pressed="true"] {
   background: rgba(129,140,248,.12);
   border-color: var(--blue);
-  color: var(--slate-900);
+  color: #0f172a;
 }
 
 /* Form inputs */
