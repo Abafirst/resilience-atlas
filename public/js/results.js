@@ -346,12 +346,32 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         const downloadEmail = localStorage.getItem('resilience_email') || results.email || '';
-        const scoresStr = encodeURIComponent(JSON.stringify(results.scores));
-        const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
-        window.location.href =
-          `/api/report/download?overall=${results.overall}` +
-          `&dominantType=${encodeURIComponent(results.dominantType)}` +
-          `&scores=${scoresStr}${emailParam}`;
+        const scoresStr = JSON.stringify(results.scores);
+
+        if (window.PdfProgress) {
+          // Async flow: show progress modal and poll for completion.
+          window.PdfProgress.start({
+            overall: results.overall,
+            dominantType: results.dominantType,
+            scores: scoresStr,
+            email: downloadEmail,
+          }).catch((err) => {
+            if (err && err.upgradeRequired) {
+              showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+              const upgradeEl = document.getElementById('upgradeCardsContainer');
+              upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (err && err.message !== 'cancelled') {
+              showAlert('pdfAlert', err.message || 'Download failed!', 'error', 'error');
+            }
+          });
+        } else {
+          // Fallback: legacy synchronous redirect.
+          const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
+          window.location.href =
+            `/api/report/download?overall=${results.overall}` +
+            `&dominantType=${encodeURIComponent(results.dominantType)}` +
+            `&scores=${encodeURIComponent(scoresStr)}${emailParam}`;
+        }
       } catch (e) {
         showAlert('pdfAlert', e.message || 'Download failed!', 'error', 'error');
       }

@@ -5,6 +5,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
+const crypto = require("crypto");
 
 const helmet = require("helmet");
 const cors = require("cors");
@@ -16,10 +17,30 @@ const compression = require("compression");
 dotenv.config();
 
 // ==============================
+// Internal utilities
+// ==============================
+const logger = require("./utils/logger");
+const { globalErrorHandler } = require("./middleware/errorHandler");
+const { sanitiseInput } = require("./middleware/validation");
+const sentry = require("./config/sentry");
+
+// ==============================
 // Express app
 // ==============================
 const app = express();
 app.use(express.static(path.join(__dirname, "../public")));
+
+// ==============================
+// Request ID — attach a unique ID to every request for tracing.
+// ==============================
+app.use((req, _res, next) => {
+  req.id = `req_${crypto.randomBytes(6).toString("hex")}`;
+  next();
+});
+
+// Sentry request handler must come before all routes.
+app.use(sentry.requestHandler());
+
 // ==============================
 // Middleware
 // ==============================
@@ -48,6 +69,9 @@ app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
+// Input sanitisation — strip XSS characters from all string fields.
+app.use(sanitiseInput);
+
 // ==============================
 // MongoDB Connection
 // ==============================
@@ -59,14 +83,14 @@ if (process.env.MONGODB_URI) {
     .connect(process.env.MONGODB_URI)
     .then(() => {
       dbStatus = "connected";
-      console.log("✅ MongoDB connected");
+      logger.info("✅ MongoDB connected");
     })
     .catch((err) => {
       dbStatus = "error";
-      console.error("❌ MongoDB connection failed:", err.message);
+      logger.error("❌ MongoDB connection failed", { message: err.message });
     });
 } else {
-  console.warn("⚠️ MONGODB_URI not set — database features disabled");
+  logger.warn("⚠️ MONGODB_URI not set — database features disabled");
 }
 
 // ==============================
@@ -190,16 +214,10 @@ app.get("*", (req, res) => {
 // Global Error Handler
 // ==============================
 
-app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err);
+// Sentry error handler must come AFTER all routes but BEFORE the custom handler.
+app.use(sentry.errorHandler());
 
-  const isDev = (process.env.NODE_ENV || "development") === "development";
-
-  res.status(err.status || 500).json({
-    error: isDev ? err.message : "Internal server error",
-    ...(isDev && err.stack ? { stack: err.stack } : {}),
-  });
-});
+app.use(globalErrorHandler);
 
 // ==============================
 // Start Server
@@ -210,7 +228,7 @@ const PORT = process.env.PORT || 3000;
 /* istanbul ignore next */
 if (!process.env.JEST_WORKER_ID) {
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    logger.info(`🚀 Server running on port ${PORT}`);
   });
 }
 
