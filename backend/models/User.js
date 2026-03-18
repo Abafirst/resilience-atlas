@@ -22,9 +22,37 @@ const userSchema = new mongoose.Schema({
     required: true
   },
 
+  // Code the user entered at signup (the referrer's affiliateCode)
+  referredBy: {
+    type: String,
+    default: null,
+    index: true
+  },
+
+  // Legacy field kept for backwards-compat (same as referredBy)
   referralCode: {
     type: String,
     default: null
+  },
+
+  // This user's own unique shareable code
+  affiliateCode: {
+    type: String,
+    default: null,
+    unique: true,
+    sparse: true
+  },
+
+  // Referral reward credits balance
+  referralCredits: {
+    type: Number,
+    default: 0
+  },
+
+  // Lifetime total referral rewards earned
+  referralRewardsEarned: {
+    type: Number,
+    default: 0
   },
 
   purchasedDeepReport: {

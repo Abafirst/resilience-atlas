@@ -19,6 +19,8 @@ const { buildReminderEmail }           = require('../templates/emails/reminder')
 const { buildStreakMilestoneEmail }    = require('../templates/emails/streakMilestone');
 const { buildTeamInvitationEmail }     = require('../templates/emails/teamInvitation');
 const { buildGrowthMilestoneEmail }    = require('../templates/emails/growthMilestone');
+const { referralWelcome }              = require('../templates/emails/referralWelcome');
+const { referralThankYou }             = require('../templates/emails/referralThankYou');
 
 /* ── Transport ─────────────────────────────────────────────────────────────── */
 
@@ -238,6 +240,28 @@ async function sendGrowthMilestone(to, vars) {
   return _send(to, emailObj);
 }
 
+/**
+ * Send a welcome email to a newly referred user.
+ *
+ * @param {string} to
+ * @param {Object} vars  { name, referrerName, discountPct, ctaUrl }
+ */
+async function sendReferralWelcome(to, vars) {
+  const emailObj = referralWelcome(vars);
+  return _send(to, emailObj);
+}
+
+/**
+ * Send a thank-you email to the referrer when their friend joins.
+ *
+ * @param {string} to
+ * @param {Object} vars  { name, friendName, creditAmount, totalCredits, dashboardUrl, badge }
+ */
+async function sendReferralThankYou(to, vars) {
+  const emailObj = referralThankYou(vars);
+  return _send(to, emailObj);
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -251,6 +275,10 @@ module.exports = {
   sendTeamInvitation,
   sendGrowthMilestone,
   sendInvitationReminder,
+
+  /* Referral program */
+  sendReferralWelcome,
+  sendReferralThankYou,
 
   /* Legacy aliases (keep existing call-sites working) */
   sendQuizReport,
