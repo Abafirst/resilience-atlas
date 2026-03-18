@@ -159,6 +159,8 @@ app.use("/api/gamification", require("./routes/gamification"));
 console.log("✅ Mounted route: /api/gamification");
 app.use("/api/atlas", require("./routes/atlas"));
 console.log("✅ Mounted route: /api/atlas");
+app.use("/api/history", require("./routes/history"));
+console.log("✅ Mounted route: /api/history");
 app.use("/api/share", require("./routes/share"));
 app.use("/api/comparisons", require("./routes/comparisons"));
 console.log("✅ Mounted route: /api/share");
