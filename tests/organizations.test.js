@@ -71,7 +71,7 @@ jest.mock('stripe', () => function Stripe() {
         retrieve: jest.fn().mockResolvedValue({
           id: 'cs_test', payment_status: 'paid',
           customer_email: 'test@example.com',
-          metadata: { tier: 'deep-report', email: 'test@example.com' },
+          metadata: { tier: 'atlas-navigator', email: 'test@example.com' },
         }),
       },
     },

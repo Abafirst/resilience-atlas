@@ -24,10 +24,10 @@ const submitLimiter = rateLimit({
 /**
  * All 7 tiers have access to the quiz assessment.
  * Tier hierarchy (lowest → highest access):
- *   free → deep-report → atlas-premium → business → starter → pro → enterprise
+ *   free → atlas-navigator → atlas-premium → business → starter → pro → enterprise
  */
 const VALID_TIERS = new Set([
-    'free', 'deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise',
+    'free', 'atlas-navigator', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise',
 ]);
 
 // Map question indices (0-based) to the six resilience type names

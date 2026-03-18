@@ -36,7 +36,7 @@ function loadUpsellScript() {
 function stubPaymentGating(tier) {
     window.PaymentGating = {
         getTier:        () => tier,
-        isDeepReport:   () => ['deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise'].includes(tier),
+        isDeepReport:   () => ['atlas-navigator', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise'].includes(tier),
         isAtlasPremium: () => ['atlas-premium', 'business', 'starter', 'pro', 'enterprise'].includes(tier),
         startCheckout:  jest.fn(),
     };
@@ -118,52 +118,52 @@ describe('UpsellSystem.showModal()', () => {
     });
 
     test('injects modal backdrop into the DOM', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         expect(document.getElementById('upsell-modal-backdrop')).not.toBeNull();
     });
 
     test('does not show modal if user already owns the tier', () => {
-        stubPaymentGating('deep-report');
+        stubPaymentGating('atlas-navigator');
         // Reload so the PaymentGating stub is picked up correctly.
         loadUpsellScript();
-        window.UpsellSystem.showModal('deep-report', 'manual');
+        window.UpsellSystem.showModal('atlas-navigator', 'manual');
         expect(document.getElementById('upsell-modal-backdrop')).toBeNull();
     });
 
     test('respects cool-down period', () => {
         // Set cooldown to now (simulates a recent dismiss).
         localStorage.setItem('upsell_cooldown', String(Date.now()));
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         expect(document.getElementById('upsell-modal-backdrop')).toBeNull();
     });
 
     test('CTA button triggers PaymentGating.startCheckout', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         const cta = document.getElementById('upsell-cta');
         cta.click();
-        expect(window.PaymentGating.startCheckout).toHaveBeenCalledWith('deep-report');
+        expect(window.PaymentGating.startCheckout).toHaveBeenCalledWith('atlas-navigator');
     });
 
     test('dismiss button removes modal', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         document.getElementById('upsell-modal-dismiss').click();
         expect(document.getElementById('upsell-modal-backdrop')).toBeNull();
     });
 
     test('"Maybe later" button removes modal', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         document.getElementById('upsell-maybe-later').click();
         expect(document.getElementById('upsell-modal-backdrop')).toBeNull();
     });
 
     test('dismiss sets cool-down in localStorage', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         document.getElementById('upsell-modal-dismiss').click();
         expect(localStorage.getItem('upsell_cooldown')).not.toBeNull();
     });
 
     test('tracks impression event via fetch', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         expect(global.fetch).toHaveBeenCalledWith(
             '/api/upsell/event',
             expect.objectContaining({ method: 'POST' })
@@ -171,7 +171,7 @@ describe('UpsellSystem.showModal()', () => {
     });
 
     test('tracks click event on CTA', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         document.getElementById('upsell-cta').click();
         // fetch called at least twice: impression + click
         expect(global.fetch.mock.calls.length).toBeGreaterThanOrEqual(2);
@@ -180,7 +180,7 @@ describe('UpsellSystem.showModal()', () => {
     });
 
     test('tracks dismiss event', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
         document.getElementById('upsell-maybe-later').click();
         const bodies = global.fetch.mock.calls.map(([, opts]) => JSON.parse(opts.body));
         expect(bodies.some((b) => b.eventType === 'dismiss')).toBe(true);
@@ -194,8 +194,8 @@ describe('UpsellSystem.showModal()', () => {
     });
 
     test('removes any existing modal before showing a new one', () => {
-        window.UpsellSystem.showModal('deep-report', 'assessment_complete');
-        window.UpsellSystem.showModal('deep-report', 'timer');
+        window.UpsellSystem.showModal('atlas-navigator', 'assessment_complete');
+        window.UpsellSystem.showModal('atlas-navigator', 'timer');
         const modals = document.querySelectorAll('#upsell-modal-backdrop');
         expect(modals.length).toBe(1);
     });
@@ -213,7 +213,7 @@ describe('UpsellSystem.showBanner()', () => {
         window.UpsellSystem.showBanner({
             message:    '🎉 Special offer today!',
             ctaLabel:   'Get it now',
-            targetTier: 'deep-report',
+            targetTier: 'atlas-navigator',
         });
         expect(document.getElementById('upsell-promo-banner')).not.toBeNull();
     });
@@ -233,14 +233,14 @@ describe('UpsellSystem.showBanner()', () => {
         window.UpsellSystem.showBanner({
             message:    'Special offer',
             ctaLabel:   'Claim',
-            targetTier: 'deep-report',
+            targetTier: 'atlas-navigator',
         });
         document.querySelector('.upsell-promo-banner__close').click();
         expect(document.getElementById('upsell-promo-banner')).toBeNull();
     });
 
     test('does not duplicate banner', () => {
-        const opts = { message: 'Offer', ctaLabel: 'Claim', targetTier: 'deep-report' };
+        const opts = { message: 'Offer', ctaLabel: 'Claim', targetTier: 'atlas-navigator' };
         window.UpsellSystem.showBanner(opts);
         window.UpsellSystem.showBanner(opts);
         expect(document.querySelectorAll('#upsell-promo-banner').length).toBe(1);
@@ -256,7 +256,7 @@ describe('UpsellSystem.renderPremiumBadge()', () => {
     });
 
     test('renders badge HTML string', () => {
-        const html = window.UpsellSystem.renderPremiumBadge('deep-report');
+        const html = window.UpsellSystem.renderPremiumBadge('atlas-navigator');
         expect(html).toContain('upsell-premium-badge');
         expect(html).toContain('Deep Report');
     });
@@ -284,14 +284,14 @@ describe('UpsellSystem.attachFeatureLock()', () => {
     test('adds locked class to element', () => {
         const el = document.createElement('div');
         document.body.appendChild(el);
-        window.UpsellSystem.attachFeatureLock(el, 'deep-report', 'PDF Download');
+        window.UpsellSystem.attachFeatureLock(el, 'atlas-navigator', 'PDF Download');
         expect(el.classList.contains('upsell-feature-locked')).toBe(true);
     });
 
     test('injects lock overlay into element', () => {
         const el = document.createElement('div');
         document.body.appendChild(el);
-        window.UpsellSystem.attachFeatureLock(el, 'deep-report', 'PDF Download');
+        window.UpsellSystem.attachFeatureLock(el, 'atlas-navigator', 'PDF Download');
         expect(el.querySelector('.upsell-feature-lock-overlay')).not.toBeNull();
     });
 
@@ -303,7 +303,7 @@ describe('UpsellSystem.attachFeatureLock()', () => {
     });
 
     test('does nothing when element is null', () => {
-        expect(() => window.UpsellSystem.attachFeatureLock(null, 'deep-report', 'X')).not.toThrow();
+        expect(() => window.UpsellSystem.attachFeatureLock(null, 'atlas-navigator', 'X')).not.toThrow();
     });
 });
 
