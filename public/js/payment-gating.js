@@ -62,27 +62,27 @@
             dataRetention: '1 year',
         },
         'starter': {
-            name: 'Teams Starter',
-            price: 9900, // $99/month or $999/year
-            billing: 'monthly',
-            maxUsers: 25,
+            name: 'Atlas Team Starter',
+            price: 29900, // $299 one-time
+            billing: 'one-time',
+            maxUsers: 15,
             maxTeams: 1,
             features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
             dataRetention: '1 year',
         },
         'pro': {
-            name: 'Teams Pro',
-            price: 29900, // $299/month or $2,999/year
-            billing: 'monthly',
-            maxUsers: 250,
+            name: 'Atlas Team Professional',
+            price: 69900, // $699 one-time
+            billing: 'one-time',
+            maxUsers: 30,
             maxTeams: 999,
             features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
             dataRetention: '3 years',
         },
         'enterprise': {
-            name: 'Enterprise',
-            price: null, // Custom pricing
-            billing: 'custom',
+            name: 'Atlas Team Enterprise',
+            price: 249900, // Starting at $2,499 one-time
+            billing: 'one-time',
             maxUsers: Infinity,
             maxTeams: Infinity,
             features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
@@ -119,14 +119,14 @@
 
     // ── Teams tier helpers ────────────────────────────────────────────────────
 
-    /** Teams Starter ($99/mo): up to 25 users, 1 team, basic dashboard + CSV. */
+    /** Atlas Team Starter ($299 one-time): up to 15 users, 1 team, basic dashboard + CSV. */
     function isTeamsStarter() {
         const t = getTier();
         return t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     /**
-     * Teams Pro ($299/mo): up to 250 users, unlimited teams.
+     * Atlas Team Professional ($699 one-time): up to 30 users, unlimited teams.
      * Advanced analytics, auto-reports, facilitation tools, team management.
      */
     function isTeamsPro() {
@@ -237,9 +237,11 @@
 
     function _showSuccessBanner(tier) {
         var messages = {
-            'enterprise':     'Welcome to Enterprise! All features including custom branding and webhooks are unlocked.',
-            'teams-pro':      'Welcome to Teams Pro! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
-            'teams-starter':  'Welcome to Teams Starter! Your team dashboard and core features are now unlocked.',
+            'enterprise':     'Welcome to Atlas Team Enterprise! All features including custom branding and webhooks are unlocked.',
+            'pro':            'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
+            'starter':        'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
+            'teams-pro':      'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
+            'teams-starter':  'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
             'business':       'Welcome to the Business tier! Team analytics and dashboard are now unlocked.',
             'atlas-premium':  'Welcome to Atlas Premium! All premium features are now unlocked.',
         };
