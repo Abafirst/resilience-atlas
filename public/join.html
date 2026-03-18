@@ -135,6 +135,8 @@
     #invite-info { display:none; }
     #not-found   { display:none; }
   </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -319,5 +321,6 @@
   })();
   </script>
 
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>

@@ -127,6 +127,8 @@
     /* Loading */
     .atlas-loading { text-align: center; padding: 3rem; color: #6a8ca8; }
   </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -140,6 +142,8 @@
       <nav class="header-nav" aria-label="Main navigation">
         <a href="quiz.html"    class="btn btn-primary">Take Assessment</a>
         <a href="results.html" class="btn btn-secondary">My Results</a>
+      
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
       </nav>
     </div>
   </header>
@@ -414,5 +418,6 @@
     document.addEventListener('DOMContentLoaded', init);
   </script>
 
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>

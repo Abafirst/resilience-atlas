@@ -546,3 +546,33 @@ body {
   color: var(--dash-text);
   font-weight: 500;
 }
+
+/* =======================================================
+   Dark Mode — Dashboard
+   ======================================================= */
+[data-theme="dark"] {
+  --dash-bg:         #0f172a;
+  --dash-surface:    #1e293b;
+  --dash-border:     #334155;
+  --dash-text:       #f1f5f9;
+  --dash-muted:      #94a3b8;
+  --dash-primary:    #818cf8;
+  --dash-primary-lt: rgba(129,140,248,.15);
+  --dash-success:    #34d399;
+  --dash-danger:     #f87171;
+}
+
+[data-theme="dark"] .dash-header,
+[data-theme="dark"] .teams-header {
+  background: #0f172a;
+  border-bottom-color: #334155;
+}
+
+[data-theme="dark"] .theme-toggle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background: #334155;
+  color: #f1f5f9;
+}
