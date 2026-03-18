@@ -274,9 +274,9 @@
         </p>
 
         <!-- Circular Compass Layout -->
-        <div class="compass-layout" role="img" aria-label="Circular compass showing the six dimensions of resilience positioned around a center point">
+        <div class="compass-layout" role="img" aria-label="Animated brand compass showing all six resilience dimensions with a rotating needle indicating the dominant dimension">
           <div class="compass-center" aria-hidden="true">
-            Resilience<br>Compass
+            <canvas id="researchCompass" class="research-compass-canvas"></canvas>
           </div>
           <div class="compass-node node-relational" aria-hidden="true">
             <img src="/icons/relational-connective.svg" alt="" class="node-icon icon icon-sm">
@@ -712,6 +712,33 @@
     </div>
   </footer>
 
+<script src="/js/brand-compass.js"></script>
+<script>
+(function () {
+  var researchScores = {
+    'Relational-Connective': 70,
+    'Cognitive-Narrative':   75,
+    'Somatic-Regulative':    65,
+    'Emotional-Adaptive':    72,
+    'Spiritual-Reflective':  78,
+    'Agentic-Generative':    68
+  };
+
+  window.addEventListener('load', function () {
+    var canvas = document.getElementById('researchCompass');
+    if (!canvas) { return; }
+    if (typeof window.renderBrandCompass !== 'function') {
+      console.warn('renderBrandCompass not available');
+      return;
+    }
+    try {
+      window.renderBrandCompass(canvas, researchScores);
+    } catch (err) {
+      console.warn('Research compass render failed:', err);
+    }
+  });
+})();
+</script>
 <script src="/js/theme-toggle.js"></script>
 </body>
 </html>
