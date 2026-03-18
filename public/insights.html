@@ -83,6 +83,8 @@
     .insights-cta-banner h2 { font-size: 1.5rem; color: #0f172a; margin-bottom: .5rem; }
     .insights-cta-banner p { color: #475569; margin-bottom: 1.5rem; }
   </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -97,6 +99,7 @@
       <nav aria-label="Main navigation" style="display:flex;align-items:center;gap:1rem;">
         <a href="/insights.html" style="font-size:.92rem;color:#4F46E5;font-weight:600;">Insights</a>
         <a href="/team.html" style="font-size:.92rem;color:var(--slate-600);font-weight:500;">For Teams</a>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
         <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
       </nav>
     </div>
@@ -221,5 +224,6 @@
     </nav>
   </footer>
 
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>

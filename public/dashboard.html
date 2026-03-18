@@ -7,6 +7,8 @@
   <meta name="description" content="Business tier team analytics dashboard for The Resilience Atlas." />
   <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -24,6 +26,7 @@
         <a href="/results.html" class="dash-nav-link">My Results</a>
         <button class="btn btn--outline" id="btn-export-csv" type="button">Export CSV</button>
         <button class="btn btn--outline" id="btn-export-pdf" type="button">Export PDF</button>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
         <button class="btn btn--danger btn--sm" id="btn-logout" type="button">Sign Out</button>
       </nav>
     </div>
@@ -179,5 +182,6 @@
   <script src="/js/payment-gating.js"></script>
   <script src="/js/analytics.js"></script>
   <script src="/js/dashboard.js"></script>
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>
