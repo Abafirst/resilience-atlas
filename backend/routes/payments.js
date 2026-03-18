@@ -9,6 +9,13 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
+/** HTML entities that the sanitisation middleware may encode in user input. */
+const HTML_ENTITY_DECODE_MAP = {
+    '&quot;': '"', '&#34;': '"', '&#x22;': '"',
+    '&apos;': "'", '&#39;': "'", '&#x27;': "'",
+    '&amp;': '&', '&lt;': '<', '&gt;': '>',
+};
+
 /** Tier definitions: name, price in cents, currency. */
 const TIERS = {
     'atlas-navigator': {
@@ -162,15 +169,19 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
 
         const tierConfig = TIERS[tier];
         const appUrl = process.env.APP_URL || 'http://localhost:3000';
-const cleanEmail = String(email || '')
-  .replace(/"/g, '')
-  .replace(/'/g, '')
-  .trim()
-  .toLowerCase();
 
-if (!cleanEmail || !cleanEmail.includes('@')) {
-  return res.status(400).json({ error: 'Valid email is required.' });
-}
+        // Decode HTML entities that the sanitisation middleware may have introduced
+        // (e.g. &quot; → ", &#x27; → ') before stripping any remaining literal quotes.
+        const cleanEmail = String(email || '')
+            .replace(/&(?:[a-z]+|#\d+|#x[\da-f]+);/gi, (entity) => HTML_ENTITY_DECODE_MAP[entity] ?? entity)
+            .replace(/"/g, '')
+            .replace(/'/g, '')
+            .trim()
+            .toLowerCase();
+
+        if (!cleanEmail || !cleanEmail.includes('@')) {
+            return res.status(400).json({ error: 'Valid email is required.' });
+        }
 const session = await stripe.checkout.sessions.create({
   payment_method_types: ['card'],
   line_items: [
