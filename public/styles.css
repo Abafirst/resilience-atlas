@@ -23,6 +23,7 @@
   --slate-800: #1E293B;
   --slate-700: #334155;
   --slate-600: #475569;
+  --slate-500: #64748B;
   --slate-400: #94A3B8;
   --slate-300: #CBD5E1;
   --slate-200: #E2E8F0;
@@ -71,8 +72,10 @@
     --white:         #f1f5f9;
     --slate-900:     #f1f5f9;
     --slate-800:     #e2e8f0;
+    --slate-700:     #cbd5e1;
     --slate-600:     #94a3b8;
-    --slate-400:     #64748b;
+    --slate-500:     #64748b;
+    --slate-400:     #475569;
     --slate-200:     #334155;
     --slate-100:     #1e293b;
     --slate-50:      #0f172a;
@@ -99,8 +102,10 @@
   --white:         #f1f5f9;
   --slate-900:     #f1f5f9;
   --slate-800:     #e2e8f0;
+  --slate-700:     #cbd5e1;
   --slate-600:     #94a3b8;
-  --slate-400:     #64748b;
+  --slate-500:     #64748b;
+  --slate-400:     #475569;
   --slate-200:     #334155;
   --slate-100:     #1e293b;
   --slate-50:      #0f172a;
@@ -204,6 +209,8 @@ h1 { font-size: clamp(1.8rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.15
 h2 { font-size: clamp(1.4rem, 3vw, 2rem);    font-weight: 700; line-height: 1.25; color: var(--slate-900); }
 h3 { font-size: 1.2rem;  font-weight: 600; color: var(--slate-900); }
 h4 { font-size: 1rem;    font-weight: 600; color: var(--slate-900); }
+h5 { font-size: .9rem;   font-weight: 600; color: var(--slate-900); }
+h6 { font-size: .8rem;   font-weight: 600; color: var(--slate-900); }
 p  { font-size: 1rem;    color: var(--slate-600); }
 
 /* ── Layout helpers ───────────────────────────────── */
@@ -2381,7 +2388,9 @@ justify-content:center;
 [data-theme="dark"] h1,
 [data-theme="dark"] h2,
 [data-theme="dark"] h3,
-[data-theme="dark"] h4 {
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
   color: var(--slate-900);
 }
 
@@ -2393,7 +2402,9 @@ justify-content:center;
   :root:not([data-theme="light"]) h1,
   :root:not([data-theme="light"]) h2,
   :root:not([data-theme="light"]) h3,
-  :root:not([data-theme="light"]) h4 {
+  :root:not([data-theme="light"]) h4,
+  :root:not([data-theme="light"]) h5,
+  :root:not([data-theme="light"]) h6 {
     color: var(--slate-900);
   }
 

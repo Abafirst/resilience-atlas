@@ -321,6 +321,40 @@
     @media (max-width: 640px) {
       .founder-creds-hero { gap: .4rem; }
     }
+
+    /* ── Dark Mode ─────────────────────────────────────────── */
+    [data-theme="dark"] .credential-card,
+    [data-theme="dark"] .publication-card {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    [data-theme="dark"] .credential-card h4 { color: var(--slate-800, #e2e8f0); }
+    [data-theme="dark"] .credential-card p { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .founder-section h2 { color: var(--slate-900, #f1f5f9); border-bottom-color: var(--slate-200, #334155); }
+    [data-theme="dark"] .founder-section p { color: var(--slate-600, #94a3b8); }
+    [data-theme="dark"] .publication-card h4 { color: var(--slate-800, #e2e8f0); }
+    [data-theme="dark"] .publication-card p { color: var(--slate-500, #64748b); }
+    [data-theme="dark"] .pullquote { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
+    [data-theme="dark"] .pullquote p { color: #a5b4fc; }
+    [data-theme="dark"] .population-card { background: #1e293b; border-color: #334155; }
+    [data-theme="dark"] .population-card h4 { color: #93c5fd; }
+    [data-theme="dark"] .population-card p { color: #60a5fa; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .credential-card,
+      :root:not([data-theme="light"]) .publication-card { background: #1e293b; border-color: #334155; }
+      :root:not([data-theme="light"]) .credential-card h4 { color: #e2e8f0; }
+      :root:not([data-theme="light"]) .credential-card p { color: #64748b; }
+      :root:not([data-theme="light"]) .founder-section h2 { color: #f1f5f9; border-bottom-color: #334155; }
+      :root:not([data-theme="light"]) .founder-section p { color: #94a3b8; }
+      :root:not([data-theme="light"]) .publication-card h4 { color: #e2e8f0; }
+      :root:not([data-theme="light"]) .publication-card p { color: #64748b; }
+      :root:not([data-theme="light"]) .pullquote { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
+      :root:not([data-theme="light"]) .pullquote p { color: #a5b4fc; }
+      :root:not([data-theme="light"]) .population-card { background: #1e293b; border-color: #334155; }
+      :root:not([data-theme="light"]) .population-card h4 { color: #93c5fd; }
+      :root:not([data-theme="light"]) .population-card p { color: #60a5fa; }
+    }
   </style>
   <!-- Prevent flash of unstyled theme -->
   <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
