@@ -66,27 +66,27 @@ const TIER_CONFIG = {
         dataRetention: '1 year',
     },
     'starter': {
-        name: 'Teams Starter',
-        price: 9900, // $99/month or $999/year
-        billing: 'monthly',
-        maxUsers: 25,
+        name: 'Atlas Team Starter',
+        price: 29900, // $299 one-time
+        billing: 'one-time',
+        maxUsers: 15,
         maxTeams: 1,
         features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
         dataRetention: '1 year',
     },
     'pro': {
-        name: 'Teams Pro',
-        price: 29900, // $299/month or $2,999/year
-        billing: 'monthly',
-        maxUsers: 250,
+        name: 'Atlas Team Professional',
+        price: 69900, // $699 one-time
+        billing: 'one-time',
+        maxUsers: 30,
         maxTeams: 999,
         features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
         dataRetention: '3 years',
     },
     'enterprise': {
-        name: 'Enterprise',
-        price: null, // Custom pricing
-        billing: 'custom',
+        name: 'Atlas Team Enterprise',
+        price: 249900, // Starting at $2,499 one-time
+        billing: 'one-time',
         maxUsers: Infinity,
         maxTeams: Infinity,
         features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
