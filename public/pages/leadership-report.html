@@ -7,6 +7,8 @@
   <meta name="description" content="Aggregated team resilience insights for organizational leaders. GDPR/CCPA compliant — no individual data exposed." />
   <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/leadership-report.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body>
 
@@ -118,5 +120,6 @@
   </main>
 
   <script src="/js/leadership-report.js"></script>
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>

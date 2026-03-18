@@ -1,173 +1,278 @@
 'use strict';
 
-const { ValidationError } = require('../utils/customErrors');
+const { ValidationError } = require('../utils/errors');
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// ── Tiny XSS / injection sanitiser ───────────────────────────────────────────
+// Strips or encodes characters that are commonly exploited in reflected XSS,
+// HTML-injection, and basic SQL-injection attacks.  This is a defence-in-depth
+// layer; always use parameterised queries / an ODM like Mongoose as well.
+
+const HTML_ENTITY_MAP = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;',
+};
 
 /**
- * Strip HTML tags and trim whitespace to prevent stored XSS.
- * Applies the tag-stripping regex repeatedly until the result stabilises so
- * that nested/split tags (e.g. `<scri<script>pt>`) are fully removed.
- * HTML entities are intentionally NOT decoded so that encoded payloads
- * (e.g. &lt;script&gt;) remain as harmless escaped text.
- *
+ * Escape HTML special characters in a string.
  * @param {string} str
  * @returns {string}
  */
-function sanitiseString(str) {
-    if (typeof str !== 'string') return str;
-    let result = str;
-    let previous;
-    do {
-        previous = result;
-        result = result.replace(/<[^>]*>/g, '');
-    } while (result !== previous);
-    return result.trim();
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"'`=/]/g, (s) => HTML_ENTITY_MAP[s]);
 }
-
-/** Basic RFC 5322 email format check. */
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email));
-}
-
-// ── Validation factories ─────────────────────────────────────────────────────
 
 /**
- * Middleware: validate a quiz submission body.
+ * Recursively sanitise all string values in an object / array.
+ * Non-string primitives are returned unchanged.
  *
- * Expected shape:
- *   { answers: number[72], email: string, firstName?: string, tier?: string }
+ * @param {*} value
+ * @returns {*}
  */
-const VALID_TIERS = new Set([
-    'free', 'deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise',
-]);
-
-function validateQuizSubmission(req, _res, next) {
-    const { answers, email, tier } = req.body || {};
-
-    if (!answers || !Array.isArray(answers) || answers.length !== 72) {
-        return next(new ValidationError('Please provide all 72 answers.', {
-            field: 'answers',
-            suggestion: 'Ensure you have answered every question before submitting.',
-        }));
+function sanitise(value) {
+    if (typeof value === 'string') return escapeHtml(value);
+    if (Array.isArray(value)) return value.map(sanitise);
+    if (value !== null && typeof value === 'object') {
+        return Object.fromEntries(
+            Object.entries(value).map(([k, v]) => [k, sanitise(v)])
+        );
     }
+    return value;
+}
 
-    for (let i = 0; i < answers.length; i++) {
-        const val = Number(answers[i]);
-        if (!Number.isInteger(val) || val < 1 || val > 5) {
-            return next(new ValidationError(
-                `Answer at position ${i + 1} is invalid. Expected a value between 1 and 5.`,
-                { field: 'answers', index: i }
-            ));
+// ── String length limiter ─────────────────────────────────────────────────────
+
+const DEFAULT_MAX_STRING_LENGTH = 10_000;
+
+/**
+ * Recursively ensure all strings in a value are within `maxLength` characters.
+ * Throws a ValidationError on violation.
+ *
+ * @param {*}      value
+ * @param {number} maxLength
+ * @param {string} [path]
+ */
+function enforceStringLengths(value, maxLength = DEFAULT_MAX_STRING_LENGTH, path = 'body') {
+    if (typeof value === 'string') {
+        if (value.length > maxLength) {
+            throw new ValidationError(
+                `String at "${path}" exceeds maximum length of ${maxLength} characters.`,
+                `The value provided for "${path}" is too long. Please shorten it to ${maxLength} characters or fewer.`,
+            );
         }
+    } else if (Array.isArray(value)) {
+        value.forEach((item, i) => enforceStringLengths(item, maxLength, `${path}[${i}]`));
+    } else if (value !== null && typeof value === 'object') {
+        Object.entries(value).forEach(([k, v]) =>
+            enforceStringLengths(v, maxLength, `${path}.${k}`)
+        );
     }
-
-    if (!email) {
-        return next(new ValidationError('Email is required.', { field: 'email' }));
-    }
-
-    if (!isValidEmail(email)) {
-        return next(new ValidationError('Please provide a valid email address.', { field: 'email' }));
-    }
-
-    if (tier !== undefined && !VALID_TIERS.has(tier)) {
-        return next(new ValidationError(`Invalid tier: "${sanitiseString(String(tier))}".`, { field: 'tier' }));
-    }
-
-    // Sanitise mutable string fields in-place.
-    if (req.body.firstName) req.body.firstName = sanitiseString(req.body.firstName);
-    if (req.body.email)     req.body.email     = sanitiseString(req.body.email);
-
-    next();
 }
 
+// ── Express middleware ────────────────────────────────────────────────────────
+
 /**
- * Middleware: validate a PDF download request query string.
- *
- * Expected query params: overall (number 0-100), scores (JSON string), email?
+ * Middleware: sanitise all string fields in req.body, req.query, and req.params
+ * to prevent reflected XSS.  Operates in-place so downstream handlers see the
+ * cleaned values.
  */
-function validateReportDownload(req, _res, next) {
-    const { overall, scores, email } = req.query || {};
-
-    if (overall === undefined || overall === null || overall === '') {
-        return next(new ValidationError('Missing required parameter: overall.', { field: 'overall' }));
-    }
-
-    const overallNum = Number(overall);
-    if (Number.isNaN(overallNum) || overallNum < 0 || overallNum > 100) {
-        return next(new ValidationError('overall must be a number between 0 and 100.', { field: 'overall' }));
-    }
-
-    if (!scores) {
-        return next(new ValidationError('Missing required parameter: scores.', { field: 'scores' }));
-    }
-
+function sanitiseInput(req, _res, next) {
     try {
-        const parsed = JSON.parse(scores);
-        if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-            throw new Error('scores must be a JSON object');
+        if (req.body && typeof req.body === 'object') {
+            req.body = sanitise(req.body);
         }
-    } catch {
-        return next(new ValidationError('scores must be valid JSON.', { field: 'scores' }));
+        if (req.query && typeof req.query === 'object') {
+            req.query = sanitise(req.query);
+        }
+        // params are matched from the URL, sanitise for safety.
+        if (req.params && typeof req.params === 'object') {
+            req.params = sanitise(req.params);
+        }
+        next();
+    } catch (err) {
+        next(err);
     }
-
-    if (email !== undefined && email !== '' && !isValidEmail(email)) {
-        return next(new ValidationError('Please provide a valid email address.', { field: 'email' }));
-    }
-
-    next();
 }
 
 /**
- * Middleware: validate a payment checkout / intent body.
+ * Middleware factory: enforce a maximum string length across the request body.
  *
- * Expected shape:
- *   { email: string, tier: string, metadata?: object }
+ * @param  {number} [maxLength=10000]
+ * @returns {import('express').RequestHandler}
  */
-const PURCHASABLE_TIERS = new Set(['deep-report', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise']);
-
-function validatePayment(req, _res, next) {
-    const { email, tier, metadata } = req.body || {};
-
-    if (!email) {
-        return next(new ValidationError('Email is required for payment.', { field: 'email' }));
-    }
-
-    if (!isValidEmail(email)) {
-        return next(new ValidationError('Please provide a valid email address.', { field: 'email' }));
-    }
-
-    if (tier !== undefined && !PURCHASABLE_TIERS.has(tier)) {
-        return next(new ValidationError(`Invalid tier: "${sanitiseString(String(tier))}".`, { field: 'tier' }));
-    }
-
-    if (metadata !== undefined && (typeof metadata !== 'object' || Array.isArray(metadata))) {
-        return next(new ValidationError('metadata must be a JSON object.', { field: 'metadata' }));
-    }
-
-    // Sanitise email.
-    if (req.body.email) req.body.email = sanitiseString(req.body.email);
-
-    next();
+function limitStringLengths(maxLength = DEFAULT_MAX_STRING_LENGTH) {
+    return function stringLengthLimiter(req, _res, next) {
+        try {
+            if (req.body) enforceStringLengths(req.body, maxLength);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
 }
 
 /**
- * Generic middleware factory: validate that a required JSON body is present.
- * Useful for endpoints that do their own validation but still want a common
- * "missing body" guard.
+ * Middleware factory: require that certain fields exist in req.body.
+ * Throws a ValidationError listing all missing fields.
+ *
+ * @param  {string[]} fields - Required field names.
+ * @returns {import('express').RequestHandler}
  */
-function requireBody(req, _res, next) {
-    if (!req.body || typeof req.body !== 'object') {
-        return next(new ValidationError('Request body is required.'));
+function requireFields(fields) {
+    return function fieldPresenceCheck(req, _res, next) {
+        const missing = fields.filter(
+            (f) => req.body[f] === undefined || req.body[f] === null || req.body[f] === ''
+        );
+        if (missing.length > 0) {
+            return next(
+                new ValidationError(
+                    `Missing required fields: ${missing.join(', ')}.`,
+                    `The following fields are required: ${missing.join(', ')}.`,
+                )
+            );
+        }
+        next();
+    };
+}
+
+/**
+ * Middleware factory: require that certain query parameters are present.
+ *
+ * @param  {string[]} params
+ * @returns {import('express').RequestHandler}
+ */
+function requireQueryParams(params) {
+    return function queryParamCheck(req, _res, next) {
+        const missing = params.filter(
+            (p) => req.query[p] === undefined || req.query[p] === ''
+        );
+        if (missing.length > 0) {
+            return next(
+                new ValidationError(
+                    `Missing required query parameters: ${missing.join(', ')}.`,
+                    `The following query parameters are required: ${missing.join(', ')}.`,
+                )
+            );
+        }
+        next();
+    };
+}
+
+/**
+ * Validate a value against a plain rules object.
+ * Supported rule keys per field:
+ *   - type: 'string' | 'number' | 'boolean' | 'email'
+ *   - min / max: for numbers or string length
+ *   - required: boolean
+ *   - pattern: RegExp
+ *
+ * @param  {object} data   - Object to validate (e.g. req.body).
+ * @param  {object} schema - Rules map: { fieldName: { type, required, … } }
+ * @throws {ValidationError}
+ */
+function validateSchema(data, schema) {
+    const errors = [];
+
+    for (const [field, rules] of Object.entries(schema)) {
+        const value = data[field];
+        const isEmpty = value === undefined || value === null || value === '';
+
+        if (rules.required && isEmpty) {
+            errors.push(`"${field}" is required.`);
+            continue;
+        }
+        if (isEmpty) continue; // optional field not provided — skip further checks
+
+        if (rules.type === 'email') {
+            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRe.test(String(value))) {
+                errors.push(`"${field}" must be a valid email address.`);
+            }
+        } else if (rules.type) {
+            const allowedTypes = ['string', 'number', 'boolean', 'object'];
+            if (allowedTypes.includes(rules.type) && typeof value !== rules.type) {
+                errors.push(`"${field}" must be of type ${rules.type}.`);
+            }
+        }
+
+        if (rules.type === 'string' || typeof value === 'string') {
+            if (rules.min !== undefined && String(value).length < rules.min) {
+                errors.push(`"${field}" must be at least ${rules.min} characters.`);
+            }
+            if (rules.max !== undefined && String(value).length > rules.max) {
+                errors.push(`"${field}" must be at most ${rules.max} characters.`);
+            }
+        }
+
+        if (rules.type === 'number' || typeof value === 'number') {
+            if (rules.min !== undefined && Number(value) < rules.min) {
+                errors.push(`"${field}" must be at least ${rules.min}.`);
+            }
+            if (rules.max !== undefined && Number(value) > rules.max) {
+                errors.push(`"${field}" must be at most ${rules.max}.`);
+            }
+        }
+
+        if (rules.pattern && !rules.pattern.test(String(value))) {
+            errors.push(`"${field}" has an invalid format.`);
+        }
     }
-    next();
+
+    if (errors.length > 0) {
+        throw new ValidationError(
+            errors.join(' '),
+            `Validation failed: ${errors.join(' ')}`,
+        );
+    }
+}
+
+/**
+ * Middleware factory: validate req.body against a schema.
+ *
+ * @param  {object} schema
+ * @returns {import('express').RequestHandler}
+ */
+function validateBody(schema) {
+    return function bodyValidator(req, _res, next) {
+        try {
+            validateSchema(req.body || {}, schema);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
+}
+
+/**
+ * Middleware factory: validate req.query against a schema.
+ *
+ * @param  {object} schema
+ * @returns {import('express').RequestHandler}
+ */
+function validateQuery(schema) {
+    return function queryValidator(req, _res, next) {
+        try {
+            validateSchema(req.query || {}, schema);
+            next();
+        } catch (err) {
+            next(err);
+        }
+    };
 }
 
 module.exports = {
-    sanitiseString,
-    isValidEmail,
-    validateQuizSubmission,
-    validateReportDownload,
-    validatePayment,
-    requireBody,
+    sanitiseInput,
+    limitStringLengths,
+    requireFields,
+    requireQueryParams,
+    validateBody,
+    validateQuery,
+    validateSchema,
+    sanitise,
+    escapeHtml,
 };

@@ -1,124 +1,163 @@
 'use strict';
 
 const logger = require('../utils/logger');
-const { AppError } = require('../utils/customErrors');
-const sentry = require('../integrations/sentry');
+const { AppError } = require('../utils/errors');
+const { captureException } = require('../config/sentry');
 
 /**
- * Categorise an error so it can be routed to the right logging / alerting
- * level.
+ * Normalise well-known non-AppError errors (e.g. Mongoose, JWT) into a shape
+ * the error-response formatter understands.
  *
- * @param {Error}  err         - The thrown error.
- * @param {number} statusCode  - Resolved HTTP status code.
- * @returns {'critical'|'warning'|'info'}
+ * Returns an object with { statusCode, code, message, userMessage, supportLink }.
  */
-function categorise(err, statusCode) {
-    if (statusCode >= 500) return 'critical';
-    if (statusCode === 429) return 'warning';
-    if (statusCode >= 400) return 'info';
-    return 'info';
-}
+function normaliseError(err) {
+    // Already an operational AppError — use it as-is.
+    if (err instanceof AppError) return err;
 
-/**
- * Build a user-friendly response body from an error.
- *
- * Operational errors (instances of AppError) expose their message to the
- * client.  Unexpected errors return a generic message in production so that
- * internal details are never leaked.
- *
- * @param {Error}   err       - The thrown error.
- * @param {boolean} isDev     - True when NODE_ENV !== 'production'.
- * @returns {object}          - JSON-serialisable response body.
- */
-function buildResponseBody(err, isDev) {
-    const isOperational = err instanceof AppError;
-    const statusCode    = err.statusCode || 500;
-
-    if (isOperational) {
-        return {
-            error:        err.message,
-            code:         err.code,
-            ...(err.extra || {}),
-        };
-    }
-
-    // Non-operational — hide internals in production.
-    const body = {
-        error:        isDev ? err.message : "We're sorry, something went wrong on our end.",
-        code:         'INTERNAL_SERVER_ERROR',
-        message:      'Please try again in a moment or contact support.',
-        supportEmail: 'support@resilienceatlas.io',
+    const out = {
+        statusCode: err.status || err.statusCode || 500,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: err.message || 'An unexpected error occurred.',
+        userMessage: 'Something went wrong on our end. Please try again in a few minutes.',
+        supportLink: 'https://support.resilienceatlas.io/help',
+        isOperational: false,
     };
 
-    if (isDev && err.stack) {
-        body.stack = err.stack;
+    // ── Mongoose validation error ──────────────────────────────────────────
+    if (err.name === 'ValidationError' && err.errors) {
+        out.statusCode = 400;
+        out.code = 'VALIDATION_ERROR';
+        out.message = Object.values(err.errors).map((e) => e.message).join('; ');
+        out.userMessage = 'Please check your input and try again.';
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
     }
 
-    return body;
+    // ── Mongoose CastError (bad ObjectId) ─────────────────────────────────
+    if (err.name === 'CastError') {
+        out.statusCode = 400;
+        out.code = 'VALIDATION_ERROR';
+        out.message = `Invalid value for field "${err.path}".`;
+        out.userMessage = 'One of the provided values is not in the expected format.';
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
+    }
+
+    // ── Mongoose duplicate key error ───────────────────────────────────────
+    if (err.code === 11000) {
+        const field = Object.keys(err.keyValue || {})[0] || 'field';
+        out.statusCode = 409;
+        out.code = 'CONFLICT';
+        out.message = `Duplicate value for "${field}".`;
+        out.userMessage = `An account with that ${field} already exists.`;
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
+    }
+
+    // ── JWT errors ─────────────────────────────────────────────────────────
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+        out.statusCode = 401;
+        out.code = 'AUTHENTICATION_ERROR';
+        out.message = err.message;
+        out.userMessage = 'Your session has expired. Please sign in again.';
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
+    }
+
+    // ── Payload too large ──────────────────────────────────────────────────
+    if (err.type === 'entity.too.large') {
+        out.statusCode = 413;
+        out.code = 'PAYLOAD_TOO_LARGE';
+        out.message = 'Request payload exceeds the maximum allowed size.';
+        out.userMessage = 'The data you submitted is too large. Please reduce its size and try again.';
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
+    }
+
+    // ── SyntaxError (malformed JSON body) ─────────────────────────────────
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        out.statusCode = 400;
+        out.code = 'INVALID_JSON';
+        out.message = 'Malformed JSON in request body.';
+        out.userMessage = 'The request body contains invalid JSON. Please check your input.';
+        out.supportLink = null;
+        out.isOperational = true;
+        return out;
+    }
+
+    return out;
 }
 
 /**
  * Global Express error-handling middleware.
  *
- * Must be registered AFTER all routes and other middleware.
- * Signature must have exactly 4 parameters so Express recognises it as an
- * error handler.
+ * Produces a consistent JSON response:
+ * {
+ *   "error":       "<short developer-facing summary>",
+ *   "userMessage": "<human-friendly explanation>",
+ *   "code":        "<MACHINE_READABLE_CODE>",
+ *   "requestId":   "req_xxxxxxxx",
+ *   "supportLink": "https://…" | null
+ * }
  *
- * @param {Error}    err
- * @param {object}   req
- * @param {object}   res
- * @param {Function} next
+ * Stack traces and the raw error message are only included in development.
  */
-function errorHandler(err, req, res, _next) {
-    const isDev      = (process.env.NODE_ENV || 'development') !== 'production';
-    const statusCode = err.statusCode || 500;
-    const category   = categorise(err, statusCode);
+// eslint-disable-next-line no-unused-vars
+function globalErrorHandler(err, req, res, next) {
+    const normalised = normaliseError(err);
 
-    // ── Logging ──────────────────────────────────────────────────────────────
-    const logContext = {
-        method:     req.method,
-        url:        req.originalUrl || req.url,
-        statusCode,
-        userId:     req.user ? (req.user.userId || req.user.id) : undefined,
-        error:      err,
+    const requestId = req.id || null;
+    const reqLogger = requestId ? logger.withRequestId(requestId) : logger;
+
+    const logPayload = {
+        statusCode: normalised.statusCode,
+        code: normalised.code,
+        path: req.originalUrl || req.path,
+        method: req.method,
+        ...(requestId ? { requestId } : {}),
+        ...(req.user ? { userId: req.user.userId || req.user.id } : {}),
+        ...(!normalised.isOperational ? { stack: err.stack } : {}),
     };
 
-    if (category === 'critical') {
-        logger.error(`${err.name || 'Error'}: ${err.message}`, logContext);
-    } else if (category === 'warning') {
-        logger.warn(`${err.name || 'Error'}: ${err.message}`, logContext);
+    if (!normalised.isOperational || normalised.statusCode >= 500) {
+        reqLogger.error(normalised.message, logPayload);
+    } else if (normalised.statusCode >= 400) {
+        reqLogger.warn(normalised.message, logPayload);
     } else {
-        logger.info(`${err.name || 'Error'}: ${err.message}`, logContext);
+        reqLogger.info(normalised.message, logPayload);
     }
 
-    // ── Sentry ───────────────────────────────────────────────────────────────
-    if (statusCode >= 500) {
-        sentry.withScope((scope) => {
-            scope.setTag('category', category);
-            if (req.user) {
-                sentry.setUser({ id: req.user.userId || req.user.id, email: req.user.email });
-            }
-            scope.setContext('request', {
-                method: req.method,
-                url:    req.originalUrl || req.url,
-                body:   req.body,
-            });
-            sentry.captureException(err);
+    // Report unexpected errors to Sentry.
+    if (!normalised.isOperational || normalised.statusCode >= 500) {
+        captureException(err, {
+            requestId,
+            path: req.originalUrl || req.path,
+            method: req.method,
+            userId: req.user ? (req.user.userId || req.user.id) : undefined,
         });
     }
 
-    // ── Retry-After header for rate-limit errors ─────────────────────────────
-    if (err.retryAfter) {
-        res.set('Retry-After', String(err.retryAfter));
-    }
+    const isDev = (process.env.NODE_ENV || 'development') === 'development';
 
-    // ── Response ─────────────────────────────────────────────────────────────
-    if (res.headersSent) {
-        // Can't send another response — just close the connection.
-        return _next(err);
-    }
+    const body = {
+        error: isDev ? normalised.message : (normalised.userMessage || normalised.message),
+        userMessage: normalised.userMessage,
+        code: normalised.code,
+        ...(requestId ? { requestId } : {}),
+        ...(normalised.supportLink ? { supportLink: normalised.supportLink } : {}),
+        ...(isDev && err.stack ? { stack: err.stack } : {}),
+        // Pass upgradeRequired through for payment-gated errors.
+        ...(normalised.upgradeRequired ? { upgradeRequired: true } : {}),
+    };
 
-    res.status(statusCode).json(buildResponseBody(err, isDev));
+    // Avoid sending a response if headers have already been sent.
+    if (res.headersSent) return;
+    res.status(normalised.statusCode).json(body);
 }
 
-module.exports = { errorHandler, buildResponseBody, categorise };
+module.exports = { globalErrorHandler, normaliseError };

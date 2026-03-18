@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/teams-enhanced.css" />
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
 </head>
 <body class="teams-dashboard">
 
@@ -27,6 +29,7 @@
         <a href="/results.html">My Results</a>
         <button type="button" id="btn-export-csv">Export CSV</button>
         <button type="button" id="btn-generate-report">Generate Report</button>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
         <button type="button" id="btn-logout" class="btn--danger">Sign Out</button>
       </nav>
     </div>
@@ -938,5 +941,6 @@
   });
   </script>
 
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>
