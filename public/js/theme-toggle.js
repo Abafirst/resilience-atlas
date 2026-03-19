@@ -36,7 +36,7 @@
     if (theme === DARK) {
       root.setAttribute('data-theme', DARK);
     } else {
-      root.removeAttribute('data-theme');
+      root.setAttribute('data-theme', LIGHT);
     }
     updateToggleIcon(theme);
   }
