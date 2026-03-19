@@ -62,6 +62,8 @@ function hexToRgb(hex) {
     const n = parseInt(hex.replace('#', ''), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
+function fc(doc, h) { doc.fillColor(hex(h)); }
+function sc(doc, h) { doc.strokeColor(hex(h)); }
 
 function fillColor(doc, hex) {
     doc.fillColor(hexToRgb(hex));
@@ -310,9 +312,27 @@ function buildJourneyMapPage(doc, report) {
     newPage(doc);
     sectionHeader(doc, 'YOUR RESILIENCE JOURNEY \u2014 EXECUTIVE SUMMARY', COLORS.primary);
 
-    if (report.executiveSummary) {
-        infoBox(doc, report.executiveSummary, COLORS.bgLight, COLORS.border, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
+    sectionBanner(doc, '\uD83D\uDCCD  Your Current Position on the Resilience Landscape', C.purple);
+    calloutBox(doc, getTerrainSummary(overall), C.bgPurple, C.purple);
+
+    sectionBanner(doc, '\uD83D\uDDDD\uFE0F  Navigation Symbols', C.textMid);
+    const symbols = [
+        ['STRONG (80–100%)',      C.strong,     'Well-developed terrain — navigate with confidence.'],
+        ['SOLID (65–79%)',        C.solid,      'Established footing — clear paths to higher elevation.'],
+        ['DEVELOPING (50–64%)',   C.developing, 'Active growth zone — investment yields rapid progress.'],
+        ['EMERGING (below 50%)', C.emerging,   'Uncharted territory — highest growth potential.'],
+    ];
+    for (const [label, color, desc] of symbols) {
+        ensureSpace(doc, 22);
+        const ry = doc.y;
+        fillRect(doc, MARGIN, ry, 110, 16, 4, color);
+        fc(doc, C.bgWhite);
+        doc.fontSize(7).font('Helvetica-Bold').text(label, MARGIN + 3, ry + 5, { width: 104 });
+        fc(doc, C.textMid);
+        doc.fontSize(9).font('Helvetica').text(desc, MARGIN + 118, ry + 4, { width: COL_W - 124 });
+        doc.y = Math.max(ry + 20, doc.y + 2);
     }
+}
 
     if (report.profileArchetype) {
         ensureSpace(doc, 60);
@@ -522,7 +542,8 @@ function buildDimensionPage(doc, dimName, analysis) {
         doc.y += 14;
     }
 
-    // Personalized insight
+    // ── Personalized insight (compact) ───────────────────────────────────
+    sectionBanner(doc, '\uD83E\uDDED  Your Navigation Skills in This Terrain', C.purple);
     if (analysis.personalizedInsight) {
         infoBox(
             doc,
@@ -718,7 +739,6 @@ function buildStressResponsePage(doc, report) {
             const cfg = DIM_CONFIG[s] || {};
             bullet(doc, s + ' \u2014 your anchor territory under stress');
         }
-        doc.y += 6;
     }
 
     if (sr.vulnerabilitiesUnderStress && sr.vulnerabilitiesUnderStress.length > 0) {
@@ -889,6 +909,15 @@ function buildActionPlanPage1(doc, report) {
         });
         doc.y += 14;
     }
+
+    // Leveraging your type
+    ensureSpace(doc, 55);
+    calloutBox(doc,
+        '\uD83D\uDEE4\uFE0F  Your Navigator Type is not a cage — it is a compass. Understanding it lets you lean ' +
+        'into your natural strengths while deliberately developing the dimensions that will round out your resilience. ' +
+        'The most resilient people know their type deeply and choose, each day, when to navigate from their strength ' +
+        'and when to stretch beyond it.',
+        C.bgBlue, C.indigo);
 }
 
 /** Page 15 - 30-Day Expedition Part 2 (Weeks 3-4) */
@@ -1009,6 +1038,12 @@ function buildResourcesPage(doc, report) {
         for (const item of section.items) { bullet(doc, item, 8); }
         doc.y += 6;
     }
+}
+
+// PAGE 15 — Relationship Navigation & Team Dynamics ───────────────────────────
+function buildRelationshipPage(doc, report) {
+    newPage(doc);
+    sectionBanner(doc, '\uD83D\uDC65  Charting Course With Others — Relationship Navigation');
 
     ensureSpace(doc, 80);
     sectionHeader(doc, 'APPS, COMMUNITIES & COACHING', COLORS.textMid);
@@ -1156,7 +1191,7 @@ function buildPdfWithPDFKit(report, overall) {
         try {
             const doc = new PDFDocument({
                 size: 'A4',
-                margin: PAGE_MARGIN,
+                margin: MARGIN,
                 bufferPages: true,
                 info: {
                     Title: 'The Resilience Atlas\u2122 \u2014 Your Personal Navigation Report',
@@ -1166,8 +1201,8 @@ function buildPdfWithPDFKit(report, overall) {
             });
 
             const chunks = [];
-            doc.on('data', (chunk) => chunks.push(chunk));
-            doc.on('end', () => resolve(Buffer.concat(chunks)));
+            doc.on('data',  (chunk) => chunks.push(chunk));
+            doc.on('end',   () => resolve(Buffer.concat(chunks)));
             doc.on('error', reject);
 
             try {
