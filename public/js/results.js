@@ -349,7 +349,8 @@ document.addEventListener('DOMContentLoaded', () => {
           upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
-        const downloadEmail = localStorage.getItem('resilience_email') || results.email || '';
+        const emailInputEl = document.getElementById('emailInput');
+        const downloadEmail = (emailInputEl?.value || '').trim() || localStorage.getItem('resilience_email') || results.email || '';
         const scoresStr = JSON.stringify(results.scores);
 
         if (window.PdfProgress) {
