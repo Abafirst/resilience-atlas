@@ -63,8 +63,8 @@ function hexToRgb(hex) {
     const n = parseInt(hex.replace('#', ''), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
-function fc(doc, h) { doc.fillColor(hex(h)); }
-function sc(doc, h) { doc.strokeColor(hex(h)); }
+function fc(doc, h) { doc.fillColor(h); }
+function sc(doc, h) { doc.strokeColor(h); }
 
 function fillColor(doc, hex) {
     doc.fillColor(hexToRgb(hex));
@@ -322,27 +322,7 @@ function buildJourneyMapPage(doc, report) {
     newPage(doc);
     sectionHeader(doc, 'YOUR RESILIENCE JOURNEY \u2014 EXECUTIVE SUMMARY', COLORS.primary);
 
-    sectionBanner(doc, '\uD83D\uDCCD  Your Current Position on the Resilience Landscape', C.purple);
-    calloutBox(doc, getTerrainSummary(overall), C.bgPurple, C.purple);
 
-    sectionBanner(doc, '\uD83D\uDDDD\uFE0F  Navigation Symbols', C.textMid);
-    const symbols = [
-        ['STRONG (80–100%)',      C.strong,     'Well-developed terrain — navigate with confidence.'],
-        ['SOLID (65–79%)',        C.solid,      'Established footing — clear paths to higher elevation.'],
-        ['DEVELOPING (50–64%)',   C.developing, 'Active growth zone — investment yields rapid progress.'],
-        ['EMERGING (below 50%)', C.emerging,   'Uncharted territory — highest growth potential.'],
-    ];
-    for (const [label, color, desc] of symbols) {
-        ensureSpace(doc, 22);
-        const ry = doc.y;
-        fillRect(doc, MARGIN, ry, 110, 16, 4, color);
-        fc(doc, C.bgWhite);
-        doc.fontSize(7).font('Helvetica-Bold').text(label, MARGIN + 3, ry + 5, { width: 104 });
-        fc(doc, C.textMid);
-        doc.fontSize(9).font('Helvetica').text(desc, MARGIN + 118, ry + 4, { width: COL_W - 124 });
-        doc.y = Math.max(ry + 20, doc.y + 2);
-    }
-}
 
     if (report.profileArchetype) {
         ensureSpace(doc, 60);
@@ -551,10 +531,7 @@ function buildDimensionPage(doc, dimName, analysis) {
         );
         doc.y += 14;
     }
-    fc(doc, COLORS.slate800);
-
     // ── Personalized insight (compact) ───────────────────────────────────
-    sectionBanner(doc, '\uD83E\uDDED  Your Navigation Skills in This Terrain', C.purple);
     if (analysis.personalizedInsight) {
         infoBox(
             doc,
@@ -889,7 +866,7 @@ function buildActionPlanPage1(doc, report) {
         // Life area applications
         const lifeAreas = ['\u2764\uFE0F Relationships', '\u{1F91D} Friendships', '\u{1F476} Parenting', '\u{1F4BC} Work', '\u{1F331} Growth'];
         doc.y += 4;
-        fc(doc, COLORS.slate500);
+        fc(doc, COLORS.textMid);
         doc.fontSize(8).font('Helvetica-Bold').text(
             `Apply in: ${lifeAreas.join('  \u2022  ')}`,
             PAGE_MARGIN + 8, doc.y, { width: CONTENT_WIDTH - 16 }
@@ -935,12 +912,12 @@ function buildActionPlanPage1(doc, report) {
 
     // Leveraging your type
     ensureSpace(doc, 55);
-    calloutBox(doc,
-        '\uD83D\uDEE4\uFE0F  Your Navigator Type is not a cage — it is a compass. Understanding it lets you lean ' +
+    infoBox(doc,
+        '\uD83D\uDEE4\uFE0F  Your Navigator Type is not a cage \u2014 it is a compass. Understanding it lets you lean ' +
         'into your natural strengths while deliberately developing the dimensions that will round out your resilience. ' +
         'The most resilient people know their type deeply and choose, each day, when to navigate from their strength ' +
         'and when to stretch beyond it.',
-        C.bgBlue, C.indigo);
+        COLORS.bgBlue, COLORS.primary, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
 }
 
 /** Page 15 - 30-Day Expedition Part 2 (Weeks 3-4) */
@@ -1075,7 +1052,7 @@ function buildResourcesPage(doc, report) {
 // PAGE 15 — Relationship Navigation & Team Dynamics ───────────────────────────
 function buildRelationshipPage(doc, report) {
     newPage(doc);
-    sectionBanner(doc, '\uD83D\uDC65  Charting Course With Others — Relationship Navigation');
+    sectionHeader(doc, 'CHARTING COURSE WITH OTHERS \u2014 RELATIONSHIP NAVIGATION', COLORS.primary);
 
     ensureSpace(doc, 80);
     sectionHeader(doc, 'APPS, COMMUNITIES & COACHING', COLORS.textMid);
