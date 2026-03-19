@@ -452,6 +452,7 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
         console.log('Launching Puppeteer browser…');
         const browser = await puppeteer.launch({
             headless: 'new',
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             timeout: 30000,
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             args: [
