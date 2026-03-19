@@ -1208,7 +1208,7 @@ function buildPdfWithPDFKit(report, overall) {
 
             const doc = new PDFDocument({
                 size: 'A4',
-                margin: MARGIN,
+                margin: PAGE_MARGIN,
                 bufferPages: true,
                 info: {
                     Title: 'The Resilience Atlas\u2122 \u2014 Your Personal Navigation Report',
