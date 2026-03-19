@@ -34,6 +34,7 @@ class PDFDocument extends EventEmitter {
     fillAndStroke() { return this; }
     fillColor() { return this; }
     strokeColor() { return this; }
+    image() { return this; }
     // Page methods
     addPage() { return this; }
     switchToPage() { return this; }
