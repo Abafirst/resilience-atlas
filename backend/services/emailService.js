@@ -263,6 +263,23 @@ async function sendReferralThankYou(to, vars) {
 }
 
 /**
+ * Validate that a buffer contains a well-formed PDF document.
+ *
+ * Checks for the `%PDF-1` magic-byte header that every compliant PDF must
+ * start with.  Returns `false` for null / empty buffers as well.
+ *
+ * @param {Buffer} buffer
+ * @returns {boolean}
+ */
+function validatePdfBuffer(buffer) {
+  if (!Buffer.isBuffer(buffer) || buffer.length < 1024) {
+    return false;
+  }
+  // PDF magic bytes: "%PDF-1" (hex 25 50 44 46 2D 31)
+  return buffer.slice(0, 6).toString('ascii') === '%PDF-1';
+}
+
+/**
  * Send a PDF report as an email attachment.
  *
  * @param {string} to         Recipient email address
@@ -270,22 +287,35 @@ async function sendReferralThankYou(to, vars) {
  * @returns {Promise<Object>} Nodemailer info object
  */
 async function sendPdfReport(to, pdfBuffer) {
-  const info = await transporter.sendMail({
-    from:    FROM,
-    to,
-    subject: 'Your Resilience Atlas Report',
-    text:    'Please find your personalized Resilience Atlas report attached.',
-    html:    '<p>Please find your personalized Resilience Atlas report attached.</p>',
-    attachments: [
-      {
-        filename:    'resilience-report.pdf',
-        content:     pdfBuffer,
-        contentType: 'application/pdf',
-      },
-    ],
-  });
-  logger.info(`[emailService] PDF report sent to ${to} — messageId: ${info.messageId}`);
-  return info;
+  if (!validatePdfBuffer(pdfBuffer)) {
+    const detail = !pdfBuffer
+      ? 'pdfBuffer is null/undefined'
+      : `buffer length ${pdfBuffer.length}, header "${pdfBuffer.slice(0, 8).toString('hex')}"`;
+    logger.error(`[emailService] sendPdfReport: invalid PDF buffer (${detail})`);
+    throw new Error('Invalid PDF buffer — cannot attach to email.');
+  }
+
+  try {
+    const info = await transporter.sendMail({
+      from:    FROM,
+      to,
+      subject: 'Your Resilience Atlas Report',
+      text:    'Please find your personalized Resilience Atlas report attached.',
+      html:    '<p>Please find your personalized Resilience Atlas report attached.</p>',
+      attachments: [
+        {
+          filename:    'resilience-report.pdf',
+          content:     pdfBuffer,
+          contentType: 'application/pdf',
+        },
+      ],
+    });
+    logger.info(`[emailService] PDF report sent to ${to} — messageId: ${info.messageId}`);
+    return info;
+  } catch (err) {
+    logger.error(`[emailService] sendPdfReport failed for ${to}: ${err.message}`, { stack: err.stack });
+    throw err;
+  }
 }
 
 /* ── Exports ──────────────────────────────────────────────────────────────── */
@@ -308,6 +338,7 @@ module.exports = {
 
   /* PDF report with attachment */
   sendPdfReport,
+  validatePdfBuffer,
 
   /* Legacy aliases (keep existing call-sites working) */
   sendQuizReport,

@@ -542,3 +542,84 @@ describe('emailService — capitalize utility', () => {
     expect(emailService.capitalize(undefined)).toBe('');
   });
 });
+
+/* ── validatePdfBuffer ────────────────────────────────────────────────────── */
+
+describe('emailService — validatePdfBuffer', () => {
+  const { validatePdfBuffer } = emailService;
+
+  function makePdfBuffer(size = 2048) {
+    const buf = Buffer.alloc(size);
+    buf.write('%PDF-1.4', 0, 'ascii');
+    return buf;
+  }
+
+  it('returns true for a buffer with valid PDF magic bytes', () => {
+    expect(validatePdfBuffer(makePdfBuffer())).toBe(true);
+  });
+
+  it('returns false for null', () => {
+    expect(validatePdfBuffer(null)).toBe(false);
+  });
+
+  it('returns false for undefined', () => {
+    expect(validatePdfBuffer(undefined)).toBe(false);
+  });
+
+  it('returns false for a non-Buffer value', () => {
+    expect(validatePdfBuffer('not a buffer')).toBe(false);
+  });
+
+  it('returns false for a buffer that is too small (< 1024 bytes)', () => {
+    const small = Buffer.alloc(512);
+    small.write('%PDF-1.4', 0, 'ascii');
+    expect(validatePdfBuffer(small)).toBe(false);
+  });
+
+  it('returns false when magic bytes are wrong', () => {
+    const buf = makePdfBuffer();
+    buf.write('NOTPDF', 0, 'ascii');
+    expect(validatePdfBuffer(buf)).toBe(false);
+  });
+});
+
+/* ── sendPdfReport ────────────────────────────────────────────────────────── */
+
+describe('emailService — sendPdfReport', () => {
+  beforeEach(() => mockSendMail.mockClear());
+
+  function validPdfBuffer(size = 2048) {
+    const buf = Buffer.alloc(size);
+    buf.write('%PDF-1.4', 0, 'ascii');
+    return buf;
+  }
+
+  it('calls sendMail with an attachment for a valid PDF buffer', async () => {
+    await emailService.sendPdfReport('user@example.com', validPdfBuffer());
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+    const opts = mockSendMail.mock.calls[0][0];
+    expect(opts.to).toBe('user@example.com');
+    expect(opts.attachments).toHaveLength(1);
+    expect(opts.attachments[0].contentType).toBe('application/pdf');
+  });
+
+  it('throws for a null pdfBuffer without calling sendMail', async () => {
+    await expect(emailService.sendPdfReport('user@example.com', null))
+      .rejects.toThrow('Invalid PDF buffer');
+    expect(mockSendMail).not.toHaveBeenCalled();
+  });
+
+  it('throws for a too-small buffer without calling sendMail', async () => {
+    const small = Buffer.alloc(100);
+    small.write('%PDF-1.4', 0, 'ascii');
+    await expect(emailService.sendPdfReport('user@example.com', small))
+      .rejects.toThrow('Invalid PDF buffer');
+    expect(mockSendMail).not.toHaveBeenCalled();
+  });
+
+  it('throws when sendMail rejects, propagating the underlying error', async () => {
+    mockSendMail.mockRejectedValueOnce(new Error('SMTP connection refused'));
+    await expect(emailService.sendPdfReport('user@example.com', validPdfBuffer()))
+      .rejects.toThrow('SMTP connection refused');
+  });
+});
