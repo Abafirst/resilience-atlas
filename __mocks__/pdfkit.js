@@ -23,8 +23,11 @@ class PDFDocument extends EventEmitter {
     // Drawing methods (chainable)
     rect() { return this; }
     roundedRect() { return this; }
+    circle() { return this; }
+    polygon() { return this; }
     moveTo() { return this; }
     lineTo() { return this; }
+    lineWidth() { return this; }
     // Style methods (chainable)
     fill() { return this; }
     stroke() { return this; }

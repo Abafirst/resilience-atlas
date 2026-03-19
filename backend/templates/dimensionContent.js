@@ -119,36 +119,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Your ability to reframe narratives helps you avoid catastrophising relationship ' +
-                'challenges. When conflict arises, you can step back and ask "what is the real ' +
-                'story here?" — creating space for understanding over reactivity. You can ' +
-                'construct empowering stories about your relationship\'s journey, seeing setbacks ' +
-                'as chapters rather than endings.',
+                'In intimate relationships, your narrative capacity helps you reframe conflicts as growth opportunities rather than threats. You can hold a larger story of the relationship beyond a single difficult moment, supporting repair and deeper understanding.',
             friendships:
-                'You naturally help friends reframe their struggles, offering perspective that ' +
-                'transforms their experience of difficulty. You are the friend who says "here\'s ' +
-                'another way to see this" — and genuinely means it. Your ability to hold a ' +
-                'growth narrative about others\' challenges makes you a profoundly supportive ' +
-                'presence in their lives.',
+                'With friends, your ability to find meaning in shared challenges creates deeper bonds. You may be the friend who helps others make sense of difficult experiences, offering perspective when emotions cloud clarity.',
             parenting:
-                'You model resilient thinking for children, teaching them to find lessons in ' +
-                'setbacks rather than spiralling into shame or defeat. When your child faces ' +
-                'failure, you help them craft a growth narrative. This may be one of the most ' +
-                'important gifts you can pass on — the capacity to tell an empowering story ' +
-                'about one\'s own life.',
+                'As a parent or caregiver, this strength lets you model a growth mindset for children. Narrating challenges as learning experiences — "we didn\'t fail, we learned what doesn\'t work" — builds children\'s resilience from an early age.',
             work:
-                'You stay solution-focused under pressure, reframe setbacks as data, and help ' +
-                'teams find meaning in challenging projects. Colleagues seek you out during ' +
-                'difficult periods for your ability to see the bigger picture. In leadership, ' +
-                'your narrative reframing ability can shift team morale during adversity.',
+                'At work, strong narrative resilience means you can reframe setbacks as data, stay solution-focused under pressure, and help your team see possibility in difficult situations — a core leadership skill in complex environments.',
             personalGrowth:
-                'Narrative reframing is your superpower for personal development. You can ' +
-                'transform your story about who you are and what is possible, unlocking new ' +
-                'dimensions of growth that others might not access. Your inner storyteller ' +
-                'is also your inner navigator — use it consciously.',
+                'Practices like journaling, narrative therapy, and reflective writing are particularly powerful for you. Writing the story of your challenges — then rewriting it from a growth perspective — is a transformative personal practice.',
         },
-
-        affirmation: 'I choose the story I tell about my life, and I choose growth.',
 
         benchmark: {
             populationMean: 62,
@@ -256,33 +236,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Deep connection and genuine empathy make you a profoundly present partner. ' +
-                'You create safety for vulnerability and are skilled at both giving and ' +
-                'receiving support during difficult times. Your partner feels truly seen ' +
-                'and heard — one of the greatest gifts in any intimate relationship.',
+                'In intimate partnerships, relational resilience means you can maintain connection even during conflict — staying present, listening deeply, and prioritising the relationship over being right. This is the foundation of lasting love.',
             friendships:
-                'You are the person friends turn to — not because you have all the answers, ' +
-                'but because you make them feel genuinely seen and understood. Your friendships ' +
-                'tend to run deep rather than wide. You invest in people, and they feel it. ' +
-                'Your relational intelligence makes you a trusted anchor in your social world.',
+                'With friends, this strength creates the depth and longevity that makes friendships feel like family. You invest in reciprocal care, show up authentically, and create the safety that allows true vulnerability.',
             parenting:
-                'Your relational intelligence creates secure attachment with your children. ' +
-                'You tune in to their emotional experience, respond with empathy, and create ' +
-                'the relational safety that is foundational for healthy development. Children ' +
-                'who feel deeply connected to a parent are more resilient themselves.',
+                'As a parent, relational resilience translates to secure attachment — being emotionally available, responsive, and consistent. Children who experience this foundation are significantly more resilient across all dimensions.',
             work:
-                'You build psychological safety in teams, facilitate effective collaboration, ' +
-                'and navigate interpersonal dynamics with skill. People tend to trust you and ' +
-                'follow your lead because of how you make them feel — valued, heard, and ' +
-                'connected. This is a rare and highly valued professional asset.',
+                'In professional settings, this dimension drives collaboration, psychological safety, and the kind of team trust that unlocks peak performance. Leaders here create environments where people feel genuinely seen and valued.',
             personalGrowth:
-                'Your relational strength can accelerate personal growth through deep ' +
-                'engagement with mentors, coaches, and growth communities. You learn well ' +
-                'in relationship — through conversation, collaboration, and the kind of ' +
-                'honest reflection that only trust makes possible.',
+                'Your growth edge is often turning this relational intelligence toward yourself — building self-compassion, inner connection, and the ability to be with your own experience as generously as you are with others.',
         },
-
-        affirmation: 'My connections are my strength, and I show up fully for the people I love.',
 
         benchmark: {
             populationMean: 60,
@@ -388,35 +351,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Your proactive orientation means you invest in relationships intentionally — ' +
-                'planning meaningful experiences, addressing challenges before they escalate, ' +
-                'and taking initiative to repair ruptures when they occur. You don\'t wait for ' +
-                'connection to happen; you create it. This generative energy is a tremendous ' +
-                'gift in any long-term relationship.',
+                'In relationships, personal agency means you can initiate difficult conversations, take responsibility for your part in challenges, and proactively invest in the health of the relationship rather than waiting for things to improve on their own.',
             friendships:
-                'You are the friend who makes things happen — organising get-togethers, ' +
-                'following up when you haven\'t heard from someone, and showing up when it ' +
-                'counts. Your reliability and initiative make you a highly valued friend. ' +
-                'People know that a friendship with you won\'t simply fade — you tend it.',
+                'You\'re the friend who follows through — who remembers to check in, who initiates the gathering, who takes action when someone is struggling. This reliability and initiative makes you a deeply valued presence in others\' lives.',
             parenting:
-                'You model initiative, problem-solving, and agency for your children — ' +
-                'teaching them that challenges are things to be approached, not fled. You ' +
-                'create environments that foster your children\'s own sense of agency, giving ' +
-                'them the confidence that their actions matter and that they can navigate ' +
-                'difficulty with resourcefulness.',
+                'With children, modeling agency is one of the greatest gifts you can offer. Teaching children that their choices matter, that effort leads to growth, and that they can create change — these lessons protect against learned helplessness and build lifelong confidence.',
             work:
-                'You are the person who moves projects forward, generates options when teams ' +
-                'are stuck, and brings energy and momentum to collective challenges. Leaders ' +
-                'seek people with your generative orientation. In your career, you are ' +
-                'unlikely to stay stuck for long — your agency creates its own opportunities.',
+                'Professionally, this dimension is the engine of entrepreneurship, leadership, and career resilience. You navigate change proactively, drive initiatives forward, and don\'t wait for permission to create value — making you highly adaptable.',
             personalGrowth:
-                'Your agency means you don\'t wait for growth to happen to you — you create ' +
-                'it intentionally, through deliberate practice, structured challenges, and ' +
-                'consistent action toward your goals. The map of your personal growth is ' +
-                'one you actively draw rather than one you simply follow.',
+                'Your personal growth accelerates when you take deliberate, consistent action on your development — setting specific goals, completing micro-challenges, and building a track record of intentional change that compounds over time.',
         },
-
-        affirmation: 'I have the power to shape my path — and I choose to move forward.',
 
         benchmark: {
             populationMean: 65,
@@ -530,35 +474,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Your emotional depth and attunement make you a remarkable partner. You can ' +
-                'hold space for a partner\'s difficult emotions without fixing or dismissing ' +
-                'them, creating the conditions for genuine intimacy. You also have the ' +
-                'courage to express your own vulnerability, which is the doorway to the kind ' +
-                'of deep connection most people long for.',
+                'Emotional intelligence is the primary currency of intimate relationships. The capacity to express your own feelings clearly, receive your partner\'s emotions without defensiveness, and repair ruptures through emotional honesty is the basis of lasting connection.',
             friendships:
-                'Your friends know they can be fully themselves with you — that their messy ' +
-                'emotions won\'t scare you away. You hold space, offer genuine empathy, and ' +
-                'create the kind of friendship that transforms people. You are likely the ' +
-                'friend others call when they are at their lowest, because you don\'t shy ' +
-                'away from the difficult terrain.',
+                'With friends, emotional resilience means you can be present for their struggles without either minimising or absorbing their pain. You create the rare kind of friendship where both people feel genuinely understood.',
             parenting:
-                'You are emotionally attuned to your children\'s inner worlds, helping them ' +
-                'name and navigate their feelings rather than suppressing them. This emotional ' +
-                'scaffolding builds their own emotional intelligence and long-term wellbeing. ' +
-                'Children whose feelings are met with empathy grow into emotionally resilient adults.',
+                'Parents who model emotional regulation give children one of the most valuable life skills. Naming your emotions, processing them openly and appropriately, and helping children navigate their own emotional worlds builds emotional intelligence from the earliest years.',
             work:
-                'Your emotional awareness helps you navigate complex interpersonal dynamics, ' +
-                'give and receive feedback skillfully, and maintain relationships across ' +
-                'difference. In leadership, emotional intelligence translates directly to ' +
-                'high-performing teams, reduced conflict, and increased psychological safety.',
+                'In professional contexts, emotional regulation is increasingly recognised as a critical leadership competency — staying grounded under pressure, receiving critical feedback without defensiveness, and managing team emotional dynamics effectively.',
             personalGrowth:
-                'Your emotional depth accelerates personal growth — you are willing to feel ' +
-                'the discomfort of growth, to process what\'s difficult, and to let ' +
-                'challenging experiences genuinely change you. Emotions, for you, are not ' +
-                'obstacles on the journey — they are the journey itself.',
+                'Your emotional life is a rich source of information about what you value, what you need, and where you are growing. Developing practices to process and express emotions — rather than suppress or be overwhelmed by them — accelerates growth in all dimensions.',
         },
-
-        affirmation: 'My feelings are valid guides, and I meet them with curiosity and compassion.',
 
         benchmark: {
             populationMean: 58,
@@ -667,38 +592,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Your sense of meaning and values creates depth and direction in relationships. ' +
-                'You are drawn to partners who share your orientation toward purpose, and you ' +
-                'contribute a grounding quality to shared life. Your ability to find meaning ' +
-                'even in the difficult chapters of a relationship — seeing them as growth, not ' +
-                'failure — makes you a profoundly steady partner.',
+                'When both people in a relationship share a sense of purpose or values, it creates a depth of connection that transcends the practical. Clarifying and sharing your values with loved ones builds a shared compass for navigating life together.',
             friendships:
-                'Your reflective depth draws others who are searching for meaning. You create ' +
-                'conversations that go beneath the surface, and your friendships are often ' +
-                'described as nourishing in a way that casual connections rarely are. Friends ' +
-                'seek you out when they need perspective, wisdom, and the kind of conversation ' +
-                'that actually helps.',
+                'Friendships grounded in shared meaning and genuine inquiry have a particular depth. You may find your most nourishing friendships involve conversations that leave you more alive — exploring what matters, what you believe, and how to live well.',
             parenting:
-                'You help your children develop their own values, sense of purpose, and inner ' +
-                'life. You model what it looks like to live with intention and to find meaning ' +
-                'even in life\'s difficult seasons. Children raised by parents with strong ' +
-                'spiritual-reflective resilience often develop a remarkable capacity for ' +
-                'purpose-driven living.',
+                'Helping children develop their own sense of meaning and values — rather than just imposing yours — is a profound parenting practice. Creating family rituals, shared traditions, and space for deep questions builds spiritual resilience for the next generation.',
             work:
-                'You bring clarity of purpose, ethical groundedness, and a long-term ' +
-                'perspective to professional life. You are the person who asks "why are we ' +
-                'doing this?" — and whose answer actually matters to others. In a culture ' +
-                'of distraction and short-termism, your capacity for deep meaning-making is ' +
-                'a rare and valuable professional asset.',
+                'Purpose-driven work is consistently associated with higher performance, greater wellbeing, and lower burnout. Connecting your daily work to a larger purpose — even in small ways — transforms the quality of your engagement and the sustainability of your effort.',
             personalGrowth:
-                'Your reflective capacity means you don\'t just accumulate experiences — ' +
-                'you digest them, integrate them, and allow them to shape your ongoing ' +
-                'becoming. Growth for you is a conscious, intentional journey, guided by ' +
-                'your internal compass rather than external expectation. You are the ' +
-                'cartographer of your own soul.',
+                'Reflective practices — meditation, journaling, time in nature, contemplative reading — are the primary tools for developing this dimension. Even 10 minutes of intentional reflection daily can steadily build existential groundedness over time.',
         },
-
-        affirmation: 'My life has meaning, and I am exactly where I need to be on my journey.',
 
         benchmark: {
             populationMean: 55,
@@ -811,38 +714,16 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'Your physical groundedness creates a calming, regulating presence for ' +
-                'partners. Research shows that when one person in a relationship is calm, ' +
-                'it genuinely helps the other co-regulate. Your somatic stability is an ' +
-                'invisible gift in intimate relationships — it creates the steady ground ' +
-                'from which genuine connection can grow.',
+                'Physical co-regulation is a powerful dimension of intimate relationships. When you are calm and grounded, your nervous system communicates safety to your partner\'s. Developing somatic awareness helps you show up as a regulating presence rather than a dysregulating one.',
             friendships:
-                'Your grounded physical presence is often felt before a word is spoken. ' +
-                'Friends feel more settled around you, and your pragmatic approach to ' +
-                'wellbeing can inspire them to care for their own physical foundations. ' +
-                'You are the friend who suggests a walk when everything feels overwhelming — ' +
-                'and you\'re right to suggest it.',
+                'Shared physical activities — walking, sport, dance, cooking together — are not just pleasant; they are powerful nervous system regulators. Embodied connection often creates the safety for deeper conversations than sitting face to face.',
             parenting:
-                'Your somatic regulation is co-regulatory for children — when you are calm, ' +
-                'they are more likely to be calm. You model physical self-care and teach ' +
-                'your children to use their bodies as regulation tools. The breathing ' +
-                'practices and physical self-care habits you model may be among the most ' +
-                'lasting gifts you give them.',
+                'Children regulate their nervous systems through co-regulation with calm caregivers. Your physical presence, your tone, your breath, and your body language communicate safety or danger to children before any words are spoken. Somatic resilience is transmitted, not just taught.',
             work:
-                'Your capacity for physical regulation under pressure translates to clearer ' +
-                'decision-making, more sustainable performance, and the ability to bring calm ' +
-                'into high-stakes moments. You model what regulated, grounded leadership ' +
-                'looks and feels like — a form of professional mastery that is increasingly ' +
-                'recognised and valued.',
+                'Physical wellbeing directly affects cognitive performance, emotional regulation, and creative capacity. Sleep, movement, and breath are not lifestyle extras — they are professional tools. Leaders who prioritise somatic health consistently perform more sustainably.',
             personalGrowth:
-                'Your embodied approach to wellbeing creates a sustainable foundation for ' +
-                'all other forms of growth. When your body is regulated, your capacity for ' +
-                'learning, change, and development expands significantly. You\'ve discovered ' +
-                'what many people miss: the body is not separate from the journey — it is ' +
-                'the vehicle for it.',
+                'Your body is your most immediate and accessible resilience tool. Daily movement, conscious breathing, adequate sleep, and mindful physical experience are the foundation on which all other growth is built. Start here when rebuilding resilience from the ground up.',
         },
-
-        affirmation: 'I listen to my body\'s wisdom and honour its need for rest and renewal.',
 
         benchmark: {
             populationMean: 57,

@@ -1,1076 +1,878 @@
 'use strict';
 
 const PDFDocument = require('pdfkit');
+const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const COLORS = {
-    // Primary Atlas palette
-    indigo: '#4f46e5',
-    indigoDark: '#3730a3',
-    indigoLight: '#818cf8',
-    purple: '#8b5cf6',
-    purpleDark: '#6d28d9',
-    purpleLight: '#c4b5fd',
-    // Accent colours
-    emerald: '#10b981',
-    emeraldLight: '#6ee7b7',
-    amber: '#f59e0b',
-    amberLight: '#fde68a',
-    rose: '#f43f5e',
-    sky: '#0ea5e9',
-    // Score level colours
-    strong: '#10b981',
-    solid: '#4f46e5',
-    developing: '#f59e0b',
-    emerging: '#ef4444',
-    // Neutrals (slate)
-    slate900: '#0f172a',
-    slate800: '#1e293b',
-    slate700: '#334155',
-    slate600: '#475569',
-    slate500: '#64748b',
-    slate400: '#94a3b8',
-    slate200: '#e2e8f0',
-    slate100: '#f1f5f9',
-    slate50: '#f8fafc',
-    white: '#ffffff',
-    // Background tints
-    bgIndigo: '#eef2ff',
+    primary: '#6366f1',
+    primaryDark: '#4f46e5',
+    secondary: '#8b5cf6',
+    accent: '#10b981',
+    accentDark: '#059669',
+    warning: '#f59e0b',
+    danger: '#ef4444',
+    text: '#1e293b',
+    textMid: '#475569',
+    textLight: '#94a3b8',
+    border: '#e2e8f0',
+    bgLight: '#f8fafc',
+    bgBlue: '#eff6ff',
+    bgGreen: '#f0fdf4',
+    bgOrange: '#fff7ed',
     bgPurple: '#faf5ff',
-    bgEmerald: '#f0fdf4',
-    bgAmber: '#fffbeb',
-    bgRose: '#fff1f2',
-    bgSky: '#f0f9ff',
+    bgPink: '#fdf2f8',
+    white: '#ffffff',
+    coverBg: '#1e1b4b',
+    coverAccent: '#4338ca',
 };
 
 const LEVEL_COLORS = {
-    strong: COLORS.emerald,
-    solid: COLORS.indigo,
-    developing: COLORS.amber,
-    emerging: COLORS.rose,
+    strong: '#059669',
+    solid: '#6366f1',
+    developing: '#f59e0b',
+    emerging: '#ef4444',
 };
 
-const LEVEL_LABELS = {
-    strong: 'Strong',
-    solid: 'Solid',
-    developing: 'Developing',
-    emerging: 'Emerging',
+const LEVEL_BG = {
+    strong: '#f0fdf4',
+    solid: '#eff6ff',
+    developing: '#fff7ed',
+    emerging: '#fef2f2',
 };
 
-const DIMENSION_EMOJIS = {
-    'Cognitive-Narrative': '🧠',
-    'Relational-Connective': '🤝',
-    'Agentic-Generative': '🧭',
-    'Emotional-Adaptive': '💛',
-    'Spiritual-Reflective': '🌟',
-    'Somatic-Regulative': '⚡',
-};
-
-const DIMENSION_COLORS = {
-    'Cognitive-Narrative': COLORS.sky,
-    'Relational-Connective': COLORS.purple,
-    'Agentic-Generative': COLORS.indigo,
-    'Emotional-Adaptive': COLORS.amber,
-    'Spiritual-Reflective': COLORS.emerald,
-    'Somatic-Regulative': COLORS.rose,
+// Per-dimension brand colours and icons
+const DIM_CONFIG = {
+    'Cognitive-Narrative':   { color: '#6366f1', bg: '#eff6ff', icon: 'C', short: 'Cognitive' },
+    'Relational-Connective': { color: '#ec4899', bg: '#fdf2f8', icon: 'R', short: 'Relational' },
+    'Agentic-Generative':    { color: '#f59e0b', bg: '#fffbeb', icon: 'A', short: 'Agentic' },
+    'Emotional-Adaptive':    { color: '#10b981', bg: '#f0fdf4', icon: 'E', short: 'Emotional' },
+    'Spiritual-Reflective':  { color: '#8b5cf6', bg: '#faf5ff', icon: 'S', short: 'Spiritual' },
+    'Somatic-Regulative':    { color: '#06b6d4', bg: '#ecfeff', icon: 'B', short: 'Somatic' },
 };
 
 // ── Layout constants ──────────────────────────────────────────────────────────
-const PAGE_MARGIN = 50;
-const PAGE_WIDTH = 595.28;   // A4 portrait
+const PAGE_MARGIN = 45;
+const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const CONTENT_WIDTH = PAGE_WIDTH - PAGE_MARGIN * 2;
-const FOOTER_HEIGHT = 30;
-const BODY_BOTTOM = PAGE_HEIGHT - PAGE_MARGIN - FOOTER_HEIGHT - 10;
 
-// ── Low-level drawing helpers ─────────────────────────────────────────────────
-
+// ── Colour helpers ─────────────────────────────────────────────────────────────
 function hexToRgb(hex) {
     const n = parseInt(hex.replace('#', ''), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
+function fc(doc, h) { doc.fillColor(hex(h)); }
+function sc(doc, h) { doc.strokeColor(hex(h)); }
 
-/** Apply a fill colour — hex '#RRGGBB' is converted to RGB array; other strings passed through. */
-function fc(doc, hex) {
-    if (typeof hex === 'string' && hex.startsWith('#')) {
-        doc.fillColor(hexToRgb(hex));
-    } else {
-        doc.fillColor(hex);
-    }
+function fillColor(doc, hex) {
+    doc.fillColor(hexToRgb(hex));
 }
 
-/** Apply a stroke colour — hex '#RRGGBB' is converted to RGB array; other strings passed through. */
-function sc(doc, hex) {
-    if (typeof hex === 'string' && hex.startsWith('#')) {
-        doc.strokeColor(hexToRgb(hex));
-    } else {
-        doc.strokeColor(hex);
-    }
+function strokeColor(doc, hex) {
+    doc.strokeColor(hexToRgb(hex));
 }
 
-function newPage(doc) { doc.addPage(); }
+// ── Layout helpers ─────────────────────────────────────────────────────────────
 
+function newPage(doc) {
+    doc.addPage();
+}
+
+/** Check remaining page space and add a new page if needed. */
 function ensureSpace(doc, needed) {
-    if (doc.y + needed > BODY_BOTTOM) newPage(doc);
+    const pageBottom = PAGE_HEIGHT - doc.page.margins.bottom - 20;
+    if (doc.y + needed > pageBottom) {
+        newPage(doc);
+    }
 }
 
-// ── Themed drawing helpers ─────────────────────────────────────────────────────
-
-/** Coloured section bar with white text. */
-function sectionBar(doc, text, colorHex, yPos) {
-    const y = yPos !== undefined ? yPos : doc.y;
-    fc(doc, colorHex);
-    doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, 26, 5).fill();
-    fc(doc, COLORS.white);
-    doc.fontSize(11).font('Helvetica-Bold').text(text, PAGE_MARGIN + 12, y + 7, { width: CONTENT_WIDTH - 24 });
-    fc(doc, COLORS.slate800);
-    doc.y = y + 34;
-    return doc.y;
-}
-
-/** Compact colored label bar (smaller than sectionBar). */
-function labelBar(doc, text, colorHex) {
+/** Draw a section header bar with white text. */
+function sectionHeader(doc, text, color) {
     const y = doc.y;
-    fc(doc, colorHex);
-    doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, 20, 4).fill();
-    fc(doc, COLORS.white);
-    doc.fontSize(9).font('Helvetica-Bold').text(text.toUpperCase(), PAGE_MARGIN + 10, y + 5, {
-        width: CONTENT_WIDTH - 20, characterSpacing: 0.8,
+    const barColor = color || COLORS.primary;
+    fillColor(doc, barColor);
+    doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, 26, 4).fill();
+    fillColor(doc, COLORS.white);
+    doc.fontSize(11).font('Helvetica-Bold').text(text, PAGE_MARGIN + 12, y + 7, {
+        width: CONTENT_WIDTH - 24,
+        lineBreak: false,
     });
-    fc(doc, COLORS.slate800);
-    doc.y = y + 27;
+    fillColor(doc, COLORS.text);
+    doc.y = y + 34;
 }
 
-/** Coloured info / callout box. */
-function calloutBox(doc, text, bgHex, borderHex, x, y, width, opts) {
+/** Draw a sub-section label. */
+function subHeader(doc, text, color) {
+    fillColor(doc, color || COLORS.primary);
+    doc.fontSize(10).font('Helvetica-Bold').text(text, PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH });
+    fillColor(doc, COLORS.text);
+    doc.y += 4;
+}
+
+/** Draw a coloured progress bar. */
+function progressBar(doc, x, y, width, pct, color) {
+    const barH = 9;
+    const clampedPct = Math.max(0, Math.min(pct / 100, 1));
+    const fillW = Math.max(3, clampedPct * width);
+    fillColor(doc, '#e2e8f0');
+    doc.roundedRect(x, y, width, barH, 4).fill();
+    fillColor(doc, color || COLORS.primary);
+    doc.roundedRect(x, y, fillW, barH, 4).fill();
+    fillColor(doc, COLORS.text);
+}
+
+/** Draw a highlighted info box (returns new doc.y after box). */
+function infoBox(doc, text, bgHex, borderHex, x, y, width) {
     if (!text) return y;
     const pad = 10;
     const innerW = width - pad * 2;
-    const fontSize = (opts && opts.fontSize) || 10;
-    const fontStyle = (opts && opts.bold) ? 'Helvetica-Bold' : 'Helvetica';
-    const textH = doc.fontSize(fontSize).font(fontStyle).heightOfString(text, { width: innerW, lineGap: 2 });
+    const textH = doc.fontSize(10).heightOfString(text, { width: innerW, lineGap: 2 });
     const boxH = textH + pad * 2;
-    fc(doc, bgHex);
-    sc(doc, borderHex);
+    fillColor(doc, bgHex);
+    strokeColor(doc, borderHex);
     doc.roundedRect(x, y, width, boxH, 6).fillAndStroke();
-    fc(doc, COLORS.slate800);
-    doc.fontSize(fontSize).font(fontStyle).text(text, x + pad, y + pad, { width: innerW, lineGap: 2 });
-    doc.y = y + boxH + 6;
+    fillColor(doc, COLORS.text);
+    doc.fontSize(10).font('Helvetica').text(text, x + pad, y + pad, { width: innerW, lineGap: 2 });
+    strokeColor(doc, COLORS.border);
+    doc.y = y + boxH + 8;
     return doc.y;
 }
 
-/** Atlas-styled callout with compass icon label. */
-function compassCallout(doc, label, text, bgHex, borderHex) {
-    if (!text) return;
-    ensureSpace(doc, 50);
-    const y = doc.y;
-    const pad = 10;
-    const innerW = CONTENT_WIDTH - pad * 2;
-    const headerH = 18;
-    const textH = doc.fontSize(9).font('Helvetica').heightOfString(text, { width: innerW, lineGap: 2 });
-    const boxH = headerH + textH + pad * 2 + 4;
-    // Outer box
-    fc(doc, bgHex);
-    sc(doc, borderHex);
-    doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, boxH, 6).fillAndStroke();
-    // Label strip
-    fc(doc, borderHex);
-    doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, headerH, 6).fill();
-    doc.rect(PAGE_MARGIN, y + headerH - 6, CONTENT_WIDTH, 6).fill(); // square bottom corners
-    fc(doc, COLORS.white);
-    doc.fontSize(8).font('Helvetica-Bold').text(`\u{1F9ED} ${label}`, PAGE_MARGIN + 10, y + 5, { width: innerW });
-    // Body text
-    fc(doc, COLORS.slate800);
-    doc.fontSize(9).font('Helvetica').text(text, PAGE_MARGIN + pad, y + headerH + pad, { width: innerW, lineGap: 2 });
-    doc.y = y + boxH + 8;
+/** Draw a stat tile. */
+function statTile(doc, label, value, x, y, w) {
+    const h = 48;
+    fillColor(doc, COLORS.bgLight);
+    strokeColor(doc, COLORS.border);
+    doc.roundedRect(x, y, w, h, 6).fillAndStroke();
+    fillColor(doc, COLORS.textLight);
+    doc.fontSize(7).font('Helvetica').text(label.toUpperCase(), x + 6, y + 6, {
+        width: w - 12,
+        align: 'center',
+        lineBreak: false,
+    });
+    fillColor(doc, COLORS.text);
+    doc.fontSize(14).font('Helvetica-Bold').text(String(value), x + 6, y + 20, {
+        width: w - 12,
+        align: 'center',
+        lineBreak: false,
+    });
+    fillColor(doc, COLORS.text);
+    strokeColor(doc, COLORS.border);
 }
 
-/** Progress bar. */
-function progressBar(doc, x, y, width, pct, colorHex) {
-    const h = 10;
-    fc(doc, COLORS.slate200);
-    sc(doc, COLORS.slate200);
-    doc.roundedRect(x, y, width, h, 4).fillAndStroke();
-    const fillW = Math.max(4, Math.min(pct / 100, 1) * width);
-    fc(doc, colorHex);
-    sc(doc, colorHex);
-    doc.roundedRect(x, y, fillW, h, 4).fillAndStroke();
-    fc(doc, COLORS.slate800);
-    sc(doc, COLORS.slate200);
+/** Draw a bullet point. */
+function bullet(doc, text, indent) {
+    const x = PAGE_MARGIN + (indent || 0);
+    ensureSpace(doc, 14);
+    fillColor(doc, COLORS.text);
+    doc.fontSize(9).font('Helvetica').text('\u2022  ' + text, x, doc.y, {
+        width: CONTENT_WIDTH - (indent || 0),
+        lineGap: 1,
+    });
+    doc.y += 2;
 }
 
-/** Draw a decorative compass-rose symbol at (cx, cy) with given radius. */
-function compassRose(doc, cx, cy, r, colorHex) {
-    const arms = 8;
-    // Use PDFKit native color string support (hex only; avoid rgba strings)
-    doc.strokeColor(colorHex).fillColor(colorHex);
-    for (let i = 0; i < arms; i++) {
-        const angle = (i / arms) * Math.PI * 2 - Math.PI / 2;
-        const len = i % 2 === 0 ? r : r * 0.6;
-        const x2 = cx + Math.cos(angle) * len;
-        const y2 = cy + Math.sin(angle) * len;
-        doc.lineWidth(i % 2 === 0 ? 2 : 1)
-            .moveTo(cx, cy)
-            .lineTo(x2, y2)
-            .stroke();
+/** Add footers to every buffered page. */
+function addFooters(doc) {
+    const range = doc.bufferedPageRange();
+    for (let i = range.start; i < range.start + range.count; i++) {
+        doc.switchToPage(i);
+        const footerY = PAGE_HEIGHT - 32;
+        strokeColor(doc, COLORS.border);
+        doc.moveTo(PAGE_MARGIN, footerY - 4).lineTo(PAGE_WIDTH - PAGE_MARGIN, footerY - 4).stroke();
+        fillColor(doc, COLORS.textLight);
+        doc.fontSize(7).font('Helvetica').text(
+            'The Resilience Atlas\u2122  \u2014  Your Personal Navigation Guide  |  For self-reflection purposes only. Not a clinical assessment.  |  Page ' + (i + 1),
+            PAGE_MARGIN,
+            footerY,
+            { width: CONTENT_WIDTH, align: 'center' }
+        );
     }
-    doc.circle(cx, cy, 5).fill();
-    doc.lineWidth(1);
-    // Restore default colors
-    fc(doc, COLORS.slate800);
-    sc(doc, COLORS.slate200);
+    fillColor(doc, COLORS.text);
 }
 
-/** Small bullet-list helper. */
-function bulletList(doc, items, indent, colorHex) {
-    if (!items || items.length === 0) return;
-    fc(doc, COLORS.slate700);
-    for (const item of items) {
-        ensureSpace(doc, 16);
-        // Bullet dot
-        fc(doc, colorHex || COLORS.indigo);
-        doc.circle(PAGE_MARGIN + indent + 4, doc.y + 5, 3).fill();
-        fc(doc, COLORS.slate700);
-        doc.fontSize(9).font('Helvetica').text(item, PAGE_MARGIN + indent + 12, doc.y, {
-            width: CONTENT_WIDTH - indent - 12, lineGap: 2,
-        });
-        doc.y += 2;
-    }
-    doc.y += 4;
-}
+// ── PAGE BUILDERS ──────────────────────────────────────────────────────────────
 
-/** Two-column layout helper — renders label+value pairs side by side. */
-function twoColStat(doc, col1Label, col1Val, col2Label, col2Val, colorHex) {
-    const colW = CONTENT_WIDTH / 2 - 8;
-    const y = doc.y;
-    // Col 1
-    fc(doc, COLORS.slate100);
-    sc(doc, COLORS.slate200);
-    doc.roundedRect(PAGE_MARGIN, y, colW, 36, 4).fillAndStroke();
-    fc(doc, colorHex || COLORS.indigo);
-    doc.fontSize(16).font('Helvetica-Bold').text(col1Val, PAGE_MARGIN + 10, y + 4, { width: colW - 20 });
-    fc(doc, COLORS.slate500);
-    doc.fontSize(8).font('Helvetica').text(col1Label, PAGE_MARGIN + 10, y + 24, { width: colW - 20 });
-    // Col 2
-    const x2 = PAGE_MARGIN + colW + 16;
-    fc(doc, COLORS.slate100);
-    sc(doc, COLORS.slate200);
-    doc.roundedRect(x2, y, colW, 36, 4).fillAndStroke();
-    fc(doc, colorHex || COLORS.indigo);
-    doc.fontSize(16).font('Helvetica-Bold').text(col2Val, x2 + 10, y + 4, { width: colW - 20 });
-    fc(doc, COLORS.slate500);
-    doc.fontSize(8).font('Helvetica').text(col2Label, x2 + 10, y + 24, { width: colW - 20 });
-    fc(doc, COLORS.slate800);
-    sc(doc, COLORS.slate200);
-    doc.y = y + 44;
-}
-
-// ── Page builders ─────────────────────────────────────────────────────────────
-
-/** PAGE 1 — Premium Cover */
+/** Page 1 - Premium Cover */
 function buildCoverPage(doc, report, overall) {
-    const dateStr = new Date().toLocaleDateString('en-US', {
+    const dateStr = new Date(report.assessmentDate || Date.now()).toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric',
     });
-    const level = report.overallLevel || 'developing';
-    const levelLabel = LEVEL_LABELS[level] || 'Developing';
+    const archetype = report.profileArchetype || 'Resilient Explorer';
 
-    // Full-page gradient-style background (approximate with layered rects)
-    fc(doc, COLORS.indigoDark);
+    // Deep background
+    fillColor(doc, COLORS.coverBg);
     doc.rect(0, 0, PAGE_WIDTH, PAGE_HEIGHT).fill();
-    fc(doc, COLORS.purpleDark);
-    doc.rect(0, PAGE_HEIGHT * 0.55, PAGE_WIDTH, PAGE_HEIGHT * 0.45).fill();
 
-    // Decorative compass rose (top-right) — use a light indigo for decoration
-    compassRose(doc, PAGE_WIDTH - 70, 80, 40, '#818cf8');
-    // A second subtle one bottom-left
-    compassRose(doc, 70, PAGE_HEIGHT - 80, 30, '#a78bfa');
+    // Top accent strip
+    fillColor(doc, COLORS.coverAccent);
+    doc.rect(0, 0, PAGE_WIDTH, 8).fill();
 
-    // Atlas logo / brand wordmark
-    fc(doc, COLORS.white);
-    doc.fontSize(11).font('Helvetica').text(
-        '\u{1F9ED}  THE RESILIENCE ATLAS\u2122',
-        PAGE_MARGIN, 44,
-        { width: CONTENT_WIDTH, align: 'center', characterSpacing: 2 }
+    // Brand name
+    fillColor(doc, COLORS.white);
+    doc.fontSize(9).font('Helvetica').text(
+        'THE RESILIENCE ATLAS\u2122  |  PERSONAL NAVIGATION REPORT',
+        PAGE_MARGIN, 22,
+        { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
     );
 
-    // Divider
-    sc(doc, COLORS.purpleLight);
-    doc.moveTo(PAGE_MARGIN + 60, 62).lineTo(PAGE_WIDTH - PAGE_MARGIN - 60, 62).lineWidth(1).stroke();
-    doc.lineWidth(1);
+    // Decorative compass ring
+    const cx = PAGE_WIDTH / 2;
+    strokeColor(doc, '#4f46e5');
+    doc.lineWidth(2).circle(cx, 180, 68).stroke();
+    doc.lineWidth(0.8).circle(cx, 180, 56).stroke();
+    strokeColor(doc, '#6366f1');
+    doc.lineWidth(1.2)
+        .moveTo(cx, 118).lineTo(cx, 242).stroke();
+    doc.moveTo(cx - 60, 180).lineTo(cx + 60, 180).stroke();
+    doc.lineWidth(0.5)
+        .moveTo(cx - 42, 138).lineTo(cx + 42, 222).stroke();
+    doc.moveTo(cx + 42, 138).lineTo(cx - 42, 222).stroke();
+
+    // N marker
+    fillColor(doc, '#818cf8');
+    doc.fontSize(9).font('Helvetica-Bold')
+        .text('N', cx - 4, 108, { lineBreak: false })
+        .text('S', cx - 4, 244, { lineBreak: false })
+        .text('E', cx + 64, 177, { lineBreak: false })
+        .text('W', cx - 74, 177, { lineBreak: false });
+
+    // Center diamond
+    fillColor(doc, COLORS.primary);
+    doc.polygon([cx, 165], [cx + 9, 180], [cx, 195], [cx - 9, 180]).fill();
 
     // Main title
-    fc(doc, COLORS.white);
-    doc.fontSize(26).font('Helvetica-Bold').text(
-        'Your Personal Resilience Report',
-        PAGE_MARGIN, 80,
-        { width: CONTENT_WIDTH, align: 'center' }
-    );
-    fc(doc, COLORS.purpleLight);
-    doc.fontSize(12).font('Helvetica').text(
-        'Your Navigation Map to Lasting Resilience',
-        PAGE_MARGIN, 116,
-        { width: CONTENT_WIDTH, align: 'center' }
-    );
-
-    // Hero score circle
-    const heroY = 160;
-    const cx = PAGE_WIDTH / 2;
-    fc(doc, '#5e5ca8');
-    doc.circle(cx, heroY + 60, 70).fill();
-    fc(doc, COLORS.white);
-    doc.circle(cx, heroY + 60, 58).fill();
-    fc(doc, COLORS.indigo);
-    doc.fontSize(36).font('Helvetica-Bold').text(
-        `${overall}%`,
-        cx - 45, heroY + 36,
-        { width: 90, align: 'center' }
-    );
-    fc(doc, COLORS.indigo);
-    doc.fontSize(9).font('Helvetica-Bold').text(
-        levelLabel.toUpperCase(),
-        cx - 45, heroY + 80,
-        { width: 90, align: 'center', characterSpacing: 1 }
-    );
-
-    // Score label above circle
-    fc(doc, COLORS.amberLight);
-    doc.fontSize(10).font('Helvetica-Bold').text(
-        'OVERALL RESILIENCE SCORE',
-        PAGE_MARGIN, heroY - 12,
-        { width: CONTENT_WIDTH, align: 'center', characterSpacing: 1 }
-    );
-
-    // Archetype badge
-    const badgeY = heroY + 148;
-    fc(doc, '#6563b8');
-    doc.roundedRect(PAGE_MARGIN + 40, badgeY, CONTENT_WIDTH - 80, 48, 10).fill();
-    fc(doc, COLORS.amberLight);
-    doc.fontSize(10).font('Helvetica-Bold').text(
-        'YOUR ARCHETYPE',
-        PAGE_MARGIN + 40, badgeY + 8,
-        { width: CONTENT_WIDTH - 80, align: 'center', characterSpacing: 1 }
-    );
-    fc(doc, COLORS.white);
-    doc.fontSize(15).font('Helvetica-Bold').text(
-        report.profileArchetype || 'The Balanced',
-        PAGE_MARGIN + 40, badgeY + 22,
-        { width: CONTENT_WIDTH - 80, align: 'center' }
-    );
+    fillColor(doc, COLORS.white);
+    doc.fontSize(26).font('Helvetica-Bold').text('Your Personal', PAGE_MARGIN, 272, {
+        align: 'center', width: CONTENT_WIDTH, lineBreak: false,
+    });
+    doc.y = 302;
+    fillColor(doc, '#818cf8');
+    doc.fontSize(30).font('Helvetica-Bold').text('Resilience Atlas\u2122', PAGE_MARGIN, doc.y, {
+        align: 'center', width: CONTENT_WIDTH, lineBreak: false,
+    });
 
     // Tagline
-    fc(doc, COLORS.purpleLight);
-    doc.fontSize(10).font('Helvetica-Oblique').text(
-        '"Discover your inner compass. Navigate your resilience journey."',
-        PAGE_MARGIN, badgeY + 72,
-        { width: CONTENT_WIDTH, align: 'center' }
+    fillColor(doc, '#c7d2fe');
+    doc.y = 342;
+    doc.fontSize(10).font('Helvetica').text(
+        'Your Internal Compass for Life\'s Journey',
+        PAGE_MARGIN, doc.y,
+        { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
     );
 
-    // Assessment date + primary strength
-    const metaY = badgeY + 102;
-    fc(doc, '#b8b6e8');
+    // Score hero box
+    const heroY = 374;
+    fillColor(doc, COLORS.coverAccent);
+    doc.roundedRect(PAGE_MARGIN + 30, heroY, CONTENT_WIDTH - 60, 130, 12).fill();
+
+    fillColor(doc, '#c7d2fe');
     doc.fontSize(9).font('Helvetica').text(
-        `Assessment Date: ${dateStr}   \u2022   Primary Strength: ${report.dominantType || 'N/A'}`,
-        PAGE_MARGIN, metaY,
-        { width: CONTENT_WIDTH, align: 'center' }
+        'OVERALL RESILIENCE SCORE',
+        PAGE_MARGIN + 30, heroY + 14,
+        { align: 'center', width: CONTENT_WIDTH - 60, lineBreak: false }
     );
 
-    // Bottom tagline
-    fc(doc, '#9896d8');
+    fillColor(doc, COLORS.white);
+    doc.fontSize(52).font('Helvetica-Bold').text(
+        overall + '%', PAGE_MARGIN + 30, heroY + 30,
+        { align: 'center', width: CONTENT_WIDTH - 60, lineBreak: false }
+    );
+
+    fillColor(doc, '#c7d2fe');
+    doc.fontSize(10).font('Helvetica').text(
+        archetype,
+        PAGE_MARGIN + 30, heroY + 96,
+        { align: 'center', width: CONTENT_WIDTH - 60, lineBreak: false }
+    );
+
+    // Meta row
+    fillColor(doc, '#94a3b8');
+    doc.y = heroY + 138;
+    doc.fontSize(9).font('Helvetica').text(
+        'Assessment Date: ' + dateStr + '  \u2014  Primary Strength: ' + (report.dominantType || 'N/A'),
+        PAGE_MARGIN, doc.y,
+        { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
+    );
+
+    // Bottom accent
+    fillColor(doc, '#312e81');
+    doc.rect(0, PAGE_HEIGHT - 50, PAGE_WIDTH, 50).fill();
+    fillColor(doc, '#818cf8');
     doc.fontSize(8).font('Helvetica').text(
-        'For personal growth and self-reflection \u2014 not a clinical assessment',
-        PAGE_MARGIN, PAGE_HEIGHT - 40,
-        { width: CONTENT_WIDTH, align: 'center' }
+        'RESILIENCE IS NOT FOUND \u2014 IT IS CHARTED  |  ONE DAY, ONE PRACTICE, ONE CHOICE AT A TIME',
+        PAGE_MARGIN, PAGE_HEIGHT - 28,
+        { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
     );
 }
 
-/** PAGE 2 — Your Resilience Journey */
-function buildJourneyPage(doc, report, overall) {
+/** Page 2 - Journey Map / Executive Summary */
+function buildJourneyMapPage(doc, report) {
     newPage(doc);
-    const level = report.overallLevel || 'developing';
-    const levelLabel = LEVEL_LABELS[level] || 'Developing';
-    const levelColor = LEVEL_COLORS[level] || COLORS.indigo;
+    sectionHeader(doc, 'YOUR RESILIENCE JOURNEY \u2014 EXECUTIVE SUMMARY', COLORS.primary);
 
-    // Page header
-    sectionBar(doc, '\u{1F5FA}  Your Resilience Journey — You Are Here', COLORS.indigoDark);
+    sectionBanner(doc, '\uD83D\uDCCD  Your Current Position on the Resilience Landscape', C.purple);
+    calloutBox(doc, getTerrainSummary(overall), C.bgPurple, C.purple);
 
-    // Welcome narrative
-    calloutBox(doc,
-        'Welcome to The Resilience Atlas\u2122. This report is more than a score — it is a ' +
-        'navigation map for your inner life. Resilience is not a fixed destination but a ' +
-        'dynamic journey, and you are already on it. What follows will show you where you ' +
-        'stand today, the terrain you\'ve already covered, and the new territory ahead of you.',
-        COLORS.bgIndigo, COLORS.indigoLight,
-        PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    // Score stats
-    twoColStat(doc,
-        'Overall Score', `${overall}%`,
-        'Resilience Level', levelLabel,
-        levelColor
-    );
-
-    // Percentile & benchmark
-    const avgPercentile = (report.dimensionAnalysis)
-        ? Math.round(Object.values(report.dimensionAnalysis).reduce((sum, d) => sum + (d.benchmark ? d.benchmark.percentile : 50), 0) / Object.keys(report.dimensionAnalysis).length)
-        : 50;
-
-    twoColStat(doc,
-        'Approx. Percentile', `Top ${100 - avgPercentile}%`,
-        'Dimensions Assessed', '6',
-        COLORS.purple
-    );
-
-    doc.y += 4;
-
-    // "You Are Here" narrative card
-    sectionBar(doc, '\u{1F4CD}  You Are Here on Your Resilience Map', COLORS.purple);
-
-    const youAreHereNarrative = buildYouAreHereNarrative(overall, levelLabel, report.profileArchetype, report.dominantType);
-    calloutBox(doc, youAreHereNarrative, COLORS.bgPurple, COLORS.purpleLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 10 });
-
-    // Level interpretation
-    sectionBar(doc, '\u{1F4CA}  What Your Level Means', COLORS.slate700);
-    const levelInterpretations = {
-        strong:
-            'A Strong resilience level signals a well-developed foundation across multiple ' +
-            'dimensions. You have built genuine capacity to navigate adversity — and this report ' +
-            'will help you go even deeper, sharing your strengths with others, and exploring ' +
-            'new territories of growth.',
-        solid:
-            'A Solid resilience level reflects meaningful development and real capacity to ' +
-            'navigate life\'s challenges. You have genuine strengths to build on and clear ' +
-            'opportunities to deepen. This is a rich and exciting stage of the resilience journey.',
-        developing:
-            'A Developing resilience level indicates an active growth phase — you are building ' +
-            'capacity in real time. This report will give you the specific practices and insights ' +
-            'to accelerate your journey and turn potential into strength.',
-        emerging:
-            'An Emerging resilience level signals that significant growth territory lies ahead ' +
-            'of you — and that is good news. The foundations are present; this report will ' +
-            'illuminate specific pathways forward and celebrate the courage it takes to engage ' +
-            'in this kind of honest self-exploration.',
-    };
-    calloutBox(doc, levelInterpretations[level] || levelInterpretations.developing,
-        COLORS.bgEmerald, COLORS.emeraldLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
+    sectionBanner(doc, '\uD83D\uDDDD\uFE0F  Navigation Symbols', C.textMid);
+    const symbols = [
+        ['STRONG (80–100%)',      C.strong,     'Well-developed terrain — navigate with confidence.'],
+        ['SOLID (65–79%)',        C.solid,      'Established footing — clear paths to higher elevation.'],
+        ['DEVELOPING (50–64%)',   C.developing, 'Active growth zone — investment yields rapid progress.'],
+        ['EMERGING (below 50%)', C.emerging,   'Uncharted territory — highest growth potential.'],
+    ];
+    for (const [label, color, desc] of symbols) {
+        ensureSpace(doc, 22);
+        const ry = doc.y;
+        fillRect(doc, MARGIN, ry, 110, 16, 4, color);
+        fc(doc, C.bgWhite);
+        doc.fontSize(7).font('Helvetica-Bold').text(label, MARGIN + 3, ry + 5, { width: 104 });
+        fc(doc, C.textMid);
+        doc.fontSize(9).font('Helvetica').text(desc, MARGIN + 118, ry + 4, { width: COL_W - 124 });
+        doc.y = Math.max(ry + 20, doc.y + 2);
+    }
 }
 
-function buildYouAreHereNarrative(overall, levelLabel, archetype, dominant) {
-    return (
-        `Your overall resilience score of ${overall}% places you at a ${levelLabel} level on ` +
-        `The Resilience Atlas\u2122 map. As ${archetype || 'a resilience-builder'}, your journey ` +
-        `is anchored in ${dominant || 'your primary strength'} \u2014 the dimension where your ` +
-        `inner compass is most reliably calibrated.\n\n` +
-        `Every explorer begins somewhere. Your current coordinates on this map are not a ` +
-        `verdict on your capacity \u2014 they are a starting point. The dimensions ahead of ` +
-        `you represent new territory to discover, and the strengths you already carry are the ` +
-        `tools you will use to navigate them.`
+    if (report.profileArchetype) {
+        ensureSpace(doc, 60);
+        sectionHeader(doc, 'YOUR ARCHETYPE: ' + report.profileArchetype.toUpperCase(), COLORS.secondary);
+        infoBox(doc, report.profileDescription || '', COLORS.bgPurple, '#c4b5fd', PAGE_MARGIN, doc.y, CONTENT_WIDTH);
+    }
+
+    // Key stats row
+    ensureSpace(doc, 70);
+    const overallNum = Number(report.overall || 0);
+    const topDim = report.dominantType || 'N/A';
+    const rankedDims = Object.entries(report.dimensionAnalysis || {})
+        .sort((a, b) => a[1].percentage - b[1].percentage);
+    const bottomDim = rankedDims.length > 0 ? rankedDims[0][0].split('-')[0] : 'N/A';
+    const level = getLevel(overallNum).toUpperCase();
+
+    const tileW = (CONTENT_WIDTH - 12) / 4;
+    const tileY = doc.y + 4;
+    statTile(doc, 'Overall Score', overallNum + '%', PAGE_MARGIN, tileY, tileW - 3);
+    statTile(doc, 'Level', level, PAGE_MARGIN + tileW + 1, tileY, tileW - 3);
+    statTile(doc, 'Top Strength', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
+    statTile(doc, 'Growth Area', bottomDim, PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
+    doc.y = tileY + 58;
+
+    // Dimension summary list
+    ensureSpace(doc, 40);
+    subHeader(doc, 'WAYPOINTS ON YOUR RESILIENCE MAP');
+    doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
+        'Six territories of resilience form your complete inner landscape. Each holds unique strengths and growth edges \u2014 together they define your resilience identity and navigation approach to life\'s challenges.',
+        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
     );
-}
+    fillColor(doc, COLORS.text);
+    doc.y += 10;
 
-/** PAGE 3 — Your Resilience Map (dimension overview) */
-function buildMapPage(doc, report) {
-    newPage(doc);
-    sectionBar(doc, '\u{1F5FA}  Your Resilience Map \u2014 Territory Overview', COLORS.indigoDark);
-
-    calloutBox(doc,
-        'Every resilience map has six territories. Below is your current landscape \u2014 ' +
-        'the regions where you are strongest and those that hold the most growth potential. ' +
-        'Each territory has its own wisdom, and together they form your unique Resilience Atlas.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    doc.y += 6;
-
-    // Dimension score table (visual map)
     const dims = Object.entries(report.dimensionAnalysis || {});
-    for (const [dimName, analysis] of dims) {
-        ensureSpace(doc, 50);
-        const dimColor = DIMENSION_COLORS[dimName] || COLORS.indigo;
-        const levelColor = LEVEL_COLORS[analysis.level] || COLORS.indigo;
+    for (const [dim, analysis] of dims) {
+        ensureSpace(doc, 18);
+        const cfg = DIM_CONFIG[dim] || { color: COLORS.primary };
+        const levelColor = LEVEL_COLORS[analysis.level] || COLORS.primary;
+        const pct = Number(analysis.percentage || 0);
+
+        fillColor(doc, cfg.color);
+        doc.fontSize(9).font('Helvetica-Bold').text(dim, PAGE_MARGIN, doc.y, {
+            continued: true, width: 200, lineBreak: false,
+        });
+        fillColor(doc, levelColor);
+        doc.fontSize(9).font('Helvetica-Bold').text('  ' + pct.toFixed(0) + '%  ', { continued: true, lineBreak: false });
+        fillColor(doc, COLORS.textLight);
+        doc.fontSize(9).font('Helvetica').text('(' + (analysis.level || '').toUpperCase() + ')', {
+            width: 100, lineBreak: false,
+        });
+        progressBar(doc, PAGE_MARGIN + 320, doc.y - 10, CONTENT_WIDTH - 325, pct, cfg.color);
+        doc.y += 4;
+        fillColor(doc, COLORS.text);
+    }
+}
+
+/** Page 3 - Visual Dashboard */
+function buildDashboardPage(doc, report) {
+    newPage(doc);
+    sectionHeader(doc, 'CHARTING YOUR TERRITORY \u2014 DIMENSION DASHBOARD', COLORS.primary);
+
+    doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
+        'Each bar below represents one territory of your resilience map. Your scores are your starting coordinates \u2014 not your destination. Every territory can be developed through intentional practice.',
+        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
+    );
+    fillColor(doc, COLORS.text);
+    doc.y += 12;
+
+    const dims = Object.entries(report.dimensionAnalysis || {});
+    const labelW = 165;
+    const barX = PAGE_MARGIN + labelW + 10;
+    const barW = CONTENT_WIDTH - labelW - 60;
+    const barRowH = 36;
+
+    for (const [dim, analysis] of dims) {
+        ensureSpace(doc, barRowH + 8);
+        const cfg = DIM_CONFIG[dim] || { color: COLORS.primary, bg: COLORS.bgLight };
+        const levelColor = LEVEL_COLORS[analysis.level] || COLORS.primary;
+        const pct = Number(analysis.percentage || 0);
         const rowY = doc.y;
 
-        // Row background
-        fc(doc, COLORS.slate50);
-        sc(doc, COLORS.slate200);
-        doc.roundedRect(PAGE_MARGIN, rowY, CONTENT_WIDTH, 40, 4).fillAndStroke();
+        fillColor(doc, cfg.bg);
+        doc.roundedRect(PAGE_MARGIN, rowY, CONTENT_WIDTH, barRowH + 4, 6).fill();
 
-        // Colored left accent strip
-        fc(doc, dimColor);
-        doc.roundedRect(PAGE_MARGIN, rowY, 5, 40, 2).fill();
+        fillColor(doc, cfg.color);
+        doc.fontSize(10).font('Helvetica-Bold').text(dim, PAGE_MARGIN + 8, rowY + 5, {
+            width: labelW - 12, lineBreak: false,
+        });
 
-        // Dimension name
-        fc(doc, COLORS.slate800);
-        doc.fontSize(10).font('Helvetica-Bold').text(
-            `${DIMENSION_EMOJIS[dimName] || ''} ${dimName}`,
-            PAGE_MARGIN + 14, rowY + 5, { width: 175 }
-        );
+        const content = DIMENSION_CONTENT[dim];
+        if (content && content.tagline) {
+            fillColor(doc, COLORS.textLight);
+            doc.fontSize(7).font('Helvetica').text(content.tagline, PAGE_MARGIN + 8, rowY + 19, {
+                width: labelW - 12, lineBreak: false,
+            });
+        }
 
-        // Tagline / descriptor
-        fc(doc, COLORS.slate500);
-        doc.fontSize(8).font('Helvetica-Oblique').text(
-            analysis.description ? analysis.description.split('.')[0] + '.' : '',
-            PAGE_MARGIN + 14, rowY + 20, { width: 175 }
-        );
+        progressBar(doc, barX, rowY + 14, barW, pct, cfg.color);
 
-        // Score
-        fc(doc, levelColor);
-        doc.fontSize(16).font('Helvetica-Bold').text(
-            `${Number(analysis.percentage || 0).toFixed(0)}%`,
-            PAGE_MARGIN + 200, rowY + 8, { width: 55, align: 'right' }
-        );
+        fillColor(doc, COLORS.text);
+        doc.fontSize(13).font('Helvetica-Bold').text(pct.toFixed(0) + '%', barX + barW + 6, rowY + 8, {
+            width: 44, lineBreak: false,
+        });
+        fillColor(doc, levelColor);
+        doc.fontSize(7).font('Helvetica-Bold').text((analysis.level || '').toUpperCase(), barX + barW + 6, rowY + 24, {
+            width: 44, lineBreak: false,
+        });
 
-        // Progress bar
-        progressBar(doc, PAGE_MARGIN + 260, rowY + 14, 120, analysis.percentage || 0, levelColor);
-
-        // Level badge
-        fc(doc, levelColor);
-        doc.fontSize(8).font('Helvetica-Bold').text(
-            (LEVEL_LABELS[analysis.level] || analysis.level || '').toUpperCase(),
-            PAGE_MARGIN + 390, rowY + 15, { width: 55, align: 'center' }
-        );
-
-        fc(doc, COLORS.slate800);
-        doc.y = rowY + 48;
+        fillColor(doc, COLORS.text);
+        doc.y = rowY + barRowH + 10;
     }
 
-    doc.y += 8;
+    // Legend
+    ensureSpace(doc, 50);
+    doc.y += 6;
+    sectionHeader(doc, 'SCORE LEGEND', COLORS.textMid);
 
-    // Territory overview legend
-    sectionBar(doc, '\u{1F9ED}  Reading Your Map', COLORS.slate700);
-    const legendItems = [
-        ['Strong (80%+)', COLORS.emerald, 'This territory is well-developed — a genuine strength and resource.'],
-        ['Solid (65–79%)', COLORS.indigo, 'Strong foundation with clear capacity for continued deepening.'],
-        ['Developing (50–64%)', COLORS.amber, 'Active growth zone — real potential being built right now.'],
-        ['Emerging (<50%)', COLORS.rose, 'New territory ahead — rich in opportunity and learning.'],
+    const levels = [
+        { key: 'strong', label: 'Strong (80-100%)', desc: 'Well-developed \u2014 leverage and share' },
+        { key: 'solid', label: 'Solid (65-79%)', desc: 'Growing well \u2014 lean in and continue' },
+        { key: 'developing', label: 'Developing (50-64%)', desc: 'Active growth zone \u2014 consistent practice pays' },
+        { key: 'emerging', label: 'Emerging (0-49%)', desc: 'Highest growth opportunity' },
     ];
-    for (const [label, color, desc] of legendItems) {
-        ensureSpace(doc, 20);
-        fc(doc, color);
-        doc.rect(PAGE_MARGIN + 8, doc.y + 2, 10, 10).fill();
-        fc(doc, COLORS.slate800);
-        doc.fontSize(9).font('Helvetica-Bold').text(label, PAGE_MARGIN + 24, doc.y, { continued: true });
-        fc(doc, COLORS.slate600);
-        doc.fontSize(9).font('Helvetica').text(`  \u2014  ${desc}`, { width: CONTENT_WIDTH - 36 });
-        doc.y += 2;
+
+    const legColW = (CONTENT_WIDTH - 12) / 2;
+    const legStartY = doc.y;
+    for (let i = 0; i < levels.length; i++) {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = PAGE_MARGIN + col * (legColW + 12);
+        const y = legStartY + row * 26;
+        fillColor(doc, LEVEL_COLORS[levels[i].key]);
+        doc.roundedRect(x, y, 10, 10, 2).fill();
+        fillColor(doc, COLORS.text);
+        doc.fontSize(9).font('Helvetica-Bold').text(levels[i].label, x + 14, y, {
+            continued: true, lineBreak: false,
+        });
+        fillColor(doc, COLORS.textLight);
+        doc.fontSize(9).font('Helvetica').text('  \u2014 ' + levels[i].desc, { width: legColW - 30, lineBreak: false });
+        fillColor(doc, COLORS.text);
     }
-}
+    doc.y = legStartY + Math.ceil(levels.length / 2) * 26 + 8;
 
-/** PAGE 4 — Your Resilience Archetype */
-function buildArchetypePage(doc, report) {
-    newPage(doc);
-    const archetype = report._archetypeObj || {};
-    const archetypeName = report.profileArchetype || 'Your Archetype';
-    const archetypeEmoji = archetype.emoji || '\u{1F9ED}';
-
-    sectionBar(doc, `${archetypeEmoji}  Your Resilience Archetype`, COLORS.purple);
-
-    // Archetype name hero
-    const heroY = doc.y;
-    fc(doc, COLORS.bgPurple);
-    sc(doc, COLORS.purpleLight);
-    doc.roundedRect(PAGE_MARGIN, heroY, CONTENT_WIDTH, 50, 8).fillAndStroke();
-    fc(doc, COLORS.purple);
-    doc.fontSize(22).font('Helvetica-Bold').text(archetypeName, PAGE_MARGIN + 16, heroY + 8, { width: CONTENT_WIDTH - 32 });
-    fc(doc, COLORS.purpleDark);
-    doc.fontSize(10).font('Helvetica-Oblique').text(
-        'Your dominant resilience identity and navigation style',
-        PAGE_MARGIN + 16, heroY + 32, { width: CONTENT_WIDTH - 32 }
+    ensureSpace(doc, 40);
+    infoBox(
+        doc,
+        'Your coordinates have been plotted. The following pages explore each territory in detail \u2014 with personalised insights, life applications, and your daily navigation tools.',
+        COLORS.bgBlue,
+        COLORS.primary,
+        PAGE_MARGIN, doc.y, CONTENT_WIDTH
     );
-    fc(doc, COLORS.slate800);
-    doc.y = heroY + 58;
-
-    // Description
-    if (report.profileDescription) {
-        calloutBox(doc, report.profileDescription,
-            COLORS.bgPurple, COLORS.purpleLight,
-            PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 10 });
-    }
-
-    // Superpowers
-    if (archetype.superpowers && archetype.superpowers.length > 0) {
-        sectionBar(doc, '\u26A1  Your Superpowers', COLORS.emerald);
-        bulletList(doc, archetype.superpowers, 0, COLORS.emerald);
-    }
-
-    // How this archetype shows up daily
-    if (archetype.teamRole) {
-        ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F4BC}  How You Show Up in the World', COLORS.indigoDark);
-        calloutBox(doc, archetype.teamRole, COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-    }
-
-    // Partnership dynamics
-    if (archetype.partnershipTips && archetype.partnershipTips.length > 0) {
-        ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F91D}  Navigating with Others', COLORS.purple);
-        bulletList(doc, archetype.partnershipTips, 0, COLORS.purple);
-    }
-
-    // Blind spots (framed as navigation watchpoints)
-    if (archetype.blindSpots && archetype.blindSpots.length > 0) {
-        ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F4A1}  Watchpoints on Your Map', COLORS.amber);
-        calloutBox(doc, 'Every archetype has navigation watchpoints — areas to stay mindful of as you travel.',
-            COLORS.bgAmber, COLORS.amberLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-        bulletList(doc, archetype.blindSpots, 0, COLORS.amber);
-    }
 }
 
-/** PAGE 5–10 — Dimension Deep-Dives (one per dimension) */
-function buildDimensionDeepDive(doc, dimName, analysis, dimIndex) {
+/** Pages 4-9 - One dimension per page */
+function buildDimensionPage(doc, dimName, analysis) {
     newPage(doc);
-    const dimColor = DIMENSION_COLORS[dimName] || COLORS.indigo;
-    const levelColor = LEVEL_COLORS[analysis.level] || COLORS.indigo;
-    const emoji = DIMENSION_EMOJIS[dimName] || '';
-    const levelLabel = LEVEL_LABELS[analysis.level] || analysis.level || '';
+    const cfg = DIM_CONFIG[dimName] || { color: COLORS.primary, bg: COLORS.bgLight, icon: 'D', short: dimName };
+    const levelColor = LEVEL_COLORS[analysis.level] || COLORS.primary;
     const pct = Number(analysis.percentage || 0);
+    const content = DIMENSION_CONTENT[dimName];
 
-    // ─ Dimension header ─
-    const headerH = 70;
-    const headerY = doc.y;
-    fc(doc, dimColor);
-    doc.roundedRect(PAGE_MARGIN, headerY, CONTENT_WIDTH, headerH, 8).fill();
+    // Dimension header band
+    fillColor(doc, cfg.color);
+    doc.rect(0, 0, PAGE_WIDTH, 52).fill();
 
-    // Dimension number
-    fc(doc, '#9896d8');
-    doc.fontSize(36).font('Helvetica-Bold').text(
-        `0${dimIndex + 1}`, PAGE_MARGIN + CONTENT_WIDTH - 60, headerY + 10, { width: 50, align: 'right' }
-    );
-
-    // Dimension name
-    fc(doc, COLORS.white);
+    fillColor(doc, COLORS.white);
     doc.fontSize(18).font('Helvetica-Bold').text(
-        `${emoji}  ${dimName}`,
-        PAGE_MARGIN + 12, headerY + 10, { width: CONTENT_WIDTH - 80 }
+        dimName, PAGE_MARGIN, 12, { width: CONTENT_WIDTH * 0.65, lineBreak: false }
     );
-
-    // Score + level badge
-    fc(doc, COLORS.white);
     doc.fontSize(26).font('Helvetica-Bold').text(
-        `${pct.toFixed(0)}%`,
-        PAGE_MARGIN + 12, headerY + 36, { width: 80 }
-    );
-    fc(doc, '#ece9ff');
-    doc.fontSize(10).font('Helvetica-Bold').text(
-        levelLabel.toUpperCase(),
-        PAGE_MARGIN + 70, headerY + 43, { width: 80 }
+        pct.toFixed(0) + '%', PAGE_MARGIN + CONTENT_WIDTH * 0.65, 10,
+        { width: CONTENT_WIDTH * 0.35, align: 'right', lineBreak: false }
     );
 
-    fc(doc, COLORS.slate800);
-    doc.y = headerY + headerH + 8;
+    // Level pill
+    fillColor(doc, levelColor);
+    doc.roundedRect(PAGE_MARGIN + CONTENT_WIDTH * 0.65, 36, 88, 13, 4).fill();
+    fillColor(doc, COLORS.white);
+    doc.fontSize(8).font('Helvetica-Bold').text(
+        (analysis.level || '').toUpperCase(), PAGE_MARGIN + CONTENT_WIDTH * 0.65, 39,
+        { width: 88, align: 'center', lineBreak: false }
+    );
+
+    doc.y = 62;
+
+    // Tagline
+    if (content && content.tagline) {
+        fillColor(doc, COLORS.textMid);
+        doc.fontSize(10).font('Helvetica-Oblique').text(
+            '"' + content.tagline + '"', PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineBreak: false }
+        );
+        doc.y += 14;
+    }
 
     // Progress bar
-    progressBar(doc, PAGE_MARGIN, doc.y, CONTENT_WIDTH, pct, levelColor);
-    doc.y += 16;
+    progressBar(doc, PAGE_MARGIN, doc.y, CONTENT_WIDTH, pct, cfg.color);
+    doc.y += 14;
 
-    // Benchmark
+    // Percentile note
     if (analysis.benchmark) {
-        fc(doc, COLORS.slate500);
-        doc.fontSize(8).font('Helvetica-Oblique').text(
-            `Approx. ${analysis.benchmark.percentile}th percentile \u2014 population mean: ${analysis.benchmark.populationMean}%`,
-            PAGE_MARGIN, doc.y
+        fillColor(doc, COLORS.textLight);
+        doc.fontSize(8).font('Helvetica').text(
+            'Approx. ' + analysis.benchmark.percentile + 'th percentile  \u2014  Population mean: ' + analysis.benchmark.populationMean + '%',
+            PAGE_MARGIN, doc.y, { lineBreak: false }
         );
         doc.y += 14;
     }
     fc(doc, COLORS.slate800);
 
-    // ─ What This Means ─
+    // ── Personalized insight (compact) ───────────────────────────────────
+    sectionBanner(doc, '\uD83E\uDDED  Your Navigation Skills in This Terrain', C.purple);
     if (analysis.personalizedInsight) {
-        sectionBar(doc, '\u{1F4CD}  What This Means for You', dimColor);
-        calloutBox(doc, analysis.personalizedInsight, COLORS.bgIndigo, dimColor, PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 9 });
+        infoBox(
+            doc,
+            'What this means for your journey:\n\n' + analysis.personalizedInsight,
+            cfg.bg, cfg.color, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+        );
     }
 
-    // ─ Core Strengths ─
-    if (analysis.strengthsDemonstrated && analysis.strengthsDemonstrated.length > 0) {
+    // Two-column: Strengths + Growth Opportunities
+    ensureSpace(doc, 80);
+    const colW2 = (CONTENT_WIDTH - 10) / 2;
+    const col1X = PAGE_MARGIN;
+    const col2X = PAGE_MARGIN + colW2 + 10;
+    const colY = doc.y;
+
+    fillColor(doc, COLORS.accentDark);
+    doc.fontSize(9).font('Helvetica-Bold').text('STRENGTHS DEMONSTRATED', col1X, colY, {
+        width: colW2, lineBreak: false,
+    });
+    fillColor(doc, COLORS.text);
+    doc.y = colY + 14;
+
+    const strengths = analysis.strengthsDemonstrated || [];
+    let maxStrY = doc.y;
+    for (const s of strengths.slice(0, 4)) {
+        ensureSpace(doc, 14);
+        doc.fontSize(8).font('Helvetica').fillColor(COLORS.text).text(
+            '\u2022  ' + s, col1X, doc.y, { width: colW2 - 4, lineGap: 1 }
+        );
+        doc.y += 2;
+        if (doc.y > maxStrY) maxStrY = doc.y;
+    }
+
+    doc.y = colY;
+    fillColor(doc, cfg.color);
+    doc.fontSize(9).font('Helvetica-Bold').text('GROWTH OPPORTUNITIES', col2X, colY, {
+        width: colW2, lineBreak: false,
+    });
+    fillColor(doc, COLORS.text);
+    let gy = colY + 14;
+    const growths = analysis.growthOpportunities || [];
+    for (const g of growths.slice(0, 4)) {
+        const textH = doc.fontSize(8).heightOfString('\u2022  ' + g, { width: colW2 - 4, lineGap: 1 });
+        doc.fontSize(8).font('Helvetica').fillColor(COLORS.text).text(
+            '\u2022  ' + g, col2X, gy, { width: colW2 - 4, lineGap: 1 }
+        );
+        gy += textH + 3;
+        if (gy > maxStrY) maxStrY = gy;
+    }
+    doc.y = maxStrY + 6;
+
+    // Daily Micro-Practice
+    if (analysis.dailyMicroPractice) {
         ensureSpace(doc, 50);
-        sectionBar(doc, '\u{1F31F}  Strengths You Carry', COLORS.emerald);
-        bulletList(doc, analysis.strengthsDemonstrated, 0, COLORS.emerald);
+        infoBox(
+            doc,
+            'DAILY 15-MINUTE PRACTICE\n' + analysis.dailyMicroPractice,
+            COLORS.bgOrange, COLORS.warning, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+        );
     }
 
-    // ─ Growth Opportunities ─
-    if (analysis.growthOpportunities && analysis.growthOpportunities.length > 0) {
-        ensureSpace(doc, 50);
-        sectionBar(doc, '\u{1F331}  Growth Territory Ahead', COLORS.amber);
-        bulletList(doc, analysis.growthOpportunities, 0, COLORS.amber);
-    }
+    // Life Applications
+    const la = content && content.lifeApplications;
+    if (la) {
+        ensureSpace(doc, 40);
+        sectionHeader(doc, 'HOW ' + dimName.toUpperCase() + ' SHAPES YOUR LIFE', cfg.color);
 
-    // ─ Application Across Life Areas ─
-    if (analysis.lifeApplications) {
-        ensureSpace(doc, 30);
-        sectionBar(doc, '\u{1F5FA}  Applying This Strength Across Your Life', dimColor);
-
-        const lifeAreas = [
-            { key: 'relationships', label: '\u2764\uFE0F  In Relationships', bg: COLORS.bgRose, border: COLORS.rose },
-            { key: 'friendships', label: '\u{1F91D}  In Friendships', bg: COLORS.bgPurple, border: COLORS.purpleLight },
-            { key: 'parenting', label: '\u{1F476}  In Parenting', bg: COLORS.bgEmerald, border: COLORS.emeraldLight },
-            { key: 'work', label: '\u{1F4BC}  At Work', bg: COLORS.bgIndigo, border: COLORS.indigoLight },
-            { key: 'personalGrowth', label: '\u{1F331}  Personal Growth', bg: COLORS.bgAmber, border: COLORS.amberLight },
+        const apps = [
+            { area: 'Romantic Relationships', text: la.relationships },
+            { area: 'Friendships & Social Life', text: la.friendships },
+            { area: 'Parenting & Caregiving', text: la.parenting },
+            { area: 'Work & Career', text: la.work },
+            { area: 'Personal Growth', text: la.personalGrowth },
         ];
 
-        for (const area of lifeAreas) {
-            const text = analysis.lifeApplications[area.key];
-            if (!text) continue;
-            ensureSpace(doc, 50);
-            const areaY = doc.y;
-            const pad = 8;
-            const innerW = CONTENT_WIDTH - pad * 2 - 16;
-            const labelH = 16;
-            const textH = doc.fontSize(9).font('Helvetica').heightOfString(text, { width: innerW, lineGap: 2 });
-            const boxH = labelH + textH + pad * 2 + 4;
-
-            fc(doc, area.bg);
-            sc(doc, area.border);
-            doc.roundedRect(PAGE_MARGIN, areaY, CONTENT_WIDTH, boxH, 5).fillAndStroke();
-
-            // Colored left border accent
-            fc(doc, area.border);
-            doc.roundedRect(PAGE_MARGIN, areaY, 4, boxH, 2).fill();
-
-            // Area label
-            fc(doc, COLORS.slate700);
-            doc.fontSize(9).font('Helvetica-Bold').text(area.label, PAGE_MARGIN + 12, areaY + 6, { width: CONTENT_WIDTH - 20 });
-
-            // Area text
-            fc(doc, COLORS.slate700);
-            doc.fontSize(9).font('Helvetica').text(text, PAGE_MARGIN + 12, areaY + labelH + 8, { width: innerW, lineGap: 2 });
-
-            fc(doc, COLORS.slate800);
-            doc.y = areaY + boxH + 6;
+        for (const app of apps) {
+            if (!app.text) continue;
+            ensureSpace(doc, 30);
+            const rowY = doc.y;
+            fillColor(doc, COLORS.primary);
+            doc.fontSize(9).font('Helvetica-Bold').text(app.area + ':', PAGE_MARGIN, rowY, {
+                width: 120, lineBreak: false,
+            });
+            fillColor(doc, COLORS.text);
+            doc.fontSize(9).font('Helvetica').text(app.text, PAGE_MARGIN + 128, rowY, {
+                width: CONTENT_WIDTH - 130, lineGap: 1,
+            });
+            const textH = doc.heightOfString(app.text, { width: CONTENT_WIDTH - 130, lineGap: 1 });
+            doc.y = rowY + Math.max(14, textH) + 5;
+            fillColor(doc, COLORS.text);
         }
     }
 
-    // ─ Daily Micro-Practice ─
-    if (analysis.dailyMicroPractice) {
-        ensureSpace(doc, 50);
-        sectionBar(doc, '\u{1F9ED}  Daily Practice (15 min)', COLORS.indigo);
-        compassCallout(doc, 'Compass Practice', analysis.dailyMicroPractice, COLORS.bgIndigo, COLORS.indigoLight);
-    }
-
-    // ─ Affirmation ─
-    if (analysis.affirmation) {
-        ensureSpace(doc, 36);
-        const affY = doc.y;
-        fc(doc, dimColor);
-        doc.roundedRect(PAGE_MARGIN, affY, CONTENT_WIDTH, 28, 6).fill();
-        fc(doc, COLORS.white);
-        doc.fontSize(10).font('Helvetica-Oblique').text(
-            `\u201C${analysis.affirmation}\u201D`,
-            PAGE_MARGIN + 14, affY + 8, { width: CONTENT_WIDTH - 28 }
-        );
-        fc(doc, COLORS.slate800);
-        doc.y = affY + 36;
+    // 30-day progression highlights
+    if (analysis.weeklyProgression && analysis.weeklyProgression.length > 0) {
+        ensureSpace(doc, 40);
+        subHeader(doc, '30-DAY PROGRESSION PATH', cfg.color);
+        for (const week of analysis.weeklyProgression.slice(0, 2)) {
+            if (!week) continue;
+            ensureSpace(doc, 18);
+            doc.fontSize(8).font('Helvetica').fillColor(COLORS.text).text(
+                '\u2022  ' + week, PAGE_MARGIN + 8, doc.y, { width: CONTENT_WIDTH - 8, lineGap: 1 }
+            );
+            doc.y += 4;
+        }
     }
 }
 
-/** PAGE 11 — Strength Integration & Synergies */
+/** Pages 10-11 - Strength Integration & Synergies */
 function buildStrengthIntegrationPage(doc, report) {
     newPage(doc);
-    sectionBar(doc, '\u{1F4A0}  Strength Integration \u2014 Your Unique Combination', COLORS.indigoDark);
+    sectionHeader(doc, 'STRENGTH INTEGRATION \u2014 YOUR INNER ALLIANCE', COLORS.primary);
 
     const si = report.strengthIntegration || {};
 
     if (si.topThreeCombo) {
-        calloutBox(doc,
-            `Your resilience is anchored in: ${si.topThreeCombo}`,
-            COLORS.bgPurple, COLORS.purpleLight,
-            PAGE_MARGIN, doc.y, CONTENT_WIDTH, { bold: true, fontSize: 11 }
+        doc.y += 4;
+        fillColor(doc, COLORS.text);
+        doc.fontSize(11).font('Helvetica-Bold').text(
+            'Your Top Combination: ' + si.topThreeCombo, PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH }
         );
+        doc.y += 10;
     }
 
     if (si.blueprint) {
-        sectionBar(doc, '\u{1F5FA}  Your Personal Resilience Blueprint', COLORS.purple);
-        calloutBox(doc, si.blueprint, COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
+        infoBox(doc, si.blueprint, COLORS.bgGreen, COLORS.accentDark, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
     }
 
     if (si.synergies && si.synergies.length > 0) {
-        ensureSpace(doc, 50);
-        sectionBar(doc, '\u26A1  Synergy Pairs \u2014 How Your Strengths Amplify Each Other', COLORS.emerald);
-        bulletList(doc, si.synergies, 0, COLORS.emerald);
+        ensureSpace(doc, 40);
+        subHeader(doc, 'HOW YOUR STRENGTHS AMPLIFY EACH OTHER');
+        for (const s of si.synergies) { bullet(doc, s); }
+        doc.y += 6;
     }
 
     if (si.gaps && si.gaps.length > 0) {
-        ensureSpace(doc, 50);
-        sectionBar(doc, '\u{1F331}  Growth Gaps \u2014 Unlock Your Full Potential', COLORS.amber);
-        calloutBox(doc,
-            'These dimensions, when developed, will create a more integrated and complete resilience profile:',
-            COLORS.bgAmber, COLORS.amberLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-        bulletList(doc, si.gaps, 0, COLORS.amber);
+        ensureSpace(doc, 40);
+        subHeader(doc, 'GROWTH EDGES TO CHART NEXT', COLORS.warning);
+        for (const g of si.gaps) { bullet(doc, g); }
+        doc.y += 8;
     }
 
-    // Integration insight
-    ensureSpace(doc, 80);
-    sectionBar(doc, '\u{1F4A1}  Integration Insight', COLORS.indigo);
-    calloutBox(doc,
-        'True resilience mastery comes not from maximising any single dimension, but from ' +
-        'understanding how all six interact in your unique profile. Your top dimensions are ' +
-        'the compass bearings that guide you \u2014 but it is the integration of all six ' +
-        'that makes the map complete. Consider this report the beginning of a lifelong ' +
-        'navigation practice.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
+    // Dimension grid
+    ensureSpace(doc, 60);
+    sectionHeader(doc, 'DIMENSION NAVIGATION MAP', COLORS.secondary);
+
+    const ranked = Object.entries(report.dimensionAnalysis || {})
+        .sort((a, b) => b[1].percentage - a[1].percentage);
+
+    const dimColW = (CONTENT_WIDTH - 10) / 3;
+    const gridStartY = doc.y;
+    for (let i = 0; i < Math.min(ranked.length, 6); i++) {
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        const [dim, analysis] = ranked[i];
+        const cfg = DIM_CONFIG[dim] || { color: COLORS.primary };
+        const x = PAGE_MARGIN + col * (dimColW + 5);
+        const y = gridStartY + row * 48;
+
+        fillColor(doc, cfg.color);
+        doc.roundedRect(x, y, dimColW, 42, 6).fill();
+        fillColor(doc, COLORS.white);
+        doc.fontSize(8).font('Helvetica-Bold').text(
+            dim.split('-')[0], x + 6, y + 6, { width: dimColW - 12, lineBreak: false }
+        );
+        doc.fontSize(17).font('Helvetica-Bold').text(
+            Number(analysis.percentage || 0).toFixed(0) + '%', x + 6, y + 18,
+            { width: dimColW - 12, align: 'right', lineBreak: false }
+        );
+        fillColor(doc, COLORS.text);
+    }
+    doc.y = gridStartY + Math.ceil(Math.min(ranked.length, 6) / 3) * 48 + 12;
 }
 
-/** PAGE 12 — Stress Response Profile / Internal Compass */
+/** Page 12 - Stress Response Profile */
 function buildStressResponsePage(doc, report) {
     newPage(doc);
-    sectionBar(doc, '\u{1F9ED}  Your Internal Compass \u2014 Navigating Under Pressure', COLORS.indigoDark);
+    sectionHeader(doc, 'YOUR EMERGENCY NAVIGATION SYSTEM \u2014 STRESS RESPONSE PROFILE', '#dc2626');
 
     const sr = report.stressResponse || {};
 
     if (sr.overallResilience) {
-        calloutBox(doc, sr.overallResilience, COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
+        infoBox(doc,
+            'Your Stress Navigation Style:\n\n' + sr.overallResilience,
+            COLORS.bgOrange, COLORS.warning, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+        );
     }
 
-    // Strengths under stress
     if (sr.strengthsUnderStress && sr.strengthsUnderStress.length > 0) {
-        sectionBar(doc, '\u26A1  When You\'re at Your Best', COLORS.emerald);
-        calloutBox(doc,
-            'These dimensions are reliably available to you even under pressure — your steadiest compass bearings:',
-            COLORS.bgEmerald, COLORS.emeraldLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-        bulletList(doc, sr.strengthsUnderStress.map(d => `${DIMENSION_EMOJIS[d] || ''} ${d} \u2014 a genuine resource under pressure`), 0, COLORS.emerald);
+        ensureSpace(doc, 40);
+        subHeader(doc, 'WHEN YOU\'RE AT YOUR BEST UNDER PRESSURE', COLORS.accentDark);
+        for (const s of sr.strengthsUnderStress) {
+            const cfg = DIM_CONFIG[s] || {};
+            bullet(doc, s + ' \u2014 your anchor territory under stress');
+        }
     }
 
-    // Vulnerabilities under stress
     if (sr.vulnerabilitiesUnderStress && sr.vulnerabilitiesUnderStress.length > 0) {
-        ensureSpace(doc, 50);
-        sectionBar(doc, '\u{1F4A1}  What Can Drain Your Resilience', COLORS.amber);
-        calloutBox(doc,
-            'These dimensions may be more vulnerable under significant stress \u2014 they are growth edges, not weaknesses:',
-            COLORS.bgAmber, COLORS.amberLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-        bulletList(doc, sr.vulnerabilitiesUnderStress.map(d => `${DIMENSION_EMOJIS[d] || ''} ${d} \u2014 may need extra support when pressure is high`), 0, COLORS.amber);
+        ensureSpace(doc, 40);
+        subHeader(doc, 'WHAT TYPICALLY DRAINS YOUR RESERVES', COLORS.warning);
+        for (const v of sr.vulnerabilitiesUnderStress) {
+            bullet(doc, v + ' \u2014 needs extra support when stress is high');
+        }
+        doc.y += 6;
     }
 
-    // Coping strategies
     if (sr.copingStrategies && sr.copingStrategies.length > 0) {
-        ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F5FA}  Grounding Techniques for Your Profile', COLORS.indigo);
-        bulletList(doc, sr.copingStrategies, 0, COLORS.indigo);
+        ensureSpace(doc, 50);
+        subHeader(doc, 'YOUR PERSONALISED COPING STRATEGIES');
+        for (const s of sr.copingStrategies.slice(0, 5)) { bullet(doc, s, 8); }
+        doc.y += 8;
     }
 
-    // Grounding techniques
     if (sr.groundingTechniques && sr.groundingTechniques.length > 0) {
         ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F4AB}  Emergency Compass Resets', COLORS.purple);
-        calloutBox(doc, 'When you feel most disoriented, these somatic techniques can restore your bearing:',
-            COLORS.bgPurple, COLORS.purpleLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-        bulletList(doc, sr.groundingTechniques, 0, COLORS.purple);
+        sectionHeader(doc, 'EMERGENCY GROUNDING TECHNIQUES', '#dc2626');
+        for (const t of sr.groundingTechniques) { bullet(doc, t, 8); }
+        doc.y += 6;
     }
 
-    // Pressure patterns
-    ensureSpace(doc, 60);
-    sectionBar(doc, '\u{1F4CA}  Navigating Your Pressure Patterns', COLORS.slate700);
-    calloutBox(doc,
-        'Your stress response profile reveals predictable patterns in how you navigate difficulty. ' +
-        'Awareness of these patterns is itself a resilience skill \u2014 when you can name what ' +
-        'is happening internally, you regain choice about how to respond. Your archetype\'s coping ' +
-        'strategies listed above are calibrated specifically to your navigation style. Consider ' +
-        'returning to them regularly \u2014 not just in crisis, but as preventive maintenance for ' +
-        'your inner compass.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    ensureSpace(doc, 80);
+    infoBox(
+        doc,
+        '5-4-3-2-1 Sensory Grounding: Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste. This grounds you instantly in the present moment.\n\nBox Breathing: Inhale 4 counts, hold 4, exhale 4, hold 4. Repeat 4 times. This activates your parasympathetic nervous system and restores calm within minutes.',
+        COLORS.bgBlue, COLORS.primary, PAGE_MARGIN, doc.y, CONTENT_WIDTH
     );
 }
 
-/** PAGE 13 — Relational Dynamics / Navigating with Others */
-function buildRelationalDynamicsPage(doc, report) {
+/** Page 13 - Relationship & Team Dynamics */
+function buildRelationshipDynamicsPage(doc, report) {
     newPage(doc);
-    sectionBar(doc, '\u{1F91D}  Navigating with Others \u2014 Relational Dynamics', COLORS.purple);
+    sectionHeader(doc, 'NAVIGATING WITH OTHERS \u2014 RELATIONSHIP & TEAM DYNAMICS', COLORS.secondary);
 
     const ri = report.relationshipInsights || {};
 
     if (ri.communicationStyle) {
-        sectionBar(doc, '\u{1F5E3}  Your Communication Style', COLORS.indigoDark);
-        calloutBox(doc, ri.communicationStyle, COLORS.bgPurple, COLORS.purpleLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 10 });
+        subHeader(doc, 'YOUR COMMUNICATION STYLE & TEAM ROLE');
+        infoBox(doc, ri.communicationStyle, COLORS.bgPurple, COLORS.secondary, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
     }
 
     if (ri.partnershipRecommendations && ri.partnershipRecommendations.length > 0) {
-        ensureSpace(doc, 60);
-        sectionBar(doc, '\u{1F9ED}  Partnership Navigation Tips', COLORS.emerald);
-        bulletList(doc, ri.partnershipRecommendations, 0, COLORS.emerald);
+        ensureSpace(doc, 50);
+        subHeader(doc, 'PARTNERSHIP & RELATIONSHIP RECOMMENDATIONS');
+        for (const p of ri.partnershipRecommendations) { bullet(doc, p, 8); }
+        doc.y += 8;
     }
 
-    // How dimensions affect relationships
-    ensureSpace(doc, 30);
-    sectionBar(doc, '\u{1F5FA}  Your Relational Landscape', COLORS.slate700);
+    // Life area applications from top dimensions
+    ensureSpace(doc, 80);
+    sectionHeader(doc, 'YOUR RESILIENCE ACROSS KEY LIFE AREAS', COLORS.primary);
 
-    const dims = Object.entries(report.dimensionAnalysis || {});
-    const relDims = dims.filter(([, a]) => a.lifeApplications && a.lifeApplications.relationships);
-
-    for (const [dimName, analysis] of relDims.slice(0, 4)) {
-        ensureSpace(doc, 40);
-        const dimColor = DIMENSION_COLORS[dimName] || COLORS.indigo;
-        const y = doc.y;
-        const pad = 8;
-        const text = analysis.lifeApplications.relationships;
-        const innerW = CONTENT_WIDTH - 20 - pad;
-        const labelH = 16;
-        const textH = doc.fontSize(9).font('Helvetica').heightOfString(text, { width: innerW, lineGap: 2 });
-        const boxH = labelH + textH + pad + 8;
-
-        fc(doc, COLORS.slate50);
-        sc(doc, dimColor);
-        doc.roundedRect(PAGE_MARGIN, y, CONTENT_WIDTH, boxH, 4).fillAndStroke();
-        fc(doc, dimColor);
-        doc.roundedRect(PAGE_MARGIN, y, 4, boxH, 2).fill();
-        fc(doc, COLORS.slate700);
-        doc.fontSize(9).font('Helvetica-Bold').text(
-            `${DIMENSION_EMOJIS[dimName] || ''} ${dimName}`,
-            PAGE_MARGIN + 12, y + 5, { width: CONTENT_WIDTH - 20 }
-        );
-        doc.fontSize(9).font('Helvetica').text(text, PAGE_MARGIN + 12, y + labelH + 6, { width: innerW, lineGap: 2 });
-        fc(doc, COLORS.slate800);
-        doc.y = y + boxH + 6;
-    }
-
-    // Conflict resolution
-    ensureSpace(doc, 60);
-    sectionBar(doc, '\u{1F4A1}  Conflict Resolution Approach', COLORS.amber);
-    const archetypeObj = report._archetypeObj || {};
-    const conflictText =
-        'Your resilience profile shapes how you naturally approach conflict. The strongest ' +
-        'navigators use conflict as a compass reading \u2014 information about what matters, ' +
-        'what has been violated, and what needs to be restored. Your archetype\'s partnership ' +
-        'tips above offer specific guidance for navigating disagreement in your closest relationships.';
-    calloutBox(doc, conflictText, COLORS.bgAmber, COLORS.amberLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH);
-}
-
-/** PAGE 14 — Resilience Across Life Domains */
-function buildLifeDomainsPage(doc, report) {
-    newPage(doc);
-    sectionBar(doc, '\u{1F5FA}  Your Resilience Across Life Domains', COLORS.indigoDark);
-
-    calloutBox(doc,
-        'Resilience is not abstract \u2014 it lives in the specific territories of your daily life. ' +
-        'Below is your personalised map of how your strengths apply across the five most important ' +
-        'life domains. Use this as a navigation guide for each area.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    const domains = [
-        {
-            key: 'relationships',
-            label: '\u2764\uFE0F  Relationships',
-            color: COLORS.rose,
-            bg: COLORS.bgRose,
-            desc: 'Intimate partnerships, family bonds, and close connections',
-        },
-        {
-            key: 'friendships',
-            label: '\u{1F91D}  Friendships',
-            color: COLORS.purple,
-            bg: COLORS.bgPurple,
-            desc: 'Social connections, support networks, and community',
-        },
-        {
-            key: 'parenting',
-            label: '\u{1F476}  Parenting',
-            color: COLORS.emerald,
-            bg: COLORS.bgEmerald,
-            desc: 'Raising children with intentional resilience practices',
-        },
-        {
-            key: 'work',
-            label: '\u{1F4BC}  Work & Career',
-            color: COLORS.indigo,
-            bg: COLORS.bgIndigo,
-            desc: 'Professional performance, leadership, and career navigation',
-        },
-        {
-            key: 'personalGrowth',
-            label: '\u{1F331}  Personal Growth',
-            color: COLORS.amber,
-            bg: COLORS.bgAmber,
-            desc: 'Self-development, learning, and becoming',
-        },
+    const topDims = (report.topDimensions || []).slice(0, 3);
+    const lifeAreas = [
+        { key: 'relationships', label: 'Romantic Relationships' },
+        { key: 'friendships', label: 'Friendships & Social Life' },
+        { key: 'parenting', label: 'Parenting & Caregiving' },
+        { key: 'work', label: 'Work & Career' },
     ];
 
-    const dims = Object.entries(report.dimensionAnalysis || {});
+    for (const area of lifeAreas) {
+        const apps = topDims
+            .map((dim) => {
+                const content = DIMENSION_CONTENT[dim];
+                return content && content.lifeApplications && content.lifeApplications[area.key];
+            })
+            .filter(Boolean);
 
-    for (const domain of domains) {
-        ensureSpace(doc, 70);
-        const domY = doc.y;
-        const domPad = 10;
-
-        // Collect text from all dimensions for this domain
-        const texts = dims
-            .filter(([, a]) => a.lifeApplications && a.lifeApplications[domain.key])
-            .map(([dimName, a]) => `${DIMENSION_EMOJIS[dimName] || ''} ${a.lifeApplications[domain.key]}`);
-
-        if (texts.length === 0) continue;
-
-        // Domain header
-        fc(doc, domain.color);
-        doc.roundedRect(PAGE_MARGIN, domY, CONTENT_WIDTH, 24, 5).fill();
-        fc(doc, COLORS.white);
-        doc.fontSize(10).font('Helvetica-Bold').text(domain.label, PAGE_MARGIN + 12, domY + 6, { width: CONTENT_WIDTH - 24 });
-        fc(doc, COLORS.slate800);
-        doc.y = domY + 30;
-
-        // Domain description
-        fc(doc, COLORS.slate500);
-        doc.fontSize(8).font('Helvetica-Oblique').text(domain.desc, PAGE_MARGIN + 8, doc.y, { width: CONTENT_WIDTH - 16 });
-        doc.y += 12;
-
-        // Top insight (first dimension's application)
-        calloutBox(doc, texts[0], domain.bg, domain.color, PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 9 });
-        doc.y += 4;
+        if (apps.length > 0) {
+            ensureSpace(doc, 40);
+            fillColor(doc, COLORS.primary);
+            doc.fontSize(10).font('Helvetica-Bold').text(area.label, PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH });
+            doc.y += 4;
+            fillColor(doc, COLORS.text);
+            doc.fontSize(9).font('Helvetica').text(apps[0], PAGE_MARGIN + 10, doc.y, {
+                width: CONTENT_WIDTH - 10, lineGap: 2,
+            });
+            doc.y += 8;
+        }
     }
+
+    ensureSpace(doc, 50);
+    infoBox(
+        doc,
+        'Conflict Navigation Insight: Your archetype shapes how you naturally approach conflict. Notice whether you tend to engage directly (agentic), seek connection first (relational), process internally (cognitive/spiritual), regulate physically (somatic), or feel deeply before responding (emotional). Awareness of your default pattern is the first step to more conscious navigation.',
+        COLORS.bgLight, COLORS.border, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    );
 }
 
-/** PAGE 15–16 — 30-Day Resilience Navigation Plan */
-function build30DayPlanPage(doc, report) {
+/** Page 14 - 30-Day Expedition Part 1 (Weeks 1-2) */
+function buildActionPlanPage1(doc, report) {
     newPage(doc);
-    sectionBar(doc, '\u{1F5FA}  Chart Your Course \u2014 30-Day Resilience Navigation Plan', COLORS.indigoDark);
+    sectionHeader(doc, 'YOUR 30-DAY RESILIENCE EXPEDITION \u2014 THE JOURNEY MAP', COLORS.accentDark);
 
-    calloutBox(doc,
-        'The most powerful journey begins with a single, deliberate step. Your 30-day ' +
-        'navigation plan is calibrated to your lowest-scoring dimensions \u2014 the territories ' +
-        'with the greatest growth potential. Each week has a focus dimension, a daily practice, ' +
-        'and a weekly milestone. Commit to 15 minutes per day and notice what changes.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
+        'Your expedition begins today. Each week charts a new territory \u2014 building resilience one intentional practice at a time. 15 minutes a day is all it takes to navigate toward a stronger, more grounded you.',
+        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
     );
+    fillColor(doc, COLORS.text);
+    doc.y += 12;
 
     const plan = report.thirtyDayPlan || {};
-    const weekColors = [COLORS.indigo, COLORS.purple, COLORS.emerald, COLORS.amber];
-    const weekBgs = [COLORS.bgIndigo, COLORS.bgPurple, COLORS.bgEmerald, COLORS.bgAmber];
-
-    const weeks = [
-        { label: 'Week 1 \u2014 Foundation', data: plan.week1, color: weekColors[0], bg: weekBgs[0] },
-        { label: 'Week 2 \u2014 Deepening', data: plan.week2, color: weekColors[1], bg: weekBgs[1] },
-        { label: 'Week 3 \u2014 Integration', data: plan.week3, color: weekColors[2], bg: weekBgs[2] },
-        { label: 'Week 4 \u2014 Habit Formation', data: plan.week4, color: weekColors[3], bg: weekBgs[3] },
+    const weekDefs = [
+        { key: 'week1', label: 'WEEK 1', color: COLORS.primary },
+        { key: 'week2', label: 'WEEK 2', color: COLORS.secondary },
     ];
 
-    for (const { label, data, color, bg } of weeks) {
+    for (const { key, label, color } of weekDefs) {
+        const data = plan[key];
         if (!data) continue;
         ensureSpace(doc, 80);
 
         const weekY = doc.y;
-        // Week header
-        fc(doc, color);
-        doc.roundedRect(PAGE_MARGIN, weekY, CONTENT_WIDTH, 28, 6).fill();
-        fc(doc, COLORS.white);
-        doc.fontSize(11).font('Helvetica-Bold').text(label, PAGE_MARGIN + 12, weekY + 7, { width: CONTENT_WIDTH * 0.6 });
-        if (data.focus) {
-            fc(doc, '#f0eeff');
-            doc.fontSize(9).font('Helvetica').text(data.focus, PAGE_MARGIN + CONTENT_WIDTH * 0.55, weekY + 9, { width: CONTENT_WIDTH * 0.42, align: 'right' });
-        }
-        fc(doc, COLORS.slate800);
-        doc.y = weekY + 36;
+        fillColor(doc, color);
+        doc.roundedRect(PAGE_MARGIN, weekY, CONTENT_WIDTH, 24, 4).fill();
+        fillColor(doc, COLORS.white);
+        doc.fontSize(11).font('Helvetica-Bold').text(
+            label + ': ' + (data.focus || '').toUpperCase(),
+            PAGE_MARGIN + 10, weekY + 6, { width: CONTENT_WIDTH - 20, lineBreak: false }
+        );
+        fillColor(doc, COLORS.text);
+        doc.y = weekY + 32;
 
         // Exercises
         if (data.exercises && data.exercises.length > 0) {
-            fc(doc, COLORS.slate600);
-            doc.fontSize(8).font('Helvetica-Bold').text('DAILY PRACTICES:', PAGE_MARGIN + 8, doc.y);
-            doc.y += 4;
-            for (const ex of data.exercises.filter(Boolean)) {
-                ensureSpace(doc, 16);
-                fc(doc, color);
-                doc.circle(PAGE_MARGIN + 14, doc.y + 5, 3).fill();
-                fc(doc, COLORS.slate700);
-                doc.fontSize(9).font('Helvetica').text(ex, PAGE_MARGIN + 22, doc.y, { width: CONTENT_WIDTH - 30, lineGap: 2 });
-                doc.y += 2;
+            subHeader(doc, 'Daily 15-Minute Practices', color);
+            for (const ex of data.exercises) {
+                if (!ex) continue;
+                bullet(doc, ex, 8);
             }
         }
 
@@ -1087,192 +889,311 @@ function build30DayPlanPage(doc, report) {
         // Affirmation
         if (data.affirmation) {
             ensureSpace(doc, 24);
-            const affY = doc.y;
-            fc(doc, bg);
-            sc(doc, color);
-            doc.roundedRect(PAGE_MARGIN, affY, CONTENT_WIDTH, 22, 4).fillAndStroke();
-            fc(doc, color);
-            doc.fontSize(9).font('Helvetica-Oblique').text(
-                `\u201C${data.affirmation}\u201D`,
-                PAGE_MARGIN + 14, affY + 6, { width: CONTENT_WIDTH - 28 }
+            fillColor(doc, color);
+            doc.fontSize(10).font('Helvetica-Oblique').text(
+                '\u201c' + data.affirmation + '\u201d',
+                PAGE_MARGIN + 20, doc.y,
+                { width: CONTENT_WIDTH - 40, align: 'center' }
             );
-            fc(doc, COLORS.slate800);
-            sc(doc, COLORS.slate200);
-            doc.y = affY + 30;
+            fillColor(doc, COLORS.text);
+            doc.y += 6;
         }
-
-        // Progress tracking checkboxes
-        ensureSpace(doc, 24);
-        doc.y += 4;
-        fc(doc, COLORS.slate400);
-        const checkLabels = ['Day 1-2', 'Day 3-4', 'Day 5-6', 'Day 7'];
-        let cx = PAGE_MARGIN + 8;
-        for (const cl of checkLabels) {
-            sc(doc, COLORS.slate400);
-            doc.rect(cx, doc.y, 10, 10).stroke();
-            fc(doc, COLORS.slate500);
-            doc.fontSize(7).font('Helvetica').text(cl, cx + 13, doc.y + 1, { width: 40 });
-            cx += 70;
-        }
-        doc.y += 18;
-
-        doc.y += 8;
+        doc.y += 10;
     }
+
+    // Progress checklist
+    ensureSpace(doc, 60);
+    sectionHeader(doc, 'WEEKS 1-2 PROGRESS TRACKING CHECKLIST', COLORS.accent);
+    const checkItems = [
+        'Completed at least 10 of 14 daily practices',
+        'Identified my primary resilience anchor dimension',
+        'Shared my journey with at least one trusted person',
+        'Noticed one stress response pattern I want to navigate differently',
+        'Journaled or reflected at least 5 times this fortnight',
+    ];
+    for (const item of checkItems) {
+        ensureSpace(doc, 16);
+        strokeColor(doc, COLORS.border);
+        fillColor(doc, COLORS.white);
+        doc.roundedRect(PAGE_MARGIN + 4, doc.y, 10, 10, 2).fillAndStroke();
+        fillColor(doc, COLORS.text);
+        doc.fontSize(9).font('Helvetica').text('  ' + item, PAGE_MARGIN + 18, doc.y, {
+            width: CONTENT_WIDTH - 20, lineBreak: false,
+        });
+        doc.y += 14;
+    }
+
+    // Leveraging your type
+    ensureSpace(doc, 55);
+    calloutBox(doc,
+        '\uD83D\uDEE4\uFE0F  Your Navigator Type is not a cage — it is a compass. Understanding it lets you lean ' +
+        'into your natural strengths while deliberately developing the dimensions that will round out your resilience. ' +
+        'The most resilient people know their type deeply and choose, each day, when to navigate from their strength ' +
+        'and when to stretch beyond it.',
+        C.bgBlue, C.indigo);
 }
 
-/** PAGE 17 — Resources / Navigation Tools */
-function buildResourcesPage(doc, report) {
+/** Page 15 - 30-Day Expedition Part 2 (Weeks 3-4) */
+function buildActionPlanPage2(doc, report) {
     newPage(doc);
-    sectionBar(doc, '\u{1F4DA}  Your Navigation Tools \u2014 Recommended Resources', COLORS.indigoDark);
+    sectionHeader(doc, 'YOUR 30-DAY EXPEDITION \u2014 WEEKS 3 & 4: INTEGRATION', COLORS.accentDark);
 
-    calloutBox(doc,
-        'Your personalised resource library is curated to support the dimensions of your ' +
-        'resilience profile that hold the most growth potential. Think of these as tools ' +
-        'for your expedition \u2014 each one chosen to help you navigate new territory.',
-        COLORS.bgIndigo, COLORS.indigoLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    const res = report.recommendedResources || {};
-
-    const sections = [
-        { title: '\u{1F4DA}  Reading for Your Journey', items: res.readingMaterials, color: COLORS.indigo, bg: COLORS.bgIndigo },
-        { title: '\u{1F3EB}  Workshops & Courses', items: res.workshops, color: COLORS.purple, bg: COLORS.bgPurple },
-        { title: '\u25B6\uFE0F  Videos & Talks', items: res.videos, color: COLORS.emerald, bg: COLORS.bgEmerald },
-        { title: '\u2705  Practices & Exercises', items: res.practices, color: COLORS.amber, bg: COLORS.bgAmber },
+    const plan = report.thirtyDayPlan || {};
+    const weekDefs = [
+        { key: 'week3', label: 'WEEK 3', color: COLORS.accent },
+        { key: 'week4', label: 'WEEK 4', color: COLORS.warning },
     ];
 
-    for (const { title, items, color, bg } of sections) {
-        if (!items || items.length === 0) continue;
+    for (const { key, label, color } of weekDefs) {
+        const data = plan[key];
+        if (!data) continue;
+        ensureSpace(doc, 80);
+
+        const weekY = doc.y;
+        fillColor(doc, color);
+        doc.roundedRect(PAGE_MARGIN, weekY, CONTENT_WIDTH, 24, 4).fill();
+        fillColor(doc, COLORS.white);
+        doc.fontSize(11).font('Helvetica-Bold').text(
+            label + ': ' + (data.focus || '').toUpperCase(),
+            PAGE_MARGIN + 10, weekY + 6, { width: CONTENT_WIDTH - 20, lineBreak: false }
+        );
+        fillColor(doc, COLORS.text);
+        doc.y = weekY + 32;
+
+        if (data.exercises && data.exercises.length > 0) {
+            subHeader(doc, 'Daily 15-Minute Practices', color);
+            for (const ex of data.exercises) {
+                if (!ex) continue;
+                bullet(doc, ex, 8);
+            }
+        }
+
+        if (data.affirmation) {
+            ensureSpace(doc, 24);
+            fillColor(doc, color);
+            doc.fontSize(10).font('Helvetica-Oblique').text(
+                '\u201c' + data.affirmation + '\u201d',
+                PAGE_MARGIN + 20, doc.y,
+                { width: CONTENT_WIDTH - 40, align: 'center' }
+            );
+            fillColor(doc, COLORS.text);
+            doc.y += 6;
+        }
+        doc.y += 10;
+    }
+
+    // Success metrics
+    ensureSpace(doc, 60);
+    sectionHeader(doc, '30-DAY SUCCESS METRICS', COLORS.accentDark);
+    const metrics = [
+        { metric: 'Daily Practice', target: 'Completed 20+ of 30 daily practices' },
+        { metric: 'Awareness', target: 'Can name all 6 dimensions and your score in each' },
+        { metric: 'Application', target: 'Applied at least one practice to a real-life challenge' },
+        { metric: 'Relationships', target: 'Had a meaningful conversation about resilience' },
+        { metric: 'Wellbeing', target: 'Noticed improvement in at least one area of daily life' },
+        { metric: 'Next Step', target: 'Ready to retake the assessment and chart your growth' },
+    ];
+    const mColW = (CONTENT_WIDTH - 8) / 2;
+    const mStartY = doc.y;
+    for (let i = 0; i < metrics.length; i++) {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = PAGE_MARGIN + col * (mColW + 8);
+        const y = mStartY + row * 32;
+        fillColor(doc, COLORS.bgGreen);
+        strokeColor(doc, COLORS.accentDark);
+        doc.roundedRect(x, y, mColW, 26, 4).fillAndStroke();
+        fillColor(doc, COLORS.accentDark);
+        doc.fontSize(8).font('Helvetica-Bold').text(metrics[i].metric, x + 6, y + 4, {
+            width: mColW - 12, lineBreak: false,
+        });
+        fillColor(doc, COLORS.text);
+        doc.fontSize(7).font('Helvetica').text(metrics[i].target, x + 6, y + 15, {
+            width: mColW - 12, lineBreak: false,
+        });
+        strokeColor(doc, COLORS.border);
+        fillColor(doc, COLORS.text);
+    }
+    doc.y = mStartY + Math.ceil(metrics.length / 2) * 32 + 12;
+
+    ensureSpace(doc, 50);
+    infoBox(
+        doc,
+        'RETAKE RECOMMENDATION: After completing your 30-day expedition, retake the Resilience Atlas assessment to chart your growth. Most people see meaningful shifts within 30 days of consistent practice. Your next map will show how far you have navigated.',
+        COLORS.bgBlue, COLORS.primary, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    );
+}
+
+/** Page 16 - Navigation Tools (Resources) */
+function buildResourcesPage(doc, report) {
+    newPage(doc);
+    sectionHeader(doc, 'YOUR NAVIGATION TOOLKIT \u2014 PERSONALISED RESOURCES', COLORS.primary);
+
+    doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
+        'These resources have been curated based on your growth-edge dimensions \u2014 the territories with the most potential on your map. One resource from each category, committed to for 30 days, creates significant change.',
+        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
+    );
+    fillColor(doc, COLORS.text);
+    doc.y += 12;
+
+    const res = report.recommendedResources || {};
+    const sections = [
+        { title: 'WORKSHOPS & COURSES', items: res.workshops, bg: COLORS.bgBlue, border: COLORS.primary },
+        { title: 'VIDEOS & TALKS', items: res.videos, bg: COLORS.bgPurple, border: COLORS.secondary },
+        { title: 'DAILY PRACTICES & TECHNIQUES', items: res.practices, bg: COLORS.bgGreen, border: COLORS.accent },
+        { title: 'BOOKS & READING LIST', items: res.readingMaterials, bg: COLORS.bgOrange, border: COLORS.warning },
+    ];
+
+    for (const section of sections) {
+        if (!section.items || section.items.length === 0) continue;
         ensureSpace(doc, 40);
-        sectionBar(doc, title, color);
-        bulletList(doc, items, 0, color);
+        sectionHeader(doc, section.title, COLORS.textMid);
+        for (const item of section.items) { bullet(doc, item, 8); }
+        doc.y += 6;
+    }
+}
+
+// PAGE 15 — Relationship Navigation & Team Dynamics ───────────────────────────
+function buildRelationshipPage(doc, report) {
+    newPage(doc);
+    sectionBanner(doc, '\uD83D\uDC65  Charting Course With Others — Relationship Navigation');
+
+    ensureSpace(doc, 80);
+    sectionHeader(doc, 'APPS, COMMUNITIES & COACHING', COLORS.textMid);
+    const appItems = [
+        'Mindfulness Apps: Headspace, Calm, Insight Timer \u2014 for somatic and spiritual resilience',
+        'Community: Search for resilience or growth communities on Meetup.com',
+        'Therapy & Coaching: A therapist or coach who specialises in your lowest dimension',
+        'Podcasts: "The Good Life Project", "On Being", "The Huberman Lab"',
+        'Support Groups: Psychology Today therapist directory or your local community centre',
+    ];
+    for (const item of appItems) { bullet(doc, item, 8); }
+    doc.y += 8;
+
+    ensureSpace(doc, 40);
+    infoBox(
+        doc,
+        'Navigation Tip: You do not need all these resources. Choose ONE from each category that resonates with you and commit to it for 30 days. Depth of engagement beats breadth of collection every time.',
+        COLORS.bgLight, COLORS.border, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    );
+}
+
+/** Page 17 - Benchmarking, Context & Growth Horizon */
+function buildBenchmarkingPage(doc, report, overall) {
+    newPage(doc);
+    sectionHeader(doc, 'BENCHMARKING, CONTEXT & YOUR GROWTH HORIZON', COLORS.primary);
+
+    const overallNum = Number(overall || 0);
+    const populationMeans = Object.values(DIMENSION_CONTENT).map((c) => c.benchmark.populationMean);
+    const avgMean = Math.round(populationMeans.reduce((a, b) => a + b, 0) / populationMeans.length);
+    const above = overallNum > avgMean;
+
+    infoBox(
+        doc,
+        'Population Context: Your overall score of ' + overallNum + '% places you ' + (above ? 'above' : 'near or below') +
+        ' the population average of approximately ' + avgMean + '%. This score reflects your current state \u2014 not your ceiling. ' +
+        'Resilience is trainable, and research consistently shows meaningful improvement with deliberate practice over 30-90 days.',
+        COLORS.bgBlue, COLORS.primary, PAGE_MARGIN, doc.y, CONTENT_WIDTH
+    );
+
+    // Per-dimension grid
+    ensureSpace(doc, 100);
+    subHeader(doc, 'YOUR COORDINATES ON THE RESILIENCE MAP');
+
+    const dims = Object.entries(report.dimensionAnalysis || {});
+    const gridColW = (CONTENT_WIDTH - 10) / 3;
+    const gridY = doc.y;
+    for (let i = 0; i < dims.length; i++) {
+        const col = i % 3;
+        const row = Math.floor(i / 3);
+        const [dim, analysis] = dims[i];
+        const cfg = DIM_CONFIG[dim] || { color: COLORS.primary };
+        const x = PAGE_MARGIN + col * (gridColW + 5);
+        const y = gridY + row * 50;
+
+        fillColor(doc, cfg.color);
+        doc.roundedRect(x, y, gridColW, 44, 6).fill();
+        fillColor(doc, COLORS.white);
+        doc.fontSize(8).font('Helvetica-Bold').text(dim.split('-')[0], x + 6, y + 6, {
+            width: gridColW - 12, lineBreak: false,
+        });
+        doc.fontSize(17).font('Helvetica-Bold').text(
+            Number(analysis.percentage || 0).toFixed(0) + '%', x + 6, y + 18,
+            { width: gridColW - 12, align: 'right', lineBreak: false }
+        );
+        fillColor(doc, '#c7d2fe');
+        doc.fontSize(7).font('Helvetica').text(
+            '~' + (analysis.benchmark ? analysis.benchmark.percentile : 50) + 'th %ile',
+            x + 6, y + 34, { width: gridColW - 12, lineBreak: false }
+        );
+        fillColor(doc, COLORS.text);
+    }
+    doc.y = gridY + Math.ceil(dims.length / 3) * 50 + 12;
+
+    // Science section
+    ensureSpace(doc, 80);
+    sectionHeader(doc, 'WHAT SCIENCE SAYS ABOUT YOUR GROWTH POTENTIAL', COLORS.secondary);
+    const sciencePoints = [
+        'Neuroplasticity: The brain remains changeable throughout life. Resilience practices create measurable neural changes within weeks.',
+        'Post-Traumatic Growth: Research by Tedeschi & Calhoun shows adversity, when processed well, can lead to profound positive change.',
+        'The 66-Day Habit: Studies suggest it takes an average of 66 days to form a new automatic behaviour \u2014 your 30-day plan is a powerful start.',
+        'Social Contagion: Resilience is catching. Spending time with resilient people measurably increases your own capacity.',
+        'Mindfulness & Regulation: Just 8 weeks of consistent mindfulness practice produces measurable changes in brain structure associated with stress regulation.',
+    ];
+    for (const point of sciencePoints) { bullet(doc, point, 8); }
+    doc.y += 8;
+
+    // Next steps
+    ensureSpace(doc, 70);
+    sectionHeader(doc, 'YOUR NEXT WAYPOINTS', COLORS.accentDark);
+    const nextSteps = [
+        { step: '30-Day Retake', desc: 'Retake the assessment in 30 days to chart your growth. Most users see a 5-15 point improvement.' },
+        { step: 'Share the Map', desc: 'Invite a friend to take the assessment. Shared journeys create accountability and deeper connection.' },
+        { step: 'Premium Upgrade', desc: 'Access 1:1 coaching, deeper dimension workshops, and advanced navigational tools.' },
+        { step: 'Get Support', desc: 'Questions about your report? Connect with our team at support@theresilienceatlas.com' },
+    ];
+    for (const ns of nextSteps) {
+        ensureSpace(doc, 24);
+        fillColor(doc, COLORS.primary);
+        doc.fontSize(9).font('Helvetica-Bold').text('\u2192  ' + ns.step + ': ', PAGE_MARGIN + 8, doc.y, {
+            continued: true, lineBreak: false,
+        });
+        fillColor(doc, COLORS.text);
+        doc.fontSize(9).font('Helvetica').text(ns.desc, { width: CONTENT_WIDTH - 30, lineGap: 1 });
         doc.y += 4;
     }
 
-    // Meditation + community resources
+    // Closing hero box
     ensureSpace(doc, 60);
-    sectionBar(doc, '\u{1F9D8}  Mindfulness & Grounding Practices', COLORS.slate700);
-    bulletList(doc, [
-        'Daily 10-minute meditation (Insight Timer, Headspace, or Calm app)',
-        'Breathwork for stress regulation: 4-7-8 technique, box breathing, or physiological sigh',
-        'Morning journaling: 5 minutes of free-writing to set your daily compass',
-        'Evening reflection: What grew in me today? What needs tending tomorrow?',
-        'Weekly nature immersion: 30-minute walk without devices, observing your terrain',
-    ], 0, COLORS.slate600);
-
-    // Premium offer callout
-    ensureSpace(doc, 50);
-    const premY = doc.y;
-    fc(doc, COLORS.indigoDark);
-    doc.roundedRect(PAGE_MARGIN, premY, CONTENT_WIDTH, 48, 8).fill();
-    fc(doc, COLORS.amberLight);
-    doc.fontSize(11).font('Helvetica-Bold').text(
-        '\u2728  Deepen Your Journey with Premium Features',
-        PAGE_MARGIN + 14, premY + 8, { width: CONTENT_WIDTH - 28 }
+    doc.y += 8;
+    fillColor(doc, COLORS.coverBg);
+    doc.roundedRect(PAGE_MARGIN, doc.y, CONTENT_WIDTH, 58, 8).fill();
+    fillColor(doc, COLORS.white);
+    doc.fontSize(12).font('Helvetica-Bold').text(
+        'You are the cartographer of your own resilience.',
+        PAGE_MARGIN, doc.y + 8, { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
     );
-    fc(doc, '#f4f2ff');
+    fillColor(doc, '#c7d2fe');
     doc.fontSize(9).font('Helvetica').text(
-        'Unlock 1:1 coaching, monthly reassessments, and your personal Atlas growth community.',
-        PAGE_MARGIN + 14, premY + 26, { width: CONTENT_WIDTH - 28 }
+        'Every practice you complete charts new territory. Every challenge you navigate builds the map.',
+        PAGE_MARGIN, doc.y + 28, { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
     );
-    fc(doc, COLORS.slate800);
-    doc.y = premY + 56;
-}
+    fillColor(doc, COLORS.text);
+    doc.y += 68;
 
-/** PAGE 18 — Growth Journey Ahead */
-function buildGrowthJourneyPage(doc, report, overall) {
-    newPage(doc);
-    sectionBar(doc, '\u{1F30D}  Next Steps on Your Map \u2014 Your Growth Journey Ahead', COLORS.indigoDark);
-
-    calloutBox(doc,
-        'You have arrived at the end of this report \u2014 and the beginning of your next ' +
-        'expedition. Resilience is not a fixed destination on the map; it is the quality ' +
-        'of your navigation. Every day you practise, you refine your compass. Every ' +
-        'challenge you face with awareness, you expand your territory.',
-        COLORS.bgPurple, COLORS.purpleLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH, { fontSize: 10 }
-    );
-
-    sectionBar(doc, '\u{1F4C5}  Your 30-Day Retake Plan', COLORS.emerald);
-    calloutBox(doc,
-        'Growth shows up in your scores. In 30 days, retake The Resilience Atlas\u2122 ' +
-        'assessment and compare your new map with this one. Use your dimension deep-dives ' +
-        'and action plan as your guide between now and then. Many people see meaningful ' +
-        'movement in even a single focused month.',
-        COLORS.bgEmerald, COLORS.emeraldLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    ensureSpace(doc, 60);
-    sectionBar(doc, '\u{1F91D}  Share Your Map', COLORS.purple);
-    calloutBox(doc,
-        'Resilience grows in community. Consider sharing your archetype and top dimensions ' +
-        'with people in your life \u2014 a partner, a close friend, a team colleague. Shared ' +
-        'self-knowledge creates deeper connection and more intentional support. You might ' +
-        'even invite someone you care about to take the assessment alongside you.',
-        COLORS.bgPurple, COLORS.purpleLight, PAGE_MARGIN, doc.y, CONTENT_WIDTH
-    );
-
-    ensureSpace(doc, 60);
-    sectionBar(doc, '\u{1F5FA}  Long-Term Navigation', COLORS.indigo);
-    bulletList(doc, [
-        'Return to your dimension deep-dives monthly \u2014 your relationship with each territory evolves',
-        'Choose one dimension per quarter to focus your growth energy',
-        'Build a personal "resilience team" \u2014 people who complement your profile',
-        'Use adversity as a navigation event: what does this challenge reveal about my map?',
-        'Celebrate milestones \u2014 resilience built is resilience earned',
-    ], 0, COLORS.indigo);
-
-    // Closing affirmation
-    ensureSpace(doc, 56);
-    const closeY = doc.y;
-    fc(doc, COLORS.indigoDark);
-    doc.roundedRect(PAGE_MARGIN, closeY, CONTENT_WIDTH, 56, 10).fill();
-    // Compass rose decoration
-    compassRose(doc, PAGE_MARGIN + 30, closeY + 28, 16, '#7a78c2');
-    fc(doc, COLORS.amberLight);
-    doc.fontSize(13).font('Helvetica-Bold').text(
-        'Begin Your Journey.',
-        PAGE_MARGIN + 55, closeY + 8, { width: CONTENT_WIDTH - 70 }
-    );
-    fc(doc, COLORS.white);
-    doc.fontSize(10).font('Helvetica').text(
-        'Your resilience is real. Your map is unique. Your compass is already inside you.',
-        PAGE_MARGIN + 55, closeY + 28, { width: CONTENT_WIDTH - 70 }
-    );
-    fc(doc, COLORS.slate800);
-    doc.y = closeY + 64;
-
-    // Contact/support
-    doc.y += 4;
-    fc(doc, COLORS.slate500);
+    // Disclaimer
+    fillColor(doc, COLORS.textLight);
     doc.fontSize(8).font('Helvetica').text(
-        'Questions? Visit TheResilienceAtlas.com or contact support@theresilienceatlas.com',
-        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, align: 'center' }
+        'The Resilience Atlas assessment is provided for personal growth and educational purposes only. It is not a clinical assessment and does not constitute medical, psychological, or therapeutic advice. If you are experiencing significant mental health challenges, please consult a qualified professional.',
+        PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, align: 'center', lineGap: 2 }
     );
-}
-
-/** Footers on every page. */
-function addFooters(doc) {
-    const range = doc.bufferedPageRange();
-    for (let i = range.start; i < range.start + range.count; i++) {
-        doc.switchToPage(i);
-        const footerY = doc.page.height - 28;
-        fc(doc, COLORS.slate200);
-        sc(doc, COLORS.slate200);
-        doc.moveTo(PAGE_MARGIN, footerY - 4).lineTo(PAGE_WIDTH - PAGE_MARGIN, footerY - 4).lineWidth(0.5).stroke();
-        doc.lineWidth(1);
-        fc(doc, COLORS.slate400);
-        doc.fontSize(7.5).font('Helvetica').text(
-            `The Resilience Atlas\u2122  \u2014  Your Personal Navigation Map  \u2022  For educational and self-reflection purposes only  \u2014  Page ${i + 1} of ${range.count}`,
-            PAGE_MARGIN, footerY,
-            { width: CONTENT_WIDTH, align: 'center' }
-        );
-    }
+    fillColor(doc, COLORS.text);
 }
 
 // ── Main export ───────────────────────────────────────────────────────────────
 
 /**
- * Build a comprehensive Atlas-branded PDF report using PDFKit.
+ * Build a comprehensive 17-page PDF report using PDFKit.
  *
  * @param {Object} report  - Output of buildComprehensiveReport()
  * @param {number|string} overall - Overall resilience score (0-100)
@@ -1291,67 +1212,66 @@ function buildPdfWithPDFKit(report, overall) {
 
             const doc = new PDFDocument({
                 size: 'A4',
-                margin: PAGE_MARGIN,
+                margin: MARGIN,
                 bufferPages: true,
                 info: {
                     Title: 'The Resilience Atlas\u2122 \u2014 Your Personal Navigation Report',
                     Author: 'The Resilience Atlas\u2122',
-                    Subject: 'Comprehensive Personal Resilience Assessment Report',
-                    Keywords: 'resilience, atlas, navigation, growth, wellbeing',
+                    Subject: 'Comprehensive Personal Resilience Report',
                 },
             });
 
             const chunks = [];
-            doc.on('data', (chunk) => chunks.push(chunk));
-            doc.on('end', () => resolve(Buffer.concat(chunks)));
+            doc.on('data',  (chunk) => chunks.push(chunk));
+            doc.on('end',   () => resolve(Buffer.concat(chunks)));
             doc.on('error', reject);
 
-            // ── Build all pages ──────────────────────────────────────────────
-            // Page 1: Premium Cover
-            buildCoverPage(doc, report, overallNum);
+            try {
+                // Page 1: Cover
+                buildCoverPage(doc, report, overall);
 
-            // Page 2: Your Resilience Journey
-            buildJourneyPage(doc, report, overallNum);
+                // Page 2: Journey Map / Executive Summary
+                buildJourneyMapPage(doc, report);
 
-            // Page 3: Your Resilience Map
-            buildMapPage(doc, report);
+                // Page 3: Visual Dashboard
+                buildDashboardPage(doc, report);
 
-            // Page 4: Your Resilience Archetype
-            buildArchetypePage(doc, report);
+                // Pages 4-9: Dimension Deep-Dives (one per dimension)
+                const dims = Object.entries(report.dimensionAnalysis || {});
+                for (const [dimName, analysis] of dims) {
+                    buildDimensionPage(doc, dimName, analysis);
+                }
 
-            // Pages 5–10: Dimension Deep-Dives (one per dimension)
-            const dims = Object.entries(report.dimensionAnalysis || {});
-            dims.forEach(([dimName, analysis], i) => {
-                buildDimensionDeepDive(doc, dimName, analysis, i);
-            });
+                // Pages 10-11: Strength Integration & Synergies
+                buildStrengthIntegrationPage(doc, report);
 
-            // Page 11: Strength Integration & Synergies
-            buildStrengthIntegrationPage(doc, report);
+                // Page 12: Stress Response Profile
+                buildStressResponsePage(doc, report);
 
-            // Page 12: Stress Response / Internal Compass
-            buildStressResponsePage(doc, report);
+                // Page 13: Relationship & Team Dynamics
+                buildRelationshipDynamicsPage(doc, report);
 
-            // Page 13: Relational Dynamics
-            buildRelationalDynamicsPage(doc, report);
+                // Page 14: 30-Day Expedition Part 1 (Weeks 1-2)
+                buildActionPlanPage1(doc, report);
 
-            // Page 14: Resilience Across Life Domains
-            buildLifeDomainsPage(doc, report);
+                // Page 15: 30-Day Expedition Part 2 (Weeks 3-4)
+                buildActionPlanPage2(doc, report);
 
-            // Page 15–16: 30-Day Navigation Plan
-            build30DayPlanPage(doc, report);
+                // Page 16: Navigation Tools (Resources)
+                buildResourcesPage(doc, report);
 
-            // Page 17: Resources
-            buildResourcesPage(doc, report);
+                // Page 17: Benchmarking, Context & Growth Horizon
+                buildBenchmarkingPage(doc, report, overall);
 
-            // Page 18: Growth Journey Ahead
-            buildGrowthJourneyPage(doc, report, overallNum);
+                // Footers on all pages
+                addFooters(doc);
 
-            // ── Footers on all pages ─────────────────────────────────────────
-            addFooters(doc);
-
-            doc.end();
-        } catch (err) {
-            reject(err);
+                doc.end();
+            } catch (buildErr) {
+                reject(buildErr);
+            }
+        } catch (initErr) {
+            reject(initErr);
         }
     });
 }
