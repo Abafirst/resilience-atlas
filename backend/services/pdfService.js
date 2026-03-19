@@ -179,6 +179,9 @@ function addFooters(doc) {
     const range = doc.bufferedPageRange();
     for (let i = range.start; i < range.start + range.count; i++) {
         doc.switchToPage(i);
+        // Set bottom margin to 0 so footer text drawn below the normal content
+        // boundary does not trigger PDFKit's auto page-break mechanism.
+        doc.page.margins.bottom = 0;
         const footerY = PAGE_HEIGHT - 32;
         strokeColor(doc, COLORS.border);
         doc.moveTo(PAGE_MARGIN, footerY - 4).lineTo(PAGE_WIDTH - PAGE_MARGIN, footerY - 4).stroke();
@@ -187,7 +190,7 @@ function addFooters(doc) {
             branding.company.name + '  |  ' + branding.company.domain + '  |  ' + branding.company.email + '  |  For self-reflection purposes only. Not a clinical assessment.  |  Page ' + (i + 1),
             PAGE_MARGIN,
             footerY,
-            { width: CONTENT_WIDTH, align: 'center' }
+            { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
         );
     }
     fillColor(doc, COLORS.text);
@@ -649,7 +652,7 @@ function buildDimensionPage(doc, dimName, analysis) {
     if (analysis.weeklyProgression && analysis.weeklyProgression.length > 0) {
         ensureSpace(doc, 40);
         subHeader(doc, '30-DAY PROGRESSION PATH', cfg.color);
-        for (const week of analysis.weeklyProgression.slice(0, 2)) {
+        for (const week of analysis.weeklyProgression) {
             if (!week) continue;
             ensureSpace(doc, 18);
             doc.fontSize(8).font('Helvetica').fillColor(COLORS.text).text(
