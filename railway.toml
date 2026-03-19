@@ -1,10 +1,10 @@
 # Railway Configuration for Resilience Atlas
 
 [build]
-buildCommand = "npm install && npm run build"
+builder = "DOCKER"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-  startCommand = "node backend/server.js"
   healthcheckPath = "/health"
   healthcheckTimeout = 30
   restartPolicyType = "ON_FAILURE"
