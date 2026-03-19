@@ -2,6 +2,7 @@
 
 const PDFDocument = require('pdfkit');
 const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
+const branding = require('../config/branding');
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const COLORS = {
@@ -183,7 +184,7 @@ function addFooters(doc) {
         doc.moveTo(PAGE_MARGIN, footerY - 4).lineTo(PAGE_WIDTH - PAGE_MARGIN, footerY - 4).stroke();
         fillColor(doc, COLORS.textLight);
         doc.fontSize(7).font('Helvetica').text(
-            'The Resilience Atlas\u2122  \u2014  Your Personal Navigation Guide  |  For self-reflection purposes only. Not a clinical assessment.  |  Page ' + (i + 1),
+            branding.company.name + '  |  ' + branding.company.domain + '  |  ' + branding.company.email + '  |  For self-reflection purposes only. Not a clinical assessment.  |  Page ' + (i + 1),
             PAGE_MARGIN,
             footerY,
             { width: CONTENT_WIDTH, align: 'center' }
@@ -301,8 +302,14 @@ function buildCoverPage(doc, report, overall) {
     doc.rect(0, PAGE_HEIGHT - 50, PAGE_WIDTH, 50).fill();
     fillColor(doc, '#818cf8');
     doc.fontSize(8).font('Helvetica').text(
+        branding.company.name + '  |  ' + branding.company.domain + '  |  ' + branding.company.email,
+        PAGE_MARGIN, PAGE_HEIGHT - 36,
+        { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
+    );
+    fillColor(doc, '#6366f1');
+    doc.fontSize(7).font('Helvetica').text(
         'RESILIENCE IS NOT FOUND \u2014 IT IS CHARTED  |  ONE DAY, ONE PRACTICE, ONE CHOICE AT A TIME',
-        PAGE_MARGIN, PAGE_HEIGHT - 28,
+        PAGE_MARGIN, PAGE_HEIGHT - 20,
         { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
     );
 }
@@ -1051,6 +1058,15 @@ function buildResourcesPage(doc, report) {
         for (const item of section.items) { bullet(doc, item, 8); }
         doc.y += 6;
     }
+
+    ensureSpace(doc, 80);
+    sectionHeader(doc, 'CONNECT WITH US', COLORS.primary);
+    bullet(doc, 'Website: ' + branding.company.domain, 8);
+    bullet(doc, 'Email: ' + branding.company.email, 8);
+    bullet(doc, 'LinkedIn: ' + branding.social.linkedin, 8);
+    bullet(doc, 'X (Twitter): ' + branding.social.twitter, 8);
+    bullet(doc, 'Facebook: ' + branding.social.facebook, 8);
+    doc.y += 6;
 }
 
 // PAGE 15 — Relationship Navigation & Team Dynamics ───────────────────────────
