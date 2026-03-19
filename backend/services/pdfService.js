@@ -1,8 +1,15 @@
 'use strict';
 
+const path = require('path');
 const PDFDocument = require('pdfkit');
 const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
 const branding = require('../config/branding');
+const { svgToPng } = require('../utils/svgToPng');
+
+// Path to the outline compass SVG bundled with the project.
+const LOGO_SVG_PATH = path.resolve(__dirname, '../../brand/compass-symbol/svg/compass-icon-outline.svg');
+// Resolved PNG path is cached here after first render (module-level singleton).
+let _logoPngPath = null;
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const COLORS = {
@@ -59,19 +66,15 @@ const PAGE_HEIGHT = 841.89;
 const CONTENT_WIDTH = PAGE_WIDTH - PAGE_MARGIN * 2;
 
 // ── Colour helpers ─────────────────────────────────────────────────────────────
-function hexToRgb(hex) {
-    const n = parseInt(hex.replace('#', ''), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
 function fc(doc, h) { doc.fillColor(h); }
 function sc(doc, h) { doc.strokeColor(h); }
 
 function fillColor(doc, hex) {
-    doc.fillColor(hexToRgb(hex));
+    doc.fillColor(hex);
 }
 
 function strokeColor(doc, hex) {
-    doc.strokeColor(hexToRgb(hex));
+    doc.strokeColor(hex);
 }
 
 // ── Layout helpers ─────────────────────────────────────────────────────────────
@@ -221,30 +224,14 @@ function buildCoverPage(doc, report, overall) {
         { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
     );
 
-    // Decorative compass ring
+    // Outline logo (PNG rendered from SVG at runtime)
     const cx = PAGE_WIDTH / 2;
-    strokeColor(doc, '#4f46e5');
-    doc.lineWidth(2).circle(cx, 180, 68).stroke();
-    doc.lineWidth(0.8).circle(cx, 180, 56).stroke();
-    strokeColor(doc, '#6366f1');
-    doc.lineWidth(1.2)
-        .moveTo(cx, 118).lineTo(cx, 242).stroke();
-    doc.moveTo(cx - 60, 180).lineTo(cx + 60, 180).stroke();
-    doc.lineWidth(0.5)
-        .moveTo(cx - 42, 138).lineTo(cx + 42, 222).stroke();
-    doc.moveTo(cx + 42, 138).lineTo(cx - 42, 222).stroke();
-
-    // N marker
-    fillColor(doc, '#818cf8');
-    doc.fontSize(9).font('Helvetica-Bold')
-        .text('N', cx - 4, 108, { lineBreak: false })
-        .text('S', cx - 4, 244, { lineBreak: false })
-        .text('E', cx + 64, 177, { lineBreak: false })
-        .text('W', cx - 74, 177, { lineBreak: false });
-
-    // Center diamond
-    fillColor(doc, COLORS.primary);
-    doc.polygon([cx, 165], [cx + 9, 180], [cx, 195], [cx - 9, 180]).fill();
+    const logoSize = 140;
+    const logoX = cx - logoSize / 2;
+    const logoY = 110;
+    if (_logoPngPath) {
+        doc.image(_logoPngPath, logoX, logoY, { width: logoSize, height: logoSize });
+    }
 
     // Main title
     fillColor(doc, COLORS.white);
@@ -320,10 +307,16 @@ function buildCoverPage(doc, report, overall) {
 /** Page 2 - Journey Map / Executive Summary */
 function buildJourneyMapPage(doc, report) {
     newPage(doc);
+
+    // Outline logo centred at the top of the page
+    if (_logoPngPath) {
+        const logoSize = 64;
+        const logoX = PAGE_WIDTH / 2 - logoSize / 2;
+        doc.image(_logoPngPath, logoX, doc.y, { width: logoSize, height: logoSize });
+        doc.y += logoSize + 8;
+    }
+
     sectionHeader(doc, 'YOUR RESILIENCE JOURNEY \u2014 EXECUTIVE SUMMARY', COLORS.primary);
-
-
-
     if (report.profileArchetype) {
         ensureSpace(doc, 60);
         sectionHeader(doc, 'YOUR ARCHETYPE: ' + report.profileArchetype.toUpperCase(), COLORS.secondary);
@@ -1196,7 +1189,15 @@ function buildBenchmarkingPage(doc, report, overall) {
  * @returns {Promise<Buffer>} Valid PDF binary buffer
  */
 function buildPdfWithPDFKit(report, overall) {
-    return new Promise((resolve, reject) => {
+    // Pre-render the SVG logo to a cached PNG (async, Railway-friendly).
+    const logoReady = svgToPng(LOGO_SVG_PATH, 'resilience-atlas-logo-outline')
+        .then((p) => { _logoPngPath = p; })
+        .catch((err) => {
+            console.warn('[pdfService] Logo render failed, continuing without logo:', err.message);
+            _logoPngPath = null;
+        });
+
+    return logoReady.then(() => new Promise((resolve, reject) => {
         try {
             const overallNum = Number(overall) || 0;
 
@@ -1269,7 +1270,7 @@ function buildPdfWithPDFKit(report, overall) {
         } catch (initErr) {
             reject(initErr);
         }
-    });
+    }));
 }
 
 module.exports = { buildPdfWithPDFKit };
