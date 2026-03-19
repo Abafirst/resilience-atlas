@@ -117,6 +117,39 @@ const DIMENSION_CONTENT = {
             'the relationship rather than reacting only to immediate events. In personal ' +
             'challenges, it is the voice that says "this is hard, and I can grow through it."',
 
+        lifeApplications: {
+            relationships:
+                'Your ability to reframe narratives helps you avoid catastrophising relationship ' +
+                'challenges. When conflict arises, you can step back and ask "what is the real ' +
+                'story here?" — creating space for understanding over reactivity. You can ' +
+                'construct empowering stories about your relationship\'s journey, seeing setbacks ' +
+                'as chapters rather than endings.',
+            friendships:
+                'You naturally help friends reframe their struggles, offering perspective that ' +
+                'transforms their experience of difficulty. You are the friend who says "here\'s ' +
+                'another way to see this" — and genuinely means it. Your ability to hold a ' +
+                'growth narrative about others\' challenges makes you a profoundly supportive ' +
+                'presence in their lives.',
+            parenting:
+                'You model resilient thinking for children, teaching them to find lessons in ' +
+                'setbacks rather than spiralling into shame or defeat. When your child faces ' +
+                'failure, you help them craft a growth narrative. This may be one of the most ' +
+                'important gifts you can pass on — the capacity to tell an empowering story ' +
+                'about one\'s own life.',
+            work:
+                'You stay solution-focused under pressure, reframe setbacks as data, and help ' +
+                'teams find meaning in challenging projects. Colleagues seek you out during ' +
+                'difficult periods for your ability to see the bigger picture. In leadership, ' +
+                'your narrative reframing ability can shift team morale during adversity.',
+            personalGrowth:
+                'Narrative reframing is your superpower for personal development. You can ' +
+                'transform your story about who you are and what is possible, unlocking new ' +
+                'dimensions of growth that others might not access. Your inner storyteller ' +
+                'is also your inner navigator — use it consciously.',
+        },
+
+        affirmation: 'I choose the story I tell about my life, and I choose growth.',
+
         benchmark: {
             populationMean: 62,
             percentileMap: { 90: 85, 75: 72, 50: 62, 25: 48, 10: 35 },
@@ -221,6 +254,36 @@ const DIMENSION_CONTENT = {
             'major life challenges. It is also protective against the isolation that ' +
             'can amplify mental health struggles.',
 
+        lifeApplications: {
+            relationships:
+                'Deep connection and genuine empathy make you a profoundly present partner. ' +
+                'You create safety for vulnerability and are skilled at both giving and ' +
+                'receiving support during difficult times. Your partner feels truly seen ' +
+                'and heard — one of the greatest gifts in any intimate relationship.',
+            friendships:
+                'You are the person friends turn to — not because you have all the answers, ' +
+                'but because you make them feel genuinely seen and understood. Your friendships ' +
+                'tend to run deep rather than wide. You invest in people, and they feel it. ' +
+                'Your relational intelligence makes you a trusted anchor in your social world.',
+            parenting:
+                'Your relational intelligence creates secure attachment with your children. ' +
+                'You tune in to their emotional experience, respond with empathy, and create ' +
+                'the relational safety that is foundational for healthy development. Children ' +
+                'who feel deeply connected to a parent are more resilient themselves.',
+            work:
+                'You build psychological safety in teams, facilitate effective collaboration, ' +
+                'and navigate interpersonal dynamics with skill. People tend to trust you and ' +
+                'follow your lead because of how you make them feel — valued, heard, and ' +
+                'connected. This is a rare and highly valued professional asset.',
+            personalGrowth:
+                'Your relational strength can accelerate personal growth through deep ' +
+                'engagement with mentors, coaches, and growth communities. You learn well ' +
+                'in relationship — through conversation, collaboration, and the kind of ' +
+                'honest reflection that only trust makes possible.',
+        },
+
+        affirmation: 'My connections are my strength, and I show up fully for the people I love.',
+
         benchmark: {
             populationMean: 60,
             percentileMap: { 90: 83, 75: 71, 50: 60, 25: 47, 10: 33 },
@@ -322,6 +385,38 @@ const DIMENSION_CONTENT = {
             'career changes, relationship challenges, health setbacks — with a sense that ' +
             'you have choices, even when the path is unclear. It is the antidote to ' +
             'learned helplessness.',
+
+        lifeApplications: {
+            relationships:
+                'Your proactive orientation means you invest in relationships intentionally — ' +
+                'planning meaningful experiences, addressing challenges before they escalate, ' +
+                'and taking initiative to repair ruptures when they occur. You don\'t wait for ' +
+                'connection to happen; you create it. This generative energy is a tremendous ' +
+                'gift in any long-term relationship.',
+            friendships:
+                'You are the friend who makes things happen — organising get-togethers, ' +
+                'following up when you haven\'t heard from someone, and showing up when it ' +
+                'counts. Your reliability and initiative make you a highly valued friend. ' +
+                'People know that a friendship with you won\'t simply fade — you tend it.',
+            parenting:
+                'You model initiative, problem-solving, and agency for your children — ' +
+                'teaching them that challenges are things to be approached, not fled. You ' +
+                'create environments that foster your children\'s own sense of agency, giving ' +
+                'them the confidence that their actions matter and that they can navigate ' +
+                'difficulty with resourcefulness.',
+            work:
+                'You are the person who moves projects forward, generates options when teams ' +
+                'are stuck, and brings energy and momentum to collective challenges. Leaders ' +
+                'seek people with your generative orientation. In your career, you are ' +
+                'unlikely to stay stuck for long — your agency creates its own opportunities.',
+            personalGrowth:
+                'Your agency means you don\'t wait for growth to happen to you — you create ' +
+                'it intentionally, through deliberate practice, structured challenges, and ' +
+                'consistent action toward your goals. The map of your personal growth is ' +
+                'one you actively draw rather than one you simply follow.',
+        },
+
+        affirmation: 'I have the power to shape my path — and I choose to move forward.',
 
         benchmark: {
             populationMean: 65,
@@ -433,6 +528,38 @@ const DIMENSION_CONTENT = {
             'pain, and to repair ruptures through emotional honesty is the foundation of ' +
             'lasting intimate bonds.',
 
+        lifeApplications: {
+            relationships:
+                'Your emotional depth and attunement make you a remarkable partner. You can ' +
+                'hold space for a partner\'s difficult emotions without fixing or dismissing ' +
+                'them, creating the conditions for genuine intimacy. You also have the ' +
+                'courage to express your own vulnerability, which is the doorway to the kind ' +
+                'of deep connection most people long for.',
+            friendships:
+                'Your friends know they can be fully themselves with you — that their messy ' +
+                'emotions won\'t scare you away. You hold space, offer genuine empathy, and ' +
+                'create the kind of friendship that transforms people. You are likely the ' +
+                'friend others call when they are at their lowest, because you don\'t shy ' +
+                'away from the difficult terrain.',
+            parenting:
+                'You are emotionally attuned to your children\'s inner worlds, helping them ' +
+                'name and navigate their feelings rather than suppressing them. This emotional ' +
+                'scaffolding builds their own emotional intelligence and long-term wellbeing. ' +
+                'Children whose feelings are met with empathy grow into emotionally resilient adults.',
+            work:
+                'Your emotional awareness helps you navigate complex interpersonal dynamics, ' +
+                'give and receive feedback skillfully, and maintain relationships across ' +
+                'difference. In leadership, emotional intelligence translates directly to ' +
+                'high-performing teams, reduced conflict, and increased psychological safety.',
+            personalGrowth:
+                'Your emotional depth accelerates personal growth — you are willing to feel ' +
+                'the discomfort of growth, to process what\'s difficult, and to let ' +
+                'challenging experiences genuinely change you. Emotions, for you, are not ' +
+                'obstacles on the journey — they are the journey itself.',
+        },
+
+        affirmation: 'My feelings are valid guides, and I meet them with curiosity and compassion.',
+
         benchmark: {
             populationMean: 58,
             percentileMap: { 90: 82, 75: 70, 50: 58, 25: 45, 10: 30 },
@@ -537,6 +664,41 @@ const DIMENSION_CONTENT = {
             '"the last human freedom" — the ability to choose one\'s attitude toward ' +
             'unavoidable suffering. When life is genuinely hard, a strong sense of meaning ' +
             'is often the difference between endurance and despair.',
+
+        lifeApplications: {
+            relationships:
+                'Your sense of meaning and values creates depth and direction in relationships. ' +
+                'You are drawn to partners who share your orientation toward purpose, and you ' +
+                'contribute a grounding quality to shared life. Your ability to find meaning ' +
+                'even in the difficult chapters of a relationship — seeing them as growth, not ' +
+                'failure — makes you a profoundly steady partner.',
+            friendships:
+                'Your reflective depth draws others who are searching for meaning. You create ' +
+                'conversations that go beneath the surface, and your friendships are often ' +
+                'described as nourishing in a way that casual connections rarely are. Friends ' +
+                'seek you out when they need perspective, wisdom, and the kind of conversation ' +
+                'that actually helps.',
+            parenting:
+                'You help your children develop their own values, sense of purpose, and inner ' +
+                'life. You model what it looks like to live with intention and to find meaning ' +
+                'even in life\'s difficult seasons. Children raised by parents with strong ' +
+                'spiritual-reflective resilience often develop a remarkable capacity for ' +
+                'purpose-driven living.',
+            work:
+                'You bring clarity of purpose, ethical groundedness, and a long-term ' +
+                'perspective to professional life. You are the person who asks "why are we ' +
+                'doing this?" — and whose answer actually matters to others. In a culture ' +
+                'of distraction and short-termism, your capacity for deep meaning-making is ' +
+                'a rare and valuable professional asset.',
+            personalGrowth:
+                'Your reflective capacity means you don\'t just accumulate experiences — ' +
+                'you digest them, integrate them, and allow them to shape your ongoing ' +
+                'becoming. Growth for you is a conscious, intentional journey, guided by ' +
+                'your internal compass rather than external expectation. You are the ' +
+                'cartographer of your own soul.',
+        },
+
+        affirmation: 'My life has meaning, and I am exactly where I need to be on my journey.',
 
         benchmark: {
             populationMean: 55,
@@ -646,6 +808,41 @@ const DIMENSION_CONTENT = {
             'dysregulated by stress, everything else — relationships, creativity, purpose — ' +
             'becomes harder. Tending to this dimension creates the physical foundation for ' +
             'all other forms of resilience.',
+
+        lifeApplications: {
+            relationships:
+                'Your physical groundedness creates a calming, regulating presence for ' +
+                'partners. Research shows that when one person in a relationship is calm, ' +
+                'it genuinely helps the other co-regulate. Your somatic stability is an ' +
+                'invisible gift in intimate relationships — it creates the steady ground ' +
+                'from which genuine connection can grow.',
+            friendships:
+                'Your grounded physical presence is often felt before a word is spoken. ' +
+                'Friends feel more settled around you, and your pragmatic approach to ' +
+                'wellbeing can inspire them to care for their own physical foundations. ' +
+                'You are the friend who suggests a walk when everything feels overwhelming — ' +
+                'and you\'re right to suggest it.',
+            parenting:
+                'Your somatic regulation is co-regulatory for children — when you are calm, ' +
+                'they are more likely to be calm. You model physical self-care and teach ' +
+                'your children to use their bodies as regulation tools. The breathing ' +
+                'practices and physical self-care habits you model may be among the most ' +
+                'lasting gifts you give them.',
+            work:
+                'Your capacity for physical regulation under pressure translates to clearer ' +
+                'decision-making, more sustainable performance, and the ability to bring calm ' +
+                'into high-stakes moments. You model what regulated, grounded leadership ' +
+                'looks and feels like — a form of professional mastery that is increasingly ' +
+                'recognised and valued.',
+            personalGrowth:
+                'Your embodied approach to wellbeing creates a sustainable foundation for ' +
+                'all other forms of growth. When your body is regulated, your capacity for ' +
+                'learning, change, and development expands significantly. You\'ve discovered ' +
+                'what many people miss: the body is not separate from the journey — it is ' +
+                'the vehicle for it.',
+        },
+
+        affirmation: 'I listen to my body\'s wisdom and honour its need for rest and renewal.',
 
         benchmark: {
             populationMean: 57,

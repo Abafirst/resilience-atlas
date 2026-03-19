@@ -173,6 +173,8 @@ function buildDimensionAnalysis(dimensionName, scoreData) {
         dailyMicroPractice: content.microPractice,
         weeklyProgression: content.weeklyProgression,
         realWorldApplication: content.realWorldApplication,
+        lifeApplications: content.lifeApplications || null,
+        affirmation: content.affirmation || null,
         benchmark: {
             percentile,
             populationMean: content.benchmark.populationMean,
@@ -452,6 +454,7 @@ function buildComprehensiveReport({ userId, overall, dominantType, scores, resul
         thirtyDayPlan,
         profileArchetype: archetype.name,
         profileDescription: archetype.description,
+        _archetypeObj: archetype,
         topDimensions,
         recommendedResources,
         disclaimer:
