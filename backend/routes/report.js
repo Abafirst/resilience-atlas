@@ -78,6 +78,26 @@ function esc(value) {
 }
 
 /**
+ * Reverse the HTML entity encoding applied by the sanitiseInput middleware so
+ * that JSON strings passed as query parameters can be safely parsed.
+ * The middleware replaces characters like `"` → `&quot;` before the route
+ * handler runs, which would otherwise make JSON.parse fail.
+ * @param {string} str
+ * @returns {string}
+ */
+function unescapeHtmlEntities(str) {
+    if (typeof str !== 'string') return str;
+    return str
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'")
+        .replace(/&#x2F;/g, '/')
+        .replace(/&#x3D;/g, '=')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+}
+
+/**
  * Render a dimension card with analysis, insights, and micro-practice.
  * @param {string} dimName
  * @param {Object} analysis - dimensionAnalysis entry
@@ -382,9 +402,10 @@ function buildReportHtml(report, overallRaw, dominantTypeRaw, scoresObj) {
  * @param {string} hash
  * @param {string} overall
  * @param {string} dominantType
- * @param {string} scores  Raw JSON string from query param
+ * @param {string} scores  Cleaned JSON string (HTML entities already reversed)
+ * @param {string} [email]  User email for personalisation (optional)
  */
-async function runGeneration(hash, overall, dominantType, scores) {
+async function runGeneration(hash, overall, dominantType, scores, email) {
     updateJob(hash, {
         status: 'processing',
         startedAt: new Date(),
@@ -408,12 +429,20 @@ async function runGeneration(hash, overall, dominantType, scores) {
 
         // Stage 2 — Generate narrative insights (25 → 50%)
         updateJob(hash, { progress: 30, message: 'Analyzing your resilience profile…' });
+
+        const comprehensiveReport = buildComprehensiveReport({
+            userId: email ? String(email).toLowerCase().trim() : 'anonymous',
+            overall: Number(overall),
+            dominantType: dominantType || '',
+            scores: scoresObj,
+        });
+
         await new Promise((r) => setTimeout(r, 50));
         updateJob(hash, { progress: 50, message: 'Narrative insights ready.' });
 
         // Stage 3 — Render PDF HTML (50 → 75%)
         updateJob(hash, { progress: 55, message: 'Building your report layout…' });
-        const html = buildReportHtml(overall, dominantType, scoresObj);
+        const html = buildReportHtml(comprehensiveReport, overall, dominantType, scoresObj);
         updateJob(hash, { progress: 75, message: 'Report layout complete.' });
 
         // Stage 4 — Generate PDF buffer (75 → 100%)
@@ -477,10 +506,25 @@ async function runGeneration(hash, overall, dominantType, scores) {
  */
 router.get('/generate', reportLimiter, async (req, res) => {
     try {
-        const { overall, dominantType, scores, email } = req.query;
+        const { overall, dominantType, email } = req.query;
+        // Reverse any HTML entity encoding applied by the sanitiseInput middleware
+        // so that the JSON string can be parsed correctly.
+        const scores = unescapeHtmlEntities(req.query.scores);
 
         if (!overall || !scores) {
             return res.status(400).json({ error: 'Missing resilience data' });
+        }
+
+        // Validate scores format early so we can return a clear 400 before
+        // queuing the job.
+        let scoresObj;
+        try {
+            scoresObj = JSON.parse(scores);
+            if (!scoresObj || typeof scoresObj !== 'object' || Array.isArray(scoresObj)) {
+                throw new Error('scores must be a plain object');
+            }
+        } catch {
+            return res.status(400).json({ error: 'Invalid scores format' });
         }
 
         // ── Tier gating ────────────────────────────────────────────────────────
@@ -508,63 +552,100 @@ router.get('/generate', reportLimiter, async (req, res) => {
         }
         // ───────────────────────────────────────────────────────────────────────
 
-        let scoresObj;
-        try {
-            scoresObj = JSON.parse(scores);
-        } catch {
-            return res.status(400).json({ error: 'Invalid scores format' });
+        // Use the re-stringified scores to build a stable hash (avoids any
+        // entity-encoding differences between identical score sets).
+        const cleanScores = JSON.stringify(scoresObj);
+        const hash = buildJobHash(overall, dominantType || '', cleanScores);
+
+        // Idempotent: reuse existing job if still active within the TTL.
+        const existing = jobStore.get(hash);
+        if (existing && ['pending', 'processing', 'ready'].includes(existing.status)) {
+            return res.json({ hash, estimatedSeconds: existing.estimatedSeconds || 15 });
         }
 
-        // Build the comprehensive report object for enriched content
-        const comprehensiveReport = buildComprehensiveReport({
-            userId: email ? String(email).toLowerCase().trim() : 'anonymous',
-            overall: Number(overall),
-            dominantType: dominantType || '',
-            scores: scoresObj,
+        // Create a new pending job entry.
+        jobStore.set(hash, {
+            status: 'pending',
+            createdAt: new Date(),
+            startedAt: null,
+            completedAt: null,
+            progress: 0,
+            message: 'Queued…',
+            estimatedSeconds: 15,
+            error: null,
+            pdfBuffer: null,
         });
 
-        const html = buildReportHtml(
-            comprehensiveReport,
-            overall,
-            dominantType,
-            scoresObj
-        );
+        // Kick off generation asynchronously — do NOT await so the response
+        // is returned immediately.
+        runGeneration(hash, overall, dominantType || '', cleanScores, email || '')
+            .catch((err) => console.error('Background report generation failed:', err.message, err.stack));
 
-        console.log('Launching Puppeteer browser...');
-        const browser = await puppeteer.launch({
-            headless: 'new',
-            timeout: 30000,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-            ],
-        });
-
-        let pdf;
-        try {
-            const page = await browser.newPage();
-            await page.setContent(html, { waitUntil: 'networkidle0' });
-            pdf = await page.pdf({
-                format: 'A4',
-                printBackground: true,
-                margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
-                preferCSSPageSize: true,
-            });
-        } finally {
-            await browser.close();
-        }
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename="resilience-atlas-report.pdf"');
-        res.send(pdf);
+        return res.json({ hash, estimatedSeconds: 15 });
     } catch (error) {
-        console.error('PDF generation failed:', error.message, error.stack);
-        return res.status(500).json({ error: 'Failed to generate PDF' });
+        console.error('Report generation start failed:', error.message, error.stack);
+        return res.status(500).json({ error: 'Failed to start report generation' });
     }
 });
 
+/**
+ * GET /api/report/status
+ * Poll the status of an async PDF generation job.
+ *
+ * Query params: hash (required)
+ */
+router.get('/status', async (req, res) => {
+    const { hash } = req.query;
+
+    if (!hash) {
+        return res.status(400).json({ error: 'Missing hash parameter' });
+    }
+
+    const job = jobStore.get(hash);
+    if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+    }
+
+    // Strip the raw PDF buffer from the response — it is served via /download.
+    const { pdfBuffer, ...safe } = job;
+    return res.json(safe);
+});
+
+/**
+ * GET /api/report/download
+ * Serve a completed PDF by its job hash.
+ *
+ * Query params: hash (required)
+ */
+router.get('/download', async (req, res) => {
+    const { hash } = req.query;
+
+    if (!hash) {
+        return res.status(400).json({ error: 'Missing hash parameter' });
+    }
+
+    const job = jobStore.get(hash);
+    if (!job) {
+        return res.status(404).json({ error: 'Report not found. It may have expired.' });
+    }
+
+    if (job.status === 'processing' || job.status === 'pending') {
+        return res.status(409).json({ error: 'Report is still being generated. Please try again shortly.' });
+    }
+
+    if (job.status === 'failed') {
+        return res.status(500).json({ error: job.error || 'Report generation failed.' });
+    }
+
+    if (job.status !== 'ready' || !job.pdfBuffer) {
+        return res.status(404).json({ error: 'Report not available.' });
+    }
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename="resilience-atlas-report.pdf"');
+    return res.send(job.pdfBuffer);
+});
+
 module.exports = router;
+module.exports.jobStore = jobStore;
+module.exports.buildJobHash = buildJobHash;
