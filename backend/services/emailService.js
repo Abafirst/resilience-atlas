@@ -262,6 +262,32 @@ async function sendReferralThankYou(to, vars) {
   return _send(to, emailObj);
 }
 
+/**
+ * Send a PDF report as an email attachment.
+ *
+ * @param {string} to         Recipient email address
+ * @param {Buffer} pdfBuffer  PDF file content
+ * @returns {Promise<Object>} Nodemailer info object
+ */
+async function sendPdfReport(to, pdfBuffer) {
+  const info = await transporter.sendMail({
+    from:    FROM,
+    to,
+    subject: 'Your Resilience Atlas Report',
+    text:    'Please find your personalized Resilience Atlas report attached.',
+    html:    '<p>Please find your personalized Resilience Atlas report attached.</p>',
+    attachments: [
+      {
+        filename:    'resilience-report.pdf',
+        content:     pdfBuffer,
+        contentType: 'application/pdf',
+      },
+    ],
+  });
+  logger.info(`[emailService] PDF report sent to ${to} — messageId: ${info.messageId}`);
+  return info;
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -279,6 +305,9 @@ module.exports = {
   /* Referral program */
   sendReferralWelcome,
   sendReferralThankYou,
+
+  /* PDF report with attachment */
+  sendPdfReport,
 
   /* Legacy aliases (keep existing call-sites working) */
   sendQuizReport,
