@@ -786,8 +786,8 @@ function buildRelationshipDynamicsPage(doc, report) {
     for (const area of lifeAreas) {
         const apps = topDims
             .map((dim) => {
-                const c = DIMENSION_CONTENT[dim];
-                return c && c.lifeApplications && c.lifeApplications[area.key];
+                const content = DIMENSION_CONTENT[dim];
+                return content && content.lifeApplications && content.lifeApplications[area.key];
             })
             .filter(Boolean);
 
