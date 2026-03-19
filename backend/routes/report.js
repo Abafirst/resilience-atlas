@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildReportHTML } = require('../templates/reportTemplate');
-const { sendPdfReport } = require('../services/emailService');
+const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
 
 /** Rate limiter — PDF generation is expensive, so keep this conservative. */
 const reportLimiter = rateLimit({
@@ -718,6 +718,11 @@ router.post('/email', async (req, res) => {
 
     if (job.status !== 'ready' || !job.pdfBuffer) {
         return res.status(409).json({ error: 'Report is not ready yet.' });
+    }
+
+    if (!validatePdfBuffer(job.pdfBuffer)) {
+        console.error(`[report/email] Invalid PDF buffer for hash ${hash}: length=${job.pdfBuffer ? job.pdfBuffer.length : 0}`);
+        return res.status(500).json({ error: 'The generated report is corrupted. Please regenerate your report and try again.' });
     }
 
     try {
