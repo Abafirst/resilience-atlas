@@ -541,6 +541,7 @@ function buildDimensionPage(doc, dimName, analysis) {
         );
         doc.y += 14;
     }
+    fc(doc, COLORS.slate800);
 
     // ── Personalized insight (compact) ───────────────────────────────────
     sectionBanner(doc, '\uD83E\uDDED  Your Navigation Skills in This Terrain', C.purple);
@@ -866,6 +867,7 @@ function buildActionPlanPage1(doc, report) {
         fillColor(doc, COLORS.text);
         doc.y = weekY + 32;
 
+        // Exercises
         if (data.exercises && data.exercises.length > 0) {
             subHeader(doc, 'Daily 15-Minute Practices', color);
             for (const ex of data.exercises) {
@@ -874,6 +876,17 @@ function buildActionPlanPage1(doc, report) {
             }
         }
 
+        // Life area applications
+        const lifeAreas = ['\u2764\uFE0F Relationships', '\u{1F91D} Friendships', '\u{1F476} Parenting', '\u{1F4BC} Work', '\u{1F331} Growth'];
+        doc.y += 4;
+        fc(doc, COLORS.slate500);
+        doc.fontSize(8).font('Helvetica-Bold').text(
+            `Apply in: ${lifeAreas.join('  \u2022  ')}`,
+            PAGE_MARGIN + 8, doc.y, { width: CONTENT_WIDTH - 16 }
+        );
+        doc.y += 12;
+
+        // Affirmation
         if (data.affirmation) {
             ensureSpace(doc, 24);
             fillColor(doc, color);
@@ -1189,6 +1202,14 @@ function buildBenchmarkingPage(doc, report, overall) {
 function buildPdfWithPDFKit(report, overall) {
     return new Promise((resolve, reject) => {
         try {
+            const overallNum = Number(overall) || 0;
+
+            // Attach overall level to report for page builders
+            report.overallLevel = overallNum >= 80 ? 'strong'
+                : overallNum >= 65 ? 'solid'
+                    : overallNum >= 50 ? 'developing'
+                        : 'emerging';
+
             const doc = new PDFDocument({
                 size: 'A4',
                 margin: MARGIN,
