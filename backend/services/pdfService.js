@@ -90,8 +90,23 @@ function hexToRgb(hex) {
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-function fc(doc, hex) { doc.fillColor(hexToRgb(hex)); }
-function sc(doc, hex) { doc.strokeColor(hexToRgb(hex)); }
+/** Apply a fill colour — hex '#RRGGBB' is converted to RGB array; other strings passed through. */
+function fc(doc, hex) {
+    if (typeof hex === 'string' && hex.startsWith('#')) {
+        doc.fillColor(hexToRgb(hex));
+    } else {
+        doc.fillColor(hex);
+    }
+}
+
+/** Apply a stroke colour — hex '#RRGGBB' is converted to RGB array; other strings passed through. */
+function sc(doc, hex) {
+    if (typeof hex === 'string' && hex.startsWith('#')) {
+        doc.strokeColor(hexToRgb(hex));
+    } else {
+        doc.strokeColor(hex);
+    }
+}
 
 function newPage(doc) { doc.addPage(); }
 
@@ -187,20 +202,23 @@ function progressBar(doc, x, y, width, pct, colorHex) {
 /** Draw a decorative compass-rose symbol at (cx, cy) with given radius. */
 function compassRose(doc, cx, cy, r, colorHex) {
     const arms = 8;
+    // Use PDFKit native color string support (hex only; avoid rgba strings)
+    doc.strokeColor(colorHex).fillColor(colorHex);
     for (let i = 0; i < arms; i++) {
         const angle = (i / arms) * Math.PI * 2 - Math.PI / 2;
         const len = i % 2 === 0 ? r : r * 0.6;
         const x2 = cx + Math.cos(angle) * len;
         const y2 = cy + Math.sin(angle) * len;
-        sc(doc, colorHex);
         doc.lineWidth(i % 2 === 0 ? 2 : 1)
             .moveTo(cx, cy)
             .lineTo(x2, y2)
             .stroke();
     }
-    fc(doc, colorHex);
     doc.circle(cx, cy, 5).fill();
     doc.lineWidth(1);
+    // Restore default colors
+    fc(doc, COLORS.slate800);
+    sc(doc, COLORS.slate200);
 }
 
 /** Small bullet-list helper. */
@@ -263,10 +281,10 @@ function buildCoverPage(doc, report, overall) {
     fc(doc, COLORS.purpleDark);
     doc.rect(0, PAGE_HEIGHT * 0.55, PAGE_WIDTH, PAGE_HEIGHT * 0.45).fill();
 
-    // Decorative compass rose (top-right)
-    compassRose(doc, PAGE_WIDTH - 70, 80, 40, 'rgba(255,255,255,0.25)');
+    // Decorative compass rose (top-right) — use a light indigo for decoration
+    compassRose(doc, PAGE_WIDTH - 70, 80, 40, '#818cf8');
     // A second subtle one bottom-left
-    compassRose(doc, 70, PAGE_HEIGHT - 80, 30, 'rgba(255,255,255,0.15)');
+    compassRose(doc, 70, PAGE_HEIGHT - 80, 30, '#a78bfa');
 
     // Atlas logo / brand wordmark
     fc(doc, COLORS.white);
@@ -298,7 +316,7 @@ function buildCoverPage(doc, report, overall) {
     // Hero score circle
     const heroY = 160;
     const cx = PAGE_WIDTH / 2;
-    fc(doc, 'rgba(255,255,255,0.12)');
+    fc(doc, '#5e5ca8');
     doc.circle(cx, heroY + 60, 70).fill();
     fc(doc, COLORS.white);
     doc.circle(cx, heroY + 60, 58).fill();
@@ -325,7 +343,7 @@ function buildCoverPage(doc, report, overall) {
 
     // Archetype badge
     const badgeY = heroY + 148;
-    fc(doc, 'rgba(255,255,255,0.15)');
+    fc(doc, '#6563b8');
     doc.roundedRect(PAGE_MARGIN + 40, badgeY, CONTENT_WIDTH - 80, 48, 10).fill();
     fc(doc, COLORS.amberLight);
     doc.fontSize(10).font('Helvetica-Bold').text(
@@ -350,7 +368,7 @@ function buildCoverPage(doc, report, overall) {
 
     // Assessment date + primary strength
     const metaY = badgeY + 102;
-    fc(doc, 'rgba(255,255,255,0.6)');
+    fc(doc, '#b8b6e8');
     doc.fontSize(9).font('Helvetica').text(
         `Assessment Date: ${dateStr}   \u2022   Primary Strength: ${report.dominantType || 'N/A'}`,
         PAGE_MARGIN, metaY,
@@ -358,7 +376,7 @@ function buildCoverPage(doc, report, overall) {
     );
 
     // Bottom tagline
-    fc(doc, 'rgba(255,255,255,0.4)');
+    fc(doc, '#9896d8');
     doc.fontSize(8).font('Helvetica').text(
         'For personal growth and self-reflection \u2014 not a clinical assessment',
         PAGE_MARGIN, PAGE_HEIGHT - 40,
@@ -394,12 +412,12 @@ function buildJourneyPage(doc, report, overall) {
     );
 
     // Percentile & benchmark
-    const totalPct = (report.dimensionAnalysis)
+    const avgPercentile = (report.dimensionAnalysis)
         ? Math.round(Object.values(report.dimensionAnalysis).reduce((sum, d) => sum + (d.benchmark ? d.benchmark.percentile : 50), 0) / Object.keys(report.dimensionAnalysis).length)
         : 50;
 
     twoColStat(doc,
-        'Approx. Percentile', `Top ${100 - totalPct}%`,
+        'Approx. Percentile', `Top ${100 - avgPercentile}%`,
         'Dimensions Assessed', '6',
         COLORS.purple
     );
@@ -611,15 +629,12 @@ function buildDimensionDeepDive(doc, dimName, analysis, dimIndex) {
 
     // ─ Dimension header ─
     const headerH = 70;
-    fc(doc, dimColor);
-    doc.rect(0, doc.y - PAGE_MARGIN + PAGE_MARGIN, PAGE_WIDTH, headerH).fill();
-    // We'll just draw a colored bar at current y
     const headerY = doc.y;
     fc(doc, dimColor);
     doc.roundedRect(PAGE_MARGIN, headerY, CONTENT_WIDTH, headerH, 8).fill();
 
     // Dimension number
-    fc(doc, 'rgba(255,255,255,0.4)');
+    fc(doc, '#9896d8');
     doc.fontSize(36).font('Helvetica-Bold').text(
         `0${dimIndex + 1}`, PAGE_MARGIN + CONTENT_WIDTH - 60, headerY + 10, { width: 50, align: 'right' }
     );
@@ -637,7 +652,7 @@ function buildDimensionDeepDive(doc, dimName, analysis, dimIndex) {
         `${pct.toFixed(0)}%`,
         PAGE_MARGIN + 12, headerY + 36, { width: 80 }
     );
-    fc(doc, 'rgba(255,255,255,0.75)');
+    fc(doc, '#ece9ff');
     doc.fontSize(10).font('Helvetica-Bold').text(
         levelLabel.toUpperCase(),
         PAGE_MARGIN + 70, headerY + 43, { width: 80 }
@@ -1038,7 +1053,7 @@ function build30DayPlanPage(doc, report) {
         fc(doc, COLORS.white);
         doc.fontSize(11).font('Helvetica-Bold').text(label, PAGE_MARGIN + 12, weekY + 7, { width: CONTENT_WIDTH * 0.6 });
         if (data.focus) {
-            fc(doc, 'rgba(255,255,255,0.8)');
+            fc(doc, '#f0eeff');
             doc.fontSize(9).font('Helvetica').text(data.focus, PAGE_MARGIN + CONTENT_WIDTH * 0.55, weekY + 9, { width: CONTENT_WIDTH * 0.42, align: 'right' });
         }
         fc(doc, COLORS.slate800);
@@ -1155,7 +1170,7 @@ function buildResourcesPage(doc, report) {
         '\u2728  Deepen Your Journey with Premium Features',
         PAGE_MARGIN + 14, premY + 8, { width: CONTENT_WIDTH - 28 }
     );
-    fc(doc, 'rgba(255,255,255,0.85)');
+    fc(doc, '#f4f2ff');
     doc.fontSize(9).font('Helvetica').text(
         'Unlock 1:1 coaching, monthly reassessments, and your personal Atlas growth community.',
         PAGE_MARGIN + 14, premY + 26, { width: CONTENT_WIDTH - 28 }
@@ -1212,7 +1227,7 @@ function buildGrowthJourneyPage(doc, report, overall) {
     fc(doc, COLORS.indigoDark);
     doc.roundedRect(PAGE_MARGIN, closeY, CONTENT_WIDTH, 56, 10).fill();
     // Compass rose decoration
-    compassRose(doc, PAGE_MARGIN + 30, closeY + 28, 16, 'rgba(255,255,255,0.3)');
+    compassRose(doc, PAGE_MARGIN + 30, closeY + 28, 16, '#7a78c2');
     fc(doc, COLORS.amberLight);
     doc.fontSize(13).font('Helvetica-Bold').text(
         'Begin Your Journey.',
