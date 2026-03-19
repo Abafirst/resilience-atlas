@@ -2405,7 +2405,7 @@ justify-content:center;
 }
 
 [data-theme="dark"] .question-text {
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2419,17 +2419,17 @@ justify-content:center;
   }
 
   :root:not([data-theme="light"]) .question-text {
-    color: #0f172a;
+    color: #f1f5f9;
   }
 
   :root:not([data-theme="light"]) .likert-btn {
-    color: #0f172a;
+    color: #f1f5f9;
   }
 
   :root:not([data-theme="light"]) .likert-btn:hover,
   :root:not([data-theme="light"]) .likert-btn.selected,
   :root:not([data-theme="light"]) .likert-btn[aria-pressed="true"] {
-    color: #0f172a;
+    color: #f1f5f9;
   }
 
   /* Footer: explicitly keep dark so variable remapping doesn't invert it */
@@ -2536,7 +2536,7 @@ justify-content:center;
 [data-theme="dark"] .likert-btn {
   background: #1e293b;
   border-color: #334155;
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
 [data-theme="dark"] .likert-btn:hover,
@@ -2544,7 +2544,7 @@ justify-content:center;
 [data-theme="dark"] .likert-btn[aria-pressed="true"] {
   background: rgba(129,140,248,.12);
   border-color: var(--blue);
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
 /* Form inputs */
