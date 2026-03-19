@@ -407,6 +407,9 @@ function buildReportHtml(report, overallRaw, dominantTypeRaw, scoresObj) {
  * @param {string} [email]  User email for personalisation (optional)
  */
 async function runGeneration(hash, overall, dominantType, scores, email) {
+    const startTime = Date.now();
+    console.log(`[PDF Generation] Starting report generation for hash: ${hash}`);
+
     updateJob(hash, {
         status: 'processing',
         startedAt: new Date(),
@@ -417,6 +420,7 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
 
     try {
         // Stage 1 — Parse assessment data (0 → 25%)
+        console.log('[PDF Generation] Stage 1: Parsing assessment data…');
         updateJob(hash, { progress: 5, message: 'Parsing your assessment data…' });
 
         let scoresObj;
@@ -427,8 +431,10 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
         }
 
         updateJob(hash, { progress: 25, message: 'Assessment data ready.' });
+        console.log(`[PDF Generation] Stage 1 complete (${Date.now() - startTime}ms)`);
 
         // Stage 2 — Generate narrative insights (25 → 50%)
+        console.log('[PDF Generation] Stage 2: Analyzing resilience profile…');
         updateJob(hash, { progress: 30, message: 'Analyzing your resilience profile…' });
 
         const comprehensiveReport = buildComprehensiveReport({
@@ -440,20 +446,24 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
 
         await new Promise((r) => setTimeout(r, 50));
         updateJob(hash, { progress: 50, message: 'Narrative insights ready.' });
+        console.log(`[PDF Generation] Stage 2 complete (${Date.now() - startTime}ms)`);
 
         // Stage 3 — Render PDF HTML (50 → 75%)
+        console.log('[PDF Generation] Stage 3: Building report layout…');
         updateJob(hash, { progress: 55, message: 'Building your report layout…' });
         const html = buildReportHtml(comprehensiveReport, overall, dominantType, scoresObj);
         updateJob(hash, { progress: 75, message: 'Report layout complete.' });
+        console.log(`[PDF Generation] Stage 3 complete (${Date.now() - startTime}ms)`);
 
         // Stage 4 — Generate PDF buffer (75 → 100%)
+        console.log('[PDF Generation] Stage 4: Generating PDF buffer…');
         updateJob(hash, { progress: 80, message: 'Generating PDF…', estimatedSeconds: 5 });
 
-        console.log('Launching Puppeteer browser…');
+        console.log('[PDF Generation] Launching Puppeteer browser…');
         const browser = await puppeteer.launch({
             headless: 'new',
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-            timeout: 30000,
+            timeout: 60000,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -463,14 +473,20 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
                 '--no-zygote',
             ],
         });
+        console.log(`[PDF Generation] Browser launched (${Date.now() - startTime}ms)`);
 
         let pdfBuffer;
         try {
             const page = await browser.newPage();
-            await page.setContent(html, { waitUntil: 'networkidle0' });
+            console.log('[PDF Generation] Setting page content…');
+            await page.setContent(html, { waitUntil: 'networkidle0', timeout: 60000 });
+            console.log(`[PDF Generation] Page content set (${Date.now() - startTime}ms)`);
+            console.log('[PDF Generation] Rendering PDF…');
             pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+            console.log(`[PDF Generation] PDF rendered (${Date.now() - startTime}ms)`);
         } finally {
             await browser.close();
+            console.log('[PDF Generation] Browser closed');
         }
 
         updateJob(hash, { progress: 95, message: 'Finalizing your report…' });
@@ -484,13 +500,24 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
             completedAt: new Date(),
             pdfBuffer,
         });
+
+        const duration = Date.now() - startTime;
+        console.log(`[PDF Generation] Complete in ${duration}ms for hash: ${hash}`);
     } catch (err) {
-        console.error('Async PDF generation failed:', err.message, err.stack);
+        const duration = Date.now() - startTime;
+        const errorMsg = err.message || 'Unknown error';
+        console.error('[PDF Generation] Error:', {
+            hash,
+            duration: `${duration}ms`,
+            message: errorMsg,
+            stack: err.stack,
+            details: err.toString(),
+        });
         updateJob(hash, {
             status: 'failed',
             progress: 0,
             message: 'Report generation failed.',
-            error: err.message,
+            error: errorMsg,
             completedAt: new Date(),
         });
     }
