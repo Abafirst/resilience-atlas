@@ -10,22 +10,12 @@ RUN npm run build
 # Stage 2: Express backend + React static assets
 FROM node:20-alpine
 WORKDIR /usr/src/app
+RUN apk add --no-cache python3 make g++ chromium
 
-# Install Chromium and required libraries for Puppeteer
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    python3 \
-    make \
-    g++
-
-# Tell Puppeteer to skip downloading its own Chrome bundle and use system Chromium
-ENV PUPPETEER_SKIP_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# Tell Puppeteer to skip downloading its own Chromium bundle and use the
+# system-installed one instead.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 COPY package*.json ./
 RUN npm ci

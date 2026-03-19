@@ -6,6 +6,7 @@ const puppeteer = require('puppeteer');
 const Purchase = require('../models/Purchase');
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildReportHTML } = require('../templates/reportTemplate');
+const { sendPdfReport } = require('../services/emailService');
 
 /** Rate limiter — PDF generation is expensive, so keep this conservative. */
 const reportLimiter = rateLimit({
@@ -453,6 +454,7 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
             headless: 'new',
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             timeout: 30000,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -645,6 +647,41 @@ router.get('/download', async (req, res) => {
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="resilience-atlas-report.pdf"');
     return res.send(job.pdfBuffer);
+});
+
+/**
+ * POST /api/report/email
+ * Send a completed PDF report to an email address.
+ *
+ * Body: { hash, email }
+ */
+router.post('/email', async (req, res) => {
+    const { hash, email } = req.body;
+
+    if (!hash) {
+        return res.status(400).json({ error: 'Missing hash parameter' });
+    }
+
+    if (!email) {
+        return res.status(400).json({ error: 'Missing email parameter' });
+    }
+
+    const job = jobStore.get(hash);
+    if (!job) {
+        return res.status(404).json({ error: 'Report not found. It may have expired.' });
+    }
+
+    if (job.status !== 'ready' || !job.pdfBuffer) {
+        return res.status(409).json({ error: 'Report is not ready yet.' });
+    }
+
+    try {
+        await sendPdfReport(email, job.pdfBuffer);
+        return res.json({ message: 'Report sent successfully' });
+    } catch (err) {
+        console.error('Report email send failed:', err.message, err.stack);
+        return res.status(500).json({ error: 'Failed to send email. Please try again.' });
+    }
 });
 
 module.exports = router;

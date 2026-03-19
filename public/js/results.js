@@ -221,6 +221,10 @@ function persistResults(data) {
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Constants for inline generate → poll fallback.
+  var REPORT_MAX_POLL_ATTEMPTS = 60;
+  var REPORT_POLL_INTERVAL_MS  = 2000;
+
   // ── Guard: require results ────────────────────────────
   if (!results || !results.scores) {
     showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', 'warning');
@@ -365,12 +369,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
         } else {
-          // Fallback: legacy synchronous redirect.
-          const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
-          window.location.href =
-            `/api/report/download?overall=${results.overall}` +
-            `&dominantType=${encodeURIComponent(results.dominantType)}` +
-            `&scores=${encodeURIComponent(scoresStr)}${emailParam}`;
+          // Fallback: generate → poll → download (no PdfProgress module).
+          (async () => {
+            try {
+              const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
+              const genRes = await fetch(
+                `/api/report/generate?overall=${encodeURIComponent(results.overall)}` +
+                `&dominantType=${encodeURIComponent(results.dominantType)}` +
+                `&scores=${encodeURIComponent(scoresStr)}${emailParam}`
+              );
+              if (!genRes.ok) {
+                const body = await genRes.json().catch(() => ({}));
+                throw new Error(body.error || 'Failed to start report generation');
+              }
+              const { hash } = await genRes.json();
+              for (let i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
+                await new Promise(r => setTimeout(r, REPORT_POLL_INTERVAL_MS));
+                const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+                const status = await statusRes.json();
+                if (status.status === 'ready') {
+                  window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}`;
+                  return;
+                }
+                if (status.status === 'failed') throw new Error(status.error || 'Report generation failed');
+              }
+              throw new Error('Report generation timed out. Please try again.');
+            } catch (e) {
+              showAlert('pdfAlert', e.message || 'Download failed!', 'error', 'error');
+            }
+          })();
         }
       } catch (e) {
         showAlert('pdfAlert', e.message || 'Download failed!', 'error', 'error');
@@ -402,24 +429,65 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailInput) emailInput.focus();
         return;
       }
-      showAlert('emailAlert', 'Sending your report to ' + inputEmail + '...', 'success', 'email');
+      showAlert('emailAlert', 'Generating your report…', 'success', 'report');
       try {
         const storedResults = localStorage.getItem('resilience_results');
         const emailResults = storedResults ? JSON.parse(storedResults) : null;
         if (!emailResults) throw new Error('No results to send. Please finish the assessment first.');
 
-        emailResults.reportText = generatePersonalizedReport(emailResults);
+        const scoresStr = JSON.stringify(emailResults.scores);
+        const params = {
+          overall:      emailResults.overall,
+          dominantType: emailResults.dominantType,
+          scores:       scoresStr,
+          email:        inputEmail,
+        };
 
-        const url =
-          `/api/report/download?overall=${emailResults.overall}` +
-          `&dominantType=${encodeURIComponent(emailResults.dominantType)}` +
-          `&scores=${encodeURIComponent(JSON.stringify(emailResults.scores))}` +
-          `&email=${encodeURIComponent(inputEmail)}`;
-        window.open(url, '_blank');
+        let hash;
+        if (window.PdfProgress) {
+          // Use the progress modal: generates, polls, and downloads automatically.
+          hash = await window.PdfProgress.start(params);
+        } else {
+          // Inline fallback: generate → poll.
+          const genRes = await fetch(
+            `/api/report/generate?overall=${encodeURIComponent(params.overall)}` +
+            `&dominantType=${encodeURIComponent(params.dominantType)}` +
+            `&scores=${encodeURIComponent(params.scores)}` +
+            `&email=${encodeURIComponent(params.email)}`
+          );
+          if (!genRes.ok) {
+            const body = await genRes.json().catch(() => ({}));
+            throw new Error(body.error || 'Failed to start report generation');
+          }
+          const genData = await genRes.json();
+          hash = genData.hash;
 
-        showAlert('emailAlert', 'Generating your report...', 'success', 'report');
+          for (let i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
+            await new Promise(r => setTimeout(r, REPORT_POLL_INTERVAL_MS));
+            const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+            const statusData = await statusRes.json();
+            if (statusData.status === 'ready') break;
+            if (statusData.status === 'failed') throw new Error(statusData.error || 'Report generation failed');
+            if (i === REPORT_MAX_POLL_ATTEMPTS - 1) throw new Error('Report generation timed out. Please try again.');
+          }
+        }
+
+        // Send the PDF to the provided email address via the backend.
+        showAlert('emailAlert', 'Sending report to ' + inputEmail + '…', 'success', 'email');
+        const emailRes = await fetch('/api/report/email', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ hash, email: inputEmail }),
+        });
+        if (!emailRes.ok) {
+          const body = await emailRes.json().catch(() => ({}));
+          throw new Error(body.error || 'Failed to send email');
+        }
+        showAlert('emailAlert', 'Report sent to ' + inputEmail + '!', 'success', 'email');
       } catch (e) {
-        showAlert('emailAlert', e.message || 'Failed to generate report.', 'error', 'error');
+        if (e && e.message !== 'cancelled') {
+          showAlert('emailAlert', e.message || 'Failed to send report.', 'error', 'error');
+        }
       }
     });
   }
