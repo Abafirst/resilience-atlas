@@ -31,6 +31,16 @@ const app = express();
 app.use(express.static(path.join(__dirname, "../public")));
 
 // ==============================
+// Request timeout — PDF generation can take up to 2 minutes.
+// ==============================
+const REQUEST_TIMEOUT_MS = 120000; // 2 minutes
+app.use((req, res, next) => {
+  req.setTimeout(REQUEST_TIMEOUT_MS);
+  res.setTimeout(REQUEST_TIMEOUT_MS);
+  next();
+});
+
+// ==============================
 // Request ID — attach a unique ID to every request for tracing.
 // ==============================
 app.use((req, _res, next) => {
