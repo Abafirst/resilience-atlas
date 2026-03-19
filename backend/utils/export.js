@@ -94,7 +94,16 @@ async function buildPdf(org, teamResult, results) {
       format: 'A4',
       printBackground: true,
       margin: { top: '20mm', right: '15mm', bottom: '20mm', left: '15mm' },
+      timeout: 30000,
     });
+    if (!pdfBuffer || pdfBuffer.length === 0) {
+      throw new Error('PDF generation produced empty buffer');
+    }
+    const MIN_VALID_PDF_SIZE = 1000;
+    console.log(`[PDF Generation] PDF buffer size: ${pdfBuffer.length} bytes`);
+    if (pdfBuffer.length < MIN_VALID_PDF_SIZE) {
+      throw new Error(`PDF buffer too small (${pdfBuffer.length} bytes) - likely invalid`);
+    }
     return pdfBuffer;
   } finally {
     await browser.close();
