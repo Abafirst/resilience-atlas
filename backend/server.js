@@ -244,12 +244,13 @@ app.use(globalErrorHandler);
 // Start Server
 // ==============================
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = "0.0.0.0";
 
 /* istanbul ignore next */
 if (!process.env.JEST_WORKER_ID) {
-  app.listen(PORT, () => {
-    logger.info(`🚀 Server running on port ${PORT}`);
+  app.listen(PORT, HOST, () => {
+    logger.info(`🚀 Server running on http://${HOST}:${PORT}`);
   });
 }
 
