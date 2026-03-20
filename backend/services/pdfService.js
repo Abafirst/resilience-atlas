@@ -6,8 +6,8 @@ const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent')
 const branding = require('../config/branding');
 const { svgToPng } = require('../utils/svgToPng');
 
-// Path to the outline compass SVG bundled with the project.
-const LOGO_SVG_PATH = path.resolve(__dirname, '../../brand/compass-symbol/svg/compass-icon-outline.svg');
+// Path to the needle-compass SVG logo (source of truth for the PDF cover).
+const LOGO_SVG_PATH = path.resolve(__dirname, '../../public/assets/compass-icon.svg');
 // Resolved PNG path is cached here after first render (module-level singleton).
 let _logoPngPath = null;
 
@@ -1190,7 +1190,7 @@ function buildBenchmarkingPage(doc, report, overall) {
  */
 function buildPdfWithPDFKit(report, overall) {
     // Pre-render the SVG logo to a cached PNG (async, Railway-friendly).
-    const logoReady = svgToPng(LOGO_SVG_PATH, 'resilience-atlas-logo-outline')
+    const logoReady = svgToPng(LOGO_SVG_PATH, 'resilience-atlas-compass-icon')
         .then((p) => { _logoPngPath = p; })
         .catch((err) => {
             console.warn('[pdfService] Logo render failed, continuing without logo:', err.message);
