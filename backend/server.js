@@ -59,9 +59,26 @@ app.use(sentry.requestHandler());
 app.use(helmet());
 
 // CORS configuration
+// Support a comma-separated allowlist in CORS_ORIGIN, e.g.:
+//   CORS_ORIGIN=https://www.example.com,https://staging.example.com
+// Unset or "*" → allow all origins (permissive default).
+const corsOriginRaw = process.env.CORS_ORIGIN || "*";
+const corsOrigins =
+  corsOriginRaw === "*"
+    ? "*"
+    : corsOriginRaw.split(",").map((s) => s.trim()).filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "*",
+    origin: (origin, callback) => {
+      // Allow non-browser clients (curl, Postman, server-to-server) that send no Origin header.
+      if (!origin) return callback(null, true);
+      // Allow all origins when wildcard is configured.
+      if (corsOrigins === "*") return callback(null, true);
+      // Allow only the listed origins.
+      if (corsOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
