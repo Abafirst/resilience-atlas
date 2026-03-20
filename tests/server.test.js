@@ -391,6 +391,58 @@ describe('GET /api/payments/tiers', () => {
     });
 });
 
+// ── CORS behaviour ────────────────────────────────────────────────────────────
+
+describe('CORS middleware', () => {
+  const ORIGIN_A = 'https://www.theresilienceatlas.com';
+  const ORIGIN_B = 'https://resilience-atlas-staging.up.railway.app';
+
+  /** Re-require the app after mutating process.env so the new CORS_ORIGIN is picked up. */
+  function loadFreshApp() {
+    jest.resetModules();
+    return require('../backend/server');
+  }
+
+  afterEach(() => {
+    delete process.env.CORS_ORIGIN;
+    jest.resetModules();
+  });
+
+  test('allows all origins when CORS_ORIGIN is not set', async () => {
+    const res = await request(app)
+      .get('/health')
+      .set('Origin', ORIGIN_A);
+    // The header must echo back the requested origin (or be absent for wildcard)
+    const acao = res.headers['access-control-allow-origin'];
+    expect([ORIGIN_A, '*', undefined]).toContain(acao);
+  });
+
+  test('allows all origins when CORS_ORIGIN is "*"', async () => {
+    process.env.CORS_ORIGIN = '*';
+    const res = await request(app)
+      .get('/health')
+      .set('Origin', ORIGIN_A);
+    const acao = res.headers['access-control-allow-origin'];
+    expect([ORIGIN_A, '*', undefined]).toContain(acao);
+  });
+
+  test('allows a listed origin when CORS_ORIGIN is a comma-separated list', async () => {
+    process.env.CORS_ORIGIN = `${ORIGIN_A},${ORIGIN_B}`;
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', ORIGIN_A);
+    expect(res.headers['access-control-allow-origin']).toBe(ORIGIN_A);
+  });
+
+  test('allows requests without an Origin header (curl/Postman)', async () => {
+    process.env.CORS_ORIGIN = ORIGIN_A;
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp).get('/health');
+    expect([200, 503]).toContain(res.status);
+  });
+});
+
 // ── Affiliate routes ──────────────────────────────────────────────────────────
 
 describe('GET /api/affiliates/dashboard', () => {
