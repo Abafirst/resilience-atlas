@@ -69,11 +69,15 @@ const makeAssessment = (overrides = {}) => ({
     _id:            'aaaaaaaaaaaaaaaaaaaaaaaa',
     userId:         'bbbbbbbbbbbbbbbbbbbbbbbb',
     overall:        72,
-    dominantType:   'emotional',
+    dominantType:   'Emotional-Adaptive',
     assessmentDate: new Date('2026-01-15'),
     scores: {
-        emotional: 80, mental: 72, physical: 65,
-        social: 70,    spiritual: 60, financial: 55,
+        'Agentic-Generative':   55,
+        'Relational-Connective':70,
+        'Spiritual-Reflective': 60,
+        'Emotional-Adaptive':   80,
+        'Somatic-Regulative':   65,
+        'Cognitive-Narrative':  72,
     },
     ...overrides,
 });
@@ -87,23 +91,38 @@ const assessment2 = makeAssessment({
     _id:  'bbbbbbbbbbbbbbbbbbbbbbbb',
     overall: 60,
     assessmentDate: new Date('2025-11-10'),
-    scores: { emotional: 65, mental: 60, physical: 60, social: 58, spiritual: 55, financial: 50 },
+    scores: {
+        'Agentic-Generative':   50,
+        'Relational-Connective':58,
+        'Spiritual-Reflective': 55,
+        'Emotional-Adaptive':   65,
+        'Somatic-Regulative':   60,
+        'Cognitive-Narrative':  60,
+    },
 });
 
 jest.mock('../backend/models/ResilienceAssessment', () => {
     const mockA1 = {
         _id:  'aaaaaaaaaaaaaaaaaaaaaaaa',
         userId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
-        overall: 72, dominantType: 'emotional',
+        overall: 72, dominantType: 'Emotional-Adaptive',
         assessmentDate: new Date('2026-01-15'),
-        scores: { emotional: 80, mental: 72, physical: 65, social: 70, spiritual: 60, financial: 55 },
+        scores: {
+            'Agentic-Generative': 55, 'Relational-Connective': 70,
+            'Spiritual-Reflective': 60, 'Emotional-Adaptive': 80,
+            'Somatic-Regulative': 65, 'Cognitive-Narrative': 72,
+        },
     };
     const mockA2 = {
         _id:  'bbbbbbbbbbbbbbbbbbbbbbbb',
         userId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
-        overall: 60, dominantType: 'emotional',
+        overall: 60, dominantType: 'Emotional-Adaptive',
         assessmentDate: new Date('2025-11-10'),
-        scores: { emotional: 65, mental: 60, physical: 60, social: 58, spiritual: 55, financial: 50 },
+        scores: {
+            'Agentic-Generative': 50, 'Relational-Connective': 58,
+            'Spiritual-Reflective': 55, 'Emotional-Adaptive': 65,
+            'Somatic-Regulative': 60, 'Cognitive-Narrative': 60,
+        },
     };
     const MockRA = jest.fn().mockImplementation(() => mockA1);
     MockRA.find = jest.fn().mockImplementation(() => ({
@@ -199,7 +218,7 @@ describe('GET /api/history/timeline', () => {
 
         const { trends } = res.body.timeline;
         expect(trends).toHaveProperty('overall');
-        ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'].forEach(d => {
+        ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'].forEach(d => {
             expect(trends).toHaveProperty(d);
         });
     });
@@ -357,7 +376,7 @@ describe('History route helpers (unit)', () => {
     // Import route module for white-box testing of exported milestone logic
     // We re-implement the same small helpers here to unit test them independently.
 
-    const DIMS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+    const DIMS = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
 
     function buildTrends(sorted) {
         const trends = { overall: [] };
@@ -375,7 +394,7 @@ describe('History route helpers (unit)', () => {
         const input = [assessment1, assessment2];
         const t = buildTrends(input);
         expect(t.overall.length).toBe(2);
-        expect(t.emotional.length).toBe(2);
+        expect(t['Emotional-Adaptive'].length).toBe(2);
     });
 
     test('buildTrends returns empty arrays for empty input', () => {
@@ -426,9 +445,9 @@ describe('History route helpers (unit)', () => {
     });
 
     test('detectMilestones flags perfect dimension score', () => {
-        const perfect = makeAssessment({ scores: { emotional: 100, mental: 70, physical: 65, social: 70, spiritual: 60, financial: 55 } });
+        const perfect = makeAssessment({ scores: { 'Agentic-Generative': 55, 'Relational-Connective': 70, 'Spiritual-Reflective': 60, 'Emotional-Adaptive': 100, 'Somatic-Regulative': 65, 'Cognitive-Narrative': 72 } });
         const badges = detectMilestones(perfect, [perfect]);
-        expect(badges).toContain('perfect_emotional');
+        expect(badges).toContain('perfect_Emotional-Adaptive');
     });
 
     test('detectMilestones flags consistent_high_performer when all overall >= 80', () => {

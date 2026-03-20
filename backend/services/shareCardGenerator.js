@@ -22,7 +22,7 @@ const COLORS = {
     grid:       '#1e4060',
 };
 
-const DIMENSIONS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+const DIMENSIONS = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
 
 // ── Mini compass SVG ──────────────────────────────────────────────────────────
 
@@ -69,7 +69,7 @@ function compassSvg(cx, cy, r, direction) {
  * @param {number} cx     - Center X
  * @param {number} cy     - Center Y
  * @param {number} r      - Radius
- * @param {Object} scores - { emotional, mental, physical, social, spiritual, financial }
+ * @param {Object} scores - { 'Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative' }
  * @returns {string} SVG fragment
  */
 function radarSvg(cx, cy, r, scores) {
@@ -124,7 +124,7 @@ function backgroundGrid(W, H) {
  * @param {Object} opts
  * @param {number} opts.overall      - Overall resilience score (0–100)
  * @param {string} opts.dominantType - Primary resilience type key
- * @param {Object} opts.scores       - Category scores { emotional, mental, … }
+ * @param {Object} opts.scores       - Category scores { 'Agentic-Generative': number, … }
  * @param {string} [opts.direction]  - Compass bearing (e.g. 'NE'). Defaults to 'N'.
  * @returns {Buffer} SVG content as a UTF-8 Buffer
  */
