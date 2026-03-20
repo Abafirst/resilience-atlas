@@ -8,22 +8,22 @@
  * evolution summary.
  *
  * Compass mapping (aligned with the Atlas concept):
- *   North  → Mental   (cognitive growth)
- *   East   → Social   (relational expansion)
- *   South  → Physical (somatic grounding)
- *   West   → Emotional + Spiritual (emotional/spiritual integration)
- *   Financial contributes diagonally between North and East (NE axis)
+ *   North  → Cognitive-Narrative  (cognitive growth)
+ *   East   → Relational-Connective (relational expansion)
+ *   South  → Somatic-Regulative   (somatic grounding)
+ *   West   → Emotional-Adaptive + Spiritual-Reflective (emotional/spiritual integration)
+ *   Agentic-Generative contributes diagonally between North and East (NE axis)
  */
 
-const DIMENSIONS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+const DIMENSIONS = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
 
 const DIRECTION_DESCRIPTIONS = {
-    N:  'Your compass points North — indicating growth in mental and cognitive resilience.',
+    N:  'Your compass points North — indicating growth in cognitive and narrative resilience.',
     NE: 'Your compass points Northeast — reflecting growth in both cognitive and relational dimensions.',
-    E:  'Your compass points East — highlighting expansion in social and relational resilience.',
+    E:  'Your compass points East — highlighting expansion in relational and connective resilience.',
     SE: 'Your compass points Southeast — suggesting development in relational and somatic areas.',
-    S:  'Your compass points South — indicating grounding in somatic and physical resilience.',
-    SW: 'Your compass points Southwest — reflecting integration of physical and emotional resilience.',
+    S:  'Your compass points South — indicating grounding in somatic and regulative resilience.',
+    SW: 'Your compass points Southwest — reflecting integration of somatic and emotional resilience.',
     W:  'Your compass points West — indicating deepening of emotional and spiritual resilience.',
     NW: 'Your compass points Northwest — reflecting integration of emotional and cognitive growth.',
 };
@@ -45,18 +45,18 @@ function angleToBearing(deg) {
  * Calculate the compass direction and magnitude of change.
  *
  * Axes:
- *   N-S: mental improvement (N) vs physical improvement (S)
- *   E-W: social improvement (E) vs emotional+spiritual improvement (W)
+ *   N-S: Cognitive-Narrative improvement (N) vs Somatic-Regulative improvement (S)
+ *   E-W: Relational-Connective improvement (E) vs Emotional-Adaptive+Spiritual-Reflective improvement (W)
  *
  * @param {Object} changes - Per-dimension change values
  * @returns {{ primary: string, magnitude: number }}
  */
 function calculateDirection(changes) {
-    // North-South axis: positive = mental (North), negative = physical (South)
-    const northward = (changes.mental || 0) - (changes.physical || 0);
+    // North-South axis: positive = Cognitive-Narrative (North), negative = Somatic-Regulative (South)
+    const northward = (changes['Cognitive-Narrative'] || 0) - (changes['Somatic-Regulative'] || 0);
 
-    // East-West axis: positive = social (East), negative = emotional+spiritual (West)
-    const eastward = (changes.social || 0) - ((changes.emotional || 0) + (changes.spiritual || 0));
+    // East-West axis: positive = Relational-Connective (East), negative = Emotional-Adaptive+Spiritual-Reflective (West)
+    const eastward = (changes['Relational-Connective'] || 0) - ((changes['Emotional-Adaptive'] || 0) + (changes['Spiritual-Reflective'] || 0));
 
     const magnitude = Math.sqrt(northward ** 2 + eastward ** 2);
 
@@ -109,17 +109,11 @@ function generateInterpretation(overallChange, changes, direction) {
     }
 
     if (improved.length > 0) {
-        const names = improved
-            .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
-            .join(', ');
-        text += `Dimensions showing growth include: ${names}. `;
+        text += `Dimensions showing growth include: ${improved.join(', ')}. `;
     }
 
     if (declined.length > 0) {
-        const names = declined
-            .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
-            .join(', ');
-        text += `Areas for continued attention include: ${names}. `;
+        text += `Areas for continued attention include: ${declined.join(', ')}. `;
     }
 
     const dirDesc = DIRECTION_DESCRIPTIONS[direction.primary] || '';
@@ -134,7 +128,8 @@ function generateInterpretation(overallChange, changes, direction) {
  * Compare the current assessment with the previous one and return evolution data.
  *
  * @param {Object} current - Current assessment: { categories, overall, dominantType }
- *   current.categories must be { emotional, mental, physical, social, spiritual, financial }
+ *   current.categories must be { 'Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective',
+ *                                 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative' }
  * @param {Object|null} previous - Previous ResilienceAssessment document (or null if first)
  * @returns {Object} Evolution data
  */

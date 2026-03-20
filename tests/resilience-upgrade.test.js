@@ -158,7 +158,7 @@ describe('POST /api/quiz/submit — async report generation', () => {
     test('returns 401 without authentication', async () => {
         const res = await request(app)
             .post('/api/quiz/submit')
-            .send({ answers: Array(36).fill(3) });
+            .send({ answers: Array(72).fill(3) });
         expect(res.status).toBe(401);
     });
 
@@ -174,7 +174,7 @@ describe('POST /api/quiz/submit — async report generation', () => {
         const res = await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(4) });
+            .send({ answers: Array(72).fill(4) });
 
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('status', 'submitted');
@@ -188,7 +188,7 @@ describe('POST /api/quiz/submit — async report generation', () => {
         await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(4) });
+            .send({ answers: Array(72).fill(4) });
 
         expect(addReportJob).toHaveBeenCalledTimes(1);
         const jobPayload = addReportJob.mock.calls[0][0];
@@ -203,7 +203,7 @@ describe('POST /api/quiz/submit — async report generation', () => {
         const res = await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(3) });
+            .send({ answers: Array(72).fill(3) });
 
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('status', 'submitted');
@@ -213,11 +213,11 @@ describe('POST /api/quiz/submit — async report generation', () => {
         const res = await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(5) });
+            .send({ answers: Array(72).fill(5) });
 
         expect(res.status).toBe(200);
         const { scores } = res.body;
-        const expectedKeys = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+        const expectedKeys = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
         for (const key of expectedKeys) {
             expect(scores).toHaveProperty(key);
         }
@@ -320,7 +320,7 @@ describe('reportService', () => {
         require('../backend/services/reportService');
     const { calculateResilienceScores } = require('../backend/scoring');
 
-    const sampleScores = calculateResilienceScores(Array(36).fill(4));
+    const sampleScores = calculateResilienceScores(Array(72).fill(4));
 
     test('buildResultsHash returns a 64-char hex string', () => {
         const hash = buildResultsHash(sampleScores);
@@ -335,7 +335,7 @@ describe('reportService', () => {
     });
 
     test('buildResultsHash differs for different scores', () => {
-        const otherScores = calculateResilienceScores(Array(36).fill(1));
+        const otherScores = calculateResilienceScores(Array(72).fill(1));
         expect(buildResultsHash(sampleScores)).not.toBe(buildResultsHash(otherScores));
     });
 

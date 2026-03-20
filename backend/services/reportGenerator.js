@@ -12,33 +12,33 @@
  *   ❌ "confirms", "diagnoses", "you will", "guaranteed"
  */
 
-const DIMENSIONS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+const DIMENSIONS = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
 
 const DIMENSION_LABELS = {
-    emotional: 'Emotional',
-    mental:    'Mental',
-    physical:  'Physical',
-    social:    'Social',
-    spiritual: 'Spiritual',
-    financial: 'Financial',
+    'Agentic-Generative':   'Agentic-Generative',
+    'Relational-Connective':'Relational-Connective',
+    'Spiritual-Reflective': 'Spiritual-Reflective',
+    'Emotional-Adaptive':   'Emotional-Adaptive',
+    'Somatic-Regulative':   'Somatic-Regulative',
+    'Cognitive-Narrative':  'Cognitive-Narrative',
 };
 
 const DIMENSION_DESCRIPTIONS = {
-    emotional: 'your ability to recognize and regulate emotions, maintaining balance under pressure',
-    mental:    'your cognitive flexibility and capacity to reframe challenges constructively',
-    physical:  'your physical well-being, energy management, and somatic awareness',
-    social:    'your capacity to build and sustain meaningful connections during difficult times',
-    spiritual: 'your sense of meaning, purpose, and connection to values larger than yourself',
-    financial: 'your sense of financial security and ability to navigate economic challenges',
+    'Agentic-Generative':   'your capacity to take purposeful action, pursue goals, and generate possibilities even under pressure',
+    'Relational-Connective':'your ability to build, nurture, and draw on meaningful relationships and community support',
+    'Spiritual-Reflective': 'your sense of meaning, purpose, and connection to values larger than yourself',
+    'Emotional-Adaptive':   'your ability to recognise, regulate, and adaptively work with emotions under stress',
+    'Somatic-Regulative':   'your physical well-being, body awareness, and capacity to regulate stress through somatic practices',
+    'Cognitive-Narrative':  'your cognitive flexibility and capacity to reframe challenges and construct meaningful narratives',
 };
 
 const DIMENSION_GROWTH_ACTIONS = {
-    emotional: 'Explore mindfulness practices, emotion-naming exercises, or reflective journaling to strengthen emotional awareness.',
-    mental:    'Engage in cognitive reframing techniques and structured goal-setting to build mental agility.',
-    physical:  'Invest in consistent movement, sleep hygiene, and body-awareness practices such as breathwork or yoga.',
-    social:    'Schedule regular quality time with your support network and practice active listening and vulnerability.',
-    spiritual: 'Explore values clarification, gratitude practices, or community engagement that connects you to a larger purpose.',
-    financial: 'Build a clear financial plan, establish an emergency fund, and engage with financial literacy resources.',
+    'Agentic-Generative':   'Set concrete goals, break challenges into manageable steps, and build a bias toward purposeful action.',
+    'Relational-Connective':'Schedule regular quality time with your support network and practice active listening and vulnerability.',
+    'Spiritual-Reflective': 'Explore values clarification, gratitude practices, or community engagement that connects you to a larger purpose.',
+    'Emotional-Adaptive':   'Explore mindfulness practices, emotion-naming exercises, or reflective journaling to strengthen emotional awareness.',
+    'Somatic-Regulative':   'Invest in consistent movement, sleep hygiene, and body-awareness practices such as breathwork or yoga.',
+    'Cognitive-Narrative':  'Engage in cognitive reframing techniques, structured reflection, and narrative journaling to build mental agility.',
 };
 
 const LEVEL_KEYS = {
@@ -69,7 +69,7 @@ function getLevel(score) {
 /**
  * Detect resilience score patterns for richer narrative interpretation.
  *
- * @param {Object} scores    - Category scores { emotional, mental, ... }
+ * @param {Object} scores    - Category scores { 'Agentic-Generative': number, 'Relational-Connective': number, ... }
  * @param {Object|null} evolution - Evolution data from evolution.js
  * @returns {string[]} List of detected pattern keys
  */
@@ -271,7 +271,7 @@ function generateEvolutionSummary(evolution) {
 /**
  * Generate a complete narrative report based on scores and evolution data.
  *
- * @param {Object} scores       - Category scores { emotional, mental, ... }
+ * @param {Object} scores       - Category scores { 'Agentic-Generative': number, 'Relational-Connective': number, ... }
  * @param {number} overall      - Overall score (0–100)
  * @param {string} dominantType - Dominant resilience type
  * @param {Object|null} evolution - Evolution data from evolution.js (null = first assessment)

@@ -29,7 +29,7 @@ const historyLimiter = rateLimit({
 router.use(historyLimiter);
 
 // ── Dimension keys ────────────────────────────────────────────────────────────
-const DIMS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+const DIMS = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

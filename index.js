@@ -83,24 +83,24 @@ app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
 
 // ── Quiz submission: compute 6-type resilience scores ─────────────────────────
-// Maps 36 quiz answers (indices 0-35) to the 6 resilience types.
-// 6 questions per type, max raw score 30 per type (5 per question).
+// Maps 72 quiz answers (indices 0-71) to the 6 resilience types.
+// 12 questions per type, max raw score 60 per type (5 per question).
 const QUIZ_TYPE_MAP = {
-    'Cognitive-Narrative':   [30, 31, 32, 33, 34, 35], // Q31–Q36
-    'Relational-Connective': [6,  7,  8,  9,  10, 11], // Q7–Q12
-    'Agentic-Generative':    [0,  1,  2,  3,  4,  5],  // Q1–Q6
-    'Emotional-Adaptive':    [18, 19, 20, 21, 22, 23], // Q19–Q24
-    'Spiritual-Reflective':  [12, 13, 14, 15, 16, 17], // Q13–Q18
-    'Somatic-Regulative':    [24, 25, 26, 27, 28, 29], // Q25–Q30
+    'Agentic-Generative':   [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11], // Q1–Q12
+    'Relational-Connective':[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], // Q13–Q24
+    'Spiritual-Reflective': [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], // Q25–Q36
+    'Emotional-Adaptive':   [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47], // Q37–Q48
+    'Somatic-Regulative':   [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59], // Q49–Q60
+    'Cognitive-Narrative':  [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71], // Q61–Q72
 };
 const MAX_ANSWER = 5;
 
-// POST /api/quiz — score 36 answers and return 6-type resilience results
+// POST /api/quiz — score 72 answers and return 6-type resilience results
 app.post('/api/quiz', (req, res) => {
     try {
         const { answers } = req.body || {};
-        if (!Array.isArray(answers) || answers.length !== 36) {
-            return res.status(400).json({ error: 'Please provide all 36 answers.' });
+        if (!Array.isArray(answers) || answers.length !== 72) {
+            return res.status(400).json({ error: 'Please provide all 72 answers.' });
         }
 
         const scores = {};

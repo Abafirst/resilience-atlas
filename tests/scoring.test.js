@@ -3,17 +3,17 @@
 const { calculateResilienceScores, generateReport } = require('../backend/scoring');
 
 describe('calculateResilienceScores', () => {
-    // Build a valid 36-answer array where every answer is 5 (maximum).
-    const allFives = Array(36).fill(5);
-    // Build a valid 36-answer array where every answer is 1 (minimum).
-    const allOnes = Array(36).fill(1);
+    // Build a valid 72-answer array where every answer is 5 (maximum).
+    const allFives = Array(72).fill(5);
+    // Build a valid 72-answer array where every answer is 1 (minimum).
+    const allOnes = Array(72).fill(1);
 
     test('throws when answers array is missing', () => {
-        expect(() => calculateResilienceScores()).toThrow('Expected at least 36 answers.');
+        expect(() => calculateResilienceScores()).toThrow('Expected at least 72 answers.');
     });
 
     test('throws when answers array has wrong length', () => {
-        expect(() => calculateResilienceScores([1, 2, 3])).toThrow('Expected at least 36 answers.');
+        expect(() => calculateResilienceScores([1, 2, 3])).toThrow('Expected at least 72 answers.');
     });
 
     test('returns 100% overall score for all-5 answers', () => {
@@ -27,17 +27,17 @@ describe('calculateResilienceScores', () => {
         expect(result.overall).toBe(20);
     });
 
-    test('result contains all six category keys', () => {
+    test('result contains all six dimension keys', () => {
         const result = calculateResilienceScores(allFives);
         expect(Object.keys(result.categories)).toEqual(
-            expect.arrayContaining(['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'])
+            expect.arrayContaining(['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'])
         );
     });
 
-    test('dominantType is one of the six categories', () => {
-        const validCategories = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+    test('dominantType is one of the six dimensions', () => {
+        const validDimensions = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective', 'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
         const result = calculateResilienceScores(allFives);
-        expect(validCategories).toContain(result.dominantType);
+        expect(validDimensions).toContain(result.dominantType);
     });
 
     test('category scores are between 0 and 100', () => {
@@ -48,18 +48,18 @@ describe('calculateResilienceScores', () => {
         }
     });
 
-    test('dominantType reflects the highest-scoring category', () => {
-        // Set all answers to 1, then boost emotional questions (indices 0–9) to 5.
-        const answers = Array(36).fill(1);
-        for (let i = 0; i <= 9; i++) answers[i] = 5;
+    test('dominantType reflects the highest-scoring dimension', () => {
+        // Set all answers to 1, then boost Agentic-Generative questions (indices 0–11) to 5.
+        const answers = Array(72).fill(1);
+        for (let i = 0; i <= 11; i++) answers[i] = 5;
 
         const result = calculateResilienceScores(answers);
-        expect(result.dominantType).toBe('emotional');
+        expect(result.dominantType).toBe('Agentic-Generative');
     });
 });
 
 describe('generateReport', () => {
-    const scores = calculateResilienceScores(Array(36).fill(3));
+    const scores = calculateResilienceScores(Array(72).fill(3));
 
     test('returns a report with overall, dominantType, categories, level, and summary', () => {
         const report = generateReport(scores);
