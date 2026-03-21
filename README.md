@@ -158,4 +158,36 @@ Each dimension was identified and validated through the original dissertation re
 
 ---
 
+## 🖼️ Social-Post Visual Templates
+
+Evergreen social cards (1080×1080 PNG) for use with Metricool autolists.
+Four template types × three color variants = **12 cards total**.
+
+### Quick start
+
+```bash
+# Install dependencies (first time only)
+npm install
+
+# Render all 12 social-card PNGs
+npm run social:build
+```
+
+Generated PNGs are written to `assets/social/generated/` (gitignored — recreate as needed).
+
+### Template types
+
+| ID | Name | File prefix | Label |
+|---|---|---|---|
+| A | Micro-practice | `micro-practice-v{1-3}` | 2-Minute Practice |
+| B | Dimension Spotlight | `dimension-spotlight-v{1-3}` | Resilience Dimension |
+| C | Myth → Truth | `myth-truth-v{1-3}` | Myth / Truth |
+| D | Weekly Reflection | `weekly-reflection-v{1-3}` | Weekly Reflection |
+
+Variants differ by accent color: v1 = Teal, v2 = Warm Sand, v3 = Soft Coral.
+
+See [`docs/brand/social-templates.md`](docs/brand/social-templates.md) for the full style guide, color palette, typography, and Metricool rotation instructions.
+
+---
+
 ## 🏗️ Project Structure

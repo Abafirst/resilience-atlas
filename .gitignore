@@ -23,5 +23,8 @@ dist/
 build/
 coverage/
 
+# Social card generated PNGs (regenerate locally with: npm run social:build)
+assets/social/generated/*.png
+
 # Optional npm cache directory
 .npm
