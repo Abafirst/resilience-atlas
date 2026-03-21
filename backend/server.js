@@ -2,6 +2,7 @@
 // Core dependencies
 // ==============================
 const express = require("express");
+const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -277,13 +278,32 @@ if (!process.env.JEST_WORKER_ID) {
     // HTTPS mode — bind the main Express app to PORT (default 3000) using the
     // Cloudflare origin certificate.  Cloudflare connects to this origin on
     // port 3000 over TLS (Full SSL mode), so the server must be reachable on
-    // that port.  The /health endpoint is served by the same HTTPS server, so
-    // no separate health-check server is needed.
+    // that port.
     https
       .createServer({ cert: CF_CERT, key: CF_KEY }, app)
       .listen(PORT, HOST, () => {
         logger.info(`🚀 Server running on https://${HOST}:${PORT} (HTTPS)`);
       });
+
+    // Dedicated plain-HTTP health server on port 3001.
+    // Railway's healthcheck probe cannot negotiate TLS, so we expose a
+    // minimal HTTP server that only responds to GET /health.  All other
+    // traffic continues to flow through the HTTPS server above.
+    const HEALTH_PORT = Number(process.env.HEALTH_PORT) || 3001;
+    const healthApp = express();
+    healthApp.get("/health", (req, res) => {
+      res.status(200).json({
+        status: "OK",
+        service: "Resilience Atlas API",
+        database: dbStatus,
+        timestamp: new Date().toISOString(),
+      });
+    });
+    http.createServer(healthApp).listen(HEALTH_PORT, HOST, () => {
+      logger.info(
+        `🩺 Health server running on http://${HOST}:${HEALTH_PORT} (HTTP)`
+      );
+    });
   } else {
     // HTTP fallback for local development / environments without TLS certs.
     logger.warn(
