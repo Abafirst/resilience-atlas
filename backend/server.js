@@ -2,7 +2,6 @@
 // Core dependencies
 // ==============================
 const express = require("express");
-const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -263,12 +262,10 @@ app.use(globalErrorHandler);
 // Start Server
 // ==============================
 
-// PORT is the public-facing port Railway exposes for healthchecks and inbound
-// traffic.  When running in HTTPS mode the main app moves to HTTPS_PORT so
-// that the plain-HTTP health server can occupy PORT (3000) — the only port
-// Railway's healthcheck will probe.
+// PORT is the public-facing port Railway (and Cloudflare) expects the app on.
+// Defaults to 3000. The HTTPS server binds directly to this port so Cloudflare
+// can reach the origin on the standard port without any port-mapping tricks.
 const PORT = Number(process.env.PORT) || 3000;
-const HTTPS_PORT = Number(process.env.HTTPS_PORT) || 3001;
 const HOST = "0.0.0.0";
 
 /* istanbul ignore next */
@@ -277,33 +274,16 @@ if (!process.env.JEST_WORKER_ID) {
   const CF_KEY = process.env.CF_ORIGIN_KEY;
 
   if (CF_CERT && CF_KEY) {
-    // HTTPS mode — the main Express app listens on HTTPS_PORT (default 3001)
-    // using the Cloudflare origin certificate so that Cloudflare's Full SSL
-    // mode can establish a trusted TLS connection to this origin server.
+    // HTTPS mode — bind the main Express app to PORT (default 3000) using the
+    // Cloudflare origin certificate.  Cloudflare connects to this origin on
+    // port 3000 over TLS (Full SSL mode), so the server must be reachable on
+    // that port.  The /health endpoint is served by the same HTTPS server, so
+    // no separate health-check server is needed.
     https
       .createServer({ cert: CF_CERT, key: CF_KEY }, app)
-      .listen(HTTPS_PORT, HOST, () => {
-        logger.info(`🚀 Server running on https://${HOST}:${HTTPS_PORT} (HTTPS)`);
+      .listen(PORT, HOST, () => {
+        logger.info(`🚀 Server running on https://${HOST}:${PORT} (HTTPS)`);
       });
-
-    // Dedicated HTTP health server on PORT (default 3000).
-    // Railway's healthcheck always probes http://<host>:PORT/health and cannot
-    // negotiate TLS, so we expose only the /health endpoint over plain HTTP on
-    // this port.  All application traffic is handled by the HTTPS server above.
-    const healthApp = express();
-    healthApp.get("/health", (_req, res) => {
-      res.status(200).json({
-        status: "OK",
-        service: "Resilience Atlas API",
-        database: dbStatus,
-        timestamp: new Date().toISOString(),
-      });
-    });
-    http.createServer(healthApp).listen(PORT, HOST, () => {
-      logger.info(
-        `🩺 Health server running on http://${HOST}:${PORT} (HTTP)`
-      );
-    });
   } else {
     // HTTP fallback for local development / environments without TLS certs.
     logger.warn(
