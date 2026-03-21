@@ -2,6 +2,7 @@
 // Core dependencies
 // ==============================
 const express = require("express");
+const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -279,6 +280,25 @@ if (!process.env.JEST_WORKER_ID) {
       .listen(PORT, HOST, () => {
         logger.info(`🚀 Server running on https://${HOST}:${PORT} (HTTPS)`);
       });
+
+    // Dedicated HTTP health server — Railway's healthcheck cannot validate
+    // self-signed / origin TLS certificates, so we expose /health over plain
+    // HTTP on a separate port.  All other traffic remains HTTPS-only.
+    const HEALTH_PORT = Number(process.env.HEALTH_PORT) || 3001;
+    const healthApp = express();
+    healthApp.get("/health", (_req, res) => {
+      res.status(200).json({
+        status: "OK",
+        service: "Resilience Atlas API",
+        database: dbStatus,
+        timestamp: new Date().toISOString(),
+      });
+    });
+    http.createServer(healthApp).listen(HEALTH_PORT, HOST, () => {
+      logger.info(
+        `🩺 Health server running on http://${HOST}:${HEALTH_PORT} (HTTP)`
+      );
+    });
   } else {
     // HTTP fallback for local development / environments without TLS certs.
     logger.warn(
