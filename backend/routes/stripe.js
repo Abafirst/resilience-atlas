@@ -4,6 +4,19 @@ const Stripe = require('stripe');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+const FALLBACK_URL = 'https://resilience-atlas-production-e037.up.railway.app';
+
+/**
+ * Return a normalized base URL for Stripe redirect URLs.
+ * Trims whitespace and removes any trailing slashes so paths can be appended
+ * with a leading slash without creating double-slash URLs.
+ * Falls back to the Railway domain if APP_URL is not set.
+ */
+function getAppUrl() {
+  const raw = process.env.APP_URL || FALLBACK_URL;
+  return raw.trim().replace(/\/+$/, '');
+}
+
 /*
 ------------------------------------
 GET Stripe publishable key
@@ -42,8 +55,8 @@ router.post('/create-checkout-session', async (req, res) => {
 
 mode: 'payment',
 
-success_url: 'https://resilience-atlas-production-e037.up.railway.app/results.html?session_id={CHECKOUT_SESSION_ID}',
-cancel_url: 'https://resilience-atlas-production-e037.up.railway.app/results.html',
+success_url: `${getAppUrl()}/results.html?session_id={CHECKOUT_SESSION_ID}`,
+cancel_url: `${getAppUrl()}/results.html`,
     });
 
     res.json({ id: session.id });

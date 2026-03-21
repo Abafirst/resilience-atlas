@@ -31,6 +31,13 @@ APP_URL
 CORS_ORIGIN
 ```
 
+> **`APP_URL` is required for Stripe Checkout redirects.**  Set it to your
+> public domain (e.g. `https://theresilienceatlas.com` for production, or
+> `https://resilience-atlas-staging.up.railway.app` for staging).  Stripe uses
+> this value to build the `success_url` and `cancel_url` for every Checkout
+> Session, so users are always returned to the correct origin after payment.
+> If `APP_URL` is missing the app falls back to the Railway default domain.
+
 ### 3. Add a MongoDB service
 
 In your Railway project click **+ New Service → Database → MongoDB**.  
