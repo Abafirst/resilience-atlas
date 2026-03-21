@@ -10,6 +10,10 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 
+// One-time log at module load so Railway logs show the diagnostic state of the
+// running container.  Safe: no secrets — only reflects whether the flag is set.
+logger.info(`DEBUG_STRIPE enabled: ${process.env.DEBUG_STRIPE === 'true'}`);
+
 /**
  * Attempt a HEAD request to https://api.stripe.com and log the outcome.
  * Helps distinguish TLS verification failures, DNS errors, and network egress
@@ -280,37 +284,41 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         // Always log a minimal summary so the error is visible in every environment.
         logger.error('Stripe checkout error', { message: err.message });
 
-        // Detailed diagnostic logging — enabled only when DEBUG_STRIPE=true or
-        // outside production so production logs stay clean by default.
-        const debugStripe =
-            process.env.DEBUG_STRIPE === 'true' ||
-            process.env.NODE_ENV !== 'production';
+        // Detailed diagnostic logging — enabled only when DEBUG_STRIPE=true.
+        // Gated to prevent sensitive stack traces from appearing in production
+        // logs by default; set DEBUG_STRIPE=true in Railway to enable.
+        const debugStripe = process.env.DEBUG_STRIPE === 'true';
 
         if (debugStripe) {
-            logger.error('Stripe checkout error details', {
-                // Stripe SDK error classification fields
+            // Build a sanitised summary object — omit request headers/body to
+            // avoid leaking auth tokens or PII that Stripe may echo back.
+            const errSummary = JSON.stringify({
                 type: err.type,
                 code: err.code,
                 statusCode: err.statusCode,
                 message: err.message,
                 requestId: err.requestId,
-                // Underlying network / TLS cause (exposes the real cause of
-                // "connection to Stripe" retries, e.g. ECONNREFUSED, CERT_*)
                 causeCode: err.cause?.code,
                 causeMessage: err.cause?.message,
-                // Node-level network fields present on low-level errors
                 errno: err.errno,
                 syscall: err.syscall,
                 address: err.address,
                 port: err.port,
-                // Re-log env-var presence at error time — no secret values exposed
                 hasStripeSecretKey: Boolean(stripeSecretKey),
                 stripeKeyPrefix: stripeSecretKey ? stripeSecretKey.slice(0, 7) : 'not-set',
                 hasOneTimePriceId,
             });
 
-            if (err.stack) {
-                logger.debug('Stripe checkout error stack:', err.stack);
+            // Use console.error with a plain string so Railway captures the data
+            // even when the Winston transport drops structured metadata objects.
+            console.error('Stripe checkout debug:', errSummary);
+            console.error('Stripe checkout error stack:', err.stack);
+            if (err.cause) {
+                console.error(
+                    'Stripe checkout error cause:',
+                    err.cause.code,
+                    err.cause.message
+                );
             }
 
             // Run a connectivity probe to distinguish TLS / DNS / egress failures.
