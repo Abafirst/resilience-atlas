@@ -2,6 +2,7 @@
 // Core dependencies
 // ==============================
 const express = require("express");
+const https = require("https");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -266,9 +267,27 @@ const HOST = "0.0.0.0";
 
 /* istanbul ignore next */
 if (!process.env.JEST_WORKER_ID) {
-  app.listen(PORT, HOST, () => {
-    logger.info(`🚀 Server running on http://${HOST}:${PORT}`);
-  });
+  const CF_CERT = process.env.CF_ORIGIN_CERT;
+  const CF_KEY = process.env.CF_ORIGIN_KEY;
+
+  if (CF_CERT && CF_KEY) {
+    // HTTPS mode — use the Cloudflare origin certificate so that Cloudflare's
+    // Full SSL mode can establish a trusted TLS connection to this origin server
+    // without triggering a redirect loop.
+    https
+      .createServer({ cert: CF_CERT, key: CF_KEY }, app)
+      .listen(PORT, HOST, () => {
+        logger.info(`🚀 Server running on https://${HOST}:${PORT} (HTTPS)`);
+      });
+  } else {
+    // HTTP fallback for local development / environments without TLS certs.
+    logger.warn(
+      "⚠️  CF_ORIGIN_CERT / CF_ORIGIN_KEY not set — falling back to HTTP"
+    );
+    app.listen(PORT, HOST, () => {
+      logger.info(`🚀 Server running on http://${HOST}:${PORT} (HTTP)`);
+    });
+  }
 }
 
 module.exports = app;
