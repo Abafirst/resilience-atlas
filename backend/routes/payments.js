@@ -182,24 +182,44 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!cleanEmail || !cleanEmail.includes('@')) {
             return res.status(400).json({ error: 'Valid email is required.' });
         }
-const session = await stripe.checkout.sessions.create({
-  payment_method_types: ['card'],
-  line_items: [
-    {
-      price_data: {
-        currency: tierConfig.currency,
-        product_data: { name: tierConfig.name },
-        unit_amount: tierConfig.amount,
-      },
-      quantity: 1,
-    },
-  ],
-  mode: 'payment',
-  customer_email: cleanEmail,
-  metadata: { tier, email: cleanEmail },
-  success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-  cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
-});
+
+        // ── Env-var presence check ──────────────────────────────────────────
+        // Log before hitting Stripe so Railway logs expose config problems
+        // (missing key, wrong variable name) without leaking secret values.
+        // Declared here so the catch block can reuse the same reference.
+        const stripeKey = process.env.STRIPE_SECRET_KEY;
+        const hasOneTimePriceId = Boolean(process.env.STRIPE_ONE_TIME_PRICE_ID);
+        // STRIPE_ONE_TIME_PRICE_ID is the expected variable name; log its
+        // presence so mismatches between Railway config and code are obvious.
+        logger.info('Stripe checkout: pre-call env check', {
+            hasStripeSecretKey: Boolean(stripeKey),
+            // Show only the 8-char prefix (sk_live_ / sk_test_) — no key material
+            stripeKeyPrefix: stripeKey ? stripeKey.slice(0, 8) : 'not-set',
+            hasOneTimePriceId,
+            priceIdVarUsed: hasOneTimePriceId ? 'STRIPE_ONE_TIME_PRICE_ID' : 'none (using inline price_data)',
+            appUrlSet: Boolean(process.env.APP_URL),
+            tier,
+        });
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price_data: {
+                        currency: tierConfig.currency,
+                        product_data: { name: tierConfig.name },
+                        unit_amount: tierConfig.amount,
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            customer_email: cleanEmail,
+            metadata: { tier, email: cleanEmail },
+            success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
+        });
+
         // Record pending purchase so the webhook can update it later.
         await Purchase.create({
             email: email.toLowerCase().trim(),
@@ -211,8 +231,35 @@ const session = await stripe.checkout.sessions.create({
         });
 
         res.json({ sessionId: session.id, url: session.url });
-    } catch (error) {
-        logger.error('Stripe checkout error:', error);
+    } catch (err) {
+        // ── Enhanced Stripe error logging ───────────────────────────────────
+        // Log every available field so Railway logs show the real failure
+        // (e.g. StripeAuthenticationError, invalid_api_key, bad success_url)
+        // instead of the generic "An error occurred with our connection to Stripe".
+        logger.error('Stripe checkout error', {
+            // Stripe SDK error classification fields
+            type: err.type,
+            code: err.code,
+            statusCode: err.statusCode,
+            message: err.message,
+            rawMessage: err.raw?.message,
+            requestId: err.requestId,
+            stripeRequestId: err.headers?.['stripe-request-id'],
+            // Underlying network / TLS cause (exposes the real cause of
+            // "connection to Stripe" retries, e.g. ECONNREFUSED, CERT_*)
+            causeCode: err.cause?.code,
+            causeMessage: err.cause?.message,
+            // Re-log env-var presence at error time so the cause is co-located
+            // with the error in Railway logs — no secret values exposed
+            hasStripeSecretKey: Boolean(stripeKey),
+            stripeKeyPrefix: stripeKey ? stripeKey.slice(0, 8) : 'not-set',
+            hasOneTimePriceId,
+        });
+        // Stack trace is verbose; only emit it outside production to avoid log noise
+        if (process.env.NODE_ENV !== 'production' && err.stack) {
+            logger.debug('Stripe checkout error stack:', err.stack);
+        }
+        // Return a generic message — never expose internal details to the client
         res.status(500).json({ error: 'Failed to create checkout session.' });
     }
 });
