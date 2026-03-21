@@ -203,6 +203,25 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         priceIdVarUsed = 'none (using inline price_data)';
     }
 
+    // Evaluate debug flag once here so it is available to both the try and catch
+    // blocks without being re-read from env on every log call.
+    // To enable:  set DEBUG_STRIPE=true in Railway Variables (or .env locally).
+    // To disable: remove the variable or set it to any value other than 'true'.
+    // Note: non-production environments (NODE_ENV !== 'production') also enable
+    // debug logging automatically to aid local development, since those
+    // environments are not externally accessible by default.
+    const debugStripe =
+        process.env.DEBUG_STRIPE === 'true' ||
+        process.env.NODE_ENV !== 'production';
+
+    // Emit a per-request confirmation when debug mode is on.  Logging this
+    // once per request (rather than only at startup) lets you cross-reference
+    // each failing checkout attempt in Railway with the exact active flag state,
+    // and immediately rule out "did my env var take effect?" as a question.
+    if (debugStripe) {
+        logger.info('DEBUG_STRIPE runtime=true');
+    }
+
     // Guard: fail fast with a clear server-side message if the key is absent.
     if (!stripeSecretKey) {
         logger.error('Stripe checkout: STRIPE_SECRET_KEY is not set — cannot create session');
@@ -300,6 +319,9 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
                 requestId: err.requestId,
                 causeCode: err.cause?.code,
                 causeMessage: err.cause?.message,
+                causeErrno: err.cause?.errno,
+                causeSyscall: err.cause?.syscall,
+                // Node-level network fields present on low-level errors
                 errno: err.errno,
                 syscall: err.syscall,
                 address: err.address,

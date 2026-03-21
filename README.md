@@ -191,3 +191,32 @@ See [`docs/brand/social-templates.md`](docs/brand/social-templates.md) for the f
 ---
 
 ## 🏗️ Project Structure
+
+
+---
+
+## 🔍 Stripe Checkout Debug Logging
+
+When Stripe checkout sessions fail in production (e.g. "An error occurred with our connection to Stripe"), you can enable verbose diagnostic logging to expose the underlying network/TLS error code.
+
+### Enabling in Railway
+
+1. Open your Railway project → backend service → **Variables**
+2. Add (or update) the variable:
+   ```
+   DEBUG_STRIPE=true
+   ```
+3. Redeploy the service.
+
+Once active, Railway logs will show:
+- `DEBUG_STRIPE runtime=true` — confirms the flag is live in the running container.
+- `Stripe checkout error details` — Stripe SDK fields plus `causeCode`/`causeMessage`.
+- `Stripe checkout error cause:` — full Node.js network error object (code, errno, syscall, stack).
+- `Stripe checkout nested cause [depth=N]:` — walks the full cause chain (e.g. `ETIMEDOUT`, `ENOTFOUND`, `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`).
+- `Stripe TLS smoke-check:` — result of a direct TLS probe to `api.stripe.com`.
+
+### Disabling
+
+Remove the `DEBUG_STRIPE` variable (or set it to any value other than `true`) in Railway and redeploy. No debug logs will appear; the service returns to the default minimal logging.
+
+> ⚠️ **Never log `STRIPE_SECRET_KEY` or full request/session payloads.** The debug logs are designed to expose only error metadata and safe key prefixes (first 7 characters only, e.g. `sk_live_` or `sk_test_`), not actual key material.
