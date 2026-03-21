@@ -155,6 +155,28 @@ router.get('/tiers', paymentsLimiter, (req, res) => {
 // Body: { tier: 'atlas-navigator' | 'atlas-premium', email: string }
 // ─────────────────────────────────────────────────────────────────────────────
 router.post('/checkout', paymentsLimiter, async (req, res) => {
+    // Declared outside try/catch so both blocks can safely reference them for
+    // logging without a ReferenceError if the Stripe call itself throws.
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+    // Support both the canonical name and a legacy variant for backwards compat.
+    const hasOneTimePriceId = Boolean(
+        process.env.STRIPE_ONE_TIME_PRICE_ID || process.env.STRIPE_PRICE_ID
+    );
+    let priceIdVarUsed;
+    if (process.env.STRIPE_ONE_TIME_PRICE_ID) {
+        priceIdVarUsed = 'STRIPE_ONE_TIME_PRICE_ID';
+    } else if (process.env.STRIPE_PRICE_ID) {
+        priceIdVarUsed = 'STRIPE_PRICE_ID (legacy)';
+    } else {
+        priceIdVarUsed = 'none (using inline price_data)';
+    }
+
+    // Guard: fail fast with a clear server-side message if the key is absent.
+    if (!stripeSecretKey) {
+        logger.error('Stripe checkout: STRIPE_SECRET_KEY is not set — cannot create session');
+        return res.status(500).json({ error: 'Payment service configuration error.' });
+    }
+
     try {
         const { tier, email } = req.body;
 
@@ -186,17 +208,12 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         // ── Env-var presence check ──────────────────────────────────────────
         // Log before hitting Stripe so Railway logs expose config problems
         // (missing key, wrong variable name) without leaking secret values.
-        // Declared here so the catch block can reuse the same reference.
-        const stripeKey = process.env.STRIPE_SECRET_KEY;
-        const hasOneTimePriceId = Boolean(process.env.STRIPE_ONE_TIME_PRICE_ID);
-        // STRIPE_ONE_TIME_PRICE_ID is the expected variable name; log its
-        // presence so mismatches between Railway config and code are obvious.
         logger.info('Stripe checkout: pre-call env check', {
-            hasStripeSecretKey: Boolean(stripeKey),
-            // Show only the 8-char prefix (sk_live_ / sk_test_) — no key material
-            stripeKeyPrefix: stripeKey ? stripeKey.slice(0, 8) : 'not-set',
+            hasStripeSecretKey: Boolean(stripeSecretKey),
+            // Show only the 7-char prefix (sk_live_ / sk_test_) — no key material
+            stripeKeyPrefix: stripeSecretKey.slice(0, 7),
             hasOneTimePriceId,
-            priceIdVarUsed: hasOneTimePriceId ? 'STRIPE_ONE_TIME_PRICE_ID' : 'none (using inline price_data)',
+            priceIdVarUsed,
             appUrlSet: Boolean(process.env.APP_URL),
             tier,
         });
@@ -251,8 +268,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             causeMessage: err.cause?.message,
             // Re-log env-var presence at error time so the cause is co-located
             // with the error in Railway logs — no secret values exposed
-            hasStripeSecretKey: Boolean(stripeKey),
-            stripeKeyPrefix: stripeKey ? stripeKey.slice(0, 8) : 'not-set',
+            hasStripeSecretKey: Boolean(stripeSecretKey),
+            stripeKeyPrefix: stripeSecretKey ? stripeSecretKey.slice(0, 7) : 'not-set',
             hasOneTimePriceId,
         });
         // Stack trace is verbose; only emit it outside production to avoid log noise
