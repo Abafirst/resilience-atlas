@@ -11,6 +11,7 @@ RUN npm run build
 FROM node:20-slim
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     python3 \
     make \
     g++ \
@@ -19,7 +20,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
-    libcups2 \
     libdbus-1-3 \
     libexpat1 \
     libgbm1 \
@@ -44,9 +44,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrender1 \
     libxss1 \
     libxtst6 \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
-
+  && update-ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 # Tell Puppeteer to skip downloading its own Chromium bundle and use the
 # system-installed one instead.
 ENV PUPPETEER_SKIP_DOWNLOAD=true
