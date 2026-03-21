@@ -1,5 +1,6 @@
 'use strict';
 
+const https = require('https');
 const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
@@ -8,6 +9,33 @@ const stripe = require('../config/stripe');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
+
+/**
+ * Attempt a HEAD request to https://api.stripe.com and log the outcome.
+ * Helps distinguish TLS verification failures, DNS errors, and network egress
+ * issues without making an authenticated Stripe API call.
+ * Only invoked when DEBUG_STRIPE=true.
+ */
+function runStripeTlsSmokeCheck() {
+    const req = https.request(
+        { hostname: 'api.stripe.com', method: 'HEAD', path: '/', port: 443 },
+        (res) => {
+            logger.info('Stripe TLS smoke-check: connected', { statusCode: res.statusCode });
+            res.resume();
+        }
+    );
+    req.on('error', (e) => {
+        logger.error('Stripe TLS smoke-check: failed', {
+            code: e.code,
+            message: e.message,
+            errno: e.errno,
+            syscall: e.syscall,
+            address: e.address,
+            port: e.port,
+        });
+    });
+    req.end();
+}
 
 /** HTML entities that the sanitisation middleware may encode in user input. */
 const HTML_ENTITY_DECODE_MAP = {
@@ -249,33 +277,47 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
 
         res.json({ sessionId: session.id, url: session.url });
     } catch (err) {
-        // ── Enhanced Stripe error logging ───────────────────────────────────
-        // Log every available field so Railway logs show the real failure
-        // (e.g. StripeAuthenticationError, invalid_api_key, bad success_url)
-        // instead of the generic "An error occurred with our connection to Stripe".
-        logger.error('Stripe checkout error', {
-            // Stripe SDK error classification fields
-            type: err.type,
-            code: err.code,
-            statusCode: err.statusCode,
-            message: err.message,
-            rawMessage: err.raw?.message,
-            requestId: err.requestId,
-            stripeRequestId: err.headers?.['stripe-request-id'],
-            // Underlying network / TLS cause (exposes the real cause of
-            // "connection to Stripe" retries, e.g. ECONNREFUSED, CERT_*)
-            causeCode: err.cause?.code,
-            causeMessage: err.cause?.message,
-            // Re-log env-var presence at error time so the cause is co-located
-            // with the error in Railway logs — no secret values exposed
-            hasStripeSecretKey: Boolean(stripeSecretKey),
-            stripeKeyPrefix: stripeSecretKey ? stripeSecretKey.slice(0, 7) : 'not-set',
-            hasOneTimePriceId,
-        });
-        // Stack trace is verbose; only emit it outside production to avoid log noise
-        if (process.env.NODE_ENV !== 'production' && err.stack) {
-            logger.debug('Stripe checkout error stack:', err.stack);
+        // Always log a minimal summary so the error is visible in every environment.
+        logger.error('Stripe checkout error', { message: err.message });
+
+        // Detailed diagnostic logging — enabled only when DEBUG_STRIPE=true or
+        // outside production so production logs stay clean by default.
+        const debugStripe =
+            process.env.DEBUG_STRIPE === 'true' ||
+            process.env.NODE_ENV !== 'production';
+
+        if (debugStripe) {
+            logger.error('Stripe checkout error details', {
+                // Stripe SDK error classification fields
+                type: err.type,
+                code: err.code,
+                statusCode: err.statusCode,
+                message: err.message,
+                requestId: err.requestId,
+                // Underlying network / TLS cause (exposes the real cause of
+                // "connection to Stripe" retries, e.g. ECONNREFUSED, CERT_*)
+                causeCode: err.cause?.code,
+                causeMessage: err.cause?.message,
+                // Node-level network fields present on low-level errors
+                errno: err.errno,
+                syscall: err.syscall,
+                address: err.address,
+                port: err.port,
+                // Re-log env-var presence at error time — no secret values exposed
+                hasStripeSecretKey: Boolean(stripeSecretKey),
+                stripeKeyPrefix: stripeSecretKey ? stripeSecretKey.slice(0, 7) : 'not-set',
+                hasOneTimePriceId,
+            });
+
+            if (err.stack) {
+                logger.debug('Stripe checkout error stack:', err.stack);
+            }
+
+            // Run a connectivity probe to distinguish TLS / DNS / egress failures.
+            // Intentionally fire-and-forget: diagnostic only, must not delay the response.
+            runStripeTlsSmokeCheck();
         }
+
         // Return a generic message — never expose internal details to the client
         res.status(500).json({ error: 'Failed to create checkout session.' });
     }
