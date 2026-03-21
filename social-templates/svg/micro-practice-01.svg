@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080"
+     role="img" aria-labelledby="mp1-title">
+  <title id="mp1-title">The Resilience Atlas&#8482; &#8212; 2-Minute Practice Template (Variant 1)</title>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="#FAF7F2"/>
+
+  <!-- Compass decoration -->
+  <g opacity="0.06">
+    <circle cx="950" cy="180" r="170"  fill="none" stroke="#0F2436" stroke-width="1.5" stroke-dasharray="7,5"/>
+    <circle cx="950" cy="180" r="93" fill="none" stroke="#0F2436" stroke-width="0.75" stroke-dasharray="3,5"/>
+    <line x1="950"   y1="10" x2="950"   y2="350" stroke="#0F2436" stroke-width="0.75"/>
+    <line x1="780" y1="180"   x2="1120" y2="180"   stroke="#0F2436" stroke-width="0.75"/>
+    <line x1="830" y1="60" x2="1070" y2="300" stroke="#0F2436" stroke-width="0.5"/>
+    <line x1="1070" y1="60" x2="830" y2="300" stroke="#0F2436" stroke-width="0.5"/>
+    <line x1="950"   y1="10"   x2="950"   y2="23"   stroke="#0F2436" stroke-width="3"/>
+    <line x1="950"   y1="337" x2="950"   y2="350"     stroke="#0F2436" stroke-width="3"/>
+    <line x1="780" y1="180"     x2="793" y2="180"     stroke="#0F2436" stroke-width="3"/>
+    <line x1="1107" y1="180"   x2="1120" y2="180"       stroke="#0F2436" stroke-width="3"/>
+    <circle cx="950" cy="180" r="5" fill="#0F2436"/>
+  </g>
+
+  <!-- Top accent strip -->
+  <rect x="0" y="0" width="1080" height="8" fill="#2A9D8F"/>
+  <!-- Left accent rule -->
+  <rect x="0" y="8" width="5" height="944" fill="#2A9D8F" opacity="0.22"/>
+
+  <!-- Pill label -->
+  <rect x="80" y="100" width="296" height="52" rx="26" fill="#2A9D8F"/>
+  <text x="228" y="134" text-anchor="middle" fill="#FFFFFF" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="0.5">2-Minute Practice</text>
+
+  <!-- Main title -->
+  <text x="80" y="262" fill="#0F2436" font-family="'DM Serif Display', Georgia, 'Times New Roman', serif" font-size="72">The 90-Second</text>
+  <text x="80" y="354" fill="#0F2436" font-family="'DM Serif Display', Georgia, 'Times New Roman', serif" font-size="72">Nervous System Reset</text>
+
+  <!-- Accent divider -->
+  <line x1="80" y1="398" x2="540" y2="398" stroke="#2A9D8F" stroke-width="2.5"/>
+
+  <!-- "Try this" label -->
+  <text x="80" y="456" fill="#0F2436" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="24" font-style="italic" opacity="0.6">Try this (under 2 minutes):</text>
+
+  <!-- Bullet points -->
+  <text x="80" y="524" fill="#0F2436" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="30">&#8226; Scan from feet to shoulders slowly</text>
+  <text x="80" y="578" fill="#0F2436" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="30">&#8226; Exhale twice as long as you inhale</text>
+  <text x="80" y="632" fill="#0F2436" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="30">&#8226; Release jaw tension, drop shoulders</text>
+
+  <!-- Atlas coordinate tag -->
+  <text x="80" y="862" fill="#0F2436" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="16" letter-spacing="2.5" opacity="0.20">RESILIENCE COORDINATES</text>
+  <line x1="80" y1="876" x2="360" y2="876" stroke="#0F2436" stroke-width="0.75" opacity="0.15"/>
+
+  <!-- Footer -->
+  <rect x="0" y="952" width="1080" height="128" fill="#091A28"/>
+  <line x1="0" y1="952" x2="1080" y2="952" stroke="#2A9D8F" stroke-width="2.5"/>
+  <text x="80"   y="1030" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" font-weight="600" letter-spacing="0.4">The Resilience Atlas&#8482;</text>
+  <text x="1000" y="1030" text-anchor="end" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="22" opacity="0.75">theresilienceatlas.com</text>
+</svg>
