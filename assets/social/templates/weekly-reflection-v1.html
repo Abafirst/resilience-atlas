@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>Weekly Reflection v1 — The Resilience Atlas</title>
+  <style>
+    
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1080px;
+    overflow: hidden;
+    background: #FAF7F2;
+    color: #0F2436;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+  }
+  .card {
+    position: relative;
+    width: 1080px; height: 1080px;
+    background: #FAF7F2;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .motif {
+    position: absolute;
+    pointer-events: none;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    align-self: flex-start;
+  }
+  .headline {
+    font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    font-size: 58px;
+    line-height: 1.18;
+    color: #0F2436;
+    margin-bottom: 40px;
+    flex-shrink: 0;
+  }
+  .body-text {
+    font-size: 28px;
+    line-height: 1.6;
+    color: #0F2436;
+    flex: 1;
+  }
+  .bullets { list-style: none; padding: 0; }
+  .bullets li {
+    padding-left: 28px;
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 28px;
+    line-height: 1.5;
+  }
+  .bullets li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-size: 28px;
+  }
+  .footer-rule {
+    width: 100%;
+    height: 1px;
+    background: rgba(15,36,54,0.12);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    color: #0F2436;
+    flex-shrink: 0;
+  }
+  .footer span:last-child { opacity: 0.72; }
+
+    .pill { background: #2A9D8F; color: #FFFFFF; }
+    .question-mark {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 180px;
+      color: #2A9D8F;
+      opacity: 0.08;
+      position: absolute;
+      bottom: 110px;
+      right: 60px;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .prompt-line {
+      font-size: 24px;
+      color: #0F2436;
+      opacity: 0.55;
+      margin-top: 36px;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="motif" aria-hidden="true"
+    style="left:40px;bottom:100px;width:320px;height:280px;opacity:0.07;"
+    viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg">
+    <!-- Trail line -->
+    <path d="M 40 240 Q 90 180 160 140 Q 220 100 270 60" fill="none" stroke="#2A9D8F" stroke-width="1.5"/>
+    <!-- Waypoints -->
+    <circle cx="40" cy="240" r="6" fill="#2A9D8F"/>
+    <circle cx="160" cy="140" r="6" fill="#2A9D8F"/>
+    <circle cx="270" cy="60" r="6" fill="#2A9D8F"/>
+    <!-- Secondary waypoints -->
+    <circle cx="40" cy="240" r="12" fill="none" stroke="#2A9D8F" stroke-width="1"/>
+    <circle cx="160" cy="140" r="12" fill="none" stroke="#2A9D8F" stroke-width="1"/>
+    <circle cx="270" cy="60" r="12" fill="none" stroke="#2A9D8F" stroke-width="1"/>
+    <!-- Coordinate tick marks -->
+    <line x1="30" y1="200" x2="50" y2="200" stroke="#2A9D8F" stroke-width="0.8"/>
+    <line x1="30" y1="160" x2="50" y2="160" stroke="#2A9D8F" stroke-width="0.8"/>
+    <line x1="80" y1="270" x2="80" y2="250" stroke="#2A9D8F" stroke-width="0.8"/>
+    <line x1="140" y1="270" x2="140" y2="250" stroke="#2A9D8F" stroke-width="0.8"/>
+  </svg>
+    <div class="question-mark" aria-hidden="true">?</div>
+
+    <span class="pill">Weekly Reflection</span>
+
+    <h1 class="headline">What would a<br>steady version of<br>you do right now?</h1>
+
+    <p class="prompt-line">Pause. Breathe. Answer honestly.</p>
+
+    <div style="flex:1"></div>
+    
+    <div class="footer-rule"></div>
+    <footer class="footer">
+      <span>The Resilience Atlas&#x2122;</span>
+      <span>theresilienceatlas.com</span>
+    </footer>
+  </div>
+</body>
+</html>

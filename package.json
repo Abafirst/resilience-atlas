@@ -8,7 +8,8 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build": "cd client && npm install && npm run build",
-    "dev-open": "fuser -k 3000/tcp 2>/dev/null; nodemon backend/server.js & sleep 3; powershell.exe start http://localhost:3000"
+    "dev-open": "fuser -k 3000/tcp 2>/dev/null; nodemon backend/server.js & sleep 3; powershell.exe start http://localhost:3000",
+    "social:build": "node scripts/render-social.js"
   },
   "dependencies": {
     "@dabh/diagnostics": "2.0.8",
