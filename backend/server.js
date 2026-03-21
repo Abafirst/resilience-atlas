@@ -264,8 +264,8 @@ app.use(globalErrorHandler);
 // ==============================
 
 // PORT is the public-facing port Railway (and Cloudflare) expects the app on.
-// Defaults to 3000. The HTTPS server binds directly to this port so Cloudflare
-// can reach the origin on the standard port without any port-mapping tricks.
+// Defaults to 3000. Both HTTP and HTTPS servers bind to this port so Cloudflare
+// can reach the origin regardless of which SSL mode is active.
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = "0.0.0.0";
 
@@ -305,12 +305,30 @@ if (!process.env.JEST_WORKER_ID) {
       );
     });
   } else {
-    // HTTP fallback for local development / environments without TLS certs.
-    logger.warn(
-      "⚠️  CF_ORIGIN_CERT / CF_ORIGIN_KEY not set — falling back to HTTP"
-    );
-    app.listen(PORT, HOST, () => {
+    // HTTP mode — no TLS certificates configured.  This is the correct setup
+    // for Cloudflare Flexible SSL, where Cloudflare terminates TLS and
+    // connects to the origin over plain HTTP.  Also used for local development.
+    http.createServer(app).listen(PORT, HOST, () => {
       logger.info(`🚀 Server running on http://${HOST}:${PORT} (HTTP)`);
+    });
+
+    // Dedicated health server on port 3001 — mirrors the HTTPS-mode setup so
+    // Railway's healthcheck probe always has a plain-HTTP endpoint regardless
+    // of which SSL mode is active.
+    const HEALTH_PORT = Number(process.env.HEALTH_PORT) || 3001;
+    const healthApp = express();
+    healthApp.get("/health", (req, res) => {
+      res.status(200).json({
+        status: "OK",
+        service: "Resilience Atlas API",
+        database: dbStatus,
+        timestamp: new Date().toISOString(),
+      });
+    });
+    http.createServer(healthApp).listen(HEALTH_PORT, HOST, () => {
+      logger.info(
+        `🩺 Health server running on http://${HOST}:${HEALTH_PORT} (HTTP)`
+      );
     });
   }
 }
