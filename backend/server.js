@@ -263,7 +263,12 @@ app.use(globalErrorHandler);
 // Start Server
 // ==============================
 
+// PORT is the public-facing port Railway exposes for healthchecks and inbound
+// traffic.  When running in HTTPS mode the main app moves to HTTPS_PORT so
+// that the plain-HTTP health server can occupy PORT (3000) — the only port
+// Railway's healthcheck will probe.
 const PORT = Number(process.env.PORT) || 3000;
+const HTTPS_PORT = Number(process.env.HTTPS_PORT) || 3001;
 const HOST = "0.0.0.0";
 
 /* istanbul ignore next */
@@ -272,19 +277,19 @@ if (!process.env.JEST_WORKER_ID) {
   const CF_KEY = process.env.CF_ORIGIN_KEY;
 
   if (CF_CERT && CF_KEY) {
-    // HTTPS mode — use the Cloudflare origin certificate so that Cloudflare's
-    // Full SSL mode can establish a trusted TLS connection to this origin server
-    // without triggering a redirect loop.
+    // HTTPS mode — the main Express app listens on HTTPS_PORT (default 3001)
+    // using the Cloudflare origin certificate so that Cloudflare's Full SSL
+    // mode can establish a trusted TLS connection to this origin server.
     https
       .createServer({ cert: CF_CERT, key: CF_KEY }, app)
-      .listen(PORT, HOST, () => {
-        logger.info(`🚀 Server running on https://${HOST}:${PORT} (HTTPS)`);
+      .listen(HTTPS_PORT, HOST, () => {
+        logger.info(`🚀 Server running on https://${HOST}:${HTTPS_PORT} (HTTPS)`);
       });
 
-    // Dedicated HTTP health server — Railway's healthcheck cannot validate
-    // self-signed / origin TLS certificates, so we expose /health over plain
-    // HTTP on a separate port.  All other traffic remains HTTPS-only.
-    const HEALTH_PORT = Number(process.env.HEALTH_PORT) || 3001;
+    // Dedicated HTTP health server on PORT (default 3000).
+    // Railway's healthcheck always probes http://<host>:PORT/health and cannot
+    // negotiate TLS, so we expose only the /health endpoint over plain HTTP on
+    // this port.  All application traffic is handled by the HTTPS server above.
     const healthApp = express();
     healthApp.get("/health", (_req, res) => {
       res.status(200).json({
@@ -294,9 +299,9 @@ if (!process.env.JEST_WORKER_ID) {
         timestamp: new Date().toISOString(),
       });
     });
-    http.createServer(healthApp).listen(HEALTH_PORT, HOST, () => {
+    http.createServer(healthApp).listen(PORT, HOST, () => {
       logger.info(
-        `🩺 Health server running on http://${HOST}:${HEALTH_PORT} (HTTP)`
+        `🩺 Health server running on http://${HOST}:${PORT} (HTTP)`
       );
     });
   } else {
