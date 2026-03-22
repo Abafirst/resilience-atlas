@@ -408,18 +408,27 @@ describe('CORS middleware', () => {
     jest.resetModules();
   });
 
-  test('allows all origins when CORS_ORIGIN is not set', async () => {
-    const res = await request(app)
+  test('allows default production origins when CORS_ORIGIN is not set', async () => {
+    const freshApp = loadFreshApp();
+    const allowedByDefault = 'https://theresilienceatlas.com';
+    const res = await request(freshApp)
       .get('/health')
-      .set('Origin', ORIGIN_A);
-    // The header must echo back the requested origin (or be absent for wildcard)
-    const acao = res.headers['access-control-allow-origin'];
-    expect([ORIGIN_A, '*', undefined]).toContain(acao);
+      .set('Origin', allowedByDefault);
+    expect(res.headers['access-control-allow-origin']).toBe(allowedByDefault);
+  });
+
+  test('blocks unlisted origins when CORS_ORIGIN is not set', async () => {
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', 'https://untrusted-domain.com');
+    expect(res.headers['access-control-allow-origin']).toBeUndefined();
   });
 
   test('allows all origins when CORS_ORIGIN is "*"', async () => {
     process.env.CORS_ORIGIN = '*';
-    const res = await request(app)
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
       .get('/health')
       .set('Origin', ORIGIN_A);
     const acao = res.headers['access-control-allow-origin'];

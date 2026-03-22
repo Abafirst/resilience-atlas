@@ -61,17 +61,35 @@ app.use(sentry.requestHandler());
 app.use(helmet());
 
 // CORS configuration
-// Support a comma-separated allowlist in CORS_ORIGIN, e.g.:
-//   CORS_ORIGIN=https://www.example.com,https://staging.example.com
-// Unset or "*" → allow all origins (permissive default).
-const corsOriginRaw = process.env.CORS_ORIGIN || "*";
-const corsOrigins =
-  corsOriginRaw === "*"
-    ? "*"
-    : corsOriginRaw.split(",").map((s) => s.trim()).filter(Boolean);
+// Default to a curated list of known safe origins.  Override via a
+// comma-separated CORS_ORIGIN env var, or set CORS_ORIGIN=* to allow all
+// origins (permissive / local-dev shortcut).
+const DEFAULT_ALLOWED_ORIGINS = [
+  "https://theresilienceatlas.com",
+  "https://resilience-atlas-production-e037.up.railway.app",
+  // http is intentional here — localhost is never reached over the public
+  // internet, so there is no credential-leakage risk for local development.
+  "http://localhost:3000",
+];
+
+const corsOriginRaw = process.env.CORS_ORIGIN;
+const corsOrigins = !corsOriginRaw
+  ? DEFAULT_ALLOWED_ORIGINS
+  : corsOriginRaw === "*"
+  ? "*"
+  : corsOriginRaw.split(",").map((s) => s.trim()).filter(Boolean);
+
+logger.info(
+  `✅ CORS allowed origins: ${Array.isArray(corsOrigins) ? corsOrigins.join(", ") : corsOrigins}`
+);
 
 app.use(
   cors({
+    // Using an origin function (rather than the string "*") ensures that
+    // callback(null, true) reflects the actual request origin back to the
+    // browser.  This is required for credentials: true to work correctly —
+    // browsers reject Access-Control-Allow-Origin: * when credentials are
+    // present, but accept a reflected origin value.
     origin: (origin, callback) => {
       // Allow non-browser clients (curl, Postman, server-to-server) that send no Origin header.
       if (!origin) return callback(null, true);
@@ -83,6 +101,7 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
