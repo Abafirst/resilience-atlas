@@ -238,10 +238,14 @@ function sectionHeading(doc, text, y, color) {
 
 function bulletList(doc, items, y, indent) {
     const x = indent || 55;
+    const bulletWidth = 14;
+    const textX = x + bulletWidth;
+    const textWidth = doc.page.width - textX - 40;
     items.forEach((item) => {
-        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(11).text('•', x, y, { continued: true });
+        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(11)
+           .text('•', x, y, { width: bulletWidth, lineBreak: false });
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-           .text('  ' + item, { width: doc.page.width - x - 40 });
+           .text(item, textX, y, { width: textWidth });
         y = doc.y + 3;
     });
     return y;
@@ -249,11 +253,14 @@ function bulletList(doc, items, y, indent) {
 
 function numberedList(doc, items, y, indent) {
     const x = indent || 55;
+    const numWidth = 20;
+    const textX = x + numWidth;
+    const textWidth = doc.page.width - textX - 40;
     items.forEach((item, i) => {
         doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(9.5)
-           .text((i + 1) + '.', x, y, { width: 18, continued: true });
+           .text((i + 1) + '.', x, y, { width: numWidth, lineBreak: false });
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-           .text('  ' + item, { width: doc.page.width - x - 45 });
+           .text(item, textX, y, { width: textWidth });
         y = doc.y + 3;
     });
     return y;
