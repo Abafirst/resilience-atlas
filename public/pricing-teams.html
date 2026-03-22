@@ -367,44 +367,36 @@
 
   <!-- ── Header ─────────────────────────────────────────────────────────────── -->
   <header class="pricing-header">
-    <div class="pricing-header__eyebrow">Flexible Pricing for Every Organization</div>
+    <div class="pricing-header__eyebrow">Simple One-Time Pricing for Every Organization</div>
     <h1 class="pricing-header__title">Transform Your Team's<br/>Resilience — Together</h1>
-    <p class="pricing-header__sub">From emerging startups to global enterprises, we have a plan that grows with you.</p>
-
-    <label class="billing-toggle" id="billing-toggle" aria-label="Toggle annual billing">
-      <span>Monthly</span>
-      <input type="checkbox" id="annual-toggle" />
-      <span class="billing-toggle__knob"></span>
-      <span>Annual <span class="billing-save-badge">Save 17%</span></span>
-    </label>
+    <p class="pricing-header__sub">From emerging startups to global enterprises, we have a plan that grows with you. No subscriptions — pay once and keep access.</p>
   </header>
 
   <!-- ── Plans ──────────────────────────────────────────────────────────────── -->
   <section class="plans-section" id="plans">
     <div class="plans-grid">
 
-      <!-- Teams Starter -->
+      <!-- Atlas Team Basic -->
       <div class="plan-card">
-        <div class="plan-name">Teams Starter</div>
+        <div class="plan-name">Atlas Team Basic</div>
         <div class="plan-tagline">For small teams getting started with resilience</div>
 
         <div class="plan-price">
           <div>
-            <span class="plan-price__amount" id="starter-price">$99</span>
-            <span class="plan-price__period">/month</span>
+            <span class="plan-price__amount">$299</span>
+            <span class="plan-price__period">one-time</span>
           </div>
-          <div class="plan-price__annual-note" id="starter-annual-note" style="display:none">Billed as $999/year</div>
         </div>
 
         <div class="plan-capacity">
-          <span><strong>Up to 25 people</strong></span>
+          <span><strong>Up to 15 people</strong></span>
           <span>1 team</span>
           <span>Data retention: 1 year</span>
         </div>
 
         <button class="plan-cta plan-cta--outline" type="button"
-          onclick="startCheckout('teams-starter')">
-          Get Started
+          onclick="startCheckout('starter')">
+          Get Started — $299
         </button>
 
         <p class="plan-features-label">What's included</p>
@@ -420,32 +412,31 @@
         </ul>
       </div>
 
-      <!-- Teams Pro (Featured) -->
+      <!-- Atlas Team Premium (Featured) -->
       <div class="plan-card plan-card--featured">
         <div class="plan-badge">Most Popular</div>
-        <div class="plan-name">Teams Pro</div>
+        <div class="plan-name">Atlas Team Premium</div>
         <div class="plan-tagline">For growing organizations serious about outcomes</div>
 
         <div class="plan-price">
           <div>
-            <span class="plan-price__amount" id="pro-price">$299</span>
-            <span class="plan-price__period">/month</span>
+            <span class="plan-price__amount">$699</span>
+            <span class="plan-price__period">one-time</span>
           </div>
-          <div class="plan-price__annual-note" id="pro-annual-note" style="display:none">Billed as $2,999/year</div>
         </div>
 
         <div class="plan-capacity">
-          <span><strong>Up to 250 people</strong></span>
+          <span><strong>Up to 30 people</strong></span>
           <span>Unlimited teams / departments</span>
           <span>Data retention: 3 years</span>
         </div>
 
         <button class="plan-cta plan-cta--primary" type="button"
-          onclick="startCheckout('teams-pro')">
-          Start Teams Pro
+          onclick="startCheckout('pro')">
+          Get Started — $699
         </button>
 
-        <p class="plan-features-label">Everything in Starter, plus</p>
+        <p class="plan-features-label">Everything in Basic, plus</p>
         <ul class="plan-features">
           <li class="plus-feature">Advanced analytics (distribution, heatmap)</li>
           <li class="plus-feature">Trend analysis (cycle-over-cycle)</li>
@@ -484,11 +475,11 @@
           <span>Unlimited data retention</span>
         </div>
 
-        <a class="plan-cta plan-cta--dark" href="mailto:enterprise@resilienceatlas.io?subject=Enterprise%20Inquiry">
+        <a class="plan-cta plan-cta--dark" href="/team.html#teamLeadForm">
           Contact Sales
         </a>
 
-        <p class="plan-features-label">Everything in Pro, plus</p>
+        <p class="plan-features-label">Everything in Premium, plus</p>
         <ul class="plan-features">
           <li class="plus-feature">Custom logo &amp; brand colors on dashboard</li>
           <li class="plus-feature">Branded PDF reports with org logo</li>
@@ -513,14 +504,14 @@
       <thead>
         <tr>
           <th style="width:45%">Feature</th>
-          <th>Starter</th>
-          <th>Pro</th>
+          <th>Basic ($299)</th>
+          <th>Premium ($699)</th>
           <th>Enterprise</th>
         </tr>
       </thead>
       <tbody>
         <tr class="category-row"><td colspan="4">Capacity &amp; Access</td></tr>
-        <tr><td>Team members</td><td>Up to 25</td><td>Up to 250</td><td>Unlimited</td></tr>
+        <tr><td>Team members</td><td>Up to 15</td><td>Up to 30</td><td>Unlimited</td></tr>
         <tr><td>Teams / departments</td><td>1</td><td>Unlimited</td><td>Unlimited</td></tr>
         <tr><td>Data retention</td><td>1 year</td><td>3 years</td><td>Unlimited</td></tr>
         <tr><td>Admin access</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
@@ -578,7 +569,7 @@
   <!-- ── Migration Banner ───────────────────────────────────────────────────── -->
   <section class="migration-banner">
     <h2>Already on a Business tier plan?</h2>
-    <p>Existing Business tier customers are automatically grandfathered into <strong>Teams Pro</strong> — no action required. You keep all your existing features plus all new Pro features.</p>
+    <p>Existing Business tier customers are automatically grandfathered into <strong>Atlas Team Premium</strong> — no action required. You keep all your existing features plus all new Premium features.</p>
     <a href="mailto:support@resilienceatlas.io?subject=Business%20Tier%20Migration%20Question"
        style="display:inline-flex;align-items:center;padding:0.625rem 1.25rem;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:0.5rem;font-size:0.875rem;font-weight:500;text-decoration:none">
       Questions? Contact Support →
@@ -590,18 +581,18 @@
     <h2 class="faq-title">Frequently Asked Questions</h2>
 
     <details class="faq-item">
-      <summary>Can I switch plans at any time?</summary>
-      <p>Yes. You can upgrade or downgrade at any time. Upgrades take effect immediately. Downgrades take effect at the end of your current billing period.</p>
+      <summary>Are these one-time payments?</summary>
+      <p>Yes. Atlas Team Basic ($299) and Atlas Team Premium ($699) are one-time purchases — no subscriptions or recurring billing. You pay once and keep access. Enterprise pricing is custom and arranged with our sales team.</p>
     </details>
 
     <details class="faq-item">
-      <summary>What happens to my data if I downgrade?</summary>
-      <p>Your data is never deleted when you downgrade. You'll retain access to your historical assessment results, though some advanced features may become inaccessible until you upgrade again.</p>
+      <summary>Can I upgrade from Basic to Premium?</summary>
+      <p>Yes. You can upgrade from Atlas Team Basic to Atlas Team Premium at any time. Contact support to discuss upgrade pricing. Your data and team settings are carried over automatically.</p>
     </details>
 
     <details class="faq-item">
-      <summary>Is there a free trial?</summary>
-      <p>We offer a 14-day free trial for Teams Starter and Teams Pro. No credit card required to start. Enterprise trials are arranged through our sales team.</p>
+      <summary>Will I receive a confirmation email after purchase?</summary>
+      <p>Yes. A purchase confirmation email is sent to your email address immediately after successful payment. If you don't see it within a few minutes, check your spam folder or contact support.</p>
     </details>
 
     <details class="faq-item">
@@ -621,7 +612,7 @@
 
     <details class="faq-item">
       <summary>Can we migrate from the Business tier?</summary>
-      <p>Existing Business tier customers are automatically migrated to Teams Pro with no disruption. You'll gain access to all new Pro features automatically. Contact support if you have questions.</p>
+      <p>Existing Business tier customers are automatically migrated to Atlas Team Premium with no disruption. You'll gain access to all new Premium features automatically. Contact support if you have questions.</p>
     </details>
   </section>
 
@@ -630,31 +621,15 @@
   <script>
   'use strict';
 
-  // ── Billing Toggle ──────────────────────────────────────────────────────────
-  var isAnnual = false;
-  var toggle = document.getElementById('billing-toggle');
-  var annualToggle = document.getElementById('annual-toggle');
-
-  function updatePricing() {
-    isAnnual = annualToggle.checked;
-    toggle.classList.toggle('annual', isAnnual);
-
-    document.getElementById('starter-price').textContent = isAnnual ? '$83' : '$99';
-    document.getElementById('pro-price').textContent     = isAnnual ? '$249' : '$299';
-
-    document.getElementById('starter-annual-note').style.display = isAnnual ? '' : 'none';
-    document.getElementById('pro-annual-note').style.display     = isAnnual ? '' : 'none';
-  }
-
-  annualToggle.addEventListener('change', updatePricing);
-
   // ── Checkout ────────────────────────────────────────────────────────────────
+  // Atlas Team Basic ('starter') and Atlas Team Premium ('pro') are one-time
+  // purchases processed via Stripe.  Enterprise uses a contact form on team.html.
   function startCheckout(tier) {
     if (window.PaymentGating) {
       window.PaymentGating.startCheckout(tier);
     } else {
-      // Fallback: redirect to checkout page
-      window.location.href = '/quiz.html';
+      // payment-gating.js has not yet loaded — notify the user and let them retry
+      window.alert('Checkout is loading. Please try again in a moment.');
     }
   }
 
