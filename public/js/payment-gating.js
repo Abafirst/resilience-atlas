@@ -187,8 +187,85 @@
     // -- Post-payment verification ---------------------------------------------
 
     /**
+     * Show the page's spinner overlay with an optional message.
+     * Falls back gracefully if the overlay element is not present.
+     */
+    function _showSpinner(text) {
+        var overlay = document.getElementById('spinnerOverlay');
+        var label   = document.getElementById('spinnerText');
+        if (!overlay) return;
+        if (label) label.textContent = text || 'Verifying your payment…';
+        overlay.classList.add('active');
+    }
+
+    /** Hide the page's spinner overlay. */
+    function _hideSpinner() {
+        var overlay = document.getElementById('spinnerOverlay');
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    /**
+     * Show a top-of-page notice banner (info/error/success).
+     * @param {string} msg
+     * @param {'info'|'success'|'error'} type
+     */
+    function _showNoticeBanner(msg, type) {
+        var existing = document.getElementById('paymentNoticeBanner');
+        if (existing) existing.remove();
+
+        var banner = document.createElement('div');
+        banner.id = 'paymentNoticeBanner';
+        banner.setAttribute('role', 'alert');
+        banner.setAttribute('aria-live', 'assertive');
+        banner.style.cssText = [
+            'position:fixed',
+            'top:0',
+            'left:0',
+            'right:0',
+            'z-index:10000',
+            'padding:0.9rem 1.25rem',
+            'font-size:0.95rem',
+            'font-weight:600',
+            'text-align:center',
+            'box-shadow:0 2px 8px rgba(0,0,0,.15)',
+        ].join(';');
+
+        if (type === 'error') {
+            banner.style.background = '#fee2e2';
+            banner.style.color = '#991b1b';
+            banner.style.borderBottom = '2px solid #fca5a5';
+        } else if (type === 'success') {
+            banner.style.background = '#dcfce7';
+            banner.style.color = '#166534';
+            banner.style.borderBottom = '2px solid #86efac';
+        } else {
+            banner.style.background = '#eff6ff';
+            banner.style.color = '#1e40af';
+            banner.style.borderBottom = '2px solid #93c5fd';
+        }
+
+        banner.textContent = msg;
+
+        // Add a dismiss button.
+        var btn = document.createElement('button');
+        btn.setAttribute('aria-label', 'Dismiss');
+        btn.style.cssText = 'margin-left:1rem;background:none;border:none;cursor:pointer;font-size:1.1rem;line-height:1;vertical-align:middle;opacity:.7';
+        btn.textContent = '\u00d7';
+        btn.addEventListener('click', function () { banner.remove(); });
+        banner.appendChild(btn);
+
+        document.body.insertBefore(banner, document.body.firstChild);
+
+        // Auto-dismiss success/info banners after 8 seconds.
+        if (type !== 'error') {
+            setTimeout(function () { if (banner.parentNode) banner.remove(); }, 8000);
+        }
+    }
+
+    /**
      * If the current URL contains ?upgrade=success&session_id=<id>, call the
      * backend to verify the session, persist the tier, then clean the URL.
+     * Shows a spinner while verifying and clear feedback on success or failure.
      */
     async function handleUpgradeSuccess() {
         const params    = new URLSearchParams(window.location.search);
@@ -199,16 +276,25 @@
         const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'atlas-navigator' || upgrade === 'atlas-premium') && sessionId;
 
         if (!isUpgradeRedirect) {
-            // Show cancelled notice if needed.
+            // Show a notice when the user cancelled their payment.
             if (upgrade === 'cancelled') {
                 _cleanUrl();
+                _showNoticeBanner(
+                    'Your payment was cancelled. You can upgrade any time to unlock your full report.',
+                    'info'
+                );
             }
             return;
         }
 
+        // Show a loading indicator so users know verification is in progress
+        // and don't click the download button prematurely.
+        _showSpinner('Verifying your payment…');
+
         try {
             var res  = await fetch('/api/payments/verify?session_id=' + encodeURIComponent(sessionId));
             var data = await res.json();
+
             if (data.success && data.tier) {
                 setTier(data.tier);
                 if (data.email) {
@@ -227,9 +313,27 @@
                 }
                 _showSuccessBanner(data.tier);
                 applyGating();
+                // Notify other scripts (e.g. results.js) that access is now unlocked.
+                document.dispatchEvent(new CustomEvent('paymentVerified', {
+                    detail: { tier: data.tier, email: data.email },
+                }));
+            } else if (!res.ok || (data && !data.success)) {
+                // Payment verification returned a non-success response.
+                var reason = (data && data.error) ? data.error : 'Payment could not be verified.';
+                console.warn('[PaymentGating] Verification returned non-success:', reason);
+                _showNoticeBanner(
+                    'We could not confirm your payment access. Please refresh the page or contact support if the issue persists.',
+                    'error'
+                );
             }
         } catch (err) {
             console.error('[PaymentGating] Verification failed:', err);
+            _showNoticeBanner(
+                'There was a problem verifying your payment. Please refresh the page — if you completed payment your access will be restored. Contact support if the issue continues.',
+                'error'
+            );
+        } finally {
+            _hideSpinner();
         }
 
         _cleanUrl();

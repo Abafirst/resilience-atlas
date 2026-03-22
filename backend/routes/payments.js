@@ -283,6 +283,9 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             ],
             mode: 'payment',
             customer_email: cleanEmail,
+            // Do not collect phone numbers — we don't need them and they add
+            // unnecessary friction to the checkout flow.
+            phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
             success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
