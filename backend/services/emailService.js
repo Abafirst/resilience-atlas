@@ -21,6 +21,8 @@ const { buildTeamInvitationEmail }     = require('../templates/emails/teamInvita
 const { buildGrowthMilestoneEmail }    = require('../templates/emails/growthMilestone');
 const { referralWelcome }              = require('../templates/emails/referralWelcome');
 const { referralThankYou }             = require('../templates/emails/referralThankYou');
+const { buildTeamPurchaseConfirmationEmail } = require('../templates/emails/teamPurchaseConfirmation');
+const { wrapEmail } = require('../templates/emails/base');
 
 /* ── Transport ─────────────────────────────────────────────────────────────── */
 
@@ -318,6 +320,75 @@ async function sendPdfReport(to, pdfBuffer) {
   }
 }
 
+/**
+ * Send a purchase confirmation email to a Teams package buyer.
+ * Called after successful payment for Atlas Team Basic or Atlas Team Premium.
+ * No admin notification is sent — these are fully self-serve.
+ *
+ * @param {string} to
+ * @param {Object} vars  { planName, planPrice, email, dashboardUrl }
+ */
+async function sendTeamPurchaseConfirmation(to, vars) {
+  const emailObj = buildTeamPurchaseConfirmationEmail(vars);
+  return _send(to, emailObj);
+}
+
+/**
+ * Send an admin notification when an Atlas Team Enterprise inquiry is received.
+ * Only invoked for Enterprise — Basic and Premium are fully self-serve.
+ *
+ * @param {string} to         Admin / site-owner email address
+ * @param {Object} vars       { contactName, companyName, email, teamSize, message }
+ */
+async function sendTeamEnterpriseAdminNotification(to, vars) {
+  const {
+    contactName  = '',
+    companyName  = '',
+    email        = '',
+    teamSize     = '',
+    message      = '',
+  } = vars;
+
+  const lines = [
+    `Name:         ${contactName}`,
+    `Company:      ${companyName}`,
+    `Email:        ${email}`,
+    `Team size:    ${teamSize || 'Not specified'}`,
+    `Message:      ${message || '(none)'}`,
+  ];
+
+  const bodyHtml = `
+    <h2 style="margin:0 0 12px;font-size:20px;">&#128279; New Atlas Team Enterprise Inquiry</h2>
+    <p style="margin:0 0 16px;font-size:14px;color:#475569;">
+      A new Enterprise inquiry has been submitted via the team page.
+    </p>
+    <table width="100%" cellpadding="6" cellspacing="0" border="0"
+           style="font-size:14px;border-collapse:collapse;margin-bottom:24px;">
+      ${[
+        ['Name',      contactName],
+        ['Company',   companyName],
+        ['Email',     `<a href="mailto:${email}">${email}</a>`],
+        ['Team size', teamSize || 'Not specified'],
+        ['Message',   message  || '(none)'],
+      ].map(([label, val]) => `
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="font-weight:700;color:#1a3a5c;width:120px;padding:8px 12px;">${label}</td>
+          <td style="color:#334155;padding:8px 12px;">${val}</td>
+        </tr>`).join('')}
+    </table>
+    <p style="font-size:13px;color:#64748b;">
+      Reply directly to <a href="mailto:${email}">${email}</a> to respond.
+    </p>`;
+
+  const emailObj = {
+    subject: `New Enterprise Inquiry — ${companyName || contactName || 'Unknown'}`,
+    html: wrapEmail(bodyHtml, 'Atlas Team Enterprise Inquiry'),
+    text: ['Atlas Team Enterprise Inquiry', '='.repeat(40), ...lines].join('\n'),
+  };
+
+  return _send(to, emailObj);
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -331,6 +402,10 @@ module.exports = {
   sendTeamInvitation,
   sendGrowthMilestone,
   sendInvitationReminder,
+
+  /* Teams package emails */
+  sendTeamPurchaseConfirmation,
+  sendTeamEnterpriseAdminNotification,
 
   /* Referral program */
   sendReferralWelcome,

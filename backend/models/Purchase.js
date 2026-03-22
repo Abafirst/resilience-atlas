@@ -30,8 +30,13 @@ const purchaseSchema = new mongoose.Schema(
 
         tier: {
             type: String,
-            enum: ['atlas-navigator', 'atlas-premium'],
+            enum: ['atlas-navigator', 'atlas-premium', 'starter', 'pro', 'enterprise'],
             required: true,
+        },
+
+        confirmationEmailSent: {
+            type: Boolean,
+            default: false,
         },
 
         amount: {

@@ -9,6 +9,7 @@ const stripe = require('../config/stripe');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
+const emailService = require('../services/emailService');
 
 // One-time log at module load so Railway logs show the diagnostic state of the
 // running container.  Safe: no secrets — only reflects whether the flag is set.
@@ -58,6 +59,16 @@ const TIERS = {
     'atlas-premium': {
         name: 'Atlas Premium',
         amount: 4999, // $49.99
+        currency: 'usd',
+    },
+    'starter': {
+        name: 'Atlas Team Basic',
+        amount: 29900, // $299 one-time
+        currency: 'usd',
+    },
+    'pro': {
+        name: 'Atlas Team Premium',
+        amount: 69900, // $699 one-time
         currency: 'usd',
     },
 };
@@ -234,7 +245,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be one of: atlas-navigator, atlas-premium.' });
+                .json({ error: 'Invalid tier. Must be one of: atlas-navigator, atlas-premium, starter, pro.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
@@ -287,8 +298,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             // unnecessary friction to the checkout flow.
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
-            success_url: `${appUrl}/results.html?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/results.html?upgrade=cancelled`,
+            success_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results.html'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results.html'}?upgrade=cancelled`,
         });
 
         // Record pending purchase so the webhook can update it later.
@@ -402,12 +413,23 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
         const tier = session.metadata?.tier;
         const email = (session.customer_email || session.metadata?.email || '').toLowerCase();
 
-        // Mark purchase as completed.
-        await Purchase.findOneAndUpdate(
-            { stripeSessionId: session_id },
-            { status: 'completed', purchasedAt: new Date() },
-            { upsert: false }
+        // Mark purchase as completed and atomically claim the email send slot.
+        // If confirmationEmailSent was already true (e.g. webhook fired first),
+        // purchase will be null and we skip sending a duplicate email.
+        const purchase = await Purchase.findOneAndUpdate(
+            { stripeSessionId: session_id, confirmationEmailSent: { $ne: true } },
+            { status: 'completed', purchasedAt: new Date(), confirmationEmailSent: true },
+            { upsert: false, new: true }
         );
+
+        // If the email was already sent (purchase is null), still ensure status is current.
+        if (!purchase) {
+            await Purchase.findOneAndUpdate(
+                { stripeSessionId: session_id },
+                { status: 'completed', purchasedAt: new Date() },
+                { upsert: false }
+            );
+        }
 
         // Update user record if they have a registered account.
         if (email) {
@@ -419,6 +441,20 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
             await User.findOneAndUpdate({ email }, updateFields, { upsert: false }).catch(
                 (err) => logger.warn('User update skipped:', err.message)
             );
+        }
+
+        // Send confirmation email for team tiers (Basic/Premium) — self-serve only.
+        // The purchase variable is non-null only when we are the first to mark
+        // confirmationEmailSent = true, preventing duplicate sends with webhook.
+        const isTeamTier = tier === 'starter' || tier === 'pro';
+        if (isTeamTier && email && purchase) {
+            const tierConfig = TIERS[tier] || {};
+            const priceInDollars = tierConfig.amount ? `$${(tierConfig.amount / 100).toFixed(0)}` : '';
+            emailService.sendTeamPurchaseConfirmation(email, {
+                planName:  tierConfig.name || tier,
+                planPrice: priceInDollars,
+                email,
+            }).catch((err) => logger.warn('[payments/verify] Confirmation email failed:', err.message));
         }
 
         res.json({ success: true, tier, email });
@@ -500,16 +536,28 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
             ).toLowerCase();
             const status = session.payment_status === 'paid' ? 'completed' : 'pending';
 
-            await Purchase.findOneAndUpdate(
-                { stripeSessionId: session.id },
-                {
-                    status,
-                    ...(status === 'completed' ? { purchasedAt: new Date() } : {}),
-                    // Upsert fallback: if webhook arrives before checkout record exists.
-                    $setOnInsert: { email, tier, amount: 0, currency: 'usd' },
-                },
-                { upsert: true }
-            );
+            // Upsert the purchase record.  Use a conditional update to atomically
+            // set confirmationEmailSent only when transitioning to completed for the
+            // first time — prevents duplicate emails if both webhook and verify fire.
+            const webhookPurchase = status === 'completed'
+                ? await Purchase.findOneAndUpdate(
+                    { stripeSessionId: session.id, confirmationEmailSent: { $ne: true } },
+                    {
+                        status,
+                        purchasedAt: new Date(),
+                        confirmationEmailSent: true,
+                        $setOnInsert: { email, tier, amount: 0, currency: 'usd' },
+                    },
+                    { upsert: true, new: true }
+                )
+                : await Purchase.findOneAndUpdate(
+                    { stripeSessionId: session.id },
+                    {
+                        status,
+                        $setOnInsert: { email, tier, amount: 0, currency: 'usd' },
+                    },
+                    { upsert: true }
+                );
 
             if (status === 'completed' && email) {
                 const updateFields =
@@ -524,6 +572,20 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
                 await User.findOneAndUpdate({ email }, updateFields, { upsert: false }).catch(
                     (err) => logger.warn('Webhook user update skipped:', err.message)
                 );
+
+                // Send purchase confirmation email for team tiers (Basic/Premium).
+                // webhookPurchase is non-null only when this webhook is the first to
+                // set confirmationEmailSent = true, preventing duplicate sends.
+                const isTeamTier = tier === 'starter' || tier === 'pro';
+                if (isTeamTier && webhookPurchase) {
+                    const tierConfig = TIERS[tier] || {};
+                    const priceInDollars = tierConfig.amount ? `$${(tierConfig.amount / 100).toFixed(0)}` : '';
+                    emailService.sendTeamPurchaseConfirmation(email, {
+                        planName:  tierConfig.name || tier,
+                        planPrice: priceInDollars,
+                        email,
+                    }).catch((err) => logger.warn('[payments/webhook] Confirmation email failed:', err.message));
+                }
             }
         }
 
