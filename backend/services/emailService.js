@@ -4,12 +4,19 @@
  * emailService.js — Centralised email sending for The Resilience Atlas™.
  *
  * All outgoing emails use the branded HTML templates in
- * backend/templates/emails/ and are sent via Nodemailer (Yahoo SMTP by default,
- * but any SMTP provider works by setting SMTP_* environment variables).
+ * backend/templates/emails/ and are sent via SendGrid (when SENDGRID_API_KEY
+ * is set) or Nodemailer (Yahoo SMTP by default, but any SMTP provider works
+ * by setting SMTP_* environment variables) as a fallback.
  */
 
 const nodemailer = require('nodemailer');
+const sgMail     = require('@sendgrid/mail');
 const logger     = require('../utils/logger');
+
+// Configure SendGrid when an API key is available.
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 const { buildAssessmentResultsEmail } = require('../templates/emails/assessmentResults');
 const { buildReportReadyEmail }        = require('../templates/emails/reportReady');
@@ -64,11 +71,32 @@ const FROM = process.env.EMAIL_FROM || process.env.YAHOO_EMAIL || 'noreply@resil
  * Send an email using the pre-built { subject, html, text } object returned
  * by a template builder function.
  *
+ * Uses SendGrid when SENDGRID_API_KEY is set; falls back to Nodemailer.
+ *
  * @param {string}  to         Recipient address
  * @param {{ subject: string, html: string, text: string }} emailObj
- * @returns {Promise<Object>}  Nodemailer info object
+ * @returns {Promise<Object>}  SendGrid response or Nodemailer info object
  */
 async function _send(to, emailObj) {
+  if (process.env.SENDGRID_API_KEY) {
+    const msg = {
+      to,
+      from:    FROM,
+      subject: emailObj.subject,
+      html:    emailObj.html,
+      text:    emailObj.text,
+    };
+    try {
+      const [response] = await sgMail.send(msg);
+      logger.info(`[emailService] Email "${emailObj.subject}" sent to ${to} via SendGrid — statusCode: ${response.statusCode}`);
+      return response;
+    } catch (err) {
+      logger.error(`[emailService] SendGrid send failed for "${emailObj.subject}" to ${to}: ${err.message}`, { stack: err.stack });
+      throw err;
+    }
+  }
+
+  // Fallback: Nodemailer
   const mailOptions = {
     from:    FROM,
     to,
