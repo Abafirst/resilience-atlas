@@ -13,6 +13,7 @@
   'use strict';
 
   const BASE_URL = window.location.origin;
+  const INSTAGRAM_PROFILE = 'https://www.instagram.com/atlas.resilience/';
 
   /* ── Helpers ───────────────────────────────────────────── */
 
@@ -78,6 +79,21 @@
       const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
       window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
       trackShareEvent('twitter', dominantDimension);
+    },
+
+    /**
+     * Instagram share guidance — downloads the radar image and shows
+     * instructions to post and tag @atlas.resilience.
+     * (Instagram does not support direct web-based sharing.)
+     * @param {string} dominantDimension
+     */
+    shareInstagram(dominantDimension) {
+      this.downloadRadarImage();
+      showToast(
+        'Image downloading! Post it on Instagram and tag @atlas.resilience \u2014 ' +
+        'or visit ' + INSTAGRAM_PROFILE
+      );
+      trackShareEvent('instagram', dominantDimension);
     },
 
     /**
@@ -148,6 +164,11 @@
       const btnTwitter = document.getElementById('btnShareTwitter');
       if (btnTwitter) {
         btnTwitter.addEventListener('click', () => this.shareTwitter(dim));
+      }
+
+      const btnInstagram = document.getElementById('btnShareInstagram');
+      if (btnInstagram) {
+        btnInstagram.addEventListener('click', () => this.shareInstagram(dim));
       }
 
       const btnCopy = document.getElementById('btnShareCopy');

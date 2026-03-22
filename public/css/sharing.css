@@ -78,6 +78,11 @@
   border-color: #a7f3d0;
 }
 
+.btn-share-instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+}
+
 .btn-share-download {
   background: #4F46E5;
   color: #fff;
@@ -173,6 +178,23 @@
   color: #059669;
   font-weight: 600;
   min-height: 1.3em;
+}
+
+/* ── Instagram hint ───────────────────────────────────────── */
+.share-instagram-hint {
+  font-size: .82rem;
+  color: #64748b;
+  margin-top: .5rem;
+}
+
+.share-instagram-hint a {
+  color: #bc1888;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.share-instagram-hint a:hover {
+  text-decoration: underline;
 }
 
 /* ── Download Toast ───────────────────────────────────────── */
