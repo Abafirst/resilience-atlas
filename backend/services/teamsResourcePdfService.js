@@ -279,17 +279,17 @@ function generateWorkshopGuide(doc, dim) {
     y = doc.y + 18;
 
     // Key Practices
-    y = sectionHeading(doc, '🔑  Key Practices for ' + d.label + ' Resilience', y, d.color);
+    y = sectionHeading(doc, 'Key Practices for ' + d.label + ' Resilience', y, d.color);
     y = bulletList(doc, d.practices, y + 4);
     y += 14;
 
     // Discussion Prompts
-    y = sectionHeading(doc, '💬  Discussion Prompts', y, d.color);
+    y = sectionHeading(doc, 'Discussion Prompts', y, d.color);
     y = numberedList(doc, d.discussion, y + 4);
     y += 14;
 
     // Activities
-    y = sectionHeading(doc, '🎯  Suggested Activities', y, d.color);
+    y = sectionHeading(doc, 'Suggested Activities', y, d.color);
     d.activities.forEach((act) => {
         doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9.5)
            .text(act.name + '  ', 55, y, { continued: true });
@@ -303,7 +303,7 @@ function generateWorkshopGuide(doc, dim) {
     y += 10;
 
     // Facilitator Tips
-    y = sectionHeading(doc, '📋  Facilitator Tips', y, d.color);
+    y = sectionHeading(doc, 'Facilitator Tips', y, d.color);
     const tips = [
         'Always open with a grounding moment or brief check-in (2–3 minutes).',
         'Model the behavior you want — be the first to share vulnerably.',
@@ -315,7 +315,7 @@ function generateWorkshopGuide(doc, dim) {
     y += 14;
 
     // Reflection Questions
-    y = sectionHeading(doc, '🪞  Closing Reflection', y, d.color);
+    y = sectionHeading(doc, 'Closing Reflection', y, d.color);
     const reflections = [
         'What was the most valuable insight from today\'s session?',
         'What one thing will you do differently this week?',
@@ -340,7 +340,7 @@ function generateTeamResilienceSnapshot(doc) {
     y = doc.y + 18;
 
     // Team info fields
-    y = sectionHeading(doc, '📋  Team Information', y);
+    y = sectionHeading(doc, 'Team Information', y);
     const fields = ['Team Name:', 'Facilitator:', 'Assessment Date:', 'Program Phase:  □ Pre   □ Mid   □ Post'];
     fields.forEach((f) => {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(f, 55, y);
@@ -350,7 +350,7 @@ function generateTeamResilienceSnapshot(doc) {
     y += 10;
 
     // Dimension scores table
-    y = sectionHeading(doc, '📊  Dimension Score Summary', y);
+    y = sectionHeading(doc, 'Dimension Score Summary', y);
     y += 6;
     const dims = Object.entries(DIMENSIONS);
     dims.forEach(([key, d]) => {
@@ -367,7 +367,7 @@ function generateTeamResilienceSnapshot(doc) {
     y += 10;
 
     // Strengths & Growth
-    y = sectionHeading(doc, '🌟  Top 3 Team Strengths', y);
+    y = sectionHeading(doc, 'Top 3 Team Strengths', y);
     for (let i = 1; i <= 3; i++) {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(i + '.', 55, y);
         doc.moveTo(68, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
@@ -375,7 +375,7 @@ function generateTeamResilienceSnapshot(doc) {
     }
     y += 8;
 
-    y = sectionHeading(doc, '🎯  Top 3 Growth Priorities', y);
+    y = sectionHeading(doc, 'Top 3 Growth Priorities', y);
     for (let i = 1; i <= 3; i++) {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(i + '.', 55, y);
         doc.moveTo(68, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
@@ -384,7 +384,7 @@ function generateTeamResilienceSnapshot(doc) {
     y += 8;
 
     // Commitments
-    y = sectionHeading(doc, '✅  Key Commitments for Next 30 Days', y);
+    y = sectionHeading(doc, 'Key Commitments for Next 30 Days', y);
     for (let i = 0; i < 3; i++) {
         doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8)
            .text('Owner: ________________    By: ________________    Action:', 55, y);
@@ -410,7 +410,7 @@ function generateHabitTracker(doc) {
     y = doc.y + 16;
 
     // Habit selection
-    y = sectionHeading(doc, '🎯  My Habits for This Month', y, COLORS.dimension.action);
+    y = sectionHeading(doc, 'My Habits for This Month', y, COLORS.dimension.action);
     const habitLabels = ['Habit 1:', 'Habit 2:', 'Habit 3:'];
     habitLabels.forEach((h) => {
         doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9.5).text(h, 55, y);
@@ -420,7 +420,7 @@ function generateHabitTracker(doc) {
     y += 10;
 
     // Calendar grid
-    y = sectionHeading(doc, '📅  30-Day Tracking Grid', y, COLORS.dimension.action);
+    y = sectionHeading(doc, '30-Day Tracking Grid', y, COLORS.dimension.action);
     y += 8;
 
     const boxSize = 22;
@@ -439,13 +439,13 @@ function generateHabitTracker(doc) {
         // Milestone markers
         if (day === 7 || day === 14 || day === 21 || day === 30) {
             doc.fillColor(COLORS.dimension.action).font(FONT_BOLD).fontSize(6)
-               .text('🌟', x + 2, boxY + boxSize + 1, { width: boxSize });
+               .text('*', x + 2, boxY + boxSize + 1, { width: boxSize });
         }
     }
     y += 3 * (boxSize + 4) + 24;
 
     // Reflection prompts
-    y = sectionHeading(doc, '🪞  Weekly Reflection Prompts', y, COLORS.dimension.action);
+    y = sectionHeading(doc, 'Weekly Reflection Prompts', y, COLORS.dimension.action);
     const prompts = [
         'Week 1: What\'s making this habit easier or harder than expected?',
         'Week 2: What have you noticed about your energy or resilience this week?',
@@ -475,7 +475,7 @@ function generateActionPlanningWorksheet(doc) {
     y = doc.y + 18;
 
     // Session info
-    y = sectionHeading(doc, '📋  Session Information', y);
+    y = sectionHeading(doc, 'Session Information', y);
     ['Session Date:', 'Dimension Focus:', 'Facilitator:', 'Attendees:'].forEach((label) => {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(label, 55, y);
         doc.moveTo(145, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
@@ -484,7 +484,7 @@ function generateActionPlanningWorksheet(doc) {
     y += 8;
 
     // Key insights
-    y = sectionHeading(doc, '💡  Key Insights from This Session', y);
+    y = sectionHeading(doc, 'Key Insights from This Session', y);
     doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8.5)
        .text('What did we learn? What shifted? What surprised us?', 55, y + 4);
     y = doc.y + 6;
@@ -495,7 +495,7 @@ function generateActionPlanningWorksheet(doc) {
     y += 10;
 
     // Action items table
-    y = sectionHeading(doc, '✅  Action Items', y);
+    y = sectionHeading(doc, 'Action Items', y);
     y += 6;
     // Table header
     doc.rect(40, y, doc.page.width - 80, 18).fill(COLORS.accent + '22');
@@ -516,7 +516,7 @@ function generateActionPlanningWorksheet(doc) {
     y += 10;
 
     // Follow-up
-    y = sectionHeading(doc, '📅  Next Session Planning', y);
+    y = sectionHeading(doc, 'Next Session Planning', y);
     ['Next session date:', 'Topic / dimension focus:', 'Pre-work for team members:'].forEach((label) => {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(label, 55, y);
         doc.moveTo(195, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
@@ -537,19 +537,19 @@ function generateDiscussionPromptSheets(doc) {
         let y = 108;
 
         // Warm-up prompts
-        y = sectionHeading(doc, '🌡️  Warm-Up Prompts (Low Risk)', y, d.color);
+        y = sectionHeading(doc, 'Warm-Up Prompts (Low Risk)', y, d.color);
         const warmUp = d.discussion.slice(0, 2);
         y = numberedList(doc, warmUp, y + 4);
         y += 12;
 
         // Explore prompts
-        y = sectionHeading(doc, '🔍  Explore Prompts (Medium Depth)', y, d.color);
+        y = sectionHeading(doc, 'Explore Prompts (Medium Depth)', y, d.color);
         const explore = d.discussion.slice(2, 4);
         y = numberedList(doc, explore, y + 4);
         y += 12;
 
         // Deepen prompts
-        y = sectionHeading(doc, '🌊  Deepen Prompts (High Trust Required)', y, d.color);
+        y = sectionHeading(doc, 'Deepen Prompts (High Trust Required)', y, d.color);
         const deepen = d.discussion.slice(4);
         y = numberedList(doc, deepen, y + 4);
         y += 16;
@@ -558,7 +558,7 @@ function generateDiscussionPromptSheets(doc) {
         doc.rect(40, y, doc.page.width - 80, 50)
            .fill(d.color + '12');
         doc.fillColor(d.color).font(FONT_BOLD).fontSize(9)
-           .text('🛡️  Psychological Safety Reminder', 52, y + 8);
+           .text('Psychological Safety Reminder', 52, y + 8);
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(8.5)
            .text(
                'Always obtain group consent before moving to deeper prompts. ' +
@@ -586,7 +586,7 @@ function generateReflectionJournal(doc) {
     y = doc.y + 18;
 
     // Weekly check-in template
-    y = sectionHeading(doc, '📅  Weekly Check-In Template', y);
+    y = sectionHeading(doc, 'Weekly Check-In Template', y);
     const weeklyItems = [
         'This week I felt most resilient when:',
         'A challenge I navigated this week:',
@@ -612,17 +612,17 @@ function generateReflectionJournal(doc) {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(d.description, 40, y, { width: doc.page.width - 80 });
         y = doc.y + 16;
 
-        y = sectionHeading(doc, '🪞  Reflection Questions', y, d.color);
+        y = sectionHeading(doc, 'Reflection Questions', y, d.color);
         y = numberedList(doc, d.discussion, y + 4);
         y += 14;
 
-        y = sectionHeading(doc, '✍️  My Notes', y, d.color);
+        y = sectionHeading(doc, 'My Notes', y, d.color);
         for (let i = 0; i < 8; i++) {
             doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
             y += 20;
         }
 
-        y = sectionHeading(doc, '🎯  My Commitment for This Dimension', y + 6, d.color);
+        y = sectionHeading(doc, 'My Commitment for This Dimension', y + 6, d.color);
         doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
         doc.moveTo(55, y + 28).lineTo(doc.page.width - 40, y + 28).stroke(COLORS.border);
 
@@ -638,17 +638,17 @@ function generateReflectionJournal(doc) {
         doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(d.description, 40, y, { width: doc.page.width - 80 });
         y = doc.y + 16;
 
-        y = sectionHeading(doc, '🪞  Reflection Questions', y, d.color);
+        y = sectionHeading(doc, 'Reflection Questions', y, d.color);
         y = numberedList(doc, d.discussion, y + 4);
         y += 14;
 
-        y = sectionHeading(doc, '✍️  My Notes', y, d.color);
+        y = sectionHeading(doc, 'My Notes', y, d.color);
         for (let i = 0; i < 8; i++) {
             doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
             y += 20;
         }
 
-        y = sectionHeading(doc, '🎯  My Commitment for This Dimension', y + 6, d.color);
+        y = sectionHeading(doc, 'My Commitment for This Dimension', y + 6, d.color);
         doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
         doc.moveTo(55, y + 28).lineTo(doc.page.width - 40, y + 28).stroke(COLORS.border);
 
@@ -671,7 +671,7 @@ function generatePsychSafetyChecklist(doc) {
 
     const sections = [
         {
-            title: '🏠  Environment Check (Pre-Session)',
+            title: 'Environment Check (Pre-Session)',
             items: [
                 '□  Private, distraction-free space confirmed (or breakout rooms set for virtual)',
                 '□  Team notified of session agenda and voluntary nature of sharing',
@@ -681,7 +681,7 @@ function generatePsychSafetyChecklist(doc) {
             ],
         },
         {
-            title: '🤝  Relationship Check',
+            title: 'Relationship Check',
             items: [
                 '□  Any unresolved tension between team members that needs addressing first?',
                 '□  Is there a dominant voice/personality that may need gentle redirection?',
@@ -691,7 +691,7 @@ function generatePsychSafetyChecklist(doc) {
             ],
         },
         {
-            title: '⚠️  Warning Signs to Watch For',
+            title: 'Warning Signs to Watch For',
             items: [
                 '□  Sarcasm or minimizing of others\' contributions → Pause and redirect',
                 '□  Visible discomfort or withdrawal → Check in privately at break',
@@ -701,7 +701,7 @@ function generatePsychSafetyChecklist(doc) {
             ],
         },
         {
-            title: '🛠️  Quick Interventions',
+            title: 'Quick Interventions',
             items: [
                 'Energy low: "Let\'s take a 3-minute stretch break."',
                 'Someone shuts down: "It\'s completely fine to observe today."',
@@ -740,23 +740,23 @@ function generateKickoffScript(doc) {
 
     const scriptSections = [
         {
-            title: '🚀  Opening (2 minutes)',
+            title: 'Opening (2 minutes)',
             script: '"Welcome, everyone. I\'m really glad we\'re here together today. This session is part of our team\'s commitment to building something really important — resilience. Not just individual resilience, but our capacity as a team to face challenges, learn, and grow together."',
         },
         {
-            title: '🌐  Frame the Work (3 minutes)',
+            title: 'Frame the Work (3 minutes)',
             script: '"The Resilience Atlas helps us understand resilience through six dimensions — Connection, Thinking, Action, Feeling, Hope, and Meaning. You\'ve already taken the individual assessment. Today we start using those insights as a team. We\'ll look at our collective strengths and the areas where we have the most to gain."',
         },
         {
-            title: '🛡️  Set Ground Rules (3 minutes)',
+            title: 'Set Ground Rules (3 minutes)',
             script: '"Before we dive in, let\'s agree on a few norms that make this work well: First, everything shared here stays here — what happens in this room is confidential. Second, participation is always optional — you can pass on any prompt. Third, we\'re here to learn, not to evaluate. There are no right answers. Can everyone agree to those?"',
         },
         {
-            title: '🎯  First Activity: Check-In (5 minutes)',
+            title: 'First Activity: Check-In (5 minutes)',
             script: '"Let\'s start with a simple check-in. On a scale of 1-10, how are you showing up today — and share one word that describes your current state. I\'ll go first..." [Model it.] "...Now let\'s go around the room."',
         },
         {
-            title: '📋  Transition to Content (1 minute)',
+            title: 'Transition to Content (1 minute)',
             script: '"Thank you for that honesty. Now let\'s look at what the data tells us about our team\'s resilience profile. I want you to approach this with curiosity rather than judgment — this is a starting point, not a verdict."',
         },
     ];
@@ -770,7 +770,7 @@ function generateKickoffScript(doc) {
     });
 
     // Closing notes
-    y = sectionHeading(doc, '💡  Facilitator Notes', y);
+    y = sectionHeading(doc, 'Facilitator Notes', y);
     const notes = [
         'Speak slowly — you\'re setting the tone, not delivering information.',
         'Make eye contact with as many people as possible during the opening.',
@@ -915,7 +915,7 @@ function generateSMARTGoalWorksheet(doc) {
         { letter: 'T', word: 'Time-bound', desc: 'What is your specific deadline or timeframe?' },
     ];
 
-    y = sectionHeading(doc, '📖  The SMART Framework', y, COLORS.dimension.action);
+    y = sectionHeading(doc, 'The SMART Framework', y, COLORS.dimension.action);
     smartItems.forEach((item) => {
         doc.rect(55, y, 20, 20).fill(COLORS.dimension.action);
         doc.fillColor(COLORS.white).font(FONT_BOLD).fontSize(12).text(item.letter, 55, y + 3, { width: 20, align: 'center' });
@@ -927,7 +927,7 @@ function generateSMARTGoalWorksheet(doc) {
 
     // Goal template (x2)
     for (let goalNum = 1; goalNum <= 2; goalNum++) {
-        y = sectionHeading(doc, `🎯  Goal ${goalNum}`, y, COLORS.dimension.action);
+        y = sectionHeading(doc, `Goal ${goalNum}`, y, COLORS.dimension.action);
         const goalFields = ['My Goal:', 'Why it Matters:', 'Specific Actions:', 'Measure of Success:', 'Due Date:'];
         goalFields.forEach((f) => {
             doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(f, 55, y);
@@ -956,7 +956,7 @@ function generateFacilitatorTroubleshootingGuide(doc) {
 
     const challenges = [
         {
-            title: '🧱  Resistant Participants',
+            title: 'Resistant Participants',
             solutions: [
                 'Name it lightly: "I notice some hesitation — that\'s completely normal."',
                 'Make participation optional: "You can observe today and engage when it feels right."',
@@ -965,7 +965,7 @@ function generateFacilitatorTroubleshootingGuide(doc) {
             ],
         },
         {
-            title: '📢  Dominant Voices',
+            title: 'Dominant Voices',
             solutions: [
                 'Use structured rounds: "We\'ll go around and each person shares 1 minute."',
                 'Acknowledge then redirect: "Thanks — let\'s hear from someone who hasn\'t spoken yet."',
@@ -974,7 +974,7 @@ function generateFacilitatorTroubleshootingGuide(doc) {
             ],
         },
         {
-            title: '😢  Emotional Moments',
+            title: 'Emotional Moments',
             solutions: [
                 'Pause and hold space: "Take the time you need — there\'s no rush here."',
                 'Normalize emotion: "It makes sense that this brings up feelings."',
@@ -984,7 +984,7 @@ function generateFacilitatorTroubleshootingGuide(doc) {
             ],
         },
         {
-            title: '⏱️  Time Management',
+            title: 'Time Management',
             solutions: [
                 'Announce time remaining: "We have 5 minutes left in this discussion."',
                 'Use a visible timer during activities.',
@@ -994,7 +994,7 @@ function generateFacilitatorTroubleshootingGuide(doc) {
             ],
         },
         {
-            title: '😴  Low Energy / Disengagement',
+            title: 'Low Energy / Disengagement',
             solutions: [
                 'Call a 3-minute movement break.',
                 'Switch to a pair or small group format.',
@@ -1068,7 +1068,7 @@ function generateVisualResource(doc, item) {
     if (item.printSize) {
         doc.rect(40, doc.page.height - 80, doc.page.width - 80, 28).fill(COLORS.light);
         doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8)
-           .text('📐 Print Size: ' + item.printSize + '    📁 Format: PDF    🖨️ Print at full size for best results',
+           .text('Print Size: ' + item.printSize + '    Format: PDF    Print at full size for best results',
                50, doc.page.height - 70, { width: doc.page.width - 100 });
     }
 
@@ -1098,7 +1098,7 @@ const VISUAL_CONTENT = {
         printSize: '8.5"×11"',
         content: [
             {
-                heading: '📡  How to Read a Team Radar Chart',
+                heading: 'How to Read a Team Radar Chart',
                 text: 'The radar chart shows your team\'s average score (1-10) across all six resilience dimensions. Each "spoke" of the radar represents one dimension.',
                 items: [
                     'Scores 7-10: Team strength — leverage these in your work and support others through them',
@@ -1107,7 +1107,7 @@ const VISUAL_CONTENT = {
                 ],
             },
             {
-                heading: '🔍  Common Team Profiles',
+                heading: 'Common Team Profiles',
                 items: [
                     'The Connector: High Connection, lower Action — great culture, may need accountability structures',
                     'The Driver: High Action, lower Feeling — gets things done, may miss emotional needs',
@@ -1116,7 +1116,7 @@ const VISUAL_CONTENT = {
                 ],
             },
             {
-                heading: '🎯  Using the Chart for Planning',
+                heading: 'Using the Chart for Planning',
                 numberedItems: [
                     'Identify the two lowest-scoring dimensions — these are your primary focus areas',
                     'Identify the two highest-scoring dimensions — use these as strengths to build from',
@@ -1134,7 +1134,7 @@ const VISUAL_CONTENT = {
         printSize: '11"×17"',
         content: [
             {
-                heading: '📅  6-Month Program Timeline',
+                heading: '6-Month Program Timeline',
                 table: [
                     ['Month', 'Focus', 'Key Activities', 'Outcome'],
                     ['Month 1', 'Foundation', 'Assessment + Kickoff + Trust Circle', 'Team baseline, shared language'],
@@ -1146,7 +1146,7 @@ const VISUAL_CONTENT = {
                 ],
             },
             {
-                heading: '📝  Implementation Notes',
+                heading: 'Implementation Notes',
                 items: [
                     'Schedule monthly 90-min sessions for best results',
                     'Add brief (15-min) check-ins between full sessions',
@@ -1178,7 +1178,7 @@ const VISUAL_CONTENT = {
         printSize: '11"×17"',
         content: [
             {
-                heading: '🗺️  The Development Pathway',
+                heading: 'The Development Pathway',
                 numberedItems: [
                     'Awareness Phase (Month 1-2): Assessment, shared language, trust building',
                     'Understanding Phase (Month 2-3): Dimension deep-dives, safety practices',
@@ -1188,7 +1188,7 @@ const VISUAL_CONTENT = {
                 ],
             },
             {
-                heading: '🏆  Milestones to Celebrate',
+                heading: 'Milestones to Celebrate',
                 items: [
                     'First vulnerable share in a group setting',
                     'First time team uses resilience language in a real challenge',
@@ -1206,7 +1206,7 @@ const VISUAL_CONTENT = {
         printSize: '8.5"×11"',
         content: [
             {
-                heading: '⏱️  By Time Available',
+                heading: 'By Time Available',
                 table: [
                     ['Time', 'Recommended Activities', 'Dimension'],
                     ['10-15 min', 'Trust Circle, Emotional Weather Check, Gratitude Circle', 'Connection, Feeling, Hope'],
@@ -1230,19 +1230,19 @@ const VISUAL_CONTENT = {
         printSize: '18"×24"',
         content: [
             {
-                heading: `🏷️  About ${d.label} Resilience`,
+                heading: `About ${d.label} Resilience`,
                 text: d.description,
             },
             {
-                heading: '🔑  Key Practices',
+                heading: 'Key Practices',
                 items: d.practices,
             },
             {
-                heading: '💬  Discussion Starters',
+                heading: 'Discussion Starters',
                 items: d.discussion.slice(0, 3),
             },
             {
-                heading: '🎯  Activities',
+                heading: 'Activities',
                 items: d.activities.map((a) => `${a.name} (${a.duration}) — ${a.description}`),
             },
         ],
@@ -1257,11 +1257,11 @@ VISUAL_CONTENT['vis-013'] = {
     printSize: '24"×36"',
     content: [
         {
-            heading: '🌐  The Six Dimensions of Team Resilience',
+            heading: 'The Six Dimensions of Team Resilience',
             items: Object.entries(DIMENSIONS).map(([k, d]) => `${d.label}: ${d.description}`),
         },
         {
-            heading: '🤝  How Dimensions Work Together',
+            heading: 'How Dimensions Work Together',
             text: 'Strong teams don\'t develop dimensions in isolation. Each dimension reinforces and amplifies the others. Connection creates safety for Feeling. Thinking enables Action. Hope sustains Meaning.',
         },
     ],
