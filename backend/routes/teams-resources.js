@@ -45,6 +45,9 @@ const TEAMS_TIERS = new Set(['starter', 'pro', 'enterprise']);
  * teams-tier purchase.  Returns { valid: boolean, tier: string|null }.
  */
 async function verifyTeamsAccess(sessionId, email) {
+    // Normalise email once up front so all DB queries use the same value.
+    const emailNorm = email ? email.toLowerCase().trim() : null;
+
     // Primary: verify via Stripe session ID
     if (sessionId) {
         // First check our database
@@ -72,8 +75,7 @@ async function verifyTeamsAccess(sessionId, email) {
     }
 
     // Fallback: verify via email
-    if (email) {
-        const emailNorm = email.toLowerCase().trim();
+    if (emailNorm) {
         const purchase = await Purchase.findOne({
             email: emailNorm,
             status: 'completed',

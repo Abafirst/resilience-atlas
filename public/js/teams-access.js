@@ -19,6 +19,11 @@
     var VERIFY_ENDPOINT    = '/api/teams/access';
     var DOWNLOAD_ENDPOINT  = '/api/teams/download';
 
+    /** Tiers that grant Teams resource access. */
+    function isTeamsTier(tier) {
+        return tier === 'starter' || tier === 'pro' || tier === 'enterprise';
+    }
+
     /* ── State ─────────────────────────────────────────────────────────────── */
     var accessState = {
         checked:   false,
@@ -66,7 +71,7 @@
                 var localTier = window.PaymentGating
                     ? PaymentGating.getTier()
                     : (localStorage.getItem('resilience_tier') || 'free');
-                var teamsLocal = (localTier === 'starter' || localTier === 'pro' || localTier === 'enterprise');
+                var teamsLocal = isTeamsTier(localTier);
                 return { valid: teamsLocal, tier: teamsLocal ? localTier : null };
             });
     }
@@ -301,8 +306,15 @@
             if (btn) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                if (window.confirm('Full activity facilitation guides require a Teams package. View Teams packages?')) {
-                    window.location.href = '/team.html#pricing';
+                // Show inline notice on the card instead of a browser dialog
+                var card = btn.closest('.ta-card');
+                var existingNotice = card && card.querySelector('.ta-gate-notice');
+                if (!existingNotice && card) {
+                    var notice = document.createElement('p');
+                    notice.className = 'ta-gate-notice';
+                    notice.style.cssText = 'margin:.5rem 0 0;font-size:.85rem;color:#1e40af;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:.4rem .75rem';
+                    notice.innerHTML = '🔒 <strong>Teams package required.</strong> <a href="/team.html#pricing" style="color:#1e40af;font-weight:700">View packages →</a>';
+                    btn.insertAdjacentElement('afterend', notice);
                 }
             }
         }, true);
@@ -359,7 +371,7 @@
         var localTier = window.PaymentGating
             ? PaymentGating.getTier()
             : (localStorage.getItem('resilience_tier') || 'free');
-        var localAccess = (localTier === 'starter' || localTier === 'pro' || localTier === 'enterprise');
+        var localAccess = isTeamsTier(localTier);
 
         if (localAccess) {
             // Optimistically unlock immediately, then verify in background
@@ -395,7 +407,7 @@
 
     // Also listen for the paymentVerified event fired by payment-gating.js
     document.addEventListener('paymentVerified', function (e) {
-        if (e.detail && (e.detail.tier === 'starter' || e.detail.tier === 'pro' || e.detail.tier === 'enterprise')) {
+        if (e.detail && isTeamsTier(e.detail.tier)) {
             applyAccessState(true);
             accessState.tier = e.detail.tier;
         }
