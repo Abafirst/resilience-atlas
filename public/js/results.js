@@ -363,6 +363,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pdfAlertEl.innerHTML = '';
       pdfAlertEl.className = 'alert';
     }
+    // Scroll to the download/email buttons so users can immediately access
+    // the report they just paid for, without having to hunt for the buttons.
+    const actionsEl = document.querySelector('.results-actions');
+    if (actionsEl) {
+      setTimeout(function () {
+        actionsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
   });
 
   // ── Download PDF button ────────────────────────────────

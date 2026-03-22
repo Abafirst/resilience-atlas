@@ -363,6 +363,9 @@
         };
         var msg = messages[tier] || 'Your Deep Resilience Report is now unlocked!';
 
+        // Show download/email CTAs only on pages that have those buttons.
+        var hasDownloadButton = !!document.getElementById('btnDownload');
+
         var banner = document.createElement('div');
         banner.className = 'payment-success-banner';
         banner.setAttribute('role', 'alert');
@@ -377,8 +380,42 @@
         var textNode = document.createTextNode(' ' + msg);
         banner.appendChild(iconImg);
         banner.appendChild(textNode);
+
+        if (hasDownloadButton) {
+            // Add a prominent "Download PDF" CTA so users know exactly what to do next.
+            var ctaBtn = document.createElement('button');
+            ctaBtn.textContent = '⬇ Download PDF';
+            ctaBtn.setAttribute('aria-label', 'Download your PDF report');
+            ctaBtn.className = 'payment-banner-cta payment-banner-cta--primary';
+            ctaBtn.addEventListener('click', function () {
+                var downloadBtn = document.getElementById('btnDownload');
+                if (downloadBtn) {
+                    banner.remove();
+                    downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    downloadBtn.focus();
+                }
+            });
+            banner.appendChild(ctaBtn);
+
+            // Also add an "Email PDF" CTA.
+            var emailCtaBtn = document.createElement('button');
+            emailCtaBtn.textContent = '✉ Email PDF';
+            emailCtaBtn.setAttribute('aria-label', 'Email your PDF report');
+            emailCtaBtn.className = 'payment-banner-cta payment-banner-cta--secondary';
+            emailCtaBtn.addEventListener('click', function () {
+                var emailBtn = document.getElementById('btnEmail');
+                if (emailBtn) {
+                    banner.remove();
+                    emailBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    emailBtn.focus();
+                }
+            });
+            banner.appendChild(emailCtaBtn);
+        }
+
         document.body.insertBefore(banner, document.body.firstChild);
-        setTimeout(function () { banner.remove(); }, 7000);
+        // Keep the success banner visible longer so users can act on the CTAs.
+        setTimeout(function () { if (banner.parentNode) banner.remove(); }, 15000);
     }
 
     function _cleanUrl() {
