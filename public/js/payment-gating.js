@@ -45,7 +45,7 @@
         },
         'atlas-premium': {
             name: 'Atlas Premium',
-            price: 9900, // $99.00
+            price: 4999, // $49.99
             billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
