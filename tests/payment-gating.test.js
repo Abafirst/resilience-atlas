@@ -318,4 +318,38 @@ describe('handleUpgradeSuccess()', () => {
         // Spinner must be hidden even when verification throws.
         expect(overlay.classList.contains('active')).toBe(false);
     });
+
+    test('after successful verification, payment overlays on locked sections are hidden', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-navigator', email: 'user@example.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_overlay');
+        loadGatingScript();
+
+        // Build a DOM that mirrors the results.html structure (locked section with overlay).
+        document.body.innerHTML += `
+            <section id="s-deep" class="premium-preview card locked" data-tier="atlas-navigator">
+                <div class="blur-preview" aria-hidden="true"><p>Blurred preview content</p></div>
+                <div class="premium-lock-message payment-overlay" role="region">
+                    <div class="payment-overlay__inner">
+                        <h3>Unlock Your Complete Resilience Map</h3>
+                        <button>Unlock Now</button>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        const section = document.getElementById('s-deep');
+        const overlay = section.querySelector('.payment-overlay');
+
+        // The section should no longer be locked.
+        expect(section.classList.contains('locked')).toBe(false);
+        // The overlay should be hidden so paid users never see the "Unlock Now" prompt.
+        expect(overlay.hidden).toBe(true);
+    });
 });
