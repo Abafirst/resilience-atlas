@@ -17,6 +17,8 @@ const COLORS = {
     light:     '#f8fafc',
     border:    '#e2e8f0',
     white:     '#ffffff',
+    headerSubtitle: '#c8dff0',   // Subtitle text on dark header background
+    headerBranding: '#7aafc8',   // Branding watermark on dark header background
     dimension: {
         connection: '#3b82f6',
         thinking:   '#8b5cf6',
@@ -30,6 +32,23 @@ const COLORS = {
 
 const FONT_REGULAR = 'Helvetica';
 const FONT_BOLD    = 'Helvetica-Bold';
+
+// ─── Typography & layout constants ────────────────────────────────────────────
+const FONT_SIZE_TITLE    = 18;   // Main document title in header
+const FONT_SIZE_SUBTITLE = 10;   // Subtitle / tagline in header
+const FONT_SIZE_SECTION  = 11;   // Section-heading labels
+const FONT_SIZE_BODY     = 9.5;  // Standard body / list-item text
+const FONT_SIZE_SMALL    = 9;    // Secondary notes, durations, captions
+const FONT_SIZE_MICRO    = 8;    // Footer branding, small callout labels
+const FONT_SIZE_LABEL    = 7;    // Footer copyright line
+
+const PAGE_MARGIN  = 40;              // Left & right page margin
+const CONTENT_X    = 55;             // Standard content indent (lists, body)
+const HEADER_H     = 90;             // Height of the top header band
+const CONTENT_TOP  = HEADER_H + 18; // Y start for first page section (108)
+const SECTION_GAP  = 14;            // Vertical space between sections
+const PARA_GAP     = 10;            // Space after a body paragraph
+const ITEM_GAP     = 4;             // Space between list items
 
 // ─── Dimension metadata ──────────────────────────────────────────────────────
 const DIMENSIONS = {
@@ -188,28 +207,29 @@ const DIMENSIONS = {
 // ─── Helper drawing functions ─────────────────────────────────────────────────
 
 function drawHeader(doc, title, subtitle, color) {
-    // Background
-    doc.rect(0, 0, doc.page.width, 90).fill(color || COLORS.primary);
+    // Background band
+    doc.rect(0, 0, doc.page.width, HEADER_H).fill(color || COLORS.primary);
 
-    // Title
+    // Document title
     doc.fillColor(COLORS.white)
        .font(FONT_BOLD)
-       .fontSize(18)
-       .text(title, 40, 25, { width: doc.page.width - 80 });
+       .fontSize(FONT_SIZE_TITLE)
+       .text(title, PAGE_MARGIN, 22, { width: doc.page.width - PAGE_MARGIN * 2 });
 
+    // Subtitle / tagline
     if (subtitle) {
-        doc.fillColor('rgba(255,255,255,0.8)')
+        doc.fillColor(COLORS.headerSubtitle)
            .font(FONT_REGULAR)
-           .fontSize(10)
-           .text(subtitle, 40, 52, { width: doc.page.width - 80 });
+           .fontSize(FONT_SIZE_SUBTITLE)
+           .text(subtitle, PAGE_MARGIN, 50, { width: doc.page.width - PAGE_MARGIN * 2 });
     }
 
-    // Branding
-    doc.fillColor('rgba(255,255,255,0.5)')
+    // Branding watermark (right-aligned)
+    doc.fillColor(COLORS.headerBranding)
        .font(FONT_REGULAR)
-       .fontSize(8)
-       .text('The Resilience Atlas™ — Teams Resource Library', 40, 72, {
-           width: doc.page.width - 80,
+       .fontSize(FONT_SIZE_MICRO)
+       .text('The Resilience Atlas™ — Teams Resource Library', PAGE_MARGIN, 72, {
+           width: doc.page.width - PAGE_MARGIN * 2,
            align: 'right',
        });
 }
@@ -219,49 +239,49 @@ function drawFooter(doc) {
     doc.rect(0, y, doc.page.width, 35).fill('#f1f5f9');
     doc.fillColor(COLORS.muted)
        .font(FONT_REGULAR)
-       .fontSize(7)
+       .fontSize(FONT_SIZE_LABEL)
        .text(
            '© 2026 The Resilience Atlas™  |  theresilienceatlas.com  |  Teams Package — Confidential',
-           40, y + 12,
-           { width: doc.page.width - 80, align: 'center' }
+           PAGE_MARGIN, y + 12,
+           { width: doc.page.width - PAGE_MARGIN * 2, align: 'center' }
        );
 }
 
 function sectionHeading(doc, text, y, color) {
-    doc.rect(40, y, doc.page.width - 80, 26).fill((color || COLORS.accent) + '18');
+    doc.rect(PAGE_MARGIN, y, doc.page.width - PAGE_MARGIN * 2, 26).fill((color || COLORS.accent) + '18');
     doc.fillColor(color || COLORS.accent)
        .font(FONT_BOLD)
-       .fontSize(11)
-       .text(text, 50, y + 7, { width: doc.page.width - 100 });
+       .fontSize(FONT_SIZE_SECTION)
+       .text(text, PAGE_MARGIN + 10, y + 7, { width: doc.page.width - PAGE_MARGIN * 2 - 20 });
     return y + 34;
 }
 
 function bulletList(doc, items, y, indent) {
-    const x = indent || 55;
+    const x = indent || CONTENT_X;
     const bulletWidth = 14;
     const textX = x + bulletWidth;
-    const textWidth = doc.page.width - textX - 40;
+    const textWidth = doc.page.width - textX - PAGE_MARGIN;
     items.forEach((item) => {
-        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(11)
+        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(FONT_SIZE_SECTION)
            .text('•', x, y, { width: bulletWidth, lineBreak: false });
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
            .text(item, textX, y, { width: textWidth });
-        y = doc.y + 3;
+        y = doc.y + ITEM_GAP;
     });
     return y;
 }
 
 function numberedList(doc, items, y, indent) {
-    const x = indent || 55;
+    const x = indent || CONTENT_X;
     const numWidth = 20;
     const textX = x + numWidth;
-    const textWidth = doc.page.width - textX - 40;
+    const textWidth = doc.page.width - textX - PAGE_MARGIN;
     items.forEach((item, i) => {
-        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(9.5)
+        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(FONT_SIZE_BODY)
            .text((i + 1) + '.', x, y, { width: numWidth, lineBreak: false });
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
            .text(item, textX, y, { width: textWidth });
-        y = doc.y + 3;
+        y = doc.y + ITEM_GAP;
     });
     return y;
 }
@@ -278,36 +298,34 @@ function generateWorkshopGuide(doc, dim) {
 
     drawHeader(doc, d.label + ' Dimension Workshop Guide', d.tagline, d.color);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
     // Intro
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-       .text(d.description, 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 18;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text(d.description, PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP + 4;
 
     // Key Practices
     y = sectionHeading(doc, 'Key Practices for ' + d.label + ' Resilience', y, d.color);
-    y = bulletList(doc, d.practices, y + 4);
-    y += 14;
+    y = bulletList(doc, d.practices, y + ITEM_GAP);
+    y += SECTION_GAP;
 
     // Discussion Prompts
     y = sectionHeading(doc, 'Discussion Prompts', y, d.color);
-    y = numberedList(doc, d.discussion, y + 4);
-    y += 14;
+    y = numberedList(doc, d.discussion, y + ITEM_GAP);
+    y += SECTION_GAP;
 
     // Activities
     y = sectionHeading(doc, 'Suggested Activities', y, d.color);
     d.activities.forEach((act) => {
-        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9.5)
-           .text(act.name + '  ', 55, y, { continued: true });
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(9)
-           .text('(' + act.duration + ')', { lineBreak: false });
+        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(FONT_SIZE_BODY)
+           .text(`${act.name}  (${act.duration})`, CONTENT_X, y, { width: doc.page.width - CONTENT_X - PAGE_MARGIN });
         y = doc.y + 2;
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(9)
-           .text(act.description, 68, y, { width: doc.page.width - 108 });
-        y = doc.y + 8;
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_SMALL)
+           .text(act.description, CONTENT_X + 13, y, { width: doc.page.width - CONTENT_X - 13 - PAGE_MARGIN });
+        y = doc.y + ITEM_GAP + 4;
     });
-    y += 10;
+    y += PARA_GAP;
 
     // Facilitator Tips
     y = sectionHeading(doc, 'Facilitator Tips', y, d.color);
@@ -318,8 +336,8 @@ function generateWorkshopGuide(doc, dim) {
         'Watch the energy. If the group drags, shorten an activity; if engaged, go deeper.',
         'Close every session with a specific commitment: "One thing I will do this week…"',
     ];
-    y = bulletList(doc, tips, y + 4);
-    y += 14;
+    y = bulletList(doc, tips, y + ITEM_GAP);
+    y += SECTION_GAP;
 
     // Reflection Questions
     y = sectionHeading(doc, 'Closing Reflection', y, d.color);
@@ -328,7 +346,7 @@ function generateWorkshopGuide(doc, dim) {
         'What one thing will you do differently this week?',
         'What support do you need from the team to follow through?',
     ];
-    y = numberedList(doc, reflections, y + 4);
+    y = numberedList(doc, reflections, y + ITEM_GAP);
 
     drawFooter(doc);
 }
@@ -336,67 +354,67 @@ function generateWorkshopGuide(doc, dim) {
 function generateTeamResilienceSnapshot(doc) {
     drawHeader(doc, 'Team Resilience Snapshot Template', 'Pre/Post Assessment Profile', COLORS.primary);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'Use this template to capture your team\'s resilience profile before and after a program. ' +
            'The snapshot helps teams see growth over time and identify priority areas.',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 18;
+    y = doc.y + SECTION_GAP;
 
     // Team info fields
     y = sectionHeading(doc, 'Team Information', y);
     const fields = ['Team Name:', 'Facilitator:', 'Assessment Date:', 'Program Phase:  □ Pre   □ Mid   □ Post'];
     fields.forEach((f) => {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(f, 55, y);
-        doc.moveTo(160, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
-        y = doc.y + 8;
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(f, CONTENT_X, y);
+        doc.moveTo(160, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
+        y = doc.y + ITEM_GAP + 4;
     });
-    y += 10;
+    y += PARA_GAP;
 
     // Dimension scores table
     y = sectionHeading(doc, 'Dimension Score Summary', y);
     y += 6;
     const dims = Object.entries(DIMENSIONS);
     dims.forEach(([key, d]) => {
-        doc.rect(40, y, 8, 8).fill(d.color);
-        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9)
-           .text(d.label, 55, y + 1, { width: 120 });
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8)
+        doc.rect(PAGE_MARGIN, y, 8, 8).fill(d.color);
+        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(FONT_SIZE_SMALL)
+           .text(d.label, CONTENT_X, y + 1, { width: 120 });
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_MICRO)
            .text(d.tagline, 180, y + 2, { width: 150 });
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(8)
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_MICRO)
            .text('Pre: ___  /10     Post: ___  /10     Δ  ___', doc.page.width - 200, y + 1, { width: 180 });
-        doc.moveTo(40, y + 16).lineTo(doc.page.width - 40, y + 16).stroke(COLORS.border);
+        doc.moveTo(PAGE_MARGIN, y + 16).lineTo(doc.page.width - PAGE_MARGIN, y + 16).stroke(COLORS.border);
         y += 22;
     });
-    y += 10;
+    y += PARA_GAP;
 
     // Strengths & Growth
     y = sectionHeading(doc, 'Top 3 Team Strengths', y);
     for (let i = 1; i <= 3; i++) {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(i + '.', 55, y);
-        doc.moveTo(68, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(i + '.', CONTENT_X, y);
+        doc.moveTo(68, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 20;
     }
-    y += 8;
+    y += ITEM_GAP + 4;
 
     y = sectionHeading(doc, 'Top 3 Growth Priorities', y);
     for (let i = 1; i <= 3; i++) {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(i + '.', 55, y);
-        doc.moveTo(68, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(i + '.', CONTENT_X, y);
+        doc.moveTo(68, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 20;
     }
-    y += 8;
+    y += ITEM_GAP + 4;
 
     // Commitments
     y = sectionHeading(doc, 'Key Commitments for Next 30 Days', y);
     for (let i = 0; i < 3; i++) {
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8)
-           .text('Owner: ________________    By: ________________    Action:', 55, y);
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_MICRO)
+           .text('Owner: ________________    By: ________________    Action:', CONTENT_X, y);
         y = doc.y + 3;
-        doc.moveTo(55, y + 6).lineTo(doc.page.width - 40, y + 6).stroke(COLORS.border);
+        doc.moveTo(CONTENT_X, y + 6).lineTo(doc.page.width - PAGE_MARGIN, y + 6).stroke(COLORS.border);
         y += 18;
     }
 
@@ -406,25 +424,25 @@ function generateTeamResilienceSnapshot(doc) {
 function generateHabitTracker(doc) {
     drawHeader(doc, '30-Day Team Habit Tracker', 'Action Dimension — Individual & Team Resilience Habits', COLORS.dimension.action);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'Track daily resilience habits for 30 days. Check the box when you complete each habit. ' +
            'Celebrate streaks of 7, 14, 21, and 30 days!',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 16;
+    y = doc.y + SECTION_GAP;
 
     // Habit selection
     y = sectionHeading(doc, 'My Habits for This Month', y, COLORS.dimension.action);
     const habitLabels = ['Habit 1:', 'Habit 2:', 'Habit 3:'];
     habitLabels.forEach((h) => {
-        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9.5).text(h, 55, y);
-        doc.moveTo(105, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(FONT_SIZE_BODY).text(h, CONTENT_X, y);
+        doc.moveTo(105, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 20;
     });
-    y += 10;
+    y += PARA_GAP;
 
     // Calendar grid
     y = sectionHeading(doc, '30-Day Tracking Grid', y, COLORS.dimension.action);
@@ -440,7 +458,7 @@ function generateHabitTracker(doc) {
         const boxY = y + row * (boxSize + 4);
 
         doc.rect(x, boxY, boxSize, boxSize).stroke(COLORS.border);
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(7)
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_LABEL)
            .text(String(day), x + 8, boxY + 4, { width: boxSize - 6 });
 
         // Milestone markers
@@ -460,8 +478,8 @@ function generateHabitTracker(doc) {
         'Week 4: What would you keep, change, or add for next month?',
     ];
     prompts.forEach((p) => {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9).text(p, 55, y);
-        doc.moveTo(55, y + 16).lineTo(doc.page.width - 40, y + 16).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(p, CONTENT_X, y);
+        doc.moveTo(CONTENT_X, y + 16).lineTo(doc.page.width - PAGE_MARGIN, y + 16).stroke(COLORS.border);
         y += 25;
     });
 
@@ -471,62 +489,64 @@ function generateHabitTracker(doc) {
 function generateActionPlanningWorksheet(doc) {
     drawHeader(doc, 'Team Action Planning Worksheet', 'Translating Insights into Committed Actions', COLORS.primary);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'Use this worksheet after every team resilience session to capture insights and convert them ' +
            'into specific, owned actions. Review progress at the next session.',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 18;
+    y = doc.y + SECTION_GAP;
 
     // Session info
     y = sectionHeading(doc, 'Session Information', y);
     ['Session Date:', 'Dimension Focus:', 'Facilitator:', 'Attendees:'].forEach((label) => {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(label, 55, y);
-        doc.moveTo(145, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(label, CONTENT_X, y);
+        doc.moveTo(145, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 20;
     });
-    y += 8;
+    y += ITEM_GAP + 4;
 
     // Key insights
     y = sectionHeading(doc, 'Key Insights from This Session', y);
-    doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8.5)
-       .text('What did we learn? What shifted? What surprised us?', 55, y + 4);
+    doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_SMALL)
+       .text('What did we learn? What shifted? What surprised us?', CONTENT_X, y + 4);
     y = doc.y + 6;
     for (let i = 0; i < 4; i++) {
-        doc.moveTo(55, y + 10).lineTo(doc.page.width - 40, y + 10).stroke(COLORS.border);
+        doc.moveTo(CONTENT_X, y + 10).lineTo(doc.page.width - PAGE_MARGIN, y + 10).stroke(COLORS.border);
         y += 18;
     }
-    y += 10;
+    y += PARA_GAP;
 
     // Action items table
     y = sectionHeading(doc, 'Action Items', y);
     y += 6;
-    // Table header
-    doc.rect(40, y, doc.page.width - 80, 18).fill(COLORS.accent + '22');
-    const colX = [45, 190, 320, 420];
-    const headers = ['Action / Commitment', 'Owner', 'Due Date', 'Status'];
+    // Table header row
+    doc.rect(PAGE_MARGIN, y, doc.page.width - PAGE_MARGIN * 2, 18).fill(COLORS.accent + '22');
+    // Column positions and their actual widths
+    const colX     = [45, 190, 320, 420];
+    const colWidths = [140, 125, 95, doc.page.width - 420 - PAGE_MARGIN];
+    const headers   = ['Action / Commitment', 'Owner', 'Due Date', 'Status'];
     headers.forEach((h, i) => {
-        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(8.5)
-           .text(h, colX[i], y + 4, { width: 135 });
+        doc.fillColor(COLORS.accent).font(FONT_BOLD).fontSize(FONT_SIZE_SMALL)
+           .text(h, colX[i], y + 4, { width: colWidths[i] });
     });
     y += 22;
     for (let row = 0; row < 6; row++) {
-        doc.moveTo(40, y + 18).lineTo(doc.page.width - 40, y + 18).stroke(COLORS.border);
-        [40, 185, 315, 415, doc.page.width - 40].forEach((x) => {
+        doc.moveTo(PAGE_MARGIN, y + 18).lineTo(doc.page.width - PAGE_MARGIN, y + 18).stroke(COLORS.border);
+        [PAGE_MARGIN, 185, 315, 415, doc.page.width - PAGE_MARGIN].forEach((x) => {
             doc.moveTo(x, y).lineTo(x, y + 18).stroke(COLORS.border);
         });
         y += 20;
     }
-    y += 10;
+    y += PARA_GAP;
 
     // Follow-up
     y = sectionHeading(doc, 'Next Session Planning', y);
     ['Next session date:', 'Topic / dimension focus:', 'Pre-work for team members:'].forEach((label) => {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(label, 55, y);
-        doc.moveTo(195, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(label, CONTENT_X, y);
+        doc.moveTo(195, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 20;
     });
 
@@ -541,36 +561,36 @@ function generateDiscussionPromptSheets(doc) {
 
         drawHeader(doc, d.label + ' Discussion Prompts', d.tagline, d.color);
 
-        let y = 108;
+        let y = CONTENT_TOP;
 
         // Warm-up prompts
         y = sectionHeading(doc, 'Warm-Up Prompts (Low Risk)', y, d.color);
         const warmUp = d.discussion.slice(0, 2);
-        y = numberedList(doc, warmUp, y + 4);
-        y += 12;
+        y = numberedList(doc, warmUp, y + ITEM_GAP);
+        y += SECTION_GAP;
 
         // Explore prompts
         y = sectionHeading(doc, 'Explore Prompts (Medium Depth)', y, d.color);
         const explore = d.discussion.slice(2, 4);
-        y = numberedList(doc, explore, y + 4);
-        y += 12;
+        y = numberedList(doc, explore, y + ITEM_GAP);
+        y += SECTION_GAP;
 
         // Deepen prompts
         y = sectionHeading(doc, 'Deepen Prompts (High Trust Required)', y, d.color);
         const deepen = d.discussion.slice(4);
-        y = numberedList(doc, deepen, y + 4);
-        y += 16;
+        y = numberedList(doc, deepen, y + ITEM_GAP);
+        y += SECTION_GAP + 2;
 
         // Safety reminder
-        doc.rect(40, y, doc.page.width - 80, 50)
+        doc.rect(PAGE_MARGIN, y, doc.page.width - PAGE_MARGIN * 2, 50)
            .fill(d.color + '12');
-        doc.fillColor(d.color).font(FONT_BOLD).fontSize(9)
-           .text('Psychological Safety Reminder', 52, y + 8);
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(8.5)
+        doc.fillColor(d.color).font(FONT_BOLD).fontSize(FONT_SIZE_SMALL)
+           .text('Psychological Safety Reminder', PAGE_MARGIN + 12, y + 8);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_SMALL)
            .text(
                'Always obtain group consent before moving to deeper prompts. ' +
                'Normalize opting out: "Feel free to pass." Watch for discomfort and adjust.',
-               52, y + 22, { width: doc.page.width - 104 }
+               PAGE_MARGIN + 12, y + 22, { width: doc.page.width - PAGE_MARGIN * 2 - 24 }
            );
 
         drawFooter(doc);
@@ -581,16 +601,16 @@ function generateReflectionJournal(doc) {
     drawHeader(doc, 'Individual Reflection Journal', 'Personal Resilience Growth — Teams Program', COLORS.primary);
 
     const dims = Object.entries(DIMENSIONS);
-    let y = 108;
+    let y = CONTENT_TOP;
 
     // Intro page content
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'This journal is your personal space to reflect on your resilience journey during the team program. ' +
            'Use the guided prompts after each session to capture insights, track growth, and set intentions.',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 18;
+    y = doc.y + SECTION_GAP;
 
     // Weekly check-in template
     y = sectionHeading(doc, 'Weekly Check-In Template', y);
@@ -602,62 +622,37 @@ function generateReflectionJournal(doc) {
         'My resilience intention for next week:',
     ];
     weeklyItems.forEach((item) => {
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9).text(item, 55, y);
-        y = doc.y + 4;
-        doc.moveTo(55, y + 8).lineTo(doc.page.width - 40, y + 8).stroke(COLORS.border);
-        doc.moveTo(55, y + 18).lineTo(doc.page.width - 40, y + 18).stroke(COLORS.border);
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(item, CONTENT_X, y);
+        y = doc.y + ITEM_GAP;
+        doc.moveTo(CONTENT_X, y + 8).lineTo(doc.page.width - PAGE_MARGIN, y + 8).stroke(COLORS.border);
+        doc.moveTo(CONTENT_X, y + 18).lineTo(doc.page.width - PAGE_MARGIN, y + 18).stroke(COLORS.border);
         y += 26;
     });
-    y += 10;
+    y += PARA_GAP;
 
-    // Dimension reflection pages (one per dimension, abbreviated)
-    dims.slice(0, 3).forEach(([key, d]) => {
+    // Dimension reflection pages (one per dimension)
+    dims.forEach(([key, d]) => {
         doc.addPage();
         drawHeader(doc, d.label + ' Dimension — Personal Reflection', d.tagline, d.color);
-        y = 108;
+        y = CONTENT_TOP;
 
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(d.description, 40, y, { width: doc.page.width - 80 });
-        y = doc.y + 16;
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+           .text(d.description, PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+        y = doc.y + SECTION_GAP;
 
         y = sectionHeading(doc, 'Reflection Questions', y, d.color);
-        y = numberedList(doc, d.discussion, y + 4);
-        y += 14;
+        y = numberedList(doc, d.discussion, y + ITEM_GAP);
+        y += SECTION_GAP;
 
         y = sectionHeading(doc, 'My Notes', y, d.color);
         for (let i = 0; i < 8; i++) {
-            doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
+            doc.moveTo(CONTENT_X, y + 14).lineTo(doc.page.width - PAGE_MARGIN, y + 14).stroke(COLORS.border);
             y += 20;
         }
 
         y = sectionHeading(doc, 'My Commitment for This Dimension', y + 6, d.color);
-        doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
-        doc.moveTo(55, y + 28).lineTo(doc.page.width - 40, y + 28).stroke(COLORS.border);
-
-        drawFooter(doc);
-    });
-
-    // Remaining dimensions
-    dims.slice(3).forEach(([key, d]) => {
-        doc.addPage();
-        drawHeader(doc, d.label + ' Dimension — Personal Reflection', d.tagline, d.color);
-        y = 108;
-
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(d.description, 40, y, { width: doc.page.width - 80 });
-        y = doc.y + 16;
-
-        y = sectionHeading(doc, 'Reflection Questions', y, d.color);
-        y = numberedList(doc, d.discussion, y + 4);
-        y += 14;
-
-        y = sectionHeading(doc, 'My Notes', y, d.color);
-        for (let i = 0; i < 8; i++) {
-            doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
-            y += 20;
-        }
-
-        y = sectionHeading(doc, 'My Commitment for This Dimension', y + 6, d.color);
-        doc.moveTo(55, y + 14).lineTo(doc.page.width - 40, y + 14).stroke(COLORS.border);
-        doc.moveTo(55, y + 28).lineTo(doc.page.width - 40, y + 28).stroke(COLORS.border);
+        doc.moveTo(CONTENT_X, y + 14).lineTo(doc.page.width - PAGE_MARGIN, y + 14).stroke(COLORS.border);
+        doc.moveTo(CONTENT_X, y + 28).lineTo(doc.page.width - PAGE_MARGIN, y + 28).stroke(COLORS.border);
 
         drawFooter(doc);
     });
@@ -666,15 +661,15 @@ function generateReflectionJournal(doc) {
 function generatePsychSafetyChecklist(doc) {
     drawHeader(doc, 'Psychological Safety Checklist', 'Feeling Dimension — Pre-Workshop Facilitator Guide', COLORS.dimension.feeling);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'Use this checklist before every team resilience session to assess and strengthen psychological safety. ' +
            'Psychological safety is the foundation that makes all other resilience work possible.',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 18;
+    y = doc.y + SECTION_GAP;
 
     const sections = [
         {
@@ -722,11 +717,11 @@ function generatePsychSafetyChecklist(doc) {
     sections.forEach((section) => {
         y = sectionHeading(doc, section.title, y, COLORS.dimension.feeling);
         section.items.forEach((item) => {
-            doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9)
-               .text(item, 55, y + 4, { width: doc.page.width - 95 });
-            y = doc.y + 5;
+            doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+               .text(item, CONTENT_X, y + 4, { width: doc.page.width - CONTENT_X - PAGE_MARGIN });
+            y = doc.y + ITEM_GAP + 1;
         });
-        y += 10;
+        y += PARA_GAP;
     });
 
     drawFooter(doc);
@@ -735,15 +730,15 @@ function generatePsychSafetyChecklist(doc) {
 function generateKickoffScript(doc) {
     drawHeader(doc, 'Team Kickoff Script', 'Word-for-Word Guide for Your First Session', COLORS.primary);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
        .text(
            'This script gives you exact language for opening your first team resilience session. ' +
            'Adapt it to your style — the key is setting the tone of safety, curiosity, and intention.',
-           40, y, { width: doc.page.width - 80 }
+           PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 }
        );
-    y = doc.y + 18;
+    y = doc.y + SECTION_GAP;
 
     const scriptSections = [
         {
@@ -770,10 +765,9 @@ function generateKickoffScript(doc) {
 
     scriptSections.forEach((section) => {
         y = sectionHeading(doc, section.title, y);
-        doc.rect(46, y + 4, 3, null);
-        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9)
-           .text(section.script, 55, y + 4, { width: doc.page.width - 95 });
-        y = doc.y + 14;
+        doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+           .text(section.script, CONTENT_X, y + 4, { width: doc.page.width - CONTENT_X - PAGE_MARGIN });
+        y = doc.y + SECTION_GAP;
     });
 
     // Closing notes
@@ -784,7 +778,7 @@ function generateKickoffScript(doc) {
         'If you sense tension or resistance, acknowledge it: "I know this might feel unusual."',
         'The check-in round is critical — it gets everyone speaking early and signals safety.',
     ];
-    y = bulletList(doc, notes, y + 4);
+    y = bulletList(doc, notes, y + ITEM_GAP);
 
     drawFooter(doc);
 }
@@ -792,10 +786,10 @@ function generateKickoffScript(doc) {
 function generateValuesCards(doc) {
     drawHeader(doc, 'Values Cards Set (50 Cards)', 'Hope Dimension — Values Alignment Activity', COLORS.dimension.hope);
 
-    let y = 108;
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-       .text('Print, cut, and use these 50 values cards for the Values Alignment Exercise. Works for individuals and teams.', 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 16;
+    let y = CONTENT_TOP;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text('Print, cut, and use these 50 values cards for the Values Alignment Exercise. Works for individuals and teams.', PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP;
 
     const values = [
         'Authenticity', 'Achievement', 'Adventure', 'Authority', 'Autonomy',
@@ -834,10 +828,10 @@ function generateValuesCards(doc) {
 function generateStrengthsCards(doc) {
     drawHeader(doc, 'Strengths Cards Set (40 Cards)', 'Meaning Dimension — Strengths Finder Activity', COLORS.dimension.meaning);
 
-    let y = 108;
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-       .text('40 printable strengths cards for the Strengths Finder Workshop. Each card includes a brief description.', 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 16;
+    let y = CONTENT_TOP;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text('40 printable strengths cards for the Strengths Finder Workshop. Each card includes a brief description.', PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP;
 
     const strengths = [
         { name: 'Achiever', desc: 'Constant drive to accomplish more.' },
@@ -907,45 +901,51 @@ function generateStrengthsCards(doc) {
 function generateSMARTGoalWorksheet(doc) {
     drawHeader(doc, 'SMART Goal Worksheet', 'Action Dimension — Individual & Team Goal Setting', COLORS.dimension.action);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-       .text('Use this worksheet to set SMART goals tied to your resilience growth. Include team goals and individual commitments.', 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 16;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text('Use this worksheet to set SMART goals tied to your resilience growth. Include team goals and individual commitments.', PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP;
 
     // SMART framework explanation
     const smartItems = [
-        { letter: 'S', word: 'Specific', desc: 'What exactly will you do or achieve?' },
-        { letter: 'M', word: 'Measurable', desc: 'How will you know when you\'ve succeeded?' },
-        { letter: 'A', word: 'Achievable', desc: 'Is this realistic given your current resources?' },
-        { letter: 'R', word: 'Relevant', desc: 'How does this connect to your resilience dimension?' },
-        { letter: 'T', word: 'Time-bound', desc: 'What is your specific deadline or timeframe?' },
+        { letter: 'S', word: 'Specific',    desc: 'What exactly will you do or achieve?' },
+        { letter: 'M', word: 'Measurable',  desc: 'How will you know when you\'ve succeeded?' },
+        { letter: 'A', word: 'Achievable',  desc: 'Is this realistic given your current resources?' },
+        { letter: 'R', word: 'Relevant',    desc: 'How does this connect to your resilience dimension?' },
+        { letter: 'T', word: 'Time-bound',  desc: 'What is your specific deadline or timeframe?' },
     ];
 
     y = sectionHeading(doc, 'The SMART Framework', y, COLORS.dimension.action);
     smartItems.forEach((item) => {
-        doc.rect(55, y, 20, 20).fill(COLORS.dimension.action);
-        doc.fillColor(COLORS.white).font(FONT_BOLD).fontSize(12).text(item.letter, 55, y + 3, { width: 20, align: 'center' });
-        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(9.5).text(item.word + ':', 82, y + 2, { continued: true });
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(9).text('  ' + item.desc);
-        y = doc.y + 4;
+        // Coloured letter badge
+        doc.rect(CONTENT_X, y, 20, 20).fill(COLORS.dimension.action);
+        doc.fillColor(COLORS.white).font(FONT_BOLD).fontSize(12)
+           .text(item.letter, CONTENT_X, y + 3, { width: 20, align: 'center' });
+        // Word label (bold) followed by description (regular) — explicit separate lines avoid
+        // the continued: true width-inheritance issue
+        doc.fillColor(COLORS.text).font(FONT_BOLD).fontSize(FONT_SIZE_BODY)
+           .text(item.word + ':', 82, y + 2, { width: 70, lineBreak: false });
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+           .text('  ' + item.desc, 82 + 70, y + 2, { width: doc.page.width - 82 - 70 - PAGE_MARGIN });
+        y = doc.y + ITEM_GAP;
     });
-    y += 14;
+    y += SECTION_GAP;
 
     // Goal template (x2)
     for (let goalNum = 1; goalNum <= 2; goalNum++) {
         y = sectionHeading(doc, `Goal ${goalNum}`, y, COLORS.dimension.action);
         const goalFields = ['My Goal:', 'Why it Matters:', 'Specific Actions:', 'Measure of Success:', 'Due Date:'];
         goalFields.forEach((f) => {
-            doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5).text(f, 55, y);
-            doc.moveTo(150, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+            doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY).text(f, CONTENT_X, y);
+            doc.moveTo(150, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
             y += 20;
         });
 
         // Accountability partner
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8.5)
-           .text('Accountability Partner:', 55, y);
-        doc.moveTo(180, y + 11).lineTo(doc.page.width - 40, y + 11).stroke(COLORS.border);
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_SMALL)
+           .text('Accountability Partner:', CONTENT_X, y);
+        doc.moveTo(180, y + 11).lineTo(doc.page.width - PAGE_MARGIN, y + 11).stroke(COLORS.border);
         y += 24;
     }
 
@@ -955,11 +955,11 @@ function generateSMARTGoalWorksheet(doc) {
 function generateFacilitatorTroubleshootingGuide(doc) {
     drawHeader(doc, 'Facilitator Troubleshooting Guide', 'Handling Common Facilitation Challenges', COLORS.primary);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-       .text('This guide helps facilitators navigate the most common challenges in team resilience sessions. Keep it nearby during your workshops.', 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 16;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text('This guide helps facilitators navigate the most common challenges in team resilience sessions. Keep it nearby during your workshops.', PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP;
 
     const challenges = [
         {
@@ -1013,8 +1013,8 @@ function generateFacilitatorTroubleshootingGuide(doc) {
 
     challenges.forEach((challenge) => {
         y = sectionHeading(doc, challenge.title, y);
-        y = bulletList(doc, challenge.solutions, y + 4);
-        y += 10;
+        y = bulletList(doc, challenge.solutions, y + ITEM_GAP);
+        y += PARA_GAP;
     });
 
     drawFooter(doc);
@@ -1025,58 +1025,58 @@ function generateVisualResource(doc, item) {
     const color = item.color || COLORS.accent;
     drawHeader(doc, item.title, item.subtitle || 'Teams Visual Resource', color);
 
-    let y = 108;
+    let y = CONTENT_TOP;
 
     // Description
-    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(10)
-       .text(item.description, 40, y, { width: doc.page.width - 80 });
-    y = doc.y + 20;
+    doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+       .text(item.description, PAGE_MARGIN, y, { width: doc.page.width - PAGE_MARGIN * 2 });
+    y = doc.y + SECTION_GAP;
 
     // Main content
     if (item.content) {
         item.content.forEach((block) => {
             if (block.heading) {
                 y = sectionHeading(doc, block.heading, y, color);
-                y += 4;
+                y += ITEM_GAP;
             }
             if (block.text) {
-                doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(9.5)
-                   .text(block.text, 50, y, { width: doc.page.width - 90 });
-                y = doc.y + 10;
+                doc.fillColor(COLORS.text).font(FONT_REGULAR).fontSize(FONT_SIZE_BODY)
+                   .text(block.text, PAGE_MARGIN + 10, y, { width: doc.page.width - PAGE_MARGIN * 2 - 10 });
+                y = doc.y + PARA_GAP;
             }
             if (block.items) {
                 y = bulletList(doc, block.items, y);
-                y += 10;
+                y += PARA_GAP;
             }
             if (block.numberedItems) {
                 y = numberedList(doc, block.numberedItems, y);
-                y += 10;
+                y += PARA_GAP;
             }
             if (block.table) {
                 block.table.forEach((row) => {
-                    const colW = (doc.page.width - 80) / row.length;
+                    const colW = (doc.page.width - PAGE_MARGIN * 2) / row.length;
                     row.forEach((cell, ci) => {
-                        const cellX = 40 + ci * colW;
+                        const cellX = PAGE_MARGIN + ci * colW;
                         if (ci === 0) doc.rect(cellX, y, colW, 22).fill(color + '18');
                         doc.fillColor(ci === 0 ? color : COLORS.text)
                            .font(ci === 0 ? FONT_BOLD : FONT_REGULAR)
-                           .fontSize(8.5)
+                           .fontSize(FONT_SIZE_SMALL)
                            .text(cell, cellX + 5, y + 6, { width: colW - 10 });
                     });
-                    doc.moveTo(40, y + 22).lineTo(doc.page.width - 40, y + 22).stroke(COLORS.border);
+                    doc.moveTo(PAGE_MARGIN, y + 22).lineTo(doc.page.width - PAGE_MARGIN, y + 22).stroke(COLORS.border);
                     y += 24;
                 });
-                y += 8;
+                y += ITEM_GAP + 4;
             }
         });
     }
 
     // Print info
     if (item.printSize) {
-        doc.rect(40, doc.page.height - 80, doc.page.width - 80, 28).fill(COLORS.light);
-        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(8)
+        doc.rect(PAGE_MARGIN, doc.page.height - 80, doc.page.width - PAGE_MARGIN * 2, 28).fill(COLORS.light);
+        doc.fillColor(COLORS.muted).font(FONT_REGULAR).fontSize(FONT_SIZE_MICRO)
            .text('Print Size: ' + item.printSize + '    Format: PDF    Print at full size for best results',
-               50, doc.page.height - 70, { width: doc.page.width - 100 });
+               PAGE_MARGIN + 10, doc.page.height - 70, { width: doc.page.width - PAGE_MARGIN * 2 - 20 });
     }
 
     drawFooter(doc);
