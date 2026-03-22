@@ -24,6 +24,34 @@
   to   { transform: translateY(0); }
 }
 
+/* ── Banner action buttons (Download / Email CTAs) ───────────── */
+.payment-banner-cta {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.payment-banner-cta:hover { opacity: 0.85; }
+
+.payment-banner-cta--primary {
+  background: #fff;
+  color: #166534;
+  border: 2px solid #fff;
+}
+
+.payment-banner-cta--secondary {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
 /* ── Locked Sections ─────────────────────────────────────────── */
 .locked {
   position: relative;
