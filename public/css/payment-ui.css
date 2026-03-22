@@ -65,6 +65,10 @@
   user-select: none;
 }
 
+/* Ensure the HTML `hidden` attribute is respected even when CSS sets display.
+   Without this, `.payment-overlay { display: flex }` would override hidden=true. */
+[hidden] { display: none !important; }
+
 /* ── Payment Overlay ─────────────────────────────────────────── */
 .payment-overlay {
   position: absolute;

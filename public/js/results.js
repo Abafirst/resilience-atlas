@@ -218,6 +218,16 @@ function persistResults(data) {
   }
 }
 
+// ── Hide/show insight-progress teaser based on payment tier ──
+// The .insight-progress section contains "Upgrade to unlock your complete
+// resilience atlas" which is misleading for paid users.
+function _applyInsightProgressVisibility() {
+  const el = document.querySelector('.insight-progress');
+  if (!el) return;
+  const isPaid = window.PaymentGating && window.PaymentGating.isDeepReport();
+  el.hidden = isPaid;
+}
+
 // ── Page initialisation ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -345,6 +355,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.PaymentGating) {
     window.PaymentGating.applyGating();
   }
+  // Hide the "upgrade teaser" progress indicator for paid users — it says
+  // "Upgrade to unlock your complete resilience atlas" which is misleading
+  // for users who have already purchased.
+  _applyInsightProgressVisibility();
 
   // ── Listen for post-payment verification success ───────
   // payment-gating.js dispatches this event once the Stripe session is verified.
@@ -354,6 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.PaymentGating) {
       window.PaymentGating.applyGating();
     }
+    // Hide the upgrade teaser — user has just paid.
+    _applyInsightProgressVisibility();
     // Hide upgrade cards — user has paid.
     const upgradeContainerEl = document.getElementById('upgradeCardsContainer');
     if (upgradeContainerEl) upgradeContainerEl.innerHTML = '';
