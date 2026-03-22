@@ -150,9 +150,8 @@ describe('POST /api/growth/team-lead — Enterprise inquiry email notification',
     );
   });
 
-  it('logs an error (not console.warn) when no admin email env var is configured', async () => {
-    // No email env vars set
-    const logger = require('../backend/utils/logger');
+  it('falls back to hardcoded janeen@theresilienceatlas.com when no admin email env var is configured', async () => {
+    // No email env vars set — should still send to DEFAULT_INQUIRY_RECIPIENT in growth.js
     const app = buildApp();
 
     const res = await request(app)
@@ -160,10 +159,11 @@ describe('POST /api/growth/team-lead — Enterprise inquiry email notification',
       .send(VALID_ENTERPRISE_BODY);
 
     expect(res.status).toBe(201);
-    expect(mockSendTeamEnterpriseAdminNotification).not.toHaveBeenCalled();
-    expect(logger.error).toHaveBeenCalledWith(
-      expect.stringContaining('no admin email is configured'),
-      expect.objectContaining({ company_name: 'Acme Corp' })
+    expect(mockSendTeamEnterpriseAdminNotification).toHaveBeenCalledTimes(1);
+    // DEFAULT_INQUIRY_RECIPIENT constant in growth.js is 'janeen@theresilienceatlas.com'
+    expect(mockSendTeamEnterpriseAdminNotification).toHaveBeenCalledWith(
+      'janeen@theresilienceatlas.com',
+      expect.objectContaining({ companyName: 'Acme Corp' })
     );
   });
 

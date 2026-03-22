@@ -5,6 +5,10 @@ const AnalyticsEvent = require('../models/Analytics');
 const emailService = require('../services/emailService');
 const logger = require('../utils/logger');
 
+// Default recipient for enterprise inquiry notifications.
+// Override by setting ADMIN_EMAIL (or COMPANY_EMAIL / SUPPORT_EMAIL / EMAIL_FROM / YAHOO_EMAIL).
+const DEFAULT_INQUIRY_RECIPIENT = 'janeen@theresilienceatlas.com';
+
 // ── POST /api/growth/team-lead ───────────────────────────────
 // Capture a B2B team/organization lead from the /team page.
 // Admin notification is sent ONLY for Enterprise plan inquiries.
@@ -33,36 +37,31 @@ router.post('/team-lead', async (req, res) => {
     // and do not require admin involvement.
     const isEnterprise = !plan || plan === 'enterprise';
     if (isEnterprise) {
+      // Always notify janeen@theresilienceatlas.com by default.
+      // Override by setting ADMIN_EMAIL (or COMPANY_EMAIL / SUPPORT_EMAIL) in the environment.
       const adminEmail = (
         process.env.ADMIN_EMAIL ||
         process.env.COMPANY_EMAIL ||
         process.env.SUPPORT_EMAIL ||
         process.env.EMAIL_FROM ||
-        process.env.YAHOO_EMAIL
+        process.env.YAHOO_EMAIL ||
+        DEFAULT_INQUIRY_RECIPIENT
       );
-      if (adminEmail) {
-        emailService.sendTeamEnterpriseAdminNotification(adminEmail, {
-          contactName: contact_name,
-          companyName: company_name,
-          email,
-          teamSize:    team_size,
-          message,
-        }).then(() => {
-          logger.info('[growth/team-lead] Enterprise inquiry notification sent', { to: adminEmail, company_name });
-        }).catch((err) => {
-          logger.error('[growth/team-lead] Admin notification failed — inquiry was saved but email was NOT sent', {
-            to: adminEmail,
-            company_name,
-            error: err.message,
-          });
+      emailService.sendTeamEnterpriseAdminNotification(adminEmail, {
+        contactName: contact_name,
+        companyName: company_name,
+        email,
+        teamSize:    team_size,
+        message,
+      }).then(() => {
+        logger.info('[growth/team-lead] Enterprise inquiry notification sent', { to: adminEmail, company_name });
+      }).catch((err) => {
+        logger.error('[growth/team-lead] Admin notification failed — inquiry was saved but email was NOT sent', {
+          to: adminEmail,
+          company_name,
+          error: err.message,
         });
-      } else {
-        logger.error(
-          '[growth/team-lead] Enterprise inquiry received but no admin email is configured. ' +
-          'Set ADMIN_EMAIL (or COMPANY_EMAIL / SUPPORT_EMAIL) in your environment to receive notifications.',
-          { company_name, contact_name, email }
-        );
-      }
+      });
     }
 
     return res.status(201).json({ success: true, id: lead._id });
