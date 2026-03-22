@@ -227,7 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Guard: require results ────────────────────────────
   if (!results || !results.scores) {
-    showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', 'warning');
+    const params = new URLSearchParams(window.location.search);
+    const isReturnFromPayment = params.get('upgrade') === 'success';
+    if (isReturnFromPayment) {
+      showAlert('pdfAlert',
+        'Your payment was successful! Your assessment results could not be found in this browser — please re-take the assessment to generate your PDF report.',
+        'error', 'warning');
+    } else {
+      showAlert('pdfAlert', 'No results found. Please complete the assessment!', 'error', 'warning');
+    }
     ['primaryStrength', 'solidStrength', 'emergingStrength'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = '—';
@@ -338,6 +346,25 @@ document.addEventListener('DOMContentLoaded', () => {
     window.PaymentGating.applyGating();
   }
 
+  // ── Listen for post-payment verification success ───────
+  // payment-gating.js dispatches this event once the Stripe session is verified.
+  // Re-apply gating and hide the upgrade cards so users can immediately use
+  // the download/email buttons after being redirected back from Stripe.
+  document.addEventListener('paymentVerified', function () {
+    if (window.PaymentGating) {
+      window.PaymentGating.applyGating();
+    }
+    // Hide upgrade cards — user has paid.
+    const upgradeContainerEl = document.getElementById('upgradeCardsContainer');
+    if (upgradeContainerEl) upgradeContainerEl.innerHTML = '';
+    // Clear any stale "requires purchase" alert so users see a clean state.
+    const pdfAlertEl = document.getElementById('pdfAlert');
+    if (pdfAlertEl && pdfAlertEl.classList.contains('alert-error')) {
+      pdfAlertEl.innerHTML = '';
+      pdfAlertEl.className = 'alert';
+    }
+  });
+
   // ── Download PDF button ────────────────────────────────
   const downloadButton = document.getElementById('btnDownload');
   if (downloadButton) {
@@ -430,6 +457,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailInput) emailInput.focus();
         return;
       }
+      // Gate: a Deep Report purchase is required to email the PDF.
+      if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
+        showAlert('emailAlert', 'Sending your full PDF report requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+        const upgradeEl = document.getElementById('upgradeCardsContainer');
+        upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
       showAlert('emailAlert', 'Generating your report…', 'success', 'report');
       try {
         const storedResults = localStorage.getItem('resilience_results');
@@ -486,7 +520,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         showAlert('emailAlert', 'Report sent to ' + inputEmail + '!', 'success', 'email');
       } catch (e) {
-        if (e && e.message !== 'cancelled') {
+        if (e && e.upgradeRequired) {
+          showAlert('emailAlert', 'Sending your full PDF report requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+          const upgradeEl = document.getElementById('upgradeCardsContainer');
+          upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else if (e && e.message !== 'cancelled') {
           showAlert('emailAlert', e.message || 'Failed to send report.', 'error', 'error');
         }
       }
