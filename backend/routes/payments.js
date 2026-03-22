@@ -343,6 +343,28 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
                 );
             }
 
+            // Dump all own property names (including non-enumerable ones) so we
+            // capture fields that JSON.stringify silently skips (e.g. `stack`,
+            // inherited getters, or library-specific non-enumerable properties).
+            console.error(
+                'Stripe checkout err own props:',
+                Object.getOwnPropertyNames(err)
+            );
+            // Also log enumerable keys in case the sets differ.
+            console.error(
+                'Stripe checkout err enum keys:',
+                Object.keys(err)
+            );
+            // Serialize the full error using all own property names so that
+            // non-enumerable fields (like `stack`) are included in the output.
+            console.error(
+                'Stripe checkout err full:',
+                JSON.stringify(err, Object.getOwnPropertyNames(err))
+            );
+            // Log the raw error object last — useful when the JSON representation
+            // above is truncated, as Railway may still format it as an object.
+            console.error('Stripe checkout raw err:', err);
+
             // Run a connectivity probe to distinguish TLS / DNS / egress failures.
             // Intentionally fire-and-forget: diagnostic only, must not delay the response.
             runStripeTlsSmokeCheck();
