@@ -3,6 +3,7 @@ const router = express.Router();
 const Lead = require('../models/Lead');
 const AnalyticsEvent = require('../models/Analytics');
 const emailService = require('../services/emailService');
+const logger = require('../utils/logger');
 
 // ── POST /api/growth/team-lead ───────────────────────────────
 // Capture a B2B team/organization lead from the /team page.
@@ -32,7 +33,13 @@ router.post('/team-lead', async (req, res) => {
     // and do not require admin involvement.
     const isEnterprise = !plan || plan === 'enterprise';
     if (isEnterprise) {
-      const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_FROM || process.env.YAHOO_EMAIL;
+      const adminEmail = (
+        process.env.ADMIN_EMAIL ||
+        process.env.COMPANY_EMAIL ||
+        process.env.SUPPORT_EMAIL ||
+        process.env.EMAIL_FROM ||
+        process.env.YAHOO_EMAIL
+      );
       if (adminEmail) {
         emailService.sendTeamEnterpriseAdminNotification(adminEmail, {
           contactName: contact_name,
@@ -40,7 +47,21 @@ router.post('/team-lead', async (req, res) => {
           email,
           teamSize:    team_size,
           message,
-        }).catch((err) => console.warn('[growth/team-lead] Admin notification failed:', err.message));
+        }).then(() => {
+          logger.info('[growth/team-lead] Enterprise inquiry notification sent', { to: adminEmail, company_name });
+        }).catch((err) => {
+          logger.error('[growth/team-lead] Admin notification failed — inquiry was saved but email was NOT sent', {
+            to: adminEmail,
+            company_name,
+            error: err.message,
+          });
+        });
+      } else {
+        logger.error(
+          '[growth/team-lead] Enterprise inquiry received but no admin email is configured. ' +
+          'Set ADMIN_EMAIL (or COMPANY_EMAIL / SUPPORT_EMAIL) in your environment to receive notifications.',
+          { company_name, contact_name, email }
+        );
       }
     }
 
