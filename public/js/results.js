@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.addEventListener('click', () => {
       try {
         if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
-          showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+          showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Please select an option below.', 'error', 'lock');
           const upgradeEl = document.getElementById('upgradeCardsContainer');
           upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
             email: downloadEmail,
           }).catch((err) => {
             if (err && err.upgradeRequired) {
-              showAlert('pdfAlert', 'PDF download requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+              showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Please select an option below.', 'error', 'lock');
               const upgradeEl = document.getElementById('upgradeCardsContainer');
               upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else if (err && err.message !== 'cancelled') {

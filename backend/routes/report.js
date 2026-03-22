@@ -3,6 +3,7 @@ const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
+const User = require('../models/User');
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
@@ -230,20 +231,35 @@ router.get('/generate', reportLimiter, async (req, res) => {
         if (process.env.STRIPE_SECRET_KEY) {
             if (!email) {
                 return res.status(402).json({
-                    error: 'A Deep Report or Atlas Premium purchase is required to download the PDF.',
+                    error: 'An Atlas Navigator or Atlas Premium purchase is required to download the PDF.',
                     upgradeRequired: true,
                 });
             }
             try {
+                const cleanEmail = String(email).toLowerCase().trim();
+                // Check for a completed individual purchase (atlas-navigator or atlas-premium).
                 const purchase = await Purchase.findOne({
-                    email: String(email).toLowerCase().trim(),
+                    email: cleanEmail,
+                    tier: { $in: ['atlas-navigator', 'atlas-premium'] },
                     status: 'completed',
                 });
                 if (!purchase) {
-                    return res.status(402).json({
-                        error: 'A Deep Report or Atlas Premium purchase is required to download the PDF.',
-                        upgradeRequired: true,
-                    });
+                    // Fallback: check the User record's purchasedDeepReport flag,
+                    // which covers users whose access was granted outside the
+                    // standard Stripe checkout flow (e.g. admin grants or migrations).
+                    let userHasAccess = false;
+                    try {
+                        const user = await User.findOne({ email: cleanEmail });
+                        userHasAccess = Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
+                    } catch (userErr) {
+                        console.warn('User access check skipped (DB unavailable):', userErr.message);
+                    }
+                    if (!userHasAccess) {
+                        return res.status(402).json({
+                            error: 'An Atlas Navigator or Atlas Premium purchase is required to download the PDF.',
+                            upgradeRequired: true,
+                        });
+                    }
                 }
             } catch (dbErr) {
                 console.warn('Purchase check skipped (DB unavailable):', dbErr.message);

@@ -57,7 +57,7 @@ const TIERS = {
     },
     'atlas-premium': {
         name: 'Atlas Premium',
-        amount: 4900, // $49.00
+        amount: 4999, // $49.99
         currency: 'usd',
     },
 };
@@ -88,7 +88,7 @@ const TIER_CONFIG = {
     },
     'atlas-premium': {
         name: 'Atlas Premium',
-        price: 4900, // $49.00
+        price: 4999, // $49.99
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
