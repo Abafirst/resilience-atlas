@@ -4,6 +4,8 @@
  * Exposes `ResilienceSharing` global object with methods:
  *   - shareLinkedIn(dominantDimension)
  *   - shareTwitter(dominantDimension)
+ *   - shareInstagram(dominantDimension)
+ *   - shareFacebook(dominantDimension)
  *   - copyShareLink()
  *   - downloadRadarImage()
  *   - trackShare(platform)
@@ -14,6 +16,7 @@
 
   const BASE_URL = window.location.origin;
   const INSTAGRAM_PROFILE = 'https://www.instagram.com/atlas.resilience/';
+  const FACEBOOK_PAGE = 'https://www.facebook.com/profile.php?id=100076220534241';
 
   /* ── Helpers ───────────────────────────────────────────── */
 
@@ -97,6 +100,15 @@
     },
 
     /**
+     * Open the Resilience Atlas Facebook page.
+     * @param {string} dominantDimension
+     */
+    shareFacebook(dominantDimension) {
+      window.open(FACEBOOK_PAGE, '_blank', 'noopener,noreferrer');
+      trackShareEvent('facebook', dominantDimension);
+    },
+
+    /**
      * Copy the current results page share link to clipboard.
      */
     copyShareLink() {
@@ -169,6 +181,11 @@
       const btnInstagram = document.getElementById('btnShareInstagram');
       if (btnInstagram) {
         btnInstagram.addEventListener('click', () => this.shareInstagram(dim));
+      }
+
+      const btnFacebook = document.getElementById('btnShareFacebook');
+      if (btnFacebook) {
+        btnFacebook.addEventListener('click', () => this.shareFacebook(dim));
       }
 
       const btnCopy = document.getElementById('btnShareCopy');
