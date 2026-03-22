@@ -323,7 +323,7 @@
                         console.warn('[PaymentGating] Could not restore results:', e);
                     }
                 }
-                _showSuccessBanner(data.tier);
+                _showSuccessBanner();
                 applyGating();
                 // Notify other scripts (e.g. results.js) that access is now unlocked.
                 document.dispatchEvent(new CustomEvent('paymentVerified', {
@@ -351,71 +351,54 @@
         _cleanUrl();
     }
 
-    function _showSuccessBanner(tier) {
-        var messages = {
-            'enterprise':     'Welcome to Atlas Team Enterprise! All features including custom branding and webhooks are unlocked.',
-            'pro':            'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
-            'starter':        'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
-            'teams-pro':      'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
-            'teams-starter':  'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
-            'business':       'Welcome to the Business tier! Team analytics and dashboard are now unlocked.',
-            'atlas-premium':  'Welcome to Atlas Premium! All premium features are now unlocked.',
-        };
-        var msg = messages[tier] || 'Your Deep Resilience Report is now unlocked!';
-
-        // Show download/email CTAs only on pages that have those buttons.
-        var hasDownloadButton = !!document.getElementById('btnDownload');
+    function _showSuccessBanner() {
+        var REDIRECT_DELAY_MS = 3000;
 
         var banner = document.createElement('div');
         banner.className = 'payment-success-banner';
         banner.setAttribute('role', 'alert');
         banner.setAttribute('aria-live', 'polite');
+        banner.style.setProperty('--banner-duration', (REDIRECT_DELAY_MS / 1000) + 's');
 
         var iconImg = document.createElement('img');
         iconImg.src = '/icons/success.svg';
         iconImg.alt = '';
         iconImg.setAttribute('aria-hidden', 'true');
         iconImg.className = 'icon icon-sm';
-
-        var textNode = document.createTextNode(' ' + msg);
         banner.appendChild(iconImg);
+
+        var textNode = document.createTextNode(' Payment successful! You will be redirected in a moment. Please be patient.');
         banner.appendChild(textNode);
 
-        if (hasDownloadButton) {
-            // Add a prominent "Download PDF" CTA so users know exactly what to do next.
-            var ctaBtn = document.createElement('button');
-            ctaBtn.textContent = '⬇ Download PDF';
-            ctaBtn.setAttribute('aria-label', 'Download your PDF report');
-            ctaBtn.className = 'payment-banner-cta payment-banner-cta--primary';
-            ctaBtn.addEventListener('click', function () {
-                var downloadBtn = document.getElementById('btnDownload');
-                if (downloadBtn) {
-                    banner.remove();
-                    downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    downloadBtn.focus();
-                }
-            });
-            banner.appendChild(ctaBtn);
+        // Progress bar counts down to the redirect.
+        var progressBar = document.createElement('div');
+        progressBar.className = 'payment-success-progress';
+        banner.appendChild(progressBar);
 
-            // Also add an "Email PDF" CTA.
-            var emailCtaBtn = document.createElement('button');
-            emailCtaBtn.textContent = '✉ Email PDF';
-            emailCtaBtn.setAttribute('aria-label', 'Email your PDF report');
-            emailCtaBtn.className = 'payment-banner-cta payment-banner-cta--secondary';
-            emailCtaBtn.addEventListener('click', function () {
-                var emailBtn = document.getElementById('btnEmail');
-                if (emailBtn) {
-                    banner.remove();
-                    emailBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    emailBtn.focus();
-                }
-            });
-            banner.appendChild(emailCtaBtn);
-        }
+        // Fallback link shown in case the redirect is delayed.
+        // Use pathname only (no query params or hash) so the page reloads cleanly
+        // after _cleanUrl() has already stripped the Stripe session params.
+        var fallback = document.createElement('a');
+        fallback.className = 'payment-banner-fallback';
+        fallback.textContent = 'If you are not redirected, click here to continue.';
+        fallback.href = window.location.pathname;
+        fallback.setAttribute('aria-label', 'Continue to your results');
+        banner.appendChild(fallback);
 
         document.body.insertBefore(banner, document.body.firstChild);
-        // Keep the success banner visible longer so users can act on the CTAs.
-        setTimeout(function () { if (banner.parentNode) banner.remove(); }, 15000);
+
+        // Auto-redirect: reload the current page (without query params) so the
+        // frontend fetches a fresh access status and removes any locked overlays.
+        var redirectTimer = setTimeout(function () {
+            if (banner.parentNode) banner.remove();
+            window.location.href = window.location.pathname;
+        }, REDIRECT_DELAY_MS);
+
+        // If the user clicks the fallback link, cancel the timer so we don't
+        // redirect twice.
+        fallback.addEventListener('click', function () {
+            clearTimeout(redirectTimer);
+        });
     }
 
     function _cleanUrl() {
