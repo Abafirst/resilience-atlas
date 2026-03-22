@@ -15,8 +15,9 @@
  */
 (function (window) {
 
-    const TIER_KEY  = 'resilience_tier';
-    const EMAIL_KEY = 'resilience_email';
+    const TIER_KEY       = 'resilience_tier';
+    const EMAIL_KEY      = 'resilience_email';
+    const SESSION_ID_KEY = 'resilience_session_id';
 
     /**
      * Tier hierarchy (lowest → highest access):
@@ -139,7 +140,13 @@
         return getTier() === 'enterprise';
     }
 
-    // -- Apply/remove locks ----------------------------------------------------
+    /** True for any Teams tier (starter, pro, or enterprise). */
+    function hasTeamsAccess() {
+        const t = getTier();
+        return t === 'starter' || t === 'pro' || t === 'enterprise';
+    }
+
+    // -- Apply/remove locks ---------------------------------------------------
 
     /**
      * Walk every element with a data-tier attribute and show or hide its
@@ -300,6 +307,11 @@
                 if (data.email) {
                     localStorage.setItem(EMAIL_KEY, data.email);
                 }
+                // Persist the Stripe session ID so teams pages can request
+                // gated downloads without requiring re-verification.
+                if (sessionId) {
+                    localStorage.setItem(SESSION_ID_KEY, sessionId);
+                }
                 // Restore results from localStorage into window so the page can render them.
                 if (!window.resilience_results) {
                     try {
@@ -442,6 +454,9 @@
         isTeamsStarter:       isTeamsStarter,
         isTeamsPro:           isTeamsPro,
         isEnterprise:         isEnterprise,
+        hasTeamsAccess:       hasTeamsAccess,
+        getSessionId:         function () { return localStorage.getItem(SESSION_ID_KEY) || ''; },
+        getEmail:             function () { return localStorage.getItem(EMAIL_KEY) || ''; },
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,

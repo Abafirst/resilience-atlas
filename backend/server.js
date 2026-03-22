@@ -215,6 +215,8 @@ app.use("/admin", require("./routes/admin"));
 console.log("✅ Mounted route: /admin");
 app.use("/api/resources", require("./routes/resources"));
 console.log("✅ Mounted route: /api/resources");
+app.use("/api/teams", require("./routes/teams-resources"));
+console.log("✅ Mounted route: /api/teams");
 
 // ==============================
 // Root API info
