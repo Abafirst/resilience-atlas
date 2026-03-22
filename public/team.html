@@ -844,9 +844,17 @@
       </div>
 
     </div>
-    <p style="text-align:center;margin-top:2rem;font-size:.93rem;color:#64748b;">
-      All facilitation materials are available with Teams Pro and Enterprise plans. <a href="#teamLeadForm" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;" style="color:#4F46E5;font-weight:600;">Contact us to learn more.</a>
+    <p id="teams-resource-gate-msg" style="text-align:center;margin-top:2rem;font-size:.93rem;color:#64748b;">
+      All facilitation materials are available with Teams packages. <a href="#pricing" style="color:#4F46E5;font-weight:600;">View packages →</a>
     </p>
+    <div id="teams-resource-hub" hidden style="text-align:center;margin-top:2rem">
+      <p style="color:#166534;font-weight:600;font-size:.95rem;margin:0 0 .75rem">✓ Your Teams purchase includes full access to all resources below.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <a href="/teams-resources.html" style="background:#4F46E5;color:#fff;border-radius:8px;padding:.6rem 1.25rem;font-weight:700;text-decoration:none;font-size:.9rem">📥 Browse &amp; Download All Resources →</a>
+        <a href="/teams-facilitation.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem 1.25rem;font-weight:600;text-decoration:none;font-size:.9rem">📋 Full Facilitation Guide</a>
+        <a href="/teams-activities.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem 1.25rem;font-weight:600;text-decoration:none;font-size:.9rem">🎯 Activity Library</a>
+      </div>
+    </div>
   </section>
 
   <!-- Six Dimensions Visual Guide -->
@@ -1097,5 +1105,6 @@
     }
   </script>
 <script src="/js/theme-toggle.js"></script>
+  <script src="/js/teams-access.js"></script>
 </body>
 </html>
