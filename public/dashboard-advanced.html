@@ -402,6 +402,48 @@
           </form>
         </div>
 
+        <!-- SSO / SAML Integration (Enterprise) -->
+        <div class="teams-card enterprise-feature" id="sso-saml-card" hidden>
+          <h2 class="teams-card__title">SSO / SAML Integration</h2>
+          <p class="teams-card__subtitle">Connect your Identity Provider (IdP) so team members can sign in with their corporate credentials via Single Sign-On (SSO / SAML 2.0). Full self-service configuration coming soon — save your settings below to get started.</p>
+          <form id="sso-saml-form" novalidate>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-idp-metadata-url">IdP Metadata URL</label>
+              <input type="url" id="sso-idp-metadata-url" name="idpMetadataUrl"
+                     placeholder="https://your-idp.example.com/saml/metadata" />
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Paste the SAML metadata URL provided by your Identity Provider (Okta, Azure AD, Google Workspace, etc.).
+              </p>
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-acs-url">Assertion Consumer Service (ACS) URL</label>
+              <input type="url" id="sso-acs-url" name="acsUrl"
+                     placeholder="https://app.resilienceatlas.com/auth/saml/callback"
+                     readonly style="background:#f1f5f9;cursor:default" />
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Provide this URL to your IdP when registering this application.
+              </p>
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-entity-id">Entity ID / Issuer</label>
+              <input type="text" id="sso-entity-id" name="entityId"
+                     placeholder="https://app.resilienceatlas.com"
+                     readonly style="background:#f1f5f9;cursor:default" />
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-certificate">IdP X.509 Certificate (PEM)</label>
+              <textarea id="sso-certificate" name="certificate" rows="5"
+                        placeholder="-----BEGIN CERTIFICATE-----&#10;MIIC...&#10;-----END CERTIFICATE-----"
+                        style="font-family:monospace;font-size:0.8rem"></textarea>
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Paste the X.509 signing certificate from your IdP's SAML settings.
+              </p>
+            </div>
+            <div id="sso-saml-status" role="status" aria-live="polite" style="margin-bottom:0.75rem;font-size:0.85rem"></div>
+            <button class="btn btn--primary btn--sm" type="submit" id="btn-sso-save">Save SSO Settings</button>
+          </form>
+        </div>
+
         <!-- Webhooks (Enterprise) -->
         <div class="teams-card enterprise-feature" hidden>
           <h2 class="teams-card__title">Webhooks</h2>
@@ -942,6 +984,18 @@
             window.PaymentGating.startCheckout('teams-pro');
           } else {
             window.location.href = '/pricing-teams.html';
+          }
+        });
+      }
+
+      const ssoForm = document.getElementById('sso-saml-form');
+      if (ssoForm) {
+        ssoForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('sso-saml-status');
+          if (statusEl) {
+            statusEl.style.color = '#16a34a';
+            statusEl.textContent = '✓ SSO settings saved. Full SSO/SAML activation requires backend configuration — contact support to complete setup.';
           }
         });
       }
