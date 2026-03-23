@@ -3,6 +3,7 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
+import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 const PAGES = { login: 'login', register: 'register', payment: 'payment', success: 'success' };
 
@@ -31,13 +32,33 @@ export default function App() {
   };
 
   if (page === PAGES.register) {
-    return <Register onRegistered={() => setPage(PAGES.login)} onLogin={() => setPage(PAGES.login)} />;
+    return (
+      <>
+        <Auth0LoginBar />
+        <Register onRegistered={() => setPage(PAGES.login)} onLogin={() => setPage(PAGES.login)} />
+      </>
+    );
   }
   if (page === PAGES.login || !token) {
-    return <Login onLogin={handleLogin} onRegister={() => setPage(PAGES.register)} />;
+    return (
+      <>
+        <Auth0LoginBar />
+        <Login onLogin={handleLogin} onRegister={() => setPage(PAGES.register)} />
+      </>
+    );
   }
   if (page === PAGES.success) {
-    return <PaymentSuccess result={paymentResult} onNewPayment={() => setPage(PAGES.payment)} onLogout={handleLogout} />;
+    return (
+      <>
+        <Auth0LoginBar />
+        <PaymentSuccess result={paymentResult} onNewPayment={() => setPage(PAGES.payment)} onLogout={handleLogout} />
+      </>
+    );
   }
-  return <Payment token={token} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />;
+  return (
+    <>
+      <Auth0LoginBar />
+      <Payment token={token} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />
+    </>
+  );
 }
