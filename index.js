@@ -78,7 +78,6 @@ app.get('/', (req, res) => {
 });
 
 // Mount route modules
-app.use('/auth', require('./routes/auth'));
 app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
 
