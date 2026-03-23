@@ -73,44 +73,32 @@ const Auth = (() => {
     }
 
     /**
-     * Log in with email + password, persist session.
-     * @param {string} email
-     * @param {string} password
-     * @returns {Promise<Object>}
+     * Redirect to the application to trigger Auth0 Universal Login.
+     * The email/password parameters are no longer used; authentication is
+     * handled entirely by Auth0 Universal Login.
+     * @returns {void}
      */
-    async function login(email, password) {
-        const data = await apiFetch('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        setSession(data.token, data.user);
-        return data;
+    // eslint-disable-next-line no-unused-vars
+    function login(email, password) {
+        window.location.href = '/app';
     }
 
     /**
-     * Sign up with username, email, and password.
-     * @param {string} username
-     * @param {string} email
-     * @param {string} password
-     * @param {string} [referralCode]
-     * @returns {Promise<Object>}
+     * Redirect to the application to trigger Auth0 Universal Login (signup screen).
+     * The username/email/password/referralCode parameters are no longer used;
+     * registration is handled entirely by Auth0 Universal Login.
+     * @returns {void}
      */
-    async function signup(username, email, password, referralCode) {
-        const data = await apiFetch('/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, password, referralCode })
-        });
-        setSession(data.token, data.user);
-        return data;
+    // eslint-disable-next-line no-unused-vars
+    function signup(username, email, password, referralCode) {
+        window.location.href = '/app';
     }
 
     /**
-     * Log the current user out and clear the session.
-     * @param {string} [redirectTo='/login.html']
+     * Log the current user out and redirect to the app root.
+     * @param {string} [redirectTo='/']
      */
-    function logout(redirectTo = '/login.html') {
+    function logout(redirectTo = '/') {
         clearSession();
         window.location.href = redirectTo;
     }
@@ -126,10 +114,10 @@ const Auth = (() => {
     }
 
     /**
-     * Guard a page — redirect to login if not authenticated.
-     * @param {string} [loginUrl='/login.html']
+     * Guard a page — redirect to the app (Auth0 login) if not authenticated.
+     * @param {string} [loginUrl='/app']
      */
-    function requireAuth(loginUrl = '/login.html') {
+    function requireAuth(loginUrl = '/app') {
         if (!isLoggedIn()) {
             window.location.href = loginUrl;
         }
