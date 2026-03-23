@@ -93,6 +93,7 @@
       <button class="teams-tab" data-tab="action-plans" role="tab" aria-selected="false">🎯 Action Plans</button>
       <button class="teams-tab" data-tab="team-mgmt" role="tab" aria-selected="false">👥 Team Management</button>
       <button class="teams-tab" data-tab="settings" role="tab" aria-selected="false">⚙️ Settings</button>
+      <button class="teams-tab enterprise-feature" data-tab="branding" role="tab" aria-selected="false" hidden>🎨 Custom Branding</button>
       <button class="teams-tab teams-pro-feature" data-tab="report" role="tab" aria-selected="false" hidden>📄 Report</button>
     </nav>
 
@@ -332,31 +333,15 @@
 
       <div class="teams-grid teams-grid--2">
 
-        <!-- Branding (Enterprise) -->
+        <!-- Branding (Enterprise) — see dedicated Custom Branding tab -->
         <div class="teams-card enterprise-feature" hidden>
           <h2 class="teams-card__title">Custom Branding</h2>
-          <p class="teams-card__subtitle">Your logo and colors appear on the dashboard and reports</p>
-          <form id="branding-form">
-            <div class="teams-form-group" style="margin-bottom:1rem">
-              <label for="brand-logo">Logo URL</label>
-              <input type="url" id="brand-logo" placeholder="https://yourcompany.com/logo.png" />
-            </div>
-            <div class="teams-form-row">
-              <div class="teams-form-group">
-                <label for="brand-primary">Primary Color</label>
-                <input type="color" id="brand-primary" value="#1a2e5a" />
-              </div>
-              <div class="teams-form-group">
-                <label for="brand-accent">Accent Color</label>
-                <input type="color" id="brand-accent" value="#3b82f6" />
-              </div>
-            </div>
-            <div class="teams-form-group" style="margin-bottom:1rem">
-              <label for="brand-intro">Assessment Intro Message</label>
-              <textarea id="brand-intro" rows="3" placeholder="Optional message shown to team members before they take the assessment…" maxlength="1000"></textarea>
-            </div>
-            <button class="btn btn--primary" type="submit">Save Branding</button>
-          </form>
+          <p class="teams-card__subtitle">Personalize the dashboard and reports with your organization's logo and colors.</p>
+          <button
+            class="btn btn--primary btn--sm"
+            type="button"
+            onclick="document.querySelector('[data-tab=branding]') && document.querySelector('[data-tab=branding]').click()"
+          >Open Custom Branding →</button>
         </div>
 
         <!-- Scheduled Exports -->
@@ -426,6 +411,98 @@
           </form>
         </div>
 
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Custom Branding (Enterprise)                                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-branding" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:720px;margin-bottom:1.5rem">
+        <h2 class="teams-card__title">🎨 Custom Branding</h2>
+        <p class="teams-card__subtitle">Personalize the dashboard and reports with your organization's identity.</p>
+        <p style="font-size:0.875rem;color:#64748b;margin:0.5rem 0 1.5rem">
+          Full self-service branding is coming soon. Use the fields below to preview and configure your
+          logo, brand colors, and a custom intro message. These settings will automatically apply to your
+          team dashboard and generated PDF reports once the feature ships.
+        </p>
+
+        <form id="enterprise-branding-form" novalidate>
+
+          <!-- Logo upload -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Organization Logo</legend>
+
+            <div class="teams-form-group" style="margin-bottom:0.75rem">
+              <label for="brand-logo-file">Upload logo (PNG, SVG, or JPEG — max 2 MB)</label>
+              <input
+                type="file"
+                id="brand-logo-file"
+                name="brand-logo-file"
+                accept="image/png,image/svg+xml,image/jpeg"
+                style="margin-top:0.25rem"
+              />
+            </div>
+
+            <div id="brand-logo-preview" style="display:none;margin-top:0.5rem">
+              <p style="font-size:0.8125rem;color:#64748b;margin:0 0 0.375rem">Preview:</p>
+              <img id="brand-logo-img" src="" alt="Logo preview" style="max-height:64px;max-width:200px;border:1px solid #e2e8f0;border-radius:6px;padding:4px;background:#fff" />
+            </div>
+          </fieldset>
+
+          <!-- Color pickers -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Brand Colors</legend>
+            <div class="teams-form-row">
+              <div class="teams-form-group">
+                <label for="brand-color-primary">Primary Color</label>
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-top:0.25rem">
+                  <input type="color" id="brand-color-primary" name="brand-color-primary" value="#1a3a5c" style="width:48px;height:36px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer" />
+                  <input type="text" id="brand-color-primary-hex" value="#1a3a5c" maxlength="7" placeholder="#1a3a5c" style="width:90px" aria-label="Primary color hex value" />
+                </div>
+                <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Used for headers and primary buttons</p>
+              </div>
+              <div class="teams-form-group">
+                <label for="brand-color-accent">Accent Color</label>
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-top:0.25rem">
+                  <input type="color" id="brand-color-accent" name="brand-color-accent" value="#3b82f6" style="width:48px;height:36px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer" />
+                  <input type="text" id="brand-color-accent-hex" value="#3b82f6" maxlength="7" placeholder="#3b82f6" style="width:90px" aria-label="Accent color hex value" />
+                </div>
+                <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Used for highlights and links</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Intro message -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Custom Intro Message</legend>
+            <div class="teams-form-group">
+              <label for="brand-intro-msg">Message shown to team members before the assessment</label>
+              <textarea
+                id="brand-intro-msg"
+                name="brand-intro-msg"
+                rows="4"
+                placeholder="e.g. Welcome to Acme Corp's Resilience Assessment. Your responses are confidential and will help us support your growth…"
+                maxlength="1000"
+                style="margin-top:0.25rem"
+              ></textarea>
+              <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Max 1,000 characters</p>
+            </div>
+          </fieldset>
+
+          <!-- Coming-soon notice -->
+          <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:0.875rem 1rem;margin-bottom:1.25rem;font-size:0.875rem;color:#0369a1">
+            <strong>🚧 Coming Soon:</strong> Full branding support — including dynamic theme application,
+            white-labelled PDF reports, custom email templates, and subdomain configuration — will be
+            available in a future release. Save your settings here to be first in line when it ships.
+          </div>
+
+          <button class="btn btn--primary" type="submit" disabled style="opacity:0.6;cursor:not-allowed" title="Backend integration coming soon">Save Branding (coming soon)</button>
+          <p style="font-size:0.75rem;color:#94a3b8;margin:0.5rem 0 0">Settings are not yet persisted. This UI is a preview of the upcoming branding feature.</p>
+
+        </form>
       </div>
 
     </section>
@@ -529,6 +606,7 @@
 
       setupTabs();
       setupButtons();
+      setupBranding();
 
       // Check tier access
       const tier = window.PaymentGating ? window.PaymentGating.getTier() : 'free';
@@ -929,6 +1007,60 @@
 
     function escAttr(str) {
       return String(str || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // ── Custom Branding UI ────────────────────────────────────────────────────
+
+    function setupBranding() {
+      // Sync color picker ↔ hex text field
+      function syncColorInputs(pickerId, hexId) {
+        const picker = document.getElementById(pickerId);
+        const hex    = document.getElementById(hexId);
+        if (!picker || !hex) return;
+        picker.addEventListener('input', () => { hex.value = picker.value; });
+        hex.addEventListener('input', () => {
+          if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) picker.value = hex.value;
+        });
+      }
+      syncColorInputs('brand-color-primary', 'brand-color-primary-hex');
+      syncColorInputs('brand-color-accent',  'brand-color-accent-hex');
+
+      // Logo file → preview
+      const logoFile    = document.getElementById('brand-logo-file');
+      const logoPreview = document.getElementById('brand-logo-preview');
+      const logoImg     = document.getElementById('brand-logo-img');
+      if (logoFile && logoPreview && logoImg) {
+        logoFile.addEventListener('change', () => {
+          const file = logoFile.files && logoFile.files[0];
+          if (!file) {
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const allowed = ['image/png', 'image/svg+xml', 'image/jpeg'];
+          if (!allowed.includes(file.type)) {
+            alert('Please upload a PNG, SVG, or JPEG file.');
+            logoFile.value = '';
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const maxBytes = 2 * 1024 * 1024; // 2 MB
+          if (file.size > maxBytes) {
+            alert('File is too large. Please upload an image under 2 MB.');
+            logoFile.value = '';
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            logoImg.src = e.target.result;
+            logoPreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        });
+      }
     }
 
     return { init, load };
