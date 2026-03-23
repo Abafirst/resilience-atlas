@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import Login from './pages/Login.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 export default function App() {
-  const { isLoading, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
+  const { isLoading, isAuthenticated, getAccessTokenSilently, logout, loginWithRedirect } = useAuth0();
   const [page, setPage] = useState('payment');
   const [paymentResult, setPaymentResult] = useState(null);
   const [accessToken, setAccessToken] = useState('');
+  // Guard against calling loginWithRedirect more than once per mount.
+  const redirecting = useRef(false);
+
+  // Redirect unauthenticated users directly to Auth0 Universal Login.
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && !redirecting.current) {
+      redirecting.current = true;
+      loginWithRedirect();
+    }
+  }, [isLoading, isAuthenticated, loginWithRedirect]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -31,23 +40,11 @@ export default function App() {
     setPage('success');
   };
 
-  if (isLoading) {
+  if (isLoading || !isAuthenticated) {
     return (
-      <>
-        <Auth0LoginBar />
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7fa' }}>
-          <span style={{ color: '#666', fontSize: 16 }}>Loading…</span>
-        </div>
-      </>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <>
-        <Auth0LoginBar />
-        <Login />
-      </>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7fa' }}>
+        <span style={{ color: '#666', fontSize: 16 }}>Redirecting to login…</span>
+      </div>
     );
   }
 

@@ -161,6 +161,8 @@ app.get("/health", (req, res) => {
 app.get("/config", (req, res) => {
   res.json({
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
+    auth0Domain: process.env.AUTH0_DOMAIN || null,
+    auth0ClientId: process.env.AUTH0_CLIENT_ID || null,
   });
 });
 
@@ -258,6 +260,43 @@ app.get("/team", pageLimiter, (req, res) => {
 // ── Admin leads page ────────────────────────────────────────
 app.get("/admin/leads/ui", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/admin/leads.html"));
+});
+
+// ── Auth routes — redirect to Auth0 Universal Login ─────────
+// These routes ensure that navigating to /login or /register never
+// renders a legacy local form.  When AUTH0_DOMAIN and AUTH0_CLIENT_ID
+// are configured the user is sent directly to the Auth0 hosted login
+// page; otherwise they are redirected to the homepage as a safe fallback.
+//
+// redirect_uri is sourced exclusively from environment variables to avoid
+// open-redirect vulnerabilities that can arise when request headers are
+// used to derive a callback URL.
+function buildAuth0AuthorizeUrl(screenHint) {
+  const domain = process.env.AUTH0_DOMAIN;
+  const clientId = process.env.AUTH0_CLIENT_ID;
+  // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
+  const redirectUri = process.env.AUTH0_REDIRECT_URI || process.env.APP_URL || null;
+  if (!domain || !clientId) return null;
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: clientId,
+    redirect_uri: redirectUri || "",
+    scope: "openid profile email",
+  });
+  if (screenHint) params.set("screen_hint", screenHint);
+  return `https://${domain}/authorize?${params.toString()}`;
+}
+
+app.get("/login", pageLimiter, (req, res) => {
+  const url = buildAuth0AuthorizeUrl(null);
+  if (url) return res.redirect(302, url);
+  res.redirect("/");
+});
+
+app.get("/register", pageLimiter, (req, res) => {
+  const url = buildAuth0AuthorizeUrl("signup");
+  if (url) return res.redirect(302, url);
+  res.redirect("/");
 });
 
 // ==============================
