@@ -119,13 +119,6 @@ test('calculateScore returns correct score for failing answers', () => {
 // --- route stubs ---
 console.log('\nRoute stubs:');
 
-test('routes/auth.js loads without error', () => {
-    // We can't fully load it without a DB, but require should not throw for the module itself
-    // Just check the file exists
-    const fs = require('fs');
-    assert(fs.existsSync(path.join(__dirname, '../routes/auth.js')), 'routes/auth.js should exist');
-});
-
 test('routes/quizzes.js loads without error', () => {
     const fs = require('fs');
     assert(fs.existsSync(path.join(__dirname, '../routes/quizzes.js')), 'routes/quizzes.js should exist');
@@ -179,38 +172,27 @@ async function runHttpTests() {
         assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
     });
 
-    // --- Auth endpoint tests ---
-    console.log('\nAuth endpoints:');
+    // --- Auth redirect tests (Auth0 Universal Login) ---
+    console.log('\nAuth endpoints (Auth0 redirect):');
 
-    await testAsync('POST /auth/signup with missing body returns 400', async () => {
-        const res = await request.post('/auth/signup').send({});
-        assert.strictEqual(res.status, 400, `expected 400, got ${res.status}`);
-        assert(res.body.error, 'response should have an error field');
+    await testAsync('GET /login redirects (no local login form rendered)', async () => {
+        const res = await request.get('/login');
+        assert.strictEqual(res.status, 302, `expected 302 redirect, got ${res.status}`);
     });
 
-    await testAsync('POST /auth/signup creates a user and returns 201', async () => {
-        const res = await request.post('/auth/signup').send({ username: 'testuser_suite', password: 'pass1234' });
-        assert.strictEqual(res.status, 201, `expected 201, got ${res.status}`);
-        assert(res.body.message, 'response should have a message field');
+    await testAsync('GET /register redirects (no local registration form rendered)', async () => {
+        const res = await request.get('/register');
+        assert.strictEqual(res.status, 302, `expected 302 redirect, got ${res.status}`);
     });
 
-    await testAsync('POST /auth/signup duplicate username returns 409', async () => {
-        await request.post('/auth/signup').send({ username: 'dup_user', password: 'pass1234' });
-        const res = await request.post('/auth/signup').send({ username: 'dup_user', password: 'pass1234' });
-        assert.strictEqual(res.status, 409, `expected 409, got ${res.status}`);
+    await testAsync('POST /auth/signup returns 404 (local signup removed)', async () => {
+        const res = await request.post('/auth/signup').send({ email: 'x@example.com', password: 'pass' });
+        assert.strictEqual(res.status, 404, `expected 404, got ${res.status}`);
     });
 
-    await testAsync('POST /auth/login with valid credentials returns a JWT token', async () => {
-        await request.post('/auth/signup').send({ username: 'login_user', password: 'pass1234' });
-        const res = await request.post('/auth/login').send({ username: 'login_user', password: 'pass1234' });
-        assert.strictEqual(res.status, 200, `expected 200, got ${res.status}`);
-        assert(typeof res.body.token === 'string' && res.body.token.length > 0, 'response should include a JWT token');
-    });
-
-    await testAsync('POST /auth/login with wrong password returns 401', async () => {
-        await request.post('/auth/signup').send({ username: 'badpass_user', password: 'correct' });
-        const res = await request.post('/auth/login').send({ username: 'badpass_user', password: 'wrong' });
-        assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
+    await testAsync('POST /auth/login returns 404 (local login removed)', async () => {
+        const res = await request.post('/auth/login').send({ email: 'x@example.com', password: 'pass' });
+        assert.strictEqual(res.status, 404, `expected 404, got ${res.status}`);
     });
 
     // --- Quiz endpoint tests ---
