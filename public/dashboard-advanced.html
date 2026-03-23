@@ -94,6 +94,7 @@
       <button class="teams-tab" data-tab="team-mgmt" role="tab" aria-selected="false">👥 Team Management</button>
       <button class="teams-tab" data-tab="settings" role="tab" aria-selected="false">⚙️ Settings</button>
       <button class="teams-tab teams-pro-feature" data-tab="report" role="tab" aria-selected="false" hidden>📄 Report</button>
+      <button class="teams-tab enterprise-feature" data-tab="data-export" role="tab" aria-selected="false" hidden>📥 Data Export</button>
     </nav>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
@@ -453,6 +454,43 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Data Export (Enterprise)                                          -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-data-export" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:640px">
+        <h2 class="teams-card__title">Data Export</h2>
+        <p class="teams-card__subtitle">
+          Self-service data export for enterprise administrators. Download your organization's
+          reports, assessment results, and user activity logs to retain and analyze data on your own terms.
+        </p>
+
+        <p style="font-size:0.9rem;line-height:1.7;color:#374151;margin-bottom:1.5rem">
+          Coming soon: bulk export of all assessments, team reports, and user activity in CSV,
+          PDF, or ZIP format. Enterprise customers will be able to schedule automatic exports and
+          download historical data directly — no manual request required.
+        </p>
+
+        <ul style="font-size:0.875rem;line-height:1.8;color:#4b5563;margin:0 0 1.75rem 1.25rem;padding:0">
+          <li>📊 Export assessment results &amp; dimension scores</li>
+          <li>📄 Download team and individual reports (PDF / CSV)</li>
+          <li>🗂 Export full user activity logs</li>
+          <li>📅 Schedule recurring exports to your admin email</li>
+        </ul>
+
+        <button class="btn btn--primary" type="button" id="btn-data-export" disabled
+                aria-describedby="data-export-coming-soon">
+          Export Data
+        </button>
+        <p id="data-export-coming-soon" style="font-size:0.8rem;color:#6b7280;margin-top:0.75rem">
+          Full export functionality will be available in an upcoming release.
+          Contact support if you need data ahead of that.
+        </p>
+      </div>
+
     </section>
 
   </main>
