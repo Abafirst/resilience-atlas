@@ -27,4 +27,5 @@ coverage/
 assets/social/generated/*.png
 
 # Optional npm cache directory
-.npm
+.npmsendgrid.env
+sendgrid.env

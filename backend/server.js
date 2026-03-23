@@ -2,6 +2,7 @@
 // Core dependencies
 // ==============================
 const express = require("express");
+const { auth } = require('express-openid-connect');
 const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
@@ -31,7 +32,16 @@ const sentry = require("./config/sentry");
 // ==============================
 const app = express();
 app.use(express.static(path.join(__dirname, "../public")));
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: 'a long, randomly-generated string stored in env', // use env in production!
+  baseURL: 'http://localhost:3000',
+  clientID: 'Egwj9LGtWJmL7bJDkuWvRgTYv9vbmb4f',
+  issuerBaseURL: 'https://dev-ammhzit80o0cjhx5.us.auth0.com'
+};
 
+app.use(auth(config));
 // ==============================
 // Request timeout — PDF generation can take up to 2 minutes.
 // ==============================
