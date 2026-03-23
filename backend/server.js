@@ -303,11 +303,20 @@ app.get("/register", pageLimiter, (req, res) => {
 // Static Frontend
 // ==============================
 
+// Serve the React production build (client/dist) when it has been compiled.
+// client/dist takes precedence so the latest frontend build is always used.
+const clientDist = path.join(__dirname, "../client/dist");
+app.use(express.static(clientDist));
 app.use(express.static(path.join(__dirname, "../public")));
 
-// SPA fallback
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+// SPA fallback — serve the React entry point for any route not handled above.
+// Falls back to the legacy public/index.html when the React build is absent
+// (e.g. local development before running `npm run build`).
+app.get("*", pageLimiter, (req, res) => {
+  const reactIndex = path.join(clientDist, "index.html");
+  res.sendFile(reactIndex, (err) => {
+    if (err) res.sendFile(path.join(__dirname, "../public/index.html"));
+  });
 });
 
 // ==============================

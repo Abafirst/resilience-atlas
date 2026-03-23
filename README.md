@@ -190,7 +190,41 @@ See [`docs/brand/social-templates.md`](docs/brand/social-templates.md) for the f
 
 ---
 
-## 🏗️ Project Structure
+## 🚀 Deployment
+
+### Frontend Build
+
+The React frontend (`client/`) must be compiled before starting the server in production. The server then serves the built files from `client/dist`.
+
+```bash
+# Build the React frontend (run from the repo root)
+npm run build
+
+# Start the server (serves client/dist automatically)
+npm start
+```
+
+A combined helper script is also available:
+
+```bash
+# Build frontend then start server in one step
+npm run start:prod
+```
+
+### Railway (Docker)
+
+The included `Dockerfile` handles both steps automatically in a multi-stage build:
+
+1. **Stage 1** — installs client dependencies and runs `npm run build` inside `client/`
+2. **Stage 2** — copies `client/dist` into the final image alongside the Express backend
+
+No manual build step is required when deploying via Railway with the Dockerfile builder (the default in `railway.toml`).
+
+### How the Server Serves the Frontend
+
+`backend/server.js` serves static files from `client/dist` first (the React production build), then falls back to the legacy `public/` directory. Any route not handled by the API returns `client/dist/index.html` so React Router can handle client-side navigation.
+
+---
 
 
 ---
