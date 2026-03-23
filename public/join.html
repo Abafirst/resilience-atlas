@@ -174,11 +174,11 @@
         <button class="btn btn--primary" id="btn-accept-logged-in" style="display:none">
           ✅ Accept &amp; Join Organization
         </button>
-        <a id="btn-signup" href="/index.html#signup" class="btn btn--primary">
+        <a id="btn-signup" href="/register" class="btn btn--primary">
           🚀 Create Account &amp; Join
         </a>
         <div class="divider">or</div>
-        <a id="btn-login" href="/index.html#login" class="btn btn--secondary">
+        <a id="btn-login" href="/login" class="btn btn--secondary">
           🔑 Log In to Accept
         </a>
         <button class="btn btn--ghost" onclick="window.location.href='/'">Decline</button>
@@ -250,9 +250,10 @@
 
         $('invite-info').style.display = 'block';
 
-        // Point signup/login links to include next=join
-        var signupHref = '/index.html?invite=' + encodeURIComponent(inviteToken) + '#signup';
-        var loginHref  = '/index.html?invite=' + encodeURIComponent(inviteToken) + '#login';
+        // Point signup/login links to Auth0 Universal Login (invite token is
+        // preserved in sessionStorage so it can be read after the user returns).
+        var signupHref = '/register';
+        var loginHref  = '/login';
         $('btn-signup').href = signupHref;
         $('btn-login').href  = loginHref;
 
