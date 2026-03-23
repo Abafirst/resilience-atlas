@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Resilience Atlas&#8482; — Login</title>
+    <title>The Resilience Atlas&#8482; — Sign In</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,78 +23,26 @@
             width: 100%;
             max-width: 420px;
             padding: 40px;
-        }
-
-        .logo {
             text-align: center;
-            margin-bottom: 28px;
         }
 
         .logo h1 {
             color: #1a3a5c;
             font-size: 1.8rem;
             font-weight: 700;
+            margin-bottom: 8px;
         }
 
         .logo p {
             color: #6c757d;
             font-size: 0.9rem;
-            margin-top: 4px;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #e9ecef;
-            margin-bottom: 24px;
-        }
-
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            color: #6c757d;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            color: #2c7da0;
-            border-bottom-color: #2c7da0;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 6px;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #2c7da0;
-            box-shadow: 0 0 0 3px rgba(44,125,160,0.15);
+            margin-bottom: 32px;
         }
 
         .btn {
+            display: inline-block;
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: #2c7da0;
             color: #fff;
             border: none;
@@ -102,148 +50,27 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            text-decoration: none;
             transition: background 0.2s;
-            margin-top: 8px;
         }
 
         .btn:hover { background: #1a5f82; }
-        .btn:disabled { background: #94c5d9; cursor: not-allowed; }
 
-        .message {
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            display: none;
+        .note {
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 0.85rem;
         }
-
-        .message.error { background: #f8d7da; color: #842029; display: block; }
-        .message.success { background: #d1e7dd; color: #0a3622; display: block; }
-
-        .panel { display: none; }
-        .panel.active { display: block; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <h1>🌍 The Resilience Atlas&#8482;</h1>
+            <h1>&#127757; The Resilience Atlas&#8482;</h1>
             <p>Discover your resilience profile</p>
         </div>
-
-        <div id="message" class="message"></div>
-
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">Sign In</div>
-            <div class="tab" onclick="switchTab('signup')">Create Account</div>
-        </div>
-
-        <!-- Login Panel -->
-        <div id="panel-login" class="panel active">
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="you@example.com" required />
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required />
-                </div>
-                <button type="submit" class="btn" id="loginBtn">Sign In</button>
-            </form>
-        </div>
-
-        <!-- Signup Panel -->
-        <div id="panel-signup" class="panel">
-            <form id="signupForm" onsubmit="handleSignup(event)">
-                <div class="form-group">
-                    <label for="signupUsername">Username</label>
-                    <input type="text" id="signupUsername" placeholder="yourname" required minlength="3" />
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email</label>
-                    <input type="email" id="signupEmail" placeholder="you@example.com" required />
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Min. 6 characters" required minlength="6" />
-                </div>
-                <div class="form-group">
-                    <label for="referralCode">Referral Code (optional)</label>
-                    <input type="text" id="referralCode" placeholder="RA-..." />
-                </div>
-                <button type="submit" class="btn" id="signupBtn">Create Account</button>
-            </form>
-        </div>
+        <a href="/" class="btn">Sign In / Create Account</a>
+        <p class="note">Authentication is handled securely via Auth0.</p>
     </div>
-
-    <script src="/js/auth.js"></script>
-    <script>
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach((el, i) => {
-                el.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
-            });
-            document.getElementById('panel-login').classList.toggle('active', tab === 'login');
-            document.getElementById('panel-signup').classList.toggle('active', tab === 'signup');
-            hideMessage();
-        }
-
-        function showMessage(text, type) {
-            const el = document.getElementById('message');
-            el.textContent = text;
-            el.className = `message ${type}`;
-        }
-
-        function hideMessage() {
-            document.getElementById('message').className = 'message';
-        }
-
-        async function handleLogin(e) {
-            e.preventDefault();
-            const btn = document.getElementById('loginBtn');
-            btn.disabled = true;
-            btn.textContent = 'Signing in…';
-            hideMessage();
-
-            try {
-                const result = await Auth.login(
-                    document.getElementById('loginEmail').value,
-                    document.getElementById('loginPassword').value
-                );
-                showMessage('Login successful! Redirecting…', 'success');
-                setTimeout(() => { window.location.href = '/quiz'; }, 1200);
-            } catch (err) {
-                showMessage(err.message || 'Login failed.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Sign In';
-            }
-        }
-
-        async function handleSignup(e) {
-            e.preventDefault();
-            const btn = document.getElementById('signupBtn');
-            btn.disabled = true;
-            btn.textContent = 'Creating account…';
-            hideMessage();
-
-            try {
-                const result = await Auth.signup(
-                    document.getElementById('signupUsername').value,
-                    document.getElementById('signupEmail').value,
-                    document.getElementById('signupPassword').value,
-                    document.getElementById('referralCode').value
-                );
-                showMessage('Account created! Redirecting…', 'success');
-                setTimeout(() => { window.location.href = '/quiz'; }, 1200);
-            } catch (err) {
-                showMessage(err.message || 'Signup failed.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Create Account';
-            }
-        }
-    </script>
 </body>
 </html>

@@ -1,64 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
-const PAGES = { login: 'login', register: 'register', payment: 'payment', success: 'success' };
-
 export default function App() {
-  const [page, setPage] = useState(PAGES.login);
-  const [token, setToken] = useState(localStorage.getItem('ra_token') || '');
+  const { isLoading, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
+  const [page, setPage] = useState('payment');
   const [paymentResult, setPaymentResult] = useState(null);
+  const [accessToken, setAccessToken] = useState('');
 
-  const handleLogin = (tok) => {
-    // NOTE: localStorage is used for simplicity; consider httpOnly cookies in production
-    // to reduce XSS exposure.
-    localStorage.setItem('ra_token', tok);
-    setToken(tok);
-    setPage(PAGES.payment);
-  };
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently()
+        .then(token => setAccessToken(token))
+        .catch((err) => {
+          console.error('Failed to retrieve Auth0 access token:', err);
+          setAccessToken('');
+        });
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   const handleLogout = () => {
-    localStorage.removeItem('ra_token');
-    setToken('');
-    setPage(PAGES.login);
+    logout({ logoutParams: { returnTo: window.location.origin } });
   };
 
   const handlePaymentSuccess = (result) => {
     setPaymentResult(result);
-    setPage(PAGES.success);
+    setPage('success');
   };
 
-  if (page === PAGES.register) {
+  if (isLoading) {
     return (
       <>
         <Auth0LoginBar />
-        <Register onRegistered={() => setPage(PAGES.login)} onLogin={() => setPage(PAGES.login)} />
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7fa' }}>
+          <span style={{ color: '#666', fontSize: 16 }}>Loading…</span>
+        </div>
       </>
     );
   }
-  if (page === PAGES.login || !token) {
+
+  if (!isAuthenticated) {
     return (
       <>
         <Auth0LoginBar />
-        <Login onLogin={handleLogin} onRegister={() => setPage(PAGES.register)} />
+        <Login />
       </>
     );
   }
-  if (page === PAGES.success) {
+
+  if (page === 'success') {
     return (
       <>
         <Auth0LoginBar />
-        <PaymentSuccess result={paymentResult} onNewPayment={() => setPage(PAGES.payment)} onLogout={handleLogout} />
+        <PaymentSuccess result={paymentResult} onNewPayment={() => setPage('payment')} onLogout={handleLogout} />
       </>
     );
   }
+
   return (
     <>
       <Auth0LoginBar />
-      <Payment token={token} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />
+      <Payment token={accessToken} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />
     </>
   );
 }
