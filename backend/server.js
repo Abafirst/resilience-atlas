@@ -2,7 +2,7 @@
 // Core dependencies
 // ==============================
 const express = require("express");
-const { auth } = require('express-openid-connect');
+const { auth, requiresAuth } = require('express-openid-connect');
 const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
@@ -42,6 +42,9 @@ const config = {
 };
 
 app.use(auth(config));
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user));
+});
 // ==============================
 // Request timeout — PDF generation can take up to 2 minutes.
 // ==============================
