@@ -31,7 +31,7 @@ const sentry = require("./config/sentry");
 // Express app
 // ==============================
 const app = express();
-app.use(express.static(path.join(__dirname, "../public")));
+// app.use(express.static(path.join(__dirname, "../public"))); // Removed: prevents stale public files from shadowing the React build
 const config = {
   authRequired: false,
   auth0Logout: true,
@@ -320,15 +320,14 @@ app.get("/register", pageLimiter, (req, res) => {
 // client/dist takes precedence so the latest frontend build is always used.
 const clientDist = path.join(__dirname, "../client/dist");
 app.use(express.static(clientDist));
-app.use(express.static(path.join(__dirname, "../public")));
+// app.use(express.static(path.join(__dirname, "../public"))); // Removed: client/dist is the sole static source for the React SPA
 
 // SPA fallback — serve the React entry point for any route not handled above.
-// Falls back to the legacy public/index.html when the React build is absent
-// (e.g. local development before running `npm run build`).
 app.get("*", pageLimiter, (req, res) => {
-  const reactIndex = path.join(clientDist, "index.html");
-  res.sendFile(reactIndex, (err) => {
-    if (err) res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
   });
 });
 
