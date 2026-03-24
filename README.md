@@ -229,6 +229,41 @@ No manual build step is required when deploying via Railway with the Dockerfile 
 
 ---
 
+## 🔐 Auth0 Authentication — Quiz Page Enforcement
+
+The quiz page (`/quiz.html`) requires users to be authenticated via [Auth0](https://auth0.com/) before they can take the assessment. On page load, the Auth0 SPA JS SDK checks whether the visitor is already logged in. If they are not, the browser is automatically redirected to the Auth0 Universal Login page and returned to the quiz after successful login.
+
+### How it works
+
+1. `quiz.html` loads the Auth0 SPA JS SDK from the Auth0 CDN.
+2. `public/js/quiz-auth.js` fetches the runtime configuration from the server's `/config` endpoint (which reads from environment variables) and initialises the Auth0 client.
+3. If the user is not authenticated, `loginWithRedirect()` is called — the browser navigates to Auth0's hosted login page.
+4. After a successful login, Auth0 redirects back to `/quiz.html`. The SDK handles the callback, cleans up the URL, and reveals the quiz.
+5. If `AUTH0_DOMAIN` or `AUTH0_CLIENT_ID` are **not** set on the server, authentication enforcement is silently skipped so local development without Auth0 credentials still works.
+
+### Required environment variables
+
+| Variable | Example | Description |
+|---|---|---|
+| `AUTH0_DOMAIN` | `dev-xxxx.us.auth0.com` | Your Auth0 tenant domain |
+| `AUTH0_CLIENT_ID` | `abc123…` | Client ID of your Auth0 Single-Page Application |
+
+These are read by the Express server and exposed safely (no secrets) via `GET /config`.
+
+### Auth0 Application settings
+
+In the Auth0 dashboard (**Applications → Your App → Settings**), configure the following fields:
+
+| Field | Value(s) |
+|---|---|
+| **Allowed Callback URLs** | `https://yourdomain.com/quiz.html, http://localhost:3000/quiz.html` |
+| **Allowed Logout URLs** | `https://yourdomain.com, http://localhost:3000` |
+| **Allowed Web Origins** | `https://yourdomain.com, http://localhost:3000` |
+
+> ⚠️ The redirect URI used by `quiz-auth.js` is always `<origin>/quiz.html` (derived from `window.location.origin`). Make sure this URL is listed in **Allowed Callback URLs** in your Auth0 application settings.
+
+---
+
 ## 🔍 Stripe Checkout Debug Logging
 
 When Stripe checkout sessions fail in production (e.g. "An error occurred with our connection to Stripe"), you can enable verbose diagnostic logging to expose the underlying network/TLS error code.

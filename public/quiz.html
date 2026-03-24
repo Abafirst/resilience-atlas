@@ -40,9 +40,10 @@
   </div>
 
   <!-- ── Spinner overlay ──────────────────────────────── -->
-  <div id="spinnerOverlay" class="spinner-overlay" role="status" aria-live="polite">
+  <!-- active by default so auth check runs before content is visible -->
+  <div id="spinnerOverlay" class="spinner-overlay active" role="status" aria-live="polite">
     <div class="spinner" aria-hidden="true"></div>
-    <p id="spinnerText" class="spinner-text">Processing&hellip;</p>
+    <p id="spinnerText" class="spinner-text">Checking authentication&hellip;</p>
   </div>
 
   <main>
@@ -160,7 +161,9 @@
     </div>
   </footer>
 
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 <script src="/js/app.js"></script>
+<script src="/js/quiz-auth.js"></script>
 <script src="/js/quiz.js"></script>
 <script src="/js/theme-toggle.js"></script>
 <script>
