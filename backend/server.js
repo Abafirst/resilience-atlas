@@ -134,6 +134,16 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(sanitiseInput);
 
 // ==============================
+// Static Frontend
+// ==============================
+
+// Serve the React production build (client/dist).
+// Must come before API routes so asset requests are handled directly
+// without falling through to the SPA catch-all.
+const clientDist = path.join(__dirname, "../client/dist");
+app.use(express.static(clientDist));
+
+// ==============================
 // MongoDB Connection
 // ==============================
 
@@ -247,34 +257,6 @@ const pageLimiter = rateLimit({
   message: "Too many requests. Please try again later.",
 });
 
-app.get("/", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
-
-// ── Insight article routes ──────────────────────────────────
-app.get("/insights", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/insights.html"));
-});
-app.get("/insights/six-resilience-dimensions", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/insights/six-resilience-dimensions.html"));
-});
-app.get("/insights/resilience-under-pressure", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/insights/resilience-under-pressure.html"));
-});
-app.get("/insights/team-resilience", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/insights/team-resilience.html"));
-});
-
-// ── Team / B2B page ─────────────────────────────────────────
-app.get("/team", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/team.html"));
-});
-
-// ── Admin leads page ────────────────────────────────────────
-app.get("/admin/leads/ui", pageLimiter, (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/admin/leads.html"));
-});
-
 // ── Auth routes — redirect to Auth0 Universal Login ─────────
 // These routes ensure that navigating to /login or /register never
 // renders a legacy local form.  When AUTH0_DOMAIN and AUTH0_CLIENT_ID
@@ -313,14 +295,8 @@ app.get("/register", pageLimiter, (req, res) => {
 });
 
 // ==============================
-// Static Frontend
+// SPA Fallback
 // ==============================
-
-// Serve the React production build (client/dist) when it has been compiled.
-// client/dist takes precedence so the latest frontend build is always used.
-const clientDist = path.join(__dirname, "../client/dist");
-app.use(express.static(clientDist));
-// app.use(express.static(path.join(__dirname, "../public"))); // Removed: client/dist is the sole static source for the React SPA
 
 // SPA fallback — serve the React entry point for any route not handled above.
 app.get("*", pageLimiter, (req, res) => {
