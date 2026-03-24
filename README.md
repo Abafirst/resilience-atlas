@@ -149,6 +149,12 @@ Each dimension was identified and validated through the original dissertation re
 - 🔐 **Role-Based Permissions** — Viewer, Contributor, Admin access levels
 - 💰 **3-Tier Pricing** — Teams Starter · Teams Pro · Enterprise
 
+## 🧭 Enterprise Team Onboarding
+
+New to Resilience Atlas as part of an enterprise or team? See the step-by-step guide covering sign-up, login, password reset, SSO, and team/org management:
+
+👉 **[docs/team-onboarding.md](./docs/team-onboarding.md)**
+
 ### Technical Features
 - ⚡ **Async Report Generation** — Redis-backed job queue (< 200ms quiz response)
 - 🔐 **JWT Authentication** — Secure login, signup, and profile management
