@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Dashboard — The Resilience Atlas™</title>
+  <meta name="description" content="Business tier team analytics dashboard for The Resilience Atlas." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ── Header ────────────────────────────────────────────────── -->
+  <header class="dash-header" role="banner">
+    <div class="dash-header__inner">
+      <div class="dash-header__brand">
+        <span class="dash-header__logo">The Resilience Atlas™</span>
+        <span class="dash-header__sep" aria-hidden="true">|</span>
+        <span class="dash-header__org" id="org-name">Team Dashboard</span>
+      </div>
+      <nav class="dash-header__nav" aria-label="Dashboard navigation">
+        <a href="/results.html" class="dash-nav-link">My Results</a>
+        <button class="btn btn--outline" id="btn-export-csv" type="button">Export CSV</button>
+        <button class="btn btn--outline" id="btn-export-pdf" type="button">Export PDF</button>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+        <button class="btn btn--danger btn--sm" id="btn-logout" type="button">Sign Out</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Business tier gate ────────────────────────────────────── -->
+  <section data-tier="business" class="locked" id="business-gate-section">
+    <div class="blur-preview" aria-hidden="true">
+      <div class="blur-preview__content">
+        <div class="blur-kpi-row">
+          <div class="blur-kpi">72%</div>
+          <div class="blur-kpi">8</div>
+          <div class="blur-kpi">68%</div>
+        </div>
+      </div>
+    </div>
+    <div class="premium-lock-message payment-overlay" role="region" aria-label="Business tier — locked">
+      <div class="payment-overlay__inner">
+        <span class="payment-overlay__icon" aria-hidden="true">&#128274;</span>
+        <h3>Unlock Team Analytics</h3>
+        <p>See your organization's resilience insights, radar chart and member results.</p>
+        <button
+          class="btn btn-upgrade"
+          type="button"
+          onclick="PaymentGating.startCheckout('business')"
+        >
+          Upgrade to Business
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main dashboard (visible to business tier) ─────────────── -->
+  <main id="main-content" class="dash-layout" aria-live="polite">
+
+    <!-- Loading state -->
+    <div id="dash-loading" class="dash-loading" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading team analytics…</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="dash-error" class="dash-error" hidden role="alert">
+      <p id="dash-error-msg">Unable to load team data. Please try again.</p>
+      <button class="btn btn--outline" type="button" onclick="Dashboard.load()">Retry</button>
+    </div>
+
+    <!-- ── KPI cards ─────────────────────────────────────────── -->
+    <section class="dash-kpi-row" aria-label="Key metrics" id="kpi-section" hidden>
+      <div class="kpi-card">
+        <div class="kpi-card__val" id="kpi-members">—</div>
+        <div class="kpi-card__lbl">Team Members</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card__val" id="kpi-overall">—</div>
+        <div class="kpi-card__lbl">Overall Average</div>
+      </div>
+      <div class="kpi-card kpi-card--dim" id="kpi-top-dim">
+        <div class="kpi-card__val" id="kpi-top-dim-val">—</div>
+        <div class="kpi-card__lbl">Strongest Dimension</div>
+      </div>
+    </section>
+
+    <!-- ── Radar chart + dimension cards ─────────────────────── -->
+    <div class="dash-row" id="charts-section" hidden>
+
+      <section class="dash-card dash-card--chart" aria-labelledby="radar-heading">
+        <h2 id="radar-heading" class="dash-card__title">Team Radar</h2>
+        <div class="radar-wrapper">
+          <canvas id="teamRadarChart" aria-label="Team resilience radar chart" role="img"></canvas>
+        </div>
+      </section>
+
+      <section class="dash-card" aria-labelledby="dim-heading">
+        <h2 id="dim-heading" class="dash-card__title">Dimension Averages</h2>
+        <div id="dim-cards" class="dim-cards"></div>
+      </section>
+
+    </div>
+
+    <!-- ── Team members table ─────────────────────────────────── -->
+    <section class="dash-card" aria-labelledby="members-heading" id="members-section" hidden>
+      <div class="dash-card__header">
+        <h2 id="members-heading" class="dash-card__title">Team Member Results</h2>
+        <input
+          type="search"
+          id="member-search"
+          placeholder="Filter by name or email…"
+          aria-label="Filter team members"
+          class="dash-search"
+        />
+      </div>
+      <div class="table-wrapper" role="region" aria-label="Team member results table" tabindex="0">
+        <table class="members-table" aria-labelledby="members-heading">
+          <thead>
+            <tr>
+              <th scope="col" class="sortable" data-col="name" tabindex="0">Name <span aria-hidden="true">⇅</span></th>
+              <th scope="col" class="sortable" data-col="email" tabindex="0">Email <span aria-hidden="true">⇅</span></th>
+              <th scope="col" class="sortable" data-col="overall" tabindex="0">Overall <span aria-hidden="true">⇅</span></th>
+              <th scope="col" class="sortable" data-col="dominantType" tabindex="0">Primary Dimension <span aria-hidden="true">⇅</span></th>
+              <th scope="col" class="sortable" data-col="createdAt" tabindex="0">Date <span aria-hidden="true">⇅</span></th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody">
+            <tr><td colspan="6" class="table-empty">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Admin panel ────────────────────────────────────────── -->
+    <section class="dash-card" aria-labelledby="admin-heading" id="admin-section" hidden>
+      <h2 id="admin-heading" class="dash-card__title">Admin Panel</h2>
+
+      <div class="admin-grid">
+
+        <!-- Invite users -->
+        <div class="admin-panel">
+          <h3 class="admin-panel__title">Invite Team Members</h3>
+          <div class="invite-row">
+            <label for="invite-email" class="hidden">Email addresses (comma-separated)</label>
+            <textarea
+              id="invite-email"
+              class="dash-textarea"
+              rows="3"
+              placeholder="alice@company.com, bob@company.com"
+              aria-label="Email addresses to invite (comma-separated)"
+            ></textarea>
+            <button class="btn btn--primary" type="button" id="btn-invite">Send Invites</button>
+          </div>
+          <p id="invite-status" class="status-msg" role="status" aria-live="polite"></p>
+        </div>
+
+        <!-- Subscription info -->
+        <div class="admin-panel">
+          <h3 class="admin-panel__title">Subscription</h3>
+          <dl class="sub-details">
+            <dt>Plan</dt><dd id="sub-plan">—</dd>
+            <dt>Status</dt><dd id="sub-status">—</dd>
+            <dt>Team name</dt><dd id="sub-team-name">—</dd>
+            <dt>Max seats</dt><dd id="sub-max-users">—</dd>
+          </dl>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Scripts ───────────────────────────────────────────────── -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="/js/payment-gating.js"></script>
+  <script src="/js/analytics.js"></script>
+  <script src="/js/dashboard.js"></script>
+<script src="/js/theme-toggle.js"></script>
+</body>
+</html>

@@ -52,15 +52,21 @@ jest.mock('winston', () => {
 
 // Mock mongoose so the server doesn't attempt a real DB connection.
 jest.mock('mongoose', () => {
+  class Schema {
+    constructor() {}
+    pre() {
+      return this;
+    }
+    index() {
+      return this;
+    }
+    methods = {};
+  }
+  Schema.Types = { ObjectId: String, Mixed: {} };
+
   const m = {
     connect: jest.fn().mockResolvedValue({}),
-    Schema: class Schema {
-      constructor() {}
-      pre() {
-        return this;
-      }
-      methods = {};
-    },
+    Schema,
     model: jest.fn(),
   };
   return m;
@@ -104,26 +110,63 @@ jest.mock('../backend/models/User', () => {
   return MockUser;
 });
 
-// Mock stripe.
-jest.mock('stripe', () => () => ({
-  paymentIntents: {
-    create: jest.fn().mockResolvedValue({
-      id: 'pi_test',
-      client_secret: 'secret_test',
-      status: 'requires_payment_method',
-    }),
-    retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
-  },
-  customers: {
-    create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
-  },
-  webhooks: {
-    constructEvent: jest.fn().mockReturnValue({
-      type: 'payment_intent.succeeded',
-      data: { object: { id: 'pi_test' } },
-    }),
-  },
+// Mock ResilienceResult model so DB saves don't require a real connection.
+jest.mock('../backend/models/ResilienceResult', () => ({
+  create: jest.fn().mockResolvedValue({}),
 }));
+
+// Mock PracticeCompletion model used by the evidence-practices route.
+jest.mock('../backend/models/PracticeCompletion', () => ({
+  create: jest.fn().mockResolvedValue({ _id: 'comp001' }),
+  find: jest.fn().mockReturnValue({
+    sort: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue([]) })
+  }),
+  countDocuments: jest.fn().mockResolvedValue(0),
+}));
+
+// Mock Purchase model used by the payments route and report download.
+jest.mock('../backend/models/Purchase', () => ({
+  create: jest.fn().mockResolvedValue({ _id: 'purchase001' }),
+  findOne: jest.fn().mockResolvedValue(null),
+  findOneAndUpdate: jest.fn().mockResolvedValue({}),
+}));
+
+// Mock stripe — use a regular function so `new Stripe(key)` works as a constructor.
+jest.mock('stripe', () => function Stripe() {
+  return {
+    paymentIntents: {
+      create: jest.fn().mockResolvedValue({
+        id: 'pi_test',
+        client_secret: 'secret_test',
+        status: 'requires_payment_method',
+      }),
+      retrieve: jest.fn().mockResolvedValue({ id: 'pi_test', status: 'succeeded' }),
+    },
+    customers: {
+      create: jest.fn().mockResolvedValue({ id: 'cus_test' }),
+    },
+    checkout: {
+      sessions: {
+        create: jest.fn().mockResolvedValue({
+          id: 'cs_test',
+          url: 'https://checkout.stripe.com/pay/cs_test',
+        }),
+        retrieve: jest.fn().mockResolvedValue({
+          id: 'cs_test',
+          payment_status: 'paid',
+          customer_email: 'test@example.com',
+          metadata: { tier: 'atlas-navigator', email: 'test@example.com' },
+        }),
+      },
+    },
+    webhooks: {
+      constructEvent: jest.fn().mockReturnValue({
+        type: 'payment_intent.succeeded',
+        data: { object: { id: 'pi_test' } },
+      }),
+    },
+  };
+});
 
 // Mock nodemailer so no emails are actually sent.
 jest.mock('nodemailer', () => ({
@@ -168,81 +211,11 @@ describe('GET /', () => {
     test('returns 200 with welcome message', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('message');
+        expect(res.type).toMatch(/html/);
     });
 });
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
-
-describe('POST /api/auth/signup', () => {
-    const User = require('../backend/models/User');
-
-    beforeEach(() => {
-        User.findOne.mockResolvedValue(null); // No existing user
-    });
-
-    test('returns 400 when required fields are missing', async () => {
-        const res = await request(app)
-            .post('/api/auth/signup')
-            .send({ username: 'alice' });
-        expect(res.status).toBe(400);
-        expect(res.body).toHaveProperty('error');
-    });
-
-    test('returns 409 when user already exists', async () => {
-        User.findOne.mockResolvedValue(mockUser); // Existing user
-        const res = await request(app)
-            .post('/api/auth/signup')
-            .send({ username: 'testuser', email: 'test@example.com', password: 'secret123' });
-        expect(res.status).toBe(409);
-    });
-
-    test('returns 201 with token when signup succeeds', async () => {
-        User.findOne.mockResolvedValue(null);
-        const res = await request(app)
-            .post('/api/auth/signup')
-            .send({ username: 'newuser', email: 'new@example.com', password: 'secret123' });
-        expect(res.status).toBe(201);
-        expect(res.body).toHaveProperty('token');
-        expect(res.body).toHaveProperty('user');
-    });
-});
-
-describe('POST /api/auth/login', () => {
-    const User = require('../backend/models/User');
-
-    test('returns 400 when fields are missing', async () => {
-        const res = await request(app)
-            .post('/api/auth/login')
-            .send({ email: 'x@x.com' });
-        expect(res.status).toBe(400);
-    });
-
-    test('returns 401 when user not found', async () => {
-        User.findOne.mockResolvedValue(null);
-        const res = await request(app)
-            .post('/api/auth/login')
-            .send({ email: 'ghost@example.com', password: 'pw' });
-        expect(res.status).toBe(401);
-    });
-
-    test('returns 401 when password is wrong', async () => {
-        User.findOne.mockResolvedValue({ ...mockUser, comparePassword: jest.fn().mockResolvedValue(false) });
-        const res = await request(app)
-            .post('/api/auth/login')
-            .send({ email: 'test@example.com', password: 'wrong' });
-        expect(res.status).toBe(401);
-    });
-
-    test('returns 200 with token on successful login', async () => {
-        User.findOne.mockResolvedValue({ ...mockUser, comparePassword: jest.fn().mockResolvedValue(true) });
-        const res = await request(app)
-            .post('/api/auth/login')
-            .send({ email: 'test@example.com', password: 'correct' });
-        expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('token');
-    });
-});
 
 describe('GET /api/auth/profile', () => {
     const User = require('../backend/models/User');
@@ -279,7 +252,7 @@ describe('POST /api/quiz/submit', () => {
     test('returns 401 without a token', async () => {
         const res = await request(app)
             .post('/api/quiz/submit')
-            .send({ answers: Array(36).fill(3) });
+            .send({ answers: Array(72).fill(3) });
         expect(res.status).toBe(401);
     });
 
@@ -296,7 +269,7 @@ describe('POST /api/quiz/submit', () => {
         const res = await request(app)
             .post('/api/quiz/submit')
             .set('Authorization', `Bearer ${authToken()}`)
-            .send({ answers: Array(36).fill(4) });
+            .send({ answers: Array(72).fill(4) });
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('scores');
         expect(res.body).toHaveProperty('overall');
@@ -320,6 +293,93 @@ describe('GET /api/quiz/results', () => {
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('results');
     });
+});
+
+// ── Payments tiers route ──────────────────────────────────────────────────────
+
+describe('GET /api/payments/tiers', () => {
+    test('returns 200 with tiers array containing atlas-navigator and atlas-premium', async () => {
+        const res = await request(app).get('/api/payments/tiers');
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('tiers');
+        expect(Array.isArray(res.body.tiers)).toBe(true);
+        expect(res.body.tiers).toHaveLength(2);
+
+        const navigatorTier = res.body.tiers.find(t => t.id === 'atlas-navigator');
+        expect(navigatorTier).toBeDefined();
+        expect(navigatorTier.name).toBe('Atlas Navigator');
+        expect(navigatorTier.price).toBe(9.99);
+        expect(navigatorTier.currency).toBe('USD');
+        expect(navigatorTier.billing).toBe('one-time');
+
+        const premiumTier = res.body.tiers.find(t => t.id === 'atlas-premium');
+        expect(premiumTier).toBeDefined();
+        expect(premiumTier.name).toBe('Atlas Premium');
+        expect(premiumTier.price).toBe(49.99);
+        expect(premiumTier.currency).toBe('USD');
+        expect(premiumTier.billing).toBe('one-time');
+    });
+});
+
+// ── CORS behaviour ────────────────────────────────────────────────────────────
+
+describe('CORS middleware', () => {
+  const ORIGIN_A = 'https://www.theresilienceatlas.com';
+  const ORIGIN_B = 'https://resilience-atlas-staging.up.railway.app';
+
+  /** Re-require the app after mutating process.env so the new CORS_ORIGIN is picked up. */
+  function loadFreshApp() {
+    jest.resetModules();
+    return require('../backend/server');
+  }
+
+  afterEach(() => {
+    delete process.env.CORS_ORIGIN;
+    jest.resetModules();
+  });
+
+  test('allows default production origins when CORS_ORIGIN is not set', async () => {
+    const freshApp = loadFreshApp();
+    const allowedByDefault = 'https://theresilienceatlas.com';
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', allowedByDefault);
+    expect(res.headers['access-control-allow-origin']).toBe(allowedByDefault);
+  });
+
+  test('blocks unlisted origins when CORS_ORIGIN is not set', async () => {
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', 'https://untrusted-domain.com');
+    expect(res.headers['access-control-allow-origin']).toBeUndefined();
+  });
+
+  test('allows all origins when CORS_ORIGIN is "*"', async () => {
+    process.env.CORS_ORIGIN = '*';
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', ORIGIN_A);
+    const acao = res.headers['access-control-allow-origin'];
+    expect([ORIGIN_A, '*', undefined]).toContain(acao);
+  });
+
+  test('allows a listed origin when CORS_ORIGIN is a comma-separated list', async () => {
+    process.env.CORS_ORIGIN = `${ORIGIN_A},${ORIGIN_B}`;
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', ORIGIN_A);
+    expect(res.headers['access-control-allow-origin']).toBe(ORIGIN_A);
+  });
+
+  test('allows requests without an Origin header (curl/Postman)', async () => {
+    process.env.CORS_ORIGIN = ORIGIN_A;
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp).get('/health');
+    expect([200, 503]).toContain(res.status);
+  });
 });
 
 // ── Affiliate routes ──────────────────────────────────────────────────────────

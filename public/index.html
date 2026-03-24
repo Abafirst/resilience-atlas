@@ -3,171 +3,318 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Resilience Atlas — API Tester</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #f4f6f9; color: #222; }
-    header {
-      background: #1a3a5c; color: #fff; padding: 1.2rem 2rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-    header h1 { font-size: 1.4rem; }
-    header span { font-size: 0.85rem; opacity: 0.75; }
-    main { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
-    .card {
-      background: #fff; border-radius: 8px; padding: 1.2rem 1.4rem;
-      margin-bottom: 1.4rem; box-shadow: 0 1px 4px rgba(0,0,0,.08);
-    }
-    .card h2 { font-size: 1rem; margin-bottom: .8rem; color: #1a3a5c; }
-    label { display: block; font-size: .82rem; color: #555; margin-bottom: .25rem; }
-    input, textarea {
-      width: 100%; padding: .45rem .6rem; border: 1px solid #ccc;
-      border-radius: 5px; font-size: .9rem; margin-bottom: .7rem;
-    }
-    textarea { resize: vertical; height: 70px; font-family: monospace; font-size: .8rem; }
-    .row { display: flex; gap: .6rem; flex-wrap: wrap; }
-    button {
-      padding: .45rem 1.1rem; border: none; border-radius: 5px;
-      font-size: .88rem; cursor: pointer; font-weight: 600;
-    }
-    .btn-primary { background: #1a3a5c; color: #fff; }
-    .btn-primary:hover { background: #245080; }
-    .btn-secondary { background: #e8edf3; color: #1a3a5c; }
-    .btn-secondary:hover { background: #d2dce9; }
-    .method { font-size: .75rem; font-weight: 700; border-radius: 4px; padding: .15rem .45rem; }
-    .GET  { background:#d4edda; color:#155724; }
-    .POST { background:#d1ecf1; color:#0c5460; }
-    .response-box {
-      margin-top: .8rem; background: #1e1e2e; color: #a9b1d6;
-      border-radius: 6px; padding: .9rem 1rem; font-family: monospace;
-      font-size: .8rem; white-space: pre-wrap; word-break: break-all;
-      min-height: 60px; max-height: 240px; overflow-y: auto;
-    }
-    .status-ok   { color: #9ece6a; }
-    .status-err  { color: #f7768e; }
-    .tip { font-size: .78rem; color: #888; margin-top: .4rem; }
-    hr { border: none; border-top: 1px solid #e8edf3; margin: 1.5rem 0; }
-  </style>
+  <title>The Resilience Atlas™ — Understand. Strengthen. Transform.</title>
+  <meta name="description" content="The Resilience Atlas™ maps the Six Dimensions of Resilience that shape how you respond to stress, setbacks, and change. Founded on 2013 doctoral research by Janeen Molchany, Ph.D., BCBA. Take the free assessment." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="The Resilience Atlas™ — Understand. Strengthen. Transform." />
+  <meta property="og:description" content="Research-based resilience assessment platform. Map your Six Dimensions of Resilience. Founded on 2013 doctoral research by Janeen Molchany, Ph.D., BCBA." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/og-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Resilience Atlas™ — Understand. Strengthen. Transform." />
+  <meta name="twitter:description" content="Map your Six Dimensions of Resilience. Research-based platform founded on 2013 doctoral research. Free assessment." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="/icons/icons.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+  <script>function loadScript(a){var b=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.src="https://tracker.metricool.com/resources/be.js",c.onreadystatechange=a,c.onload=a,b.appendChild(c)}loadScript(function(){beTracker.t({hash:"155eebcf4d6e80be4d8af4297527c807"})});</script>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🌍 Resilience Atlas</h1>
-    <span>In-browser API Tester — <span id="baseUrl"></span></span>
-  </div>
-</header>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link active">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+        <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+      </nav>
+    </div>
+  </header>
 
-<main>
-
-  <!-- ── Health Check ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> /health — Server Health Check</h2>
-    <button class="btn-primary" onclick="call('GET','/health','health-res')">Send Request</button>
-    <div class="response-box" id="health-res">Click "Send Request" to test…</div>
-  </div>
-
-  <!-- ── Root / Welcome ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> / — Welcome Message</h2>
-    <button class="btn-primary" onclick="call('GET','/','root-res')">Send Request</button>
-    <div class="response-box" id="root-res">Click "Send Request" to test…</div>
-  </div>
-
-  <!-- ── Auth Token Helper ── -->
-  <div class="card">
-    <h2>🔑 JWT Token (for protected endpoints)</h2>
-    <label>Paste a valid JWT here — it will be sent as <code>Authorization: Bearer &lt;token&gt;</code> on all authenticated requests below.</label>
-    <input type="text" id="jwt-token" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…" />
-    <p class="tip">
-      No token yet? Generate one from your server with <code>jwt.sign({ userId: '...' }, process.env.JWT_SECRET, { expiresIn: '1h' })</code>
-      or via <a href="https://jwt.io/" target="_blank" rel="noopener">jwt.io</a>.
-    </p>
-  </div>
-
-  <hr />
-
-  <!-- ── Create Payment ── -->
-  <div class="card">
-    <h2><span class="method POST">POST</span> /create-payment — Create Payment Intent</h2>
-    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above and real Stripe credentials on the server.</p>
-    <div class="row">
-    <label>Amount (USD dollars, e.g. 10.50)</label>
-        <input type="number" id="pay-amount" value="10" min="1" />
+  <!-- Hero -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow">Resilience is Learnable</span>
+      <h1>Build the Resilience You Already Have</h1>
+      <p class="hero-subheadline">
+        Resilience isn't something you're born with &mdash; it's a set of skills you can understand, develop, and strengthen.
+        In 10 minutes, discover your personalized map across six dimensions and get a clear path forward.
+        Start where you are. Grow from here.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn-hero-primary" href="/quiz.html">
+          <span aria-hidden="true">&#9654;</span> Take the Assessment
+        </a>
+        <a class="btn-hero-secondary" href="#example-results">
+          See Example Results
+        </a>
       </div>
-      <div style="flex:1">
-        <label>Currency</label>
-        <input type="text" id="pay-currency" value="usd" />
+      <div class="hero-radar-preview" aria-label="Sample resilience radar chart">
+<canvas id="heroRadar"></canvas>
       </div>
     </div>
-    <label>Description (optional)</label>
-    <input type="text" id="pay-desc" placeholder="Resilience Atlas Payment" />
-    <button class="btn-primary" onclick="createPayment()">Create Payment Intent</button>
-    <div class="response-box" id="pay-res">Click "Create Payment Intent" to test…</div>
+  </section>
+
+  <!-- Six Dimensions -->
+  <section class="landing-section" id="dimensions" aria-labelledby="dimensionsHeading">
+    <div class="section-header">
+      <span class="section-label">The Framework</span>
+      <h2 id="dimensionsHeading">The Six Dimensions of Resilience</h2>
+      <p>Resilience is not a single trait. It is a constellation of capacities. Each dimension reflects a distinct way you adapt, recover, and grow.</p>
+    </div>
+    <div class="dimensions-grid">
+      <article class="dimension-card" aria-label="Relational-Connective dimension">
+        <div class="dimension-icon dimension-icon--relational" aria-hidden="true">
+          <img src="/icons/relational-connective.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Relational-Connective</h3>
+        <p>How you access and draw on support from others. Your capacity to maintain connections and seek help when facing adversity.</p>
+      </article>
+      <article class="dimension-card" aria-label="Cognitive-Narrative dimension">
+        <div class="dimension-icon dimension-icon--cognitive" aria-hidden="true">
+          <img src="/icons/cognitive-narrative.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Cognitive-Narrative</h3>
+        <p>How you interpret and reframe challenges. Your ability to shift perspective, find meaning, and construct a narrative of growth.</p>
+      </article>
+      <article class="dimension-card" aria-label="Somatic-Regulative dimension">
+        <div class="dimension-icon dimension-icon--somatic" aria-hidden="true">
+          <img src="/icons/somatic-regulative.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Somatic-Regulative</h3>
+        <p>How your body regulates stress. Your physiological capacity to move through tension, restore calm, and sustain energy.</p>
+      </article>
+      <article class="dimension-card" aria-label="Emotional-Adaptive dimension">
+        <div class="dimension-icon dimension-icon--emotional" aria-hidden="true">
+          <img src="/icons/emotional-adaptive.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Emotional-Adaptive</h3>
+        <p>How you process difficult feelings. Your capacity to acknowledge, experience, and move through challenging emotional states.</p>
+      </article>
+      <article class="dimension-card" aria-label="Spiritual-Reflective dimension">
+        <div class="dimension-icon dimension-icon--spiritual" aria-hidden="true">
+          <img src="/icons/spiritual-reflective.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Spiritual-Reflective</h3>
+        <p>How meaning and purpose shape resilience. Your connection to values, beliefs, and a larger sense of why that sustains you.</p>
+      </article>
+      <article class="dimension-card" aria-label="Agentic-Generative dimension">
+        <div class="dimension-icon dimension-icon--agentic" aria-hidden="true">
+          <img src="/icons/agentic-generative.svg" alt="" class="icon icon-lg">
+        </div>
+        <h3 class="dimension-name">Agentic-Generative</h3>
+        <p>How you take action in adversity. Your capacity to move forward, make decisions, and assert agency even in uncertainty.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Example Results -->
+  <section class="landing-section alt-bg" id="example-results" aria-labelledby="exampleHeading">
+    <div class="section-header">
+      <span class="section-label">Example Profile</span>
+      <h2 id="exampleHeading">What Your Results Look Like</h2>
+      <p>After completing the assessment you receive a personalized radar map and narrative profile across all six dimensions.</p>
+    </div>
+<div class="example-results">
+  <div class="example-radar" aria-label="Sample radar chart">
+<canvas id="exampleRadar"></canvas>
   </div>
 
-  <!-- ── Get Payment Status ── -->
-  <div class="card">
-    <h2><span class="method GET">GET</span> /payment/:id — Get Payment Status</h2>
-    <p class="tip" style="margin-bottom:.7rem">Requires a valid JWT token above.</p>
-    <label>Payment Intent ID</label>
-    <input type="text" id="get-pay-id" placeholder="pi_3OxxxxxxxxxxxxYYYY" />
-    <button class="btn-primary" onclick="getPayment()">Get Payment Status</button>
-    <div class="response-box" id="get-pay-res">Enter a Payment Intent ID and click the button to test…</div>
+  <div class="example-profile-card">
+    <p class="profile-label">Sample Profile</p>
+    <span class="example-profile-badge">Dominant: Relational</span>
+    <h3>Sarah &mdash; Team Lead, Healthcare</h3>
+    <p>Sarah's profile shows strong Relational and Spiritual dimensions, indicating she draws deeply on community and purpose to navigate pressure.</p>
+    <p style="margin-top:1rem">
+      <em style="font-size:.88rem;color:#94a3b8">
+        "Understanding my six dimensions completely changed how I approach difficult moments at work."
+      </em>
+    </p>
   </div>
+</div>
+  <!-- Why Multiple Dimensions -->
+  <section class="landing-section" aria-labelledby="whyHeading">
+    <div class="section-header">
+      <span class="section-label">Why It Matters</span>
+      <h2 id="whyHeading">Why Resilience Has Multiple Dimensions</h2>
+      <p>A single resilience score misses the complexity of how people actually respond under pressure. The six-dimension model gives you actionable, nuanced insight.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <h4>No single path to resilience</h4>
+        <p>People recover and adapt through different pathways &mdash; some through connection, others through meaning, action, or physical regulation.</p>
+      </div>
+      <div class="why-card">
+        <h4>Strengths and growth edges</h4>
+        <p>Knowing which dimensions are strong and which need development gives you a targeted, personalized roadmap rather than generic advice.</p>
+      </div>
+      <div class="why-card">
+        <h4>Contextual resilience</h4>
+        <p>Different challenges activate different dimensions. Understanding your profile prepares you for the full range of life's adversities.</p>
+      </div>
+      <div class="why-card">
+        <h4>Science-informed design</h4>
+        <p>Each dimension is grounded in resilience research, positive psychology, somatic science, and clinical practice.</p>
+      </div>
+    </div>
+  </section>
 
-</main>
+  <!-- Resilience is Learnable -->
+  <section class="landing-section alt-bg" aria-labelledby="learnableHeading">
+    <div class="section-header">
+      <span class="section-label">Why It Works</span>
+      <h2 id="learnableHeading">Resilience is Learnable</h2>
+      <p>You don't need to be "naturally resilient." Research shows that resilience is a set of skills you can understand, develop, and strengthen &mdash; and the first step is knowing where you already stand.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <h4>Start where you are</h4>
+        <p>No two resilience profiles are alike. Your map is uniquely yours — built from honest answers across six dimensions of how you respond to adversity.</p>
+      </div>
+      <div class="why-card">
+        <h4>Small shifts, real impact</h4>
+        <p>You don't have to overhaul your life. The most powerful resilience gains come from small, consistent practices in your two or three growth-edge dimensions.</p>
+      </div>
+      <div class="why-card">
+        <h4>Grow from here</h4>
+        <p>Every dimension you strengthen adds to your capacity to adapt, recover, and thrive — in work, relationships, and everyday life.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem">
+      <a href="/quiz.html" class="btn btn-primary btn-lg">Take the Assessment <span aria-hidden="true">&rarr;</span></a>
+      <a href="/research.html" class="btn btn-secondary" style="margin-left:1rem">Read the Research</a>
+    </div>
+  </section>
 
+  <!-- Business / B2B -->
+  <section class="landing-section business-section" aria-labelledby="businessHeading">
+    <div class="business-inner">
+      <div>
+        <span class="section-label" style="color:#a5b4fc;">For Organizations</span>
+        <h2 id="businessHeading">Bring Resilience Atlas to Your Team</h2>
+        <p>Help your organization understand collective resilience across the Six Dimensions. Spot team-wide patterns, support individuals, and build a culture of adaptive capacity.</p>
+        <ul class="business-benefits" aria-label="Business benefits">
+          <li>Aggregated team radar chart across all six dimensions</li>
+          <li>Individual and team-level reports</li>
+          <li>Admin dashboard with member results</li>
+          <li>CSV export for HR and L&amp;D reporting</li>
+          <li>Bulk invitation flow for easy onboarding</li>
+        </ul>
+        <a href="/team.html" class="btn-business">
+          <span aria-hidden="true">&#127970;</span> Get Team Access
+        </a>
+      </div>
+      <div class="business-dashboard-preview" aria-hidden="true">
+        <div class="dashboard-mock">
+          <div class="mock-card"><div class="mock-value">72%</div><div class="mock-label">Avg Resilience</div></div>
+          <div class="mock-card"><div class="mock-value">Relational</div><div class="mock-label">Strongest Dimension</div></div>
+          <div class="mock-card"><div class="mock-value">24</div><div class="mock-label">Team Members</div></div>
+          <div class="mock-card"><div class="mock-value">95%</div><div class="mock-label">Completion Rate</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="landing-section" aria-labelledby="finalCtaHeading">
+    <div class="final-cta">
+      <h2 id="finalCtaHeading">Ready to Map Your Resilience?</h2>
+      <p>Take the free 10-minute assessment and discover how you are wired to adapt, recover, and grow. No signup required to start.</p>
+      <a class="btn-hero-primary" href="/quiz.html" style="display:inline-flex;margin:0 auto;">
+        <span aria-hidden="true">&#9654;</span> Take the Free Assessment
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+        <a href="/research.html#dimensions">Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+        <a href="/founder.html">Our Founder</a>
+        <a href="/research.html">Research</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p><strong>The Resilience Atlas&#8482; — Understand. Strengthen. Transform.</strong></p>
+      <p>A research-based resilience assessment platform founded on published 2013 doctoral research.</p>
+      <p>&copy; 2026 The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+</footer>
+
+<script src="/js/brand-compass.js"></script>
 <script>
-  // Show the current origin in the header
-  document.getElementById('baseUrl').textContent = location.origin;
+(function () {
+  var heroScores = {
+    'Relational-Connective':            78,
+    'Cognitive-Narrative':   65,
+    'Somatic-Regulative':    58,
+    'Emotional-Adaptive':    72,
+    'Spiritual-Reflective': 82,
+    'Agentic-Generative':    69
+  };
 
-  function fmt(res, body) {
-    const ok = res.ok;
-    const status = `HTTP ${res.status} ${res.statusText}`;
-    let text;
-    try { text = JSON.stringify(body, null, 2); } catch { text = String(body); }
-    return { ok, status, text };
-  }
+  var sampleScores = {
+    'Relational-Connective':            85,
+    'Cognitive-Narrative':   60,
+    'Somatic-Regulative':    52,
+    'Emotional-Adaptive':    70,
+    'Spiritual-Reflective': 80,
+    'Agentic-Generative':    64
+  };
 
-  async function call(method, path, outId, headers = {}, body = null) {
-    const box = document.getElementById(outId);
-    box.textContent = '⏳ Sending…';
+  function initializeCompass(canvasId, scores) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) { console.warn('Compass canvas not found:', canvasId); return; }
+    if (typeof window.renderBrandCompass !== 'function') { console.warn('renderBrandCompass not available'); return; }
     try {
-      const opts = { method, headers: { 'Content-Type': 'application/json', ...headers } };
-      if (body) opts.body = JSON.stringify(body);
-      const res = await fetch(path, opts);
-      let json;
-      try { json = await res.json(); } catch { json = await res.text(); }
-      const { ok, status, text } = fmt(res, json);
-      box.innerHTML = `<span class="${ok ? 'status-ok' : 'status-err'}">${status}</span>\n\n${escHtml(text)}`;
+      window.renderBrandCompass(canvas, scores);
     } catch (err) {
-      box.innerHTML = `<span class="status-err">Error: ${escHtml(err.message)}</span>`;
+      console.warn('Compass render failed (' + canvasId + '):', err);
     }
   }
 
-  function authHeaders() {
-    const token = document.getElementById('jwt-token').value.trim();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  }
-
-  function createPayment() {
-    const amount   = parseFloat(document.getElementById('pay-amount').value) || 10;
-    const currency = document.getElementById('pay-currency').value.trim() || 'usd';
-    const description = document.getElementById('pay-desc').value.trim();
-    call('POST', '/create-payment', 'pay-res', authHeaders(), { amount, currency, description });
-  }
-
-  function getPayment() {
-    const id = document.getElementById('get-pay-id').value.trim();
-    if (!id) { document.getElementById('get-pay-res').textContent = '⚠️ Please enter a Payment Intent ID.'; return; }
-    call('GET', `/payment/${id}`, 'get-pay-res', authHeaders());
-  }
-
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  window.addEventListener('load', function () {
+    initializeCompass('heroRadar', heroScores);
+    initializeCompass('exampleRadar', sampleScores);
+  });
+})();
 </script>
-
+<script src="/js/theme-toggle.js"></script>
 </body>
 </html>

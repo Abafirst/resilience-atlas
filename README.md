@@ -1,171 +1,256 @@
-# Resilience Atlas
+# The Resilience Atlas™ — Understand. Strengthen. Transform.
 
-> ⭐ **This is the official, canonical repository for Resilience Atlas.**
-> All development, deployments, and issues should be managed here.
-> Any other repositories with a similar name are outdated and should be **archived** — see the note at the bottom of this file for instructions.
-
-## Project Documentation
-
-### Features
-- Comprehensive visualization of resilience data
-- Interactive data exploration and analysis tools
-- API integration for real-time data retrieval
-- User-friendly interface
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Abafirst/resilience-atlas.git
-   cd resilience-atlas
-   ```
-2. Install the necessary dependencies:
-   ```bash
-   npm install
-   ```
-3. Copy `.env.example` to `.env` and fill in your credentials:
-   ```bash
-   cp .env.example .env
-   # Edit .env — at minimum set JWT_SECRET, STRIPE_SECRET_KEY, and STRIPE_PUBLISHABLE_KEY
-   ```
-4. Build the React payment frontend:
-   ```bash
-   npm run build:client
-   ```
-5. Start the application:
-   ```bash
-   npm start
-   ```
-
-### Testing in the browser
-
-Once the server is running, open the **React payment UI** at:
-
-```
-http://localhost:3000/app
-```
-
-This loads the full payment flow — create an account, sign in, enter card details, and complete a payment.
-
-You can also open the **in-browser API Tester** at:
-
-```
-http://localhost:3000/index.html
-```
-
-This is a simple page that lets you click buttons to call every endpoint and see the live JSON responses without needing any external tool.
-
-### Auth endpoints (no database required)
-
-The signup/login endpoints use an in-memory user store when no database is configured, so you can test the auth flow immediately without MongoDB:
-
-```bash
-# Register a new user
-curl -X POST http://localhost:3000/auth/signup \
-  -H "Content-Type: application/json" \
-  -d '{"username":"testuser","password":"mypassword"}'
-
-# Log in and get a JWT
-curl -X POST http://localhost:3000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"testuser","password":"mypassword"}'
-```
-
-### Running the automated test suite
-
-```bash
-npm test
-```
-
-No database or Stripe credentials are needed for the automated tests — all 27 tests run with mocked/placeholder values.
-
-### API Endpoints
-- **GET /health** — Server health check
-- **GET /config** — Returns the Stripe publishable key for the frontend
-- **POST /auth/signup** — Register a new user (returns `201` on success)
-- **POST /auth/login** — Sign in and get a JWT token
-- **GET /api/quizzes** — Retrieve all 36 resilience quiz questions
-- **POST /create-payment** *(requires JWT)* — Create a Stripe Payment Intent
-- **GET /payment/:id** *(requires JWT)* — Get the status of a payment
-
-## License
-This project is licensed under the MIT License.
+> **A research-based resilience assessment platform** founded on published 2013 doctoral research — mapping six dimensions of resilience for individuals, teams, and organizations. Grounded in science. Designed for impact.
 
 ---
 
-## Consolidating repositories — how to archive the old ones
+## 🎯 What Is the Resilience Atlas?
 
-If you have other GitHub repositories for this project that are no longer needed, **archiving** is the safest option instead of deleting:
+The Resilience Atlas™ is a comprehensive digital platform that translates 13 years of doctoral research and clinical practice into an accessible, actionable resilience assessment experience. Founded by **Janeen Molchany, Ph.D., BCBA** — a Board Certified Behavior Analyst, foster care alumna, and published resilience researcher — the platform brings rigorous behavioral science to everyone who needs it.
 
-- **Archived repos are read-only** — no one can accidentally push to them.
-- **GitHub shows a clear "Archived" banner** on every page of the repo, so there is no confusion.
-- **History and code are preserved** in case you ever need to reference something.
-- **It is reversible** — you can unarchive at any time.
+### Core Mission
+> *"To make the science of resilience legible, personal, and actionable — so that every person can understand, cultivate, and share their capacity to grow through adversity."*
 
-### Steps to archive a GitHub repository
+---
 
-1. Go to the repository on GitHub (e.g. `https://github.com/Abafirst/<repo-name>`)
-2. Click **Settings** (top right of the repo page)
-3. Scroll down to the **Danger Zone** section
-4. Click **Archive this repository**
-5. Confirm the action
+## 🔬 The Research Foundation
 
-Repeat for each of the other 3 repositories. After archiving, add a short notice to their `README.md` (you can still edit files while unarchived, before archiving):
+| Credential | Detail |
+|-----------|--------|
+| 📄 **Published Dissertation** | 2013 doctoral research establishing the six-dimension model |
+| 🧪 **Psychometric Assessments** | 6 validated instruments across all six dimensions |
+| 👥 **Resilience Exemplars** | 18 individuals studied through in-depth qualitative interviews |
+| 📅 **Years of Refinement** | 13+ years of clinical practice, testing, and platform development |
+| 🏥 **Populations Served** | Foster youth, autistic children & families, vulnerable communities |
+| 🎓 **Credentials** | Ph.D., Board Certified Behavior Analyst (BCBA) |
 
-```markdown
-> ⚠️ **ARCHIVED** — This repository is no longer maintained.
-> The active project has moved to: https://github.com/Abafirst/resilience-atlas
-```
+The framework integrates five scientific traditions: **Positive Psychology · Resilience Science · Applied Behavior Analysis · Acceptance & Commitment Therapy · Cross-Cultural Research · Trauma-Informed Practice**
 
-This makes it instantly clear to anyone who finds the old repo where they should go.
-> **Consolidated repository** — single source of truth for the Resilience Atlas platform.
+---
 
-Resilience Atlas is a full-stack web application that helps users discover their resilience profile through a comprehensive 36-question assessment, delivering personalised insights across six resilience dimensions: **Emotional, Mental, Physical, Social, Spiritual, and Financial**.
+## 📊 The Six Dimensions of Resilience
 
-## Features
+Each dimension was identified and validated through the original dissertation research:
 
-- 🧠 36-question resilience assessment with 6-type scoring
-- 📧 Email report delivery (Yahoo Mail / Nodemailer)
-- 🔐 JWT authentication — login, signup, profile
-- 💳 Stripe payments with webhook handling
-- 🤝 Affiliate referral system
-- 🔔 OpenClaw — GitHub webhook → Telegram notifications
-- 🚀 Railway deployment ready
+| Dimension | Description |
+|-----------|-------------|
+| 🤝 **Relational-Connective** | Accessing social support and sustaining meaningful connections under stress |
+| 🧠 **Cognitive-Narrative** | Meaning-making, reframing, and maintaining adaptive thinking |
+| ⚡ **Agentic-Generative** | Purposeful action, self-efficacy, and forward momentum |
+| 💙 **Emotional-Adaptive** | Processing difficult emotions and adapting emotional responses |
+| 🙏 **Spiritual-Reflective** | Purpose, values, and existential grounding |
+| 💚 **Somatic-Regulative** | Body awareness, physical regulation, and somatic resilience practices |
 
-## Quick Start
+---
+
+## ✨ Features
+
+### Core Assessment
+- 🧠 **36-question Resilience Assessment** — six-category scoring algorithm
+- 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, Somatic-Regulative
+- 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
+
+### Enhanced Results & Visualization
+- 📈 **Interactive Radar Chart** — Visual representation of your 6-dimension profile
+- 📊 **Score Breakdown** — Detailed percentage scores for each resilience type
+- 📄 **Structured Narrative Report** — AI-powered, pattern-based interpretations tailored to your profile
+- 🎨 **Strength Cards** — Primary, Solid, and Emerging strength identification and descriptions
+- 📥 **PDF Download** — Generate downloadable PDF report of your resilience profile
+- 📧 **Email Results** — Receive your full assessment report via email
+
+### Longitudinal Tracking (Resilience Atlas)
+- 📅 **Assessment History Timeline** — View all past assessments chronologically
+- 🧭 **Evolution Compass** — Visual compass showing direction of resilience growth
+  - North → Cognitive/Mental growth
+  - East → Relational/Social expansion
+  - South → Somatic/Physical grounding
+  - West → Emotional/Spiritual integration
+- 📊 **Comparative Analysis** — See how each dimension changed between assessments
+- 🗺️ **Resilience Atlas Page** (`/atlas`) — Complete journey visualization with:
+  - Assessment history timeline
+  - Individual radar charts for each assessment
+  - Evolution compass visualization
+  - Narrative evolution summary
+- 🚀 **Retake Encouragement** — "Return in 30 days to see how your resilience evolves"
+- 📍 **Journey Tracker** — Progress indicator showing previous ↔ current → next evolution
+
+### Social Sharing & Virality
+- 📸 **Shareable Profile Card** — Beautiful 1200×630 PNG optimized for social media
+  - Includes primary/solid/emerging strengths
+  - Overall resilience score
+  - Mini radar chart
+  - Compass visualization
+  - "Discover your resilience profile with The Resilience Atlas" call-to-action
+- 🔗 **Social Share Buttons:**
+  - Share on LinkedIn
+  - Share on X (Twitter)
+  - Download Image
+  - Copy Share Link
+- 📱 **Web Share API** — Native sharing on supported browsers with fallbacks
+
+### Asynchronous Report Generation
+- ⚡ **Fast Quiz Submission** — Response time < 200ms (non-blocking)
+- 🔄 **Background Processing** — Reports generated asynchronously by dedicated worker
+- 📋 **Job Queue System** — Redis-backed job management for scalability
+- 🔁 **Job Retries** — Automatic retry logic (up to 3 attempts) for failed jobs
+- 📝 **Report Caching** — Intelligent caching to reuse reports for identical assessments
+- 🌍 **Horizontal Scalability** — Web server and worker server run independently
+
+### User Experience
+- 🔐 **JWT Authentication** — Secure login, signup, and profile management
+- 💾 **MongoDB Persistence** — Results stored securely and indefinitely
+- 🎯 **Immediate Feedback** — Scores displayed instantly after quiz completion
+- 📊 **Pattern Detection** — Smart narrative generation based on assessment patterns
+- ♿ **Accessible Visualizations** — SVG-based charts with ARIA labels
+
+---
+
+## 👤 About the Founder
+
+**Janeen Molchany, Ph.D., BCBA** is the founder and Chief Resilience Scientist behind The Resilience Atlas™.
+
+- 🎓 **Doctoral researcher** — Published 2013 dissertation establishing the six-dimension resilience framework
+- 🏥 **Board Certified Behavior Analyst (BCBA)** — Nationally certified in evidence-based behavioral science
+- 🏠 **Foster care alumna** — Lived experience as a foster youth drives the mission's authenticity and urgency
+- 👶 **Clinical experience** — Direct practice with foster youth, autistic children and families, and vulnerable communities
+- 📊 **13+ years** of continuous framework development and refinement (2013–2026)
+
+> *"I didn't just study resilience. I lived it. The Resilience Atlas™ exists because every person deserves a map of their own inner strength — and the tools to cultivate it."*
+> — Janeen Molchany, Ph.D., BCBA
+
+---
+
+## ✨ Platform Features
+
+### Core Assessment
+- 🧠 **36-question Resilience Assessment** — six-category scoring algorithm grounded in doctoral research
+- 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Reflective, Somatic-Regulative
+- 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
+
+### Enhanced Results & Visualization
+- 📈 **Interactive Radar Chart** — Visual representation of your 6-dimension profile
+- 📊 **Score Breakdown** — Detailed percentage scores for each resilience type
+- 📄 **Structured Narrative Report** — Pattern-based interpretations tailored to your profile
+- 🎨 **Strength Cards** — Primary, Solid, and Emerging strength identification and descriptions
+- 📥 **PDF Download** — Generate downloadable PDF report of your resilience profile
+- 📧 **Email Results** — Receive your full assessment report via email
+
+### Longitudinal Tracking (Resilience Atlas)
+- 📅 **Assessment History Timeline** — View all past assessments chronologically
+- 🧭 **Evolution Compass** — Visual compass showing direction of resilience growth
+- 📊 **Comparative Analysis** — See how each dimension changed between assessments
+- 🗺️ **Resilience Atlas Page** (`/atlas`) — Complete journey visualization
+
+### Teams & Organizations
+- 👥 **Team Dashboard** — Aggregated team resilience radar chart and analytics
+- 📊 **Advanced Analytics** — Dimension distribution, trend analysis, risk flagging
+- 📄 **Team Reports** — Auto-generated narrative team resilience summaries
+- 📋 **Facilitation Tools** — Workshop guides, discussion prompts, action plan builder
+- 🔐 **Role-Based Permissions** — Viewer, Contributor, Admin access levels
+- 💰 **3-Tier Pricing** — Teams Starter · Teams Pro · Enterprise
+
+### Technical Features
+- ⚡ **Async Report Generation** — Redis-backed job queue (< 200ms quiz response)
+- 🔐 **JWT Authentication** — Secure login, signup, and profile management
+- 💾 **MongoDB Persistence** — Results stored securely and indefinitely
+- ♿ **Accessible Visualizations** — SVG-based charts with ARIA labels
+- 📱 **Mobile-Responsive** — Full experience on all screen sizes
+
+---
+
+## 🖼️ Social-Post Visual Templates
+
+Evergreen social cards (1080×1080 PNG) for use with Metricool autolists.
+Four template types × three color variants = **12 cards total**.
+
+### Quick start
 
 ```bash
-git clone https://github.com/Abafirst/resilience-atlas.git
-cd resilience-atlas
+# Install dependencies (first time only)
 npm install
-cp .env.example .env   # fill in your values
+
+# Render all 12 social-card PNGs
+npm run social:build
+```
+
+Generated PNGs are written to `assets/social/generated/` (gitignored — recreate as needed).
+
+### Template types
+
+| ID | Name | File prefix | Label |
+|---|---|---|---|
+| A | Micro-practice | `micro-practice-v{1-3}` | 2-Minute Practice |
+| B | Dimension Spotlight | `dimension-spotlight-v{1-3}` | Resilience Dimension |
+| C | Myth → Truth | `myth-truth-v{1-3}` | Myth / Truth |
+| D | Weekly Reflection | `weekly-reflection-v{1-3}` | Weekly Reflection |
+
+Variants differ by accent color: v1 = Teal, v2 = Warm Sand, v3 = Soft Coral.
+
+See [`docs/brand/social-templates.md`](docs/brand/social-templates.md) for the full style guide, color palette, typography, and Metricool rotation instructions.
+
+---
+
+## 🚀 Deployment
+
+### Frontend Build
+
+The React frontend (`client/`) must be compiled before starting the server in production. The server then serves the built files from `client/dist`.
+
+```bash
+# Build the React frontend (run from the repo root)
+npm run build
+
+# Start the server (serves client/dist automatically)
 npm start
 ```
 
-## Documentation
+A combined helper script is also available:
 
-Full documentation lives in the [`docs/`](docs/) directory:
-
-- [docs/README.md](docs/README.md) — Project overview and API reference
-- [docs/SETUP.md](docs/SETUP.md) — Installation and configuration
-- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) — Deployment guide (Railway, Docker, Heroku)
-- [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) — How to contribute
-- [docs/CHANGELOG.md](docs/CHANGELOG.md) — Version history
-- [docs/OPENCLAW.md](docs/OPENCLAW.md) — GitHub → Telegram integration
-
-## Project Structure
-
-```
-backend/            Express API server, routes, middleware, models, services, utils
-frontend/           HTML pages and client-side JavaScript
-integrations/       OpenClaw (GitHub → Telegram) and other third-party integrations
-docs/               Project documentation
-questions.json      36-question assessment data
-package.json        Combined dependencies
-.env.example        Environment variable template
-Dockerfile          Docker container definition
-railway.toml        Railway deployment configuration
+```bash
+# Build frontend then start server in one step
+npm run start:prod
 ```
 
-## License
+### Railway (Docker)
 
-MIT License
+The included `Dockerfile` handles both steps automatically in a multi-stage build:
+
+1. **Stage 1** — installs client dependencies and runs `npm run build` inside `client/`
+2. **Stage 2** — copies `client/dist` into the final image alongside the Express backend
+
+No manual build step is required when deploying via Railway with the Dockerfile builder (the default in `railway.toml`).
+
+### How the Server Serves the Frontend
+
+`backend/server.js` serves static files from `client/dist` first (the React production build), then falls back to the legacy `public/` directory. Any route not handled by the API returns `client/dist/index.html` so React Router can handle client-side navigation.
+
+---
+
+
+---
+
+## 🔍 Stripe Checkout Debug Logging
+
+When Stripe checkout sessions fail in production (e.g. "An error occurred with our connection to Stripe"), you can enable verbose diagnostic logging to expose the underlying network/TLS error code.
+
+### Enabling in Railway
+
+1. Open your Railway project → backend service → **Variables**
+2. Add (or update) the variable:
+   ```
+   DEBUG_STRIPE=true
+   ```
+3. Redeploy the service.
+
+Once active, Railway logs will show:
+- `DEBUG_STRIPE runtime=true` — confirms the flag is live in the running container.
+- `Stripe checkout error details` — Stripe SDK fields plus `causeCode`/`causeMessage`.
+- `Stripe checkout error cause:` — full Node.js network error object (code, errno, syscall, stack).
+- `Stripe checkout nested cause [depth=N]:` — walks the full cause chain (e.g. `ETIMEDOUT`, `ENOTFOUND`, `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`).
+- `Stripe TLS smoke-check:` — result of a direct TLS probe to `api.stripe.com`.
+
+### Disabling
+
+Remove the `DEBUG_STRIPE` variable (or set it to any value other than `true`) in Railway and redeploy. No debug logs will appear; the service returns to the default minimal logging.
+
+> ⚠️ **Never log `STRIPE_SECRET_KEY` or full request/session payloads.** The debug logs are designed to expose only error metadata and safe key prefixes (first 7 characters only, e.g. `sk_live_` or `sk_test_`), not actual key material.

@@ -1,182 +1,74 @@
 [
-  {
-    "id": 1,
-    "question": "How do you feel when faced with challenges?",
-    "category": "Emotional"
-  },
-  {
-    "id": 2,
-    "question": "How well do you manage stress?",
-    "category": "Emotional"
-  },
-  {
-    "id": 3,
-    "question": "Do you often feel overwhelmed by your responsibilities?",
-    "category": "Emotional"
-  },
-  {
-    "id": 4,
-    "question": "How often do you feel happy or satisfied?",
-    "category": "Emotional"
-  },
-  {
-    "id": 5,
-    "question": "Do you express your emotions openly?",
-    "category": "Emotional"
-  },
-  {
-    "id": 6,
-    "question": "How do you cope with emotional pain?",
-    "category": "Emotional"
-  },
-  {
-    "id": 7,
-    "question": "How do you rise after a setback?",
-    "category": "Emotional"
-  },
-  {
-    "id": 8,
-    "question": "Do you seek support from others during tough times?",
-    "category": "Emotional"
-  },
-  {
-    "id": 9,
-    "question": "How often do you engage in self-reflection?",
-    "category": "Emotional"
-  },
-  {
-    "id": 10,
-    "question": "Are you able to find meaning in difficult situations?",
-    "category": "Emotional"
-  },
-  {
-    "id": 11,
-    "question": "How do you rate your mental clarity?",
-    "category": "Mental"
-  },
-  {
-    "id": 12,
-    "question": "Do you often feel mentally fatigued?",
-    "category": "Mental"
-  },
-  {
-    "id": 13,
-    "question": "How well do you concentrate when working?",
-    "category": "Mental"
-  },
-  {
-    "id": 14,
-    "question": "How do you react to new ideas or opinions?",
-    "category": "Mental"
-  },
-  {
-    "id": 15,
-    "question": "Do you practice mindfulness or meditation?",
-    "category": "Mental"
-  },
-  {
-    "id": 16,
-    "question": "How often do you challenge your thoughts?",
-    "category": "Mental"
-  },
-  {
-    "id": 17,
-    "question": "How do you handle distractions?",
-    "category": "Mental"
-  },
-  {
-    "id": 18,
-    "question": "Do you set clear goals for yourself?",
-    "category": "Mental"
-  },
-  {
-    "id": 19,
-    "question": "Do you often talk to yourself in a positive way?",
-    "category": "Mental"
-  },
-  {
-    "id": 20,
-    "question": "How do you define your problem-solving skills?",
-    "category": "Mental"
-  },
-  {
-    "id": 21,
-    "question": "How do you prioritize your physical health?",
-    "category": "Physical"
-  },
-  {
-    "id": 22,
-    "question": "How often do you exercise?",
-    "category": "Physical"
-  },
-  {
-    "id": 23,
-    "question": "How do you manage your diet?",
-    "category": "Physical"
-  },
-  {
-    "id": 24,
-    "question": "How much sleep do you get each night?",
-    "category": "Physical"
-  },
-  {
-    "id": 25,
-    "question": "Do you engage in physical relaxation techniques?",
-    "category": "Physical"
-  },
-  {
-    "id": 26,
-    "question": "How do you cope with physical pain?",
-    "category": "Physical"
-  },
-  {
-    "id": 27,
-    "question": "How well do you recover after physical exertion?",
-    "category": "Physical"
-  },
-  {
-    "id": 28,
-    "question": "How regularly do you get health check-ups?",
-    "category": "Physical"
-  },
-  {
-    "id": 29,
-    "question": "Do you make time for recreational activities?",
-    "category": "Physical"
-  },
-  {
-    "id": 30,
-    "question": "How do you stay hydrated?",
-    "category": "Physical"
-  },
-  {
-    "id": 31,
-    "question": "How do you handle setbacks in your fitness journey?",
-    "category": "Physical"
-  },
-  {
-    "id": 32,
-    "question": "How do you ensure a work-life balance?",
-    "category": "General"
-  },
-  {
-    "id": 33,
-    "question": "How often do you take breaks throughout the day?",
-    "category": "General"
-  },
-  {
-    "id": 34,
-    "question": "How do you maintain relationships with friends and family?",
-    "category": "General"
-  },
-  {
-    "id": 35,
-    "question": "Do you engage in hobbies or interests that bring you joy?",
-    "category": "General"
-  },
-  {
-    "id": 36,
-    "question": "How do you adapt to changes in your life?",
-    "category": "General"
-  }
+  { "id": 1,  "question": "I take action to improve difficult situations.", "category": "Agentic-Generative" },
+  { "id": 2,  "question": "I pursue meaningful goals even during stress.", "category": "Agentic-Generative" },
+  { "id": 3,  "question": "I create opportunities even when things are hard.", "category": "Agentic-Generative" },
+  { "id": 4,  "question": "I stay motivated when facing adversity.", "category": "Agentic-Generative" },
+  { "id": 5,  "question": "I generate new possibilities in challenging times.", "category": "Agentic-Generative" },
+  { "id": 6,  "question": "I move forward with purpose after setbacks.", "category": "Agentic-Generative" },
+  { "id": 7,  "question": "I take initiative even when outcomes are uncertain.", "category": "Agentic-Generative" },
+  { "id": 8,  "question": "I can identify concrete steps to address challenges.", "category": "Agentic-Generative" },
+  { "id": 9,  "question": "I feel empowered to create positive change in my life.", "category": "Agentic-Generative" },
+  { "id": 10, "question": "I follow through on decisions even when they are difficult.", "category": "Agentic-Generative" },
+  { "id": 11, "question": "I view obstacles as opportunities to demonstrate my capability.", "category": "Agentic-Generative" },
+  { "id": 12, "question": "I take responsibility for my resilience journey.", "category": "Agentic-Generative" },
+  { "id": 13, "question": "I reach out to others when I need support.", "category": "Relational-Connective" },
+  { "id": 14, "question": "I maintain supportive relationships.", "category": "Relational-Connective" },
+  { "id": 15, "question": "I feel connected to my community.", "category": "Relational-Connective" },
+  { "id": 16, "question": "I contribute to the well-being of others.", "category": "Relational-Connective" },
+  { "id": 17, "question": "I communicate openly with people I trust.", "category": "Relational-Connective" },
+  { "id": 18, "question": "My relationships help me through challenges.", "category": "Relational-Connective" },
+  { "id": 19, "question": "I have people I can trust with my struggles.", "category": "Relational-Connective" },
+  { "id": 20, "question": "I ask for help without shame or hesitation.", "category": "Relational-Connective" },
+  { "id": 21, "question": "I repair and reconcile relationships after conflict or misunderstanding.", "category": "Relational-Connective" },
+  { "id": 22, "question": "I set healthy boundaries in relationships to protect my own well-being.", "category": "Relational-Connective" },
+  { "id": 23, "question": "I feel seen and understood by people close to me.", "category": "Relational-Connective" },
+  { "id": 24, "question": "I invest time in nurturing important relationships.", "category": "Relational-Connective" },
+  { "id": 25, "question": "I have a sense of purpose that guides me.", "category": "Spiritual-Reflective" },
+  { "id": 26, "question": "My values help orient me during difficult times.", "category": "Spiritual-Reflective" },
+  { "id": 27, "question": "I reflect on deeper meaning in life events.", "category": "Spiritual-Reflective" },
+  { "id": 28, "question": "I feel connected to something larger than myself.", "category": "Spiritual-Reflective" },
+  { "id": 29, "question": "My beliefs help me stay grounded.", "category": "Spiritual-Reflective" },
+  { "id": 30, "question": "Purpose gives me strength during adversity.", "category": "Spiritual-Reflective" },
+  { "id": 31, "question": "I understand what gives my life meaning and purpose.", "category": "Spiritual-Reflective" },
+  { "id": 32, "question": "I draw on contemplative or spiritual practices to restore inner calm.", "category": "Spiritual-Reflective" },
+  { "id": 33, "question": "I find gratitude and appreciation even in the midst of adversity.", "category": "Spiritual-Reflective" },
+  { "id": 34, "question": "Adversity deepens my sense of what matters most.", "category": "Spiritual-Reflective" },
+  { "id": 35, "question": "I find resilience through spiritual or philosophical practice.", "category": "Spiritual-Reflective" },
+  { "id": 36, "question": "A clear sense of meaning helps me endure hardship.", "category": "Spiritual-Reflective" },
+  { "id": 37, "question": "I can adapt emotionally to stressful situations.", "category": "Emotional-Adaptive" },
+  { "id": 38, "question": "I manage difficult emotions effectively.", "category": "Emotional-Adaptive" },
+  { "id": 39, "question": "I recover emotionally after setbacks.", "category": "Emotional-Adaptive" },
+  { "id": 40, "question": "I can tolerate emotional discomfort when needed.", "category": "Emotional-Adaptive" },
+  { "id": 41, "question": "I regulate my emotional reactions well.", "category": "Emotional-Adaptive" },
+  { "id": 42, "question": "My emotions help guide my decisions.", "category": "Emotional-Adaptive" },
+  { "id": 43, "question": "I can sit with uncomfortable emotions without being overwhelmed.", "category": "Emotional-Adaptive" },
+  { "id": 44, "question": "I understand the messages my emotions are sending.", "category": "Emotional-Adaptive" },
+  { "id": 45, "question": "I recognize when I need emotional support and actively seek it.", "category": "Emotional-Adaptive" },
+  { "id": 46, "question": "I can express difficult emotions in healthy ways.", "category": "Emotional-Adaptive" },
+  { "id": 47, "question": "My emotions provide valuable information about my needs.", "category": "Emotional-Adaptive" },
+  { "id": 48, "question": "I maintain emotional balance during stressful periods.", "category": "Emotional-Adaptive" },
+  { "id": 49, "question": "Physical movement helps me regulate stress.", "category": "Somatic-Regulative" },
+  { "id": 50, "question": "I notice how my body reacts to stress.", "category": "Somatic-Regulative" },
+  { "id": 51, "question": "Consistent daily habits provide a stable foundation for my well-being.", "category": "Somatic-Regulative" },
+  { "id": 52, "question": "Breathing or physical grounding helps me reset.", "category": "Somatic-Regulative" },
+  { "id": 53, "question": "Sleep and rest influence my resilience.", "category": "Somatic-Regulative" },
+  { "id": 54, "question": "Exercise or movement improves my mood.", "category": "Somatic-Regulative" },
+  { "id": 55, "question": "I prioritize rest and recovery as key components of my resilience.", "category": "Somatic-Regulative" },
+  { "id": 56, "question": "My body is a resource I actively care for.", "category": "Somatic-Regulative" },
+  { "id": 57, "question": "I use nutrition and hydration intentionally to support my energy and mood.", "category": "Somatic-Regulative" },
+  { "id": 58, "question": "I maintain consistency in sleep, movement, and nutrition.", "category": "Somatic-Regulative" },
+  { "id": 59, "question": "My physical well-being directly impacts my resilience.", "category": "Somatic-Regulative" },
+  { "id": 60, "question": "I use somatic techniques (breathing, stretching, etc.) intentionally.", "category": "Somatic-Regulative" },
+  { "id": 61, "question": "I reflect on difficult experiences to learn from them.", "category": "Cognitive-Narrative" },
+  { "id": 62, "question": "I can reframe setbacks in a constructive way.", "category": "Cognitive-Narrative" },
+  { "id": 63, "question": "My personal story helps me understand challenges.", "category": "Cognitive-Narrative" },
+  { "id": 64, "question": "I find meaning in difficult experiences.", "category": "Cognitive-Narrative" },
+  { "id": 65, "question": "I actively interpret events in ways that support growth.", "category": "Cognitive-Narrative" },
+  { "id": 66, "question": "Reflection helps me move forward after adversity.", "category": "Cognitive-Narrative" },
+  { "id": 67, "question": "I actively construct meaningful narratives from my experiences.", "category": "Cognitive-Narrative" },
+  { "id": 68, "question": "I can identify growth and learning from past difficulties.", "category": "Cognitive-Narrative" },
+  { "id": 69, "question": "I use storytelling to make sense of challenges.", "category": "Cognitive-Narrative" },
+  { "id": 70, "question": "I challenge unhelpful thinking patterns.", "category": "Cognitive-Narrative" },
+  { "id": 71, "question": "I maintain perspective during adversity.", "category": "Cognitive-Narrative" },
+  { "id": 72, "question": "I integrate difficult experiences into my life narrative.", "category": "Cognitive-Narrative" }
 ]

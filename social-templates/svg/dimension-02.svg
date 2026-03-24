@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080"
+     role="img" aria-labelledby="dim2-title">
+  <title id="dim2-title">The Resilience Atlas&#8482; &#8212; Resilience Dimension Template (Variant 2)</title>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="#0F2436"/>
+
+  <!-- Faint map-grid lines -->
+  <g opacity="0.055" stroke="#FAF7F2" stroke-width="0.75">
+    <line x1="0"   y1="216" x2="1080" y2="216"/>
+    <line x1="0"   y1="432" x2="1080" y2="432"/>
+    <line x1="0"   y1="648" x2="1080" y2="648"/>
+    <line x1="0"   y1="864" x2="1080" y2="864"/>
+    <line x1="216" y1="0"   x2="216" y2="952"/>
+    <line x1="432" y1="0"   x2="432" y2="952"/>
+    <line x1="648" y1="0"   x2="648" y2="952"/>
+    <line x1="864" y1="0"   x2="864" y2="952"/>
+  </g>
+
+  <!-- Compass decoration -->
+  <g opacity="0.06">
+    <circle cx="950" cy="780" r="190"  fill="none" stroke="#FAF7F2" stroke-width="1.5" stroke-dasharray="7,5"/>
+    <circle cx="950" cy="780" r="104" fill="none" stroke="#FAF7F2" stroke-width="0.75" stroke-dasharray="3,5"/>
+    <line x1="950"   y1="590" x2="950"   y2="970" stroke="#FAF7F2" stroke-width="0.75"/>
+    <line x1="760" y1="780"   x2="1140" y2="780"   stroke="#FAF7F2" stroke-width="0.75"/>
+    <line x1="816" y1="646" x2="1084" y2="914" stroke="#FAF7F2" stroke-width="0.5"/>
+    <line x1="1084" y1="646" x2="816" y2="914" stroke="#FAF7F2" stroke-width="0.5"/>
+    <line x1="950"   y1="590"   x2="950"   y2="605"   stroke="#FAF7F2" stroke-width="3"/>
+    <line x1="950"   y1="955" x2="950"   y2="970"     stroke="#FAF7F2" stroke-width="3"/>
+    <line x1="760" y1="780"     x2="775" y2="780"     stroke="#FAF7F2" stroke-width="3"/>
+    <line x1="1125" y1="780"   x2="1140" y2="780"       stroke="#FAF7F2" stroke-width="3"/>
+    <circle cx="950" cy="780" r="5" fill="#FAF7F2"/>
+  </g>
+
+  <!-- Top accent strip -->
+  <rect x="0" y="0" width="1080" height="8" fill="#E9C46A"/>
+  <!-- Left accent rule -->
+  <rect x="0" y="8" width="5" height="944" fill="#E9C46A" opacity="0.35"/>
+
+  <!-- Section label -->
+  <text x="80" y="108" fill="#E9C46A" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="3.5">RESILIENCE DIMENSION</text>
+  <line x1="80" y1="122" x2="460" y2="122" stroke="#E9C46A" stroke-width="1.2" opacity="0.45"/>
+
+  <!-- Dimension name -->
+  <text x="80" y="238" fill="#FAF7F2" font-family="'DM Serif Display', Georgia, 'Times New Roman', serif" font-size="82">Cognitive&#8209;</text>
+  <text x="80" y="332" fill="#FAF7F2" font-family="'DM Serif Display', Georgia, 'Times New Roman', serif" font-size="82">Narrative</text>
+
+  <!-- Accent rule below title -->
+  <line x1="80" y1="366" x2="640" y2="366" stroke="#E9C46A" stroke-width="2.5"/>
+
+  <!-- One-line definition -->
+  <text x="80" y="424" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="28" opacity="0.82">How you make meaning from your experience</text>
+
+  <!-- Signs it's strong -->
+  <text x="80" y="506" fill="#E9C46A" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="2.5">SIGNS IT&#8217;S STRONG</text>
+  <text x="80" y="548" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" opacity="0.78">&#8226; You reframe challenges with perspective</text>
+  <text x="80" y="590" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" opacity="0.78">&#8226; You notice your own story-making</text>
+
+  <!-- Growth edge -->
+  <text x="80" y="662" fill="#E9C46A" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="2.5">GROWTH EDGE</text>
+  <text x="80" y="704" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" opacity="0.78">&#8226; Catastrophizing under pressure</text>
+
+  <!-- 1-min tip -->
+  <text x="80" y="776" fill="#E9C46A" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="2.5">1-MINUTE TIP</text>
+  <text x="80" y="816" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" opacity="0.78">Ask: &#8220;What story am I telling right now?&#8221;</text>
+
+  <!-- Atlas coordinate tag -->
+  <text x="80" y="880" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="16" letter-spacing="2.5" opacity="0.18">ATLAS COORDINATES</text>
+  <line x1="80" y1="894" x2="300" y2="894" stroke="#FAF7F2" stroke-width="0.75" opacity="0.12"/>
+
+  <!-- Footer -->
+  <rect x="0" y="952" width="1080" height="128" fill="#091A28"/>
+  <line x1="0" y1="952" x2="1080" y2="952" stroke="#E9C46A" stroke-width="2.5"/>
+  <text x="80"   y="1030" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="26" font-weight="600" letter-spacing="0.4">The Resilience Atlas&#8482;</text>
+  <text x="1000" y="1030" text-anchor="end" fill="#FAF7F2" font-family="'Inter', 'Source Sans 3', Arial, sans-serif" font-size="22" opacity="0.75">theresilienceatlas.com</text>
+</svg>

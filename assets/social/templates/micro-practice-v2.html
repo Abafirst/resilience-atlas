@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080">
+  <title>Micro-practice v2 — The Resilience Atlas</title>
+  <style>
+    
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 1080px; height: 1080px;
+    overflow: hidden;
+    background: #FAF7F2;
+    color: #0F2436;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+  }
+  .card {
+    position: relative;
+    width: 1080px; height: 1080px;
+    background: #FAF7F2;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .motif {
+    position: absolute;
+    pointer-events: none;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    align-self: flex-start;
+  }
+  .headline {
+    font-family: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+    font-size: 58px;
+    line-height: 1.18;
+    color: #0F2436;
+    margin-bottom: 40px;
+    flex-shrink: 0;
+  }
+  .body-text {
+    font-size: 28px;
+    line-height: 1.6;
+    color: #0F2436;
+    flex: 1;
+  }
+  .bullets { list-style: none; padding: 0; }
+  .bullets li {
+    padding-left: 28px;
+    position: relative;
+    margin-bottom: 18px;
+    font-size: 28px;
+    line-height: 1.5;
+  }
+  .bullets li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-size: 28px;
+  }
+  .footer-rule {
+    width: 100%;
+    height: 1px;
+    background: rgba(15,36,54,0.12);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    color: #0F2436;
+    flex-shrink: 0;
+  }
+  .footer span:last-child { opacity: 0.72; }
+
+    .pill { background: #E9C46A; color: #0F2436; }
+    .bullets li::before { color: #E9C46A; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="motif" aria-hidden="true"
+    style="right:-60px;bottom:100px;width:480px;height:480px;opacity:0.06;"
+    viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#E9C46A" stroke-width="1"/>
+    <circle cx="100" cy="100" r="60" fill="none" stroke="#E9C46A" stroke-width="0.8"/>
+    <circle cx="100" cy="100" r="30" fill="none" stroke="#E9C46A" stroke-width="0.6"/>
+    <!-- 8-point rose petals -->
+    <polygon points="100,10 106,94 100,100 94,94" fill="#E9C46A"/>
+    <polygon points="100,190 106,106 100,100 94,106" fill="#E9C46A"/>
+    <polygon points="10,100 94,106 100,100 94,94" fill="#E9C46A"/>
+    <polygon points="190,100 106,106 100,100 106,94" fill="#E9C46A"/>
+    <polygon points="27,27 97,97 100,100 96,91" fill="#E9C46A" opacity="0.6"/>
+    <polygon points="173,27 103,97 100,100 109,96" fill="#E9C46A" opacity="0.6"/>
+    <polygon points="27,173 97,103 100,100 96,109" fill="#E9C46A" opacity="0.6"/>
+    <polygon points="173,173 103,103 100,100 109,104" fill="#E9C46A" opacity="0.6"/>
+    <!-- Center dot -->
+    <circle cx="100" cy="100" r="5" fill="#E9C46A"/>
+    <!-- Cardinal labels -->
+    <text x="100" y="7" text-anchor="middle" font-size="10" fill="#E9C46A" font-family="Inter,Arial,sans-serif">N</text>
+    <text x="100" y="198" text-anchor="middle" font-size="10" fill="#E9C46A" font-family="Inter,Arial,sans-serif">S</text>
+    <text x="5" y="104" text-anchor="middle" font-size="10" fill="#E9C46A" font-family="Inter,Arial,sans-serif">W</text>
+    <text x="195" y="104" text-anchor="middle" font-size="10" fill="#E9C46A" font-family="Inter,Arial,sans-serif">E</text>
+  </svg>
+
+    <span class="pill">2-Minute Practice</span>
+
+    <h1 class="headline">A small shift<br>starts here.</h1>
+
+    <div class="body-text">
+      <ul class="bullets">
+        <li>Notice what you&rsquo;re carrying right now</li>
+        <li>Choose the one thing you can act on today</li>
+        <li>Take the smallest workable step forward</li>
+      </ul>
+    </div>
+
+    
+    <div class="footer-rule"></div>
+    <footer class="footer">
+      <span>The Resilience Atlas&#x2122;</span>
+      <span>theresilienceatlas.com</span>
+    </footer>
+  </div>
+</body>
+</html>

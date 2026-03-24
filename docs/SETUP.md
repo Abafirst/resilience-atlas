@@ -5,7 +5,7 @@
 - Node.js 18+ and npm
 - MongoDB (local or Atlas cloud)
 - Stripe account (test keys for development)
-- Yahoo Mail account with an App Password (for email delivery)
+- SendGrid account with an API key (for email delivery)
 - Telegram bot token (optional, for OpenClaw notifications)
 
 ---
@@ -38,8 +38,10 @@ Open `.env` and fill in:
 | `MONGODB_URI` | MongoDB connection string |
 | `JWT_SECRET` | Random secret for signing JWTs |
 | `SESSION_SECRET` | Random secret for express-session |
-| `YAHOO_EMAIL` | Yahoo email for sending reports |
-| `YAHOO_APP_PASSWORD` | Yahoo App Password (not your login password) |
+| `SMTP_HOST` | SMTP server hostname (e.g. `smtp.sendgrid.net`) |
+| `SMTP_PORT` | SMTP server port (e.g. `587`) |
+| `SMTP_USER` | SMTP username (for SendGrid use the literal string `apikey`) |
+| `SMTP_PASS` | SMTP password / API key (for SendGrid, your API key starting with `SG.`) |
 | `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key |
 | `STRIPE_SECRET_KEY` | Stripe secret key |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
@@ -62,12 +64,22 @@ The API will be available at `http://localhost:3000`.
 
 ---
 
-## Yahoo App Password
+## SendGrid SMTP
 
-1. Go to [Yahoo Account Security](https://login.yahoo.com/account/security)
-2. Enable two-step verification
-3. Generate an App Password under "Manage app passwords"
-4. Use this password as `YAHOO_APP_PASSWORD` — **not** your regular password
+The application sends all transactional emails through SendGrid's SMTP relay using Nodemailer. To configure it:
+
+1. Create a free account at [sendgrid.com](https://sendgrid.com)
+2. Go to **Settings → API Keys** and create an API key with **Mail Send** permissions
+3. Add the following variables to your `.env` file:
+
+   | Variable | Value |
+   |----------|-------|
+   | `SMTP_HOST` | `smtp.sendgrid.net` |
+   | `SMTP_PORT` | `587` |
+   | `SMTP_USER` | `apikey` (literal string) |
+   | `SMTP_PASS` | Your SendGrid API key (starts with `SG.`) |
+
+> **Note:** `SMTP_USER` must be the literal string `apikey` — this is required by SendGrid's SMTP relay regardless of which API key you use.
 
 ---
 

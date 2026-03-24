@@ -1,43 +1,66 @@
-import React, { useState } from 'react';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
+import React, { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
-
-const PAGES = { login: 'login', register: 'register', payment: 'payment', success: 'success' };
+import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 export default function App() {
-  const [page, setPage] = useState(PAGES.login);
-  const [token, setToken] = useState(localStorage.getItem('ra_token') || '');
+  const { isLoading, isAuthenticated, getAccessTokenSilently, logout, loginWithRedirect } = useAuth0();
+  const [page, setPage] = useState('payment');
   const [paymentResult, setPaymentResult] = useState(null);
+  const [accessToken, setAccessToken] = useState('');
+  // Guard against calling loginWithRedirect more than once per mount.
+  const redirecting = useRef(false);
 
-  const handleLogin = (tok) => {
-    // NOTE: localStorage is used for simplicity; consider httpOnly cookies in production
-    // to reduce XSS exposure.
-    localStorage.setItem('ra_token', tok);
-    setToken(tok);
-    setPage(PAGES.payment);
-  };
+  // Redirect unauthenticated users directly to Auth0 Universal Login.
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated && !redirecting.current) {
+      redirecting.current = true;
+      loginWithRedirect();
+    }
+  }, [isLoading, isAuthenticated, loginWithRedirect]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently()
+        .then(token => setAccessToken(token))
+        .catch((err) => {
+          console.error('Failed to retrieve Auth0 access token:', err);
+          setAccessToken('');
+        });
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   const handleLogout = () => {
-    localStorage.removeItem('ra_token');
-    setToken('');
-    setPage(PAGES.login);
+    logout({ logoutParams: { returnTo: window.location.origin } });
   };
 
   const handlePaymentSuccess = (result) => {
     setPaymentResult(result);
-    setPage(PAGES.success);
+    setPage('success');
   };
 
-  if (page === PAGES.register) {
-    return <Register onRegistered={() => setPage(PAGES.login)} onLogin={() => setPage(PAGES.login)} />;
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7fa' }}>
+        <span style={{ color: '#666', fontSize: 16 }}>Redirecting to login…</span>
+      </div>
+    );
   }
-  if (page === PAGES.login || !token) {
-    return <Login onLogin={handleLogin} onRegister={() => setPage(PAGES.register)} />;
+
+  if (page === 'success') {
+    return (
+      <>
+        <Auth0LoginBar />
+        <PaymentSuccess result={paymentResult} onNewPayment={() => setPage('payment')} onLogout={handleLogout} />
+      </>
+    );
   }
-  if (page === PAGES.success) {
-    return <PaymentSuccess result={paymentResult} onNewPayment={() => setPage(PAGES.payment)} onLogout={handleLogout} />;
-  }
-  return <Payment token={token} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />;
+
+  return (
+    <>
+      <Auth0LoginBar />
+      <Payment token={accessToken} onSuccess={handlePaymentSuccess} onLogout={handleLogout} />
+    </>
+  );
 }

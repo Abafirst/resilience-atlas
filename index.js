@@ -78,9 +78,94 @@ app.get('/', (req, res) => {
 });
 
 // Mount route modules
-app.use('/auth', require('./routes/auth'));
 app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
+
+// ── Quiz submission: compute 6-type resilience scores ─────────────────────────
+// Maps 72 quiz answers (indices 0-71) to the 6 resilience types.
+// 12 questions per type, max raw score 60 per type (5 per question).
+const QUIZ_TYPE_MAP = {
+    'Agentic-Generative':   [ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11], // Q1–Q12
+    'Relational-Connective':[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], // Q13–Q24
+    'Spiritual-Reflective': [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35], // Q25–Q36
+    'Emotional-Adaptive':   [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47], // Q37–Q48
+    'Somatic-Regulative':   [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59], // Q49–Q60
+    'Cognitive-Narrative':  [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71], // Q61–Q72
+};
+const MAX_ANSWER = 5;
+
+// POST /api/quiz — score 72 answers and return 6-type resilience results
+app.post('/api/quiz', (req, res) => {
+    try {
+        const { answers } = req.body || {};
+        if (!Array.isArray(answers) || answers.length !== 72) {
+            return res.status(400).json({ error: 'Please provide all 72 answers.' });
+        }
+
+        const scores = {};
+        let totalRaw = 0;
+        let totalMax = 0;
+
+        for (const [type, indices] of Object.entries(QUIZ_TYPE_MAP)) {
+            const raw = indices.reduce((sum, idx) => sum + (Number(answers[idx]) || 0), 0);
+            const max = indices.length * MAX_ANSWER;
+            const percentage = Math.round((raw / max) * 10000) / 100;
+            scores[type] = { raw, max, percentage };
+            totalRaw += raw;
+            totalMax += max;
+        }
+
+        const overall = Math.round((totalRaw / totalMax) * 100);
+        const dominantType = Object.entries(scores).reduce(
+            (best, [type, data]) => (data.percentage > best[1] ? [type, data.percentage] : best),
+            ['', -1]
+        )[0];
+
+        return res.status(200).json({ overall, dominantType, scores });
+    } catch (err) {
+        console.error('Quiz scoring error:', err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+// ── Auth routes — redirect to Auth0 Universal Login ────────────────────────
+// When AUTH0_DOMAIN and AUTH0_CLIENT_ID are configured the user is sent
+// directly to the Auth0 hosted login page; otherwise they fall back to
+// the homepage as a safe default.
+// redirect_uri is sourced exclusively from environment variables to avoid
+// open-redirect vulnerabilities.
+/**
+ * Build an Auth0 /authorize URL.
+ * @param {string|null} screenHint - Pass 'signup' for the registration screen, null for login.
+ * @returns {string|null} The Auth0 authorization URL, or null if Auth0 is not configured.
+ */
+function buildAuth0AuthorizeUrl(screenHint) {
+    const domain = process.env.AUTH0_DOMAIN;
+    const clientId = process.env.AUTH0_CLIENT_ID;
+    // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
+    const redirectUri = process.env.AUTH0_REDIRECT_URI || process.env.APP_URL || null;
+    if (!domain || !clientId || !redirectUri) return null;
+    const params = new URLSearchParams({
+        response_type: 'code',
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        scope: 'openid profile email',
+    });
+    if (screenHint) params.set('screen_hint', screenHint);
+    return `https://${domain}/authorize?${params.toString()}`;
+}
+
+app.get('/login', (req, res) => {
+    const url = buildAuth0AuthorizeUrl(null);
+    if (url) return res.redirect(302, url);
+    res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+    const url = buildAuth0AuthorizeUrl('signup');
+    if (url) return res.redirect(302, url);
+    res.redirect('/');
+});
 
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));

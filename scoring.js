@@ -1,33 +1,48 @@
-// scoring.js
+function calculateResilienceScores(answers, questions) {
 
-/**
- * Function to calculate score based on quiz results
- * @param {number[]} answers - Array of user's answers
- * @param {number[]} correctAnswers - Array of correct answers
- * @returns {Object} - Contains score and feedback
- */
-function calculateScore(answers, correctAnswers) {
-    let score = 0;
-    for(let i = 0; i < answers.length; i++) {
-        if(answers[i] === correctAnswers[i]) {
-            score++;
-        }
+  const dimensions = {
+    "Somatic-Regulative": 0,
+    "Cognitive-Narrative": 0,
+    "Emotional-Adaptive": 0,
+    "Relational-Connective": 0,
+    "Agentic-Generative": 0,
+    "Spiritual-Reflective": 0
+  };
+
+  const counts = {
+    "Somatic-Regulative": 0,
+    "Cognitive-Narrative": 0,
+    "Emotional-Adaptive": 0,
+    "Relational-Connective": 0,
+    "Agentic-Generative": 0,
+    "Spiritual-Reflective": 0
+  };
+
+  answers.forEach((value, index) => {
+
+    const question = questions[index];
+    const dimension = question.category;
+
+    if (dimension && value !== null) {
+      dimensions[dimension] += value;
+      counts[dimension]++;
     }
-    const percentage = (score / correctAnswers.length) * 100;
-    let feedback = '';
 
-    // Determine feedback based on score
-    if(percentage === 100) {
-        feedback = 'Excellent! Perfect score!';
-    } else if(percentage >= 75) {
-        feedback = 'Great job! You have a good understanding of the material.';
-    } else if(percentage >= 50) {
-        feedback = 'Not bad! Consider reviewing the material.';
+  });
+
+  // convert to percentages
+  const scores = {};
+
+  Object.keys(dimensions).forEach(dim => {
+    if (counts[dim] > 0) {
+      scores[dim] = Math.round((dimensions[dim] / (counts[dim] * 5)) * 100);
     } else {
-        feedback = 'Keep trying! Review the content and take the quiz again.';
+      scores[dim] = 0;
     }
+  });
 
-    return { score, feedback };
+  return scores;
+
 }
 
-module.exports = { calculateScore };
+module.exports = { calculateResilienceScores };

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Resilience Atlas™ — Journey &amp; Evolution</title>
+  <meta name="description" content="Navigate your resilience journey. View your assessment history, evolution compass, growth charts, milestone badges, and longitudinal resilience profile." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Atlas page supplemental styles ─────────────────────── */
+    .atlas-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
+      color: #fff;
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid #1e4060;
+    }
+    .atlas-hero h1 { font-size: 2.2rem; margin-bottom: 0.5rem; color: #4a9eca; }
+    .atlas-hero p  { color: #a8c4d8; max-width: 600px; margin: 0 auto; }
+
+    /* Period filter bar */
+    .period-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 1rem 1.5rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .period-btn {
+      padding: 0.4rem 1rem;
+      border: 1px solid #c4d4e0;
+      border-radius: 20px;
+      background: #fff;
+      color: #4a6a82;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .period-btn:hover, .period-btn.active {
+      background: #4a9eca;
+      color: #fff;
+      border-color: #4a9eca;
+    }
+
+    /* Main grid */
+    .atlas-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    @media (min-width: 800px) {
+      .atlas-grid { grid-template-columns: 2fr 1fr; }
+    }
+
+    /* ── Timeline ──────────────────────────────────────────── */
+    .tl-list { list-style: none; padding: 0; margin: 0; position: relative; }
+    .tl-list::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: #e0eaf2;
+    }
+    .tl-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.9rem 0.5rem 0.9rem 0;
+      border-bottom: 1px solid #edf2f7;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 6px;
+      position: relative;
+    }
+    .tl-item:hover, .tl-item.selected { background: #f0f7ff; }
+    .tl-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px currentColor;
+      z-index: 1;
+      margin-top: 2px;
+    }
+    .tl-body { flex: 1; min-width: 0; }
+    .tl-header { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .tl-score  { font-size: 1.5rem; font-weight: 700; }
+    .tl-type   { font-size: 0.85rem; color: #4a9eca; margin-top: 2px; }
+    .tl-date   { font-size: 0.78rem; color: #8a9cac; margin-top: 2px; }
+    .tl-top3   { font-size: 0.78rem; color: #6a8ca8; margin-top: 3px; }
+    .tl-badge  { font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; background: #fff7e0; color: #b8860b; border: 1px solid #f0c060; }
+    .first-badge { background: #fff7e0; }
+
+    /* Growth arrows */
+    .growth-arrow { font-size: 0.8rem; font-weight: bold; }
+    .growth-arrow.up     { color: #27ae60; }
+    .growth-arrow.down   { color: #e74c3c; }
+    .growth-arrow.stable { color: #95a5a6; }
+
+    /* ── Milestone badges strip ─────────────────────────────── */
+    .milestone-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.75rem;
+      background: linear-gradient(135deg, #fff7e0, #fef3c7);
+      border: 1px solid #f0c060;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #92400e;
+      font-weight: 500;
+    }
+
+    /* ── Growth narrative ───────────────────────────────────── */
+    .growth-narrative {
+      background: #f0f7ff;
+      border-left: 4px solid #4a9eca;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1rem;
+    }
+    .narrative-list {
+      margin: 0; padding-left: 1.25rem;
+      font-size: 0.92rem; color: #2c4a6a; line-height: 1.7;
+    }
+    .narrative-list li { margin-bottom: 0.25rem; }
+
+    /* ── Charts container ───────────────────────────────────── */
+    .charts-section { margin-top: 1.5rem; }
+    .chart-card {
+      background: #fff;
+      border: 1px solid #dce8f0;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .chart-card h4 { margin: 0 0 0.75rem; color: #1a3a5c; font-size: 0.95rem; }
+    .chart-canvas-wrap { position: relative; height: 220px; }
+
+    /* ── Evolution compass ──────────────────────────────────── */
+    .compass-card {
+      background: #0f2942;
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: #fff;
+      text-align: center;
+    }
+    .compass-card h3 { color: #4a9eca; margin-bottom: 0.5rem; }
+    .compass-card p  { color: #a8c4d8; font-size: 0.85rem; margin-bottom: 1rem; }
+    #compassContainer { max-width: 280px; margin: 0 auto; }
+    .compass-changes-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    .compass-changes-table td { padding: 4px 8px; }
+    .compass-dim-label  { color: #a8c4d8; }
+    .compass-dim-change { font-weight: bold; text-align: right; }
+    .change-up     { color: #7fba8f; }
+    .change-down   { color: #e07060; }
+    .change-stable { color: #a8c4d8; }
+
+    /* ── Assessment detail panel ────────────────────────────── */
+    .assessment-detail {
+      display: none;
+      background: #fff;
+      border: 1px solid #d0dce8;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .assessment-detail.visible { display: block; }
+    .detail-scores { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+    .detail-score-item {
+      flex: 1 1 110px;
+      background: #f4f7fa;
+      border-radius: 6px;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    .detail-score-label { font-size: 0.78rem; color: #6a8ca8; }
+    .detail-score-value { font-size: 1.3rem; font-weight: bold; }
+    .detail-score-delta { font-size: 0.78rem; margin-top: 2px; }
+
+    /* Note textarea */
+    .note-area {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.6rem;
+      border: 1px solid #c8d8e8;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    .note-save-btn {
+      margin-top: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: #4a9eca;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .note-save-btn:hover { background: #357ca5; }
+    .note-status { font-size: 0.8rem; color: #27ae60; margin-left: 0.5rem; }
+
+    /* ── Evolution narrative (compass section) ──────────────── */
+    .evolution-narrative {
+      background: #f4f7fa;
+      border-left: 4px solid #4a9eca;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      color: #2c3e50;
+      margin-top: 1rem;
+    }
+    .evolution-narrative p { margin: 0; }
+
+    /* ── Empty / loading ────────────────────────────────────── */
+    .atlas-empty {
+      text-align: center; padding: 4rem 2rem; color: #6a8ca8;
+    }
+    .atlas-empty h3 { color: #1a3a5c; margin-bottom: 1rem; }
+    .atlas-empty p  { max-width: 480px; margin: 0 auto 1.5rem; }
+    .atlas-loading  { text-align: center; padding: 3rem; color: #6a8ca8; }
+  </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">
+        <div class="logo-icon" aria-hidden="true"><img src="/brand/symbol/svg/symbol.svg" alt="" width="36" height="36"></div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="quiz.html"    class="btn btn-primary">Take Assessment</a>
+        <a href="results.html" class="btn btn-secondary">My Results</a>
+      
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <section class="atlas-hero">
+    <h1>&#9788; The Resilience Atlas&#8482;</h1>
+    <p>
+      Navigate your resilience journey. Each assessment marks a new point on your
+      personal atlas — tracking how your resilience evolves over time.
+    </p>
+  </section>
+
+  <!-- ── Period filter ───────────────────────────────────── -->
+  <div class="period-bar" id="periodBar" hidden>
+    <button class="period-btn" data-period="30d">Last 30 Days</button>
+    <button class="period-btn" data-period="90d">Last 90 Days</button>
+    <button class="period-btn" data-period="1y">Last Year</button>
+    <button class="period-btn active" data-period="all">All Time</button>
+  </div>
+
+  <!-- ── Main content ────────────────────────────────────── -->
+  <main>
+    <div id="atlasLoading" class="atlas-loading">
+      <p>Loading your resilience history&hellip;</p>
+    </div>
+
+    <div id="atlasEmpty" class="atlas-empty" hidden>
+      <h3>Your Atlas Awaits</h3>
+      <p>
+        Complete your first assessment to map the first point on The Resilience Atlas&#8482;.
+        Every retake adds a new data point to your longitudinal resilience journey.
+      </p>
+      <a href="quiz.html" class="btn btn-primary btn-lg">Take the Assessment</a>
+    </div>
+
+    <div id="atlasContent" class="atlas-grid" hidden>
+
+      <!-- ── Left column: timeline + detail + charts ───── -->
+      <div>
+
+        <!-- Milestone badges -->
+        <div id="milestoneBadges" class="card" hidden>
+          <h3 style="margin:0 0 0.5rem; color:#1a3a5c;">Your Milestones</h3>
+          <div id="milestonesContainer"></div>
+        </div>
+
+        <!-- Growth narrative -->
+        <div id="growthNarrative" class="growth-narrative" hidden>
+          <strong style="color:#1a3a5c;">Your Growth Story</strong>
+          <div id="narrativeContainer"></div>
+        </div>
+
+        <!-- Timeline card list -->
+        <div class="card" style="margin-top:1.25rem;">
+          <h2>Assessment History</h2>
+          <p class="section-description">
+            Your most recent <span id="assessmentCount">0</span> assessments,
+            newest first. Click any entry to view details.
+          </p>
+          <ul id="timeline" class="tl-list" aria-label="Assessment history"></ul>
+        </div>
+
+        <!-- Selected assessment detail panel -->
+        <div id="assessmentDetail" class="assessment-detail" role="region" aria-live="polite" aria-label="Assessment details">
+          <h3 id="detailHeading">Assessment Details</h3>
+          <p id="detailDate" style="font-size:0.85rem;color:#6a8ca8;"></p>
+          <div class="detail-scores" id="detailScores"></div>
+
+          <!-- Radar chart for selected assessment -->
+          <div class="chart-card" style="margin-top:1rem;" id="radarCard">
+            <h4>Dimension Profile</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="radarChart" aria-label="Dimension radar chart"></canvas>
+            </div>
+          </div>
+
+          <!-- User note -->
+          <label for="assessmentNote" style="font-size:0.85rem;color:#4a6a82;display:block;margin-top:0.75rem;">
+            Personal note (optional):
+          </label>
+          <textarea id="assessmentNote" class="note-area" rows="3" maxlength="2000" placeholder="Jot down how you were feeling, what was going on in your life…"></textarea>
+          <div>
+            <button id="btnSaveNote" class="note-save-btn">Save Note</button>
+            <span id="noteStatus" class="note-status" aria-live="polite"></span>
+          </div>
+
+          <p style="margin-top:1rem;">
+            <a id="linkViewReport" href="#" style="color:#4a9eca;font-size:0.88rem;">View full report ↗</a>
+          </p>
+        </div>
+
+        <!-- Charts section -->
+        <div class="charts-section" id="chartsSection" hidden>
+          <div class="chart-card">
+            <h4>Overall Score Trend</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="overallTrendChart" aria-label="Overall score trend"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h4>Dimension Growth</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="growthBarsChart" aria-label="Dimension growth bars"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h4>Dimension Trends</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="dimTrendsChart" aria-label="Dimension trends"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Right column: compass + retake ───────────── -->
+      <div>
+
+        <!-- Evolution compass -->
+        <div class="compass-card">
+          <h3>Resilience Compass</h3>
+          <p>Your current resilience profile. See the evolution narrative below for changes since your last assessment.</p>
+          <canvas id="compassContainer" aria-label="Resilience compass"></canvas>
+          <div id="changesContainer" aria-label="Dimension changes"></div>
+        </div>
+
+        <!-- Evolution narrative (compass-linked) -->
+        <div id="evolutionNarrative" class="evolution-narrative" hidden>
+          <p id="evolutionText"></p>
+        </div>
+
+        <!-- Retake encouragement -->
+        <div class="card" style="margin-top:1rem; text-align:center;">
+          <h3>Continue Your Journey</h3>
+          <p>Retake the assessment in 30 days to track your evolution.</p>
+          <a href="quiz.html" class="btn btn-primary" id="btnRetake">Retake Assessment</a>
+        </div>
+
+      </div>
+
+    </div><!-- /.atlas-grid -->
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+    <p class="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
+    <p class="mt-2">For educational and self-reflection purposes only. Not a clinical assessment.</p>
+  </footer>
+
+  <!-- Chart.js (CDN, integrity hash pinned for security) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
+    integrity="sha256-IIb4bP5qFBF4mBGJP1bGmT4YaNDJQrXYIUQaGEbNPDM="
+    crossorigin="anonymous"></script>
+
+  <script src="js/app.js"></script>
+  <script src="js/visualizations.js"></script>
+  <script src="js/brand-compass.js"></script>
+  <script src="js/timeline-view.js"></script>
+  <script src="js/growth-charts.js"></script>
+  <script>
+    /* ── Atlas page orchestration ────────────────────────── */
+    'use strict';
+
+    // DOM refs
+    var atlasLoading    = document.getElementById('atlasLoading');
+    var atlasEmpty      = document.getElementById('atlasEmpty');
+    var atlasContent    = document.getElementById('atlasContent');
+    var periodBar       = document.getElementById('periodBar');
+    var timelineEl      = document.getElementById('timeline');
+    var countEl         = document.getElementById('assessmentCount');
+    var milestonesCard  = document.getElementById('milestoneBadges');
+    var milestonesContainer = document.getElementById('milestonesContainer');
+    var narrativeBox    = document.getElementById('growthNarrative');
+    var narrativeContainer = document.getElementById('narrativeContainer');
+    var detailPanel     = document.getElementById('assessmentDetail');
+    var detailHeading   = document.getElementById('detailHeading');
+    var detailDate      = document.getElementById('detailDate');
+    var detailScores    = document.getElementById('detailScores');
+    var noteEl          = document.getElementById('assessmentNote');
+    var btnSaveNote     = document.getElementById('btnSaveNote');
+    var noteStatus      = document.getElementById('noteStatus');
+    var linkViewReport  = document.getElementById('linkViewReport');
+    var compassContainer = document.getElementById('compassContainer');
+    var changesContainer = document.getElementById('changesContainer');
+    var evolutionBox    = document.getElementById('evolutionNarrative');
+    var evolutionText   = document.getElementById('evolutionText');
+    var chartsSection   = document.getElementById('chartsSection');
+
+    var DIMS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
+
+    var _currentAssessments = [];
+    var _selectedId  = null;
+    var _selectedIdx = null;
+    var _currentPeriod = 'all';
+
+    // ── Auth header ───────────────────────────────────────
+
+    function getAuthHeader() {
+      var token = (typeof Store !== 'undefined' && Store.get('atlas_token')) ||
+                  localStorage.getItem('atlas_token');
+      return token ? { 'Authorization': 'Bearer ' + token } : {};
+    }
+
+    // ── Data fetching ─────────────────────────────────────
+
+    async function fetchTimeline(period) {
+      var headers = Object.assign({ 'Content-Type': 'application/json' }, getAuthHeader());
+      var url = '/api/history/timeline?period=' + (period || 'all');
+      var res = await fetch(url, { headers: headers });
+      if (!res.ok) throw new Error('Failed to load timeline');
+      return res.json();
+    }
+
+    // ── Compass helpers ───────────────────────────────────
+
+    function calculateSimpleEvolution(current, previous) {
+      var changes = {};
+      var overallChange = (current.overall || 0) - (previous.overall || 0);
+      DIMS.forEach(function (dim) {
+        changes[dim] = ((current.scores && current.scores[dim]) || 0) -
+                       ((previous.scores && previous.scores[dim]) || 0);
+      });
+      return { changes: changes, overallChange: overallChange };
+    }
+
+    function pickDirection(changes) {
+      var northward = (changes.mental || 0) - (changes.physical || 0);
+      var eastward  = (changes.social || 0) - ((changes.emotional || 0) + (changes.spiritual || 0));
+      var magnitude = Math.sqrt(northward * northward + eastward * eastward);
+      if (magnitude < 0.5) return { primary: 'N', magnitude: 0 };
+      var deg  = 90 - Math.atan2(eastward, northward) * 180 / Math.PI;
+      var dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      var idx  = Math.round(((deg % 360) + 360) % 360 / 45) % 8;
+      return { primary: dirs[idx], magnitude: Math.min(10, Math.round(magnitude / 50 * 10)) };
+    }
+
+    function renderCompass(current, previous) {
+      if (typeof window.renderBrandCompass !== 'function') return;
+      if (!current || !current.scores) {
+        changesContainer.innerHTML = '';
+        evolutionText.textContent = "You\u2019ve mapped the first point on The Resilience Atlas\u2122. Return in 30 days to see how your resilience evolves.";
+        evolutionBox.hidden = false;
+        return;
+      }
+      try {
+        window.renderBrandCompass(compassContainer, current.scores);
+      } catch (err) {
+        console.warn('[BrandCompass] Render failed:', err);
+      }
+      if (previous) {
+        var evo  = calculateSimpleEvolution(current, previous);
+        var sign = evo.overallChange > 0 ? '+' : '';
+        var text = evo.overallChange !== 0
+          ? 'Overall change: ' + sign + evo.overallChange + ' points since this assessment.'
+          : 'Your overall score was stable between these assessments.';
+        evolutionText.textContent = text;
+      } else {
+        evolutionText.textContent = "You\u2019ve mapped the first point on The Resilience Atlas\u2122. Return in 30 days to see how your resilience evolves.";
+      }
+      evolutionBox.hidden = false;
+    }
+
+    // ── Detail panel ──────────────────────────────────────
+
+    function showDetail(a, idx, all) {
+      _selectedId  = a._id;
+      _selectedIdx = idx;
+
+      // Highlight selected item
+      var items = timelineEl.querySelectorAll('.tl-item');
+      items.forEach(function (li) { li.classList.remove('selected'); });
+      if (items[idx]) items[idx].classList.add('selected');
+
+      var prev = all[idx + 1] || null;
+
+      if (typeof TimelineView !== 'undefined') {
+        TimelineView.renderDetail({
+          panel:      detailPanel,
+          heading:    detailHeading,
+          dateEl:     detailDate,
+          scoresEl:   detailScores,
+          noteEl:     noteEl,
+          assessment: a,
+          previous:   prev,
+        });
+      }
+
+      // Radar chart
+      if (typeof GrowthCharts !== 'undefined') {
+        GrowthCharts.renderRadar('radarChart', a, prev);
+      }
+
+      // Link to full report (results page with assessment id)
+      if (a._id) {
+        linkViewReport.href = 'results.html?id=' + a._id;
+        linkViewReport.hidden = false;
+      } else {
+        linkViewReport.hidden = true;
+      }
+
+      // Save-note wiring (update closure)
+      btnSaveNote.onclick = function () { saveNote(a._id); };
+
+      renderCompass(a, prev);
+    }
+
+    // ── Save note ─────────────────────────────────────────
+
+    async function saveNote(assessmentId) {
+      if (!assessmentId) return;
+      noteStatus.textContent = '';
+      var headers = Object.assign({ 'Content-Type': 'application/json' }, getAuthHeader());
+      try {
+        var res = await fetch('/api/history/' + assessmentId + '/note', {
+          method: 'PATCH',
+          headers: headers,
+          body: JSON.stringify({ note: noteEl.value }),
+        });
+        if (res.ok) {
+          noteStatus.textContent = 'Saved!';
+          setTimeout(function () { noteStatus.textContent = ''; }, 3000);
+          // Update in-memory
+          var a = _currentAssessments.find(function (x) { return x._id === assessmentId; });
+          if (a) a.notes = noteEl.value;
+        } else {
+          noteStatus.style.color = '#e74c3c';
+          noteStatus.textContent = 'Could not save.';
+        }
+      } catch (e) {
+        noteStatus.style.color = '#e74c3c';
+        noteStatus.textContent = 'Network error.';
+      }
+    }
+
+    // ── Render page ───────────────────────────────────────
+
+    function renderPage(data) {
+      _currentAssessments = data.assessments || [];
+      var assessments = _currentAssessments;
+
+      atlasLoading.hidden = true;
+      periodBar.hidden    = false;
+
+      if (assessments.length === 0) {
+        atlasEmpty.hidden = false;
+        atlasContent.hidden = true;
+        chartsSection.hidden = true;
+        return;
+      }
+
+      atlasEmpty.hidden   = true;
+      atlasContent.hidden = false;
+      countEl.textContent = assessments.length;
+
+      // Milestones
+      var milestones = (data.timeline && data.timeline.milestones) || [];
+      if (milestones.length > 0) {
+        if (typeof TimelineView !== 'undefined') {
+          TimelineView.renderMilestoneBadges(milestonesContainer, milestones);
+        }
+        milestonesCard.hidden = false;
+      }
+
+      // Growth narrative
+      var narrative = data.narrative || [];
+      if (narrative.length > 0) {
+        if (typeof TimelineView !== 'undefined') {
+          TimelineView.renderNarrative(narrativeContainer, narrative);
+        }
+        narrativeBox.hidden = false;
+      }
+
+      // Timeline list
+      if (typeof TimelineView !== 'undefined') {
+        TimelineView.renderTimeline(timelineEl, assessments, function (a, idx, all) {
+          showDetail(a, idx, all);
+        });
+      }
+
+      // Charts (need ≥2 assessments for meaningful trends)
+      if (assessments.length >= 2 && typeof GrowthCharts !== 'undefined') {
+        var trends = (data.timeline && data.timeline.trends) || {};
+        // Reverse to oldest-first for chart rendering
+        var overallPts = (trends.overall || []).slice().reverse();
+        GrowthCharts.renderOverallTrend('overallTrendChart', overallPts);
+        var reversedTrends = {};
+        Object.keys(trends).forEach(function (k) {
+          reversedTrends[k] = (trends[k] || []).slice().reverse();
+        });
+        GrowthCharts.renderGrowthBars('growthBarsChart', reversedTrends);
+        GrowthCharts.renderDimensionTrends('dimTrendsChart', reversedTrends);
+        chartsSection.hidden = false;
+      }
+
+      // Auto-select the latest assessment
+      showDetail(assessments[0], 0, assessments);
+    }
+
+    // ── Period filter ─────────────────────────────────────
+
+    document.querySelectorAll('.period-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.period-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        _currentPeriod = btn.dataset.period;
+        load(_currentPeriod);
+      });
+    });
+
+    // ── Init ──────────────────────────────────────────────
+
+    async function load(period) {
+      atlasLoading.hidden  = false;
+      atlasContent.hidden  = true;
+      atlasEmpty.hidden    = true;
+      chartsSection.hidden = true;
+      milestonesCard.hidden = true;
+      narrativeBox.hidden   = true;
+      detailPanel.classList.remove('visible');
+
+      try {
+        var data = await fetchTimeline(period || 'all');
+        renderPage(data);
+      } catch (err) {
+        atlasLoading.hidden = true;
+        atlasEmpty.hidden   = false;
+        console.error('Atlas load error:', err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () { load('all'); });
+  </script>
+
+<script src="/js/theme-toggle.js"></script>
+</body>
+</html>

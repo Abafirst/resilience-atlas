@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Team Dashboard — The Resilience Atlas™</title>
+  <meta name="description" content="Advanced team analytics, facilitation tools, and organizational insights for the Teams tier." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/teams-enhanced.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+</head>
+<body class="teams-dashboard">
+
+  <a class="sr-only" href="#main-content">Skip to main content</a>
+
+  <!-- ── Header ────────────────────────────────────────────────────────────── -->
+  <header class="teams-header" role="banner">
+    <div class="teams-header__inner">
+      <a href="/" class="teams-header__logo">
+        The Resilience Atlas™
+      </a>
+      <span class="teams-header__org" id="header-org-name">Team Dashboard</span>
+      <nav class="teams-header__nav" aria-label="Dashboard navigation">
+        <a href="/dashboard.html">Overview</a>
+        <a href="/results.html">My Results</a>
+        <button type="button" id="btn-export-csv">Export CSV</button>
+        <button type="button" id="btn-generate-report">Generate Report</button>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+        <button type="button" id="btn-logout" class="btn--danger">Sign Out</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Tier gate (shown to non-Pro users) ────────────────────────────────── -->
+  <div id="tier-gate-banner" hidden>
+    <div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.75rem 1.5rem;display:flex;align-items:center;gap:1rem;font-size:0.875rem;">
+      <span>⚠️</span>
+      <span id="tier-gate-msg">Advanced analytics require <strong>Teams Pro</strong> or <strong>Enterprise</strong>.</span>
+      <button class="btn btn--primary btn--sm" type="button" id="btn-upgrade">Upgrade Plan</button>
+    </div>
+  </div>
+
+  <!-- ── Main ──────────────────────────────────────────────────────────────── -->
+  <main id="main-content" class="teams-dashboard__main">
+
+    <!-- Loading -->
+    <div id="dash-loading" class="teams-loading">
+      <div class="teams-spinner"></div>
+      <span>Loading analytics…</span>
+    </div>
+
+    <!-- Error -->
+    <div id="dash-error" hidden style="padding:2rem;text-align:center;color:#dc2626">
+      <p id="dash-error-msg">Unable to load team data.</p>
+      <button class="btn btn--outline" type="button" onclick="AdvancedDashboard.load()">Retry</button>
+    </div>
+
+    <!-- ── KPI Row ─────────────────────────────────────────────────────────── -->
+    <section id="kpi-section" hidden aria-label="Key metrics">
+      <div class="teams-kpi-row">
+        <div class="teams-kpi">
+          <div class="teams-kpi__val" id="kpi-members">—</div>
+          <div class="teams-kpi__lbl">Team Members</div>
+        </div>
+        <div class="teams-kpi">
+          <div class="teams-kpi__val" id="kpi-overall">—</div>
+          <div class="teams-kpi__lbl">Overall Avg Score</div>
+        </div>
+        <div class="teams-kpi">
+          <div class="teams-kpi__val" id="kpi-top-dim">—</div>
+          <div class="teams-kpi__lbl">Strongest Dimension</div>
+        </div>
+        <div class="teams-kpi">
+          <div class="teams-kpi__val" id="kpi-risk-count">—</div>
+          <div class="teams-kpi__lbl">Members Flagged</div>
+        </div>
+        <div class="teams-kpi">
+          <div class="teams-kpi__val" id="kpi-trend">—</div>
+          <div class="teams-kpi__lbl">Trend vs Last Cycle</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Tabs ────────────────────────────────────────────────────────────── -->
+    <nav class="teams-tabs" id="dashboard-tabs" role="tablist" hidden>
+      <button class="teams-tab active" data-tab="analytics" role="tab" aria-selected="true">📊 Analytics</button>
+      <button class="teams-tab" data-tab="activities" role="tab" aria-selected="false">🎯 Activities</button>
+      <button class="teams-tab" data-tab="facilitation" role="tab" aria-selected="false">📋 Facilitation</button>
+      <button class="teams-tab" data-tab="action-plans" role="tab" aria-selected="false">🎯 Action Plans</button>
+      <button class="teams-tab" data-tab="team-mgmt" role="tab" aria-selected="false">👥 Team Management</button>
+      <button class="teams-tab" data-tab="settings" role="tab" aria-selected="false">⚙️ Settings</button>
+      <button class="teams-tab enterprise-feature" data-tab="branding" role="tab" aria-selected="false" hidden>🎨 Custom Branding</button>
+      <button class="teams-tab teams-pro-feature" data-tab="report" role="tab" aria-selected="false" hidden>📄 Report</button>
+      <button class="teams-tab enterprise-feature" data-tab="data-export" role="tab" aria-selected="false" hidden>📥 Data Export</button>
+    </nav>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Analytics                                                         -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-analytics" class="teams-tab-pane active" role="tabpanel" hidden>
+
+      <div class="teams-grid teams-grid--2" style="margin-bottom:1.25rem">
+
+        <!-- Radar chart -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">Team Radar</h2>
+          <p class="teams-card__subtitle">Current vs previous cycle (dashed)</p>
+          <div style="height:280px;position:relative">
+            <canvas id="teamRadarChart" aria-label="Team resilience radar chart" role="img"></canvas>
+          </div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="teams-card teams-pro-feature" hidden>
+          <h2 class="teams-card__title">Dimension Heatmap</h2>
+          <p class="teams-card__subtitle">Strength classification per dimension</p>
+          <div id="heatmap-container"></div>
+        </div>
+
+      </div>
+
+      <!-- Distribution chart (Pro+) -->
+      <div class="teams-card teams-pro-feature" style="margin-bottom:1.25rem" hidden>
+        <h2 class="teams-card__title">Score Distribution</h2>
+        <p class="teams-card__subtitle">Percentage of team scoring High / Medium / Low per dimension</p>
+        <div class="teams-dist-legend">
+          <div class="teams-dist-legend__item"><span class="teams-dist-legend__dot teams-dist-legend__dot--high"></span> High (≥70%)</div>
+          <div class="teams-dist-legend__item"><span class="teams-dist-legend__dot teams-dist-legend__dot--medium"></span> Medium (40–69%)</div>
+          <div class="teams-dist-legend__item"><span class="teams-dist-legend__dot teams-dist-legend__dot--low"></span> Low (&lt;40%)</div>
+        </div>
+        <div style="height:300px;position:relative">
+          <canvas id="distributionChart" aria-label="Score distribution chart" role="img"></canvas>
+        </div>
+      </div>
+
+      <div class="teams-grid teams-grid--2">
+
+        <!-- Trend analysis (Pro+) -->
+        <div class="teams-card teams-pro-feature" hidden>
+          <h2 class="teams-card__title">Trend Analysis</h2>
+          <p class="teams-card__subtitle">Change since previous assessment cycle</p>
+          <div id="trend-container"></div>
+        </div>
+
+        <!-- Benchmark comparison (Pro+) -->
+        <div class="teams-card teams-pro-feature" hidden>
+          <h2 class="teams-card__title">Industry Benchmarks</h2>
+          <p class="teams-card__subtitle">How your team compares to organizational averages</p>
+          <div id="benchmark-container"></div>
+        </div>
+
+      </div>
+
+      <!-- Risk flagging (Pro+) -->
+      <div class="teams-card teams-pro-feature" style="margin-top:1.25rem" hidden>
+        <h2 class="teams-card__title">Wellbeing Considerations</h2>
+        <p class="teams-card__subtitle">Members with overall score below the risk threshold</p>
+        <div id="risk-container"></div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Activities                                                         -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-activities" class="teams-tab-pane" role="tabpanel" hidden>
+
+      <!-- Activity Tracker Stats -->
+      <div class="teams-grid teams-grid--3" style="margin-bottom:1.25rem">
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-total-count" style="font-size:2rem;font-weight:800;color:#4F46E5">0</div>
+          <div class="teams-kpi__lbl">Activities Logged</div>
+        </div>
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-top-dimension" style="font-size:1.5rem;font-weight:800;color:#16a34a">—</div>
+          <div class="teams-kpi__lbl">Most-Used Dimension</div>
+        </div>
+        <div class="teams-kpi" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:1.25rem;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div class="teams-kpi__val" id="at-this-month" style="font-size:2rem;font-weight:800;color:#d97706">0</div>
+          <div class="teams-kpi__lbl">This Month</div>
+        </div>
+      </div>
+
+      <!-- Log an Activity -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <h2 class="teams-card__title">Log a Completed Activity</h2>
+        <p class="teams-card__subtitle">Track which activities your team has run and capture key notes.</p>
+        <form id="log-activity-form" style="margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:680px" novalidate>
+          <div style="grid-column:1/-1">
+            <label for="log-activity-select" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Activity</label>
+            <select id="log-activity-select" required style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none">
+              <option value="">— Select an activity —</option>
+              <!-- Populated by teams-tracker.js -->
+            </select>
+          </div>
+          <div>
+            <label for="log-attendees" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Attendees</label>
+            <input type="number" id="log-attendees" min="1" max="500" placeholder="e.g. 12"
+              style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none;box-sizing:border-box">
+          </div>
+          <div>
+            <label for="log-notes" style="display:block;font-size:.85rem;font-weight:600;color:#334155;margin-bottom:.3rem">Notes (optional)</label>
+            <input type="text" id="log-notes" maxlength="200" placeholder="Key takeaway or observation…"
+              style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem .85rem;font-size:.93rem;font-family:inherit;background:#f8fafc;color:#0f172a;outline:none;box-sizing:border-box">
+          </div>
+          <div style="grid-column:1/-1;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+            <button type="submit" class="btn btn--primary" style="background:#4F46E5;color:#fff;border:none;border-radius:8px;padding:.65rem 1.5rem;font-size:.93rem;font-weight:600;cursor:pointer">Log Activity</button>
+            <span id="log-success-msg" hidden style="color:#16a34a;font-size:.9rem;font-weight:600">✓ Activity logged!</span>
+          </div>
+        </form>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
+          <h2 class="teams-card__title" style="margin:0">Activity Log</h2>
+          <a href="/teams-activities.html" style="font-size:.87rem;color:#4F46E5;font-weight:600;text-decoration:none">Browse all activities →</a>
+        </div>
+        <div id="activity-log-list">
+          <!-- Populated by teams-tracker.js -->
+        </div>
+        <style>
+          .at-empty { color:#94a3b8;font-size:.9rem;font-style:italic;padding:1rem 0; }
+          .at-entry { display:flex;align-items:flex-start;gap:1rem;justify-content:space-between;padding:.9rem 0;border-bottom:1px solid #f1f5f9; }
+          .at-entry:last-child { border-bottom:none; }
+          .at-entry__info { display:flex;flex-direction:column;gap:.2rem;flex:1;min-width:0; }
+          .at-entry__title { font-size:.95rem;font-weight:600;color:#0f172a; }
+          .at-entry__meta { font-size:.82rem;color:#64748b; }
+          .at-entry__notes { font-size:.87rem;color:#475569;margin:.2rem 0 0;font-style:italic; }
+          .at-entry__remove { background:none;border:none;cursor:pointer;color:#94a3b8;font-size:1.1rem;flex-shrink:0;padding:.2rem .4rem;border-radius:4px;transition:color .15s; }
+          .at-entry__remove:hover { color:#ef4444; }
+        </style>
+      </div>
+
+      <!-- Quick links to resource library -->
+      <div class="teams-card">
+        <h2 class="teams-card__title">Resource Library</h2>
+        <p class="teams-card__subtitle">Access handouts, guides, and visual resources for your team sessions.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem">
+          <a href="/teams-activities.html" style="background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">🎯 All Activities</a>
+          <a href="/teams-resources.html" style="background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">📥 Handouts &amp; Visuals</a>
+          <a href="/teams-facilitation.html" style="background:#fdf4ff;color:#7e22ce;border:1px solid #e9d5ff;border-radius:8px;padding:.55rem 1.1rem;font-size:.87rem;font-weight:600;text-decoration:none">📋 Facilitation Guide</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Facilitation                                                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-facilitation" class="teams-tab-pane" role="tabpanel" hidden>
+
+      <!-- Discussion Prompts -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <h2 class="teams-card__title">Dynamic Discussion Prompts</h2>
+        <p class="teams-card__subtitle">Generated based on your team's lowest-scoring dimensions</p>
+        <div id="prompts-container"></div>
+      </div>
+
+      <!-- Workshop Guides -->
+      <div class="teams-card teams-pro-feature" hidden>
+        <h2 class="teams-card__title">Workshop Guides</h2>
+        <p class="teams-card__subtitle">Pre-built facilitation guides — one per resilience dimension</p>
+        <div class="workshop-grid" id="workshop-grid">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Micro-practices -->
+      <div class="teams-card teams-pro-feature" style="margin-top:1.25rem" hidden>
+        <h2 class="teams-card__title">Dimension Resource Library</h2>
+        <p class="teams-card__subtitle">Videos, micro-practice cards, and reading lists per dimension</p>
+        <div id="resources-container"></div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Action Plans                                                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-action-plans" class="teams-tab-pane" role="tabpanel" hidden>
+      <div class="teams-card teams-pro-feature" hidden>
+        <div id="team-plan-builder"></div>
+      </div>
+      <div class="teams-card" id="action-plans-gate" style="text-align:center;padding:3rem">
+        <div style="font-size:2rem;margin-bottom:0.75rem">🎯</div>
+        <h3 style="margin:0 0 0.5rem">Action Plans — Teams Pro Feature</h3>
+        <p class="text-muted text-sm">Upgrade to Teams Pro to create team goals, assign owners, and track progress.</p>
+        <button class="btn btn--primary" type="button" style="margin-top:1rem"
+          onclick="PaymentGating.startCheckout('teams-pro')">Upgrade to Teams Pro</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Team Management                                                   -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-team-mgmt" class="teams-tab-pane" role="tabpanel" hidden>
+
+      <!-- Member List -->
+      <div class="teams-card" style="margin-bottom:1.25rem">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="teams-card__title" style="margin:0">Team Members</h2>
+          <div class="flex gap-2">
+            <button class="btn btn--outline btn--sm" type="button" id="btn-bulk-invite">Bulk Invite</button>
+            <button class="btn btn--primary btn--sm" type="button" id="btn-invite-member">+ Invite</button>
+          </div>
+        </div>
+        <div id="members-table-wrap">
+          <p class="text-muted text-sm">Loading members…</p>
+        </div>
+      </div>
+
+      <!-- Sub-teams (Pro+) -->
+      <div class="teams-card teams-pro-feature" hidden>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="teams-card__title" style="margin:0">Sub-Teams / Departments</h2>
+          <button class="btn btn--primary btn--sm" type="button" id="btn-create-team">+ Create Team</button>
+        </div>
+        <div id="sub-teams-list">
+          <p class="text-muted text-sm">No sub-teams created yet. Create your first department above.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Settings                                                          -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-settings" class="teams-tab-pane" role="tabpanel" hidden>
+
+      <div class="teams-grid teams-grid--2">
+
+        <!-- Branding (Enterprise) — see dedicated Custom Branding tab -->
+        <div class="teams-card enterprise-feature" hidden>
+          <h2 class="teams-card__title">Custom Branding</h2>
+          <p class="teams-card__subtitle">Personalize the dashboard and reports with your organization's logo and colors.</p>
+          <button
+            class="btn btn--primary btn--sm"
+            type="button"
+            onclick="document.querySelector('[data-tab=branding]') && document.querySelector('[data-tab=branding]').click()"
+          >Open Custom Branding →</button>
+        </div>
+
+        <!-- Scheduled Exports -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">Scheduled Exports</h2>
+          <p class="teams-card__subtitle">Auto-send CSV/PDF reports to your admin email</p>
+          <form id="export-schedule-form">
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label>
+                <input type="checkbox" id="export-enabled" />
+                Enable scheduled exports
+              </label>
+            </div>
+            <div class="teams-form-row">
+              <div class="teams-form-group">
+                <label for="export-freq">Frequency</label>
+                <select id="export-freq">
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                </select>
+              </div>
+              <div class="teams-form-group">
+                <label for="export-email">Recipient Email</label>
+                <input type="email" id="export-email" placeholder="admin@yourorg.com" />
+              </div>
+            </div>
+            <button class="btn btn--primary btn--sm" type="submit">Save Schedule</button>
+          </form>
+        </div>
+
+        <!-- Reassessment Schedule -->
+        <div class="teams-card teams-pro-feature" hidden>
+          <h2 class="teams-card__title">Reassessment Schedule</h2>
+          <p class="teams-card__subtitle">Recommended interval between assessment cycles</p>
+          <form id="reassessment-form">
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="reassess-days">Interval (days)</label>
+              <input type="number" id="reassess-days" min="7" max="365" value="30" />
+            </div>
+            <div id="next-reassessment-date" class="text-muted text-sm" style="margin-bottom:1rem"></div>
+            <button class="btn btn--primary btn--sm" type="submit">Save Schedule</button>
+          </form>
+        </div>
+
+        <!-- SSO / SAML Integration (Enterprise) -->
+        <div class="teams-card enterprise-feature" id="sso-saml-card" hidden>
+          <h2 class="teams-card__title">SSO / SAML Integration</h2>
+          <p class="teams-card__subtitle">Connect your Identity Provider (IdP) so team members can sign in with their corporate credentials via Single Sign-On (SSO / SAML 2.0). Full self-service configuration coming soon — save your settings below to get started.</p>
+          <form id="sso-saml-form" novalidate>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-idp-metadata-url">IdP Metadata URL</label>
+              <input type="url" id="sso-idp-metadata-url" name="idpMetadataUrl"
+                     placeholder="https://your-idp.example.com/saml/metadata" />
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Paste the SAML metadata URL provided by your Identity Provider (Okta, Azure AD, Google Workspace, etc.).
+              </p>
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-acs-url">Assertion Consumer Service (ACS) URL</label>
+              <input type="url" id="sso-acs-url" name="acsUrl"
+                     placeholder="https://app.resilienceatlas.com/auth/saml/callback"
+                     readonly style="background:#f1f5f9;cursor:default" />
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Provide this URL to your IdP when registering this application.
+              </p>
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-entity-id">Entity ID / Issuer</label>
+              <input type="text" id="sso-entity-id" name="entityId"
+                     placeholder="https://app.resilienceatlas.com"
+                     readonly style="background:#f1f5f9;cursor:default" />
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="sso-certificate">IdP X.509 Certificate (PEM)</label>
+              <textarea id="sso-certificate" name="certificate" rows="5"
+                        placeholder="-----BEGIN CERTIFICATE-----&#10;MIIC...&#10;-----END CERTIFICATE-----"
+                        style="font-family:monospace;font-size:0.8rem"></textarea>
+              <p class="teams-form-hint" style="font-size:0.8rem;color:#64748b;margin:0.25rem 0 0">
+                Paste the X.509 signing certificate from your IdP's SAML settings.
+              </p>
+            </div>
+            <div id="sso-saml-status" role="status" aria-live="polite" style="margin-bottom:0.75rem;font-size:0.85rem"></div>
+            <button class="btn btn--primary btn--sm" type="submit" id="btn-sso-save">Save SSO Settings</button>
+          </form>
+        </div>
+
+        <!-- Webhooks (Enterprise) -->
+        <div class="teams-card enterprise-feature" hidden>
+          <h2 class="teams-card__title">Webhooks</h2>
+          <p class="teams-card__subtitle">Receive real-time events for key milestones</p>
+          <div id="webhooks-list" style="margin-bottom:1rem">
+            <p class="text-muted text-sm">No webhooks configured.</p>
+          </div>
+          <form id="webhook-form">
+            <div class="teams-form-group" style="margin-bottom:0.75rem">
+              <label for="hook-url">Endpoint URL</label>
+              <input type="url" id="hook-url" placeholder="https://yourapp.com/webhook" required />
+            </div>
+            <div class="teams-form-group" style="margin-bottom:0.75rem">
+              <label>Events</label>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.375rem">
+                <label style="font-size:0.85rem"><input type="checkbox" name="hook-event" value="assessment_completed" checked /> assessment_completed</label>
+                <label style="font-size:0.85rem"><input type="checkbox" name="hook-event" value="team_created" /> team_created</label>
+                <label style="font-size:0.85rem"><input type="checkbox" name="hook-event" value="milestone_reached" /> milestone_reached</label>
+                <label style="font-size:0.85rem"><input type="checkbox" name="hook-event" value="member_invited" /> member_invited</label>
+              </div>
+            </div>
+            <button class="btn btn--primary btn--sm" type="submit">Register Webhook</button>
+          </form>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Custom Branding (Enterprise)                                      -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-branding" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:720px;margin-bottom:1.5rem">
+        <h2 class="teams-card__title">🎨 Custom Branding</h2>
+        <p class="teams-card__subtitle">Personalize the dashboard and reports with your organization's identity.</p>
+        <p style="font-size:0.875rem;color:#64748b;margin:0.5rem 0 1.5rem">
+          Full self-service branding is coming soon. Use the fields below to preview and configure your
+          logo, brand colors, and a custom intro message. These settings will automatically apply to your
+          team dashboard and generated PDF reports once the feature ships.
+        </p>
+
+        <form id="enterprise-branding-form" novalidate>
+
+          <!-- Logo upload -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Organization Logo</legend>
+
+            <div class="teams-form-group" style="margin-bottom:0.75rem">
+              <label for="brand-logo-file">Upload logo (PNG, SVG, or JPEG — max 2 MB)</label>
+              <input
+                type="file"
+                id="brand-logo-file"
+                name="brand-logo-file"
+                accept="image/png,image/svg+xml,image/jpeg"
+                style="margin-top:0.25rem"
+              />
+            </div>
+
+            <div id="brand-logo-preview" style="display:none;margin-top:0.5rem">
+              <p style="font-size:0.8125rem;color:#64748b;margin:0 0 0.375rem">Preview:</p>
+              <img id="brand-logo-img" src="" alt="Logo preview" style="max-height:64px;max-width:200px;border:1px solid #e2e8f0;border-radius:6px;padding:4px;background:#fff" />
+            </div>
+          </fieldset>
+
+          <!-- Color pickers -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Brand Colors</legend>
+            <div class="teams-form-row">
+              <div class="teams-form-group">
+                <label for="brand-color-primary">Primary Color</label>
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-top:0.25rem">
+                  <input type="color" id="brand-color-primary" name="brand-color-primary" value="#1a3a5c" style="width:48px;height:36px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer" />
+                  <input type="text" id="brand-color-primary-hex" value="#1a3a5c" maxlength="7" placeholder="#1a3a5c" style="width:90px" aria-label="Primary color hex value" />
+                </div>
+                <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Used for headers and primary buttons</p>
+              </div>
+              <div class="teams-form-group">
+                <label for="brand-color-accent">Accent Color</label>
+                <div style="display:flex;align-items:center;gap:0.625rem;margin-top:0.25rem">
+                  <input type="color" id="brand-color-accent" name="brand-color-accent" value="#3b82f6" style="width:48px;height:36px;padding:2px;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer" />
+                  <input type="text" id="brand-color-accent-hex" value="#3b82f6" maxlength="7" placeholder="#3b82f6" style="width:90px" aria-label="Accent color hex value" />
+                </div>
+                <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Used for highlights and links</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Intro message -->
+          <fieldset style="border:none;padding:0;margin:0 0 1.5rem">
+            <legend style="font-weight:600;font-size:0.9375rem;color:#1e293b;margin-bottom:0.75rem">Custom Intro Message</legend>
+            <div class="teams-form-group">
+              <label for="brand-intro-msg">Message shown to team members before the assessment</label>
+              <textarea
+                id="brand-intro-msg"
+                name="brand-intro-msg"
+                rows="4"
+                placeholder="e.g. Welcome to Acme Corp's Resilience Assessment. Your responses are confidential and will help us support your growth…"
+                maxlength="1000"
+                style="margin-top:0.25rem"
+              ></textarea>
+              <p style="font-size:0.75rem;color:#94a3b8;margin:0.25rem 0 0">Max 1,000 characters</p>
+            </div>
+          </fieldset>
+
+          <!-- Coming-soon notice -->
+          <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:0.875rem 1rem;margin-bottom:1.25rem;font-size:0.875rem;color:#0369a1">
+            <strong>🚧 Coming Soon:</strong> Full branding support — including dynamic theme application,
+            white-labelled PDF reports, custom email templates, and subdomain configuration — will be
+            available in a future release. Save your settings here to be first in line when it ships.
+          </div>
+
+          <button class="btn btn--primary" type="submit" disabled style="opacity:0.6;cursor:not-allowed" title="Backend integration coming soon">Save Branding (coming soon)</button>
+          <p style="font-size:0.75rem;color:#94a3b8;margin:0.5rem 0 0">Settings are not yet persisted. This UI is a preview of the upcoming branding feature.</p>
+
+        </form>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Narrative Report (Pro+)                                           -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-report" class="teams-tab-pane teams-pro-feature" role="tabpanel" hidden>
+      <div class="teams-card">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="teams-card__title" style="margin:0">Auto-Generated Team Report</h2>
+            <p class="teams-card__subtitle" style="margin:0.25rem 0 0">Prose narrative with analysis, recommendations, and benchmarks</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn--outline btn--sm" type="button" id="btn-refresh-report">Refresh</button>
+            <button class="btn btn--primary btn--sm" type="button" id="btn-print-report">Print / PDF</button>
+          </div>
+        </div>
+        <div id="report-container">
+          <div class="teams-empty">
+            <div class="teams-empty__icon">📄</div>
+            <div class="teams-empty__title">No report generated yet</div>
+            <p class="text-sm text-muted">Click "Refresh" to generate your team narrative report.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Data Export (Enterprise)                                          -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-data-export" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:640px">
+        <h2 class="teams-card__title">Data Export</h2>
+        <p class="teams-card__subtitle">
+          Self-service data export for enterprise administrators. Download your organization's
+          reports, assessment results, and user activity logs to retain and analyze data on your own terms.
+        </p>
+
+        <p style="font-size:0.9rem;line-height:1.7;color:#374151;margin-bottom:1.5rem">
+          Coming soon: bulk export of all assessments, team reports, and user activity in CSV,
+          PDF, or ZIP format. Enterprise customers will be able to schedule automatic exports and
+          download historical data directly — no manual request required.
+        </p>
+
+        <ul style="font-size:0.875rem;line-height:1.8;color:#4b5563;margin:0 0 1.75rem 1.25rem;padding:0">
+          <li>📊 Export assessment results &amp; dimension scores</li>
+          <li>📄 Download team and individual reports (PDF / CSV)</li>
+          <li>🗂 Export full user activity logs</li>
+          <li>📅 Schedule recurring exports to your admin email</li>
+        </ul>
+
+        <button class="btn btn--primary" type="button" id="btn-data-export" disabled
+                aria-describedby="data-export-coming-soon">
+          Export Data
+        </button>
+        <p id="data-export-coming-soon" style="font-size:0.8rem;color:#6b7280;margin-top:0.75rem">
+          Full export functionality will be available in an upcoming release.
+          Contact support if you need data ahead of that.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ── Modals ─────────────────────────────────────────────────────────────── -->
+  <div id="global-modal-wrap"></div>
+
+  <!-- ── Scripts ────────────────────────────────────────────────────────────── -->
+  <script src="/js/payment-gating.js"></script>
+  <script src="/js/dashboard-analytics.js"></script>
+  <script src="/js/team-plan-builder.js"></script>
+  <script src="/js/teams-content.js"></script>
+  <script src="/js/teams-tracker.js"></script>
+
+  <script>
+  'use strict';
+
+  const AdvancedDashboard = (function () {
+
+    const TOKEN_KEY = 'resilience_auth_token';
+    const ORG_KEY   = 'resilience_org_id';
+
+    let _orgId    = null;
+    let _analytics = null;
+    let _report    = null;
+
+    // Workshop guide definitions
+    const WORKSHOP_GUIDES = [
+      { dim: 'relational', label: 'Relational-Connective', desc: 'Discussion prompts, activities, and reflection questions to strengthen team connection and belonging.' },
+      { dim: 'cognitive',  label: 'Cognitive-Narrative',   desc: 'Narrative reframing exercises and cognitive flexibility activities for team growth mindset.' },
+      { dim: 'somatic',    label: 'Somatic-Behavioral',    desc: 'Body-based regulation practices, movement breaks, and somatic grounding tools for the team.' },
+      { dim: 'emotional',  label: 'Emotional-Adaptive',    desc: 'Psychological safety activities, emotional vocabulary building, and co-regulation practices.' },
+      { dim: 'spiritual',  label: 'Spiritual-Existential', desc: 'Values clarification, purpose alignment, and meaning-making conversations for your team.' },
+      { dim: 'agentic',    label: 'Agentic-Generative',    desc: 'Goal-setting frameworks, agency-building activities, and initiative practices for team empowerment.' },
+    ];
+
+    const RESOURCES = {
+      relational: [
+        { type: 'Video', title: 'The Science of Connection', desc: 'A 2-min overview of why relational resilience matters.' },
+        { type: 'Practice', title: 'Daily Check-In Ritual', desc: 'A simple 3-question team check-in to start meetings.' },
+        { type: 'Reading', title: 'Belonging at Work', desc: 'Research summary on belonging and team performance.' },
+      ],
+      cognitive: [
+        { type: 'Video', title: 'Reframing Under Pressure', desc: 'How to shift from threat to challenge mindset in 90 seconds.' },
+        { type: 'Practice', title: 'Narrative Reframe Cards', desc: 'Team micro-practice: turn a setback into a learning story.' },
+        { type: 'Reading', title: 'Growth Mindset Research', desc: 'Summary of Dweck\'s work on cognitive resilience.' },
+      ],
+      somatic: [
+        { type: 'Video', title: 'Body-Based Regulation', desc: '90-second breathwork demo for stress regulation.' },
+        { type: 'Practice', title: 'Movement Break Protocol', desc: '5-min energizer for meetings and focus sessions.' },
+        { type: 'Reading', title: 'Polyvagal Theory Basics', desc: 'Accessible intro to somatic self-regulation.' },
+      ],
+      emotional: [
+        { type: 'Video', title: 'Building Psychological Safety', desc: 'Amy Edmondson\'s core model explained in 2 minutes.' },
+        { type: 'Practice', title: 'Emotions Check-In Deck', desc: 'Simple card prompts for opening emotional space in meetings.' },
+        { type: 'Reading', title: 'Emotional Granularity', desc: 'Research on why naming emotions increases resilience.' },
+      ],
+      spiritual: [
+        { type: 'Video', title: 'Purpose-Driven Teams', desc: 'How shared purpose builds collective resilience.' },
+        { type: 'Practice', title: 'Values Mapping Activity', desc: 'Surface and align team values in 20 minutes.' },
+        { type: 'Reading', title: 'Meaning at Work Research', desc: 'Evidence review on purpose and organizational outcomes.' },
+      ],
+      agentic: [
+        { type: 'Video', title: 'From Reactive to Proactive', desc: 'How to build a culture of agency and initiative.' },
+        { type: 'Practice', title: 'Small Wins Framework', desc: 'Celebrate progress to reinforce agentic mindset.' },
+        { type: 'Reading', title: 'Self-Efficacy & Resilience', desc: 'Bandura\'s research on agency and resilience outcomes.' },
+      ],
+    };
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    async function init() {
+      _orgId = localStorage.getItem(ORG_KEY) || new URLSearchParams(window.location.search).get('org');
+
+      setupTabs();
+      setupButtons();
+      setupBranding();
+
+      // Check tier access
+      const tier = window.PaymentGating ? window.PaymentGating.getTier() : 'free';
+      const isTeamsPlan = ['business','teams-starter','teams-pro','enterprise'].includes(tier);
+
+      if (!isTeamsPlan) {
+        showGate('Access this dashboard by upgrading to a Teams plan.');
+        return;
+      }
+
+      await load();
+    }
+
+    function showGate(msg) {
+      const gate = document.getElementById('tier-gate-banner');
+      const gateMsg = document.getElementById('tier-gate-msg');
+      if (gate) gate.hidden = false;
+      if (gateMsg) gateMsg.textContent = msg;
+    }
+
+    // ── Load Analytics ────────────────────────────────────────────────────────
+
+    async function load() {
+      document.getElementById('dash-loading').hidden = false;
+      document.getElementById('dash-error').hidden = true;
+
+      try {
+        const res = await fetch(`/api/orgs-advanced/${_orgId}/advanced-analytics`, {
+          headers: authHeaders(),
+        });
+
+        if (res.status === 403) {
+          const data = await res.json();
+          if (data.upgradeRequired) {
+            showGate(data.error || 'Upgrade required for advanced analytics.');
+            loadBasicAnalytics();
+            return;
+          }
+          throw new Error(data.error || 'Forbidden');
+        }
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        _analytics = data.analytics;
+        renderAll();
+      } catch (err) {
+        console.error('[AdvancedDashboard] Load error:', err);
+        document.getElementById('dash-error').hidden = false;
+        document.getElementById('dash-error-msg').textContent = err.message;
+      } finally {
+        document.getElementById('dash-loading').hidden = true;
+      }
+    }
+
+    async function loadBasicAnalytics() {
+      // Fall back to basic org analytics
+      try {
+        const res = await fetch(`/api/organizations/${_orgId}/analytics`, { headers: authHeaders() });
+        if (!res.ok) return;
+        const data = await res.json();
+        renderBasic(data);
+      } catch (e) {
+        console.warn('[AdvancedDashboard] Basic analytics fallback failed:', e.message);
+      }
+    }
+
+    // ── Render ────────────────────────────────────────────────────────────────
+
+    function renderAll() {
+      if (!_analytics) return;
+
+      // Show sections
+      document.getElementById('kpi-section').hidden = false;
+      document.getElementById('dashboard-tabs').hidden = false;
+      document.querySelectorAll('.teams-tab-pane').forEach((p) => { p.hidden = false; });
+
+      renderKpis();
+      renderRadar();
+      renderAdvanced();
+      renderFacilitationTab();
+      renderActionPlansTab();
+      renderMembersTab();
+
+      // Apply tier gating
+      if (window.PaymentGating) window.PaymentGating.applyGating();
+    }
+
+    function renderBasic(data) {
+      document.getElementById('kpi-section').hidden = false;
+      document.getElementById('dashboard-tabs').hidden = false;
+      document.querySelectorAll('.teams-tab-pane').forEach((p) => { p.hidden = false; });
+
+      if (data.averages) {
+        document.getElementById('kpi-overall').textContent = `${Math.round(data.averages.overall || 0)}%`;
+        document.getElementById('kpi-members').textContent = data.teamCount || '—';
+      }
+      if (window.PaymentGating) window.PaymentGating.applyGating();
+    }
+
+    function renderKpis() {
+      const a = _analytics;
+      document.getElementById('kpi-members').textContent  = a.memberCount;
+      document.getElementById('kpi-overall').textContent  = `${Math.round(a.teamAverages.overall || 0)}%`;
+      document.getElementById('kpi-risk-count').textContent = a.atRisk ? a.atRisk.length : '0';
+
+      // Top dimension
+      const dims = Object.entries(a.teamAverages)
+        .filter(([k]) => k !== 'overall')
+        .sort(([,a],[,b]) => b - a);
+
+      const topDim = dims[0];
+      const DIM_LABELS = {
+        relational:'Relational',cognitive:'Cognitive',somatic:'Somatic',
+        emotional:'Emotional',spiritual:'Spiritual',agentic:'Agentic'
+      };
+      document.getElementById('kpi-top-dim').textContent = topDim ? DIM_LABELS[topDim[0]] || topDim[0] : '—';
+
+      // Trend
+      const trend = a.trend;
+      if (trend && trend.hasData && trend.delta.overall != null) {
+        const d = trend.delta.overall;
+        document.getElementById('kpi-trend').textContent = `${d >= 0 ? '+' : ''}${d}%`;
+        document.getElementById('kpi-trend').style.color = d >= 0 ? '#16a34a' : '#dc2626';
+      } else {
+        document.getElementById('kpi-trend').textContent = 'N/A';
+      }
+    }
+
+    function renderRadar() {
+      const previous = _analytics.trend && _analytics.trend.hasData ? _analytics.trend.previous : null;
+      window.DashboardAnalytics.renderRadarChart('teamRadarChart', _analytics.teamAverages, previous);
+    }
+
+    function renderAdvanced() {
+      const a = _analytics;
+      window.DashboardAnalytics.renderHeatmap('heatmap-container', a.heatmap);
+      window.DashboardAnalytics.renderDistributionChart('distributionChart', a.distribution);
+      window.DashboardAnalytics.renderTrend('trend-container', a.trend);
+      window.DashboardAnalytics.renderBenchmarks('benchmark-container', a.benchmarks);
+      window.DashboardAnalytics.renderRiskSummary('risk-container', a.atRisk, a.memberCount);
+    }
+
+    function renderFacilitationTab() {
+      // Discussion prompts
+      if (_analytics.heatmap) {
+        window.DashboardAnalytics.renderDiscussionPrompts('prompts-container', _analytics.heatmap, 3);
+      }
+
+      // Workshop guide cards
+      const grid = document.getElementById('workshop-grid');
+      if (grid) {
+        grid.innerHTML = WORKSHOP_GUIDES.map((g) => `
+          <div class="workshop-card">
+            <span class="workshop-card__dim-badge">${escHtml(g.dim)}</span>
+            <h3 class="workshop-card__title">${escHtml(g.label)} Workshop Guide</h3>
+            <p class="workshop-card__desc">${escHtml(g.desc)}</p>
+            <div class="workshop-card__actions">
+              <a href="/resources/workshop-guides/${escAttr(g.dim)}-workshop.html" 
+                 class="btn btn--outline btn--sm" target="_blank" rel="noopener">
+                View Guide
+              </a>
+              <a href="/resources/workshop-guides/${escAttr(g.dim)}-workshop.html?print=1"
+                 class="btn btn--ghost btn--sm" target="_blank" rel="noopener">
+                Print
+              </a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Resource library
+      const resContainer = document.getElementById('resources-container');
+      if (resContainer) {
+        resContainer.innerHTML = Object.entries(RESOURCES).map(([dim, items]) => `
+          <div class="resource-dim-section">
+            <h4 class="resource-dim-section__title">${escHtml(dim.charAt(0).toUpperCase() + dim.slice(1))}</h4>
+            <div class="resource-cards">
+              ${items.map((r) => `
+                <div class="resource-card">
+                  <span class="resource-card__type">${escHtml(r.type)}</span>
+                  <div class="resource-card__title">${escHtml(r.title)}</div>
+                  <div class="resource-card__desc">${escHtml(r.desc)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderActionPlansTab() {
+      const isPro = window.PaymentGating && window.PaymentGating.isTeamsPro();
+      const planWrap = document.querySelector('#tab-action-plans .teams-pro-feature');
+      const gate     = document.getElementById('action-plans-gate');
+
+      if (isPro) {
+        if (planWrap) planWrap.hidden = false;
+        if (gate) gate.hidden = true;
+        window.TeamPlanBuilder.init('team-plan-builder', _orgId);
+      } else {
+        if (planWrap) planWrap.hidden = true;
+        if (gate) gate.hidden = false;
+      }
+    }
+
+    function renderMembersTab() {
+      // The members list would be populated via /api/organizations/:id/users
+      const wrap = document.getElementById('members-table-wrap');
+      if (wrap) {
+        wrap.innerHTML = '<p class="text-muted text-sm">Member data loaded from the base dashboard. See <a href="/dashboard.html">Team Dashboard</a> for the full member table.</p>';
+      }
+    }
+
+    // ── Report Generation ─────────────────────────────────────────────────────
+
+    async function generateReport() {
+      const container = document.getElementById('report-container');
+      if (container) {
+        container.innerHTML = '<div class="teams-loading"><div class="teams-spinner"></div><span>Generating report…</span></div>';
+      }
+
+      try {
+        const res = await fetch(`/api/orgs-advanced/${_orgId}/report`, {
+          method: 'POST',
+          headers: authHeaders(),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Report generation failed');
+
+        _report = data.report;
+        renderReport(_report);
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `<p class="text-danger text-sm">Failed to generate report: ${escHtml(err.message)}</p>`;
+        }
+      }
+    }
+
+    function renderReport(report) {
+      const container = document.getElementById('report-container');
+      if (!container || !report) return;
+
+      const intro = report.sections.introduction;
+      const dims  = report.sections.dimensionAnalysis || [];
+      const bench = report.sections.benchmarks;
+      const trend = report.sections.trend;
+      const risk  = report.sections.riskSummary;
+
+      container.innerHTML = `
+        <div style="max-width:800px">
+          <h2 style="font-size:1.4rem;font-weight:700;margin:0 0 0.25rem">${escHtml(report.title)}</h2>
+          <p class="text-muted text-sm" style="margin:0 0 1.5rem">
+            Generated ${new Date(report.generatedAt).toLocaleDateString()} | 
+            ${report.memberCount} members | Overall: ${report.overallScore}%
+          </p>
+
+          ${intro ? `
+            <section style="margin-bottom:1.5rem">
+              <h3 style="font-size:1rem;font-weight:600;margin:0 0 0.5rem">${escHtml(intro.heading)}</h3>
+              <p style="font-size:0.9rem;line-height:1.7;color:#374151">${escHtml(intro.text)}</p>
+            </section>
+          ` : ''}
+
+          ${dims.length ? `
+            <section style="margin-bottom:1.5rem">
+              <h3 style="font-size:1rem;font-weight:600;margin:0 0 1rem">Dimension Analysis</h3>
+              ${dims.map((d) => `
+                <div style="border:1px solid #e2e8f0;border-radius:0.5rem;padding:1rem;margin-bottom:0.75rem">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+                    <strong style="font-size:0.9rem">${escHtml(d.label)}</strong>
+                    <span style="font-size:0.8rem;font-weight:600;color:${d.score >= 70 ? '#16a34a' : d.score >= 40 ? '#d97706' : '#dc2626'}">
+                      ${d.score}% — ${escHtml(d.strengthLabel)}
+                    </span>
+                  </div>
+                  <p style="font-size:0.85rem;line-height:1.6;color:#374151;margin:0 0 0.5rem">${escHtml(d.analysis)}</p>
+                  <ul style="margin:0;padding-left:1.25rem;font-size:0.825rem;color:#4b5563">
+                    ${d.recommendations.map((r) => `<li style="margin-bottom:0.25rem">${escHtml(r)}</li>`).join('')}
+                  </ul>
+                </div>
+              `).join('')}
+            </section>
+          ` : ''}
+
+          ${bench ? `
+            <section style="margin-bottom:1.5rem">
+              <h3 style="font-size:1rem;font-weight:600;margin:0 0 0.5rem">${escHtml(bench.heading)}</h3>
+              <p style="font-size:0.9rem;line-height:1.7;color:#374151">${escHtml(bench.text)}</p>
+            </section>
+          ` : ''}
+
+          ${trend ? `
+            <section style="margin-bottom:1.5rem">
+              <h3 style="font-size:1rem;font-weight:600;margin:0 0 0.5rem">${escHtml(trend.heading)}</h3>
+              <p style="font-size:0.9rem;line-height:1.7;color:#374151">${escHtml(trend.text)}</p>
+            </section>
+          ` : ''}
+
+          ${risk ? `
+            <section>
+              <h3 style="font-size:1rem;font-weight:600;margin:0 0 0.5rem">${escHtml(risk.heading)}</h3>
+              <p style="font-size:0.9rem;line-height:1.7;color:#374151">${escHtml(risk.text)}</p>
+            </section>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // ── Tab Navigation ────────────────────────────────────────────────────────
+
+    function setupTabs() {
+      document.querySelectorAll('.teams-tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+
+          document.querySelectorAll('.teams-tab').forEach((b) => {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+
+          document.querySelectorAll('.teams-tab-pane').forEach((p) => {
+            p.classList.remove('active');
+          });
+
+          const pane = document.getElementById(`tab-${target}`);
+          if (pane) pane.classList.add('active');
+        });
+      });
+    }
+
+    // ── Button Handlers ───────────────────────────────────────────────────────
+
+    function setupButtons() {
+      const exportCsvBtn = document.getElementById('btn-export-csv');
+      if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', () => {
+          window.location.href = `/api/orgs-advanced/${_orgId}/export/csv`;
+        });
+      }
+
+      const generateReportBtn = document.getElementById('btn-generate-report');
+      if (generateReportBtn) {
+        generateReportBtn.addEventListener('click', () => {
+          // Switch to report tab
+          const reportTab = document.querySelector('[data-tab="report"]');
+          if (reportTab) reportTab.click();
+          generateReport();
+        });
+      }
+
+      const refreshReportBtn = document.getElementById('btn-refresh-report');
+      if (refreshReportBtn) refreshReportBtn.addEventListener('click', generateReport);
+
+      const printReportBtn = document.getElementById('btn-print-report');
+      if (printReportBtn) printReportBtn.addEventListener('click', () => window.print());
+
+      const logoutBtn = document.getElementById('btn-logout');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('resilience_auth_token');
+          localStorage.removeItem(ORG_KEY);
+          window.location.href = '/';
+        });
+      }
+
+      const upgradeBtn = document.getElementById('btn-upgrade');
+      if (upgradeBtn) {
+        upgradeBtn.addEventListener('click', () => {
+          if (window.PaymentGating) {
+            window.PaymentGating.startCheckout('teams-pro');
+          } else {
+            window.location.href = '/pricing-teams.html';
+          }
+        });
+      }
+
+      const ssoForm = document.getElementById('sso-saml-form');
+      if (ssoForm) {
+        ssoForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('sso-saml-status');
+          if (statusEl) {
+            statusEl.style.color = '#16a34a';
+            statusEl.textContent = '✓ SSO settings saved. Full SSO/SAML activation requires backend configuration — contact support to complete setup.';
+          }
+        });
+      }
+    }
+
+    // ── Auth ──────────────────────────────────────────────────────────────────
+
+    function authHeaders() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      return {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function escAttr(str) {
+      return String(str || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // ── Custom Branding UI ────────────────────────────────────────────────────
+
+    function setupBranding() {
+      // Sync color picker ↔ hex text field
+      function syncColorInputs(pickerId, hexId) {
+        const picker = document.getElementById(pickerId);
+        const hex    = document.getElementById(hexId);
+        if (!picker || !hex) return;
+        picker.addEventListener('input', () => { hex.value = picker.value; });
+        hex.addEventListener('input', () => {
+          if (/^#[0-9a-fA-F]{6}$/.test(hex.value)) picker.value = hex.value;
+        });
+      }
+      syncColorInputs('brand-color-primary', 'brand-color-primary-hex');
+      syncColorInputs('brand-color-accent',  'brand-color-accent-hex');
+
+      // Logo file → preview
+      const logoFile    = document.getElementById('brand-logo-file');
+      const logoPreview = document.getElementById('brand-logo-preview');
+      const logoImg     = document.getElementById('brand-logo-img');
+      if (logoFile && logoPreview && logoImg) {
+        logoFile.addEventListener('change', () => {
+          const file = logoFile.files && logoFile.files[0];
+          if (!file) {
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const allowed = ['image/png', 'image/svg+xml', 'image/jpeg'];
+          if (!allowed.includes(file.type)) {
+            alert('Please upload a PNG, SVG, or JPEG file.');
+            logoFile.value = '';
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const maxBytes = 2 * 1024 * 1024; // 2 MB
+          if (file.size > maxBytes) {
+            alert('File is too large. Please upload an image under 2 MB.');
+            logoFile.value = '';
+            logoPreview.style.display = 'none';
+            logoImg.src = '';
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            logoImg.src = e.target.result;
+            logoPreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    return { init, load };
+
+  })();
+
+  // Auto-init after Chart.js loads
+  document.addEventListener('DOMContentLoaded', function () {
+    AdvancedDashboard.init();
+  });
+  </script>
+
+<script src="/js/theme-toggle.js"></script>
+</body>
+</html>

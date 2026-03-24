@@ -20,8 +20,10 @@ NODE_ENV=production
 MONGODB_URI
 JWT_SECRET
 SESSION_SECRET
-YAHOO_EMAIL
-YAHOO_APP_PASSWORD
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASS=<your SendGrid API key>
 STRIPE_PUBLISHABLE_KEY
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
@@ -30,6 +32,15 @@ TELEGRAM_CHAT_ID
 APP_URL
 CORS_ORIGIN
 ```
+
+> **`APP_URL` is required for Stripe Checkout redirects.**  Set it to your
+> public domain (e.g. `https://theresilienceatlas.com` for production, or
+> `https://resilience-atlas-staging.up.railway.app` for staging).  Stripe uses
+> this value to build the `success_url` and `cancel_url` for every Checkout
+> Session, so users are always returned to the correct origin after payment.
+> If `APP_URL` is missing the app falls back to the Railway default domain.
+
+> **SendGrid SMTP:** `SMTP_USER` must be the literal string `apikey`. Set `SMTP_PASS` to your SendGrid API key (starts with `SG.`). See [docs/SETUP.md](SETUP.md#sendgrid-smtp) for instructions on creating the API key.
 
 ### 3. Add a MongoDB service
 

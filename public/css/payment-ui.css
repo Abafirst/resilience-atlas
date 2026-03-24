@@ -1,0 +1,599 @@
+/* =============================================================
+   payment-ui.css — Payment gating & upgrade UI for Resilience Atlas
+   ============================================================= */
+
+/* ── Payment Success Banner ─────────────────────────────────── */
+.payment-success-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #ecfdf5;
+  color: #065f46;
+  text-align: center;
+  padding: 1rem 2rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  border-bottom: 2px solid #6ee7b7;
+  animation: slideDown 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Redirect progress bar (shrinks to show countdown) ──────── */
+.payment-success-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #10b981;
+  transform-origin: left center;
+  animation: progressShrink var(--banner-duration, 3s) linear forwards;
+}
+
+@keyframes progressShrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ── Fallback manual link ────────────────────────────────────── */
+.payment-banner-fallback {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #047857;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.payment-banner-fallback:hover {
+  color: #065f46;
+}
+
+/* ── Banner action buttons (Download / Email CTAs) ───────────── */
+.payment-banner-cta {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.payment-banner-cta:hover { opacity: 0.85; }
+
+.payment-banner-cta--primary {
+  background: #059669;
+  color: #fff;
+  border: 2px solid #059669;
+}
+
+.payment-banner-cta--secondary {
+  background: transparent;
+  color: #047857;
+  border: 2px solid #047857;
+}
+
+/* ── Locked Sections ─────────────────────────────────────────── */
+.locked {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+}
+
+.locked > *:not(.payment-overlay) {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Ensure the HTML `hidden` attribute is respected even when CSS sets display.
+   Without this, `.payment-overlay { display: flex }` would override hidden=true. */
+[hidden] { display: none !important; }
+
+/* ── Payment Overlay ─────────────────────────────────────────── */
+.payment-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+  border-radius: inherit;
+}
+
+.payment-overlay__inner {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.payment-overlay__icon {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.payment-overlay__message {
+  font-size: 1.05rem;
+  color: #374151;
+  margin: 0 0 1.25rem 0;
+  font-weight: 500;
+}
+
+/* ── Upgrade Comparison Section ──────────────────────────────── */
+.upgrade-comparison {
+  margin: 3rem 0;
+  padding: 2rem 1.5rem;
+  background: #f9fafb;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.upgrade-comparison__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.upgrade-comparison__subtitle {
+  color: #6b7280;
+  margin: 0 auto 2rem auto;
+  max-width: 520px;
+  line-height: 1.55;
+}
+
+.upgrade-comparison__disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.upgrade-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .upgrade-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Upgrade Card ────────────────────────────────────────────── */
+.upgrade-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.75rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.upgrade-card:hover,
+.upgrade-card:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+}
+
+.upgrade-card--atlas-premium {
+  border-color: #f59e0b;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 100%);
+}
+
+.upgrade-card--atlas-premium:hover,
+.upgrade-card--atlas-premium:focus-within {
+  border-color: #d97706;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.18);
+}
+
+.upgrade-card__header {
+  margin-bottom: 1.25rem;
+}
+
+.upgrade-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.badge-blue {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-gold {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.upgrade-card__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+}
+
+.upgrade-card__price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #667eea;
+  margin: 0 0 0.5rem 0;
+}
+
+.upgrade-card--atlas-premium .upgrade-card__price {
+  color: #d97706;
+}
+
+.upgrade-card__description {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.upgrade-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  flex: 1;
+}
+
+.upgrade-card__features li {
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: #374151;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.upgrade-card__features li:last-child {
+  border-bottom: none;
+}
+
+.upgrade-card__features li span[aria-hidden] {
+  color: #22c55e;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* ── Upgrade Button ──────────────────────────────────────────── */
+.btn-upgrade {
+  display: inline-block;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.btn-upgrade:hover {
+  opacity: 0.92;
+}
+
+.btn-upgrade:active {
+  transform: scale(0.98);
+}
+
+.btn-upgrade:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.btn-upgrade.btn-sm {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9rem;
+  width: auto;
+}
+
+.upgrade-card--atlas-premium .btn-upgrade {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.upgrade-card--atlas-premium .btn-upgrade:focus-visible {
+  outline-color: #d97706;
+}
+
+.upgrade-card__trust {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Deep Analysis Preview (blurred placeholder) ─────────────── */
+.deep-analysis-preview {
+  padding: 1rem 0;
+}
+
+.deep-analysis-preview p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.55;
+}
+
+/* ── Free Brief Report Snapshot Card ────────────────────────── */
+.free-brief-report {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+.fbr-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fbr-score-circle {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+  padding-top: 22px;
+}
+
+.fbr-score-num {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fbr-score-sym {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-left: 1px;
+}
+
+.fbr-hero-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.3rem 0;
+}
+
+.fbr-hero-level {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0 0 0.2rem 0;
+}
+
+.fbr-hero-strength {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0;
+}
+
+.fbr-dims-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6b7280;
+  margin: 0 0 0.6rem 0;
+}
+
+.fbr-dim-row {
+  display: grid;
+  grid-template-columns: 10.5rem 1fr 2.75rem;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.45rem;
+}
+
+.fbr-dim-name {
+  font-size: 0.8rem;
+  color: #374151;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fbr-dim-bar-wrap {
+  background: #f3f4f6;
+  border-radius: 999px;
+  height: 7px;
+  overflow: hidden;
+}
+
+.fbr-dim-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.fbr-dim-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #374151;
+  text-align: right;
+}
+
+.fbr-hint {
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  color: #9ca3af;
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 480px) {
+  .fbr-hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .fbr-dim-row {
+    grid-template-columns: 7.5rem 1fr 2.25rem;
+    gap: 0.4rem;
+  }
+
+  .fbr-dim-name {
+    font-size: 0.74rem;
+  }
+}
+
+/* ── Narrative Report Sections (paid users) ─────────────────── */
+.narrative-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nr-overview {
+  background: #f8fafc;
+  border-left: 3px solid #667eea;
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.nr-overview p {
+  margin: 0;
+}
+
+.nr-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+}
+
+.nr-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.nr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6b7280;
+}
+
+.nr-score {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nr-dim-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.4rem 0;
+}
+
+.nr-description {
+  font-size: 0.88rem;
+  color: #475569;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.5;
+}
+
+.nr-insight {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+}
+
+.nr-primary { border-left: 3px solid #667eea; }
+.nr-solid   { border-left: 3px solid #059669; }
+.nr-emerging { border-left: 3px solid #f59e0b; }
+
+.nr-suggestions {
+  background: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.nr-suggestions-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.6rem 0;
+}
+
+.nr-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nr-suggestions-list li {
+  font-size: 0.85rem;
+  color: #475569;
+  padding: 0.3rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+  line-height: 1.45;
+}
+
+.nr-suggestions-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #22c55e;
+  font-weight: 700;
+  font-size: 0.8rem;
+}

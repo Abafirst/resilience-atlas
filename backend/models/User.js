@@ -1,12 +1,109 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    email:    { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    referralCode: { type: String },
-    createdAt: { type: Date, default: Date.now }
+const userSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
+
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+
+  password: {
+    type: String,
+    required: true
+  },
+
+  // Code the user entered at signup (the referrer's affiliateCode)
+  referredBy: {
+    type: String,
+    default: null,
+    index: true
+  },
+
+  // Legacy field kept for backwards-compat (same as referredBy)
+  referralCode: {
+    type: String,
+    default: null
+  },
+
+  // This user's own unique shareable code
+  affiliateCode: {
+    type: String,
+    default: null,
+    unique: true,
+    sparse: true
+  },
+
+  // Referral reward credits balance
+  referralCredits: {
+    type: Number,
+    default: 0
+  },
+
+  // Lifetime total referral rewards earned
+  referralRewardsEarned: {
+    type: Number,
+    default: 0
+  },
+
+  purchasedDeepReport: {
+    type: Boolean,
+    default: false
+  },
+
+  atlasPremium: {
+    type: Boolean,
+    default: false
+  },
+
+  purchaseDate: {
+    type: Date,
+    default: null,
+  },
+
+  // B2B organization fields (optional, null for free-tier users)
+  organization_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+    default: null,
+  },
+
+  role: {
+    type: String,
+    enum: ['member', 'admin'],
+    default: 'member',
+  },
+
+  teamName: {
+    type: String,
+    default: null,
+    trim: true,
+  },
+
+}, { timestamps: true });
+
+// Hash password before saving
+userSchema.pre('save', async function () {
+
+  if (!this.isModified('password')) return;
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+
 });
 
-module.exports = mongoose.model('User', UserSchema);
+// Compare password for login
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
+module.exports = mongoose.model('User', userSchema);

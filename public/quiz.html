@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Take the Assessment — The Resilience Atlas™</title>
+  <meta name="description" content="Answer 72 questions and discover your personalized resilience profile across six dimensions with The Resilience Atlas™." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true"><img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36"></div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
+      
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Dark mode readability hint (hidden in light mode) ──────────────── -->
+  <div class="dm-quiz-hint" id="dmQuizHint" role="note" aria-label="Accessibility tip">
+    <span aria-hidden="true">💡</span>
+    Finding quiz content hard to read? Select the <strong>&#9728;&#65039; sun icon</strong> (top right) to switch to <strong>Light Mode</strong>.
+    <button type="button" class="dm-quiz-hint-close" id="dmQuizHintClose" aria-label="Dismiss accessibility tip">&#x2715;</button>
+  </div>
+
+  <!-- ── Spinner overlay ──────────────────────────────── -->
+  <div id="spinnerOverlay" class="spinner-overlay" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="spinnerText" class="spinner-text">Processing&hellip;</p>
+  </div>
+
+  <main>
+    <div class="quiz-page">
+      <div class="quiz-wrapper">
+
+        <!-- Progress bar -->
+        <div class="progress-container" role="region" aria-label="Quiz progress">
+          <div class="progress-header">
+            <span id="progressLabel">Question 0 of 72</span>
+            <span id="progressPct"></span>
+          </div>
+          <div class="progress-bar-track" aria-hidden="true">
+            <div id="progressFill" class="progress-bar-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Name & Email -->
+        <div id="infoStep" class="info-step card">
+          <h2>Welcome to The Resilience Atlas&#8482;</h2>
+          <p class="description">
+            This 72-question assessment takes about 15–20 minutes to complete.
+            Please answer each question honestly — there are no right or wrong
+            answers. Enter your details below to get started.
+          </p>
+
+          <div class="form-group">
+            <label for="firstName">First Name <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              autocomplete="given-name"
+              placeholder="Your first name"
+              required
+              aria-required="true"
+              aria-describedby="nameError"
+            />
+            <span id="nameError" class="field-error" role="alert"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address <span aria-hidden="true">*</span></label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="you@example.com"
+              required
+              aria-required="true"
+              aria-describedby="emailError"
+            />
+            <span id="emailError" class="field-error" role="alert"></span>
+          </div>
+        </div>
+
+        <!-- Step 2: Questions (built by quiz.js) -->
+        <div id="questionContainer"></div>
+
+        <!-- Step 3: Review & Submit -->
+        <div id="submitStep" class="submit-step card">
+          <h2>You have answered all 72 questions!</h2>
+          <p>
+            Click <strong>Submit</strong> to generate your personalized
+            resilience report. This usually takes just a moment.
+          </p>
+          <button type="button" id="btnSubmit" class="btn btn-primary btn-lg">
+            <span class="btn-label">Submit &amp; See My Results</span>
+          </button>
+          <div id="submitAlert" class="alert" role="alert"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="quiz-nav">
+          <button type="button" id="btnPrev" class="btn btn-secondary" style="visibility:hidden">
+            <span aria-hidden="true">&larr;</span>
+            <span class="btn-label">Previous</span>
+          </button>
+          <button type="button" id="btnNext" class="btn btn-primary">
+            <span class="btn-label">Start Quiz</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+        </div>
+
+      </div><!-- /.quiz-wrapper -->
+    </div><!-- /.quiz-page -->
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+    </div>
+  </footer>
+
+<script src="/js/app.js"></script>
+<script src="/js/quiz.js"></script>
+<script src="/js/theme-toggle.js"></script>
+<script>
+  (function () {
+    var closeBtn = document.getElementById('dmQuizHintClose');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        var hint = document.getElementById('dmQuizHint');
+        if (hint) hint.hidden = true;
+      });
+    }
+  }());
+</script>
+</body>
+</html>
