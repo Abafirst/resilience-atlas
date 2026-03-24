@@ -4,6 +4,8 @@
  * Exposes `ResilienceSharing` global object with methods:
  *   - shareLinkedIn(dominantDimension)
  *   - shareTwitter(dominantDimension)
+ *   - shareInstagram(dominantDimension)
+ *   - shareFacebook(dominantDimension)
  *   - copyShareLink()
  *   - downloadRadarImage()
  *   - trackShare(platform)
@@ -13,6 +15,8 @@
   'use strict';
 
   const BASE_URL = window.location.origin;
+  const INSTAGRAM_PROFILE = 'https://www.instagram.com/atlas.resilience/';
+  const FACEBOOK_PAGE = 'https://www.facebook.com/profile.php?id=100076220534241';
 
   /* ── Helpers ───────────────────────────────────────────── */
 
@@ -78,6 +82,30 @@
       const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
       window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
       trackShareEvent('twitter', dominantDimension);
+    },
+
+    /**
+     * Instagram share guidance — downloads the radar image and shows
+     * instructions to post and tag @atlas.resilience.
+     * (Instagram does not support direct web-based sharing.)
+     * @param {string} dominantDimension
+     */
+    shareInstagram(dominantDimension) {
+      this.downloadRadarImage();
+      showToast(
+        'Image downloading! Post it on Instagram and tag @atlas.resilience \u2014 ' +
+        'or visit ' + INSTAGRAM_PROFILE
+      );
+      trackShareEvent('instagram', dominantDimension);
+    },
+
+    /**
+     * Open the Resilience Atlas Facebook page.
+     * @param {string} dominantDimension
+     */
+    shareFacebook(dominantDimension) {
+      window.open(FACEBOOK_PAGE, '_blank', 'noopener,noreferrer');
+      trackShareEvent('facebook', dominantDimension);
     },
 
     /**
@@ -148,6 +176,16 @@
       const btnTwitter = document.getElementById('btnShareTwitter');
       if (btnTwitter) {
         btnTwitter.addEventListener('click', () => this.shareTwitter(dim));
+      }
+
+      const btnInstagram = document.getElementById('btnShareInstagram');
+      if (btnInstagram) {
+        btnInstagram.addEventListener('click', () => this.shareInstagram(dim));
+      }
+
+      const btnFacebook = document.getElementById('btnShareFacebook');
+      if (btnFacebook) {
+        btnFacebook.addEventListener('click', () => this.shareFacebook(dim));
       }
 
       const btnCopy = document.getElementById('btnShareCopy');

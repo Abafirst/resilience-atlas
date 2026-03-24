@@ -4,12 +4,19 @@
  * emailService.js — Centralised email sending for The Resilience Atlas™.
  *
  * All outgoing emails use the branded HTML templates in
- * backend/templates/emails/ and are sent via Nodemailer (Yahoo SMTP by default,
- * but any SMTP provider works by setting SMTP_* environment variables).
+ * backend/templates/emails/ and are sent via SendGrid (when SENDGRID_API_KEY
+ * is set) or Nodemailer (Yahoo SMTP by default, but any SMTP provider works
+ * by setting SMTP_* environment variables) as a fallback.
  */
 
 const nodemailer = require('nodemailer');
+const sgMail     = require('@sendgrid/mail');
 const logger     = require('../utils/logger');
+
+// Configure SendGrid when an API key is available.
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 const { buildAssessmentResultsEmail } = require('../templates/emails/assessmentResults');
 const { buildReportReadyEmail }        = require('../templates/emails/reportReady');
@@ -21,6 +28,8 @@ const { buildTeamInvitationEmail }     = require('../templates/emails/teamInvita
 const { buildGrowthMilestoneEmail }    = require('../templates/emails/growthMilestone');
 const { referralWelcome }              = require('../templates/emails/referralWelcome');
 const { referralThankYou }             = require('../templates/emails/referralThankYou');
+const { buildTeamPurchaseConfirmationEmail } = require('../templates/emails/teamPurchaseConfirmation');
+const { wrapEmail } = require('../templates/emails/base');
 
 /* ── Transport ─────────────────────────────────────────────────────────────── */
 
@@ -62,11 +71,32 @@ const FROM = process.env.EMAIL_FROM || process.env.YAHOO_EMAIL || 'noreply@resil
  * Send an email using the pre-built { subject, html, text } object returned
  * by a template builder function.
  *
+ * Uses SendGrid when SENDGRID_API_KEY is set; falls back to Nodemailer.
+ *
  * @param {string}  to         Recipient address
  * @param {{ subject: string, html: string, text: string }} emailObj
- * @returns {Promise<Object>}  Nodemailer info object
+ * @returns {Promise<Object>}  SendGrid response or Nodemailer info object
  */
 async function _send(to, emailObj) {
+  if (process.env.SENDGRID_API_KEY) {
+    const msg = {
+      to,
+      from:    FROM,
+      subject: emailObj.subject,
+      html:    emailObj.html,
+      text:    emailObj.text,
+    };
+    try {
+      const [response] = await sgMail.send(msg);
+      logger.info(`[emailService] Email "${emailObj.subject}" sent to ${to} via SendGrid — statusCode: ${response.statusCode}`);
+      return response;
+    } catch (err) {
+      logger.error(`[emailService] SendGrid send failed for "${emailObj.subject}" to ${to}: ${err.message}`, { stack: err.stack });
+      throw err;
+    }
+  }
+
+  // Fallback: Nodemailer
   const mailOptions = {
     from:    FROM,
     to,
@@ -318,6 +348,75 @@ async function sendPdfReport(to, pdfBuffer) {
   }
 }
 
+/**
+ * Send a purchase confirmation email to a Teams package buyer.
+ * Called after successful payment for Atlas Team Basic or Atlas Team Premium.
+ * No admin notification is sent — these are fully self-serve.
+ *
+ * @param {string} to
+ * @param {Object} vars  { planName, planPrice, email, dashboardUrl }
+ */
+async function sendTeamPurchaseConfirmation(to, vars) {
+  const emailObj = buildTeamPurchaseConfirmationEmail(vars);
+  return _send(to, emailObj);
+}
+
+/**
+ * Send an admin notification when an Atlas Team Enterprise inquiry is received.
+ * Only invoked for Enterprise — Basic and Premium are fully self-serve.
+ *
+ * @param {string} to         Admin / site-owner email address
+ * @param {Object} vars       { contactName, companyName, email, teamSize, message }
+ */
+async function sendTeamEnterpriseAdminNotification(to, vars) {
+  const {
+    contactName  = '',
+    companyName  = '',
+    email        = '',
+    teamSize     = '',
+    message      = '',
+  } = vars;
+
+  const lines = [
+    `Name:         ${contactName}`,
+    `Company:      ${companyName}`,
+    `Email:        ${email}`,
+    `Team size:    ${teamSize || 'Not specified'}`,
+    `Message:      ${message || '(none)'}`,
+  ];
+
+  const bodyHtml = `
+    <h2 style="margin:0 0 12px;font-size:20px;">&#128279; New Atlas Team Enterprise Inquiry</h2>
+    <p style="margin:0 0 16px;font-size:14px;color:#475569;">
+      A new Enterprise inquiry has been submitted via the team page.
+    </p>
+    <table width="100%" cellpadding="6" cellspacing="0" border="0"
+           style="font-size:14px;border-collapse:collapse;margin-bottom:24px;">
+      ${[
+        ['Name',      contactName],
+        ['Company',   companyName],
+        ['Email',     `<a href="mailto:${email}">${email}</a>`],
+        ['Team size', teamSize || 'Not specified'],
+        ['Message',   message  || '(none)'],
+      ].map(([label, val]) => `
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="font-weight:700;color:#1a3a5c;width:120px;padding:8px 12px;">${label}</td>
+          <td style="color:#334155;padding:8px 12px;">${val}</td>
+        </tr>`).join('')}
+    </table>
+    <p style="font-size:13px;color:#64748b;">
+      Reply directly to <a href="mailto:${email}">${email}</a> to respond.
+    </p>`;
+
+  const emailObj = {
+    subject: `New Enterprise Inquiry — ${companyName || contactName || 'Unknown'}`,
+    html: wrapEmail(bodyHtml, 'Atlas Team Enterprise Inquiry'),
+    text: ['Atlas Team Enterprise Inquiry', '='.repeat(40), ...lines].join('\n'),
+  };
+
+  return _send(to, emailObj);
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -331,6 +430,10 @@ module.exports = {
   sendTeamInvitation,
   sendGrowthMilestone,
   sendInvitationReminder,
+
+  /* Teams package emails */
+  sendTeamPurchaseConfirmation,
+  sendTeamEnterpriseAdminNotification,
 
   /* Referral program */
   sendReferralWelcome,

@@ -385,7 +385,7 @@ describe('GET /api/payments/tiers', () => {
         const premiumTier = res.body.tiers.find(t => t.id === 'atlas-premium');
         expect(premiumTier).toBeDefined();
         expect(premiumTier.name).toBe('Atlas Premium');
-        expect(premiumTier.price).toBe(99);
+        expect(premiumTier.price).toBe(49.99);
         expect(premiumTier.currency).toBe('USD');
         expect(premiumTier.billing).toBe('one-time');
     });

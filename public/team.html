@@ -430,14 +430,14 @@
       <div class="team-tier-card">
         <div class="ttc-header">
           <span class="ttc-badge ttc-badge--blue">Most Popular</span>
-          <h3 class="ttc-name">Atlas Team Starter</h3>
+          <h3 class="ttc-name">Atlas Team Basic</h3>
           <div class="ttc-price">
             <span class="ttc-amount">$299</span>
             <span class="ttc-period">one-time</span>
           </div>
           <p class="ttc-desc">Perfect for small teams starting their resilience journey.</p>
         </div>
-        <ul class="ttc-features" aria-label="Atlas Team Starter features">
+        <ul class="ttc-features" aria-label="Atlas Team Basic features">
           <li><span aria-hidden="true">&#10003;</span> Up to 15 users</li>
           <li><span aria-hidden="true">&#10003;</span> 1 team</li>
           <li><span aria-hidden="true">&#10003;</span> Team dashboard</li>
@@ -445,33 +445,33 @@
           <li><span aria-hidden="true">&#10003;</span> CSV export</li>
           <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
         </ul>
-        <a href="#teamLeadForm" class="ttc-btn ttc-btn--primary" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
-          Get Started
-        </a>
+        <button class="ttc-btn ttc-btn--primary" type="button" onclick="startTeamCheckout('starter')">
+          Get Started — $299 one-time
+        </button>
       </div>
 
       <!-- Pro -->
       <div class="team-tier-card team-tier-card--featured">
         <div class="ttc-header">
           <span class="ttc-badge ttc-badge--gold">Best Value</span>
-          <h3 class="ttc-name">Atlas Team Professional</h3>
+          <h3 class="ttc-name">Atlas Team Premium</h3>
           <div class="ttc-price">
             <span class="ttc-amount">$699</span>
             <span class="ttc-period">one-time</span>
           </div>
           <p class="ttc-desc">For growing organizations with multiple teams and deeper analytics needs.</p>
         </div>
-        <ul class="ttc-features" aria-label="Atlas Team Professional features">
+        <ul class="ttc-features" aria-label="Atlas Team Premium features">
           <li><span aria-hidden="true">&#10003;</span> Up to 30 users</li>
           <li><span aria-hidden="true">&#10003;</span> Multiple teams</li>
           <li><span aria-hidden="true">&#10003;</span> Advanced analytics</li>
           <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports</li>
           <li><span aria-hidden="true">&#10003;</span> Facilitation tools</li>
-          <li><span aria-hidden="true">&#10003;</span> Everything in Starter</li>
+          <li><span aria-hidden="true">&#10003;</span> Everything in Basic</li>
         </ul>
-        <a href="#teamLeadForm" class="ttc-btn ttc-btn--featured" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
-          Get Started
-        </a>
+        <button class="ttc-btn ttc-btn--featured" type="button" onclick="startTeamCheckout('pro')">
+          Get Started — $699 one-time
+        </button>
       </div>
 
       <!-- Enterprise -->
@@ -489,7 +489,7 @@
           <li><span aria-hidden="true">&#10003;</span> Custom branding</li>
           <li><span aria-hidden="true">&#10003;</span> SSO / SAML integration</li>
           <li><span aria-hidden="true">&#10003;</span> Dedicated support</li>
-          <li><span aria-hidden="true">&#10003;</span> Everything in Pro</li>
+          <li><span aria-hidden="true">&#10003;</span> Everything in Premium</li>
           <li><span aria-hidden="true">&#10003;</span> Data retention: Unlimited</li>
         </ul>
         <a href="#teamLeadForm" class="ttc-btn ttc-btn--primary" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;">
@@ -500,13 +500,13 @@
     </div>
   </section>
 
-  <!-- Lead Capture Form -->
-  <section class="landing-section alt-bg" aria-labelledby="formHeading">
+  <!-- Enterprise Contact Form (Enterprise plan only) -->
+  <section class="landing-section alt-bg" aria-labelledby="formHeading" id="teamLeadForm">
     <div class="lead-form-wrap">
-      <h2 id="formHeading">Get Team Access</h2>
-      <p>Tell us about your organization and we will be in touch within one business day.</p>
+      <h2 id="formHeading">Atlas Team Enterprise Inquiry</h2>
+      <p>Tell us about your organization and we will be in touch within one business day to discuss your custom Enterprise plan.</p>
 
-      <form id="teamLeadForm" novalidate>
+      <form id="teamLeadFormEl" novalidate>
         <div class="form-row">
           <label for="contactName">Your Name <span aria-hidden="true">*</span></label>
           <input type="text" id="contactName" name="contact_name" required autocomplete="name" placeholder="Jane Smith" />
@@ -534,14 +534,14 @@
           <label for="message">What are you hoping to achieve? (optional)</label>
           <textarea id="message" name="message" placeholder="e.g. Understand team resilience profiles ahead of an organizational change program..."></textarea>
         </div>
-        <button type="submit" class="btn-submit" id="submitLeadBtn">Request Team Access</button>
+        <button type="submit" class="btn-submit" id="submitLeadBtn">Request Enterprise Access</button>
         <p class="form-error" id="formError" role="alert"></p>
       </form>
 
       <div class="form-success" id="formSuccess" aria-live="polite">
         <div class="success-icon" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" class="icon icon-md"></div>
         <h3>Thank you!</h3>
-        <p>We have received your inquiry and will be in touch within one business day.</p>
+        <p>We have received your Enterprise inquiry and will be in touch within one business day.</p>
         <a href="/quiz.html" class="btn btn-primary" style="margin-top:1rem;display:inline-block;">
           Take the Individual Assessment
         </a>
@@ -844,9 +844,17 @@
       </div>
 
     </div>
-    <p style="text-align:center;margin-top:2rem;font-size:.93rem;color:#64748b;">
-      All facilitation materials are available with Teams Pro and Enterprise plans. <a href="#teamLeadForm" onclick="document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'});return false;" style="color:#4F46E5;font-weight:600;">Contact us to learn more.</a>
+    <p id="teams-resource-gate-msg" style="text-align:center;margin-top:2rem;font-size:.93rem;color:#64748b;">
+      All facilitation materials are available with Teams packages. <a href="#pricing" style="color:#4F46E5;font-weight:600;">View packages →</a>
     </p>
+    <div id="teams-resource-hub" hidden style="text-align:center;margin-top:2rem">
+      <p style="color:#166534;font-weight:600;font-size:.95rem;margin:0 0 .75rem">✓ Your Teams purchase includes full access to all resources below.</p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+        <a href="/teams-resources.html" style="background:#4F46E5;color:#fff;border-radius:8px;padding:.6rem 1.25rem;font-weight:700;text-decoration:none;font-size:.9rem">📥 Browse &amp; Download All Resources →</a>
+        <a href="/teams-facilitation.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem 1.25rem;font-weight:600;text-decoration:none;font-size:.9rem">📋 Full Facilitation Guide</a>
+        <a href="/teams-activities.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;border-radius:8px;padding:.6rem 1.25rem;font-weight:600;text-decoration:none;font-size:.9rem">🎯 Activity Library</a>
+      </div>
+    </div>
   </section>
 
   <!-- Six Dimensions Visual Guide -->
@@ -1015,9 +1023,10 @@
     </div>
   </footer>
 
+  <script src="/js/payment-gating.js"></script>
   <script>
     (function () {
-      var form = document.getElementById('teamLeadForm');
+      var form = document.getElementById('teamLeadFormEl');
       var success = document.getElementById('formSuccess');
       var errorEl = document.getElementById('formError');
       var submitBtn = document.getElementById('submitLeadBtn');
@@ -1043,10 +1052,11 @@
         submitBtn.disabled = true;
         submitBtn.textContent = 'Sending…';
 
+        // This form is Enterprise-only — always pass plan='enterprise'.
         fetch('/api/growth/team-lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contact_name: contact_name, company_name: company_name, email: email, team_size: team_size, message: message })
+          body: JSON.stringify({ contact_name: contact_name, company_name: company_name, email: email, team_size: team_size, message: message, plan: 'enterprise' })
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
@@ -1061,10 +1071,24 @@
           errorEl.textContent = err.message || 'Something went wrong. Please try again.';
           errorEl.style.display = 'block';
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Request Team Access';
+          submitBtn.textContent = 'Request Enterprise Access';
         });
       });
     })();
+
+    /**
+     * Start a Stripe one-time checkout for Atlas Team Basic ($299) or
+     * Atlas Team Premium ($699).  Enterprise uses the contact form instead.
+     * @param {'starter'|'pro'} tier
+     */
+    function startTeamCheckout(tier) {
+      if (window.PaymentGating) {
+        window.PaymentGating.startCheckout(tier);
+      } else {
+        // payment-gating.js has not yet loaded — notify the user and let them retry
+        window.alert('Checkout is loading. Please try again in a moment.');
+      }
+    }
 
     function toggleTeamActivity(btn) {
       var panel = btn.nextElementSibling;
@@ -1081,5 +1105,6 @@
     }
   </script>
 <script src="/js/theme-toggle.js"></script>
+  <script src="/js/teams-access.js"></script>
 </body>
 </html>

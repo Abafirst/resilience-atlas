@@ -2436,8 +2436,24 @@ justify-content:center;
   color: var(--slate-900);
 }
 
+/* Quiz question cards: dark surface in dark mode for AA contrast */
+[data-theme="dark"] .question-step.card,
+[data-theme="dark"] .info-step.active {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
 [data-theme="dark"] .question-text {
   color: #f1f5f9;
+}
+
+[data-theme="dark"] .question-category {
+  color: #34d399;
+}
+
+[data-theme="dark"] .progress-header {
+  color: #94a3b8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2450,18 +2466,53 @@ justify-content:center;
     color: var(--slate-900);
   }
 
+  /* Quiz question cards: dark surface for AA contrast */
+  :root:not([data-theme="light"]) .question-step.card,
+  :root:not([data-theme="light"]) .info-step.active {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+
   :root:not([data-theme="light"]) .question-text {
     color: #f1f5f9;
   }
 
+  :root:not([data-theme="light"]) .question-category {
+    color: #34d399;
+  }
+
+  :root:not([data-theme="light"]) .progress-header {
+    color: #94a3b8;
+  }
+
   :root:not([data-theme="light"]) .likert-btn {
+    background: #0f172a;
+    border-color: #475569;
     color: #f1f5f9;
   }
 
   :root:not([data-theme="light"]) .likert-btn:hover,
   :root:not([data-theme="light"]) .likert-btn.selected,
   :root:not([data-theme="light"]) .likert-btn[aria-pressed="true"] {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: #818cf8;
     color: #f1f5f9;
+  }
+
+  :root:not([data-theme="light"]) .likert-dot {
+    border-color: #475569;
+  }
+
+  :root:not([data-theme="light"]) .likert-btn.selected .likert-dot,
+  :root:not([data-theme="light"]) .likert-btn[aria-pressed="true"] .likert-dot {
+    border-color: #818cf8;
+    background: #818cf8;
+  }
+
+  :root:not([data-theme="light"]) .likert-btn.selected .likert-dot::after,
+  :root:not([data-theme="light"]) .likert-btn[aria-pressed="true"] .likert-dot::after {
+    background: #0f172a;
   }
 
   /* Footer: explicitly keep dark so variable remapping doesn't invert it */
@@ -2483,6 +2534,30 @@ justify-content:center;
   :root:not([data-theme="light"]) .btn-secondary:hover {
     background: #334155;
   }
+
+  /* Header, logo, and nav links for system dark mode */
+  :root:not([data-theme="light"]) .site-header {
+    background: #0f172a;
+    border-bottom-color: #334155;
+  }
+  :root:not([data-theme="light"]) .logo {
+    color: #f1f5f9;
+  }
+  :root:not([data-theme="light"]) .nav-link {
+    color: #cbd5e1;
+  }
+  :root:not([data-theme="light"]) .nav-link:hover {
+    color: #f1f5f9;
+    background: #1e293b;
+  }
+  :root:not([data-theme="light"]) .nav-link.active {
+    color: #a5b4fc;
+  }
+
+  /* Dark mode quiz hint */
+  :root:not([data-theme="light"]) .dm-quiz-hint {
+    display: flex;
+  }
 }
 
 /* Header */
@@ -2492,20 +2567,20 @@ justify-content:center;
 }
 
 [data-theme="dark"] .logo {
-  color: var(--slate-900);
+  color: #f1f5f9;
 }
 
 [data-theme="dark"] .nav-link {
-  color: var(--slate-600);
+  color: #cbd5e1;
 }
 
 [data-theme="dark"] .nav-link:hover {
-  color: var(--slate-900);
-  background: var(--slate-100);
+  color: #f1f5f9;
+  background: #1e293b;
 }
 
 [data-theme="dark"] .nav-link.active {
-  color: var(--blue);
+  color: #a5b4fc;
 }
 
 /* Footer: explicitly keep dark in dark mode (variable remapping would invert its colors) */
@@ -2564,19 +2639,39 @@ justify-content:center;
   background: rgba(129,140,248,.15);
 }
 
-/* Likert buttons */
+/* Likert buttons — darker than the dark quiz card (#1e293b) for separation */
 [data-theme="dark"] .likert-btn {
-  background: #1e293b;
-  border-color: #334155;
+  background: #0f172a;
+  border-color: #475569;
   color: #f1f5f9;
 }
 
-[data-theme="dark"] .likert-btn:hover,
+[data-theme="dark"] .likert-btn:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #818cf8;
+  color: #f1f5f9;
+}
+
 [data-theme="dark"] .likert-btn.selected,
 [data-theme="dark"] .likert-btn[aria-pressed="true"] {
-  background: rgba(129,140,248,.12);
-  border-color: var(--blue);
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #818cf8;
   color: #f1f5f9;
+}
+
+[data-theme="dark"] .likert-dot {
+  border-color: #475569;
+}
+
+[data-theme="dark"] .likert-btn.selected .likert-dot,
+[data-theme="dark"] .likert-btn[aria-pressed="true"] .likert-dot {
+  border-color: #818cf8;
+  background: #818cf8;
+}
+
+[data-theme="dark"] .likert-btn.selected .likert-dot::after,
+[data-theme="dark"] .likert-btn[aria-pressed="true"] .likert-dot::after {
+  background: #0f172a;
 }
 
 /* Form inputs */
@@ -2669,6 +2764,44 @@ justify-content:center;
 [data-theme="dark"] ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 4px;
+}
+
+/* -- Dark mode quiz readability hint ---------------- */
+.dm-quiz-hint {
+  display: none;
+  align-items: center;
+  gap: .6rem;
+  font-size: .85rem;
+  padding: .55rem 1.25rem;
+  background: rgba(129, 140, 248, .1);
+  color: #a5b4fc;
+  border-bottom: 1px solid rgba(129, 140, 248, .2);
+}
+
+[data-theme="dark"] .dm-quiz-hint {
+  display: flex;
+}
+
+.dm-quiz-hint strong {
+  font-weight: 700;
+}
+
+.dm-quiz-hint-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: .95rem;
+  line-height: 1;
+  padding: .15rem .4rem;
+  border-radius: 4px;
+  transition: color 150ms, background 150ms;
+}
+
+.dm-quiz-hint-close:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, .1);
 }
 
 /* -- Print mode: always light ---------------------- */

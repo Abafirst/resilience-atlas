@@ -36,9 +36,9 @@
     };
 
     /** Fallback prices used when the backend is unreachable or fetch is unavailable. */
-    var FALLBACK_PRICES = { 'atlas-navigator': '$9.99', 'atlas-premium': '$99' };
+    var FALLBACK_PRICES = { 'atlas-navigator': '$9.99', 'atlas-premium': '$49.99' };
 
-    /** Cache of fetched prices: { 'atlas-navigator': '$9.99', 'atlas-premium': '$99' } */
+    /** Cache of fetched prices: { 'atlas-navigator': '$9.99', 'atlas-premium': '$49.99' } */
     var _prices = null;
 
     /**
@@ -86,7 +86,11 @@
             var tier = btn.getAttribute('data-tier');
             if (_prices && _prices[tier]) {
                 var title = TIER_TITLES[tier] || tier;
-                btn.setAttribute('aria-label', 'Unlock ' + title + ' for ' + _prices[tier]);
+                var price = _prices[tier];
+                btn.setAttribute('aria-label', 'Unlock ' + title + ' for ' + price);
+                // Also update the button text label if it contains the price placeholder.
+                var prefix = tier === 'atlas-navigator' ? 'Get My Deep Report' : 'Unlock Lifetime Access';
+                btn.textContent = prefix + ' \u2014 ' + price;
             }
         });
     }
@@ -101,12 +105,13 @@
         const title       = TIER_TITLES[tier] || tier;
         const price       = (_prices && _prices[tier]) ? _prices[tier] : '\u2026'; // '…' while loading
         const features    = isNavigator ? ATLAS_NAVIGATOR_FEATURES : ATLAS_PREMIUM_FEATURES;
-        const badgeText   = 'One-Time Purchase';
+        const badgeText   = isNavigator ? 'One-Time PDF Download' : 'Lifetime Access';
         const badgeClass  = isNavigator ? 'badge-blue' : 'badge-gold';
-        const btnLabel    = isNavigator ? 'Unlock Atlas Navigator' : 'Upgrade to Atlas Premium';
+        const btnPrefix   = isNavigator ? 'Get My Deep Report' : 'Unlock Lifetime Access';
+        const btnLabel    = price !== '\u2026' ? `${btnPrefix} — ${price}` : btnPrefix;
         const description = isNavigator
-            ? 'Go deeper into your resilience profile with full dimension analysis and personalized strategies.'
-            : 'Track your resilience journey over time and unlock all premium features.';
+            ? 'Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.'
+            : 'Unlimited reassessments, evolution tracking, and all future Deep Report PDFs. One payment, lifetime access.';
 
         return `
             <div class="upgrade-card upgrade-card--${tier}" role="article" aria-labelledby="upgrade-title-${tier}">
@@ -141,10 +146,9 @@
     function renderComparisonCards() {
         return `
             <div class="upgrade-comparison" role="region" aria-label="Upgrade options">
-                <h2 class="upgrade-comparison__title">Unlock Your Full Resilience Atlas</h2>
+                <h2 class="upgrade-comparison__title">Download Your Deep Resilience Report</h2>
                 <p class="upgrade-comparison__subtitle">
-                    Your free report gives you a powerful starting point.
-                    Go deeper to transform your resilience journey.
+                    Choose the option that fits you best — a one-time PDF download or lifetime access for unlimited reassessments.
                 </p>
                 <div class="upgrade-cards-grid">
                     ${renderUpgradeCard('atlas-navigator')}

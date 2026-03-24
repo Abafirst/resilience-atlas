@@ -40,13 +40,13 @@
             'atlas-navigator': {
                 headline:  'Unlock Your Full Resilience Analysis',
                 subtext:   'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment.',
-                ctaLabel:  'Get Deep Report — $14',
+                ctaLabel:  'Get Deep Report — $9.99',
                 offer:     null,
             },
             'atlas-premium': {
                 headline:  'Take Your Resilience Journey Further',
                 subtext:   'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium licence.',
-                ctaLabel:  'Upgrade to Atlas Premium — $49',
+                ctaLabel:  'Upgrade to Atlas Premium — $49.99',
                 offer:     null,
             },
         },
@@ -54,13 +54,13 @@
             'atlas-navigator': {
                 headline:  'You\'re in the Top 20% — Unlock What\'s Holding You Back',
                 subtext:   'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
-                ctaLabel:  'Unlock My Deep Report ($14)',
+                ctaLabel:  'Unlock My Deep Report ($9.99)',
                 offer:     null,
             },
             'atlas-premium': {
                 headline:  'Most People See Results in 30 Days',
                 subtext:   'Atlas Premium members track their resilience growth over time. Will you be one of them? Lifetime access, zero subscriptions.',
-                ctaLabel:  'Start My Journey — $49',
+                ctaLabel:  'Start My Journey — $49.99',
                 offer:     null,
             },
         },
@@ -68,27 +68,27 @@
             'atlas-navigator': {
                 headline:  '🎉 Complete Your Resilience Atlas',
                 subtext:   'You\'ve completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep.',
-                ctaLabel:  'Get the Full Report — $14 One-Time',
-                offer:     { label: '🕐 Limited Offer: Save 20% Today', code: 'ATLAS20', savingText: 'Was $17.50 · Today Only $14' },
+                ctaLabel:  'Get the Full Report — $9.99 One-Time',
+                offer:     null,
             },
             'atlas-premium': {
                 headline:  '⭐ Lifetime Access — No Subscriptions Ever',
                 subtext:   'One payment. Unlimited reassessments, evolution tracking, growth pathways, and priority support. No recurring charges.',
-                ctaLabel:  'Unlock Atlas Premium — $49 Lifetime',
-                offer:     { label: '🕐 Limited Offer: Founding Member Price', code: 'FOUNDER49', savingText: 'Regular price $79 · Now $49' },
+                ctaLabel:  'Unlock Atlas Premium — $49.99 Lifetime',
+                offer:     { label: '🕐 Limited Offer: Founding Member Price', code: 'FOUNDER49', savingText: 'Lifetime access for just $49.99' },
             },
         },
         variant_c: {
             'atlas-navigator': {
                 headline:  'Your Resilience Profile Is Only Half Complete',
                 subtext:   'The free report covers the basics. Upgrade to uncover the full picture: all 6 dimensions, your stress profile, and a 30-day action plan.',
-                ctaLabel:  'Complete My Profile — $14',
+                ctaLabel:  'Complete My Profile — $9.99',
                 offer:     null,
             },
             'atlas-premium': {
                 headline:  'Compare. Grow. Repeat.',
                 subtext:   'Atlas Premium unlocks side-by-side comparisons, historical trends, and unlimited retakes — so you can measure real progress.',
-                ctaLabel:  'Get Lifetime Access — $49',
+                ctaLabel:  'Get Lifetime Access — $49.99',
                 offer:     null,
             },
         },
@@ -489,7 +489,7 @@
         if (_isOfferActive() && window.PaymentGating && !window.PaymentGating.isDeepReport()) {
             setTimeout(function () {
                 showBanner({
-                    message:    '🎉 Limited Time: Get your Deep Resilience Report for just $14 (was $17.50)',
+                    message:    '🎉 Get your complete Deep Resilience Report PDF for just $9.99',
                     ctaLabel:   'Claim Offer',
                     targetTier: 'atlas-navigator',
                     trigger:    'timer',

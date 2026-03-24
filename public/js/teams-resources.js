@@ -88,10 +88,11 @@
         '<div class="tr-card__meta">' + dimHtml + pagesHtml +
           '<span class="tr-card__meta-item">📁 ' + escHtml(item.format || 'PDF') + '</span>' +
         '</div>' +
-        '<a href="' + escHtml(item.downloadUrl || '#') + '" class="tr-card__download-btn" ' +
-          (item.downloadUrl && item.downloadUrl !== '#'
-            ? 'download aria-label="Download ' + escHtml(item.title) + '"'
-            : 'aria-label="Coming soon: ' + escHtml(item.title) + '" class="tr-card__download-btn tr-card__download-btn--soon"') +
+        '<a href="#" class="tr-card__download-btn tr-card__download-btn--soon" ' +
+          'data-resource-id="' + escHtml(item.id || '') + '" ' +
+          'data-title="' + escHtml(item.title) + '" ' +
+          'aria-label="Purchase a Teams package to download ' + escHtml(item.title) + '" ' +
+          'aria-disabled="true"' +
         '>⬇ Download</a>' +
       '</div>' +
     '</div>';
@@ -113,10 +114,11 @@
           '<span class="tr-card__meta-item">📐 ' + escHtml(item.printSize || '') + '</span>' +
           '<span class="tr-card__meta-item">📁 ' + escHtml(item.format || 'PDF') + '</span>' +
         '</div>' +
-        '<a href="' + escHtml(item.downloadUrl || '#') + '" class="tr-card__download-btn" ' +
-          (item.downloadUrl && item.downloadUrl !== '#'
-            ? 'download aria-label="Download ' + escHtml(item.title) + '"'
-            : 'aria-label="Coming soon: ' + escHtml(item.title) + '"') +
+        '<a href="#" class="tr-card__download-btn tr-card__download-btn--soon" ' +
+          'data-resource-id="' + escHtml(item.id || '') + '" ' +
+          'data-title="' + escHtml(item.title) + '" ' +
+          'aria-label="Purchase a Teams package to download ' + escHtml(item.title) + '" ' +
+          'aria-disabled="true"' +
         '>⬇ Download</a>' +
       '</div>' +
     '</div>';

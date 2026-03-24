@@ -9,19 +9,81 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: #22c55e;
-  color: #fff;
+  background: #ecfdf5;
+  color: #065f46;
   text-align: center;
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 1.25rem;
   font-size: 1rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  border-bottom: 2px solid #6ee7b7;
   animation: slideDown 0.3s ease;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
   from { transform: translateY(-100%); }
   to   { transform: translateY(0); }
+}
+
+/* ── Redirect progress bar (shrinks to show countdown) ──────── */
+.payment-success-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #10b981;
+  transform-origin: left center;
+  animation: progressShrink var(--banner-duration, 3s) linear forwards;
+}
+
+@keyframes progressShrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ── Fallback manual link ────────────────────────────────────── */
+.payment-banner-fallback {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #047857;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.payment-banner-fallback:hover {
+  color: #065f46;
+}
+
+/* ── Banner action buttons (Download / Email CTAs) ───────────── */
+.payment-banner-cta {
+  display: inline-block;
+  margin-left: 1rem;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.payment-banner-cta:hover { opacity: 0.85; }
+
+.payment-banner-cta--primary {
+  background: #059669;
+  color: #fff;
+  border: 2px solid #059669;
+}
+
+.payment-banner-cta--secondary {
+  background: transparent;
+  color: #047857;
+  border: 2px solid #047857;
 }
 
 /* ── Locked Sections ─────────────────────────────────────────── */
@@ -36,6 +98,10 @@
   pointer-events: none;
   user-select: none;
 }
+
+/* Ensure the HTML `hidden` attribute is respected even when CSS sets display.
+   Without this, `.payment-overlay { display: flex }` would override hidden=true. */
+[hidden] { display: none !important; }
 
 /* ── Payment Overlay ─────────────────────────────────────────── */
 .payment-overlay {

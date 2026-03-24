@@ -188,3 +188,168 @@ describe('tier helper functions', () => {
         });
     });
 });
+
+// ── handleUpgradeSuccess behaviour ───────────────────────────────────────────
+
+describe('handleUpgradeSuccess()', () => {
+    // Helpers to set window.location.search inside jsdom using history API
+    // (avoids triggering jsdom navigation which is not implemented).
+    function setSearch(search) {
+        window.history.replaceState({}, '', '/results.html' + search);
+    }
+
+    beforeEach(() => {
+        localStorage.clear();
+        document.body.innerHTML = `
+            <div id="spinnerOverlay"></div>
+            <p id="spinnerText"></p>
+        `;
+        delete window.PaymentGating;
+        // Reset URL to clean state before each test.
+        window.history.replaceState({}, '', '/results.html');
+        global.fetch = undefined;
+    });
+
+    test('sets tier in localStorage after successful verification', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-navigator', email: 'user@example.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_123');
+        loadGatingScript();
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        expect(localStorage.getItem('resilience_tier')).toBe('atlas-navigator');
+        expect(localStorage.getItem('resilience_email')).toBe('user@example.com');
+    });
+
+    test('dispatches paymentVerified event after successful verification', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-navigator', email: 'user@example.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_123');
+        loadGatingScript();
+
+        let eventFired = false;
+        let eventDetail = null;
+        document.addEventListener('paymentVerified', (e) => {
+            eventFired = true;
+            eventDetail = e.detail;
+        });
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        expect(eventFired).toBe(true);
+        expect(eventDetail).toEqual({ tier: 'atlas-navigator', email: 'user@example.com' });
+    });
+
+    test('does not set tier on network error', async () => {
+        global.fetch = jest.fn().mockRejectedValue(new Error('Network failure'));
+
+        setSearch('?upgrade=success&session_id=cs_test_fail');
+        loadGatingScript();
+
+        // Should not throw even when fetch fails.
+        await expect(window.PaymentGating.handleUpgradeSuccess()).resolves.toBeUndefined();
+
+        // Tier should remain free (unset).
+        expect(localStorage.getItem('resilience_tier')).toBeNull();
+    });
+
+    test('does not set tier when verification returns non-success', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: false,
+            status: 402,
+            json: async () => ({ success: false, error: 'Payment not completed.' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_unpaid');
+        loadGatingScript();
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        expect(localStorage.getItem('resilience_tier')).toBeNull();
+    });
+
+    test('does nothing when no upgrade params in URL', async () => {
+        global.fetch = jest.fn();
+
+        loadGatingScript();
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        expect(global.fetch).not.toHaveBeenCalled();
+        expect(localStorage.getItem('resilience_tier')).toBeNull();
+    });
+
+    test('hides spinner after verification completes (success)', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-navigator', email: 'a@b.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_spin');
+        loadGatingScript();
+
+        const overlay = document.getElementById('spinnerOverlay');
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        // After completion the spinner should NOT have the 'active' class.
+        expect(overlay.classList.contains('active')).toBe(false);
+    });
+
+    test('hides spinner after verification fails (error)', async () => {
+        global.fetch = jest.fn().mockRejectedValue(new Error('Network failure'));
+
+        setSearch('?upgrade=success&session_id=cs_test_err');
+        loadGatingScript();
+
+        const overlay = document.getElementById('spinnerOverlay');
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        // Spinner must be hidden even when verification throws.
+        expect(overlay.classList.contains('active')).toBe(false);
+    });
+
+    test('after successful verification, payment overlays on locked sections are hidden', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-navigator', email: 'user@example.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_overlay');
+        loadGatingScript();
+
+        // Build a DOM that mirrors the results.html structure (locked section with overlay).
+        document.body.innerHTML += `
+            <section id="s-deep" class="premium-preview card locked" data-tier="atlas-navigator">
+                <div class="blur-preview" aria-hidden="true"><p>Blurred preview content</p></div>
+                <div class="premium-lock-message payment-overlay" role="region">
+                    <div class="payment-overlay__inner">
+                        <h3>Unlock Your Complete Resilience Map</h3>
+                        <button>Unlock Now</button>
+                    </div>
+                </div>
+            </section>
+        `;
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        const section = document.getElementById('s-deep');
+        const overlay = section.querySelector('.payment-overlay');
+
+        // The section should no longer be locked.
+        expect(section.classList.contains('locked')).toBe(false);
+        // The overlay should be hidden so paid users never see the "Unlock Now" prompt.
+        expect(overlay.hidden).toBe(true);
+    });
+});

@@ -15,8 +15,9 @@
  */
 (function (window) {
 
-    const TIER_KEY  = 'resilience_tier';
-    const EMAIL_KEY = 'resilience_email';
+    const TIER_KEY       = 'resilience_tier';
+    const EMAIL_KEY      = 'resilience_email';
+    const SESSION_ID_KEY = 'resilience_session_id';
 
     /**
      * Tier hierarchy (lowest → highest access):
@@ -45,7 +46,7 @@
         },
         'atlas-premium': {
             name: 'Atlas Premium',
-            price: 9900, // $99.00
+            price: 4999, // $49.99
             billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
@@ -139,7 +140,13 @@
         return getTier() === 'enterprise';
     }
 
-    // -- Apply/remove locks ----------------------------------------------------
+    /** True for any Teams tier (starter, pro, or enterprise). */
+    function hasTeamsAccess() {
+        const t = getTier();
+        return t === 'starter' || t === 'pro' || t === 'enterprise';
+    }
+
+    // -- Apply/remove locks ---------------------------------------------------
 
     /**
      * Walk every element with a data-tier attribute and show or hide its
@@ -187,8 +194,85 @@
     // -- Post-payment verification ---------------------------------------------
 
     /**
+     * Show the page's spinner overlay with an optional message.
+     * Falls back gracefully if the overlay element is not present.
+     */
+    function _showSpinner(text) {
+        var overlay = document.getElementById('spinnerOverlay');
+        var label   = document.getElementById('spinnerText');
+        if (!overlay) return;
+        if (label) label.textContent = text || 'Verifying your payment…';
+        overlay.classList.add('active');
+    }
+
+    /** Hide the page's spinner overlay. */
+    function _hideSpinner() {
+        var overlay = document.getElementById('spinnerOverlay');
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    /**
+     * Show a top-of-page notice banner (info/error/success).
+     * @param {string} msg
+     * @param {'info'|'success'|'error'} type
+     */
+    function _showNoticeBanner(msg, type) {
+        var existing = document.getElementById('paymentNoticeBanner');
+        if (existing) existing.remove();
+
+        var banner = document.createElement('div');
+        banner.id = 'paymentNoticeBanner';
+        banner.setAttribute('role', 'alert');
+        banner.setAttribute('aria-live', 'assertive');
+        banner.style.cssText = [
+            'position:fixed',
+            'top:0',
+            'left:0',
+            'right:0',
+            'z-index:10000',
+            'padding:0.9rem 1.25rem',
+            'font-size:0.95rem',
+            'font-weight:600',
+            'text-align:center',
+            'box-shadow:0 2px 8px rgba(0,0,0,.15)',
+        ].join(';');
+
+        if (type === 'error') {
+            banner.style.background = '#fee2e2';
+            banner.style.color = '#991b1b';
+            banner.style.borderBottom = '2px solid #fca5a5';
+        } else if (type === 'success') {
+            banner.style.background = '#dcfce7';
+            banner.style.color = '#166534';
+            banner.style.borderBottom = '2px solid #86efac';
+        } else {
+            banner.style.background = '#eff6ff';
+            banner.style.color = '#1e40af';
+            banner.style.borderBottom = '2px solid #93c5fd';
+        }
+
+        banner.textContent = msg;
+
+        // Add a dismiss button.
+        var btn = document.createElement('button');
+        btn.setAttribute('aria-label', 'Dismiss');
+        btn.style.cssText = 'margin-left:1rem;background:none;border:none;cursor:pointer;font-size:1.1rem;line-height:1;vertical-align:middle;opacity:.7';
+        btn.textContent = '\u00d7';
+        btn.addEventListener('click', function () { banner.remove(); });
+        banner.appendChild(btn);
+
+        document.body.insertBefore(banner, document.body.firstChild);
+
+        // Auto-dismiss success/info banners after 8 seconds.
+        if (type !== 'error') {
+            setTimeout(function () { if (banner.parentNode) banner.remove(); }, 8000);
+        }
+    }
+
+    /**
      * If the current URL contains ?upgrade=success&session_id=<id>, call the
      * backend to verify the session, persist the tier, then clean the URL.
+     * Shows a spinner while verifying and clear feedback on success or failure.
      */
     async function handleUpgradeSuccess() {
         const params    = new URLSearchParams(window.location.search);
@@ -199,20 +283,34 @@
         const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'atlas-navigator' || upgrade === 'atlas-premium') && sessionId;
 
         if (!isUpgradeRedirect) {
-            // Show cancelled notice if needed.
+            // Show a notice when the user cancelled their payment.
             if (upgrade === 'cancelled') {
                 _cleanUrl();
+                _showNoticeBanner(
+                    'Your payment was cancelled. You can upgrade any time to unlock your full report.',
+                    'info'
+                );
             }
             return;
         }
 
+        // Show a loading indicator so users know verification is in progress
+        // and don't click the download button prematurely.
+        _showSpinner('Verifying your payment…');
+
         try {
             var res  = await fetch('/api/payments/verify?session_id=' + encodeURIComponent(sessionId));
             var data = await res.json();
+
             if (data.success && data.tier) {
                 setTier(data.tier);
                 if (data.email) {
                     localStorage.setItem(EMAIL_KEY, data.email);
+                }
+                // Persist the Stripe session ID so teams pages can request
+                // gated downloads without requiring re-verification.
+                if (sessionId) {
+                    localStorage.setItem(SESSION_ID_KEY, sessionId);
                 }
                 // Restore results from localStorage into window so the page can render them.
                 if (!window.resilience_results) {
@@ -225,44 +323,82 @@
                         console.warn('[PaymentGating] Could not restore results:', e);
                     }
                 }
-                _showSuccessBanner(data.tier);
+                _showSuccessBanner();
                 applyGating();
+                // Notify other scripts (e.g. results.js) that access is now unlocked.
+                document.dispatchEvent(new CustomEvent('paymentVerified', {
+                    detail: { tier: data.tier, email: data.email },
+                }));
+            } else if (!res.ok || (data && !data.success)) {
+                // Payment verification returned a non-success response.
+                var reason = (data && data.error) ? data.error : 'Payment could not be verified.';
+                console.warn('[PaymentGating] Verification returned non-success:', reason);
+                _showNoticeBanner(
+                    'We could not confirm your payment access. Please refresh the page or contact support if the issue persists.',
+                    'error'
+                );
             }
         } catch (err) {
             console.error('[PaymentGating] Verification failed:', err);
+            _showNoticeBanner(
+                'There was a problem verifying your payment. Please refresh the page — if you completed payment your access will be restored. Contact support if the issue continues.',
+                'error'
+            );
+        } finally {
+            _hideSpinner();
         }
 
         _cleanUrl();
     }
 
-    function _showSuccessBanner(tier) {
-        var messages = {
-            'enterprise':     'Welcome to Atlas Team Enterprise! All features including custom branding and webhooks are unlocked.',
-            'pro':            'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
-            'starter':        'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
-            'teams-pro':      'Welcome to Atlas Team Professional! Advanced analytics, facilitation tools, and multi-team support are now unlocked.',
-            'teams-starter':  'Welcome to Atlas Team Starter! Your team dashboard and core features are now unlocked.',
-            'business':       'Welcome to the Business tier! Team analytics and dashboard are now unlocked.',
-            'atlas-premium':  'Welcome to Atlas Premium! All premium features are now unlocked.',
-        };
-        var msg = messages[tier] || 'Your Deep Resilience Report is now unlocked!';
+    function _showSuccessBanner() {
+        var REDIRECT_DELAY_MS = 3000;
 
         var banner = document.createElement('div');
         banner.className = 'payment-success-banner';
         banner.setAttribute('role', 'alert');
         banner.setAttribute('aria-live', 'polite');
+        banner.style.setProperty('--banner-duration', (REDIRECT_DELAY_MS / 1000) + 's');
 
         var iconImg = document.createElement('img');
         iconImg.src = '/icons/success.svg';
         iconImg.alt = '';
         iconImg.setAttribute('aria-hidden', 'true');
         iconImg.className = 'icon icon-sm';
-
-        var textNode = document.createTextNode(' ' + msg);
         banner.appendChild(iconImg);
+
+        var textNode = document.createTextNode(' Payment successful! You will be redirected in a moment. Please be patient.');
         banner.appendChild(textNode);
+
+        // Progress bar counts down to the redirect.
+        var progressBar = document.createElement('div');
+        progressBar.className = 'payment-success-progress';
+        banner.appendChild(progressBar);
+
+        // Fallback link shown in case the redirect is delayed.
+        // Use pathname only (no query params or hash) so the page reloads cleanly
+        // after _cleanUrl() has already stripped the Stripe session params.
+        var fallback = document.createElement('a');
+        fallback.className = 'payment-banner-fallback';
+        fallback.textContent = 'If you are not redirected, click here to continue.';
+        fallback.href = window.location.pathname;
+        fallback.setAttribute('aria-label', 'Continue to your results');
+        banner.appendChild(fallback);
+
         document.body.insertBefore(banner, document.body.firstChild);
-        setTimeout(function () { banner.remove(); }, 7000);
+
+        // Auto-redirect: reload the current page (without query params) so the
+        // frontend fetches a fresh access status and removes any locked overlays.
+        var redirectTimer = setTimeout(function () {
+            if (banner.parentNode) banner.remove();
+            window.location.href = window.location.pathname;
+        }, REDIRECT_DELAY_MS);
+
+        // If the user clicks the fallback link, cancel the timer so we don't
+        // redirect twice.
+        fallback.addEventListener('click', function () {
+            clearTimeout(redirectTimer);
+        });
     }
 
     function _cleanUrl() {
@@ -338,6 +474,9 @@
         isTeamsStarter:       isTeamsStarter,
         isTeamsPro:           isTeamsPro,
         isEnterprise:         isEnterprise,
+        hasTeamsAccess:       hasTeamsAccess,
+        getSessionId:         function () { return localStorage.getItem(SESSION_ID_KEY) || ''; },
+        getEmail:             function () { return localStorage.getItem(EMAIL_KEY) || ''; },
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,
