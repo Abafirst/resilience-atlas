@@ -79,7 +79,6 @@ app.get('/', (req, res) => {
 });
 
 // Mount route modules
-app.use('/auth', require('./routes/auth'));
 app.use('/api/quizzes', require('./routes/quizzes'));
 app.use('/api/payments', require('./routes/payments'));
 
@@ -128,6 +127,45 @@ app.post('/api/quiz', (req, res) => {
         console.error('Quiz scoring error:', err);
         return res.status(500).json({ error: 'Internal server error.' });
     }
+});
+
+// ── Auth routes — redirect to Auth0 Universal Login ────────────────────────
+// When AUTH0_DOMAIN and AUTH0_CLIENT_ID are configured the user is sent
+// directly to the Auth0 hosted login page; otherwise they fall back to
+// the homepage as a safe default.
+// redirect_uri is sourced exclusively from environment variables to avoid
+// open-redirect vulnerabilities.
+/**
+ * Build an Auth0 /authorize URL.
+ * @param {string|null} screenHint - Pass 'signup' for the registration screen, null for login.
+ * @returns {string|null} The Auth0 authorization URL, or null if Auth0 is not configured.
+ */
+function buildAuth0AuthorizeUrl(screenHint) {
+    const domain = process.env.AUTH0_DOMAIN;
+    const clientId = process.env.AUTH0_CLIENT_ID;
+    // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
+    const redirectUri = process.env.AUTH0_REDIRECT_URI || process.env.APP_URL || null;
+    if (!domain || !clientId || !redirectUri) return null;
+    const params = new URLSearchParams({
+        response_type: 'code',
+        client_id: clientId,
+        redirect_uri: redirectUri,
+        scope: 'openid profile email',
+    });
+    if (screenHint) params.set('screen_hint', screenHint);
+    return `https://${domain}/authorize?${params.toString()}`;
+}
+
+app.get('/login', (req, res) => {
+    const url = buildAuth0AuthorizeUrl(null);
+    if (url) return res.redirect(302, url);
+    res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+    const url = buildAuth0AuthorizeUrl('signup');
+    if (url) return res.redirect(302, url);
+    res.redirect('/');
 });
 
 // Serve browser test UI at /index.html (and any other static assets in public/)

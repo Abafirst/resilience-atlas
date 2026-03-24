@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Removed
+- **`frontend/login.html`** — Legacy login/signup interface removed; all authentication now handled by Auth0 Universal Login via `loginWithRedirect`.
+- **`frontend/public/js/auth.js`** — Legacy client-side JWT session management removed; authentication is fully delegated to Auth0.
+
+---
+
 ## [1.0.0] — 2026-03-03
 
 ### Added

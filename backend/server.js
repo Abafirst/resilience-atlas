@@ -174,6 +174,8 @@ app.get("/health", (req, res) => {
 app.get("/config", (req, res) => {
   res.json({
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
+    auth0Domain: process.env.AUTH0_DOMAIN || null,
+    auth0ClientId: process.env.AUTH0_CLIENT_ID || null,
   });
 });
 
@@ -273,15 +275,61 @@ app.get("/admin/leads/ui", pageLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, "../public/admin/leads.html"));
 });
 
+// ── Auth routes — redirect to Auth0 Universal Login ─────────
+// These routes ensure that navigating to /login or /register never
+// renders a legacy local form.  When AUTH0_DOMAIN and AUTH0_CLIENT_ID
+// are configured the user is sent directly to the Auth0 hosted login
+// page; otherwise they are redirected to the homepage as a safe fallback.
+//
+// redirect_uri is sourced exclusively from environment variables to avoid
+// open-redirect vulnerabilities that can arise when request headers are
+// used to derive a callback URL.
+function buildAuth0AuthorizeUrl(screenHint) {
+  const domain = process.env.AUTH0_DOMAIN;
+  const clientId = process.env.AUTH0_CLIENT_ID;
+  // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
+  const redirectUri = process.env.AUTH0_REDIRECT_URI || process.env.APP_URL || null;
+  if (!domain || !clientId) return null;
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: clientId,
+    redirect_uri: redirectUri || "",
+    scope: "openid profile email",
+  });
+  if (screenHint) params.set("screen_hint", screenHint);
+  return `https://${domain}/authorize?${params.toString()}`;
+}
+
+app.get("/login", pageLimiter, (req, res) => {
+  const url = buildAuth0AuthorizeUrl(null);
+  if (url) return res.redirect(302, url);
+  res.redirect("/");
+});
+
+app.get("/register", pageLimiter, (req, res) => {
+  const url = buildAuth0AuthorizeUrl("signup");
+  if (url) return res.redirect(302, url);
+  res.redirect("/");
+});
+
 // ==============================
 // Static Frontend
 // ==============================
 
+// Serve the React production build (client/dist) when it has been compiled.
+// client/dist takes precedence so the latest frontend build is always used.
+const clientDist = path.join(__dirname, "../client/dist");
+app.use(express.static(clientDist));
 app.use(express.static(path.join(__dirname, "../public")));
 
-// SPA fallback
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+// SPA fallback — serve the React entry point for any route not handled above.
+// Falls back to the legacy public/index.html when the React build is absent
+// (e.g. local development before running `npm run build`).
+app.get("*", pageLimiter, (req, res) => {
+  const reactIndex = path.join(clientDist, "index.html");
+  res.sendFile(reactIndex, (err) => {
+    if (err) res.sendFile(path.join(__dirname, "../public/index.html"));
+  });
 });
 
 // ==============================

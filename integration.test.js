@@ -2,76 +2,34 @@
 const app = require('./index');
 
 describe('Resilience Atlas API Tests', () => {
-  describe('Authentication Endpoints', () => {
-    
-    test('POST /auth/signup - Create new user', async () => {
+  describe('Authentication — Auth0 Universal Login', () => {
+
+    test('GET /login redirects to Auth0 (no local login form)', async () => {
+      const res = await request(app).get('/login');
+      // Must be a redirect — no local login form should be rendered
+      expect(res.status).toBe(302);
+    });
+
+    test('GET /register redirects to Auth0 (no local registration form)', async () => {
+      const res = await request(app).get('/register');
+      // Must be a redirect — no local registration form should be rendered
+      expect(res.status).toBe(302);
+    });
+
+    test('POST /auth/signup returns 404 (local signup endpoint removed)', async () => {
       const res = await request(app)
         .post('/auth/signup')
         .set('Content-Type', 'application/json')
-        .send({
-          username: 'testuser',
-          email: 'test@example.com',
-          password: 'password123'
-        });
-      
-      expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('token');
+        .send({ email: 'test@example.com', password: 'password123' });
+      expect(res.status).toBe(404);
     });
 
-    test('POST /auth/signup - Duplicate email returns 409', async () => {
-      await request(app)
-        .post('/auth/signup')
-        .set('Content-Type', 'application/json')
-        .send({
-          username: 'testuser1',
-          email: 'duplicate@example.com',
-          password: 'password123'
-        });
-
-      const res = await request(app)
-        .post('/auth/signup')
-        .set('Content-Type', 'application/json')
-        .send({
-          username: 'testuser2',
-          email: 'duplicate@example.com',
-          password: 'password123'
-        });
-
-      expect(res.status).toBe(409);
-    });
-
-    test('POST /auth/login - Valid credentials', async () => {
-      await request(app)
-        .post('/auth/signup')
-        .set('Content-Type', 'application/json')
-        .send({
-          username: 'logintest',
-          email: 'login@example.com',
-          password: 'password123'
-        });
-
+    test('POST /auth/login returns 404 (local login endpoint removed)', async () => {
       const res = await request(app)
         .post('/auth/login')
         .set('Content-Type', 'application/json')
-        .send({
-          email: 'login@example.com',
-          password: 'password123'
-        });
-
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('token');
-    });
-
-    test('POST /auth/login - Invalid credentials returns 401', async () => {
-      const res = await request(app)
-        .post('/auth/login')
-        .set('Content-Type', 'application/json')
-        .send({
-          email: 'nonexistent@example.com',
-          password: 'wrongpassword'
-        });
-
-      expect(res.status).toBe(401);
+        .send({ email: 'test@example.com', password: 'password123' });
+      expect(res.status).toBe(404);
     });
   });
 

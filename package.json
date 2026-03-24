@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --forceExit",
     "start": "node backend/server.js",
+    "start:prod": "npm run build && node backend/server.js",
     "dev": "nodemon backend/server.js",
     "build": "cd client && npm install && npm run build",
     "dev-open": "fuser -k 3000/tcp 2>/dev/null; nodemon backend/server.js & sleep 3; powershell.exe start http://localhost:3000",
