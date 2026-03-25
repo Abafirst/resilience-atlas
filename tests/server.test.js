@@ -217,6 +217,26 @@ describe('GET /', () => {
     });
 });
 
+// ── Public assessment pages (free, no payment required) ──────────────────────
+
+describe('GET /quiz.html', () => {
+    test('serves the assessment page without requiring payment (HTTP 200)', async () => {
+        // The basic assessment is free. /quiz.html must be accessible without
+        // authentication or payment so that all users can take the quiz.
+        const res = await request(app).get('/quiz.html');
+        expect(res.status).toBe(200);
+        expect(res.type).toMatch(/html/);
+    });
+});
+
+describe('GET /results.html', () => {
+    test('serves the results page without requiring payment (HTTP 200)', async () => {
+        const res = await request(app).get('/results.html');
+        expect(res.status).toBe(200);
+        expect(res.type).toMatch(/html/);
+    });
+});
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
 describe('GET /api/auth/profile', () => {
