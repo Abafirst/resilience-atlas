@@ -83,6 +83,13 @@ function CheckoutForm({ token, amount, currency, description, onSuccess }) {
   );
 }
 
+/**
+ * Payment — rendered ONLY when the user explicitly requests the full
+ * premium (deep) report.  It must NEVER be shown as a gate on the free
+ * assessment.  Navigation here is controlled by App.jsx: the page state
+ * must be set to 'payment' only via an explicit user action (e.g. clicking
+ * "Unlock Full Report" on the AssessmentHub).
+ */
 export default function Payment({ token, onSuccess, onLogout }) {
   const [amount, setAmount] = useState('49.99');
   const [currency, setCurrency] = useState('usd');

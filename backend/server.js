@@ -335,6 +335,18 @@ app.get("/register", pageLimiter, (req, res) => {
 });
 
 // ==============================
+// Public static files
+// ==============================
+
+// Serve the legacy public/ directory (quiz.html, results.html, assessment pages,
+// etc.) AFTER the React SPA static assets so that client/dist files always take
+// priority for the root route, while standalone HTML pages remain directly
+// accessible via their own URLs (e.g. /quiz.html, /results.html).
+// This must come BEFORE the SPA catch-all so these pages are served correctly
+// instead of falling through to the React app.
+app.use(express.static(path.join(__dirname, "../public")));
+
+// ==============================
 // SPA Fallback
 // ==============================
 
