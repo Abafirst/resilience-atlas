@@ -10,9 +10,10 @@ const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI || window.location.o
 
 if (!domain || !clientId) {
   throw new Error(
-    'Auth0 configuration is missing. ' +
-    'Please set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in your .env file. ' +
-    'See client/.env.example for a template.'
+    `Auth0 configuration is missing.\n` +
+    `Local development: set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in client/.env (see client/.env.example).\n` +
+    `Production/Docker: pass them as build ARGs: --build-arg VITE_AUTH0_DOMAIN=... --build-arg VITE_AUTH0_CLIENT_ID=...\n` +
+    `Railway: set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID in the Railway environment variables before deploying.`
   );
 }
 
