@@ -1,24 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import LandingPage from './pages/LandingPage.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 export default function App() {
-  const { isLoading, isAuthenticated, getAccessTokenSilently, logout, loginWithRedirect } = useAuth0();
+  const { isLoading, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
   const [page, setPage] = useState('payment');
   const [paymentResult, setPaymentResult] = useState(null);
   const [accessToken, setAccessToken] = useState('');
-  // Guard against calling loginWithRedirect more than once per mount.
-  const redirecting = useRef(false);
-
-  // Redirect unauthenticated users directly to Auth0 Universal Login.
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated && !redirecting.current) {
-      redirecting.current = true;
-      loginWithRedirect();
-    }
-  }, [isLoading, isAuthenticated, loginWithRedirect]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -40,12 +31,19 @@ export default function App() {
     setPage('success');
   };
 
-  if (isLoading || !isAuthenticated) {
+  // Show a loading spinner while Auth0 initialises.
+  if (isLoading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7fa' }}>
-        <span style={{ color: '#666', fontSize: 16 }}>Redirecting to login…</span>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
+        <span style={{ color: '#a0aec0', fontSize: 16 }}>Loading…</span>
       </div>
     );
+  }
+
+  // Public landing page — shown to unauthenticated visitors.
+  // Auth0 login is only triggered when the user clicks "Start Assessment".
+  if (!isAuthenticated) {
+    return <LandingPage />;
   }
 
   if (page === 'success') {
