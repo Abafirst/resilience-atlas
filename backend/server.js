@@ -70,8 +70,46 @@ app.use(sentry.requestHandler());
 // Middleware
 // ==============================
 
-// Security headers
-app.use(helmet());
+// Security headers — helmet sets sensible defaults for all headers.
+// The Content Security Policy is explicitly configured to allow Auth0 and
+// Stripe resources that are required for authentication and payments, while
+// keeping everything else locked down to 'self'.
+//
+// Auth0 domain is read from the AUTH0_DOMAIN environment variable so the
+// same server code works across dev, staging and production environments
+// without changes.  The hardcoded value is kept as a safe fallback for the
+// current dev tenant.
+const auth0Domain = process.env.AUTH0_DOMAIN
+  ? `https://${process.env.AUTH0_DOMAIN}`
+  : "https://dev-ammhzit80o0cjhx5.us.auth0.com";
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        // Default: only allow resources from our own origin.
+        defaultSrc: ["'self'"],
+        // Allow Stripe's JS SDK (https://js.stripe.com) so the payment UI
+        // can be loaded and initialised in the browser.
+        scriptSrc: ["'self'", "https://js.stripe.com"],
+        // Allow network requests to:
+        //   - Auth0 tenant: required for token exchange and user-info calls
+        //     during the OAuth/OIDC login flow.
+        //   - https://js.stripe.com: required for Stripe Elements iframe
+        //     communication.
+        //   - https://api.stripe.com: required for card-element payment
+        //     intent confirmations and other Stripe API calls made from the
+        //     browser.
+        connectSrc: [
+          "'self'",
+          auth0Domain,              // Auth0 OAuth/OIDC endpoints
+          "https://js.stripe.com",  // Stripe Elements iframe
+          "https://api.stripe.com", // Stripe API calls from the browser
+        ],
+      },
+    },
+  })
+);
 
 // CORS configuration
 // Default to a curated list of known safe origins.  Override via a
