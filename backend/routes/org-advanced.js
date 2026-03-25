@@ -36,6 +36,7 @@ const { authenticateJWT } = require('../middleware/auth');
 const { computeAdvancedAnalytics } = require('../services/advancedAnalytics');
 const { generateTeamNarrativeReport } = require('../services/teamReportGenerator');
 const emailService = require('../services/emailService');
+const { canAccessFeature } = require('../utils/tierUtils');
 
 const router = express.Router();
 
@@ -69,22 +70,10 @@ function isOrgAdmin(org, userId) {
   return org.admins && org.admins.some((id) => id.toString() === userId.toString());
 }
 
-/**
- * Determine whether the org's plan supports a given feature.
- * teams-starter: basic analytics only
- * teams-pro:     advanced analytics, multi-team, facilitation tools
- * enterprise:    all features + custom branding, webhooks
- */
-function planSupports(plan, feature) {
-  const tiers = {
-    free:           [],
-    business:       ['basic'],
-    'teams-starter':['basic'],
-    'teams-pro':    ['basic', 'advanced', 'multi-team', 'facilitation'],
-    enterprise:     ['basic', 'advanced', 'multi-team', 'facilitation', 'branding', 'webhooks'],
-  };
-  return (tiers[plan] || []).includes(feature);
-}
+// Feature-gate checks are performed via canAccessFeature() from
+// backend/utils/tierUtils.js — the single source of truth for all plan
+// feature gates.  All plan features and limits are governed by
+// backend/config/tiers.js.  Never hardcode plan logic here.
 
 async function requireOrgAdmin(req, res) {
   const { id } = req.params;
@@ -116,7 +105,7 @@ router.get('/:id/advanced-analytics', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'advanced')) {
+    if (!canAccessFeature(org.plan, 'advanced')) {
       return res.status(403).json({
         error: 'Advanced analytics require Teams Pro or Enterprise plan.',
         upgradeRequired: true,
@@ -143,7 +132,7 @@ router.get('/:id/teams', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'multi-team')) {
+    if (!canAccessFeature(org.plan, 'multi-team')) {
       return res.status(403).json({
         error: 'Multi-team support requires Teams Pro or Enterprise plan.',
         upgradeRequired: true,
@@ -168,7 +157,7 @@ router.post('/:id/teams', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'multi-team')) {
+    if (!canAccessFeature(org.plan, 'multi-team')) {
       return res.status(403).json({
         error: 'Multi-team support requires Teams Pro or Enterprise plan.',
         upgradeRequired: true,
@@ -324,7 +313,7 @@ router.put('/:id/settings', authenticateJWT, async (req, res) => {
     const { branding, permissions, scheduledExport, reassessmentSchedule } = req.body;
 
     // Validate branding access
-    if (branding && !planSupports(org.plan, 'branding')) {
+    if (branding && !canAccessFeature(org.plan, 'branding')) {
       return res.status(403).json({
         error: 'Custom branding requires Enterprise plan.',
         upgradeRequired: true,
@@ -362,7 +351,7 @@ router.post('/:id/settings/action-plan', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'facilitation')) {
+    if (!canAccessFeature(org.plan, 'facilitation')) {
       return res.status(403).json({
         error: 'Action plans require Teams Pro or Enterprise plan.',
         upgradeRequired: true,
@@ -471,7 +460,7 @@ router.post('/:id/report', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'advanced')) {
+    if (!canAccessFeature(org.plan, 'advanced')) {
       return res.status(403).json({
         error: 'Narrative reports require Teams Pro or Enterprise plan.',
         upgradeRequired: true,
@@ -544,7 +533,7 @@ router.post('/:id/webhooks', authenticateJWT, async (req, res) => {
     const org = await requireOrgAdmin(req, res);
     if (!org) return;
 
-    if (!planSupports(org.plan, 'webhooks')) {
+    if (!canAccessFeature(org.plan, 'webhooks')) {
       return res.status(403).json({
         error: 'Webhooks require Enterprise plan.',
         upgradeRequired: true,

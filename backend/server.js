@@ -205,6 +205,8 @@ app.use("/api/stripe", require("./routes/stripe"));
 console.log("✅ Mounted route: /api/stripe");
 app.use("/api/payments", require("./routes/payments"));
 console.log("✅ Mounted route: /api/payments");
+app.use("/api/tiers", require("./routes/tiers"));
+console.log("✅ Mounted route: /api/tiers");
 app.use("/api/upsell", require("./routes/upsell"));
 console.log("✅ Mounted route: /api/upsell");
 app.use("/api/report", require("./routes/report"));
