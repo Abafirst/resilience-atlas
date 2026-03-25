@@ -89,12 +89,25 @@ app.use(
       directives: {
         // Default: only allow resources from our own origin.
         defaultSrc: ["'self'"],
-        // Allow Stripe's JS SDK (https://js.stripe.com) so the payment UI
-        // can be loaded and initialised in the browser.
-        scriptSrc: ["'self'", "https://js.stripe.com"],
-        // Allow network requests to:
+        // Scripts: allow Stripe JS SDK and Auth0 SPA JS SDK loaded from CDN.
+        // quiz.html loads auth0-spa-js directly from cdn.auth0.com.
+        scriptSrc: [
+          "'self'",
+          "https://js.stripe.com",
+          "https://cdn.auth0.com",
+        ],
+        // Styles: allow self and inline styles (used by React, chart libraries,
+        // and certain Auth0 components).  cdn.auth0.com may serve style bundles
+        // for the Universal Login widget / Lock.
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://cdn.auth0.com",
+        ],
+        // Network requests allowed from the browser:
         //   - Auth0 tenant: required for token exchange and user-info calls
         //     during the OAuth/OIDC login flow.
+        //   - https://cdn.auth0.com: Auth0 CDN for SPA JS and management API.
         //   - https://js.stripe.com: required for Stripe Elements iframe
         //     communication.
         //   - https://api.stripe.com: required for card-element payment
@@ -103,9 +116,26 @@ app.use(
         connectSrc: [
           "'self'",
           auth0Domain,              // Auth0 OAuth/OIDC endpoints
+          "https://cdn.auth0.com",  // Auth0 CDN
           "https://js.stripe.com",  // Stripe Elements iframe
           "https://api.stripe.com", // Stripe API calls from the browser
         ],
+        // Frames: Stripe embeds its payment UI inside cross-origin iframes.
+        frameSrc: [
+          "'self'",
+          "https://js.stripe.com",
+        ],
+        // Images: allow self, inline data URIs (charts), Gravatar (user avatars),
+        // and Auth0 CDN (profile pictures / Lock widget assets).
+        imgSrc: [
+          "'self'",
+          "data:",
+          "https://www.gravatar.com",
+          "https://s.gravatar.com",
+          "https://cdn.auth0.com",
+        ],
+        // Fonts: allow self and inline data URIs (icon fonts embedded as data URLs).
+        fontSrc: ["'self'", "data:"],
       },
     },
   })
@@ -351,7 +381,16 @@ app.use(express.static(path.join(__dirname, "../public")));
 // ==============================
 
 // SPA fallback — serve the React entry point for any route not handled above.
+// IMPORTANT: only handle routes without a file extension (browser navigation).
+// Requests for .js, .css, .png, etc. that reach this point mean the asset
+// does not exist — returning index.html for those would trigger a browser
+// MIME-type mismatch error ("text/html is not a supported stylesheet MIME
+// type").  A 404 is the correct response for missing static assets.
 app.get("*", pageLimiter, (req, res) => {
+  const ext = path.extname(req.path);
+  if (ext && ext !== ".html") {
+    return res.status(404).send("Not found");
+  }
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
     if (err) {
       res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
