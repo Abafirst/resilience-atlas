@@ -10,6 +10,7 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 const emailService = require('../services/emailService');
+const { TIER_CONFIG } = require('../config/tiers');
 
 // One-time log at module load so Railway logs show the diagnostic state of the
 // running container.  Safe: no secrets — only reflects whether the flag is set.
@@ -73,76 +74,8 @@ const TIERS = {
     },
 };
 
-/**
- * Full tier configuration matching the frontend TIER_CONFIG.
- * Covers all 7 tiers with pricing, feature access, and billing metadata.
- * Tiers with null price use custom/contact-sales pricing.
- */
-const TIER_CONFIG = {
-    'free': {
-        name: 'Free',
-        price: 0,
-        billing: 'free',
-        maxUsers: 1,
-        maxTeams: 0,
-        features: ['Basic assessment', 'Individual results', 'Radar chart'],
-        dataRetention: '1 month',
-    },
-    'atlas-navigator': {
-        name: 'Atlas Navigator',
-        price: 999, // $9.99
-        billing: 'one-time',
-        maxUsers: 1,
-        maxTeams: 0,
-        features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies'],
-        dataRetention: '1 year',
-    },
-    'atlas-premium': {
-        name: 'Atlas Premium',
-        price: 4999, // $49.99
-        billing: 'one-time',
-        maxUsers: 1,
-        maxTeams: 0,
-        features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
-        dataRetention: 'Unlimited',
-    },
-    'business': {
-        name: 'Business',
-        price: null, // Custom pricing
-        billing: 'custom',
-        maxUsers: 25,
-        maxTeams: 1,
-        features: ['Team analytics', 'Member results', 'Admin dashboard'],
-        dataRetention: '1 year',
-    },
-    'starter': {
-        name: 'Atlas Team Starter',
-        price: 29900, // $299 one-time
-        billing: 'one-time',
-        maxUsers: 15,
-        maxTeams: 1,
-        features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
-        dataRetention: '1 year',
-    },
-    'pro': {
-        name: 'Atlas Team Professional',
-        price: 69900, // $699 one-time
-        billing: 'one-time',
-        maxUsers: 30,
-        maxTeams: 999,
-        features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
-        dataRetention: '3 years',
-    },
-    'enterprise': {
-        name: 'Atlas Team Enterprise',
-        price: 249900, // Starting at $2,499 one-time
-        billing: 'one-time',
-        maxUsers: Infinity,
-        maxTeams: Infinity,
-        features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
-        dataRetention: 'Unlimited',
-    },
-};
+// TIER_CONFIG is imported from backend/config/tiers.js — the canonical source
+// of truth for all plan names, features, and limits.  Do not duplicate it here.
 
 /** Rate limiter for all payment endpoints — low limit to prevent abuse. */
 const paymentsLimiter = rateLimit({
