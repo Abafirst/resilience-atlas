@@ -3048,3 +3048,37 @@ justify-content:center;
   color: #059669;
   font-weight: 600;
 }
+
+/* ── Privacy Guarantee Banner ─────────────────────────────────────────────── */
+.privacy-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem auto 0;
+  max-width: 860px;
+  font-size: 0.875rem;
+  color: #166534;
+  line-height: 1.5;
+}
+.privacy-guarantee__icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.privacy-guarantee__text a {
+  color: #15803d;
+  text-decoration: underline;
+}
+.privacy-guarantee__text a:hover {
+  color: #166534;
+}
+@media (max-width: 600px) {
+  .privacy-guarantee {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+}

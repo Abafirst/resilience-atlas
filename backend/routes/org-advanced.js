@@ -7,20 +7,27 @@
  *
  * Route summary
  * ─────────────
- * GET    /api/orgs-advanced/:id/advanced-analytics   Full advanced analytics
- * GET    /api/orgs-advanced/:id/teams                List sub-teams
- * POST   /api/orgs-advanced/:id/teams                Create sub-team
- * DELETE /api/orgs-advanced/:id/teams/:teamId        Delete sub-team
- * POST   /api/orgs-advanced/:id/teams/:teamId/invite Invite member to team
- * GET    /api/orgs-advanced/:id/settings             Get org settings / branding
- * PUT    /api/orgs-advanced/:id/settings             Update org settings / branding
- * POST   /api/orgs-advanced/:id/settings/action-plan Add action plan item
- * PUT    /api/orgs-advanced/:id/settings/action-plan/:planId Update plan item
- * DELETE /api/orgs-advanced/:id/settings/action-plan/:planId Delete plan item
- * POST   /api/orgs-advanced/:id/report               Generate narrative team report
- * POST   /api/orgs-advanced/:id/export/csv           Programmatic CSV export
- * POST   /api/orgs-advanced/:id/webhooks             Register webhook
- * DELETE /api/orgs-advanced/:id/webhooks/:hookId     Remove webhook
+ * GET    /api/orgs-advanced/:id/advanced-analytics         Full advanced analytics
+ * GET    /api/orgs-advanced/:id/teams                      List sub-teams
+ * POST   /api/orgs-advanced/:id/teams                      Create sub-team
+ * DELETE /api/orgs-advanced/:id/teams/:teamId              Delete sub-team
+ * POST   /api/orgs-advanced/:id/teams/:teamId/invite       Invite member to team
+ * GET    /api/orgs-advanced/:id/settings                   Get org settings / branding
+ * PUT    /api/orgs-advanced/:id/settings                   Update org settings / branding
+ * POST   /api/orgs-advanced/:id/settings/action-plan       Add action plan item
+ * PUT    /api/orgs-advanced/:id/settings/action-plan/:planId  Update plan item
+ * DELETE /api/orgs-advanced/:id/settings/action-plan/:planId  Delete plan item
+ * POST   /api/orgs-advanced/:id/report                     Generate narrative team report
+ * POST   /api/orgs-advanced/:id/export/csv                 Programmatic CSV export
+ * GET    /api/orgs-advanced/:id/export/batch               Batch CSV export (Enterprise)
+ * GET    /api/orgs-advanced/:id/retention                  Get retention policy (Enterprise)
+ * PUT    /api/orgs-advanced/:id/retention                  Set retention policy (Enterprise)
+ * GET    /api/orgs-advanced/:id/roles                      List member org-roles (Enterprise)
+ * PUT    /api/orgs-advanced/:id/roles/:userId              Assign org-role (Enterprise)
+ * GET    /api/orgs-advanced/:id/benchmarks                 Get benchmark settings (Enterprise)
+ * PUT    /api/orgs-advanced/:id/benchmarks                 Update benchmark settings (Enterprise)
+ * POST   /api/orgs-advanced/:id/webhooks                   Register webhook
+ * DELETE /api/orgs-advanced/:id/webhooks/:hookId           Remove webhook
  */
 
 const express    = require('express');
@@ -656,6 +663,314 @@ async function emitWebhookEvent(orgId, event, payload) {
     console.warn('[org-advanced] emitWebhookEvent error:', err.message);
   }
 }
+
+// ── Batch Export (Enterprise) ─────────────────────────────────────────────────
+
+/**
+ * GET /api/orgs-advanced/:id/export/batch
+ *
+ * Batch CSV export — all members, dimension scores, and assessment metadata.
+ * Returns a comprehensive CSV that includes more columns than the basic export.
+ * Requires Enterprise plan (data-export gate).
+ */
+router.get('/:id/export/batch', authenticateJWT, exportLimiter, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    if (!canAccessFeature(org.plan, 'data-export')) {
+      return res.status(403).json({
+        error: 'Batch export requires the Enterprise plan.',
+        upgradeRequired: true,
+      });
+    }
+
+    const User   = require('../models/User');
+    const DIMS   = ['Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective',
+                    'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative'];
+
+    const results = await ResilienceResult.find({
+      _id: { $in: org.completedResultIds || [] },
+    }).lean();
+
+    const userIds  = [...new Set(results.map((r) => r.userId).filter(Boolean))];
+    const users    = await User.find({ _id: { $in: userIds } }).select('email username').lean();
+    const userMap  = {};
+    users.forEach((u) => { userMap[u._id.toString()] = u; });
+
+    const header = [
+      'userId', 'email', 'username', 'overall_score', 'dominant_dimension',
+      ...DIMS.map((d) => `dim_${d.replace(/-/g, '_').toLowerCase()}`),
+      'assessed_at',
+    ].join(',');
+
+    const escape = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+
+    const rows = results.map((r) => {
+      const user = r.userId ? userMap[r.userId.toString()] : null;
+      const dimScores = DIMS.map((d) => {
+        if (r.scores && r.scores[d] != null) return r.scores[d];
+        if (r.dimension_scores && r.dimension_scores[d] != null) return r.dimension_scores[d];
+        return '';
+      });
+      return [
+        escape(r.userId || ''),
+        escape(user ? user.email : (r.email || '')),
+        escape(user ? user.username : ''),
+        r.overall != null ? r.overall : (r.overall_score != null ? r.overall_score : ''),
+        escape(r.dominant_dimension || r.dominantType || ''),
+        ...dimScores,
+        r.createdAt ? new Date(r.createdAt).toISOString() : '',
+      ].join(',');
+    });
+
+    const csv = [header, ...rows].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition',
+      `attachment; filename="batch-export-${org._id}-${Date.now()}.csv"`);
+    return res.send(csv);
+  } catch (err) {
+    console.error('[org-advanced] batch-export error:', err);
+    return res.status(500).json({ error: 'Failed to generate batch export.' });
+  }
+});
+
+// ── Data Retention Policy (Enterprise) ───────────────────────────────────────
+
+/**
+ * GET /api/orgs-advanced/:id/retention
+ * Returns the current data retention policy for the org.
+ */
+router.get('/:id/retention', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    if (!canAccessFeature(org.plan, 'data-export')) {
+      return res.status(403).json({
+        error: 'Retention policy management requires the Enterprise plan.',
+        upgradeRequired: true,
+      });
+    }
+
+    const settings = await OrgSettings.findOne({ organizationId: org._id })
+      .select('retentionPolicy')
+      .lean();
+
+    return res.json({
+      retentionPolicy: settings ? (settings.retentionPolicy || {}) : {},
+    });
+  } catch (err) {
+    console.error('[org-advanced] get-retention error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve retention policy.' });
+  }
+});
+
+/**
+ * PUT /api/orgs-advanced/:id/retention
+ * Update the data retention policy.
+ * Body: { retentionDays, autoDelete }
+ */
+router.put('/:id/retention', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    if (!canAccessFeature(org.plan, 'data-export')) {
+      return res.status(403).json({
+        error: 'Retention policy management requires the Enterprise plan.',
+        upgradeRequired: true,
+      });
+    }
+
+    const { retentionDays, autoDelete } = req.body || {};
+
+    const update = {};
+    if (retentionDays !== undefined) {
+      const days = Number(retentionDays);
+      if (!Number.isInteger(days) || days < 0) {
+        return res.status(400).json({ error: 'retentionDays must be a non-negative integer.' });
+      }
+      update['retentionPolicy.retentionDays'] = days;
+    }
+    if (autoDelete !== undefined) {
+      update['retentionPolicy.autoDelete'] = Boolean(autoDelete);
+    }
+
+    const settings = await OrgSettings.findOneAndUpdate(
+      { organizationId: org._id },
+      { $set: update },
+      { upsert: true, new: true }
+    );
+
+    return res.json({ success: true, retentionPolicy: settings.retentionPolicy });
+  } catch (err) {
+    console.error('[org-advanced] set-retention error:', err);
+    return res.status(500).json({ error: 'Failed to update retention policy.' });
+  }
+});
+
+// ── Granular Org Roles (Enterprise) ──────────────────────────────────────────
+
+const VALID_ORG_ROLES = ['super_admin', 'data_officer', 'report_viewer', 'member'];
+
+/**
+ * GET /api/orgs-advanced/:id/roles
+ * List all member role assignments for the org.
+ */
+router.get('/:id/roles', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    if (!canAccessFeature(org.plan, 'data-export')) {
+      return res.status(403).json({
+        error: 'Granular role management requires the Enterprise plan.',
+        upgradeRequired: true,
+      });
+    }
+
+    const settings = await OrgSettings.findOne({ organizationId: org._id })
+      .select('memberRoles')
+      .lean();
+
+    return res.json({ memberRoles: settings ? (settings.memberRoles || []) : [] });
+  } catch (err) {
+    console.error('[org-advanced] get-roles error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve member roles.' });
+  }
+});
+
+/**
+ * PUT /api/orgs-advanced/:id/roles/:userId
+ * Assign an org-level role to a member.
+ * Body: { orgRole }
+ */
+router.put('/:id/roles/:userId', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    if (!canAccessFeature(org.plan, 'data-export')) {
+      return res.status(403).json({
+        error: 'Granular role management requires the Enterprise plan.',
+        upgradeRequired: true,
+      });
+    }
+
+    const { userId } = req.params;
+    if (!validId(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID.' });
+    }
+
+    const { orgRole } = req.body || {};
+    if (!orgRole || !VALID_ORG_ROLES.includes(orgRole)) {
+      return res.status(400).json({
+        error: `orgRole must be one of: ${VALID_ORG_ROLES.join(', ')}.`,
+      });
+    }
+
+    // Upsert the member role entry
+    const settings = await OrgSettings.findOneAndUpdate(
+      { organizationId: org._id, 'memberRoles.userId': new mongoose.Types.ObjectId(userId) },
+      {
+        $set: {
+          'memberRoles.$.orgRole':    orgRole,
+          'memberRoles.$.assignedAt': new Date(),
+          'memberRoles.$.assignedBy': new mongoose.Types.ObjectId(req.user.userId),
+        },
+      },
+      { new: true }
+    );
+
+    if (!settings) {
+      // No existing entry — push a new one
+      const updated = await OrgSettings.findOneAndUpdate(
+        { organizationId: org._id },
+        {
+          $push: {
+            memberRoles: {
+              userId:     new mongoose.Types.ObjectId(userId),
+              orgRole,
+              assignedAt: new Date(),
+              assignedBy: new mongoose.Types.ObjectId(req.user.userId),
+            },
+          },
+        },
+        { upsert: true, new: true }
+      );
+      return res.json({
+        success: true,
+        memberRole: updated.memberRoles.find((r) => r.userId.toString() === userId),
+      });
+    }
+
+    return res.json({
+      success: true,
+      memberRole: settings.memberRoles.find((r) => r.userId.toString() === userId),
+    });
+  } catch (err) {
+    console.error('[org-advanced] set-role error:', err);
+    return res.status(500).json({ error: 'Failed to assign role.' });
+  }
+});
+
+// ── Benchmark Settings (Enterprise) ──────────────────────────────────────────
+
+/**
+ * GET /api/orgs-advanced/:id/benchmarks
+ * Get benchmark opt-in settings for the org.
+ */
+router.get('/:id/benchmarks', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    const settings = await OrgSettings.findOne({ organizationId: org._id })
+      .select('benchmarks')
+      .lean();
+
+    return res.json({ benchmarks: settings ? (settings.benchmarks || {}) : {} });
+  } catch (err) {
+    console.error('[org-advanced] get-benchmarks error:', err);
+    return res.status(500).json({ error: 'Failed to retrieve benchmark settings.' });
+  }
+});
+
+/**
+ * PUT /api/orgs-advanced/:id/benchmarks
+ * Update benchmark opt-in settings.
+ * Body: { optIn, scope }
+ */
+router.put('/:id/benchmarks', authenticateJWT, async (req, res) => {
+  try {
+    const org = await requireOrgAdmin(req, res);
+    if (!org) return;
+
+    const { optIn, scope } = req.body || {};
+    const update = {};
+
+    if (optIn !== undefined) update['benchmarks.optIn'] = Boolean(optIn);
+    if (scope !== undefined) {
+      if (!['org', 'platform'].includes(scope)) {
+        return res.status(400).json({ error: "scope must be 'org' or 'platform'." });
+      }
+      update['benchmarks.scope'] = scope;
+    }
+
+    const settings = await OrgSettings.findOneAndUpdate(
+      { organizationId: org._id },
+      { $set: update },
+      { upsert: true, new: true }
+    );
+
+    return res.json({ success: true, benchmarks: settings.benchmarks });
+  } catch (err) {
+    console.error('[org-advanced] set-benchmarks error:', err);
+    return res.status(500).json({ error: 'Failed to update benchmark settings.' });
+  }
+});
 
 module.exports = router;
 module.exports.emitWebhookEvent = emitWebhookEvent;

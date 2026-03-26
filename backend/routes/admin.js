@@ -1,8 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const Lead = require('../models/Lead');
 const AnalyticsEvent = require('../models/Analytics');
+const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 
 // Rate limit: 60 requests per minute for admin routes
@@ -75,6 +77,64 @@ router.get('/analytics', authenticateJWT, requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('admin/analytics GET error:', err);
     return res.status(500).json({ error: 'Failed to fetch analytics.' });
+  }
+});
+
+// ── GET /admin/users ────────────────────────────────────────
+// List all users with optional role filter. Admin-only.
+router.get('/users', authenticateJWT, requireAdmin, async (req, res) => {
+  try {
+    const { role, page = 1, limit = 50 } = req.query;
+    const filter = role ? { role } : {};
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [users, total] = await Promise.all([
+      User.find(filter)
+        .select('email username role createdAt organization_id')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      User.countDocuments(filter),
+    ]);
+
+    return res.json({ users, total, page: Number(page), limit: Number(limit) });
+  } catch (err) {
+    console.error('admin/users GET error:', err);
+    return res.status(500).json({ error: 'Failed to fetch users.' });
+  }
+});
+
+// ── PATCH /admin/users/:id/role ─────────────────────────────
+// Update a user's platform-level role (admin / member). Admin-only.
+router.patch('/users/:id/role', authenticateJWT, requireAdmin, async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!role || !['admin', 'member'].includes(role)) {
+      return res.status(400).json({ error: "role must be 'admin' or 'member'." });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid user ID.' });
+    }
+
+    // Prevent self-demotion
+    if (req.params.id === req.user.userId) {
+      return res.status(400).json({ error: 'You cannot change your own role.' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true, runValidators: true }
+    ).select('email username role').lean();
+
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    return res.json({ user });
+  } catch (err) {
+    console.error('admin/users/role PATCH error:', err);
+    return res.status(500).json({ error: 'Failed to update user role.' });
   }
 });
 
