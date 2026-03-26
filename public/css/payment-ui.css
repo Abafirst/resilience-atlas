@@ -337,6 +337,19 @@
   margin: 0;
 }
 
+/* ── Locked Download Button (shown for free users) ──────────── */
+/* When the PDF download button is in a "locked" state for free users it  */
+/* uses a muted style so users know purchase is required before clicking. */
+.btn-locked {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%) !important;
+  cursor: pointer;
+  position: relative;
+}
+
+.btn-locked:hover {
+  opacity: 0.9;
+}
+
 /* ── Deep Analysis Preview (blurred placeholder) ─────────────── */
 .deep-analysis-preview {
   padding: 1rem 0;

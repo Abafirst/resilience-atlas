@@ -10,11 +10,19 @@
  *   POST /api/gamification/share           — award share points
  *   PUT  /api/gamification/preferences     — update opt-in preferences
  *   GET  /api/gamification/leaderboard     — opt-in leaderboard (weekly/monthly/alltime)
+ *
+ * All endpoints require:
+ *   1. JWT authentication (authenticateJWT)
+ *   2. A paid individual tier (atlas-navigator or atlas-premium) or any teams
+ *      tier (starter, pro, enterprise) — enforced by requirePaidTier.
  */
 
 const express    = require('express');
 const rateLimit  = require('express-rate-limit');
 const { authenticateJWT } = require('../middleware/auth');
+const Purchase   = require('../models/Purchase');
+const User       = require('../models/User');
+const { PREMIUM_TIERS } = require('../config/tiers');
 const svc        = require('../services/gamificationService');
 const logger     = require('../utils/logger');
 
@@ -32,9 +40,87 @@ const gamificationLimiter = rateLimit({
 
 router.use(gamificationLimiter);
 
-// ── All routes require authentication ─────────────────────────────────────────
+// ── All routes require JWT authentication ─────────────────────────────────────
 
 router.use(authenticateJWT);
+
+// ── Tier gate middleware ───────────────────────────────────────────────────────
+
+/**
+ * Tiers that grant access to gamification features.
+ * Individual: atlas-navigator, atlas-premium
+ * Teams:      starter, pro, enterprise
+ *
+ * Sourced from the canonical tier config — do not hardcode here.
+ */
+const GAMIFICATION_TIERS = new Set(PREMIUM_TIERS);
+
+/**
+ * requirePaidTier — middleware that verifies the authenticated user holds a
+ * completed purchase for one of the GAMIFICATION_TIERS.
+ *
+ * Falls back gracefully when the DB is unavailable (allows access rather than
+ * blocking — prevents lockout in degraded-DB scenarios).
+ *
+ * When STRIPE_SECRET_KEY is not set (development / local environment without
+ * Stripe configured) the check is skipped so developers can test without a
+ * real payment.
+ */
+async function requirePaidTier(req, res, next) {
+  // Skip in environments where Stripe / payments are not configured.
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return next();
+  }
+
+  // Resolve the email from the JWT payload.
+  const email = req.user && (req.user.email || req.user.sub || '');
+  if (!email) {
+    return res.status(403).json({
+      error: 'A paid tier (Atlas Navigator or above) is required to access gamification features.',
+      upgradeRequired: true,
+    });
+  }
+
+  try {
+    const cleanEmail = String(email).toLowerCase().trim();
+
+    // Check for a completed purchase at any gamification-eligible tier.
+    const purchase = await Purchase.findOne({
+      email:  cleanEmail,
+      tier:   { $in: [...GAMIFICATION_TIERS] },
+      status: 'completed',
+    });
+
+    if (purchase) return next();
+
+    // Fallback: check User record flags for users granted access outside Stripe.
+    let userHasAccess = false;
+    try {
+      const user = await User.findOne({ email: cleanEmail });
+      userHasAccess = Boolean(
+        user && (user.purchasedDeepReport || user.atlasPremium)
+      );
+    } catch (userErr) {
+      logger.warn('[gamification] User fallback check failed:', userErr.message);
+    }
+
+    if (userHasAccess) return next();
+
+    return res.status(402).json({
+      error: 'A paid tier (Atlas Navigator or above) is required to access gamification features.',
+      upgradeRequired: true,
+    });
+  } catch (dbErr) {
+    // DB unavailable — block access to maintain security.
+    // Return 503 so the client knows this is a temporary issue, not a permanent denial.
+    logger.warn('[gamification] Purchase check failed (DB unavailable):', dbErr.message);
+    return res.status(503).json({
+      error: 'Unable to verify your purchase status at this time. Please try again shortly.',
+    });
+  }
+}
+
+router.use(requirePaidTier);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
+const { PREMIUM_TIERS } = require('../config/tiers');
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
@@ -228,6 +229,13 @@ router.get('/generate', reportLimiter, async (req, res) => {
         }
 
         // ── Tier gating ────────────────────────────────────────────────────────
+        // Enforce an Atlas Navigator or Atlas Premium purchase before generating
+        // the full PDF report.
+        //
+        // The check is skipped when STRIPE_SECRET_KEY is not set so that local
+        // development and test environments can generate PDFs without payment.
+        // In production, STRIPE_SECRET_KEY must be present and the purchase DB
+        // must contain a completed record for the provided email address.
         if (process.env.STRIPE_SECRET_KEY) {
             if (!email) {
                 return res.status(402).json({
@@ -238,9 +246,11 @@ router.get('/generate', reportLimiter, async (req, res) => {
             try {
                 const cleanEmail = String(email).toLowerCase().trim();
                 // Check for a completed individual purchase (atlas-navigator or atlas-premium).
+                // Teams tiers (starter, pro, enterprise) also grant deep-report access.
+                // PREMIUM_TIERS is the canonical list from backend/config/tiers.js.
                 const purchase = await Purchase.findOne({
                     email: cleanEmail,
-                    tier: { $in: ['atlas-navigator', 'atlas-premium'] },
+                    tier: { $in: PREMIUM_TIERS },
                     status: 'completed',
                 });
                 if (!purchase) {
@@ -262,7 +272,12 @@ router.get('/generate', reportLimiter, async (req, res) => {
                     }
                 }
             } catch (dbErr) {
-                console.warn('Purchase check skipped (DB unavailable):', dbErr.message);
+                // DB unavailable — block rather than silently allow, to prevent
+                // free access during temporary DB outages in production.
+                console.warn('Purchase check failed (DB unavailable):', dbErr.message);
+                return res.status(503).json({
+                    error: 'Unable to verify your purchase at this time. Please try again shortly.',
+                });
             }
         }
         // ───────────────────────────────────────────────────────────────────────

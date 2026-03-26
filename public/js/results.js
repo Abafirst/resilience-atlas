@@ -360,6 +360,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // for users who have already purchased.
   _applyInsightProgressVisibility();
 
+  // ── Lock/style the PDF download button for free users ─
+  // Show a visual "locked" state so users know purchase is required before clicking.
+  const hasDeepReportNow = window.PaymentGating && window.PaymentGating.isDeepReport();
+  const downloadBtnEl = document.getElementById('btnDownload');
+  if (downloadBtnEl && !hasDeepReportNow) {
+    downloadBtnEl.classList.add('btn-locked');
+    downloadBtnEl.setAttribute('aria-label', 'Unlock PDF download — requires Atlas Navigator or Atlas Premium');
+    downloadBtnEl.innerHTML =
+      '<span aria-hidden="true">&#128274;</span> ' +
+      '<span class="btn-label">Unlock PDF Download</span>';
+  }
+
+  // ── Fire assessmentComplete event for upsell-system.js ─
+  // This triggers the post-assessment upsell modal for free users (with
+  // a 24-hour cooldown so it does not annoy users who already dismissed it).
+  // The brief delay lets the rest of the page finish rendering first.
+  const UPSELL_MODAL_DELAY_MS = 800;
+  if (!hasDeepReportNow) {
+    setTimeout(function () {
+      document.dispatchEvent(new CustomEvent('assessmentComplete'));
+    }, UPSELL_MODAL_DELAY_MS);
+  }
+
+  // ── Notify other scripts that results are loaded ───────
+  window.dominantDimension = primaryStrength;
+  document.dispatchEvent(new CustomEvent('resultsLoaded', {
+    detail: { dominantDimension: primaryStrength },
+  }));
+
   // ── Listen for post-payment verification success ───────
   // payment-gating.js dispatches this event once the Stripe session is verified.
   // Re-apply gating and hide the upgrade cards so users can immediately use
@@ -379,6 +408,15 @@ document.addEventListener('DOMContentLoaded', () => {
       pdfAlertEl.innerHTML = '';
       pdfAlertEl.className = 'alert';
     }
+    // Restore the PDF download button from its locked state.
+    const dlBtn = document.getElementById('btnDownload');
+    if (dlBtn) {
+      dlBtn.classList.remove('btn-locked');
+      dlBtn.removeAttribute('aria-label');
+      dlBtn.innerHTML =
+        '<span aria-hidden="true">&#8681;</span> ' +
+        '<span class="btn-label">Download PDF</span>';
+    }
     // Scroll to the download/email buttons so users can immediately access
     // the report they just paid for, without having to hunt for the buttons.
     const actionsEl = document.querySelector('.results-actions');
@@ -395,9 +433,19 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.addEventListener('click', () => {
       try {
         if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
-          showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Please select an option below.', 'error', 'lock');
+          // Direct free users to the upgrade/purchase flow instead of just an alert.
+          // Scroll to upgrade cards and show a clear call-to-action.
           const upgradeEl = document.getElementById('upgradeCardsContainer');
-          upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (upgradeEl && upgradeEl.innerHTML) {
+            upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            // Upgrade cards not rendered yet — render them now.
+            if (upgradeEl && window.UpgradeCards) {
+              upgradeEl.innerHTML = window.UpgradeCards.renderComparisonCards();
+              upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
+          showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Choose a plan below to unlock.', 'error', 'lock');
           return;
         }
         const emailInputEl = document.getElementById('emailInput');

@@ -111,4 +111,19 @@ const PLAN_ALIASES = {
     'teams-pro': 'pro',
 };
 
-module.exports = { TIER_CONFIG, PLAN_ALIASES };
+/**
+ * Tiers that grant access to premium features (PDF report, gamification, etc.).
+ * Includes both individual paid tiers and all Teams tiers.
+ *
+ * Used by report.js and gamification.js to verify purchases.
+ * Always use this constant rather than hardcoding tier names in route handlers.
+ */
+const PREMIUM_TIERS = [
+    'atlas-navigator',
+    'atlas-premium',
+    'starter',
+    'pro',
+    'enterprise',
+];
+
+module.exports = { TIER_CONFIG, PLAN_ALIASES, PREMIUM_TIERS };
