@@ -709,10 +709,9 @@ router.get('/:id/export/batch', authenticateJWT, exportLimiter, async (req, res)
     const rows = results.map((r) => {
       const user = r.userId ? userMap[r.userId.toString()] : null;
       const dimScores = DIMS.map((d) => {
-        const score = r.scores && r.scores[d] != null
-          ? r.scores[d]
-          : (r.dimension_scores && r.dimension_scores[d] != null ? r.dimension_scores[d] : '');
-        return score;
+        if (r.scores && r.scores[d] != null) return r.scores[d];
+        if (r.dimension_scores && r.dimension_scores[d] != null) return r.dimension_scores[d];
+        return '';
       });
       return [
         escape(r.userId || ''),

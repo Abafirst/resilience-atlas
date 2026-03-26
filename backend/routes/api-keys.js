@@ -135,7 +135,7 @@ router.post('/', authenticateJWT, async (req, res) => {
       resolvedExpiry
     );
 
-    const safeDoc = { ...doc.toObject(), keyHash: undefined };
+    const safeDoc = doc.toObject();
     delete safeDoc.keyHash;
 
     return res.status(201).json({

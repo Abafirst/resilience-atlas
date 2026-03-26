@@ -596,8 +596,6 @@
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!-- TAB: Data Export (Enterprise)                                          -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
-    <!-- TAB: Data Export (Enterprise)                                          -->
-    <!-- ══════════════════════════════════════════════════════════════════════ -->
     <section id="tab-data-export" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
 
       <div class="teams-grid teams-grid--2">
@@ -1415,7 +1413,7 @@
       let allLabels = [];
       const datasets = DIM_FULL_LABELS.map((dim, i) => {
         const entries = (trends && trends[dim]) || [];
-        const pts     = entries.map((e) => ({ x: new Date(e.date).toLocaleDateString(), y: Math.round(e.average) }));
+        const pts     = entries.map((e) => ({ x: new Date(e.date).toISOString().slice(0, 10), y: Math.round(e.average) }));
         pts.forEach((p) => { if (!allLabels.includes(p.x)) allLabels.push(p.x); });
         return {
           label:           dim.split('-')[0],
