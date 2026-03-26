@@ -1,9 +1,19 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
 const logger = require('../utils/logger');
 
 const router = express.Router();
+
+// Rate limiter for auth status checks.
+const authStatusLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
 
 /**
  * GET /api/auth/profile
@@ -59,7 +69,7 @@ router.put('/profile', authenticateJWT, async (req, res) => {
  *   { authenticated: true,  email: string, name: string } — if logged in
  *   { authenticated: false }                               — if not logged in
  */
-router.get('/oidc-status', (req, res) => {
+router.get('/oidc-status', authStatusLimiter, (req, res) => {
     // express-openid-connect attaches req.oidc when the auth() middleware is
     // active.  If Auth0 is not configured (missing env vars) the middleware is
     // absent and req.oidc is undefined — treat that as "not authenticated".
