@@ -91,8 +91,12 @@ app.use(
         defaultSrc: ["'self'"],
         // Scripts: allow Stripe JS SDK and Auth0 SPA JS SDK loaded from CDN.
         // quiz.html loads auth0-spa-js directly from cdn.auth0.com.
+        // 'unsafe-inline' is required by Stripe and Auth0 libraries as well as
+        // any inline event handlers in the frontend; without it the browser
+        // blocks their scripts and the payment/login flows never complete.
         scriptSrc: [
           "'self'",
+          "'unsafe-inline'",
           "https://js.stripe.com",
           "https://cdn.auth0.com",
         ],
