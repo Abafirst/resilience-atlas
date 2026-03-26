@@ -13,6 +13,7 @@
     "social:build": "node scripts/render-social.js"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.16.0",
     "@dabh/diagnostics": "2.0.8",
     "@resvg/resvg-js": "^2.6.2",
     "@sendgrid/mail": "^8.1.6",
