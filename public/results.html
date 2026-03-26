@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="css/sharing.css" />
 </head>
 <body>
+  <!-- Confetti celebration canvas (hidden until triggered) -->
+  <canvas id="confettiCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;" aria-hidden="true"></canvas>
 
   <!-- ── Header ──────────────────────────────────────── -->
 <header class="site-header" role="banner">
@@ -196,8 +198,27 @@
         <!-- Evidence-Based Micro-Practices Section -->
         <div id="evidencePracticesContainer"></div>
 
+        <!-- Personalized Next Steps Section -->
+        <div id="personalizedNextStepsContainer"></div>
+
         <!-- Resilience Affirmations Section -->
         <div id="affirmationsContainer"></div>
+
+        <!-- ── Reminder Opt-In ─────────────────────────────── -->
+        <section id="reminderOptInSection" class="reminder-optin-section card" hidden aria-labelledby="reminderOptInHeading">
+          <h3 id="reminderOptInHeading">🔔 Set a Reassessment Reminder</h3>
+          <p>Resilience grows over time. Would you like a reminder to retake the assessment in 30 days to track your progress?</p>
+          <div class="reminder-optin-row">
+            <label class="reminder-optin-label">
+              <input type="checkbox" id="reminderOptInCheckbox" aria-label="Opt in to 30-day reassessment reminder" />
+              <span>Yes, remind me in 30 days to retake the assessment</span>
+            </label>
+          </div>
+          <button type="button" id="btnReminderOptIn" class="btn btn-primary btn-sm">
+            Set Reminder
+          </button>
+          <p id="reminderOptInStatus" class="reminder-optin-status" aria-live="polite"></p>
+        </section>
 
         <!-- ── Sharing Section ──────────────────────────────── -->
         <section class="share-section" aria-labelledby="shareHeading">

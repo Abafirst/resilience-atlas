@@ -4,6 +4,51 @@
 
 'use strict';
 
+// ── Autosave key ───────────────────────────────────────
+const AUTOSAVE_KEY = 'ra_quiz_progress';
+
+// ── Autosave helpers ───────────────────────────────────
+function saveProgress() {
+  try {
+    const snapshot = {
+      answers:       state.answers,
+      questionOrder: state.questionOrder,
+      currentStep:   state.currentStep,
+      firstName:     state.firstName,
+      email:         state.email,
+      flaggedQuestions: Array.from(state.flaggedQuestions),
+      savedAt:       Date.now(),
+    };
+    localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(snapshot));
+  } catch (e) {
+    // localStorage may be unavailable — fail silently
+  }
+}
+
+function loadSavedProgress() {
+  try {
+    const raw = localStorage.getItem(AUTOSAVE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    // Discard saves older than 7 days
+    if (!saved.savedAt || Date.now() - saved.savedAt > 7 * 24 * 60 * 60 * 1000) {
+      localStorage.removeItem(AUTOSAVE_KEY);
+      return null;
+    }
+    return saved;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearProgress() {
+  try {
+    localStorage.removeItem(AUTOSAVE_KEY);
+  } catch (e) {
+    // ignore
+  }
+}
+
 // Likert scale options
 const LIKERT_OPTIONS = [
   { value: 1, label: "Never" },
@@ -122,6 +167,8 @@ const state = {
   // questionOrder[displayIdx] = originalIdx in QUESTIONS (populated at init time)
   questionOrder: [],
   currentStep: 'info', // 'info' | 0..71 | 'submit'
+  // Set of question IDs (1-based, as in QUESTIONS[i].id) the user flagged as confusing
+  flaggedQuestions: new Set(),
 };
 
 // ── DOM refs ───────────────────────────────────────────
@@ -147,12 +194,84 @@ function init() {
   emailError        = document.getElementById('emailError');
   submitAlert       = document.getElementById('submitAlert');
 
-  // Generate a shuffled display order for question randomization
-  state.questionOrder = shuffleArray(QUESTIONS.map((_, i) => i));
+  // Check for saved progress before generating new question order
+  const saved = loadSavedProgress();
+  if (saved && saved.answers && saved.questionOrder && saved.questionOrder.length === QUESTIONS.length) {
+    showRestoreBanner(saved);
+  } else {
+    // Generate a shuffled display order for question randomization
+    state.questionOrder = shuffleArray(QUESTIONS.map((_, i) => i));
+    buildQuestionCards();
+    attachNavListeners();
+    showStep('info');
+  }
+}
 
+// ── Restore banner ─────────────────────────────────────
+function showRestoreBanner(saved) {
+  const banner = document.getElementById('restoreBanner');
+  if (!banner) {
+    // If no banner in HTML, just initialize fresh
+    startFresh();
+    return;
+  }
+
+  banner.hidden = false;
+
+  const answeredCount = saved.answers.filter(a => a !== null).length;
+  const bannerMsg = banner.querySelector('#restoreBannerMsg');
+  if (bannerMsg) {
+    const name = saved.firstName ? `, ${saved.firstName}` : '';
+    bannerMsg.textContent = `Welcome back${name}! You answered ${answeredCount} of ${QUESTIONS.length} questions. Would you like to continue where you left off?`;
+  }
+
+  const btnRestore = banner.querySelector('#btnRestoreProgress');
+  const btnFresh   = banner.querySelector('#btnStartFresh');
+
+  if (btnRestore) {
+    btnRestore.addEventListener('click', () => {
+      banner.hidden = true;
+      restoreProgress(saved);
+    });
+  }
+
+  if (btnFresh) {
+    btnFresh.addEventListener('click', () => {
+      banner.hidden = true;
+      clearProgress();
+      startFresh();
+    });
+  }
+}
+
+function startFresh() {
+  state.questionOrder = shuffleArray(QUESTIONS.map((_, i) => i));
   buildQuestionCards();
   attachNavListeners();
   showStep('info');
+}
+
+function restoreProgress(saved) {
+  state.answers       = saved.answers;
+  state.questionOrder = saved.questionOrder;
+  state.firstName     = saved.firstName || '';
+  state.email         = saved.email     || '';
+  state.flaggedQuestions = new Set(saved.flaggedQuestions || []);
+
+  // Pre-fill the info form fields
+  if (nameInput  && state.firstName) nameInput.value  = state.firstName;
+  if (emailInput && state.email)     emailInput.value = state.email;
+
+  buildQuestionCards();
+  attachNavListeners();
+
+  // Restore to the saved step
+  const step = saved.currentStep;
+  if (step === 'submit' || step === 'info' || typeof step === 'number') {
+    showStep(step);
+  } else {
+    showStep('info');
+  }
 }
 
 // ── Build question HTML ────────────────────────────────
@@ -166,6 +285,8 @@ function buildQuestionCards() {
     card.className = 'question-step card';
     card.id = `question-${displayIdx}`;
     card.setAttribute('data-index', displayIdx);
+
+    const isFlagged = state.flaggedQuestions.has(q.id);
 
     const likertHtml = LIKERT_OPTIONS.map(opt => `
       <button type="button"
@@ -183,6 +304,18 @@ function buildQuestionCards() {
       <p class="question-text">${q.text}</p>
       <div class="likert-scale" role="group" aria-label="Rate your agreement">
         ${likertHtml}
+      </div>
+      <div class="question-flag-row">
+        <button type="button"
+                class="btn-flag-question${isFlagged ? ' flagged' : ''}"
+                data-qid="${q.id}"
+                data-display="${displayIdx}"
+                aria-pressed="${isFlagged}"
+                aria-label="Flag this question as confusing"
+                title="Flag as confusing">
+          <span aria-hidden="true">&#9873;</span>
+          <span class="flag-label">${isFlagged ? 'Flagged' : 'Flag as confusing'}</span>
+        </button>
       </div>
     `;
 
@@ -206,6 +339,34 @@ function buildQuestionCards() {
     const val = parseInt(btn.dataset.value, 10);
     selectAnswer(idx, val);
   });
+
+  // Delegated click handler for flag buttons
+  questionContainer.addEventListener('click', (e) => {
+    const flagBtn = e.target.closest('.btn-flag-question');
+    if (!flagBtn) return;
+    toggleFlag(flagBtn);
+  });
+}
+
+function toggleFlag(flagBtn) {
+  const qid = parseInt(flagBtn.dataset.qid, 10);
+  const isFlagged = state.flaggedQuestions.has(qid);
+
+  if (isFlagged) {
+    state.flaggedQuestions.delete(qid);
+    flagBtn.classList.remove('flagged');
+    flagBtn.setAttribute('aria-pressed', 'false');
+    const lbl = flagBtn.querySelector('.flag-label');
+    if (lbl) lbl.textContent = 'Flag as confusing';
+  } else {
+    state.flaggedQuestions.add(qid);
+    flagBtn.classList.add('flagged');
+    flagBtn.setAttribute('aria-pressed', 'true');
+    const lbl = flagBtn.querySelector('.flag-label');
+    if (lbl) lbl.textContent = 'Flagged';
+  }
+
+  saveProgress();
 }
 
 function selectAnswer(questionIdx, value) {
@@ -218,11 +379,17 @@ function selectAnswer(questionIdx, value) {
     b.classList.toggle('selected', selected);
     b.setAttribute('aria-pressed', selected ? 'true' : 'false');
   });
+
+  // Autosave after each answer
+  saveProgress();
 }
 
 // ── Navigation ─────────────────────────────────────────
 function showStep(step) {
   state.currentStep = step;
+
+  // Autosave on every step change
+  saveProgress();
 
   // Hide all
   if (infoStep) infoStep.classList.remove('active');
@@ -347,6 +514,8 @@ function validateInfo() {
   if (valid) {
     state.firstName = name;
     state.email     = email;
+    // Autosave name/email on validation
+    saveProgress();
   }
 
   return valid;
@@ -407,8 +576,31 @@ async function submitQuiz() {
     Store.set('resilience_name',    state.firstName);
     Store.set('resilience_email',   state.email);
 
+    // Send flagged questions + feedback to backend (non-blocking)
+    const flags = Array.from(state.flaggedQuestions);
+    if (flags.length > 0) {
+      fetch('/api/quiz/feedback', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          email:            state.email,
+          firstName:        state.firstName,
+          flaggedQuestions: flags,
+          feedbackText:     '',
+        }),
+      }).catch(() => {});
+    }
+
+    // Clear autosave now that submission succeeded
+    clearProgress();
+
     Spinner.hide();
-    window.location.href = 'results.html';
+
+    // Always show the feedback modal after a successful quiz submission
+    // (it lets users flag question issues and share improvement suggestions)
+    showFeedbackModal(() => {
+      window.location.href = 'results.html';
+    });
   } catch (err) {
     Spinner.hide();
     if (submitAlert) {
@@ -418,6 +610,57 @@ async function submitQuiz() {
         'error'
       );
     }
+  }
+}
+
+// ── Post-quiz feedback modal ───────────────────────────
+function showFeedbackModal(onComplete) {
+  const modal = document.getElementById('feedbackModal');
+  if (!modal) {
+    onComplete();
+    return;
+  }
+
+  modal.hidden = false;
+  modal.setAttribute('aria-hidden', 'false');
+
+  const btnSkip   = modal.querySelector('#btnFeedbackSkip');
+  const btnSubmit = modal.querySelector('#btnFeedbackSubmit');
+  const textArea  = modal.querySelector('#feedbackTextarea');
+  const status    = modal.querySelector('#feedbackStatus');
+
+  function closeAndContinue() {
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    onComplete();
+  }
+
+  if (btnSkip) {
+    btnSkip.addEventListener('click', closeAndContinue, { once: true });
+  }
+
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', async () => {
+      const text = textArea ? textArea.value.trim() : '';
+      btnSubmit.disabled = true;
+      try {
+        await fetch('/api/quiz/feedback', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            email:            state.email,
+            firstName:        state.firstName,
+            flaggedQuestions: Array.from(state.flaggedQuestions),
+            feedbackText:     text,
+          }),
+        });
+        if (status) status.textContent = 'Thank you for your feedback!';
+        setTimeout(closeAndContinue, 1200);
+      } catch (e) {
+        if (status) status.textContent = 'Could not send feedback, but your results are saved.';
+        setTimeout(closeAndContinue, 1500);
+      }
+    }, { once: true });
   }
 }
 
