@@ -46,6 +46,22 @@
     <p id="spinnerText" class="spinner-text">Checking authentication&hellip;</p>
   </div>
 
+  <!-- ── Autosave restore banner (hidden until saved progress detected) ── -->
+  <div id="restoreBanner" class="restore-banner" hidden role="alert" aria-live="polite">
+    <div class="restore-banner-inner">
+      <span class="restore-banner-icon" aria-hidden="true">💾</span>
+      <p id="restoreBannerMsg" class="restore-banner-msg"></p>
+      <div class="restore-banner-actions">
+        <button type="button" id="btnRestoreProgress" class="btn btn-primary btn-sm">
+          Continue Where I Left Off
+        </button>
+        <button type="button" id="btnStartFresh" class="btn btn-secondary btn-sm">
+          Start Fresh
+        </button>
+      </div>
+    </div>
+  </div>
+
   <main>
     <div class="quiz-page">
       <div class="quiz-wrapper">
@@ -160,6 +176,32 @@
       <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
     </div>
   </footer>
+
+  <!-- ── Post-quiz feedback modal ────────────────────── -->
+  <div id="feedbackModal" class="feedback-modal-overlay" hidden aria-hidden="true" role="dialog" aria-labelledby="feedbackModalTitle" aria-modal="true">
+    <div class="feedback-modal-card">
+      <h2 id="feedbackModalTitle" class="feedback-modal-title">How did the assessment feel?</h2>
+      <p class="feedback-modal-desc">Help us improve! Share any thoughts on the assessment experience.</p>
+      <label for="feedbackTextarea" class="feedback-modal-label">Your feedback (optional)</label>
+      <textarea
+        id="feedbackTextarea"
+        class="feedback-modal-textarea"
+        rows="4"
+        maxlength="2000"
+        placeholder="e.g. Some questions were unclear, or I'd love more context for the Somatic dimension…"
+        aria-label="Assessment improvement feedback"
+      ></textarea>
+      <p id="feedbackStatus" class="feedback-modal-status" aria-live="polite"></p>
+      <div class="feedback-modal-actions">
+        <button type="button" id="btnFeedbackSubmit" class="btn btn-primary">
+          Send Feedback &amp; See Results
+        </button>
+        <button type="button" id="btnFeedbackSkip" class="btn btn-secondary">
+          Skip &rarr; See My Results
+        </button>
+      </div>
+    </div>
+  </div>
 
 <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 <script src="/js/app.js"></script>

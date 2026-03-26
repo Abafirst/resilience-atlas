@@ -218,6 +218,192 @@ function persistResults(data) {
   }
 }
 
+// ── Personalized next-steps per dimension ─────────────
+const DIMENSION_NEXT_STEPS = {
+  'Agentic-Generative': [
+    { icon: '🎯', title: 'Set a Micro-Goal', desc: 'Identify one small, concrete action you can take this week toward a goal that matters to you.' },
+    { icon: '📋', title: 'Action Planning', desc: 'Write down 3 steps you can take in the next 30 days to move forward on a challenge.' },
+    { icon: '💪', title: 'Practice Agency', desc: 'Each morning, choose one thing you have control over and take action on it intentionally.' },
+  ],
+  'Relational-Connective': [
+    { icon: '🤝', title: 'Reach Out', desc: 'Connect with one trusted person this week — share something real about how you\'re doing.' },
+    { icon: '🌐', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
+    { icon: '💬', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
+  ],
+  'Spiritual-Reflective': [
+    { icon: '🧘', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
+    { icon: '📖', title: 'Gratitude Practice', desc: 'Each evening, note 3 things you\'re grateful for — include at least one thing from a difficult moment.' },
+    { icon: '🌅', title: 'Purpose Meditation', desc: 'Try a 10-minute guided meditation focused on purpose and what you want to contribute to the world.' },
+  ],
+  'Emotional-Adaptive': [
+    { icon: '🌊', title: 'Emotion Naming', desc: 'When you notice a strong emotion, pause and name it specifically — this activates your prefrontal cortex and reduces intensity.' },
+    { icon: '🌱', title: 'RAIN Practice', desc: 'Use the RAIN technique: Recognize, Allow, Investigate, Nurture. Apply it to one difficult emotion today.' },
+    { icon: '📓', title: 'Emotional Journal', desc: 'Write for 5 minutes daily about your emotional experiences — what triggered them and what they may be communicating.' },
+  ],
+  'Somatic-Regulative': [
+    { icon: '🌬️', title: 'Mindful Breathing', desc: 'Practice 4-7-8 breathing: inhale 4 counts, hold 7, exhale 8. Do this for 3 cycles when stressed.' },
+    { icon: '🚶', title: 'Movement as Medicine', desc: 'Add a 15-minute intentional walk to your daily routine — notice how your body and mood shift.' },
+    { icon: '😴', title: 'Sleep Hygiene', desc: 'Establish a consistent sleep-wake schedule this week. A regular rhythm boosts resilience significantly.' },
+  ],
+  'Cognitive-Narrative': [
+    { icon: '✍️', title: 'Morning Pages', desc: 'Write 3 pages of stream-of-consciousness every morning to process your experiences and reframe challenges.' },
+    { icon: '🔄', title: 'Reframing Exercise', desc: 'When facing a setback, ask: "What is one alternative way to interpret this?" Write down 3 possibilities.' },
+    { icon: '📚', title: 'Story Integration', desc: 'Reflect on a past difficulty: What did you learn? How did it shape who you are? Write your "resilience story."' },
+  ],
+};
+
+/**
+ * Render personalized next-steps cards for the user's lowest-scoring dimensions.
+ * @param {Object} scores - { dimensionName: { percentage } }
+ * @returns {string} HTML string
+ */
+function renderPersonalizedNextSteps(scores) {
+  const ranked = Object.entries(scores)
+    .map(([dim, data]) => ({ dim, pct: typeof data === 'object' ? data.percentage : data }))
+    .sort((a, b) => a.pct - b.pct);
+
+  const focusDims = ranked.slice(0, 2);
+
+  const cards = focusDims.map(({ dim, pct }) => {
+    const steps = DIMENSION_NEXT_STEPS[dim] || [];
+    const color = DIM_COLORS[dim] || '#667eea';
+    const pctRounded = Math.round(pct);
+
+    const stepHtml = steps.map(s => `
+      <li class="next-step-item">
+        <span class="next-step-icon" aria-hidden="true">${s.icon}</span>
+        <div class="next-step-content">
+          <strong class="next-step-title">${escapeHtml(s.title)}</strong>
+          <p class="next-step-desc">${escapeHtml(s.desc)}</p>
+        </div>
+      </li>
+    `).join('');
+
+    return `
+      <div class="next-steps-card" style="border-left: 4px solid ${escapeHtml(color)}">
+        <div class="next-steps-card-header">
+          <span class="next-steps-dim-name" style="color:${escapeHtml(color)}">${escapeHtml(dim)}</span>
+          <span class="next-steps-dim-score">${pctRounded}% — Growth Focus</span>
+        </div>
+        <ul class="next-steps-list" aria-label="Next steps for ${escapeHtml(dim)}">
+          ${stepHtml}
+        </ul>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <section class="personalized-next-steps card" aria-labelledby="nextStepsHeading">
+      <h2 id="nextStepsHeading">🗺️ Your Personalized Next Steps</h2>
+      <p class="next-steps-intro">
+        Based on your lowest-scoring dimensions, here are actionable practices to build your resilience:
+      </p>
+      ${cards}
+    </section>
+  `;
+}
+
+// ── Confetti celebration ───────────────────────────────
+function triggerConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  if (!canvas) return;
+
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = Array.from({ length: 120 }, () => ({
+    x:     Math.random() * canvas.width,
+    y:     Math.random() * canvas.height - canvas.height,
+    r:     4 + Math.random() * 6,
+    d:     2 + Math.random() * 3,
+    color: ['#4F46E5','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#f59e0b','#10b981'][Math.floor(Math.random() * 8)],
+    tilt:  Math.random() * 10 - 10,
+    tiltAngle: 0,
+    tiltSpeed: 0.05 + Math.random() * 0.05,
+  }));
+
+  let angle = 0;
+  let frame;
+  const duration = 3000;
+  const start = Date.now();
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    angle += 0.01;
+    pieces.forEach(p => {
+      p.tiltAngle += p.tiltSpeed;
+      p.y += p.d;
+      p.x += Math.sin(angle) * 0.6;
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.ellipse(p.x + p.tilt, p.y, p.r, p.r * 0.5, p.tilt * 0.1, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    if (Date.now() - start < duration) {
+      frame = requestAnimationFrame(draw);
+    } else {
+      cancelAnimationFrame(frame);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'none';
+    }
+  }
+
+  draw();
+}
+
+// ── Reminder opt-in handler ────────────────────────────
+function initReminderOptIn(email, firstName, overallScore) {
+  const optInSection = document.getElementById('reminderOptInSection');
+  if (!optInSection) return;
+  optInSection.hidden = false;
+
+  const checkbox = document.getElementById('reminderOptInCheckbox');
+  const btn      = document.getElementById('btnReminderOptIn');
+  const status   = document.getElementById('reminderOptInStatus');
+
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    if (checkbox && !checkbox.checked) {
+      if (status) status.textContent = 'Please check the box to opt in.';
+      return;
+    }
+
+    btn.disabled = true;
+    if (status) status.textContent = 'Saving your preference…';
+
+    try {
+      const res = await fetch('/api/quiz/reminder-optin', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, firstName, lastScore: overallScore }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (status) {
+          status.textContent = '✅ Done! We\'ll remind you in 30 days.';
+          status.className = 'reminder-optin-status success';
+        }
+        if (btn) btn.hidden = true;
+      } else {
+        if (status) status.textContent = data.error || 'Could not save preference.';
+        btn.disabled = false;
+      }
+    } catch (e) {
+      if (status) status.textContent = 'Network error. Please try again.';
+      btn.disabled = false;
+    }
+  });
+}
+
 // ── Hide/show insight-progress teaser based on payment tier ──
 // The .insight-progress section contains "Upgrade to unlock your complete
 // resilience atlas" which is misleading for paid users.
@@ -335,6 +521,20 @@ document.addEventListener('DOMContentLoaded', () => {
     practicesContainer.innerHTML = window.EvidencePractices.renderPracticesSection(emergingStrength);
     window.EvidencePractices.initPracticeInteractions();
   }
+
+  // ── Personalized Next Steps ───────────────────────────
+  const nextStepsContainer = document.getElementById('personalizedNextStepsContainer');
+  if (nextStepsContainer) {
+    nextStepsContainer.innerHTML = renderPersonalizedNextSteps(results.scores);
+  }
+
+  // ── Confetti celebration (brief animation on results load) ────
+  setTimeout(triggerConfetti, 600);
+
+  // ── Reminder opt-in ───────────────────────────────────
+  const userEmail  = results.email || localStorage.getItem('resilience_email') || '';
+  const firstName  = results.firstName || results.name || localStorage.getItem('resilience_name') || '';
+  initReminderOptIn(userEmail, firstName, results.overall);
 
   // ── Store email for payment gating ────────────────────
   const resultEmail = results.email || '';

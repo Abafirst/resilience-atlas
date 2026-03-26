@@ -9,6 +9,8 @@ const ResilienceResult = require('../models/ResilienceResult');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
 const { calculateEvolution } = require('../services/evolution');
 const { generateNarrativeReport } = require('../services/reportGenerator');
+const QuizFeedback = require('../models/QuizFeedback');
+const ReminderOptIn = require('../models/ReminderOptIn');
 
 const router = express.Router();
 
@@ -225,6 +227,154 @@ router.get('/questions', (req, res) => {
     } catch (err) {
         logger.error('Questions fetch error:', err);
         res.status(500).json({ error: 'Could not load questions.' });
+    }
+});
+
+/**
+ * POST /api/quiz/feedback
+ * Store question flags and post-quiz improvement feedback for admin review.
+ * No authentication required — captures anonymous feedback.
+ *
+ * Body: { email, firstName, flaggedQuestions: number[], feedbackText: string }
+ */
+const feedbackLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many feedback submissions. Please try again later.' },
+});
+
+router.post('/feedback', feedbackLimiter, async (req, res) => {
+    try {
+        const { email, firstName, flaggedQuestions, feedbackText } = req.body;
+
+        if (!email || typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ error: 'Email is required.' });
+        }
+
+        const safeEmail = email.trim().toLowerCase();
+        const safeName  = (firstName || '').toString().trim().slice(0, 100);
+        const safeText  = (feedbackText || '').toString().trim().slice(0, 2000);
+        const safeFlags = Array.isArray(flaggedQuestions)
+            ? flaggedQuestions.filter(n => Number.isInteger(n) && n >= 1 && n <= 72)
+            : [];
+
+        await QuizFeedback.create({
+            email:            safeEmail,
+            firstName:        safeName,
+            flaggedQuestions: safeFlags,
+            feedbackText:     safeText,
+        });
+
+        logger.info(`Quiz feedback received from ${safeEmail}: ${safeFlags.length} flags, text: ${safeText.length > 0}`);
+        res.status(200).json({ message: 'Feedback saved. Thank you!' });
+    } catch (err) {
+        logger.error('Quiz feedback save error:', err);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+/**
+ * POST /api/quiz/reminder-optin
+ * Opt a user in to 30-day reassessment reminder emails.
+ *
+ * Body: { email, firstName, lastScore }
+ */
+const reminderOptInLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again later.' },
+});
+
+router.post('/reminder-optin', reminderOptInLimiter, async (req, res) => {
+    try {
+        const { email, firstName, lastScore } = req.body;
+
+        if (!email || typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ error: 'Email is required.' });
+        }
+
+        const safeEmail = email.trim().toLowerCase();
+        const safeName  = (firstName || '').toString().trim().slice(0, 100);
+        const safeScore = typeof lastScore === 'number' && lastScore >= 0 && lastScore <= 100
+            ? lastScore
+            : null;
+
+        // Upsert so re-opting in after a new assessment refreshes the date
+        await ReminderOptIn.findOneAndUpdate(
+            { email: safeEmail },
+            {
+                $set: {
+                    firstName:          safeName,
+                    lastScore:          safeScore,
+                    lastAssessmentDate: new Date(),
+                    optedIn:            true,
+                },
+            },
+            { upsert: true, new: true }
+        );
+
+        logger.info(`Reminder opt-in recorded for ${safeEmail}`);
+        res.status(200).json({ message: 'You\'ll receive a reminder to reassess in 30 days.' });
+    } catch (err) {
+        logger.error('Reminder opt-in error:', err);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+/**
+ * POST /api/quiz/reminder-optout
+ * Opt a user out of reassessment reminder emails (unsubscribe via form/API).
+ *
+ * Body: { email }
+ */
+router.post('/reminder-optout', reminderOptInLimiter, async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email || typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ error: 'Email is required.' });
+        }
+        await ReminderOptIn.findOneAndUpdate(
+            { email: email.trim().toLowerCase() },
+            { $set: { optedIn: false } }
+        );
+        res.status(200).json({ message: 'You have been unsubscribed from reassessment reminders.' });
+    } catch (err) {
+        logger.error('Reminder opt-out error:', err);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+/**
+ * GET /api/quiz/reminder-optout
+ * Opt a user out of reassessment reminder emails via a one-click link in email.
+ *
+ * Query: ?email=user@example.com
+ */
+router.get('/reminder-optout', reminderOptInLimiter, async (req, res) => {
+    try {
+        const email = (req.query.email || '').trim().toLowerCase();
+        if (!email) {
+            return res.status(400).send('Email parameter is required.');
+        }
+        await ReminderOptIn.findOneAndUpdate(
+            { email },
+            { $set: { optedIn: false } }
+        );
+        res.status(200).send(
+            '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Unsubscribed</title></head>' +
+            '<body style="font-family:sans-serif;max-width:480px;margin:60px auto;text-align:center">' +
+            '<h2>✅ Unsubscribed</h2>' +
+            '<p>You\'ve been removed from reassessment reminder emails.</p>' +
+            '<p><a href="/">Return to The Resilience Atlas</a></p>' +
+            '</body></html>'
+        );
+    } catch (err) {
+        logger.error('Reminder opt-out (GET) error:', err);
+        res.status(500).send('An error occurred. Please try again.');
     }
 });
 
