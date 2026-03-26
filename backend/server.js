@@ -123,9 +123,12 @@ app.use(
           "https://api.stripe.com", // Stripe API calls from the browser
         ],
         // Frames: Stripe embeds its payment UI inside cross-origin iframes.
+        // Auth0 Universal Login also uses a cross-origin popup/frame for
+        // the login and registration flow.
         frameSrc: [
           "'self'",
           "https://js.stripe.com",
+          auth0Domain,
         ],
         // Images: allow self, inline data URIs (charts), Gravatar (user avatars),
         // and Auth0 CDN (profile pictures / Lock widget assets).
