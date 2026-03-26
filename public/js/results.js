@@ -706,12 +706,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Retake quiz button ─────────────────────────────────
+  // Only Atlas Premium ($49.99 Lifetime/Unlimited) and higher tiers allow
+  // free retakes.  All other tiers see an upgrade call-to-action instead.
   const retakeButton = document.getElementById('btnRetake');
+  const retakeLocked = document.getElementById('retakeLockedMsg');
   if (retakeButton) {
-    retakeButton.addEventListener('click', () => {
-      localStorage.removeItem('resilience_results');
-      window.location.href = 'quiz.html';
-    });
+    const canRetake = window.PaymentGating && window.PaymentGating.isAtlasPremium();
+    if (canRetake) {
+      retakeButton.addEventListener('click', () => {
+        localStorage.removeItem('resilience_results');
+        window.location.href = 'quiz.html';
+      });
+    } else {
+      // Hide the plain retake button and show the upgrade prompt instead
+      retakeButton.hidden = true;
+      if (retakeLocked) retakeLocked.hidden = false;
+    }
   }
 
   // ── Email report button ────────────────────────────────

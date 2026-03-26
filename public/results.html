@@ -166,6 +166,18 @@
             <span aria-hidden="true">&#8635;</span>
             <span class="btn-label">Retake Quiz</span>
           </button>
+
+          <!-- Shown by results.js for users without atlas-premium (unlimited retakes) -->
+          <div id="retakeLockedMsg" class="retake-locked-msg" hidden>
+            <span aria-hidden="true">&#128274;</span>
+            <span>Unlimited retakes require the <strong>Atlas Premium</strong> plan ($49.99 lifetime).</span>
+            <button
+              type="button"
+              class="btn btn-upgrade btn-sm"
+              onclick="PaymentGating.startCheckout('atlas-premium')"
+              aria-label="Unlock unlimited retakes"
+            >Unlock Unlimited Retakes</button>
+          </div>
         </div>
 
         <!-- Business tier: link to team dashboard -->

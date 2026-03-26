@@ -7,6 +7,10 @@
 // ── Autosave key ───────────────────────────────────────
 const AUTOSAVE_KEY = 'ra_quiz_progress';
 
+// ── Results / retake keys ──────────────────────────────
+const RESULTS_KEY = 'resilience_results';
+const TIER_KEY    = 'resilience_tier';
+
 // ── Autosave helpers ───────────────────────────────────
 function saveProgress() {
   try {
@@ -194,7 +198,39 @@ function init() {
   emailError        = document.getElementById('emailError');
   submitAlert       = document.getElementById('submitAlert');
 
-  // Check for saved progress before generating new question order
+  // If the user has already completed the quiz (results exist in localStorage),
+  // never show the "resume incomplete quiz" banner.  Only atlas-premium users
+  // may retake freely; everyone else is sent back to their results page.
+  const existingResults = (() => {
+    try { return JSON.parse(localStorage.getItem(RESULTS_KEY)); } catch (e) { return null; }
+  })();
+
+  if (existingResults) {
+    const tier = localStorage.getItem(TIER_KEY) || 'free';
+    // NOTE: payment-gating.js is not loaded on quiz.html, so we replicate the
+    // isAtlasPremium() check inline (mirrors PaymentGating.isAtlasPremium()).
+    const hasUnlimitedRetakes =
+      tier === 'atlas-premium' || tier === 'business' ||
+      tier === 'starter'       || tier === 'pro'       || tier === 'enterprise';
+
+    if (!hasUnlimitedRetakes) {
+      // Not allowed to retake for free — send them back to their results
+      clearProgress();
+      window.location.href = 'results.html';
+      return;
+    }
+
+    // atlas-premium (or higher): allow a fresh retake — discard any stale
+    // partial progress so we never ask to "resume" a completed quiz.
+    clearProgress();
+    state.questionOrder = shuffleArray(QUESTIONS.map((_, i) => i));
+    buildQuestionCards();
+    attachNavListeners();
+    showStep('info');
+    return;
+  }
+
+  // No completed results — check for genuinely incomplete saved progress
   const saved = loadSavedProgress();
   if (saved && saved.answers && saved.questionOrder && saved.questionOrder.length === QUESTIONS.length) {
     showRestoreBanner(saved);

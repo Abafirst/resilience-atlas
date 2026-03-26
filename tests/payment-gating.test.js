@@ -353,3 +353,81 @@ describe('handleUpgradeSuccess()', () => {
         expect(overlay.hidden).toBe(true);
     });
 });
+
+// ── Retake gating (results.html) ─────────────────────────────────────────────
+
+describe('retake gating', () => {
+    function buildRetakeDOM() {
+        document.body.innerHTML = `
+            <button id="btnRetake" class="btn btn-secondary">Retake Quiz</button>
+            <div id="retakeLockedMsg" hidden>
+                <button onclick="PaymentGating.startCheckout('atlas-premium')">Unlock</button>
+            </div>
+        `;
+        return {
+            retakeBtn:   document.getElementById('btnRetake'),
+            lockedMsg:   document.getElementById('retakeLockedMsg'),
+        };
+    }
+
+    test('free tier: retake button hidden, upgrade prompt shown', () => {
+        localStorage.setItem('resilience_tier', 'free');
+        loadGatingScript();
+        const { retakeBtn, lockedMsg } = buildRetakeDOM();
+
+        // Simulate what results.js does
+        const canRetake = window.PaymentGating && window.PaymentGating.isAtlasPremium();
+        if (!canRetake) {
+            retakeBtn.hidden = true;
+            lockedMsg.hidden = false;
+        }
+
+        expect(retakeBtn.hidden).toBe(true);
+        expect(lockedMsg.hidden).toBe(false);
+    });
+
+    test('atlas-navigator tier: retake button hidden, upgrade prompt shown', () => {
+        localStorage.setItem('resilience_tier', 'atlas-navigator');
+        loadGatingScript();
+        const { retakeBtn, lockedMsg } = buildRetakeDOM();
+
+        const canRetake = window.PaymentGating && window.PaymentGating.isAtlasPremium();
+        if (!canRetake) {
+            retakeBtn.hidden = true;
+            lockedMsg.hidden = false;
+        }
+
+        expect(retakeBtn.hidden).toBe(true);
+        expect(lockedMsg.hidden).toBe(false);
+    });
+
+    test('atlas-premium tier: retake button visible, upgrade prompt hidden', () => {
+        localStorage.setItem('resilience_tier', 'atlas-premium');
+        loadGatingScript();
+        const { retakeBtn, lockedMsg } = buildRetakeDOM();
+
+        const canRetake = window.PaymentGating && window.PaymentGating.isAtlasPremium();
+        if (!canRetake) {
+            retakeBtn.hidden = true;
+            lockedMsg.hidden = false;
+        }
+
+        expect(retakeBtn.hidden).toBe(false);
+        expect(lockedMsg.hidden).toBe(true);
+    });
+
+    test('business tier: retake button visible (unlimited retakes)', () => {
+        localStorage.setItem('resilience_tier', 'business');
+        loadGatingScript();
+        const { retakeBtn, lockedMsg } = buildRetakeDOM();
+
+        const canRetake = window.PaymentGating && window.PaymentGating.isAtlasPremium();
+        if (!canRetake) {
+            retakeBtn.hidden = true;
+            lockedMsg.hidden = false;
+        }
+
+        expect(retakeBtn.hidden).toBe(false);
+        expect(lockedMsg.hidden).toBe(true);
+    });
+});
