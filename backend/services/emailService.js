@@ -417,6 +417,16 @@ async function sendTeamEnterpriseAdminNotification(to, vars) {
   return _send(to, emailObj);
 }
 
+/**
+ * Generic send function for custom HTML/text emails (e.g. scheduled reports).
+ *
+ * @param {string} to
+ * @param {{ subject: string, html: string, text?: string }} emailObj
+ */
+async function sendEmail(to, emailObj) {
+  return _send(to, emailObj);
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -446,6 +456,9 @@ module.exports = {
   /* Legacy aliases (keep existing call-sites working) */
   sendQuizReport,
   sendInviteEmail,
+
+  /* Generic send for custom emails */
+  sendEmail,
 
   /* Exposed for testing */
   capitalize,

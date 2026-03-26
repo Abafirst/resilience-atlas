@@ -96,6 +96,8 @@
       <button class="teams-tab enterprise-feature" data-tab="branding" role="tab" aria-selected="false" hidden>🎨 Custom Branding</button>
       <button class="teams-tab teams-pro-feature" data-tab="report" role="tab" aria-selected="false" hidden>📄 Report</button>
       <button class="teams-tab enterprise-feature" data-tab="data-export" role="tab" aria-selected="false" hidden>📥 Data Export</button>
+      <button class="teams-tab enterprise-feature" data-tab="api-keys" role="tab" aria-selected="false" hidden>🔑 API Keys</button>
+      <button class="teams-tab enterprise-feature" data-tab="roles" role="tab" aria-selected="false" hidden>👤 Roles</button>
     </nav>
 
     <!-- ══════════════════════════════════════════════════════════════════════ -->
@@ -153,6 +155,22 @@
           <div id="benchmark-container"></div>
         </div>
 
+      </div>
+
+      <!-- ── Dimension Trends Over Time (all team plans) ──────────────────── -->
+      <div class="teams-card" style="margin-top:1.25rem" id="dim-trends-section" hidden>
+        <h2 class="teams-card__title">📈 Dimension Trends Over Time</h2>
+        <p class="teams-card__subtitle">How each resilience dimension has changed across assessment cycles</p>
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem">
+          <button class="btn btn--outline btn--sm" type="button" id="btn-trend-line" aria-pressed="true">Line</button>
+          <button class="btn btn--outline btn--sm" type="button" id="btn-trend-bar" aria-pressed="false">Bar</button>
+        </div>
+        <div style="height:320px;position:relative">
+          <canvas id="dimTrendsOverTimeChart" aria-label="Dimension trends over time" role="img"></canvas>
+        </div>
+        <p class="text-muted text-sm" id="dim-trends-empty" hidden>
+          Trend charts will appear after multiple assessment cycles have been recorded.
+        </p>
       </div>
 
       <!-- Risk flagging (Pro+) -->
@@ -578,36 +596,228 @@
     <!-- ══════════════════════════════════════════════════════════════════════ -->
     <!-- TAB: Data Export (Enterprise)                                          -->
     <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Data Export (Enterprise)                                          -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
     <section id="tab-data-export" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
 
-      <div class="teams-card" style="max-width:640px">
-        <h2 class="teams-card__title">Data Export</h2>
+      <div class="teams-grid teams-grid--2">
+
+        <!-- Batch Export -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">📥 Batch Export</h2>
+          <p class="teams-card__subtitle">
+            Download all assessment results, dimension scores, and member data as a comprehensive CSV file.
+          </p>
+          <ul style="font-size:0.875rem;line-height:1.8;color:#4b5563;margin:0 0 1.25rem 1.25rem;padding:0">
+            <li>All member assessment results</li>
+            <li>All 6 dimension scores per member</li>
+            <li>Timestamps and user identifiers</li>
+          </ul>
+          <button class="btn btn--primary" type="button" id="btn-batch-export">
+            ⬇ Download Batch CSV
+          </button>
+          <p id="batch-export-status" role="status" aria-live="polite"
+             style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+        </div>
+
+        <!-- Data Retention Policy -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">🗄 Data Retention Policy</h2>
+          <p class="teams-card__subtitle">
+            Configure how long assessment data is retained. Set to 0 for indefinite retention.
+          </p>
+          <form id="retention-form">
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="retention-days">Retention period (days, 0 = indefinite)</label>
+              <input type="number" id="retention-days" min="0" value="0"
+                     style="width:140px" />
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label>
+                <input type="checkbox" id="retention-auto-delete" />
+                Enable automated purging of expired records
+              </label>
+            </div>
+            <button class="btn btn--primary btn--sm" type="submit">Save Policy</button>
+            <p id="retention-status" role="status" aria-live="polite"
+               style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+          </form>
+        </div>
+
+        <!-- Scheduled Exports (moved from Settings for Enterprise) -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">📅 Scheduled Exports</h2>
+          <p class="teams-card__subtitle">
+            Automatically send weekly or monthly analytics summaries to your admin email.
+          </p>
+          <form id="export-schedule-form-enterprise">
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label>
+                <input type="checkbox" id="export-enabled-ent" />
+                Enable scheduled exports
+              </label>
+            </div>
+            <div class="teams-form-row">
+              <div class="teams-form-group">
+                <label for="export-freq-ent">Frequency</label>
+                <select id="export-freq-ent">
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly" selected>Monthly</option>
+                </select>
+              </div>
+              <div class="teams-form-group">
+                <label for="export-email-ent">Recipient Email</label>
+                <input type="email" id="export-email-ent" placeholder="admin@yourorg.com" />
+              </div>
+            </div>
+            <button class="btn btn--primary btn--sm" type="submit">Save Schedule</button>
+            <p id="schedule-status-ent" role="status" aria-live="polite"
+               style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+          </form>
+        </div>
+
+        <!-- Benchmark Settings -->
+        <div class="teams-card">
+          <h2 class="teams-card__title">📊 Benchmark Settings</h2>
+          <p class="teams-card__subtitle">
+            Opt in to anonymized benchmarking. Your data is never individually identified.
+          </p>
+          <form id="benchmark-form">
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label>
+                <input type="checkbox" id="benchmark-optin" />
+                Participate in anonymized benchmarking
+              </label>
+              <p style="font-size:0.8rem;color:#6b7280;margin:0.25rem 0 0">
+                Only aggregated averages are shared — no individual data is ever disclosed.
+              </p>
+            </div>
+            <div class="teams-form-group" style="margin-bottom:1rem">
+              <label for="benchmark-scope">Benchmark scope</label>
+              <select id="benchmark-scope">
+                <option value="org">Within my organization only</option>
+                <option value="platform">Compare vs all organizations (anonymized)</option>
+              </select>
+            </div>
+            <button class="btn btn--primary btn--sm" type="submit">Save Settings</button>
+            <p id="benchmark-status" role="status" aria-live="polite"
+               style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+          </form>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: API Keys (Enterprise)                                             -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-api-keys" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:760px">
+        <h2 class="teams-card__title">🔑 API Key Management</h2>
         <p class="teams-card__subtitle">
-          Self-service data export for enterprise administrators. Download your organization's
-          reports, assessment results, and user activity logs to retain and analyze data on your own terms.
+          Generate API keys to enable automated, programmatic access to your organization's data for
+          exports, integrations, and custom dashboards.
         </p>
 
-        <p style="font-size:0.9rem;line-height:1.7;color:#374151;margin-bottom:1.5rem">
-          Coming soon: bulk export of all assessments, team reports, and user activity in CSV,
-          PDF, or ZIP format. Enterprise customers will be able to schedule automatic exports and
-          download historical data directly — no manual request required.
+        <div id="api-keys-list" style="margin-bottom:1.5rem">
+          <p class="text-muted text-sm">Loading API keys…</p>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 0 1.25rem" />
+
+        <h3 style="font-size:0.95rem;font-weight:600;margin:0 0 1rem">Generate New API Key</h3>
+        <form id="api-key-form">
+          <div class="teams-form-row">
+            <div class="teams-form-group" style="flex:2">
+              <label for="api-key-label">Key Label</label>
+              <input type="text" id="api-key-label" placeholder="e.g. HR Dashboard, CI Export"
+                     maxlength="100" required />
+            </div>
+            <div class="teams-form-group">
+              <label for="api-key-scopes">Scopes</label>
+              <select id="api-key-scopes">
+                <option value="read">Read only</option>
+                <option value="read,export">Read + Export</option>
+              </select>
+            </div>
+          </div>
+          <div class="teams-form-group" style="margin-bottom:1rem">
+            <label for="api-key-expires">Expiry date (optional)</label>
+            <input type="date" id="api-key-expires" />
+          </div>
+          <button class="btn btn--primary btn--sm" type="submit">Generate Key</button>
+        </form>
+
+        <!-- New key reveal -->
+        <div id="new-key-reveal" hidden
+             style="margin-top:1.25rem;padding:1rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:0.5rem">
+          <p style="font-size:0.875rem;font-weight:600;color:#166534;margin:0 0 0.5rem">
+            ✅ New API key generated — copy it now. It will <strong>not</strong> be shown again.
+          </p>
+          <div style="display:flex;align-items:center;gap:0.5rem">
+            <code id="new-key-value"
+                  style="font-size:0.8rem;background:#fff;border:1px solid #d1fae5;padding:0.5rem 0.75rem;border-radius:0.375rem;flex:1;word-break:break-all"></code>
+            <button class="btn btn--outline btn--sm" type="button" id="btn-copy-key">Copy</button>
+          </div>
+        </div>
+
+        <p id="api-key-status" role="status" aria-live="polite"
+           style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+      </div>
+
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- TAB: Roles (Enterprise)                                                -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <section id="tab-roles" class="teams-tab-pane enterprise-feature" role="tabpanel" hidden>
+
+      <div class="teams-card" style="max-width:760px">
+        <h2 class="teams-card__title">👤 Granular Role Management</h2>
+        <p class="teams-card__subtitle">
+          Assign fine-grained organizational roles to team members.
+          Roles control what each person can view, export, and manage within the dashboard.
         </p>
 
-        <ul style="font-size:0.875rem;line-height:1.8;color:#4b5563;margin:0 0 1.75rem 1.25rem;padding:0">
-          <li>📊 Export assessment results &amp; dimension scores</li>
-          <li>📄 Download team and individual reports (PDF / CSV)</li>
-          <li>🗂 Export full user activity logs</li>
-          <li>📅 Schedule recurring exports to your admin email</li>
-        </ul>
+        <div style="margin-bottom:1.5rem;font-size:0.875rem">
+          <strong>Available roles:</strong>
+          <ul style="margin:0.5rem 0 0 1.25rem;line-height:1.8;color:#4b5563">
+            <li><strong>Super Admin</strong> — Full org management, can assign any role</li>
+            <li><strong>Data Officer</strong> — Can export data, manage retention policy, and view all analytics</li>
+            <li><strong>Report Viewer</strong> — Read-only access to analytics and reports, cannot export</li>
+            <li><strong>Member</strong> — Standard access (own results only)</li>
+          </ul>
+        </div>
 
-        <button class="btn btn--primary" type="button" id="btn-data-export" disabled
-                aria-describedby="data-export-coming-soon">
-          Export Data
-        </button>
-        <p id="data-export-coming-soon" style="font-size:0.8rem;color:#6b7280;margin-top:0.75rem">
-          Full export functionality will be available in an upcoming release.
-          Contact support if you need data ahead of that.
-        </p>
+        <div id="roles-list" style="margin-bottom:1.5rem">
+          <p class="text-muted text-sm">Loading member roles…</p>
+        </div>
+
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 0 1.25rem" />
+
+        <h3 style="font-size:0.95rem;font-weight:600;margin:0 0 1rem">Assign Role to Member</h3>
+        <form id="role-assign-form">
+          <div class="teams-form-row">
+            <div class="teams-form-group" style="flex:2">
+              <label for="role-user-id">User ID</label>
+              <input type="text" id="role-user-id" placeholder="MongoDB user ID" required />
+            </div>
+            <div class="teams-form-group">
+              <label for="role-org-role">Role</label>
+              <select id="role-org-role">
+                <option value="member">Member</option>
+                <option value="report_viewer">Report Viewer</option>
+                <option value="data_officer">Data Officer</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn--primary btn--sm" type="submit">Assign Role</button>
+          <p id="role-status" role="status" aria-live="polite"
+             style="font-size:0.8rem;margin-top:0.5rem;min-height:1.2rem"></p>
+        </form>
       </div>
 
     </section>
@@ -687,6 +897,7 @@
       setupTabs();
       setupButtons();
       setupBranding();
+      setupEnterpriseFeatures();
 
       // Check tier access
       const tier = window.PaymentGating ? window.PaymentGating.getTier() : 'free';
@@ -828,6 +1039,9 @@
       window.DashboardAnalytics.renderTrend('trend-container', a.trend);
       window.DashboardAnalytics.renderBenchmarks('benchmark-container', a.benchmarks);
       window.DashboardAnalytics.renderRiskSummary('risk-container', a.atRisk, a.memberCount);
+
+      // Render dimension trends over time chart
+      renderDimTrendsOverTime('line');
     }
 
     function renderFacilitationTab() {
@@ -1155,7 +1369,401 @@
       }
     }
 
-    return { init, load };
+    // ── Dimension Trends Over Time Chart ─────────────────────────────────────
+
+    let _dimTrendsChart = null;
+
+    function renderDimTrendsOverTime(chartType) {
+      const section  = document.getElementById('dim-trends-section');
+      const emptyEl  = document.getElementById('dim-trends-empty');
+      const canvasEl = document.getElementById('dimTrendsOverTimeChart');
+      if (!section || !canvasEl) return;
+
+      const a      = _analytics;
+      const trends = a && a.dimTrends;    // { 'Agentic-Generative': [{date, average}], … }
+
+      const DIM_FULL_LABELS = [
+        'Agentic-Generative', 'Relational-Connective', 'Spiritual-Reflective',
+        'Emotional-Adaptive', 'Somatic-Regulative', 'Cognitive-Narrative',
+      ];
+      const DIM_COLORS = [
+        'rgba(99,102,241,0.8)', 'rgba(16,185,129,0.8)', 'rgba(245,158,11,0.8)',
+        'rgba(239,68,68,0.8)',  'rgba(59,130,246,0.8)', 'rgba(168,85,247,0.8)',
+      ];
+
+      // Gather time-series data from teamProfile trends (if present)
+      const teamProfile = a && a.teamProfile;
+      const profileDimTrends = teamProfile && teamProfile.dimensionTrends;
+
+      // Build datasets from available data
+      const hasData = trends || profileDimTrends;
+      section.hidden = false;
+
+      if (!hasData) {
+        if (emptyEl) emptyEl.hidden = false;
+        canvasEl.hidden = true;
+        return;
+      }
+
+      if (emptyEl) emptyEl.hidden = true;
+      canvasEl.hidden = false;
+
+      // Destroy old chart
+      if (_dimTrendsChart) { _dimTrendsChart.destroy(); _dimTrendsChart = null; }
+
+      // Build label set and datasets from dimTrends if present
+      let allLabels = [];
+      const datasets = DIM_FULL_LABELS.map((dim, i) => {
+        const entries = (trends && trends[dim]) || [];
+        const pts     = entries.map((e) => ({ x: new Date(e.date).toLocaleDateString(), y: Math.round(e.average) }));
+        pts.forEach((p) => { if (!allLabels.includes(p.x)) allLabels.push(p.x); });
+        return {
+          label:           dim.split('-')[0],
+          data:            pts.map((p) => p.y),
+          borderColor:     DIM_COLORS[i],
+          backgroundColor: DIM_COLORS[i].replace('0.8', '0.2'),
+          tension:         0.3,
+          fill:            chartType === 'bar',
+          pointRadius:     chartType === 'line' ? 4 : 0,
+        };
+      });
+
+      if (!allLabels.length) {
+        if (emptyEl) emptyEl.hidden = false;
+        canvasEl.hidden = true;
+        return;
+      }
+
+      _dimTrendsChart = new Chart(canvasEl, {
+        type: chartType,
+        data: { labels: allLabels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11 } } },
+            tooltip: { mode: 'index', intersect: false },
+          },
+          scales: {
+            y: { min: 0, max: 100, ticks: { callback: (v) => v + '%' } },
+          },
+        },
+      });
+
+      // Wire toggle buttons
+      const lineBtn = document.getElementById('btn-trend-line');
+      const barBtn  = document.getElementById('btn-trend-bar');
+      if (lineBtn) {
+        lineBtn.onclick = () => {
+          lineBtn.setAttribute('aria-pressed', 'true');
+          if (barBtn) barBtn.setAttribute('aria-pressed', 'false');
+          renderDimTrendsOverTime('line');
+        };
+      }
+      if (barBtn) {
+        barBtn.onclick = () => {
+          barBtn.setAttribute('aria-pressed', 'true');
+          if (lineBtn) lineBtn.setAttribute('aria-pressed', 'false');
+          renderDimTrendsOverTime('bar');
+        };
+      }
+    }
+
+    // ── Enterprise Features Setup ─────────────────────────────────────────────
+
+    function setupEnterpriseFeatures() {
+      // ── Batch Export ──────────────────────────────────────────────────────
+      const batchExportBtn = document.getElementById('btn-batch-export');
+      if (batchExportBtn) {
+        batchExportBtn.addEventListener('click', async () => {
+          const statusEl = document.getElementById('batch-export-status');
+          try {
+            batchExportBtn.disabled = true;
+            if (statusEl) { statusEl.style.color = '#374151'; statusEl.textContent = 'Preparing export…'; }
+            window.location.href = `/api/orgs-advanced/${_orgId}/export/batch`;
+            setTimeout(() => {
+              batchExportBtn.disabled = false;
+              if (statusEl) statusEl.textContent = '';
+            }, 3000);
+          } catch (err) {
+            batchExportBtn.disabled = false;
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = 'Export failed: ' + escHtml(err.message); }
+          }
+        });
+      }
+
+      // ── Data Retention Form ───────────────────────────────────────────────
+      const retentionForm = document.getElementById('retention-form');
+      if (retentionForm) {
+        // Load current policy
+        fetch(`/api/orgs-advanced/${_orgId}/retention`, { headers: authHeaders() })
+          .then((r) => r.ok ? r.json() : null)
+          .then((data) => {
+            if (!data || !data.retentionPolicy) return;
+            const { retentionDays, autoDelete } = data.retentionPolicy;
+            const daysEl = document.getElementById('retention-days');
+            const autoEl = document.getElementById('retention-auto-delete');
+            if (daysEl) daysEl.value = retentionDays != null ? retentionDays : 0;
+            if (autoEl) autoEl.checked = Boolean(autoDelete);
+          })
+          .catch(() => {});
+
+        retentionForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('retention-status');
+          try {
+            const days    = parseInt(document.getElementById('retention-days').value, 10) || 0;
+            const autoDel = document.getElementById('retention-auto-delete').checked;
+            const res = await fetch(`/api/orgs-advanced/${_orgId}/retention`, {
+              method: 'PUT',
+              headers: authHeaders(),
+              body: JSON.stringify({ retentionDays: days, autoDelete: autoDel }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to save.');
+            if (statusEl) { statusEl.style.color = '#16a34a'; statusEl.textContent = '✓ Retention policy saved.'; }
+          } catch (err) {
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = err.message; }
+          }
+        });
+      }
+
+      // ── Enterprise Scheduled Export Form ──────────────────────────────────
+      const schedFormEnt = document.getElementById('export-schedule-form-enterprise');
+      if (schedFormEnt) {
+        schedFormEnt.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('schedule-status-ent');
+          try {
+            const enabled = document.getElementById('export-enabled-ent').checked;
+            const freq    = document.getElementById('export-freq-ent').value;
+            const email   = document.getElementById('export-email-ent').value.trim();
+            const res = await fetch(`/api/orgs-advanced/${_orgId}/settings`, {
+              method: 'PUT',
+              headers: authHeaders(),
+              body: JSON.stringify({ scheduledExport: { enabled, frequency: freq, recipientEmail: email || null } }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to save.');
+            if (statusEl) { statusEl.style.color = '#16a34a'; statusEl.textContent = '✓ Schedule saved.'; }
+          } catch (err) {
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = err.message; }
+          }
+        });
+      }
+
+      // ── Benchmark Form ────────────────────────────────────────────────────
+      const benchmarkForm = document.getElementById('benchmark-form');
+      if (benchmarkForm) {
+        fetch(`/api/orgs-advanced/${_orgId}/benchmarks`, { headers: authHeaders() })
+          .then((r) => r.ok ? r.json() : null)
+          .then((data) => {
+            if (!data || !data.benchmarks) return;
+            const optInEl = document.getElementById('benchmark-optin');
+            const scopeEl = document.getElementById('benchmark-scope');
+            if (optInEl) optInEl.checked = Boolean(data.benchmarks.optIn);
+            if (scopeEl && data.benchmarks.scope) scopeEl.value = data.benchmarks.scope;
+          })
+          .catch(() => {});
+
+        benchmarkForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('benchmark-status');
+          try {
+            const optIn = document.getElementById('benchmark-optin').checked;
+            const scope = document.getElementById('benchmark-scope').value;
+            const res = await fetch(`/api/orgs-advanced/${_orgId}/benchmarks`, {
+              method: 'PUT',
+              headers: authHeaders(),
+              body: JSON.stringify({ optIn, scope }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to save.');
+            if (statusEl) { statusEl.style.color = '#16a34a'; statusEl.textContent = '✓ Benchmark settings saved.'; }
+          } catch (err) {
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = err.message; }
+          }
+        });
+      }
+
+      // ── API Keys ──────────────────────────────────────────────────────────
+      loadApiKeys();
+
+      const apiKeyForm = document.getElementById('api-key-form');
+      if (apiKeyForm) {
+        apiKeyForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const statusEl  = document.getElementById('api-key-status');
+          const revealEl  = document.getElementById('new-key-reveal');
+          const keyValEl  = document.getElementById('new-key-value');
+          try {
+            const label      = document.getElementById('api-key-label').value.trim();
+            const scopeStr   = document.getElementById('api-key-scopes').value;
+            const scopes     = scopeStr.split(',').map((s) => s.trim()).filter(Boolean);
+            const expiresVal = document.getElementById('api-key-expires').value;
+            const expiresAt  = expiresVal ? new Date(expiresVal).toISOString() : null;
+
+            const res = await fetch(`/api/orgs-advanced/${_orgId}/api-keys`, {
+              method: 'POST',
+              headers: authHeaders(),
+              body: JSON.stringify({ label, scopes, expiresAt }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to generate key.');
+
+            if (keyValEl) keyValEl.textContent = data.rawKey;
+            if (revealEl) revealEl.hidden = false;
+            if (statusEl) { statusEl.style.color = '#16a34a'; statusEl.textContent = ''; }
+            apiKeyForm.reset();
+            loadApiKeys();
+          } catch (err) {
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = err.message; }
+          }
+        });
+      }
+
+      const copyKeyBtn = document.getElementById('btn-copy-key');
+      if (copyKeyBtn) {
+        copyKeyBtn.addEventListener('click', () => {
+          const val = document.getElementById('new-key-value');
+          if (val) navigator.clipboard.writeText(val.textContent).catch(() => {});
+          copyKeyBtn.textContent = 'Copied!';
+          setTimeout(() => { copyKeyBtn.textContent = 'Copy'; }, 2000);
+        });
+      }
+
+      // ── Role Assignment ───────────────────────────────────────────────────
+      loadRoles();
+
+      const roleForm = document.getElementById('role-assign-form');
+      if (roleForm) {
+        roleForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const statusEl = document.getElementById('role-status');
+          try {
+            const userId  = document.getElementById('role-user-id').value.trim();
+            const orgRole = document.getElementById('role-org-role').value;
+            const res = await fetch(`/api/orgs-advanced/${_orgId}/roles/${userId}`, {
+              method: 'PUT',
+              headers: authHeaders(),
+              body: JSON.stringify({ orgRole }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to assign role.');
+            if (statusEl) { statusEl.style.color = '#16a34a'; statusEl.textContent = '✓ Role assigned.'; }
+            roleForm.reset();
+            loadRoles();
+          } catch (err) {
+            if (statusEl) { statusEl.style.color = '#dc2626'; statusEl.textContent = err.message; }
+          }
+        });
+      }
+    }
+
+    // ── API Keys Loader ───────────────────────────────────────────────────────
+
+    async function loadApiKeys() {
+      const listEl = document.getElementById('api-keys-list');
+      if (!listEl || !_orgId) return;
+      try {
+        const res  = await fetch(`/api/orgs-advanced/${_orgId}/api-keys`, { headers: authHeaders() });
+        if (!res.ok) { listEl.innerHTML = '<p class="text-muted text-sm">Unable to load API keys.</p>'; return; }
+        const data = await res.json();
+        const keys = data.keys || [];
+        if (!keys.length) {
+          listEl.innerHTML = '<p class="text-muted text-sm">No API keys generated yet.</p>';
+          return;
+        }
+        listEl.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;font-size:0.875rem">
+            <thead>
+              <tr style="background:#f9fafb;text-align:left">
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Label</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Prefix</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Scopes</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Expires</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Last Used</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${keys.map((k) => `
+                <tr style="border-bottom:1px solid #f3f4f6">
+                  <td style="padding:8px 12px">${escHtml(k.label)}</td>
+                  <td style="padding:8px 12px;font-family:monospace;color:#374151">${escHtml(k.prefix)}…</td>
+                  <td style="padding:8px 12px">${escHtml((k.scopes || []).join(', '))}</td>
+                  <td style="padding:8px 12px">${k.expiresAt ? new Date(k.expiresAt).toLocaleDateString() : 'Never'}</td>
+                  <td style="padding:8px 12px">${k.lastUsedAt ? new Date(k.lastUsedAt).toLocaleDateString() : '—'}</td>
+                  <td style="padding:8px 12px">
+                    ${k.isActive ? `<button class="btn btn--danger btn--sm" type="button"
+                      onclick="AdvancedDashboard._revokeKey('${escAttr(k._id)}')">Revoke</button>` : '<span style="color:#6b7280">Revoked</span>'}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`;
+      } catch (err) {
+        if (listEl) listEl.innerHTML = `<p class="text-muted text-sm">Error: ${escHtml(err.message)}</p>`;
+      }
+    }
+
+    async function revokeKey(keyId) {
+      if (!confirm('Revoke this API key? Applications using it will immediately lose access.')) return;
+      try {
+        const res = await fetch(`/api/orgs-advanced/${_orgId}/api-keys/${keyId}`, {
+          method: 'DELETE',
+          headers: authHeaders(),
+        });
+        if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }
+        loadApiKeys();
+      } catch (err) {
+        alert('Failed to revoke key: ' + err.message);
+      }
+    }
+
+    // ── Roles Loader ──────────────────────────────────────────────────────────
+
+    async function loadRoles() {
+      const listEl = document.getElementById('roles-list');
+      if (!listEl || !_orgId) return;
+      try {
+        const res  = await fetch(`/api/orgs-advanced/${_orgId}/roles`, { headers: authHeaders() });
+        if (!res.ok) { listEl.innerHTML = '<p class="text-muted text-sm">Unable to load roles.</p>'; return; }
+        const data = await res.json();
+        const roles = data.memberRoles || [];
+        if (!roles.length) {
+          listEl.innerHTML = '<p class="text-muted text-sm">No custom roles assigned. All members use the default role.</p>';
+          return;
+        }
+        const ROLE_LABELS = {
+          super_admin: '🔴 Super Admin',
+          data_officer: '🟠 Data Officer',
+          report_viewer: '🔵 Report Viewer',
+          member: '⚪ Member',
+        };
+        listEl.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;font-size:0.875rem">
+            <thead>
+              <tr style="background:#f9fafb;text-align:left">
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">User ID</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Org Role</th>
+                <th style="padding:8px 12px;border-bottom:2px solid #e5e7eb">Assigned</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${roles.map((r) => `
+                <tr style="border-bottom:1px solid #f3f4f6">
+                  <td style="padding:8px 12px;font-family:monospace;font-size:0.8rem">${escHtml(String(r.userId))}</td>
+                  <td style="padding:8px 12px">${ROLE_LABELS[r.orgRole] || escHtml(r.orgRole)}</td>
+                  <td style="padding:8px 12px">${r.assignedAt ? new Date(r.assignedAt).toLocaleDateString() : '—'}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`;
+      } catch (err) {
+        if (listEl) listEl.innerHTML = `<p class="text-muted text-sm">Error: ${escHtml(err.message)}</p>`;
+      }
+    }
+
+    return { init, load, _revokeKey: revokeKey };
 
   })();
 

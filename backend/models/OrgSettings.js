@@ -203,6 +203,71 @@ const orgSettingsSchema = new mongoose.Schema(
         },
       },
     ],
+    // ── Data Retention Policy ─────────────────────────────────────────────────
+
+    retentionPolicy: {
+      // How long to retain assessment records (in days). 0 = indefinite.
+      retentionDays: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      // When the retention policy was last applied
+      lastAppliedAt: {
+        type: Date,
+        default: null,
+      },
+      // Whether automated purging of expired records is enabled
+      autoDelete: {
+        type: Boolean,
+        default: false,
+      },
+    },
+
+    // ── Granular Org Roles ────────────────────────────────────────────────────
+
+    // Per-member role overrides within the organization.
+    // Supported roles: 'super_admin', 'data_officer', 'report_viewer', 'member'
+    memberRoles: [
+      {
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          required: true,
+        },
+        orgRole: {
+          type: String,
+          enum: ['super_admin', 'data_officer', 'report_viewer', 'member'],
+          default: 'member',
+        },
+        assignedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        assignedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+          default: null,
+        },
+      },
+    ],
+
+    // ── Benchmark Settings ────────────────────────────────────────────────────
+
+    benchmarks: {
+      // Whether to participate in anonymized org-level benchmarking
+      optIn: {
+        type: Boolean,
+        default: false,
+      },
+      // Visibility: 'org' = org-wide averages only; 'platform' = vs all orgs
+      scope: {
+        type: String,
+        enum: ['org', 'platform'],
+        default: 'org',
+      },
+    },
+
   },
   { timestamps: true }
 );
