@@ -86,8 +86,8 @@
             billing: 'one-time',
             maxUsers: Infinity,
             maxTeams: Infinity,
-            features: ['Unlimited everything', 'Custom branding', 'Webhooks', 'SSO/SAML', 'Dedicated support'],
-            dataRetention: 'Unlimited',
+            features: ['Unlimited users & teams', 'Org-managed custom branding', 'SSO/SAML self-service setup', 'Self-service data export', 'Everything in Premium', 'Self-custody: own your org data'],
+            dataRetention: 'Self-managed (export anytime)',
         },
     };
 
