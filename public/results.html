@@ -63,9 +63,9 @@
           <p class="primary-type-description" id="primaryDescription"></p>
         </section>
 
-        <!-- Atlas Map (radar chart) -->
+        <!-- Atlas Map (radar chart — visible to all users for free) -->
 
-<section class="atlas-section card locked" aria-labelledby="radarHeading" data-tier="atlas-premium">
+<section class="atlas-section card" aria-labelledby="radarHeading">
           <h2 id="radarHeading">Your Resilience Compass</h2>
           <p class="atlas-description">This compass visualizes the balance of your resilience system across six core dimensions.</p>
 <div id="radarChartContainer" aria-label="Resilience compass visualization">
@@ -152,6 +152,7 @@
 
         <!-- Action Buttons -->
         <div class="results-actions">
+          <!-- For free users, this button is replaced by a locked-upgrade button via results.js -->
           <button type="button" id="btnDownload" class="btn btn-primary">
             <span aria-hidden="true">&#8681;</span>
             <span class="btn-label">Download PDF</span>
@@ -281,6 +282,7 @@
 <script src="/js/visualizations.js"></script>
 <script src="/js/payment-gating.js"></script>
 <script src="/js/upgrade-cards.js"></script>
+<script src="/js/upsell-system.js"></script>
 <script src="/js/pdf-progress.js"></script>
 <script src="/js/results.js"></script>
 <script src="/js/evidence-based-practices.js"></script>

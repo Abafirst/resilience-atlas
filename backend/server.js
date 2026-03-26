@@ -99,10 +99,12 @@ app.use(
         // Styles: allow self and inline styles (used by React, chart libraries,
         // and certain Auth0 components).  cdn.auth0.com may serve style bundles
         // for the Universal Login widget / Lock.
+        // fonts.googleapis.com is required for the Google Fonts stylesheet.
         styleSrc: [
           "'self'",
           "'unsafe-inline'",
           "https://cdn.auth0.com",
+          "https://fonts.googleapis.com",
         ],
         // Network requests allowed from the browser:
         //   - Auth0 tenant: required for token exchange and user-info calls
@@ -134,8 +136,9 @@ app.use(
           "https://s.gravatar.com",
           "https://cdn.auth0.com",
         ],
-        // Fonts: allow self and inline data URIs (icon fonts embedded as data URLs).
-        fontSrc: ["'self'", "data:"],
+        // Fonts: allow self, inline data URIs (icon fonts embedded as data URLs),
+        // and Google Fonts CDN for webfont delivery.
+        fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
       },
     },
   })
@@ -336,7 +339,12 @@ const pageLimiter = rateLimit({
 // redirect_uri is sourced exclusively from environment variables to avoid
 // open-redirect vulnerabilities that can arise when request headers are
 // used to derive a callback URL.
-function buildAuth0AuthorizeUrl(screenHint) {
+//
+// An optional `returnTo` query param (URL-encoded, must start with "/") is
+// stored in the Auth0 `state` parameter so that the callback handler can
+// redirect the user back to the page they were on — including a `?checkout=<tier>`
+// param that auto-starts the Stripe purchase flow after login.
+function buildAuth0AuthorizeUrl(screenHint, returnTo) {
   const domain = process.env.AUTH0_DOMAIN;
   const clientId = process.env.AUTH0_CLIENT_ID;
   // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
@@ -349,12 +357,41 @@ function buildAuth0AuthorizeUrl(screenHint) {
     scope: "openid profile email",
   });
   if (screenHint) params.set("screen_hint", screenHint);
+  // Pass a safe returnTo as the Auth0 state so the callback can redirect there.
+  // Only allow same-origin paths (must start with "/") to prevent open redirects.
+  if (returnTo && typeof returnTo === "string" && returnTo.startsWith("/")) {
+    params.set("state", encodeURIComponent(returnTo));
+  }
   return `https://${domain}/authorize?${params.toString()}`;
 }
 
 app.get("/login", pageLimiter, (req, res) => {
-  const url = buildAuth0AuthorizeUrl(null);
+  // Accept an optional ?returnTo=/path?checkout=tier redirect hint.
+  // Only allow same-origin paths to prevent open redirects:
+  //   - Must start with "/" (not "//", "/\", etc.)
+  //   - Must not contain protocol separators (":", "//")
+  //   - URL-decode first, then re-validate the decoded value
+  let returnTo = null;
+  if (req.query.returnTo) {
+    try {
+      const rt = decodeURIComponent(String(req.query.returnTo));
+      // Strict same-origin path check: must start with '/' but not '//'
+      // and must not contain any protocol-relative patterns.
+      if (
+        rt.startsWith("/") &&
+        !rt.startsWith("//") &&
+        !rt.startsWith("/\\") &&
+        !/[a-zA-Z][a-zA-Z0-9+\-.]*:/.test(rt)  // no scheme like http:, https:, data:
+      ) {
+        returnTo = rt;
+      }
+    } catch (_e) {
+      // Ignore malformed or un-decodable param.
+    }
+  }
+  const url = buildAuth0AuthorizeUrl(null, returnTo);
   if (url) return res.redirect(302, url);
+  // Auth0 not configured — fall back to homepage.
   res.redirect("/");
 });
 

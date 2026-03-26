@@ -50,4 +50,28 @@ router.put('/profile', authenticateJWT, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/auth/oidc-status
+ * Check whether the current request has an active Auth0 (OIDC) session.
+ * Used by the frontend purchase flow to decide whether to redirect to login.
+ *
+ * Returns:
+ *   { authenticated: true,  email: string, name: string } — if logged in
+ *   { authenticated: false }                               — if not logged in
+ */
+router.get('/oidc-status', (req, res) => {
+    // express-openid-connect attaches req.oidc when the auth() middleware is
+    // active.  If Auth0 is not configured (missing env vars) the middleware is
+    // absent and req.oidc is undefined — treat that as "not authenticated".
+    if (req.oidc && req.oidc.isAuthenticated()) {
+        const user = req.oidc.user || {};
+        return res.json({
+            authenticated: true,
+            email: user.email || null,
+            name:  user.name  || null,
+        });
+    }
+    return res.json({ authenticated: false });
+});
+
 module.exports = router;

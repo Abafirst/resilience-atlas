@@ -413,10 +413,46 @@
 
     /**
      * Start a Stripe Checkout session for the given tier.
-     * Prompts for email if not already stored.
+     *
+     * Flow:
+     *  1. If AUTH0_DOMAIN is configured (server reports it via /config) and the
+     *     user is not yet authenticated, redirect to Auth0 login first.  The
+     *     return URL includes `?checkout=<tier>` so that after login the checkout
+     *     is auto-started on this page.
+     *  2. Otherwise, prompt for email (if not already stored) and initiate a
+     *     Stripe Checkout session.
+     *
      * @param {'atlas-navigator'|'atlas-premium'|'business'} tier
      */
     async function startCheckout(tier) {
+        // ── Step 1: Auth0 login gate ──────────────────────────────────────────
+        // Fetch the server config once per page load to learn whether Auth0 is
+        // configured.  Cache the result in a module-level variable.
+        try {
+            if (_auth0Config === undefined) {
+                const cfgRes = await fetch('/config');
+                _auth0Config = cfgRes.ok ? await cfgRes.json() : null;
+            }
+        } catch (_e) {
+            _auth0Config = null;
+        }
+
+        if (_auth0Config && _auth0Config.auth0Domain) {
+            // Ask the backend whether the user has an active Auth0 session.
+            const isAuthed = await _checkAuth0Session();
+            if (!isAuthed) {
+                // Not logged in — redirect to Auth0.  After login, Auth0 will
+                // redirect back to this page via the configured callback.  We
+                // pass `returnTo` so the user lands back here with the
+                // checkout intent intact.
+                var returnTo = window.location.pathname +
+                    '?checkout=' + encodeURIComponent(tier);
+                window.location.href = '/login?returnTo=' + encodeURIComponent(returnTo);
+                return;
+            }
+        }
+
+        // ── Step 2: Collect email & start Stripe Checkout ────────────────────
         var email = localStorage.getItem(EMAIL_KEY) ||
             (window.resilience_results && window.resilience_results.email) ||
             '';
@@ -454,11 +490,44 @@
         }
     }
 
+    /**
+     * Check whether the current user has an active Auth0 session.
+     * Uses the backend's /api/auth/oidc-status endpoint (added for this flow).
+     * Returns a Promise<boolean>.
+     */
+    async function _checkAuth0Session() {
+        try {
+            var r = await fetch('/api/auth/oidc-status', { credentials: 'include' });
+            if (!r.ok) return false;
+            var d = await r.json();
+            return Boolean(d && d.authenticated);
+        } catch (_e) {
+            return false;
+        }
+    }
+
+    /** Cached /config response (undefined = not yet fetched, null = fetch failed). */
+    var _auth0Config;
+
     // -- Auto-init -------------------------------------------------------------
 
     document.addEventListener('DOMContentLoaded', function () {
         handleUpgradeSuccess().then(function () {
             applyGating();
+            // Auto-start checkout if the user was redirected back here after
+            // Auth0 login with a ?checkout=<tier> query parameter.
+            var params = new URLSearchParams(window.location.search);
+            var checkoutTier = params.get('checkout');
+            if (checkoutTier) {
+                // Remove the param from the URL to avoid re-triggering on refresh.
+                var cleanUrl = window.location.pathname;
+                window.history.replaceState({}, '', cleanUrl);
+                // Allow the page to finish rendering before the checkout redirect.
+                var PAGE_RENDER_DELAY_MS = 500;
+                setTimeout(function () {
+                    startCheckout(checkoutTier);
+                }, PAGE_RENDER_DELAY_MS);
+            }
         });
     });
 
