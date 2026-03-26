@@ -46,7 +46,7 @@ Each dimension was identified and validated through the original dissertation re
 ## ✨ Features
 
 ### Core Assessment
-- 🧠 **36-question Resilience Assessment** — six-category scoring algorithm
+- 🧠 **72-question Resilience Assessment** — six-category scoring algorithm
 - 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Existential, Somatic-Regulative
 - 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
 
@@ -123,7 +123,7 @@ Each dimension was identified and validated through the original dissertation re
 ## ✨ Platform Features
 
 ### Core Assessment
-- 🧠 **36-question Resilience Assessment** — six-category scoring algorithm grounded in doctoral research
+- 🧠 **72-question Resilience Assessment** — six-category scoring algorithm grounded in doctoral research
 - 📊 **Six Resilience Dimensions:** Cognitive-Narrative, Relational, Agentic-Generative, Emotional-Adaptive, Spiritual-Reflective, Somatic-Regulative
 - 🎯 **Instant Results** — Fast quiz submission with immediate score feedback
 
