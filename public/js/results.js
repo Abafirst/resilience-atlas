@@ -555,7 +555,7 @@ async function checkPriorReportAccess(email) {
           const purchase = data.purchases[idx];
           if (!purchase || !purchase.assessmentData) return;
           btn.disabled = true;
-          btn.textContent = 'Generating\u2026';
+          btn.innerHTML = '<span aria-hidden="true">&#8681;</span> Generating\u2026';
           downloadPdfForAssessment(purchase.assessmentData, downloadEmail)
             .then(function () {
               btn.disabled = false;

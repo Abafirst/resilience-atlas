@@ -247,7 +247,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
 
         // If the user is on the results page and passes assessment data, store it
         // so we can regenerate the exact PDF for this purchase later.
-        if (overall !== undefined && dominantType !== undefined && scores !== undefined) {
+        if (overall !== undefined && dominantType !== undefined && scores !== undefined && scores !== null) {
             let parsedScores = scores;
             if (typeof scores === 'string') {
                 try { parsedScores = JSON.parse(scores); } catch (_) { parsedScores = null; }
