@@ -610,3 +610,53 @@
   font-weight: 700;
   font-size: 0.8rem;
 }
+
+/* ── Prior Report Downloads Section ─────────────────────────── */
+/* Shown when the user has a prior paid purchase in the database. */
+.prior-reports-section {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prior-reports-section h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #15803d;
+  margin: 0 0 0.5rem;
+}
+
+.prior-reports-desc {
+  font-size: 0.88rem;
+  color: #166534;
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.prior-reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.prior-report-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #dcfce7;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.prior-report-tier {
+  font-weight: 600;
+  color: #15803d;
+}
+
+.prior-report-date {
+  color: #6b7280;
+}

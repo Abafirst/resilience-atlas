@@ -410,8 +410,86 @@ function initReminderOptIn(email, firstName, overallScore) {
 function _applyInsightProgressVisibility() {
   const el = document.querySelector('.insight-progress');
   if (!el) return;
-  const isPaid = window.PaymentGating && window.PaymentGating.isDeepReport();
+  // Hide the teaser for anyone who has paid — either via current tier in
+  // localStorage or via a prior purchase confirmed by the backend.
+  const isPaid = (window.PaymentGating && window.PaymentGating.isDeepReport()) ||
+                 Boolean(window._hasPriorPdfAccess);
   el.hidden = isPaid;
+}
+
+// ── Prior-purchase section renderer ─────────────────────────
+// Renders a compact card listing the user's prior purchases so they know
+// their PDF download access is always active regardless of current tier.
+function renderPriorReportsSection(purchases) {
+  var TIER_LABELS = {
+    'atlas-navigator': 'Atlas Navigator',
+    'atlas-premium':   'Atlas Premium (Lifetime)',
+    'starter':         'Atlas Team Starter',
+    'pro':             'Atlas Team Pro',
+    'enterprise':      'Atlas Team Enterprise',
+  };
+  var rowsHtml = purchases.map(function (p) {
+    var tierLabel = TIER_LABELS[p.tier] || p.tier;
+    var date = p.purchasedAt ? new Date(p.purchasedAt).toLocaleDateString() : 'N/A';
+    return '<div class="prior-report-row">' +
+      '<span class="prior-report-tier">' + escapeHtml(tierLabel) + '</span>' +
+      '<span class="prior-report-date">Purchased ' + escapeHtml(date) + '</span>' +
+      '</div>';
+  }).join('');
+
+  return '<section class="prior-reports-section" aria-labelledby="priorReportsHeading">' +
+    '<h3 id="priorReportsHeading">&#128190; Prior Report Purchases</h3>' +
+    '<p class="prior-reports-desc">Your purchased PDF report is always available — ' +
+      'use the <strong>Download PDF</strong> button to regenerate it at any time.</p>' +
+    '<div class="prior-reports-list">' + rowsHtml + '</div>' +
+    '</section>';
+}
+
+/**
+ * Async: query /api/report/access to check whether this email has a prior
+ * completed PDF purchase.  If it does, unlock the download button regardless
+ * of the current localStorage tier (which may be stale or missing).
+ * This ensures users always retain access to content they have paid for.
+ */
+async function checkPriorReportAccess(email) {
+  if (!email) return;
+  try {
+    const url = new URL('/api/report/access', window.location.origin);
+    url.searchParams.set('email', email);
+    const res = await fetch(url.toString());
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.hasAccess) return;
+
+    // Flag that a prior purchase was verified so the download handler can
+    // bypass the tier-gating check on the frontend.
+    window._hasPriorPdfAccess = true;
+
+    // Unlock the download button if it was showing the locked state.
+    const dlBtn = document.getElementById('btnDownload');
+    if (dlBtn && dlBtn.classList.contains('btn-locked')) {
+      dlBtn.classList.remove('btn-locked');
+      dlBtn.removeAttribute('aria-label');
+      dlBtn.innerHTML =
+        '<span aria-hidden="true">&#8681;</span> ' +
+        '<span class="btn-label">Download PDF</span>';
+    }
+
+    // Hide the "upgrade to unlock" upsell elements — user already paid.
+    const upgradeContainerEl = document.getElementById('upgradeCardsContainer');
+    if (upgradeContainerEl) upgradeContainerEl.innerHTML = '';
+    _applyInsightProgressVisibility();
+
+    // Render the prior purchases card so the user knows their access history.
+    const priorSection = document.getElementById('priorReportsSection');
+    if (priorSection && data.purchases && data.purchases.length > 0) {
+      priorSection.innerHTML = renderPriorReportsSection(data.purchases);
+      priorSection.hidden = false;
+    }
+  } catch (err) {
+    // Non-fatal: fall back to tier-based gating if the check fails.
+    console.warn('[results] Prior access check failed:', err.message);
+  }
 }
 
 // ── Page initialisation ────────────────────────────────
@@ -572,6 +650,15 @@ document.addEventListener('DOMContentLoaded', () => {
       '<span class="btn-label">Unlock PDF Download</span>';
   }
 
+  // ── Async: check backend purchase history for prior access ─────
+  // A user who paid before may have a stale/cleared localStorage tier.
+  // Query the backend with their email to see if a prior purchase exists;
+  // if so, unlock the download button without requiring re-purchase.
+  const checkEmail = (results.email || localStorage.getItem('resilience_email') || '').trim();
+  if (checkEmail) {
+    checkPriorReportAccess(checkEmail);
+  }
+
   // ── Fire assessmentComplete event for upsell-system.js ─
   // This triggers the post-assessment upsell modal for free users (with
   // a 24-hour cooldown so it does not annoy users who already dismissed it).
@@ -632,7 +719,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (downloadButton) {
     downloadButton.addEventListener('click', () => {
       try {
-        if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
+        // Allow download if the user has an active paid tier OR if a prior
+        // purchase was confirmed by the backend (window._hasPriorPdfAccess).
+        if (window.PaymentGating && !window.PaymentGating.isDeepReport() && !window._hasPriorPdfAccess) {
           // Direct free users to the upgrade/purchase flow instead of just an alert.
           // Scroll to upgrade cards and show a clear call-to-action.
           const upgradeEl = document.getElementById('upgradeCardsContainer');
@@ -740,7 +829,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       // Gate: a Deep Report purchase is required to email the PDF.
-      if (window.PaymentGating && !window.PaymentGating.isDeepReport()) {
+      // Allow if the user has an active tier OR a prior purchase confirmed by the backend.
+      if (window.PaymentGating && !window.PaymentGating.isDeepReport() && !window._hasPriorPdfAccess) {
         showAlert('emailAlert', 'Sending your full PDF report requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
         const upgradeEl = document.getElementById('upgradeCardsContainer');
         upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
