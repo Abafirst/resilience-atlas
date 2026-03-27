@@ -7,7 +7,7 @@ import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 export default function App() {
-  const { isLoading, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
+  const { isLoading, isAuthenticated, user, getAccessTokenSilently, logout } = useAuth0();
   // Default to 'home' so authenticated users see the assessment hub first.
   // The payment page is only shown when the user explicitly requests the
   // full premium report — never as an automatic gate on login.
@@ -73,6 +73,7 @@ export default function App() {
   // Default: assessment hub — free quiz access + premium upgrade option.
   return (
     <AssessmentHub
+      userEmail={user?.email}
       onUpgrade={() => setPage('payment')}
       onLogout={handleLogout}
     />
