@@ -43,9 +43,10 @@ const TEAMS_TIERS = new Set(['starter', 'pro', 'enterprise']);
 
 /**
  * Extract the userId from a Bearer JWT in the Authorization header.
- * Returns null if no token is present or the token is invalid.
+ * Returns null if no token is present, the token is invalid, or JWT_SECRET is not configured.
  */
 function extractUserIdFromToken(req) {
+    if (!process.env.JWT_SECRET) return null;
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
     const token = authHeader.slice(7);

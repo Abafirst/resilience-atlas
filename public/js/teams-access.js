@@ -25,6 +25,9 @@
     var VERIFY_ENDPOINT    = '/api/teams/access';
     var DOWNLOAD_ENDPOINT  = '/api/teams/download';
 
+    /** Shared gate message shown on all teams-gated pages. */
+    var TEAMS_GATE_MSG = 'This resource is part of Teams Starter/Pro. Please purchase to unlock.';
+
     /** Tiers that grant Teams resource access. */
     function isTeamsTier(tier) {
         return tier === 'starter' || tier === 'pro' || tier === 'enterprise';
@@ -249,7 +252,7 @@
             '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
             '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Teams Access Required</h2>' +
             '<p style="color:#475569;margin:0 0 .75rem;max-width:480px;margin-left:auto;margin-right:auto">' +
-                'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+                TEAMS_GATE_MSG +
             '</p>' +
             '<p style="color:#475569;margin:0 0 1.25rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.9rem">' +
                 'Purchase any Teams package to unlock all 31 resources instantly.' +
@@ -325,7 +328,7 @@
             '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
             '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Teams Access Required</h2>' +
             '<p style="color:#475569;margin:0 0 .75rem;max-width:540px;margin-left:auto;margin-right:auto">' +
-                'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+                TEAMS_GATE_MSG +
             '</p>' +
             '<p style="color:#475569;margin:0 0 1.25rem;max-width:540px;margin-left:auto;margin-right:auto;font-size:.9rem">' +
                 'The complete facilitation guide — including all scripts, interventions, and best practices — ' +
@@ -397,7 +400,7 @@
                 '<div style="font-size:2rem;margin-bottom:.5rem">🔒</div>' +
                 '<h2 style="color:#1e40af;margin:0 0 .4rem;font-size:1.1rem">Teams Access Required</h2>' +
                 '<p style="color:#475569;margin:0 0 .5rem;font-size:.9rem">' +
-                    'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+                    TEAMS_GATE_MSG +
                 '</p>' +
                 '<p style="color:#475569;margin:0 0 1rem;font-size:.9rem">Step-by-step instructions, facilitation tips, and reflection prompts are available to Teams package holders.</p>' +
                 '<a href="/team.html#pricing" style="display:inline-block;background:#4F46E5;color:#fff;' +
@@ -434,7 +437,9 @@
      */
     function showLoginGate() {
         var page = window.location.pathname;
-        var returnTo = encodeURIComponent(page + window.location.search);
+        // Restrict returnTo to a same-origin path only (no protocol/host) to prevent open redirects
+        var safePath = page.replace(/[^a-zA-Z0-9/_\-.~%]/g, '') || '/';
+        var returnTo = encodeURIComponent(safePath);
 
         var gateEl = document.createElement('div');
         gateEl.id = 'teams-login-gate';
@@ -447,7 +452,7 @@
             '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
             '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Sign In Required</h2>' +
             '<p style="color:#475569;margin:0 0 1.25rem;max-width:500px;margin-left:auto;margin-right:auto">' +
-                'This resource is part of Teams Starter/Pro. Please sign in or purchase a Teams package to access this content.' +
+                TEAMS_GATE_MSG + ' Please sign in or purchase a Teams package to access this content.' +
             '</p>' +
             '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
                 '<a href="/login?returnTo=' + returnTo + '" style="background:#4F46E5;color:#fff;border-radius:8px;' +
