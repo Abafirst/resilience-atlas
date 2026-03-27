@@ -418,8 +418,9 @@ function _applyInsightProgressVisibility() {
 }
 
 // ── Prior-purchase section renderer ─────────────────────────
-// Renders a compact card listing the user's prior purchases so they know
-// their PDF download access is always active regardless of current tier.
+// Renders a compact card listing the user's prior purchases.
+// Each row with stored assessmentData gets its own "Download PDF" button
+// so the user can regenerate the exact report for that specific attempt.
 function renderPriorReportsSection(purchases) {
   var TIER_LABELS = {
     'atlas-navigator': 'Atlas Navigator',
@@ -428,21 +429,81 @@ function renderPriorReportsSection(purchases) {
     'pro':             'Atlas Team Pro',
     'enterprise':      'Atlas Team Enterprise',
   };
-  var rowsHtml = purchases.map(function (p) {
+  var rowsHtml = purchases.map(function (p, idx) {
     var tierLabel = TIER_LABELS[p.tier] || p.tier;
     var date = p.purchasedAt ? new Date(p.purchasedAt).toLocaleDateString() : 'N/A';
+    var hasData = p.assessmentData &&
+                  p.assessmentData.overall !== undefined &&
+                  p.assessmentData.dominantType &&
+                  p.assessmentData.scores;
+    var downloadBtn = hasData
+      ? '<button type="button" class="btn btn-primary btn-sm prior-report-dl-btn" ' +
+          'data-idx="' + idx + '" ' +
+          'aria-label="Download PDF for ' + escapeHtml(tierLabel) + ' purchased ' + escapeHtml(date) + '">' +
+          '<span aria-hidden="true">&#8681;</span> Download PDF' +
+        '</button>'
+      : '';
     return '<div class="prior-report-row">' +
-      '<span class="prior-report-tier">' + escapeHtml(tierLabel) + '</span>' +
-      '<span class="prior-report-date">Purchased ' + escapeHtml(date) + '</span>' +
+      '<div class="prior-report-info">' +
+        '<span class="prior-report-tier">' + escapeHtml(tierLabel) + '</span>' +
+        '<span class="prior-report-date">Purchased ' + escapeHtml(date) + '</span>' +
+      '</div>' +
+      (downloadBtn ? '<div class="prior-report-actions">' + downloadBtn + '</div>' : '') +
       '</div>';
   }).join('');
 
   return '<section class="prior-reports-section" aria-labelledby="priorReportsHeading">' +
     '<h3 id="priorReportsHeading">&#128190; Prior Report Purchases</h3>' +
-    '<p class="prior-reports-desc">Your purchased PDF report is always available — ' +
-      'use the <strong>Download PDF</strong> button to regenerate it at any time.</p>' +
+    '<p class="prior-reports-desc">Each purchased report is always available for download. ' +
+      'Use the <strong>Download PDF</strong> button next to a specific purchase to regenerate that exact report.</p>' +
     '<div class="prior-reports-list">' + rowsHtml + '</div>' +
     '</section>';
+}
+
+/**
+ * Trigger PDF generation and download for a specific set of assessment data.
+ * Used by the per-purchase Download PDF buttons in the prior reports section.
+ * @param {{ overall: number, dominantType: string, scores: Object }} assessmentData
+ * @param {string} email
+ */
+async function downloadPdfForAssessment(assessmentData, email) {
+  var REPORT_MAX_POLL_ATTEMPTS = 60;
+  var REPORT_POLL_INTERVAL_MS  = 2000;
+  var scoresStr = JSON.stringify(assessmentData.scores);
+  var params = {
+    overall:      assessmentData.overall,
+    dominantType: assessmentData.dominantType,
+    scores:       scoresStr,
+    email:        email,
+  };
+  if (window.PdfProgress) {
+    return window.PdfProgress.start(params);
+  }
+  // Inline fallback: generate → poll → download
+  var emailParam = email ? '&email=' + encodeURIComponent(email) : '';
+  var genRes = await fetch(
+    '/api/report/generate?overall=' + encodeURIComponent(params.overall) +
+    '&dominantType=' + encodeURIComponent(params.dominantType) +
+    '&scores=' + encodeURIComponent(scoresStr) +
+    emailParam
+  );
+  if (!genRes.ok) {
+    var body = await genRes.json().catch(function () { return {}; });
+    throw new Error(body.error || 'Failed to start report generation');
+  }
+  var genData = await genRes.json();
+  var hash = genData.hash;
+  for (var i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
+    await new Promise(function (r) { setTimeout(r, REPORT_POLL_INTERVAL_MS); });
+    var statusRes = await fetch('/api/report/status?hash=' + encodeURIComponent(hash));
+    var statusData = await statusRes.json();
+    if (statusData.status === 'ready') {
+      window.location.href = '/api/report/download?hash=' + encodeURIComponent(hash);
+      return;
+    }
+    if (statusData.status === 'failed') throw new Error(statusData.error || 'Report generation failed');
+  }
+  throw new Error('Report generation timed out. Please try again.');
 }
 
 /**
@@ -485,6 +546,28 @@ async function checkPriorReportAccess(email) {
     if (priorSection && data.purchases && data.purchases.length > 0) {
       priorSection.innerHTML = renderPriorReportsSection(data.purchases);
       priorSection.hidden = false;
+
+      // Wire up per-purchase Download PDF buttons.
+      const downloadEmail = email;
+      priorSection.querySelectorAll('.prior-report-dl-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const idx = parseInt(btn.getAttribute('data-idx'), 10);
+          const purchase = data.purchases[idx];
+          if (!purchase || !purchase.assessmentData) return;
+          btn.disabled = true;
+          btn.innerHTML = '<span aria-hidden="true">&#8681;</span> Generating\u2026';
+          downloadPdfForAssessment(purchase.assessmentData, downloadEmail)
+            .then(function () {
+              btn.disabled = false;
+              btn.innerHTML = '<span aria-hidden="true">&#8681;</span> Download PDF';
+            })
+            .catch(function (err) {
+              btn.disabled = false;
+              btn.innerHTML = '<span aria-hidden="true">&#8681;</span> Download PDF';
+              showAlert('pdfAlert', err.message || 'Download failed.', 'error', 'error');
+            });
+        });
+      });
     }
   } catch (err) {
     // Non-fatal: fall back to tier-based gating if the check fails.

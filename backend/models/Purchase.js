@@ -58,6 +58,17 @@ const purchaseSchema = new mongoose.Schema(
         purchasedAt: {
             type: Date,
         },
+
+        /**
+         * Assessment data captured at checkout time.
+         * Stored so the PDF for this specific attempt can be regenerated later
+         * without relying on the user's current localStorage state.
+         */
+        assessmentData: {
+            overall:      { type: Number },
+            dominantType: { type: String },
+            scores:       { type: mongoose.Schema.Types.Mixed },
+        },
     },
     { timestamps: true }
 );
