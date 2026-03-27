@@ -173,7 +173,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
     }
 
     try {
-        const { tier, email } = req.body;
+        const { tier, email, overall, dominantType, scores } = req.body;
 
         if (!TIERS[tier]) {
             return res
@@ -236,14 +236,32 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         });
 
         // Record pending purchase so the webhook can update it later.
-        await Purchase.create({
+        const purchaseDoc = {
             email: email.toLowerCase().trim(),
             stripeSessionId: session.id,
             tier,
             amount: tierConfig.amount,
             currency: tierConfig.currency,
             status: 'pending',
-        });
+        };
+
+        // If the user is on the results page and passes assessment data, store it
+        // so we can regenerate the exact PDF for this purchase later.
+        if (overall !== undefined && dominantType !== undefined && scores !== undefined) {
+            let parsedScores = scores;
+            if (typeof scores === 'string') {
+                try { parsedScores = JSON.parse(scores); } catch (_) { parsedScores = null; }
+            }
+            if (parsedScores && typeof parsedScores === 'object' && !Array.isArray(parsedScores)) {
+                purchaseDoc.assessmentData = {
+                    overall:      Number(overall),
+                    dominantType: String(dominantType),
+                    scores:       parsedScores,
+                };
+            }
+        }
+
+        await Purchase.create(purchaseDoc);
 
         res.json({ sessionId: session.id, url: session.url });
     } catch (err) {

@@ -467,10 +467,26 @@
         }
 
         try {
+            var assessmentPayload = {};
+            try {
+                var storedResults = localStorage.getItem('resilience_results');
+                if (storedResults) {
+                    var parsedResults = JSON.parse(storedResults);
+                    if (parsedResults && parsedResults.overall !== undefined && parsedResults.dominantType) {
+                        assessmentPayload = {
+                            overall:      parsedResults.overall,
+                            dominantType: parsedResults.dominantType,
+                            scores:       parsedResults.scores || null,
+                        };
+                    }
+                }
+            } catch (_parseErr) {
+                // Assessment data is optional — proceed without it if localStorage is unavailable.
+            }
             var res = await fetch('/api/payments/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tier: tier, email: email }),
+                body: JSON.stringify(Object.assign({ tier: tier, email: email }, assessmentPayload)),
             });
             var data = await res.json();
 

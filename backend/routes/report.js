@@ -461,7 +461,7 @@ router.get('/access', accessLimiter, async (req, res) => {
             tier: { $in: PREMIUM_TIERS },
             status: 'completed',
         })
-            .select('tier purchasedAt createdAt')
+            .select('tier purchasedAt createdAt assessmentData')
             .sort({ createdAt: -1 })
             .lean();
 
@@ -471,6 +471,7 @@ router.get('/access', accessLimiter, async (req, res) => {
                 purchases: purchases.map((p) => ({
                     tier: p.tier,
                     purchasedAt: p.purchasedAt || p.createdAt,
+                    assessmentData: p.assessmentData || null,
                 })),
             });
         }
@@ -491,6 +492,7 @@ router.get('/access', accessLimiter, async (req, res) => {
                 purchases: [{
                     tier: user.atlasPremium ? 'atlas-premium' : 'atlas-navigator',
                     purchasedAt: user.purchaseDate || null,
+                    assessmentData: null,
                 }],
             });
         }
