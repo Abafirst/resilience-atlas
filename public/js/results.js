@@ -436,9 +436,10 @@ function renderPriorReportsSection(purchases) {
                   p.assessmentData.overall !== undefined &&
                   p.assessmentData.dominantType &&
                   p.assessmentData.scores;
+    var purchaseId = p.purchaseId || String(idx);
     var downloadBtn = hasData
       ? '<button type="button" class="btn btn-primary btn-sm prior-report-dl-btn" ' +
-          'data-idx="' + idx + '" ' +
+          'data-purchase-id="' + escapeHtml(purchaseId) + '" ' +
           'aria-label="Download PDF for ' + escapeHtml(tierLabel) + ' purchased ' + escapeHtml(date) + '">' +
           '<span aria-hidden="true">&#8681;</span> Download PDF' +
         '</button>'
@@ -549,10 +550,16 @@ async function checkPriorReportAccess(email) {
 
       // Wire up per-purchase Download PDF buttons.
       const downloadEmail = email;
+      // Build a map from purchaseId → purchase object for O(1) lookup.
+      const purchaseMap = {};
+      data.purchases.forEach(function (p, i) {
+        var key = p.purchaseId || String(i);
+        purchaseMap[key] = p;
+      });
       priorSection.querySelectorAll('.prior-report-dl-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          const idx = parseInt(btn.getAttribute('data-idx'), 10);
-          const purchase = data.purchases[idx];
+          const purchaseId = btn.getAttribute('data-purchase-id');
+          const purchase = purchaseMap[purchaseId];
           if (!purchase || !purchase.assessmentData) return;
           btn.disabled = true;
           btn.innerHTML = '<span aria-hidden="true">&#8681;</span> Generating\u2026';

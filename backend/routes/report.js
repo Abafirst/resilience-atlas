@@ -461,7 +461,7 @@ router.get('/access', accessLimiter, async (req, res) => {
             tier: { $in: PREMIUM_TIERS },
             status: 'completed',
         })
-            .select('tier purchasedAt createdAt assessmentData')
+            .select('_id tier purchasedAt createdAt assessmentData')
             .sort({ createdAt: -1 })
             .lean();
 
@@ -469,6 +469,7 @@ router.get('/access', accessLimiter, async (req, res) => {
             return res.json({
                 hasAccess: true,
                 purchases: purchases.map((p) => ({
+                    purchaseId: String(p._id),
                     tier: p.tier,
                     purchasedAt: p.purchasedAt || p.createdAt,
                     assessmentData: p.assessmentData || null,

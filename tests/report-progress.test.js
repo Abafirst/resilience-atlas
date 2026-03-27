@@ -394,6 +394,100 @@ describe('GET /api/report/access', () => {
         expect(res.body.purchases[0].tier).toBe('atlas-navigator');
     });
 
+    test('includes assessmentData in each purchase entry when present', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const mockScores = { 'Agentic-Generative': 80, 'Emotional-Adaptive': 72 };
+        const mockPurchase = {
+            _id: '507f191e810c19729de860ea',
+            tier: 'atlas-navigator',
+            purchasedAt: new Date('2024-07-15'),
+            createdAt:   new Date('2024-07-15'),
+            assessmentData: {
+                overall:      78,
+                dominantType: 'Agentic-Generative',
+                scores:       mockScores,
+            },
+        };
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([mockPurchase]),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'withdata@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases).toHaveLength(1);
+        const p = res.body.purchases[0];
+        expect(p.purchaseId).toBe('507f191e810c19729de860ea');
+        expect(p.assessmentData).toBeTruthy();
+        expect(p.assessmentData.overall).toBe(78);
+        expect(p.assessmentData.dominantType).toBe('Agentic-Generative');
+        expect(p.assessmentData.scores).toEqual(mockScores);
+    });
+
+    test('returns assessmentData as null when not stored on a purchase', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const mockPurchase = {
+            _id: '507f191e810c19729de860eb',
+            tier: 'atlas-premium',
+            purchasedAt: new Date('2024-05-10'),
+            createdAt:   new Date('2024-05-10'),
+            assessmentData: null,
+        };
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([mockPurchase]),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'nodata@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases[0].purchaseId).toBe('507f191e810c19729de860eb');
+        expect(res.body.purchases[0].assessmentData).toBeNull();
+    });
+
+    test('returns multiple purchases sorted newest-first with per-purchase data', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const mockPurchases = [
+            {
+                _id: 'aaa111',
+                tier: 'atlas-premium',
+                purchasedAt: new Date('2025-01-20'),
+                createdAt:   new Date('2025-01-20'),
+                assessmentData: { overall: 85, dominantType: 'Relational-Connective', scores: {} },
+            },
+            {
+                _id: 'bbb222',
+                tier: 'atlas-navigator',
+                purchasedAt: new Date('2024-06-01'),
+                createdAt:   new Date('2024-06-01'),
+                assessmentData: { overall: 70, dominantType: 'Agentic-Generative', scores: {} },
+            },
+        ];
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue(mockPurchases),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'multi@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases).toHaveLength(2);
+        expect(res.body.purchases[0].purchaseId).toBe('aaa111');
+        expect(res.body.purchases[0].tier).toBe('atlas-premium');
+        expect(res.body.purchases[1].purchaseId).toBe('bbb222');
+        expect(res.body.purchases[1].tier).toBe('atlas-navigator');
+    });
+
     test('returns hasAccess=true via User fallback when purchasedDeepReport flag is set', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         Purchase.find = jest.fn().mockReturnValue({
