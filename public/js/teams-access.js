@@ -10,6 +10,12 @@
  *  - team.html:               shows post-purchase resource hub
  *
  * Depends on payment-gating.js being loaded first (for PaymentGating helpers).
+ *
+ * Security notes:
+ *  - Content is hidden by default; only revealed after backend confirms access.
+ *  - localStorage tier values are never trusted as access proof.
+ *  - If the backend check fails, access is denied (fail-safe).
+ *  - JWT Bearer token is forwarded for authenticated (org/team) users.
  */
 
 /* global PaymentGating */
@@ -31,16 +37,98 @@
         tier:      null,
     };
 
+    /* ── Loading overlay ────────────────────────────────────────────────────── */
+
+    /**
+     * Show a loading overlay on the main content area while access is verified.
+     * Content is hidden underneath to prevent premature disclosure.
+     */
+    function showLoadingOverlay() {
+        var page = window.location.pathname;
+        var contentSelector = null;
+
+        if (page.includes('teams-facilitation')) {
+            contentSelector = '.tf-content';
+        } else if (page.includes('teams-activities')) {
+            contentSelector = '.ta-main';
+        } else if (page.includes('teams-resources')) {
+            contentSelector = '.tr-main';
+        }
+
+        if (!contentSelector) return;
+
+        var container = document.querySelector(contentSelector);
+        if (!container) return;
+
+        // Hide the content container while loading
+        container.setAttribute('data-teams-loading', 'true');
+        container.style.cssText = 'position:relative;min-height:120px';
+
+        var overlay = document.createElement('div');
+        overlay.id = 'teams-loading-overlay';
+        overlay.setAttribute('aria-live', 'polite');
+        overlay.setAttribute('aria-busy', 'true');
+        overlay.style.cssText = [
+            'position:absolute', 'inset:0', 'background:rgba(255,255,255,.92)',
+            'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:center',
+            'gap:.75rem', 'z-index:100', 'border-radius:8px',
+        ].join(';');
+        overlay.innerHTML =
+            '<div style="width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:#4F46E5;' +
+                'border-radius:50%;animation:teams-spin 0.7s linear infinite" aria-hidden="true"></div>' +
+            '<p style="color:#475569;font-size:.9rem;margin:0">Verifying access…</p>';
+
+        // Inject spin keyframes once
+        if (!document.getElementById('teams-spin-style')) {
+            var style = document.createElement('style');
+            style.id = 'teams-spin-style';
+            style.textContent = '@keyframes teams-spin{to{transform:rotate(360deg)}}';
+            document.head.appendChild(style);
+        }
+
+        container.insertBefore(overlay, container.firstChild);
+    }
+
+    /** Remove the loading overlay once the access check completes. */
+    function removeLoadingOverlay() {
+        var overlay = document.getElementById('teams-loading-overlay');
+        if (overlay) overlay.remove();
+
+        var containers = document.querySelectorAll('[data-teams-loading]');
+        containers.forEach(function (el) {
+            el.removeAttribute('data-teams-loading');
+            el.style.cssText = '';
+        });
+    }
+
     /* ── Access verification ────────────────────────────────────────────────── */
 
     /**
+     * Return true if the user has any stored credentials that could prove purchase.
+     */
+    function hasStoredCredentials() {
+        var sessionId = window.PaymentGating
+            ? PaymentGating.getSessionId()
+            : (localStorage.getItem('resilience_session_id') || '');
+        var email = window.PaymentGating
+            ? PaymentGating.getEmail()
+            : (localStorage.getItem('resilience_email') || '');
+        var token = localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+        return !!(sessionId || email || token);
+    }
+
+    /**
      * Verify teams access with the backend.
-     * Tries session_id first, then email.
+     * Tries JWT Bearer token first, then session_id, then email.
      * Returns a promise that resolves to { valid, tier }.
+     *
+     * SECURITY: Never falls back to localStorage tier.
+     * If the backend check fails, access is denied (fail-safe default).
      */
     function verifyAccess() {
         var sessionId = '';
         var email     = '';
+        var token     = '';
 
         // Pull credentials from payment-gating.js if available
         if (window.PaymentGating) {
@@ -52,7 +140,10 @@
             email     = localStorage.getItem('resilience_email') || '';
         }
 
-        if (!sessionId && !email) {
+        // Include JWT token for authenticated (org/team) users
+        token = localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+
+        if (!sessionId && !email && !token) {
             return Promise.resolve({ valid: false, tier: null });
         }
 
@@ -60,19 +151,20 @@
         if (sessionId) params.set('session_id', sessionId);
         else if (email) params.set('email', email);
 
-        return fetch(VERIFY_ENDPOINT + '?' + params.toString())
+        var fetchOptions = { credentials: 'same-origin' };
+        if (token) {
+            fetchOptions.headers = { 'Authorization': 'Bearer ' + token };
+        }
+
+        return fetch(VERIFY_ENDPOINT + '?' + params.toString(), fetchOptions)
             .then(function (res) { return res.json(); })
             .then(function (data) {
                 return { valid: !!data.valid, tier: data.tier || null };
             })
             .catch(function (err) {
                 console.warn('[TeamsAccess] Backend check failed:', err);
-                // Graceful degradation: trust local tier as fallback
-                var localTier = window.PaymentGating
-                    ? PaymentGating.getTier()
-                    : (localStorage.getItem('resilience_tier') || 'free');
-                var teamsLocal = isTeamsTier(localTier);
-                return { valid: teamsLocal, tier: teamsLocal ? localTier : null };
+                // Fail-safe: deny access if backend is unreachable
+                return { valid: false, tier: null };
             });
     }
 
@@ -103,6 +195,10 @@
         // Remove "coming soon" banner
         var banner = document.querySelector('.tr-coming-soon-banner');
         if (banner) banner.remove();
+
+        // Remove access gate if present
+        var gate = document.getElementById('tr-teams-gate');
+        if (gate) gate.remove();
 
         // Show access badge
         var hero = document.querySelector('.tr-hero');
@@ -144,6 +240,7 @@
         var banner = document.querySelector('.tr-coming-soon-banner');
         var gateEl = document.createElement('div');
         gateEl.id = 'tr-teams-gate';
+        gateEl.setAttribute('role', 'alert');
         gateEl.style.cssText = [
             'background:#eff6ff', 'border:2px solid #3b82f6', 'border-radius:12px',
             'padding:2rem 1.5rem', 'margin:2rem 0', 'text-align:center',
@@ -151,8 +248,10 @@
         gateEl.innerHTML =
             '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
             '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Teams Access Required</h2>' +
-            '<p style="color:#475569;margin:0 0 1.25rem;max-width:480px;margin-left:auto;margin-right:auto">' +
-                'Download access is available exclusively to Teams package holders. ' +
+            '<p style="color:#475569;margin:0 0 .75rem;max-width:480px;margin-left:auto;margin-right:auto">' +
+                'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+            '</p>' +
+            '<p style="color:#475569;margin:0 0 1.25rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.9rem">' +
                 'Purchase any Teams package to unlock all 31 resources instantly.' +
             '</p>' +
             '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
@@ -191,6 +290,10 @@
         var gate = document.getElementById('tf-access-gate');
         if (gate) gate.remove();
 
+        // Reveal the content area (hidden by default until access confirmed)
+        var content = document.querySelector('.tf-content');
+        if (content) content.removeAttribute('hidden');
+
         // Show access indicator
         var hero = document.querySelector('.tf-hero');
         if (hero) {
@@ -207,22 +310,26 @@
     }
 
     function showFacilitationGate() {
+        // Keep .tf-content hidden — insert the gate outside/before it
+        var layout = document.querySelector('.tf-layout');
         var content = document.querySelector('.tf-content');
-        if (!content) return;
 
         var gate = document.createElement('div');
         gate.id = 'tf-access-gate';
+        gate.setAttribute('role', 'alert');
         gate.style.cssText = [
             'background:#eff6ff', 'border:2px solid #3b82f6', 'border-radius:12px',
-            'padding:2.5rem 2rem', 'margin:2rem 0', 'text-align:center',
+            'padding:2.5rem 2rem', 'margin:2rem 1.5rem', 'text-align:center',
         ].join(';');
         gate.innerHTML =
             '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
             '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Teams Access Required</h2>' +
-            '<p style="color:#475569;margin:0 0 1.25rem;max-width:540px;margin-left:auto;margin-right:auto">' +
-                'The complete facilitation guide — including all expandable sections, ' +
-                'scripts, interventions, and best practices — is available exclusively ' +
-                'to Teams package holders.' +
+            '<p style="color:#475569;margin:0 0 .75rem;max-width:540px;margin-left:auto;margin-right:auto">' +
+                'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+            '</p>' +
+            '<p style="color:#475569;margin:0 0 1.25rem;max-width:540px;margin-left:auto;margin-right:auto;font-size:.9rem">' +
+                'The complete facilitation guide — including all scripts, interventions, and best practices — ' +
+                'is available exclusively to Teams package holders.' +
             '</p>' +
             '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
                 '<a href="/team.html#pricing" style="background:#4F46E5;color:#fff;border-radius:8px;' +
@@ -231,27 +338,20 @@
                 '<a href="/team.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
                     'border-radius:8px;padding:.65rem 1.5rem;font-weight:600;text-decoration:none;font-size:.95rem">' +
                     'View Packages</a>' +
-            '</div>' +
-            '<p style="margin-top:1.25rem;font-size:.82rem;color:#64748b">Preview: Headers and section names are visible below. Full content unlocks after purchase.</p>';
+            '</div>';
 
-        content.insertBefore(gate, content.firstChild);
+        // Insert gate before the layout (content stays hidden)
+        if (layout) {
+            layout.parentNode.insertBefore(gate, layout);
+        } else if (content) {
+            content.parentNode.insertBefore(gate, content);
+        } else {
+            var main = document.getElementById('main-content');
+            if (main) main.insertBefore(gate, main.firstChild);
+        }
 
-        // Mark expandable bodies as gated (prevent them expanding to show content)
-        document.querySelectorAll('.tf-expandable__body').forEach(function (el) {
-            el.setAttribute('data-gated', 'true');
-            el.hidden = true;
-        });
-        document.querySelectorAll('.tf-expandable__trigger').forEach(function (btn) {
-            btn.addEventListener('click', function (e) {
-                var bodyId = btn.getAttribute('aria-controls');
-                var body   = bodyId ? document.getElementById(bodyId) : null;
-                if (body && body.getAttribute('data-gated')) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    window.location.href = '/team.html#pricing';
-                }
-            }, true);
-        });
+        // Ensure content remains hidden
+        if (content) content.setAttribute('hidden', '');
     }
 
     /* ── Activities page (teams-activities.html) ─────────────────────────────── */
@@ -282,22 +382,28 @@
         // Find the activity grid/list container
         var grid = document.getElementById('ta-activities-grid') ||
                    document.querySelector('.ta-grid, [id*="activities"]');
+        var main = document.querySelector('.ta-main');
+        var insertTarget = grid || main;
 
-        if (grid) {
+        if (insertTarget) {
             var gate = document.createElement('div');
             gate.id = 'ta-access-gate';
+            gate.setAttribute('role', 'alert');
             gate.style.cssText = [
                 'background:#eff6ff', 'border:2px solid #3b82f6', 'border-radius:12px',
                 'padding:2rem 1.5rem', 'margin:0 0 2rem', 'text-align:center',
             ].join(';');
             gate.innerHTML =
                 '<div style="font-size:2rem;margin-bottom:.5rem">🔒</div>' +
-                '<h2 style="color:#1e40af;margin:0 0 .4rem;font-size:1.1rem">Full Activity Guides — Teams Access Required</h2>' +
+                '<h2 style="color:#1e40af;margin:0 0 .4rem;font-size:1.1rem">Teams Access Required</h2>' +
+                '<p style="color:#475569;margin:0 0 .5rem;font-size:.9rem">' +
+                    'This resource is part of Teams Starter/Pro. Please purchase to unlock.' +
+                '</p>' +
                 '<p style="color:#475569;margin:0 0 1rem;font-size:.9rem">Step-by-step instructions, facilitation tips, and reflection prompts are available to Teams package holders.</p>' +
                 '<a href="/team.html#pricing" style="display:inline-block;background:#4F46E5;color:#fff;' +
                     'border-radius:8px;padding:.55rem 1.25rem;font-weight:700;text-decoration:none;font-size:.9rem">' +
                     '🚀 Unlock Full Guides</a>';
-            grid.insertBefore(gate, grid.firstChild);
+            insertTarget.insertBefore(gate, insertTarget.firstChild);
         }
 
         // Intercept "View Details" toggle clicks and redirect to purchase
@@ -318,6 +424,73 @@
                 }
             }
         }, true);
+    }
+
+    /* ── Login prompt gate (unauthenticated users) ───────────────────────────── */
+
+    /**
+     * Show a gate prompting the user to log in or purchase,
+     * used when no stored credentials exist at all.
+     */
+    function showLoginGate() {
+        var page = window.location.pathname;
+        var returnTo = encodeURIComponent(page + window.location.search);
+
+        var gateEl = document.createElement('div');
+        gateEl.id = 'teams-login-gate';
+        gateEl.setAttribute('role', 'alert');
+        gateEl.style.cssText = [
+            'background:#eff6ff', 'border:2px solid #3b82f6', 'border-radius:12px',
+            'padding:2.5rem 2rem', 'margin:2rem 1.5rem', 'text-align:center',
+        ].join(';');
+        gateEl.innerHTML =
+            '<div style="font-size:2.5rem;margin-bottom:.75rem">🔒</div>' +
+            '<h2 style="color:#1e40af;margin:0 0 .5rem;font-size:1.25rem">Sign In Required</h2>' +
+            '<p style="color:#475569;margin:0 0 1.25rem;max-width:500px;margin-left:auto;margin-right:auto">' +
+                'This resource is part of Teams Starter/Pro. Please sign in or purchase a Teams package to access this content.' +
+            '</p>' +
+            '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
+                '<a href="/login?returnTo=' + returnTo + '" style="background:#4F46E5;color:#fff;border-radius:8px;' +
+                    'padding:.65rem 1.5rem;font-weight:700;text-decoration:none;font-size:.95rem">' +
+                    '👤 Sign In</a>' +
+                '<a href="/team.html#pricing" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
+                    'border-radius:8px;padding:.65rem 1.5rem;font-weight:600;text-decoration:none;font-size:.95rem">' +
+                    '🚀 View Teams Packages</a>' +
+            '</div>';
+
+        // Apply the appropriate gate based on page
+        if (page.includes('teams-facilitation')) {
+            var layout = document.querySelector('.tf-layout');
+            var content = document.querySelector('.tf-content');
+            if (content) content.setAttribute('hidden', '');
+            if (layout) layout.parentNode.insertBefore(gateEl, layout);
+            else if (content) content.parentNode.insertBefore(gateEl, content);
+        } else if (page.includes('teams-activities')) {
+            var main = document.querySelector('.ta-main');
+            if (main) main.insertBefore(gateEl, main.firstChild);
+            // Intercept toggle clicks
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.ta-card__toggle')) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    window.location.href = '/login?returnTo=' + returnTo;
+                }
+            }, true);
+        } else if (page.includes('teams-resources')) {
+            var trMain = document.querySelector('.tr-main');
+            var banner = document.querySelector('.tr-coming-soon-banner');
+            if (banner) banner.replaceWith(gateEl);
+            else if (trMain) trMain.insertBefore(gateEl, trMain.firstChild);
+            document.querySelectorAll('.tr-card__download-btn').forEach(function (btn) {
+                btn.classList.add('tr-card__download-btn--soon');
+                btn.href = '#';
+                btn.setAttribute('aria-disabled', 'true');
+                btn.onclick = function (e) {
+                    e.preventDefault();
+                    window.location.href = '/login?returnTo=' + returnTo;
+                };
+            });
+        }
     }
 
     /* ── Teams home page (team.html) ─────────────────────────────────────────── */
@@ -367,27 +540,30 @@
     }
 
     function init() {
-        // Quick optimistic check via local tier (avoids flash of gated state for valid users)
-        var localTier = window.PaymentGating
-            ? PaymentGating.getTier()
-            : (localStorage.getItem('resilience_tier') || 'free');
-        var localAccess = isTeamsTier(localTier);
+        // Show loading overlay while verifying with the backend
+        showLoadingOverlay();
 
-        if (localAccess) {
-            // Optimistically unlock immediately, then verify in background
-            applyAccessState(true);
-        }
+        // For facilitation page, hide the content area immediately
+        // (it also has the `hidden` attribute set in HTML, but this handles
+        // dynamic navigation and ensures content stays hidden during the check)
+        var facilitationContent = document.querySelector('.tf-content');
+        if (facilitationContent) facilitationContent.setAttribute('hidden', '');
 
-        // Always verify with the backend for security
+        // Verify access with the backend — no optimistic unlock, no localStorage trust
         verifyAccess().then(function (result) {
+            removeLoadingOverlay();
             accessState.tier = result.tier;
-            if (result.valid !== localAccess) {
-                // Server result differs — apply authoritative result
+            accessState.checked = true;
+
+            if (!hasStoredCredentials()) {
+                // No credentials at all — show login/purchase prompt
+                showLoginGate();
+            } else {
                 applyAccessState(result.valid);
                 if (result.valid && window.PaymentGating) {
                     PaymentGating.setTier(result.tier);
-                } else if (!result.valid && localAccess) {
-                    // Local said yes, server said no → reset tier
+                } else if (!result.valid) {
+                    // Server confirmed no access — reset local tier
                     if (window.PaymentGating) {
                         PaymentGating.setTier('free');
                     } else {

@@ -6,12 +6,13 @@
  * All routes under /api/teams
  *
  * Endpoints:
- *   GET /api/teams/access          — verify teams purchase (session_id or email)
- *   GET /api/teams/download/:id    — download a resource PDF (requires session_id)
+ *   GET /api/teams/access          — verify teams purchase (session_id, email, or Bearer JWT)
+ *   GET /api/teams/download/:id    — download a resource PDF (requires session_id, email, or Bearer JWT)
  */
 
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const stripe = require('../config/stripe');
@@ -41,14 +42,50 @@ const downloadLimiter = rateLimit({
 const TEAMS_TIERS = new Set(['starter', 'pro', 'enterprise']);
 
 /**
- * Verify whether a given session_id or email corresponds to a completed
- * teams-tier purchase.  Returns { valid: boolean, tier: string|null }.
+ * Extract the userId from a Bearer JWT in the Authorization header.
+ * Returns null if no token is present or the token is invalid.
  */
-async function verifyTeamsAccess(sessionId, email) {
+function extractUserIdFromToken(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+    const token = authHeader.slice(7);
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return decoded.userId || decoded.id || null;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Verify whether a given session_id, email, or authenticated userId corresponds
+ * to a completed teams-tier purchase.
+ * Returns { valid: boolean, tier: string|null }.
+ *
+ * @param {string|null} sessionId  Stripe checkout session ID
+ * @param {string|null} email      Purchaser email
+ * @param {string|null} userId     Authenticated user's MongoDB ObjectId (from JWT)
+ */
+async function verifyTeamsAccess(sessionId, email, userId = null) {
     // Normalise email once up front so all DB queries use the same value.
     const emailNorm = email ? email.toLowerCase().trim() : null;
 
-    // Primary: verify via Stripe session ID
+    // Primary: verify via authenticated userId (most secure)
+    if (userId) {
+        const purchase = await Purchase.findOne({
+            userId,
+            status: 'completed',
+            tier: { $in: Array.from(TEAMS_TIERS) },
+        })
+            .sort({ purchasedAt: -1 })
+            .lean();
+
+        if (purchase) {
+            return { valid: true, tier: purchase.tier };
+        }
+    }
+
+    // Secondary: verify via Stripe session ID
     if (sessionId) {
         // First check our database
         const purchase = await Purchase.findOne({
@@ -96,17 +133,19 @@ async function verifyTeamsAccess(sessionId, email) {
 // GET /api/teams/access
 // Check whether the requester holds a valid Teams-tier purchase.
 // Query: ?session_id=<cs_xxx>  OR  ?email=<email>
+// OR: Authorization: Bearer <jwt>  (for authenticated org/team users)
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/access', teamsLimiter, async (req, res) => {
     try {
         const sessionId = (req.query.session_id || '').trim();
         const email     = (req.query.email     || '').trim();
+        const userId    = extractUserIdFromToken(req);
 
-        if (!sessionId && !email) {
-            return res.status(400).json({ error: 'session_id or email is required.' });
+        if (!sessionId && !email && !userId) {
+            return res.status(400).json({ error: 'session_id, email, or authenticated session is required.' });
         }
 
-        const result = await verifyTeamsAccess(sessionId || null, email || null);
+        const result = await verifyTeamsAccess(sessionId || null, email || null, userId);
         return res.json(result);
     } catch (err) {
         logger.error('[teams/access] Error:', err);
@@ -117,13 +156,15 @@ router.get('/access', teamsLimiter, async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /api/teams/download/:resourceId
 // Stream a PDF resource.  Requires proof of teams purchase.
-// Query: ?session_id=<cs_xxx>  (required)  or  ?email=<email>  (fallback)
+// Query: ?session_id=<cs_xxx>  or  ?email=<email>
+// OR: Authorization: Bearer <jwt>  (for authenticated users)
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/download/:resourceId', downloadLimiter, async (req, res) => {
     try {
         const { resourceId } = req.params;
         const sessionId = (req.query.session_id || '').trim();
         const email     = (req.query.email     || '').trim();
+        const userId    = extractUserIdFromToken(req);
 
         // Validate resource ID
         if (!ALL_RESOURCE_IDS.includes(resourceId)) {
@@ -131,13 +172,13 @@ router.get('/download/:resourceId', downloadLimiter, async (req, res) => {
         }
 
         // Verify access
-        if (!sessionId && !email) {
+        if (!sessionId && !email && !userId) {
             return res.status(401).json({
-                error: 'Purchase verification required. Please include session_id or email.',
+                error: 'Purchase verification required. Please include session_id, email, or log in.',
             });
         }
 
-        const { valid, tier } = await verifyTeamsAccess(sessionId || null, email || null);
+        const { valid, tier } = await verifyTeamsAccess(sessionId || null, email || null, userId);
         if (!valid) {
             return res.status(403).json({
                 error: 'Access denied. A valid Teams purchase is required to download this resource.',
