@@ -18,6 +18,18 @@ const reportLimiter = rateLimit({
     message: { error: 'Too many requests. Please try again in a moment.' },
 });
 
+/**
+ * Rate limiter for lightweight read-only endpoints (e.g. /access check).
+ * More lenient than the PDF generation limiter.
+ */
+const accessLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
 // ── In-memory job store ───────────────────────────────────────────────────────
 // Stores generation jobs keyed by hash. Jobs expire after JOB_TTL_MS.
 // A Map is sufficient for single-process deployments; replace with Redis for
@@ -413,6 +425,83 @@ router.post('/email', async (req, res) => {
     } catch (err) {
         console.error('Report email send failed:', err.message, err.stack);
         return res.status(500).json({ error: 'Failed to send email. Please try again.' });
+    }
+});
+
+/**
+ * GET /api/report/access
+ * Check whether an email address has a completed PDF-report purchase.
+ *
+ * Returns { hasAccess: boolean, purchases: [{ tier, purchasedAt }] }
+ *
+ * No auth required — the email functions as the access token (consistent
+ * with /generate which also uses email for tier verification).
+ * Rate-limited to prevent enumeration abuse.
+ */
+router.get('/access', accessLimiter, async (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({ error: 'Missing email parameter', hasAccess: false });
+    }
+
+    // In dev/test environments (no Stripe key) grant access so that local
+    // development can exercise the download flow without needing real purchases.
+    if (!process.env.STRIPE_SECRET_KEY) {
+        return res.json({ hasAccess: true, purchases: [] });
+    }
+
+    try {
+        const cleanEmail = String(email).toLowerCase().trim();
+
+        // Find all completed purchases for this email that grant PDF access.
+        // PREMIUM_TIERS is imported from backend/config/tiers.js at the top of this file.
+        const purchases = await Purchase.find({
+            email: cleanEmail,
+            tier: { $in: PREMIUM_TIERS },
+            status: 'completed',
+        })
+            .select('tier purchasedAt createdAt')
+            .sort({ createdAt: -1 })
+            .lean();
+
+        if (purchases.length > 0) {
+            return res.json({
+                hasAccess: true,
+                purchases: purchases.map((p) => ({
+                    tier: p.tier,
+                    purchasedAt: p.purchasedAt || p.createdAt,
+                })),
+            });
+        }
+
+        // Fallback: check the User record's flags (covers admin grants / migrations).
+        let user = null;
+        try {
+            user = await User.findOne({ email: cleanEmail })
+                .select('purchasedDeepReport atlasPremium purchaseDate')
+                .lean();
+        } catch (userErr) {
+            console.warn('User access check skipped (DB unavailable):', userErr.message);
+        }
+
+        if (user && (user.purchasedDeepReport || user.atlasPremium)) {
+            return res.json({
+                hasAccess: true,
+                purchases: [{
+                    tier: user.atlasPremium ? 'atlas-premium' : 'atlas-navigator',
+                    purchasedAt: user.purchaseDate || null,
+                }],
+            });
+        }
+
+        return res.json({ hasAccess: false, purchases: [] });
+    } catch (dbErr) {
+        console.warn('Purchase access check failed (DB unavailable):', dbErr.message);
+        return res.status(503).json({
+            error: 'Unable to verify access at this time. Please try again shortly.',
+            hasAccess: false,
+        });
     }
 });
 

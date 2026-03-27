@@ -321,3 +321,125 @@ describe('buildJobHash', () => {
         expect(h).toMatch(/^[0-9a-f]{32}$/);
     });
 });
+
+// ── /api/report/access ────────────────────────────────────────────────────────
+
+describe('GET /api/report/access', () => {
+    const Purchase = require('../backend/models/Purchase');
+    const User     = require('../backend/models/User');
+
+    afterEach(() => {
+        delete process.env.STRIPE_SECRET_KEY;
+        jest.clearAllMocks();
+    });
+
+    test('returns 400 when email is missing', async () => {
+        const res = await request(app).get('/api/report/access');
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('error');
+        expect(res.body.hasAccess).toBe(false);
+    });
+
+    test('returns hasAccess=true with empty purchases in dev mode (no STRIPE_SECRET_KEY)', async () => {
+        delete process.env.STRIPE_SECRET_KEY;
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'user@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(Array.isArray(res.body.purchases)).toBe(true);
+    });
+
+    test('returns hasAccess=false when STRIPE_SECRET_KEY is set and no purchase exists', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        Purchase.findOne = jest.fn().mockResolvedValue(null);
+        // find() returns a chainable that resolves to []
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([]),
+        });
+        User.findOne = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue(null),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'nopurchase@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(false);
+        expect(res.body.purchases).toHaveLength(0);
+    });
+
+    test('returns hasAccess=true with purchases when a completed Purchase record exists', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const mockPurchase = {
+            tier: 'atlas-navigator',
+            purchasedAt: new Date('2024-06-01'),
+            createdAt:   new Date('2024-06-01'),
+        };
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([mockPurchase]),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'buyer@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases).toHaveLength(1);
+        expect(res.body.purchases[0].tier).toBe('atlas-navigator');
+    });
+
+    test('returns hasAccess=true via User fallback when purchasedDeepReport flag is set', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([]),
+        });
+        User.findOne = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue({
+                purchasedDeepReport: true,
+                atlasPremium: false,
+                purchaseDate: new Date('2024-05-01'),
+            }),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'legacy@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases).toHaveLength(1);
+        expect(res.body.purchases[0].tier).toBe('atlas-navigator');
+    });
+
+    test('returns hasAccess=true via User fallback when atlasPremium flag is set', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([]),
+        });
+        User.findOne = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue({
+                purchasedDeepReport: false,
+                atlasPremium: true,
+                purchaseDate: null,
+            }),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'premium@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.purchases[0].tier).toBe('atlas-premium');
+    });
+});
