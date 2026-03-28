@@ -230,9 +230,12 @@ describe('GET /quiz.html', () => {
 });
 
 describe('GET /results.html', () => {
-    test('serves the results page without requiring payment (HTTP 200)', async () => {
+    test('serves the React SPA for the results page (200 in prod, 503 without build)', async () => {
+        // /results.html is now served by the React SPA (client/dist/index.html).
+        // In production client/dist/index.html exists → 200.
+        // In CI/test environments without a frontend build → 503.
         const res = await request(app).get('/results.html');
-        expect(res.status).toBe(200);
+        expect([200, 503]).toContain(res.status);
         expect(res.type).toMatch(/html/);
     });
 });
