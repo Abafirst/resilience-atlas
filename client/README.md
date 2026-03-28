@@ -89,3 +89,19 @@ The app will be available at <http://localhost:5173>.
 | `VITE_AUTH0_CLIENT_ID` | **Yes** | Your Auth0 application Client ID |
 | `VITE_AUTH0_AUDIENCE` | No | API audience identifier (for access tokens) |
 | `VITE_AUTH0_REDIRECT_URI` | No | Callback URL after login (default: `window.location.origin`) |
+
+---
+
+## Changelog
+
+### Stripe dependency downgrade (temporary fix)
+
+**`@stripe/stripe-js` pinned to `2.0.0`; `@stripe/react-stripe-js` pinned to `1.8.0`.**
+
+A breaking error (`TypeError: Constructor ArrayBuffer requires 'new'`) was introduced in a recent Stripe CDN update to `m.stripe.network/out-4.5.45.js`. This error occurs during page load and causes the checkout/auth flows to fail with a redirect back to the landing page.
+
+The app uses only standard Stripe Elements APIs (`loadStripe`, `Elements`, `CardElement`, `useStripe`, `useElements`, `confirmCardPayment`) that are fully supported by these pinned versions. No application code changes are required.
+
+> **This is a temporary fix.** Revert to the latest `@stripe/stripe-js` and `@stripe/react-stripe-js` once Stripe resolves the upstream CDN `ArrayBuffer` bug.
+
+> **Note:** `npm install --legacy-peer-deps` is required when installing, because `@stripe/react-stripe-js@1.8.0` declares a peer dependency on `@stripe/stripe-js@^1.26.0`, but this version combination works correctly at runtime with all APIs used in this app.
