@@ -221,6 +221,17 @@ app.use(sanitiseInput);
 const clientDist = path.join(__dirname, "../client/dist");
 app.use(express.static(clientDist));
 
+// Serve brand assets (SVG icons, favicon, etc.) at /brand/*.
+// The public HTML pages reference /brand/symbol/web/favicon.svg and other
+// brand resources, so this directory must be exposed as a static route.
+app.use("/brand", express.static(path.join(__dirname, "../brand")));
+
+// Redirect the browser's automatic /favicon.ico request to the SVG favicon
+// so that the browser tab icon is shown and no 404 is logged.
+app.get("/favicon.ico", (req, res) => {
+  res.redirect(301, "/brand/symbol/web/favicon.svg");
+});
+
 // ==============================
 // MongoDB Connection
 // ==============================

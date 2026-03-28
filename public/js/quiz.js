@@ -436,7 +436,8 @@ function showStep(step) {
     if (infoStep) infoStep.classList.add('active');
     if (btnPrev) btnPrev.style.visibility = 'hidden';
     if (btnNext) { btnNext.style.display = 'inline-flex'; btnNext.querySelector('.btn-label').textContent = 'Start Quiz'; }
-    updateProgress(0, QUESTIONS.length);
+    if (progressFill) progressFill.style.width = '0%';
+    if (progressLabel) progressLabel.textContent = `${QUESTIONS.length} Questions`;
     return;
   }
 
