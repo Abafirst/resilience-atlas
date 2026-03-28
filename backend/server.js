@@ -2,7 +2,6 @@
 // Core dependencies
 // ==============================
 const express = require("express");
-const { auth, requiresAuth } = require('express-openid-connect');
 const http = require("http");
 const https = require("https");
 const mongoose = require("mongoose");
@@ -32,19 +31,42 @@ const sentry = require("./config/sentry");
 // ==============================
 const app = express();
 // app.use(express.static(path.join(__dirname, "../public"))); // Removed: prevents stale public files from shadowing the React build
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: 'a long, randomly-generated string stored in env', // use env in production!
-  baseURL: 'http://localhost:3000',
-  clientID: 'Egwj9LGtWJmL7bJDkuWvRgTYv9vbmb4f',
-  issuerBaseURL: 'https://dev-ammhzit80o0cjhx5.us.auth0.com'
-};
 
-app.use(auth(config));
-app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});
+// ==============================
+// express-openid-connect (server-side OIDC session)
+// ==============================
+// Only initialise the server-side OIDC middleware when the required
+// environment variables are present.  When the variables are absent the
+// middleware would fall back to hardcoded placeholder values, producing a
+// baseURL/clientID mismatch that can intercept or corrupt the SPA auth
+// callback and cause the React results page to hang on "Loading…".
+const oidcAuth0Domain   = process.env.AUTH0_DOMAIN;
+const oidcAuth0ClientId = process.env.AUTH0_CLIENT_ID;
+const oidcSecret        = process.env.AUTH0_SECRET;
+const oidcBaseURL       = process.env.BASE_URL || 'http://localhost:3000';
+
+let requiresAuth; // may remain undefined if OIDC middleware is not mounted
+
+if (oidcAuth0Domain && oidcAuth0ClientId && oidcSecret) {
+  const { auth: oidcAuth, requiresAuth: _requiresAuth } = require('express-openid-connect');
+  requiresAuth = _requiresAuth;
+  const oidcConfig = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: oidcSecret,
+    baseURL: oidcBaseURL,
+    clientID: oidcAuth0ClientId,
+    issuerBaseURL: `https://${oidcAuth0Domain}`,
+  };
+  app.use(oidcAuth(oidcConfig));
+} else {
+  logger.warn(
+    '⚠️  express-openid-connect NOT mounted — AUTH0_DOMAIN, AUTH0_CLIENT_ID, ' +
+    'or AUTH0_SECRET missing.  Set all three to enable server-side OIDC sessions.'
+  );
+}
+
+
 // ==============================
 // Request timeout — PDF generation can take up to 2 minutes.
 // ==============================
@@ -350,6 +372,17 @@ const pageLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: "Too many requests. Please try again later.",
+});
+
+// Debug /profile route — only useful when the OIDC middleware is active.
+// Rate-limited to prevent credential-enumeration / DoS abuse.
+app.get('/profile', pageLimiter, (req, res) => {
+  if (requiresAuth) {
+    return requiresAuth()(req, res, () => {
+      res.json(req.oidc.user);
+    });
+  }
+  res.status(501).json({ error: 'OIDC middleware not configured.' });
 });
 
 // ── Auth routes — redirect to Auth0 Universal Login ─────────
