@@ -413,13 +413,29 @@ app.get("/register", pageLimiter, (req, res) => {
 });
 
 // ==============================
+// Results route — serve React SPA
+// ==============================
+
+// /results and /results.html must always load the React SPA so the
+// ResultsHistory component can run.  This explicit route is placed before
+// the legacy public/ static middleware to prevent a stale public/results.html
+// (present on older deployments) from being served instead of the React app.
+app.get(["/results", "/results.html"], pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
+  });
+});
+
+// ==============================
 // Public static files
 // ==============================
 
-// Serve the legacy public/ directory (quiz.html, results.html, assessment pages,
-// etc.) AFTER the React SPA static assets so that client/dist files always take
+// Serve the legacy public/ directory (quiz.html, assessment pages, etc.)
+// AFTER the React SPA static assets so that client/dist files always take
 // priority for the root route, while standalone HTML pages remain directly
-// accessible via their own URLs (e.g. /quiz.html, /results.html).
+// accessible via their own URLs (e.g. /quiz.html).
 // This must come BEFORE the SPA catch-all so these pages are served correctly
 // instead of falling through to the React app.
 app.use(express.static(path.join(__dirname, "../public")));

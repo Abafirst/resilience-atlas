@@ -1,4 +1,5 @@
 import React from 'react';
+import ResultsHistory from '../components/ResultsHistory.jsx';
 
 /**
  * AssessmentHub — shown to authenticated users as the default landing page.
@@ -160,7 +161,7 @@ const styles = {
   },
 };
 
-export default function AssessmentHub({ onUpgrade, onLogout }) {
+export default function AssessmentHub({ userEmail, onUpgrade, onLogout }) {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -216,6 +217,8 @@ export default function AssessmentHub({ onUpgrade, onLogout }) {
             </button>
           </div>
         </div>
+
+        <ResultsHistory email={userEmail} />
       </div>
     </div>
   );
