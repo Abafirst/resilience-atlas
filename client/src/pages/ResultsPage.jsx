@@ -95,6 +95,92 @@ const DIMENSION_NEXT_STEPS = {
   ],
 };
 
+// ── Affirmations (condensed — 3 per dimension, from affirmations.js) ─────────
+const AFFIRMATIONS = {
+  'Cognitive-Narrative': [
+    'I can reinterpret setbacks in a way that helps me move forward.',
+    'When things go wrong, I try to find meaning in the experience.',
+    'I can step back and see challenges from a broader perspective.',
+  ],
+  'Relational-Connective': [
+    'I am worthy of support, and I am willing to ask for it.',
+    'My connections with others are a genuine source of strength.',
+    'I can be vulnerable with safe people and grow through it.',
+  ],
+  'Agentic-Generative': [
+    'I am capable of taking meaningful action, even in difficult circumstances.',
+    'Each step forward — no matter how small — is evidence of my resilience.',
+    'I create change by focusing on what I can control.',
+  ],
+  'Emotional-Adaptive': [
+    'My emotions are information, not obstacles.',
+    'I can feel difficult emotions and still move forward with purpose.',
+    'I am learning to respond to stress with awareness rather than reaction.',
+  ],
+  'Spiritual-Reflective': [
+    'My life has meaning and purpose, even in difficult moments.',
+    'I am grounded in my values, and they guide me through uncertainty.',
+    'I find strength in connecting to something larger than myself.',
+  ],
+  'Somatic-Regulative': [
+    'My body is a resource for resilience, and I am learning to listen to it.',
+    'I can return to calm through breath, movement, and rest.',
+    'My physical habits are the foundation of my emotional strength.',
+  ],
+};
+
+// ── Evidence-based practices (condensed — 2 per dimension, from evidence-based-practices.js) ──
+const EVIDENCE_PRACTICES = {
+  'Cognitive-Narrative': [
+    { emoji: '📓', title: 'Reframing Journal', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Write down one recent challenge.', 'Describe your first interpretation.', 'Now write an alternative story: What strengths did you use? What did you learn?', 'End with one sentence about how this contributes to your growth.'],
+      actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Differential Reinforcement of Adaptive Interpretations' },
+    { emoji: '🍃', title: 'Leaves on a Stream', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Sit comfortably and close your eyes.', 'Imagine a gently flowing stream with leaves drifting on the surface.', 'As thoughts arise, place each one on a leaf and watch it float away.', 'Notice that you are the observer of thoughts, not the thoughts themselves.'],
+      actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Attention Control' },
+  ],
+  'Relational-Connective': [
+    { emoji: '🤲', title: 'Empathic Listening', duration: '10 min', difficulty: 'beginner',
+      instructions: ['Choose a conversation today where you focus entirely on listening.', 'Resist the urge to offer advice or share your own experience.', 'Reflect back what you heard: "It sounds like you feel…"', 'Notice how the other person responds when they feel truly heard.'],
+      actPrinciple: 'Values Alignment', abaPrinciple: 'Behavioral Shaping' },
+    { emoji: '📆', title: 'Connection Scheduling', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Identify two people you care about but haven\'t connected with recently.', 'Schedule a specific time to reach out — call, message, or meet.', 'Commit to the connection in your calendar.', 'After connecting, notice any shift in your mood or sense of belonging.'],
+      actPrinciple: 'Committed Action', abaPrinciple: 'Behavior Shaping' },
+  ],
+  'Agentic-Generative': [
+    { emoji: '👟', title: 'One Small Step', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Think of a goal or aspiration you\'ve been putting off.', 'Identify the very smallest first step that would move you toward it.', 'Make it so small it feels almost too easy.', 'Do that one step right now or schedule it for today.'],
+      actPrinciple: 'Committed Action', abaPrinciple: 'Goal Shaping' },
+    { emoji: '🧭', title: 'Values Compass Check', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Write down three things you care most deeply about.', 'Look at how you spent your time and energy in the past 48 hours.', 'Rate each value: How much did your actions align with it? (1–10)', 'Name one specific action you can take tomorrow to move toward that alignment.'],
+      actPrinciple: 'Values Alignment', abaPrinciple: 'Goal Shaping' },
+  ],
+  'Emotional-Adaptive': [
+    { emoji: '🌊', title: 'Emotion Labeling', duration: '3 min', difficulty: 'beginner',
+      instructions: ['When you notice a strong emotion, pause.', 'Name it specifically — not just "bad" but "frustrated" or "anxious".', 'Say to yourself: "I notice I am feeling ___."', 'Observe how naming it changes your relationship to the feeling.'],
+      actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Functional Behavior Analysis' },
+    { emoji: '🌱', title: 'RAIN Practice', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Recognize: Name the emotion you\'re experiencing.', 'Allow: Let the feeling be present without pushing it away.', 'Investigate: With curiosity, notice where you feel it in your body.', 'Nurture: Offer yourself a kind word or gesture.'],
+      actPrinciple: 'Acceptance', abaPrinciple: 'Differential Reinforcement' },
+  ],
+  'Spiritual-Reflective': [
+    { emoji: '🙏', title: 'Values Reflection', duration: '5 min', difficulty: 'beginner',
+      instructions: ['Spend 5 minutes writing about what gives your life meaning.', 'How does a recent challenge relate to your values?', 'What does this experience reveal about what matters most to you?', 'Write one sentence connecting your challenge to your purpose.'],
+      actPrinciple: 'Values Clarification', abaPrinciple: 'Establishing Operations for Meaning-Seeking' },
+    { emoji: '📖', title: 'Gratitude Practice', duration: '3 min', difficulty: 'beginner',
+      instructions: ['Each evening, note 3 things you\'re grateful for.', 'Include at least one thing from a difficult moment.', 'For each, briefly write why it matters to you.', 'Notice any shift in your perspective after this practice.'],
+      actPrinciple: 'Values Alignment', abaPrinciple: 'Positive Reinforcement of Adaptive Cognition' },
+  ],
+  'Somatic-Regulative': [
+    { emoji: '🌬️', title: '4-7-8 Breathing', duration: '3 min', difficulty: 'beginner',
+      instructions: ['Sit comfortably with your back straight.', 'Inhale through your nose for 4 counts.', 'Hold your breath for 7 counts.', 'Exhale completely through your mouth for 8 counts.', 'Repeat 3–4 cycles.'],
+      actPrinciple: 'Present-Moment Awareness', abaPrinciple: 'Physiological Self-Regulation' },
+    { emoji: '🚶', title: 'Movement as Medicine', duration: '15 min', difficulty: 'beginner',
+      instructions: ['Schedule a 15-minute intentional walk today.', 'Leave your phone in your pocket and walk without a destination.', 'Notice physical sensations — your breath, the ground underfoot.', 'Observe how your mood shifts during and after the walk.'],
+      actPrinciple: 'Present-Moment Awareness', abaPrinciple: 'Behavioral Activation' },
+  ],
+};
+
 // ── Confetti animation (ported from legacy results.js) ──────────────────────
 function runConfetti(canvas) {
   if (!canvas) return;
@@ -151,6 +237,59 @@ function runConfetti(canvas) {
 
 // ── Styles ─────────────────────────────────────────────────────────────────
 const s = {
+  // ── Site Header ──
+  siteHeader: {
+    background: 'rgba(15,35,65,0.97)',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    backdropFilter: 'blur(10px)',
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+    padding: '0 24px',
+  },
+  headerInner: {
+    maxWidth: 1100,
+    margin: '0 auto',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 62,
+    gap: 16,
+  },
+  headerLogo: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    color: '#e8f0fe',
+    textDecoration: 'none',
+    fontWeight: 700,
+    fontSize: 15,
+    flexShrink: 0,
+  },
+  headerNav: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 20,
+    flexWrap: 'wrap',
+  },
+  navLink: {
+    color: '#a0aec0',
+    textDecoration: 'none',
+    fontSize: 13,
+    fontWeight: 500,
+  },
+  retakeBtn: {
+    padding: '7px 16px',
+    background: 'rgba(74,144,217,0.15)',
+    color: '#60a5fa',
+    border: '1px solid rgba(74,144,217,0.4)',
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    display: 'inline-block',
+  },
   page: {
     minHeight: '100vh',
     background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
@@ -564,6 +703,321 @@ const s = {
     lineHeight: 1.8,
     textAlign: 'center',
   },
+  // ── Free Brief Report ──
+  freeBriefReport: {
+    background: 'rgba(79,70,229,0.08)',
+    border: '1px solid rgba(79,70,229,0.25)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  fbrHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#c7d9f0' },
+  fbrHint: { fontSize: 12, color: '#718096', marginTop: 12, fontStyle: 'italic', lineHeight: 1.5 },
+  // ── Primary Resilience Mode ──
+  primaryTypeCard: {
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.12)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  primaryTypeHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 10 },
+  primaryTypeName: (color) => ({
+    fontSize: 22,
+    fontWeight: 800,
+    color: color || '#e8f0fe',
+    marginBottom: 10,
+  }),
+  primaryTypeDesc: { fontSize: 14, color: '#a0aec0', lineHeight: 1.7, margin: 0 },
+  // ── Insight Progress Indicator (free users) ──
+  insightProgress: {
+    background: 'rgba(79,70,229,0.06)',
+    border: '1px solid rgba(79,70,229,0.2)',
+    borderRadius: 12,
+    padding: '16px 24px',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  insightProgressLabel: { fontSize: 13, color: '#a0aec0', marginBottom: 8 },
+  insightProgressBarWrap: {
+    background: 'rgba(255,255,255,0.08)',
+    borderRadius: 999,
+    height: 10,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  insightProgressBarFill: {
+    width: '40%',
+    height: '100%',
+    background: 'linear-gradient(90deg, #4f46e5, #7c3aed)',
+    borderRadius: 999,
+    transition: 'width 0.8s ease',
+  },
+  insightProgressHint: { fontSize: 12, color: '#718096', margin: 0 },
+  // ── Personalized Report ──
+  reportSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  reportHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#c7d9f0' },
+  reportOverview: { fontSize: 14, color: '#a0aec0', marginBottom: 16, lineHeight: 1.7 },
+  reportNrSection: (color) => ({
+    borderLeft: `3px solid ${color}`,
+    paddingLeft: 14,
+    marginBottom: 18,
+  }),
+  reportNrHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  reportNrLabel: { fontSize: 11, fontWeight: 700, color: '#718096', textTransform: 'uppercase', letterSpacing: '0.06em' },
+  reportNrScore: (color) => ({
+    background: color,
+    color: '#fff',
+    borderRadius: 4,
+    padding: '1px 8px',
+    fontSize: 12,
+    fontWeight: 700,
+  }),
+  reportNrName: (color) => ({ fontSize: 15, fontWeight: 700, color, marginBottom: 4 }),
+  reportNrDesc: { fontSize: 13, color: '#c7d9f0', lineHeight: 1.6, marginBottom: 4 },
+  reportNrInsight: { fontSize: 12, color: '#718096', fontStyle: 'italic', lineHeight: 1.5, margin: 0 },
+  reportSuggestions: { marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)' },
+  reportSuggestionsTitle: { fontSize: 13, fontWeight: 700, color: '#c7d9f0', marginBottom: 8 },
+  reportSuggestionsList: { listStyle: 'none', padding: 0, margin: 0, fontSize: 13, color: '#a0aec0', lineHeight: 1.9 },
+  reportSuggestionsLi: { display: 'flex', gap: 8, alignItems: 'flex-start' },
+  // ── Deep Analysis locked section ──
+  deepAnalysisSection: {
+    background: 'rgba(255,255,255,0.03)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  deepAnalysisHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 10 },
+  deepAnalysisBlur: { filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none', color: '#a0aec0', fontSize: 13, lineHeight: 1.7 },
+  deepAnalysisOverlay: {
+    position: 'absolute',
+    inset: 0,
+    background: 'rgba(26,26,46,0.7)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backdropFilter: 'blur(2px)',
+    borderRadius: 14,
+  },
+  deepAnalysisOverlayInner: { textAlign: 'center', padding: '24px 32px' },
+  deepAnalysisLockIcon: { fontSize: 28, marginBottom: 10 },
+  deepAnalysisOverlayTitle: { fontSize: 16, fontWeight: 700, color: '#e8f0fe', marginBottom: 8 },
+  deepAnalysisOverlayDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.6 },
+  deepAnalysisUnlockBtn: (loading) => ({
+    padding: '10px 24px',
+    background: loading ? 'rgba(74,144,217,0.4)' : '#4a90d9',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: loading ? 'not-allowed' : 'pointer',
+  }),
+  // ── Email section ──
+  emailSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  emailHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
+  emailDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  emailInputRow: {
+    display: 'flex',
+    gap: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  emailInput: {
+    flex: '1 1 220px',
+    maxWidth: 320,
+    padding: '10px 14px',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.15)',
+    borderRadius: 8,
+    color: '#e8f0fe',
+    fontSize: 14,
+    outline: 'none',
+  },
+  emailBtn: (loading) => ({
+    padding: '10px 20px',
+    background: loading ? 'rgba(20,184,166,0.4)' : '#0d9488',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: loading ? 'not-allowed' : 'pointer',
+    flexShrink: 0,
+  }),
+  emailAlert: (success) => ({
+    fontSize: 13,
+    color: success ? '#6ee7b7' : '#fc8181',
+    marginTop: 6,
+    lineHeight: 1.5,
+  }),
+  // ── Evidence-based practices ──
+  practicesSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  practicesHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
+  practicesSubheading: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  practiceCard: (color) => ({
+    borderLeft: `4px solid ${color}`,
+    background: 'rgba(255,255,255,0.03)',
+    borderRadius: 8,
+    padding: '16px 18px',
+    marginBottom: 14,
+  }),
+  practiceCardHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  practiceEmoji: { fontSize: 20, flexShrink: 0 },
+  practiceTitle: { fontSize: 14, fontWeight: 700, color: '#e8f0fe', flex: 1 },
+  practiceTags: { display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' },
+  practiceTag: {
+    background: 'rgba(255,255,255,0.08)',
+    color: '#a0aec0',
+    borderRadius: 4,
+    padding: '2px 8px',
+    fontSize: 11,
+    fontWeight: 600,
+  },
+  practicePrinciples: {
+    display: 'flex',
+    gap: 8,
+    marginBottom: 10,
+    flexWrap: 'wrap',
+  },
+  practicePrincipleBadge: (color) => ({
+    background: color,
+    color: '#fff',
+    borderRadius: 4,
+    padding: '2px 7px',
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.04em',
+  }),
+  practiceSteps: { listStyle: 'decimal', paddingLeft: 18, margin: '0 0 10px', fontSize: 12, color: '#a0aec0', lineHeight: 2 },
+  // ── Affirmations section ──
+  affirmationsSection: {
+    background: 'rgba(124,58,237,0.06)',
+    border: '1px solid rgba(124,58,237,0.2)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  affirmationsHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 4 },
+  affirmationsSubtitle: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  affirmationDailyWidget: {
+    background: 'rgba(124,58,237,0.12)',
+    border: '1px solid rgba(124,58,237,0.3)',
+    borderRadius: 10,
+    padding: '16px 20px',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  affirmationDailyTitle: { fontSize: 12, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 },
+  affirmationDailyText: { fontSize: 15, color: '#e8f0fe', lineHeight: 1.7, fontStyle: 'italic', margin: 0 },
+  affirmationCardsGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  },
+  affirmationCard: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 10,
+    padding: '14px 18px',
+    fontSize: 13,
+    color: '#c7d9f0',
+    lineHeight: 1.65,
+    fontStyle: 'italic',
+  },
+  // ── Invite colleagues ──
+  inviteSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  inviteHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
+  inviteDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  inviteForm: {
+    display: 'flex',
+    gap: 10,
+    flexWrap: 'wrap',
+  },
+  inviteInput: {
+    flex: '1 1 220px',
+    maxWidth: 300,
+    padding: '10px 14px',
+    background: 'rgba(255,255,255,0.06)',
+    border: '1px solid rgba(255,255,255,0.15)',
+    borderRadius: 8,
+    color: '#e8f0fe',
+    fontSize: 14,
+    outline: 'none',
+  },
+  inviteBtn: (loading) => ({
+    padding: '10px 20px',
+    background: loading ? 'rgba(79,70,229,0.4)' : '#4f46e5',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: loading ? 'not-allowed' : 'pointer',
+    flexShrink: 0,
+  }),
+  inviteStatus: (success) => ({
+    fontSize: 13,
+    color: success ? '#6ee7b7' : '#fc8181',
+    marginTop: 10,
+    lineHeight: 1.5,
+  }),
+  // ── Privacy guarantee ──
+  privacyGuarantee: {
+    background: 'rgba(16,185,129,0.06)',
+    border: '1px solid rgba(16,185,129,0.2)',
+    borderRadius: 10,
+    padding: '14px 20px',
+    marginBottom: 24,
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: 12,
+    fontSize: 13,
+    color: '#a0aec0',
+    lineHeight: 1.6,
+  },
+  privacyIcon: { fontSize: 18, flexShrink: 0 },
+  privacyText: { margin: 0 },
+  privacyLink: { color: '#6ee7b7', textDecoration: 'underline' },
 };
 
 // ── Social share URLs ──────────────────────────────────────────────────────
@@ -776,6 +1230,16 @@ export default function ResultsPage() {
 
   // ── Copy-link state (social sharing) ─────────────────────────────────
   const [copyLabel, setCopyLabel] = useState('Copy Link');
+
+  // ── Email report state ────────────────────────────────────────────────
+  const [emailInput, setEmailInput]     = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailAlert, setEmailAlert]     = useState(null); // { success, message }
+
+  // ── Invite colleague state ────────────────────────────────────────────
+  const [inviteEmail, setInviteEmail]     = useState('');
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [inviteStatus, setInviteStatus]   = useState(null); // { success, message }
 
   // ── Confetti canvas ref ────────────────────────────────────────────────
   const confettiRef = useRef(null);
@@ -1004,6 +1468,94 @@ export default function ResultsPage() {
     }
   }, [results]);
 
+  // ── Email report handler ───────────────────────────────────────────────
+  const handleEmailReport = useCallback(async () => {
+    const email = emailInput.trim() || (results && results.email) || getStoredEmail();
+    if (!email) {
+      setEmailAlert({ success: false, message: 'Please enter your email address.' });
+      return;
+    }
+    setEmailLoading(true);
+    setEmailAlert(null);
+    try {
+      const res = await fetch('/api/quiz/email-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          firstName: (results && (results.firstName || results.name)) || '',
+          overall: results ? results.overall : 0,
+          dominantType: (results && results.dominantType) || '',
+          scores: results ? results.scores : {},
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEmailAlert({ success: true, message: '✅ Report sent! Check your inbox.' });
+        setEmailInput('');
+      } else {
+        setEmailAlert({ success: false, message: data.error || 'Could not send report. Please try again.' });
+      }
+    } catch (_) {
+      setEmailAlert({ success: false, message: 'Network error. Please try again.' });
+    } finally {
+      setEmailLoading(false);
+    }
+  }, [results, emailInput]);
+
+  // ── Invite colleague handler ───────────────────────────────────────────
+  const handleInviteColleague = useCallback(async (e) => {
+    e.preventDefault();
+    const email = inviteEmail.trim();
+    if (!email) {
+      setInviteStatus({ success: false, message: 'Please enter your colleague\'s email.' });
+      return;
+    }
+    setInviteLoading(true);
+    setInviteStatus(null);
+    try {
+      const senderEmail = (results && results.email) || getStoredEmail();
+      const res = await fetch('/api/quiz/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          inviteeEmail: email,
+          senderEmail,
+          senderName: (results && (results.firstName || results.name)) || '',
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setInviteStatus({ success: true, message: '✅ Invite sent! Your colleague will receive an email shortly.' });
+        setInviteEmail('');
+      } else {
+        setInviteStatus({ success: false, message: data.error || 'Could not send invite. Please try again.' });
+      }
+    } catch (_) {
+      setInviteStatus({ success: false, message: 'Network error. Please try again.' });
+    } finally {
+      setInviteLoading(false);
+    }
+  }, [results, inviteEmail]);
+
+  // ── Download radar chart as PNG ────────────────────────────────────────
+  const handleDownloadRadar = useCallback(() => {
+    const canvas = document.querySelector('canvas[aria-label="Resilience compass"], canvas');
+    if (!canvas) {
+      alert('Radar chart not found. Please wait for the chart to load.');
+      return;
+    }
+    try {
+      const link = document.createElement('a');
+      link.download = 'resilience-atlas-radar.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      trackShareEvent('download_radar', (results && results.dominantType) || '');
+    } catch (_) {
+      alert('Could not download radar chart. Please try taking a screenshot.');
+    }
+  }, [results]);
+
   // ── Derived values ─────────────────────────────────────────────────────
   const hasPremiumAccess = tier === 'atlas-starter' || tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
   const isAtlasPremium   = tier === 'atlas-premium';
@@ -1029,26 +1581,45 @@ export default function ResultsPage() {
   if (!results) {
     const isReturnFromPayment = upgradeParam === 'success';
     return (
-      <div style={s.page}>
-        <div style={s.container}>
-          <a href="/" style={s.backLink}>← Home</a>
-          <div style={s.emptyCard}>
-            <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
-            <div style={s.emptyTitle}>
-              {isReturnFromPayment ? 'Payment confirmed!' : 'No assessment results found'}
-            </div>
-            <p style={s.emptyDesc}>
-              {isReturnFromPayment
-                ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
-                : 'Complete the free assessment to see your personalised resilience profile.'
-              }
-            </p>
-            <a href="/quiz.html" style={s.primaryBtn}>
-              {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
+      <>
+        {/* Site Header */}
+        <header style={s.siteHeader} role="banner">
+          <div style={s.headerInner}>
+            <a href="/" style={s.headerLogo}>
+              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="32" height="32" />
+              The Resilience Atlas&#8482;
             </a>
+            <nav style={s.headerNav} aria-label="Main navigation">
+              <a href="/" style={s.navLink}>Home</a>
+              <a href="/assessment.html" style={s.navLink}>Assessment</a>
+              <a href="/research.html" style={s.navLink}>Research</a>
+              <a href="/team.html" style={s.navLink}>Teams</a>
+              <a href="/kids.html" style={s.navLink}>Kids</a>
+              <a href="/about.html" style={s.navLink}>About</a>
+              <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
+            </nav>
+          </div>
+        </header>
+        <div style={s.page}>
+          <div style={s.container}>
+            <div style={s.emptyCard}>
+              <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
+              <div style={s.emptyTitle}>
+                {isReturnFromPayment ? 'Payment confirmed!' : 'No assessment results found'}
+              </div>
+              <p style={s.emptyDesc}>
+                {isReturnFromPayment
+                  ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
+                  : 'Complete the free assessment to see your personalised resilience profile.'
+                }
+              </p>
+              <a href="/quiz.html" style={s.primaryBtn}>
+                {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
@@ -1057,13 +1628,31 @@ export default function ResultsPage() {
   const name  = results.firstName || results.name || '';
 
   return (
-    <div style={s.page}>
+    <>
       {/* Confetti canvas — positioned fixed, above all content */}
       <canvas ref={confettiRef} style={s.confettiCanvas} aria-hidden="true" />
 
-      <div style={s.container}>
+      {/* ── Site Header ──────────────────────────────────────────────── */}
+      <header style={s.siteHeader} role="banner">
+        <div style={s.headerInner}>
+          <a href="/" style={s.headerLogo}>
+            <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="32" height="32" />
+            The Resilience Atlas&#8482;
+          </a>
+          <nav style={s.headerNav} aria-label="Main navigation">
+            <a href="/" style={s.navLink}>Home</a>
+            <a href="/assessment.html" style={s.navLink}>Assessment</a>
+            <a href="/research.html" style={s.navLink}>Research</a>
+            <a href="/team.html" style={s.navLink}>Teams</a>
+            <a href="/kids.html" style={s.navLink}>Kids</a>
+            <a href="/about.html" style={s.navLink}>About</a>
+            <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
+          </nav>
+        </div>
+      </header>
 
-        <a href="/" style={s.backLink}>← Home</a>
+      <div style={s.page}>
+      <div style={s.container}>
 
         {/* Banner */}
         {banner && (
@@ -1072,7 +1661,7 @@ export default function ResultsPage() {
           </div>
         )}
 
-        {/* Score hero */}
+        {/* ── Results header / greeting ─────────────────────────────── */}
         <div style={s.scoreHero}>
           <div style={s.scoreCircle} aria-label={`Overall resilience score ${results.overall}%`}>
             <span style={s.scoreNum}>{results.overall}</span>
@@ -1083,6 +1672,7 @@ export default function ResultsPage() {
               {name ? `${name}'s Resilience Profile` : 'Your Resilience Profile'}
             </div>
             <p style={s.scoreSub}>
+              Your resilience system reveals how you adapt, recover, and grow through challenge.{' '}
               You demonstrate a <strong style={{ color: '#e8f0fe' }}>{level}</strong> resilience
               foundation.{' '}
               {rankedDims[0] && (
@@ -1098,23 +1688,9 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Brand Compass — animated compass chart, always visible after score summary */}
-        <div style={{
-          background: 'rgba(255,255,255,0.04)',
-          borderRadius: 16,
-          padding: '28px 20px 20px',
-          marginBottom: 24,
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 16, letterSpacing: 0.3 }}>
-            🧭 Your Resilience Atlas Map
-          </div>
-          <BrandCompass scores={results.scores} darkMode={true} />
-        </div>
-
-        {/* Dimension bars */}
-        <div style={s.dimSection}>
-          <div style={s.dimHeading}>Six Resilience Dimensions</div>
+        {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
+        <div style={s.freeBriefReport} role="region" aria-label="Your Resilience Snapshot">
+          <div style={s.fbrHeading}>📊 Your Resilience Snapshot</div>
           {rankedDims.map(([dim, score]) => {
             const pct   = Math.round(score.percentage);
             const color = DIM_COLORS[dim] || '#667eea';
@@ -1134,16 +1710,69 @@ export default function ResultsPage() {
               </div>
             );
           })}
+          {!hasPremiumAccess && (
+            <p style={s.fbrHint}>
+              Unlock your full report for personalised insights &amp; growth strategies.
+            </p>
+          )}
         </div>
 
-        {/* Narrative / guidance section — primary, solid, and emerging strengths */}
+        {/* ── Primary Resilience Mode ───────────────────────────────── */}
+        {dominantType && (
+          <section style={s.primaryTypeCard} aria-labelledby="primaryTypeHeading">
+            <div style={s.primaryTypeHeading} id="primaryTypeHeading">Your Primary Resilience Mode</div>
+            <div style={s.primaryTypeName(DIM_COLORS[dominantType])}>
+              {dominantType}
+            </div>
+            <p style={s.primaryTypeDesc}>
+              {TYPE_DESCRIPTIONS[dominantType] || ''}
+            </p>
+          </section>
+        )}
+
+        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
+        <section style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 16,
+          padding: '28px 20px 20px',
+          marginBottom: 24,
+          textAlign: 'center',
+        }} aria-labelledby="radarHeading">
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 4, letterSpacing: 0.3 }} id="radarHeading">
+            🧭 Your Resilience Compass
+          </div>
+          <p style={{ fontSize: 13, color: '#a0aec0', marginBottom: 16 }}>
+            This compass visualizes the balance of your resilience system across six core dimensions.
+          </p>
+          <BrandCompass scores={results.scores} darkMode={true} />
+          {dominantType && (
+            <p style={{ fontSize: 13, color: '#a0aec0', marginTop: 14 }}>
+              Your strongest resilience dimension is:{' '}
+              <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong>
+            </p>
+          )}
+        </section>
+
+        {/* ── Insight Progress Indicator (free users only) ──────────── */}
+        {!hasPremiumAccess && (
+          <div style={s.insightProgress} aria-hidden="true">
+            <p style={s.insightProgressLabel}>Your resilience insights unlocked</p>
+            <div style={s.insightProgressBarWrap} role="progressbar" aria-valuenow={40} aria-valuemin={0} aria-valuemax={100}>
+              <div style={s.insightProgressBarFill} />
+            </div>
+            <p style={s.insightProgressHint}>Upgrade to unlock your complete resilience atlas</p>
+          </div>
+        )}
+
+        {/* ── Core Strengths Grid ───────────────────────────────────── */}
         {rankedDims.length >= 3 && (
           <div style={s.narrativeSection}>
-            <div style={s.narrativeHeading}>🗺️ Your Resilience Guidance</div>
+            <div style={s.narrativeHeading}>🗺️ Your Core Resilience Strengths</div>
             {[
               { label: 'Primary Strength', dimEntry: rankedDims[0] },
               { label: 'Solid Strength',   dimEntry: rankedDims[1] },
-              { label: 'Growth Opportunity', dimEntry: rankedDims[rankedDims.length - 1] },
+              { label: 'Emerging Strength', dimEntry: rankedDims[rankedDims.length - 1] },
             ].map(({ label, dimEntry }) => {
               const [dim, score] = dimEntry;
               const color = DIM_COLORS[dim] || '#667eea';
@@ -1159,188 +1788,61 @@ export default function ResultsPage() {
               );
             })}
             <p style={{ margin: '16px 0 0', fontSize: 12, color: '#718096', lineHeight: 1.5 }}>
-              Leverage your primary strength as a foundation. Develop your growth opportunity to significantly
+              Leverage your primary strength as a foundation. Develop your emerging strength to significantly
               expand your overall resilience capacity.
             </p>
           </div>
         )}
 
-        {/* Personalized next steps — focus on lowest-scoring dimensions */}
-        {rankedDims.length > 0 && (
-          <div style={s.nextStepsSection}>
-            <div style={s.nextStepsHeading}>🎯 Your Personalized Next Steps</div>
-            <p style={s.nextStepsIntro}>
-              {rankedDims.length === 1
-                ? 'Here are actionable practices to build your resilience:'
-                : 'Based on your lowest-scoring dimensions, here are actionable practices to build your resilience:'
-              }
+        {/* ── Personalized Report (narrative analysis) ─────────────── */}
+        {rankedDims.length >= 3 && (
+          <section style={s.reportSection} aria-labelledby="reportHeading">
+            <div style={s.reportHeading} id="reportHeading">📝 Your Personalized Report</div>
+            <p style={s.reportOverview}>
+              Your overall resilience score is <strong style={{ color: '#e8f0fe' }}>{results.overall}%</strong> — a{' '}
+              {level === 'strong' ? 'strong foundation' : level === 'solid' ? 'solid foundation' : level === 'developing' ? 'developing foundation' : 'emerging foundation'}{' '}
+              across six key dimensions.
             </p>
-            {rankedDims.slice(-Math.min(2, rankedDims.length)).reverse().map(([dim, score]) => {
+            {[
+              { sectionLabel: 'Primary Strength', entry: rankedDims[0], insight: 'Leverage this strength as a foundation for growth across other dimensions.' },
+              { sectionLabel: 'Solid Strength',   entry: rankedDims[1], insight: 'This complements your primary strength and creates a robust resilience foundation.' },
+              { sectionLabel: 'Growth Opportunity', entry: rankedDims[rankedDims.length - 1], insight: 'Intentionally developing this area can significantly expand your overall resilience capacity.' },
+            ].map(({ sectionLabel, entry, insight }) => {
+              const [dim, score] = entry;
               const color = DIM_COLORS[dim] || '#667eea';
-              const steps = DIMENSION_NEXT_STEPS[dim] || [];
-              const pct   = Math.round(score.percentage);
+              const desc  = TYPE_DESCRIPTIONS[dim] || '';
               return (
-                <div key={dim} style={s.nextStepsCard(color)}>
-                  <div style={s.nextStepsCardHeader}>
-                    <span style={s.nextStepsDimName(color)}>{dim}</span>
-                    <span style={s.nextStepsDimScore}>{pct}% — Growth Focus</span>
+                <div key={dim} style={s.reportNrSection(color)}>
+                  <div style={s.reportNrHeader}>
+                    <span style={s.reportNrLabel}>{sectionLabel}</span>
+                    <span style={s.reportNrScore(color)}>{Math.round(score.percentage)}%</span>
                   </div>
-                  <ul style={s.nextStepsList} aria-label={`Next steps for ${dim}`}>
-                    {steps.map(step => (
-                      <li key={step.title} style={s.nextStepItem}>
-                        <span style={s.nextStepIcon} aria-hidden="true">{step.icon}</span>
-                        <div>
-                          <strong style={s.nextStepTitle}>{step.title}</strong>
-                          <p style={s.nextStepDesc}>{step.desc}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
+                  <div style={s.reportNrName(color)}>{dim}</div>
+                  {desc && <p style={s.reportNrDesc}>{desc}</p>}
+                  <p style={s.reportNrInsight}>{insight}</p>
                 </div>
               );
             })}
-          </div>
-        )}
-
-        {/* Reminder opt-in section (ported from legacy results.js) */}
-        {results && (results.email || localStorage.getItem('resilience_email')) && !reminderDone && (
-          <div style={s.reminderSection} aria-labelledby="reminderOptInHeading">
-            <div style={s.reminderHeading} id="reminderOptInHeading">🔔 Stay on Track</div>
-            <p style={s.reminderDesc}>
-              Would you like a reminder to reassess your resilience in 30 days?
-              Tracking progress over time reveals real growth.
-            </p>
-            <div style={s.reminderCheckRow}>
-              <input
-                id="reminderOptInCheckbox"
-                type="checkbox"
-                style={s.reminderCheckbox}
-                checked={reminderChecked}
-                onChange={e => setReminderChecked(e.target.checked)}
-              />
-              <label htmlFor="reminderOptInCheckbox" style={s.reminderCheckLabel}>
-                Yes, remind me to reassess in 30 days
-              </label>
+            <div style={s.reportSuggestions}>
+              <div style={s.reportSuggestionsTitle}>Growth Suggestions</div>
+              <ul style={s.reportSuggestionsList}>
+                {[
+                  `Build on your ${rankedDims[0][0]} strength by helping others develop it`,
+                  `Practice integrating ${rankedDims[1][0]} with ${rankedDims[rankedDims.length - 1][0]}`,
+                  `Start small with one daily habit that develops ${rankedDims[rankedDims.length - 1][0]}`,
+                  'Track your progress monthly to recognize growth patterns',
+                ].map(s2 => (
+                  <li key={s2} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                    <span aria-hidden="true" style={{ color: '#10b981', flexShrink: 0 }}>✓</span>
+                    <span>{s2}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <button
-              type="button"
-              style={s.reminderBtn(reminderLoading)}
-              onClick={handleReminderOptIn}
-              disabled={reminderLoading}
-            >
-              {reminderLoading ? 'Saving…' : 'Set Reminder'}
-            </button>
-            {reminderMessage && (
-              <div style={s.reminderStatus(reminderStatus === 'success')} role="status">
-                {reminderMessage}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Social sharing section */}
-        {results && (
-          <section style={s.shareSection} aria-labelledby="shareResultsHeading">
-            <div style={s.shareHeading} id="shareResultsHeading">📣 Share Your Resilience Profile</div>
-            <p style={s.shareDesc}>
-              Discovered your strongest dimension? Share it and invite others to map theirs.
-            </p>
-            <div style={s.shareButtons} role="group" aria-label="Share options">
-              <ShareButton
-                label="LinkedIn"
-                icon="in"
-                bg="#0a66c2"
-                onClick={() => {
-                  shareLinkedIn(dominantType);
-                  trackShareEvent('linkedin', dominantType);
-                }}
-              />
-              <ShareButton
-                label="X / Twitter"
-                icon="𝕏"
-                bg="#000000"
-                onClick={() => {
-                  shareTwitter(dominantType);
-                  trackShareEvent('twitter', dominantType);
-                }}
-              />
-              <ShareButton
-                label="Facebook"
-                icon="f"
-                bg="#1877f2"
-                onClick={() => {
-                  shareFacebook();
-                  trackShareEvent('facebook', dominantType);
-                }}
-              />
-              <ShareButton
-                label="Instagram"
-                icon="📷"
-                bg="#e1306c"
-                onClick={() => {
-                  trackShareEvent('instagram', dominantType);
-                  window.open(SOCIAL_URLS.instagram, '_blank', 'noopener,noreferrer');
-                }}
-              />
-              <ShareButton
-                label={copyLabel}
-                icon="🔗"
-                bg="#4a5568"
-                onClick={handleCopyLink}
-              />
-            </div>
-            {dominantType && (
-              <p style={s.sharePreview} aria-live="polite">
-                &ldquo;{buildShareText(dominantType)}&rdquo;
-              </p>
-            )}
-            <p style={s.shareInstagramHint}>
-              📷 <strong>Instagram tip:</strong> Visit our Instagram{' '}
-              <a
-                href={SOCIAL_URLS.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: '#a0aec0' }}
-              >
-                @atlas.resilience
-              </a>{' '}
-              and tag us when you share your results!
-            </p>
           </section>
         )}
 
-        {/* PDF Download — shown after purchase */}
-        {hasPremiumAccess && (
-          <div style={s.downloadSection}>
-            <div style={s.downloadHeading}>
-              🎉 Your Full Report is Ready
-            </div>
-            <p style={s.downloadDesc}>
-              {isAtlasPremium
-                ? 'Your Atlas Premium lifetime access lets you download this report any time.'
-                : tier === 'atlas-starter'
-                  ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
-                  : tier === 'atlas-navigator'
-                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
-                    : 'Your report is ready. Download your personalised PDF now.'
-              }
-            </p>
-            {pdfError && (
-              <div style={{ color: '#fc8181', fontSize: 13, marginBottom: 12 }}>{pdfError}</div>
-            )}
-            <button
-              type="button"
-              style={s.downloadBtn(pdfLoading || tierLoading)}
-              onClick={handleDownloadPdf}
-              disabled={pdfLoading || tierLoading}
-              aria-busy={pdfLoading}
-            >
-              {pdfLoading ? '⏳ Generating PDF…' : '⬇ Download PDF Report'}
-            </button>
-          </div>
-        )}
-
-        {/* Upgrade cards — hidden after purchase */}
+        {/* ── Upgrade Cards (free users) ───────────────────────────── */}
         {!hasPremiumAccess && (
           <>
             <div style={s.upgradeHeading}>Unlock Your Full Report</div>
@@ -1399,7 +1901,71 @@ export default function ResultsPage() {
           </>
         )}
 
-        {/* Re-take / retake row */}
+        {/* ── Deep Analysis (locked for free users) ────────────────── */}
+        {!hasPremiumAccess && (
+          <section style={s.deepAnalysisSection} aria-labelledby="deepAnalysisHeading">
+            <div style={s.deepAnalysisHeading} id="deepAnalysisHeading">Deep Resilience Analysis</div>
+            <div style={s.deepAnalysisBlur} aria-hidden="true">
+              <p>Comprehensive breakdown of all 6 resilience dimensions with personalized insights tailored to your unique profile.</p>
+              <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
+              <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalized development roadmap.</p>
+            </div>
+            <div style={s.deepAnalysisOverlay} role="region" aria-label="Premium content — locked">
+              <div style={s.deepAnalysisOverlayInner}>
+                <div style={s.deepAnalysisLockIcon}>🔒</div>
+                <div style={s.deepAnalysisOverlayTitle}>Unlock Your Complete Resilience Map</div>
+                <p style={s.deepAnalysisOverlayDesc}>Go deeper to understand the full structure of your resilience system.</p>
+                <button
+                  type="button"
+                  style={s.deepAnalysisUnlockBtn(checkoutLoading === 'atlas-navigator')}
+                  onClick={() => handleUpgrade('atlas-navigator')}
+                  disabled={!!checkoutLoading}
+                  aria-label="Unlock Deep Report"
+                >
+                  {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : 'Unlock Now'}
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── Prior Purchases / ResultsHistory ─────────────────────── */}
+        <ResultsHistory
+          email={(results && results.email) || getStoredEmail()}
+        />
+
+        {/* ── PDF Download + Action Buttons ─────────────────────────── */}
+        {hasPremiumAccess && (
+          <div style={s.downloadSection}>
+            <div style={s.downloadHeading}>
+              🎉 Your Full Report is Ready
+            </div>
+            <p style={s.downloadDesc}>
+              {isAtlasPremium
+                ? 'Your Atlas Premium lifetime access lets you download this report any time.'
+                : tier === 'atlas-starter'
+                  ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
+                  : tier === 'atlas-navigator'
+                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                    : 'Your report is ready. Download your personalised PDF now.'
+              }
+            </p>
+            {pdfError && (
+              <div style={{ color: '#fc8181', fontSize: 13, marginBottom: 12 }}>{pdfError}</div>
+            )}
+            <button
+              type="button"
+              style={s.downloadBtn(pdfLoading || tierLoading)}
+              onClick={handleDownloadPdf}
+              disabled={pdfLoading || tierLoading}
+              aria-busy={pdfLoading}
+            >
+              {pdfLoading ? '⏳ Generating PDF…' : '⬇ Download PDF Report'}
+            </button>
+          </div>
+        )}
+
+        {/* Retake row */}
         <div style={s.retakeRow}>
           <button
             type="button"
@@ -1410,19 +1976,306 @@ export default function ResultsPage() {
           </button>
         </div>
 
-        {/* Prior purchases — always available for paid users */}
-        <ResultsHistory
-          email={(results && results.email) || getStoredEmail()}
-        />
+        {/* ── Email Report Section ──────────────────────────────────── */}
+        <section style={s.emailSection} aria-labelledby="emailHeading">
+          <div style={s.emailHeading} id="emailHeading">✉️ Email Your Report</div>
+          <p style={s.emailDesc}>
+            Send your resilience profile to your inbox for future reference.
+          </p>
+          <div style={s.emailInputRow}>
+            <input
+              type="email"
+              value={emailInput || (results && results.email) || ''}
+              onChange={e => setEmailInput(e.target.value)}
+              placeholder="Enter your email address"
+              aria-label="Email address to send report"
+              style={s.emailInput}
+              autoComplete="email"
+            />
+            <button
+              type="button"
+              style={s.emailBtn(emailLoading)}
+              onClick={handleEmailReport}
+              disabled={emailLoading}
+              aria-busy={emailLoading}
+            >
+              {emailLoading ? '⏳ Sending…' : '✉️ Send Report'}
+            </button>
+          </div>
+          {emailAlert && (
+            <div style={s.emailAlert(emailAlert.success)} role="alert">{emailAlert.message}</div>
+          )}
+        </section>
 
-        {/* Quicklinks & social follow — mirrors legacy results page footer */}
+        {/* ── Evidence-Based Practices ──────────────────────────────── */}
+        {dominantType && EVIDENCE_PRACTICES[dominantType] && (
+          <section style={s.practicesSection} aria-labelledby="practicesHeading">
+            <div style={s.practicesHeading} id="practicesHeading">🔬 Evidence-Based Micro-Practices</div>
+            <p style={s.practicesSubheading}>
+              Practices for <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong> —
+              grounded in Acceptance and Commitment Therapy (ACT) and Applied Behavior Analysis (ABA).
+            </p>
+            {EVIDENCE_PRACTICES[dominantType].map((practice) => {
+              const color = DIM_COLORS[dominantType] || '#667eea';
+              return (
+                <div key={practice.title} style={s.practiceCard(color)}>
+                  <div style={s.practiceCardHeader}>
+                    <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
+                    <span style={s.practiceTitle}>{practice.title}</span>
+                  </div>
+                  <div style={s.practiceTags}>
+                    <span style={s.practiceTag}>⏱ {practice.duration}</span>
+                    <span style={s.practiceTag}>{practice.difficulty}</span>
+                  </div>
+                  <div style={s.practicePrinciples}>
+                    <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
+                    <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
+                  </div>
+                  <ol style={s.practiceSteps}>
+                    {practice.instructions.map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
+                  </ol>
+                  <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
+                    Educational note: These practices support self-reflection. Not therapeutic treatment.
+                  </p>
+                </div>
+              );
+            })}
+          </section>
+        )}
+
+        {/* ── Personalized Next Steps ──────────────────────────────── */}
+        {rankedDims.length > 0 && (
+          <div style={s.nextStepsSection}>
+            <div style={s.nextStepsHeading}>🎯 Your Personalized Next Steps</div>
+            <p style={s.nextStepsIntro}>
+              {rankedDims.length === 1
+                ? 'Here are actionable practices to build your resilience:'
+                : 'Based on your lowest-scoring dimensions, here are actionable practices to build your resilience:'
+              }
+            </p>
+            {rankedDims.slice(-Math.min(2, rankedDims.length)).reverse().map(([dim, score]) => {
+              const color = DIM_COLORS[dim] || '#667eea';
+              const steps = DIMENSION_NEXT_STEPS[dim] || [];
+              const pct   = Math.round(score.percentage);
+              return (
+                <div key={dim} style={s.nextStepsCard(color)}>
+                  <div style={s.nextStepsCardHeader}>
+                    <span style={s.nextStepsDimName(color)}>{dim}</span>
+                    <span style={s.nextStepsDimScore}>{pct}% — Growth Focus</span>
+                  </div>
+                  <ul style={s.nextStepsList} aria-label={`Next steps for ${dim}`}>
+                    {steps.map(step => (
+                      <li key={step.title} style={s.nextStepItem}>
+                        <span style={s.nextStepIcon} aria-hidden="true">{step.icon}</span>
+                        <div>
+                          <strong style={s.nextStepTitle}>{step.title}</strong>
+                          <p style={s.nextStepDesc}>{step.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Resilience Affirmations ───────────────────────────────── */}
+        {dominantType && AFFIRMATIONS[dominantType] && (
+          <section style={s.affirmationsSection} aria-labelledby="affirmationsHeading">
+            <div style={s.affirmationsHeading} id="affirmationsHeading">✨ Your Resilience Affirmations</div>
+            <p style={s.affirmationsSubtitle}>
+              Strength statements aligned with your{' '}
+              <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong> resilience profile.
+            </p>
+            <p style={{ fontSize: 11, color: '#4a5568', marginBottom: 14, lineHeight: 1.5 }}>
+              ℹ️ <strong style={{ color: '#718096' }}>Educational Note:</strong> These affirmations support self-reflection and psychological flexibility.
+              They are not therapeutic statements or clinical treatment.
+            </p>
+            {/* Daily affirmation widget */}
+            {AFFIRMATIONS[dominantType][0] && (
+              <div style={s.affirmationDailyWidget}>
+                <div style={s.affirmationDailyTitle}>🌟 Your Affirmation for Today</div>
+                <blockquote style={s.affirmationDailyText}>
+                  &ldquo;{AFFIRMATIONS[dominantType][0]}&rdquo;
+                </blockquote>
+              </div>
+            )}
+            {/* All affirmation cards */}
+            <div style={s.affirmationCardsGrid}>
+              {AFFIRMATIONS[dominantType].slice(1).map((text, i) => (
+                <div key={i} style={s.affirmationCard}>
+                  &ldquo;{text}&rdquo;
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Reminder Opt-In ──────────────────────────────────────── */}
+        {results && (results.email || localStorage.getItem('resilience_email')) && !reminderDone && (
+          <div style={s.reminderSection} aria-labelledby="reminderOptInHeading">
+            <div style={s.reminderHeading} id="reminderOptInHeading">🔔 Set a Reassessment Reminder</div>
+            <p style={s.reminderDesc}>
+              Resilience grows over time. Would you like a reminder to retake the assessment in 30 days
+              to track your progress?
+            </p>
+            <div style={s.reminderCheckRow}>
+              <input
+                id="reminderOptInCheckbox"
+                type="checkbox"
+                style={s.reminderCheckbox}
+                checked={reminderChecked}
+                onChange={e => setReminderChecked(e.target.checked)}
+              />
+              <label htmlFor="reminderOptInCheckbox" style={s.reminderCheckLabel}>
+                Yes, remind me in 30 days to retake the assessment
+              </label>
+            </div>
+            <button
+              type="button"
+              style={s.reminderBtn(reminderLoading)}
+              onClick={handleReminderOptIn}
+              disabled={reminderLoading}
+            >
+              {reminderLoading ? 'Saving…' : 'Set Reminder'}
+            </button>
+            {reminderMessage && (
+              <div style={s.reminderStatus(reminderStatus === 'success')} role="status">
+                {reminderMessage}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Social Sharing + Quicklinks ───────────────────────────── */}
+        {results && (
+          <section style={s.shareSection} aria-labelledby="shareResultsHeading">
+            <div style={s.shareHeading} id="shareResultsHeading">📣 Share Your Resilience Dimension</div>
+            <p style={s.shareDesc}>
+              Discovered your strongest dimension? Share it and invite others to map theirs.
+            </p>
+            <div style={s.shareButtons} role="group" aria-label="Share options">
+              <ShareButton
+                label="LinkedIn"
+                icon="in"
+                bg="#0a66c2"
+                onClick={() => {
+                  shareLinkedIn(dominantType);
+                  trackShareEvent('linkedin', dominantType);
+                }}
+              />
+              <ShareButton
+                label="X / Twitter"
+                icon="𝕏"
+                bg="#000000"
+                onClick={() => {
+                  shareTwitter(dominantType);
+                  trackShareEvent('twitter', dominantType);
+                }}
+              />
+              <ShareButton
+                label="Instagram"
+                icon="📷"
+                bg="#e1306c"
+                onClick={() => {
+                  trackShareEvent('instagram', dominantType);
+                  window.open(SOCIAL_URLS.instagram, '_blank', 'noopener,noreferrer');
+                }}
+              />
+              <ShareButton
+                label="Facebook"
+                icon="f"
+                bg="#1877f2"
+                onClick={() => {
+                  shareFacebook();
+                  trackShareEvent('facebook', dominantType);
+                }}
+              />
+              <ShareButton
+                label={copyLabel}
+                icon="🔗"
+                bg="#4a5568"
+                onClick={handleCopyLink}
+              />
+              <ShareButton
+                label="Download Radar"
+                icon="⬇"
+                bg="#0891B2"
+                onClick={handleDownloadRadar}
+              />
+            </div>
+            {dominantType && (
+              <p style={s.sharePreview} aria-live="polite">
+                &ldquo;{buildShareText(dominantType)}&rdquo;
+              </p>
+            )}
+            <p style={s.shareInstagramHint}>
+              📷 <strong>Instagram tip:</strong> Click <em>Download Radar</em> above to save your radar graphic, then post it and tag{' '}
+              <a
+                href={SOCIAL_URLS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#a0aec0' }}
+              >
+                @atlas.resilience
+              </a>!
+            </p>
+          </section>
+        )}
+
+        {/* ── Invite Colleagues ─────────────────────────────────────── */}
+        <section style={s.inviteSection} aria-labelledby="inviteHeading">
+          <div style={s.inviteHeading} id="inviteHeading">👥 Compare with Your Team</div>
+          <p style={s.inviteDesc}>
+            Invite a colleague to take the assessment and compare your Six Dimensions of Resilience profiles.
+          </p>
+          <form style={s.inviteForm} onSubmit={handleInviteColleague} noValidate>
+            <input
+              type="email"
+              value={inviteEmail}
+              onChange={e => setInviteEmail(e.target.value)}
+              placeholder="colleague@company.com"
+              aria-label="Colleague email address"
+              style={s.inviteInput}
+              autoComplete="email"
+            />
+            <button
+              type="submit"
+              style={s.inviteBtn(inviteLoading)}
+              disabled={inviteLoading}
+              aria-busy={inviteLoading}
+            >
+              {inviteLoading ? '⏳ Sending…' : 'Send Invite'}
+            </button>
+          </form>
+          {inviteStatus && (
+            <p style={s.inviteStatus(inviteStatus.success)} aria-live="polite">
+              {inviteStatus.message}
+            </p>
+          )}
+        </section>
+
+        {/* ── Privacy Guarantee ─────────────────────────────────────── */}
+        <div style={s.privacyGuarantee} role="note" aria-label="Data privacy guarantee">
+          <span style={s.privacyIcon}>🔒</span>
+          <p style={s.privacyText}>
+            <strong style={{ color: '#e8f0fe' }}>You control your data.</strong>{' '}
+            Delete your account and results anytime —{' '}
+            <a href="/about.html#privacy" style={s.privacyLink}>learn more about our privacy commitment</a>.
+          </p>
+        </div>
+
+        {/* ── Footer Nav + Social Follow ─────────────────────────────── */}
         <nav style={s.quicklinksSection} aria-label="Quick links">
           <div style={s.quicklinksGrid}>
             <div style={s.quicklinksGroup}>
               <div style={s.quicklinksGroupHeading}>Assessment</div>
               <ul style={s.quicklinksGroupLinks}>
-                <li><a href="/quiz.html" style={s.quicklinkAnchor}>Take the Quiz</a></li>
                 <li><a href="/assessment.html" style={s.quicklinkAnchor}>About the Assessment</a></li>
+                <li><a href="/quiz.html" style={s.quicklinkAnchor}>Take the Quiz</a></li>
                 <li><a href="/results" style={s.quicklinkAnchor}>My Results</a></li>
               </ul>
             </div>
@@ -1461,12 +2314,14 @@ export default function ResultsPage() {
 
           <div style={s.footerBottom}>
             <p><strong>The Resilience Atlas™ — Understand. Strengthen. Transform.</strong></p>
+            <p>A research-based resilience assessment platform founded on published 2013 doctoral research.</p>
             <p>© 2026 The Resilience Atlas™ — a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
             <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
           </div>
         </nav>
 
       </div>
-    </div>
+      </div>
+    </>
   );
 }
