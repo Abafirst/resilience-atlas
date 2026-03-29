@@ -474,7 +474,231 @@ const s = {
     zIndex: 9999,
     display: 'none',
   },
+  // ── Social share section ──
+  shareSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  shareHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#c7d9f0' },
+  shareDesc: { color: '#a0aec0', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
+  shareButtons: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 14,
+  },
+  sharePreview: {
+    fontSize: 12,
+    color: '#718096',
+    fontStyle: 'italic',
+    marginBottom: 8,
+    lineHeight: 1.5,
+  },
+  shareInstagramHint: {
+    fontSize: 12,
+    color: '#a0aec0',
+    lineHeight: 1.5,
+    margin: 0,
+  },
+  // ── Quicklinks / footer nav section ──
+  quicklinksSection: {
+    borderTop: '1px solid rgba(255,255,255,0.1)',
+    paddingTop: 32,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  quicklinksGrid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 32,
+    marginBottom: 24,
+  },
+  quicklinksGroup: {
+    flex: '1 1 140px',
+    minWidth: 120,
+  },
+  quicklinksGroupHeading: {
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: '#718096',
+    marginBottom: 10,
+  },
+  quicklinksGroupLinks: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+  },
+  quicklinkAnchor: {
+    color: '#a0aec0',
+    fontSize: 13,
+    textDecoration: 'none',
+    lineHeight: 2,
+    display: 'block',
+    transition: 'color 0.15s',
+  },
+  socialFollowRow: {
+    display: 'flex',
+    gap: 14,
+    alignItems: 'center',
+    marginBottom: 20,
+    flexWrap: 'wrap',
+  },
+  socialFollowLabel: {
+    fontSize: 12,
+    color: '#718096',
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.06em',
+    flexShrink: 0,
+  },
+  footerBottom: {
+    borderTop: '1px solid rgba(255,255,255,0.06)',
+    paddingTop: 16,
+    fontSize: 12,
+    color: '#4a5568',
+    lineHeight: 1.8,
+    textAlign: 'center',
+  },
 };
+
+// ── Social share URLs ──────────────────────────────────────────────────────
+const SOCIAL_URLS = {
+  linkedin:  'https://www.linkedin.com/company/theresilienceatlas',
+  twitter:   'https://x.com/atlasresilience',
+  facebook:  'https://www.facebook.com/profile.php?id=100076220534241',
+  instagram: 'https://www.instagram.com/atlas.resilience/',
+};
+
+function buildShareText(dominantDimension) {
+  const dim = dominantDimension || 'Resilience';
+  return (
+    `My strongest resilience dimension is ${dim}. What\u2019s yours? ` +
+    'Take the Resilience Atlas assessment to map your Six Dimensions of Resilience.'
+  );
+}
+
+function shareLinkedIn(dominantDimension) {
+  const url = encodeURIComponent(window.location.origin + '/quiz.html');
+  const text = encodeURIComponent(buildShareText(dominantDimension));
+  window.open(
+    `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${text}`,
+    '_blank', 'width=600,height=520,noopener,noreferrer'
+  );
+}
+
+function shareTwitter(dominantDimension) {
+  const url  = encodeURIComponent(window.location.origin + '/quiz.html');
+  const text = encodeURIComponent(buildShareText(dominantDimension));
+  window.open(
+    `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    '_blank', 'width=600,height=400,noopener,noreferrer'
+  );
+}
+
+function shareFacebook() {
+  window.open(SOCIAL_URLS.facebook, '_blank', 'noopener,noreferrer');
+}
+
+function trackShareEvent(platform, dimension) {
+  try {
+    fetch('/api/growth/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'results_shared',
+        properties: { platform, dimension },
+      }),
+    }).catch(() => {});
+  } catch (_) {}
+}
+
+// ── Inline share-button style ──────────────────────────────────────────────
+function shareBtnStyle(bg, hovered) {
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 7,
+    padding: '9px 16px',
+    background: hovered ? bg : bg + 'cc',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: 'pointer',
+    transition: 'background 0.15s, transform 0.12s',
+    transform: hovered ? 'translateY(-1px)' : 'none',
+    boxShadow: hovered ? '0 4px 12px rgba(0,0,0,0.25)' : 'none',
+    outline: 'none',
+    flexShrink: 0,
+  };
+}
+
+// ── Social follow link style ──────────────────────────────────────────────
+function socialFollowBtnStyle(bg, hovered) {
+  return {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    padding: '7px 13px',
+    background: hovered ? bg : 'rgba(255,255,255,0.07)',
+    color: hovered ? '#fff' : '#a0aec0',
+    border: `1px solid ${hovered ? bg : 'rgba(255,255,255,0.12)'}`,
+    borderRadius: 20,
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    transition: 'all 0.15s',
+    flexShrink: 0,
+  };
+}
+
+// ── ShareButton sub-component ──────────────────────────────────────────────
+function ShareButton({ label, icon, bg, onClick }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      type="button"
+      style={shareBtnStyle(bg, hovered)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      onClick={onClick}
+      aria-label={label}
+    >
+      <span aria-hidden="true">{icon}</span>
+      {label}
+    </button>
+  );
+}
+
+// ── SocialFollowLink sub-component ────────────────────────────────────────
+function SocialFollowLink({ label, icon, href, bg }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={socialFollowBtnStyle(bg, hovered)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      aria-label={label}
+    >
+      <span aria-hidden="true">{icon}</span>
+      {label}
+    </a>
+  );
+}
 
 // ── PDF download helper ────────────────────────────────────────────────────
 const MAX_POLLING_ATTEMPTS = 60;   // 2 minutes at 2 s intervals
@@ -549,6 +773,9 @@ export default function ResultsPage() {
   const [reminderStatus, setReminderStatus]     = useState('');  // '' | 'success' | 'error'
   const [reminderMessage, setReminderMessage]   = useState('');
   const [reminderDone, setReminderDone]         = useState(false);
+
+  // ── Copy-link state (social sharing) ─────────────────────────────────
+  const [copyLabel, setCopyLabel] = useState('Copy Link');
 
   // ── Confetti canvas ref ────────────────────────────────────────────────
   const confettiRef = useRef(null);
@@ -744,6 +971,39 @@ export default function ResultsPage() {
     }
   }, [results, reminderChecked]);
 
+  // ── Copy link handler ─────────────────────────────────────────────────
+  const handleCopyLink = useCallback(() => {
+    const link = window.location.origin + '/quiz.html';
+    const dim  = (results && results.dominantType) || '';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          setCopyLabel('✓ Copied!');
+          setTimeout(() => setCopyLabel('Copy Link'), 2500);
+          trackShareEvent('copy_link', dim);
+        })
+        .catch(() => setCopyLabel('Copy Link'));
+    } else {
+      // Fallback: textarea trick for browsers without Clipboard API
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = link;
+        ta.style.position = 'fixed';
+        ta.style.opacity  = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        setCopyLabel('✓ Copied!');
+        setTimeout(() => setCopyLabel('Copy Link'), 2500);
+        trackShareEvent('copy_link', dim);
+      } catch (_) {
+        setCopyLabel('Copy failed');
+        setTimeout(() => setCopyLabel('Copy Link'), 2500);
+      }
+    }
+  }, [results]);
+
   // ── Derived values ─────────────────────────────────────────────────────
   const hasPremiumAccess = tier === 'atlas-starter' || tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
   const isAtlasPremium   = tier === 'atlas-premium';
@@ -751,6 +1011,8 @@ export default function ResultsPage() {
   const rankedDims = results
     ? Object.entries(results.scores).sort((a, b) => b[1].percentage - a[1].percentage)
     : [];
+
+  const dominantType = (results && results.dominantType) || '';
 
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
@@ -976,6 +1238,77 @@ export default function ResultsPage() {
           </div>
         )}
 
+        {/* Social sharing section */}
+        {results && (
+          <section style={s.shareSection} aria-labelledby="shareResultsHeading">
+            <div style={s.shareHeading} id="shareResultsHeading">📣 Share Your Resilience Profile</div>
+            <p style={s.shareDesc}>
+              Discovered your strongest dimension? Share it and invite others to map theirs.
+            </p>
+            <div style={s.shareButtons} role="group" aria-label="Share options">
+              <ShareButton
+                label="LinkedIn"
+                icon="in"
+                bg="#0a66c2"
+                onClick={() => {
+                  shareLinkedIn(dominantType);
+                  trackShareEvent('linkedin', dominantType);
+                }}
+              />
+              <ShareButton
+                label="X / Twitter"
+                icon="𝕏"
+                bg="#000000"
+                onClick={() => {
+                  shareTwitter(dominantType);
+                  trackShareEvent('twitter', dominantType);
+                }}
+              />
+              <ShareButton
+                label="Facebook"
+                icon="f"
+                bg="#1877f2"
+                onClick={() => {
+                  shareFacebook();
+                  trackShareEvent('facebook', dominantType);
+                }}
+              />
+              <ShareButton
+                label="Instagram"
+                icon="📷"
+                bg="#e1306c"
+                onClick={() => {
+                  trackShareEvent('instagram', dominantType);
+                  window.open(SOCIAL_URLS.instagram, '_blank', 'noopener,noreferrer');
+                }}
+              />
+              <ShareButton
+                label={copyLabel}
+                icon="🔗"
+                bg="#4a5568"
+                onClick={handleCopyLink}
+              />
+            </div>
+            {dominantType && (
+              <p style={s.sharePreview} aria-live="polite">
+                &ldquo;{buildShareText(dominantType)}&rdquo;
+              </p>
+            )}
+            <p style={s.shareInstagramHint}>
+              📷 <strong>Instagram tip:</strong> Visit our Instagram{' '}
+              <a
+                href={SOCIAL_URLS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#a0aec0' }}
+              >
+                @atlas.resilience
+              </a>{' '}
+              and tag us when you share your results!
+            </p>
+          </section>
+        )}
+
         {/* PDF Download — shown after purchase */}
         {hasPremiumAccess && (
           <div style={s.downloadSection}>
@@ -1079,6 +1412,57 @@ export default function ResultsPage() {
         <ResultsHistory
           email={(results && results.email) || getStoredEmail()}
         />
+
+        {/* Quicklinks & social follow — mirrors legacy results page footer */}
+        <nav style={s.quicklinksSection} aria-label="Quick links">
+          <div style={s.quicklinksGrid}>
+            <div style={s.quicklinksGroup}>
+              <div style={s.quicklinksGroupHeading}>Assessment</div>
+              <ul style={s.quicklinksGroupLinks}>
+                <li><a href="/quiz.html" style={s.quicklinkAnchor}>Take the Quiz</a></li>
+                <li><a href="/assessment.html" style={s.quicklinkAnchor}>About the Assessment</a></li>
+                <li><a href="/results" style={s.quicklinkAnchor}>My Results</a></li>
+              </ul>
+            </div>
+            <div style={s.quicklinksGroup}>
+              <div style={s.quicklinksGroupHeading}>Research</div>
+              <ul style={s.quicklinksGroupLinks}>
+                <li><a href="/research.html" style={s.quicklinkAnchor}>Foundations</a></li>
+                <li><a href="/research.html#dimensions" style={s.quicklinkAnchor}>Six Dimensions</a></li>
+              </ul>
+            </div>
+            <div style={s.quicklinksGroup}>
+              <div style={s.quicklinksGroupHeading}>Programs</div>
+              <ul style={s.quicklinksGroupLinks}>
+                <li><a href="/team.html" style={s.quicklinkAnchor}>For Teams</a></li>
+                <li><a href="/kids.html" style={s.quicklinkAnchor}>For Kids</a></li>
+              </ul>
+            </div>
+            <div style={s.quicklinksGroup}>
+              <div style={s.quicklinksGroupHeading}>Company</div>
+              <ul style={s.quicklinksGroupLinks}>
+                <li><a href="/about.html" style={s.quicklinkAnchor}>About</a></li>
+                <li><a href="/founder.html" style={s.quicklinkAnchor}>Our Founder</a></li>
+                <li><a href="/research.html" style={s.quicklinkAnchor}>Research</a></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Social follow row */}
+          <div style={s.socialFollowRow}>
+            <span style={s.socialFollowLabel}>Follow us</span>
+            <SocialFollowLink label="LinkedIn" icon="in" href={SOCIAL_URLS.linkedin} bg="#0a66c2" />
+            <SocialFollowLink label="X / Twitter" icon="𝕏" href={SOCIAL_URLS.twitter} bg="#000000" />
+            <SocialFollowLink label="Facebook" icon="f" href={SOCIAL_URLS.facebook} bg="#1877f2" />
+            <SocialFollowLink label="Instagram" icon="📷" href={SOCIAL_URLS.instagram} bg="#e1306c" />
+          </div>
+
+          <div style={s.footerBottom}>
+            <p><strong>The Resilience Atlas™ — Understand. Strengthen. Transform.</strong></p>
+            <p>© 2026 The Resilience Atlas™ — a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+            <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+          </div>
+        </nav>
 
       </div>
     </div>
