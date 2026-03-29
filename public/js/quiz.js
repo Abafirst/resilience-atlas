@@ -633,11 +633,8 @@ async function submitQuiz() {
 
     Spinner.hide();
 
-    // Always show the feedback modal after a successful quiz submission
-    // (it lets users flag question issues and share improvement suggestions)
-    showFeedbackModal(() => {
-      window.location.href = 'results.html';
-    });
+    // Redirect immediately to results (feedback modal skipped for now)
+    window.location.href = 'results.html';
   } catch (err) {
     Spinner.hide();
     if (submitAlert) {
