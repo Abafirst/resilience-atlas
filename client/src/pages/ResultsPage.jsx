@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
+import RadarChart from '../components/RadarChart.jsx';
 
 // ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
@@ -12,9 +13,15 @@ const DIM_COLORS = {
 };
 
 const TIER_FEATURES = {
+  'atlas-starter': [
+    'Full PDF summary report',
+    'Overall resilience score',
+    'Top dimension highlights',
+    'Actionable starter practices',
+  ],
   'atlas-navigator': [
-    'Full PDF deep-dive report',
-    'Dimension-by-dimension analysis',
+    'Everything in Atlas Starter',
+    'Deep dimension-by-dimension analysis',
     'Personalised growth strategies',
     'Evidence-based practices',
   ],
@@ -524,7 +531,7 @@ export default function ResultsPage() {
 
   // ── State ──────────────────────────────────────────────────────────────
   const [results, setResults]         = useState(null);
-  const [tier, setTier]               = useState('free'); // 'free' | 'atlas-navigator' | 'atlas-premium'
+  const [tier, setTier]               = useState('free'); // 'free' | 'atlas-starter' | 'atlas-navigator' | 'atlas-premium'
   const [tierLoading, setTierLoading] = useState(false);
   const [tiers, setTiers]             = useState([]);     // pricing from API
   const [banner, setBanner]           = useState(null);   // { type, message }
@@ -591,7 +598,7 @@ export default function ResultsPage() {
             setTier(data.tier);
             // Persist tier to localStorage so the upgrade cards stay hidden on reload
             try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
-            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${data.tier === 'atlas-premium' ? 'Atlas Premium (Lifetime)' : 'Atlas Navigator'} access.` });
+            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${data.tier === 'atlas-premium' ? 'Atlas Premium (Lifetime)' : data.tier === 'atlas-starter' ? 'Atlas Starter' : 'Atlas Navigator'} access.` });
           } else {
             setBanner({ type: 'error', message: data.error || 'Could not verify payment. Please contact support.' });
           }
@@ -735,7 +742,7 @@ export default function ResultsPage() {
   }, [results, reminderChecked]);
 
   // ── Derived values ─────────────────────────────────────────────────────
-  const hasPremiumAccess = tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
+  const hasPremiumAccess = tier === 'atlas-starter' || tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -744,7 +751,11 @@ export default function ResultsPage() {
 
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
-    if (!t) return tierId === 'atlas-navigator' ? '$9.99' : '$49.99';
+    if (!t) {
+      if (tierId === 'atlas-starter') return '$4.99';
+      if (tierId === 'atlas-navigator') return '$9.99';
+      return '$49.99';
+    }
     return `$${Number(t.price).toFixed(2)}`;
   };
 
@@ -819,6 +830,20 @@ export default function ResultsPage() {
               )}
             </p>
           </div>
+        </div>
+
+        {/* Radar / compass chart — always visible after score summary */}
+        <div style={{
+          background: 'rgba(255,255,255,0.04)',
+          borderRadius: 16,
+          padding: '28px 20px 20px',
+          marginBottom: 24,
+          textAlign: 'center',
+        }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 16, letterSpacing: 0.3 }}>
+            🧭 Your Resilience Atlas Map
+          </div>
+          <RadarChart scores={results.scores} size={340} />
         </div>
 
         {/* Dimension bars */}
@@ -956,7 +981,9 @@ export default function ResultsPage() {
             <p style={s.downloadDesc}>
               {isAtlasPremium
                 ? 'Your Atlas Premium lifetime access lets you download this report any time.'
-                : 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                : tier === 'atlas-starter'
+                  ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
+                  : 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
               }
             </p>
             {pdfError && (
@@ -984,8 +1011,31 @@ export default function ResultsPage() {
             </p>
 
             <div style={s.upgradeCards}>
-              {/* Atlas Navigator */}
+              {/* Atlas Starter */}
               <div style={s.upgradeCard(false)}>
+                <div style={s.tierIcon}>🌱</div>
+                <span style={s.tierBadge('#38a169')}>STARTER</span>
+                <div style={s.tierName}>Atlas Starter</div>
+                <div style={s.tierPrice}>{getPrice('atlas-starter')}</div>
+                <div style={s.tierBilling}>one-time payment · USD</div>
+                <ul style={s.featureList}>
+                  {TIER_FEATURES['atlas-starter'].map(f => (
+                    <li key={f}><span style={s.checkmark}>✓</span>{f}</li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  style={s.buyBtn('#38a169', checkoutLoading === 'atlas-starter')}
+                  onClick={() => handleUpgrade('atlas-starter')}
+                  disabled={!!checkoutLoading}
+                  aria-busy={checkoutLoading === 'atlas-starter'}
+                >
+                  {checkoutLoading === 'atlas-starter' ? '⏳ Redirecting…' : `Upgrade to Starter · ${getPrice('atlas-starter')}`}
+                </button>
+              </div>
+
+              {/* Atlas Navigator */}
+              <div style={s.upgradeCard(true)}>
                 <div style={s.tierIcon}>🗺️</div>
                 <span style={s.tierBadge('#4a90d9')}>POPULAR</span>
                 <div style={s.tierName}>Atlas Navigator</div>
@@ -1003,30 +1053,7 @@ export default function ResultsPage() {
                   disabled={!!checkoutLoading}
                   aria-busy={checkoutLoading === 'atlas-navigator'}
                 >
-                  {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : `Get Atlas Navigator · ${getPrice('atlas-navigator')}`}
-                </button>
-              </div>
-
-              {/* Atlas Premium */}
-              <div style={s.upgradeCard(true)}>
-                <div style={s.tierIcon}>⭐</div>
-                <span style={s.tierBadge('#7c3aed')}>LIFETIME</span>
-                <div style={s.tierName}>Atlas Premium</div>
-                <div style={s.tierPrice}>{getPrice('atlas-premium')}</div>
-                <div style={s.tierBilling}>one-time · lifetime access · USD</div>
-                <ul style={s.featureList}>
-                  {TIER_FEATURES['atlas-premium'].map(f => (
-                    <li key={f}><span style={s.checkmark}>✓</span>{f}</li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  style={s.buyBtn('#7c3aed', checkoutLoading === 'atlas-premium')}
-                  onClick={() => handleUpgrade('atlas-premium')}
-                  disabled={!!checkoutLoading}
-                  aria-busy={checkoutLoading === 'atlas-premium'}
-                >
-                  {checkoutLoading === 'atlas-premium' ? '⏳ Redirecting…' : `Get Atlas Premium · ${getPrice('atlas-premium')}`}
+                  {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : `Upgrade to Navigator · ${getPrice('atlas-navigator')}`}
                 </button>
               </div>
             </div>

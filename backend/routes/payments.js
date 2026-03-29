@@ -52,6 +52,11 @@ const HTML_ENTITY_DECODE_MAP = {
 
 /** Tier definitions: name, price in cents, currency. */
 const TIERS = {
+    'atlas-starter': {
+        name: 'Atlas Starter',
+        amount: 499, // $4.99
+        currency: 'usd',
+    },
     'atlas-navigator': {
         name: 'Atlas Navigator',
         amount: 999, // $9.99
@@ -101,24 +106,24 @@ const webhookLimiter = rateLimit({
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /api/payments/tiers
-// Return public pricing for the two purchasable tiers (atlas-navigator, atlas-premium).
+// Return public pricing for the two purchasable individual tiers.
 // No authentication required — used by the frontend to display current prices.
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/tiers', paymentsLimiter, (req, res) => {
     res.json({
         tiers: [
             {
+                id: 'atlas-starter',
+                name: TIERS['atlas-starter'].name,
+                price: TIERS['atlas-starter'].amount / 100,
+                currency: TIERS['atlas-starter'].currency.toUpperCase(),
+                billing: 'one-time',
+            },
+            {
                 id: 'atlas-navigator',
                 name: TIERS['atlas-navigator'].name,
                 price: TIERS['atlas-navigator'].amount / 100,
                 currency: TIERS['atlas-navigator'].currency.toUpperCase(),
-                billing: 'one-time',
-            },
-            {
-                id: 'atlas-premium',
-                name: TIERS['atlas-premium'].name,
-                price: TIERS['atlas-premium'].amount / 100,
-                currency: TIERS['atlas-premium'].currency.toUpperCase(),
                 billing: 'one-time',
             },
         ],
@@ -128,7 +133,7 @@ router.get('/tiers', paymentsLimiter, (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/payments/checkout
 // Create a Stripe Checkout session for the requested tier.
-// Body: { tier: 'atlas-navigator' | 'atlas-premium', email: string }
+// Body: { tier: 'atlas-starter' | 'atlas-navigator' | 'atlas-premium', email: string }
 // ─────────────────────────────────────────────────────────────────────────────
 router.post('/checkout', paymentsLimiter, async (req, res) => {
     // Declared outside try/catch so both blocks can safely reference them for
@@ -178,7 +183,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be one of: atlas-navigator, atlas-premium, starter, pro.' });
+                .json({ error: 'Invalid tier. Must be one of: atlas-starter, atlas-navigator, atlas-premium, starter, pro.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
@@ -384,10 +389,9 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
 
         // Update user record if they have a registered account.
         if (email) {
-            const updateFields =
-                tier === 'atlas-premium'
-                    ? { atlasPremium: true, purchasedDeepReport: true, purchaseDate: new Date() }
-                    : { purchasedDeepReport: true, purchaseDate: new Date() };
+            const updateFields = tier === 'atlas-premium'
+                ? { atlasPremium: true, purchasedDeepReport: true, purchaseDate: new Date() }
+                : { purchasedDeepReport: true, purchaseDate: new Date() };
 
             await User.findOneAndUpdate({ email }, updateFields, { upsert: false }).catch(
                 (err) => logger.warn('User update skipped:', err.message)
@@ -427,7 +431,7 @@ router.get('/status', paymentsLimiter, async (req, res) => {
             return res.status(400).json({ error: 'Email is required.' });
         }
 
-        // Atlas Premium supersedes Atlas Navigator — return the best available tier.
+        // Atlas Premium supersedes Atlas Navigator supersedes Atlas Starter — return the best available tier.
         const premiumPurchase = await Purchase.findOne({
             email: email.toLowerCase().trim(),
             status: 'completed',
@@ -444,6 +448,15 @@ router.get('/status', paymentsLimiter, async (req, res) => {
         });
         if (deepPurchase) {
             return res.json({ tier: 'atlas-navigator', purchasedAt: deepPurchase.purchasedAt });
+        }
+
+        const starterPurchase = await Purchase.findOne({
+            email: email.toLowerCase().trim(),
+            status: 'completed',
+            tier: 'atlas-starter',
+        });
+        if (starterPurchase) {
+            return res.json({ tier: 'atlas-starter', purchasedAt: starterPurchase.purchasedAt });
         }
 
         res.json({ tier: 'free' });

@@ -323,12 +323,19 @@ describe('GET /api/quiz/results', () => {
 // ── Payments tiers route ──────────────────────────────────────────────────────
 
 describe('GET /api/payments/tiers', () => {
-    test('returns 200 with tiers array containing atlas-navigator and atlas-premium', async () => {
+    test('returns 200 with tiers array containing atlas-starter and atlas-navigator', async () => {
         const res = await request(app).get('/api/payments/tiers');
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('tiers');
         expect(Array.isArray(res.body.tiers)).toBe(true);
         expect(res.body.tiers).toHaveLength(2);
+
+        const starterTier = res.body.tiers.find(t => t.id === 'atlas-starter');
+        expect(starterTier).toBeDefined();
+        expect(starterTier.name).toBe('Atlas Starter');
+        expect(starterTier.price).toBe(4.99);
+        expect(starterTier.currency).toBe('USD');
+        expect(starterTier.billing).toBe('one-time');
 
         const navigatorTier = res.body.tiers.find(t => t.id === 'atlas-navigator');
         expect(navigatorTier).toBeDefined();
@@ -336,13 +343,6 @@ describe('GET /api/payments/tiers', () => {
         expect(navigatorTier.price).toBe(9.99);
         expect(navigatorTier.currency).toBe('USD');
         expect(navigatorTier.billing).toBe('one-time');
-
-        const premiumTier = res.body.tiers.find(t => t.id === 'atlas-premium');
-        expect(premiumTier).toBeDefined();
-        expect(premiumTier.name).toBe('Atlas Premium');
-        expect(premiumTier.price).toBe(49.99);
-        expect(premiumTier.currency).toBe('USD');
-        expect(premiumTier.billing).toBe('one-time');
     });
 });
 

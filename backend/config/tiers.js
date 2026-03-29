@@ -39,6 +39,16 @@ const TIER_CONFIG = {
         gates: [],
         dataRetention: '1 month',
     },
+    'atlas-starter': {
+        name: 'Atlas Starter',
+        price: 499, // $4.99
+        billing: 'one-time',
+        maxUsers: 1,
+        maxTeams: 0,
+        features: ['Full PDF report', 'Core dimension scores', 'Resilience level summary'],
+        gates: ['basic-report'],
+        dataRetention: '6 months',
+    },
     'atlas-navigator': {
         name: 'Atlas Navigator',
         price: 999, // $9.99
@@ -120,6 +130,7 @@ const PLAN_ALIASES = {
  * Always use this constant rather than hardcoding tier names in route handlers.
  */
 const PREMIUM_TIERS = [
+    'atlas-starter',
     'atlas-navigator',
     'atlas-premium',
     'starter',
