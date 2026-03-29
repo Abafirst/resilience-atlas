@@ -4,7 +4,17 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
-const { PREMIUM_TIERS } = require('../config/tiers');
+const { TIER_CONFIG } = require('../config/tiers');
+const { canAccessFeature } = require('../utils/tierUtils');
+
+/**
+ * Tiers that grant access to any report (basic PDF summary or full deep report).
+ * Derived dynamically from TIER_CONFIG via canAccessFeature so that adding or
+ * changing a tier in tiers.js automatically updates this set — no hardcoding.
+ */
+const REPORT_ACCESS_TIERS = Object.keys(TIER_CONFIG).filter(
+    (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report')
+);
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
@@ -251,18 +261,18 @@ router.get('/generate', reportLimiter, async (req, res) => {
         if (process.env.STRIPE_SECRET_KEY) {
             if (!email) {
                 return res.status(402).json({
-                    error: 'An Atlas Navigator or Atlas Premium purchase is required to download the PDF.',
+                    error: 'A paid report purchase is required to download the PDF.',
                     upgradeRequired: true,
                 });
             }
             try {
                 const cleanEmail = String(email).toLowerCase().trim();
-                // Check for a completed individual purchase (atlas-navigator or atlas-premium).
-                // Teams tiers (starter, pro, enterprise) also grant deep-report access.
-                // PREMIUM_TIERS is the canonical list from backend/config/tiers.js.
+                // Check for a completed purchase whose tier grants report access.
+                // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature,
+                // so it stays in sync with tiers.js without hardcoding tier names.
                 const purchase = await Purchase.findOne({
                     email: cleanEmail,
-                    tier: { $in: PREMIUM_TIERS },
+                    tier: { $in: REPORT_ACCESS_TIERS },
                     status: 'completed',
                 });
                 if (!purchase) {
@@ -278,7 +288,7 @@ router.get('/generate', reportLimiter, async (req, res) => {
                     }
                     if (!userHasAccess) {
                         return res.status(402).json({
-                            error: 'An Atlas Navigator or Atlas Premium purchase is required to download the PDF.',
+                            error: 'A paid report purchase is required to download the PDF.',
                             upgradeRequired: true,
                         });
                     }
@@ -455,10 +465,11 @@ router.get('/access', accessLimiter, async (req, res) => {
         const cleanEmail = String(email).toLowerCase().trim();
 
         // Find all completed purchases for this email that grant PDF access.
-        // PREMIUM_TIERS is imported from backend/config/tiers.js at the top of this file.
+        // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature
+        // so it stays in sync with tiers.js without hardcoding tier names.
         const purchases = await Purchase.find({
             email: cleanEmail,
-            tier: { $in: PREMIUM_TIERS },
+            tier: { $in: REPORT_ACCESS_TIERS },
             status: 'completed',
         })
             .select('tier purchasedAt createdAt assessmentData')
