@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import ResultsHistory from '../components/ResultsHistory.jsx';
 
 // ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
@@ -22,6 +23,65 @@ const TIER_FEATURES = {
     'Lifetime access & future re-assessments',
     'Unlimited re-downloads',
     'Priority support',
+  ],
+};
+
+// ── Type descriptions (ported from legacy results.js) ─────────────────────
+const TYPE_DESCRIPTIONS = {
+  'Cognitive-Narrative':
+    'Your resilience is driven by meaning-making and reframing life experiences. ' +
+    'You find strength in narrative coherence and the ability to construct meaningful ' +
+    'stories from challenging events.',
+  'Relational-Connective':
+    'Your resilience is strengthened through connection, trust, and supportive ' +
+    'relationships. You thrive when you have people to lean on and meaningful bonds ' +
+    'that sustain you.',
+  'Agentic-Generative':
+    'You demonstrate resilience through purposeful action and forward momentum. ' +
+    'You are energized by taking charge, creating change, and generating new ' +
+    'possibilities even in difficulty.',
+  'Emotional-Adaptive':
+    'You show flexibility in managing emotions and adapting to stress. You can ' +
+    'recognize, tolerate, and work skillfully with a wide range of emotional experiences.',
+  'Spiritual-Reflective':
+    'Your resilience is grounded in purpose, values, and a sense of meaning beyond ' +
+    'yourself. You draw strength from a coherent worldview and connection to something larger.',
+  'Somatic-Regulative':
+    'You rely on body awareness and behavioral habits to stabilize and recover from ' +
+    'stress. Your physical practices and consistent routines provide a reliable foundation.',
+};
+
+// ── Personalized next steps per dimension (ported from legacy results.js) ──
+const DIMENSION_NEXT_STEPS = {
+  'Agentic-Generative': [
+    { icon: '🎯', title: 'Set a Micro-Goal', desc: 'Identify one small, concrete action you can take this week toward a goal that matters to you.' },
+    { icon: '📋', title: 'Action Planning', desc: 'Write down 3 steps you can take in the next 30 days to move forward on a challenge.' },
+    { icon: '💪', title: 'Practice Agency', desc: 'Each morning, choose one thing you have control over and take action on it intentionally.' },
+  ],
+  'Relational-Connective': [
+    { icon: '🤝', title: 'Reach Out', desc: "Connect with one trusted person this week — share something real about how you're doing." },
+    { icon: '🌐', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
+    { icon: '💬', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
+  ],
+  'Spiritual-Reflective': [
+    { icon: '🧘', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
+    { icon: '📖', title: 'Gratitude Practice', desc: "Each evening, note 3 things you're grateful for — include at least one thing from a difficult moment." },
+    { icon: '🌅', title: 'Purpose Meditation', desc: 'Try a 10-minute guided meditation focused on purpose and what you want to contribute to the world.' },
+  ],
+  'Emotional-Adaptive': [
+    { icon: '🌊', title: 'Emotion Naming', desc: 'When you notice a strong emotion, pause and name it specifically — this activates your prefrontal cortex and reduces intensity.' },
+    { icon: '🌱', title: 'RAIN Practice', desc: 'Use the RAIN technique: Recognize, Allow, Investigate, Nurture. Apply it to one difficult emotion today.' },
+    { icon: '📓', title: 'Emotional Journal', desc: 'Write for 5 minutes daily about your emotional experiences — what triggered them and what they may be communicating.' },
+  ],
+  'Somatic-Regulative': [
+    { icon: '🌬️', title: 'Mindful Breathing', desc: 'Practice 4-7-8 breathing: inhale 4 counts, hold 7, exhale 8. Do this for 3 cycles when stressed.' },
+    { icon: '🚶', title: 'Movement as Medicine', desc: 'Add a 15-minute intentional walk to your daily routine — notice how your body and mood shift.' },
+    { icon: '😴', title: 'Sleep Hygiene', desc: 'Establish a consistent sleep-wake schedule this week. A regular rhythm boosts resilience significantly.' },
+  ],
+  'Cognitive-Narrative': [
+    { icon: '✍️', title: 'Morning Pages', desc: 'Write 3 pages of stream-of-consciousness every morning to process your experiences and reframe challenges.' },
+    { icon: '🔄', title: 'Reframing Exercise', desc: 'When facing a setback, ask: "What is one alternative way to interpret this?" Write down 3 possibilities.' },
+    { icon: '📚', title: 'Story Integration', desc: 'Reflect on a past difficulty: What did you learn? How did it shape who you are? Write your "resilience story."' },
   ],
 };
 
@@ -241,6 +301,75 @@ const s = {
     border: 'none',
     padding: 0,
   },
+  // ── Narrative / guidance section ──
+  narrativeSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  narrativeHeading: { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#c7d9f0' },
+  strengthRow: (color) => ({
+    borderLeft: `3px solid ${color}`,
+    paddingLeft: 14,
+    marginBottom: 18,
+  }),
+  strengthLabel: {
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: '#a0aec0',
+    marginBottom: 2,
+  },
+  strengthName: (color) => ({
+    fontSize: 15,
+    fontWeight: 700,
+    color,
+    marginBottom: 4,
+  }),
+  strengthDesc: {
+    fontSize: 13,
+    color: '#c7d9f0',
+    lineHeight: 1.6,
+    margin: 0,
+  },
+  // ── Next steps section ──
+  nextStepsSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  nextStepsHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#c7d9f0' },
+  nextStepsIntro: { color: '#a0aec0', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
+  nextStepsCard: (color) => ({
+    borderLeft: `4px solid ${color}`,
+    background: 'rgba(255,255,255,0.03)',
+    borderRadius: 8,
+    padding: '14px 16px',
+    marginBottom: 14,
+  }),
+  nextStepsCardHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  nextStepsDimName: (color) => ({ fontSize: 14, fontWeight: 700, color }),
+  nextStepsDimScore: { fontSize: 12, color: '#a0aec0' },
+  nextStepsList: { listStyle: 'none', padding: 0, margin: 0 },
+  nextStepItem: {
+    display: 'flex',
+    gap: 10,
+    marginBottom: 8,
+    alignItems: 'flex-start',
+  },
+  nextStepIcon: { fontSize: 18, flexShrink: 0, lineHeight: 1.4 },
+  nextStepTitle: { fontSize: 13, fontWeight: 600, color: '#e8f0fe', display: 'block', marginBottom: 2 },
+  nextStepDesc: { fontSize: 12, color: '#a0aec0', lineHeight: 1.5, margin: 0 },
 };
 
 // ── PDF download helper ────────────────────────────────────────────────────
@@ -285,6 +414,14 @@ function resilienceLevel(overall) {
   return 'emerging';
 }
 
+// ── Get stored email (from results object or resilience_email key) ─────────
+function getStoredEmail() {
+  try {
+    const r = JSON.parse(localStorage.getItem('resilience_results') || '{}');
+    return r.email || localStorage.getItem('resilience_email') || '';
+  } catch (_) { return ''; }
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
@@ -300,6 +437,7 @@ export default function ResultsPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(''); // tier id being purchased
   const [pdfLoading, setPdfLoading]   = useState(false);
   const [pdfError, setPdfError]       = useState('');
+  const [priorAccess, setPriorAccess] = useState(false);  // true if /api/report/access confirms prior purchase
 
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
@@ -360,12 +498,7 @@ export default function ResultsPage() {
     } catch (_) { /* ignore */ }
 
     // ── Also check server-side status for signed-in users ─────────────────
-    const email = (() => {
-      try {
-        const r = JSON.parse(localStorage.getItem('resilience_results') || '{}');
-        return r.email || localStorage.getItem('resilience_email') || '';
-      } catch (_) { return ''; }
-    })();
+    const email = getStoredEmail();
 
     if (email) {
       fetch(`/api/payments/status?email=${encodeURIComponent(email)}`)
@@ -379,6 +512,24 @@ export default function ResultsPage() {
         .catch(() => { /* non-fatal */ });
     }
   }, [upgradeParam, sessionId]);
+
+  // ── Check prior report access (/api/report/access) ────────────────────
+  // Permanently unlock download for users who previously purchased, even if
+  // their localStorage tier is stale or cleared (mirrors legacy results.js).
+  useEffect(() => {
+    const email = getStoredEmail();
+    if (!email) return;
+    fetch(`/api/report/access?email=${encodeURIComponent(email)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.hasAccess) {
+          setPriorAccess(true);
+        }
+      })
+      .catch(err => {
+        console.warn('[ResultsPage] Prior access check failed:', err.message);
+      });
+  }, []);
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
@@ -431,7 +582,7 @@ export default function ResultsPage() {
   }, [results]);
 
   // ── Derived values ─────────────────────────────────────────────────────
-  const hasPremiumAccess = tier === 'atlas-navigator' || tier === 'atlas-premium';
+  const hasPremiumAccess = tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -538,6 +689,72 @@ export default function ResultsPage() {
           })}
         </div>
 
+        {/* Narrative / guidance section — primary, solid, and emerging strengths */}
+        {rankedDims.length >= 3 && (
+          <div style={s.narrativeSection}>
+            <div style={s.narrativeHeading}>🗺️ Your Resilience Guidance</div>
+            {[
+              { label: 'Primary Strength', dimEntry: rankedDims[0] },
+              { label: 'Solid Strength',   dimEntry: rankedDims[1] },
+              { label: 'Growth Opportunity', dimEntry: rankedDims[rankedDims.length - 1] },
+            ].map(({ label, dimEntry }) => {
+              const [dim, score] = dimEntry;
+              const color = DIM_COLORS[dim] || '#667eea';
+              const desc  = TYPE_DESCRIPTIONS[dim] || '';
+              return (
+                <div key={dim} style={s.strengthRow(color)}>
+                  <div style={s.strengthLabel}>{label}</div>
+                  <div style={s.strengthName(color)}>
+                    {dim} ({Math.round(score.percentage)}%)
+                  </div>
+                  {desc && <p style={s.strengthDesc}>{desc}</p>}
+                </div>
+              );
+            })}
+            <p style={{ margin: '16px 0 0', fontSize: 12, color: '#718096', lineHeight: 1.5 }}>
+              Leverage your primary strength as a foundation. Develop your growth opportunity to significantly
+              expand your overall resilience capacity.
+            </p>
+          </div>
+        )}
+
+        {/* Personalized next steps — focus on lowest-scoring dimensions */}
+        {rankedDims.length > 0 && (
+          <div style={s.nextStepsSection}>
+            <div style={s.nextStepsHeading}>🎯 Your Personalized Next Steps</div>
+            <p style={s.nextStepsIntro}>
+              {rankedDims.length === 1
+                ? 'Here are actionable practices to build your resilience:'
+                : 'Based on your lowest-scoring dimensions, here are actionable practices to build your resilience:'
+              }
+            </p>
+            {rankedDims.slice(-Math.min(2, rankedDims.length)).reverse().map(([dim, score]) => {
+              const color = DIM_COLORS[dim] || '#667eea';
+              const steps = DIMENSION_NEXT_STEPS[dim] || [];
+              const pct   = Math.round(score.percentage);
+              return (
+                <div key={dim} style={s.nextStepsCard(color)}>
+                  <div style={s.nextStepsCardHeader}>
+                    <span style={s.nextStepsDimName(color)}>{dim}</span>
+                    <span style={s.nextStepsDimScore}>{pct}% — Growth Focus</span>
+                  </div>
+                  <ul style={s.nextStepsList} aria-label={`Next steps for ${dim}`}>
+                    {steps.map(step => (
+                      <li key={step.title} style={s.nextStepItem}>
+                        <span style={s.nextStepIcon} aria-hidden="true">{step.icon}</span>
+                        <div>
+                          <strong style={s.nextStepTitle}>{step.title}</strong>
+                          <p style={s.nextStepDesc}>{step.desc}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* PDF Download — shown after purchase */}
         {hasPremiumAccess && (
           <div style={s.downloadSection}>
@@ -634,6 +851,11 @@ export default function ResultsPage() {
             ↺ Re-take the assessment
           </button>
         </div>
+
+        {/* Prior purchases — always available for paid users */}
+        <ResultsHistory
+          email={(results && results.email) || getStoredEmail()}
+        />
 
       </div>
     </div>
