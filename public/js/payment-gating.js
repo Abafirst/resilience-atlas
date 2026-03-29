@@ -107,6 +107,25 @@
                t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
+    /**
+     * True for Atlas Starter ($4.99 one-time) — grants access to the basic
+     * PDF summary report.  Does NOT unlock deep-report sections (use
+     * isDeepReport() for those), but does allow PDF download.
+     */
+    function isBasicReport() {
+        const t = getTier();
+        return t === 'atlas-starter';
+    }
+
+    /**
+     * True for any individual paid tier that grants PDF download access:
+     * atlas-starter (basic report) or atlas-navigator/premium (deep report).
+     * Also true for all Teams tiers.
+     */
+    function isAnyPaidTier() {
+        return isBasicReport() || isDeepReport();
+    }
+
     function isAtlasPremium() {
         const t = getTier();
         return t === 'atlas-premium' || t === 'business' ||
@@ -554,6 +573,8 @@
         getTier:              getTier,
         setTier:              setTier,
         isDeepReport:         isDeepReport,
+        isBasicReport:        isBasicReport,
+        isAnyPaidTier:        isAnyPaidTier,
         isAtlasPremium:       isAtlasPremium,
         isBusiness:           isBusiness,
         isTeamsStarter:       isTeamsStarter,

@@ -81,6 +81,19 @@ describe('applyGating() tier hierarchy', () => {
         expect(bizSection.classList.contains('locked')).toBe(true);
     });
 
+    test('atlas-starter tier: deep-report sections remain locked (starter is basic report only)', () => {
+        localStorage.setItem('resilience_tier', 'atlas-starter');
+        loadGatingScript();
+        const { deepSection, atlasSection, bizSection } = buildDOM();
+
+        window.PaymentGating.applyGating();
+
+        // Deep-report sections should still be locked for atlas-starter buyers
+        expect(deepSection.classList.contains('locked')).toBe(true);
+        expect(atlasSection.classList.contains('locked')).toBe(true);
+        expect(bizSection.classList.contains('locked')).toBe(true);
+    });
+
     test('atlas-navigator tier: atlas-navigator AND atlas-premium sections unlocked; business still locked', () => {
         localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
@@ -160,6 +173,37 @@ describe('tier helper functions', () => {
         expect(window.PaymentGating.isDeepReport()).toBe(false);
     });
 
+    test('isDeepReport() returns false for atlas-starter (starter has basic report only, not deep report)', () => {
+        loadGatingScript();
+
+        localStorage.setItem('resilience_tier', 'atlas-starter');
+        expect(window.PaymentGating.isDeepReport()).toBe(false);
+    });
+
+    test('isBasicReport() returns true only for atlas-starter', () => {
+        loadGatingScript();
+
+        localStorage.setItem('resilience_tier', 'atlas-starter');
+        expect(window.PaymentGating.isBasicReport()).toBe(true);
+
+        ['atlas-navigator', 'atlas-premium', 'business', 'free'].forEach(tier => {
+            localStorage.setItem('resilience_tier', tier);
+            expect(window.PaymentGating.isBasicReport()).toBe(false);
+        });
+    });
+
+    test('isAnyPaidTier() returns true for atlas-starter, atlas-navigator, atlas-premium, and business', () => {
+        loadGatingScript();
+
+        ['atlas-starter', 'atlas-navigator', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise'].forEach(tier => {
+            localStorage.setItem('resilience_tier', tier);
+            expect(window.PaymentGating.isAnyPaidTier()).toBe(true);
+        });
+
+        localStorage.setItem('resilience_tier', 'free');
+        expect(window.PaymentGating.isAnyPaidTier()).toBe(false);
+    });
+
     test('isAtlasPremium() returns true only for atlas-premium and business', () => {
         loadGatingScript();
 
@@ -182,7 +226,7 @@ describe('tier helper functions', () => {
         localStorage.setItem('resilience_tier', 'business');
         expect(window.PaymentGating.isBusiness()).toBe(true);
 
-        ['atlas-navigator', 'atlas-premium', 'free'].forEach(tier => {
+        ['atlas-starter', 'atlas-navigator', 'atlas-premium', 'free'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isBusiness()).toBe(false);
         });
@@ -224,6 +268,22 @@ describe('handleUpgradeSuccess()', () => {
 
         expect(localStorage.getItem('resilience_tier')).toBe('atlas-navigator');
         expect(localStorage.getItem('resilience_email')).toBe('user@example.com');
+    });
+
+    test('sets atlas-starter tier in localStorage after successful atlas-starter purchase', async () => {
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            json: async () => ({ success: true, tier: 'atlas-starter', email: 'starter@example.com' }),
+        });
+
+        setSearch('?upgrade=success&session_id=cs_test_starter');
+        loadGatingScript();
+
+        await window.PaymentGating.handleUpgradeSuccess();
+
+        expect(localStorage.getItem('resilience_tier')).toBe('atlas-starter');
+        expect(localStorage.getItem('resilience_email')).toBe('starter@example.com');
     });
 
     test('dispatches paymentVerified event after successful verification', async () => {
