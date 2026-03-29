@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 
 // ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
@@ -84,6 +84,60 @@ const DIMENSION_NEXT_STEPS = {
     { icon: '📚', title: 'Story Integration', desc: 'Reflect on a past difficulty: What did you learn? How did it shape who you are? Write your "resilience story."' },
   ],
 };
+
+// ── Confetti animation (ported from legacy results.js) ──────────────────────
+function runConfetti(canvas) {
+  if (!canvas) return;
+  canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = Array.from({ length: 120 }, () => ({
+    x:         Math.random() * canvas.width,
+    y:         Math.random() * canvas.height - canvas.height,
+    r:         4 + Math.random() * 6,
+    d:         2 + Math.random() * 3,
+    color:     ['#4F46E5','#059669','#D97706','#DC2626','#7C3AED','#0891B2','#f59e0b','#10b981'][Math.floor(Math.random() * 8)],
+    tilt:      Math.random() * 10 - 10,
+    tiltAngle: 0,
+    tiltSpeed: 0.05 + Math.random() * 0.05,
+  }));
+
+  let angle = 0;
+  let frame;
+  const duration = 3000;
+  const start = Date.now();
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    angle += 0.01;
+    pieces.forEach(p => {
+      p.tiltAngle += p.tiltSpeed;
+      p.y += p.d;
+      p.x += Math.sin(angle) * 0.6;
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.ellipse(p.x + p.tilt, p.y, p.r, p.r * 0.5, p.tilt * 0.1, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+    if (Date.now() - start < duration) {
+      frame = requestAnimationFrame(draw);
+    } else {
+      cancelAnimationFrame(frame);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = 'none';
+    }
+  }
+
+  draw();
+  return () => { cancelAnimationFrame(frame); };
+}
 
 // ── Styles ─────────────────────────────────────────────────────────────────
 const s = {
@@ -370,6 +424,46 @@ const s = {
   nextStepIcon: { fontSize: 18, flexShrink: 0, lineHeight: 1.4 },
   nextStepTitle: { fontSize: 13, fontWeight: 600, color: '#e8f0fe', display: 'block', marginBottom: 2 },
   nextStepDesc: { fontSize: 12, color: '#a0aec0', lineHeight: 1.5, margin: 0 },
+  // ── Reminder opt-in section ──
+  reminderSection: {
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: 14,
+    padding: '24px 28px',
+    marginBottom: 24,
+  },
+  reminderHeading: { fontSize: 15, fontWeight: 700, marginBottom: 8, color: '#c7d9f0' },
+  reminderDesc: { color: '#a0aec0', fontSize: 13, marginBottom: 14, lineHeight: 1.5 },
+  reminderCheckRow: { display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 14 },
+  reminderCheckbox: { marginTop: 2, accentColor: '#10b981', width: 16, height: 16, cursor: 'pointer', flexShrink: 0 },
+  reminderCheckLabel: { fontSize: 13, color: '#c7d9f0', lineHeight: 1.5, cursor: 'pointer' },
+  reminderBtn: (disabled) => ({
+    padding: '10px 22px',
+    background: disabled ? 'rgba(16,185,129,0.3)' : '#10b981',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 8,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: disabled ? 'not-allowed' : 'pointer',
+  }),
+  reminderStatus: (success) => ({
+    marginTop: 10,
+    fontSize: 13,
+    color: success ? '#6ee7b7' : '#fc8181',
+    lineHeight: 1.5,
+  }),
+  // ── Confetti canvas ──
+  confettiCanvas: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: 9999,
+    display: 'none',
+  },
 };
 
 // ── PDF download helper ────────────────────────────────────────────────────
@@ -439,6 +533,16 @@ export default function ResultsPage() {
   const [pdfError, setPdfError]       = useState('');
   const [priorAccess, setPriorAccess] = useState(false);  // true if /api/report/access confirms prior purchase
 
+  // ── Reminder opt-in state ──────────────────────────────────────────────
+  const [reminderChecked, setReminderChecked]   = useState(false);
+  const [reminderLoading, setReminderLoading]   = useState(false);
+  const [reminderStatus, setReminderStatus]     = useState('');  // '' | 'success' | 'error'
+  const [reminderMessage, setReminderMessage]   = useState('');
+  const [reminderDone, setReminderDone]         = useState(false);
+
+  // ── Confetti canvas ref ────────────────────────────────────────────────
+  const confettiRef = useRef(null);
+
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
     try {
@@ -446,6 +550,19 @@ export default function ResultsPage() {
       if (raw) setResults(JSON.parse(raw));
     } catch (_) { /* ignore parse errors */ }
   }, []);
+
+  // ── Confetti celebration — fire 600 ms after results load ─────────────
+  useEffect(() => {
+    if (!results) return;
+    let confettiCleanup;
+    const timer = setTimeout(() => {
+      confettiCleanup = runConfetti(confettiRef.current);
+    }, 600);
+    return () => {
+      clearTimeout(timer);
+      if (confettiCleanup) confettiCleanup();
+    };
+  }, [results]);
 
   // ── Load tier pricing from API ─────────────────────────────────────────
   useEffect(() => {
@@ -581,6 +698,42 @@ export default function ResultsPage() {
     }
   }, [results]);
 
+  // ── Reminder opt-in handler (ported from legacy results.js) ───────────
+  const handleReminderOptIn = useCallback(async () => {
+    if (!reminderChecked) {
+      setReminderStatus('error');
+      setReminderMessage('Please check the box to opt in.');
+      return;
+    }
+    const email     = (results && results.email) || localStorage.getItem('resilience_email') || '';
+    const firstName = (results && (results.firstName || results.name)) || localStorage.getItem('resilience_name') || '';
+    const lastScore = results ? results.overall : 0;
+    setReminderLoading(true);
+    setReminderMessage('Saving your preference…');
+    setReminderStatus('');
+    try {
+      const res = await fetch('/api/quiz/reminder-optin', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, firstName, lastScore }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setReminderStatus('success');
+        setReminderMessage("✅ Done! We'll remind you in 30 days.");
+        setReminderDone(true);
+      } else {
+        setReminderStatus('error');
+        setReminderMessage(data.error || 'Could not save preference.');
+        setReminderLoading(false);
+      }
+    } catch (_) {
+      setReminderStatus('error');
+      setReminderMessage('Network error. Please try again.');
+      setReminderLoading(false);
+    }
+  }, [results, reminderChecked]);
+
   // ── Derived values ─────────────────────────────────────────────────────
   const hasPremiumAccess = tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
   const isAtlasPremium   = tier === 'atlas-premium';
@@ -628,6 +781,9 @@ export default function ResultsPage() {
 
   return (
     <div style={s.page}>
+      {/* Confetti canvas — positioned fixed, above all content */}
+      <canvas ref={confettiRef} style={s.confettiCanvas} aria-hidden="true" />
+
       <div style={s.container}>
 
         <a href="/" style={s.backLink}>← Home</a>
@@ -752,6 +908,42 @@ export default function ResultsPage() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* Reminder opt-in section (ported from legacy results.js) */}
+        {results && (results.email || localStorage.getItem('resilience_email')) && !reminderDone && (
+          <div style={s.reminderSection} aria-labelledby="reminderOptInHeading">
+            <div style={s.reminderHeading} id="reminderOptInHeading">🔔 Stay on Track</div>
+            <p style={s.reminderDesc}>
+              Would you like a reminder to reassess your resilience in 30 days?
+              Tracking progress over time reveals real growth.
+            </p>
+            <div style={s.reminderCheckRow}>
+              <input
+                id="reminderOptInCheckbox"
+                type="checkbox"
+                style={s.reminderCheckbox}
+                checked={reminderChecked}
+                onChange={e => setReminderChecked(e.target.checked)}
+              />
+              <label htmlFor="reminderOptInCheckbox" style={s.reminderCheckLabel}>
+                Yes, remind me to reassess in 30 days
+              </label>
+            </div>
+            <button
+              type="button"
+              style={s.reminderBtn(reminderLoading)}
+              onClick={handleReminderOptIn}
+              disabled={reminderLoading}
+            >
+              {reminderLoading ? 'Saving…' : 'Set Reminder'}
+            </button>
+            {reminderMessage && (
+              <div style={s.reminderStatus(reminderStatus === 'success')} role="status">
+                {reminderMessage}
+              </div>
+            )}
           </div>
         )}
 
