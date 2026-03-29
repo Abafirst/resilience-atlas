@@ -126,13 +126,6 @@ router.get('/tiers', paymentsLimiter, (req, res) => {
                 currency: TIERS['atlas-navigator'].currency.toUpperCase(),
                 billing: 'one-time',
             },
-            {
-                id: 'atlas-premium',
-                name: TIERS['atlas-premium'].name,
-                price: TIERS['atlas-premium'].amount / 100,
-                currency: TIERS['atlas-premium'].currency.toUpperCase(),
-                billing: 'one-time',
-            },
         ],
     });
 });
