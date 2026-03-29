@@ -106,7 +106,7 @@ const webhookLimiter = rateLimit({
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /api/payments/tiers
-// Return public pricing for the two purchasable individual tiers.
+// Return public pricing for the purchasable individual tiers.
 // No authentication required — used by the frontend to display current prices.
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/tiers', paymentsLimiter, (req, res) => {
@@ -124,6 +124,13 @@ router.get('/tiers', paymentsLimiter, (req, res) => {
                 name: TIERS['atlas-navigator'].name,
                 price: TIERS['atlas-navigator'].amount / 100,
                 currency: TIERS['atlas-navigator'].currency.toUpperCase(),
+                billing: 'one-time',
+            },
+            {
+                id: 'atlas-premium',
+                name: TIERS['atlas-premium'].name,
+                price: TIERS['atlas-premium'].amount / 100,
+                currency: TIERS['atlas-premium'].currency.toUpperCase(),
                 billing: 'one-time',
             },
         ],

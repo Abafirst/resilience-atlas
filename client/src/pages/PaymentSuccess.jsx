@@ -10,8 +10,9 @@ const styles = {
   detailRow: { display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 14 },
   detailLabel: { color: '#666' },
   detailValue: { fontWeight: 600, color: '#333' },
-  btnPrimary: { width: '100%', padding: '12px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer', marginBottom: 10 },
-  btnSecondary: { width: '100%', padding: '12px', background: 'none', color: '#4f46e5', border: '1px solid #4f46e5', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer' },
+  btnPrimary: { width: '100%', padding: '12px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer', marginBottom: 10, textDecoration: 'none', display: 'block' },
+  btnSecondary: { width: '100%', padding: '12px', background: 'none', color: '#4f46e5', border: '1px solid #4f46e5', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer', marginBottom: 10 },
+  btnTertiary: { width: '100%', padding: '12px', background: 'none', color: '#666', border: '1px solid #ddd', borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: 'pointer' },
 };
 
 export default function PaymentSuccess({ result, onNewPayment, onLogout }) {
@@ -23,7 +24,7 @@ export default function PaymentSuccess({ result, onNewPayment, onLogout }) {
         <div style={styles.icon}>✅</div>
         <h2 style={styles.title}>Payment Successful!</h2>
         <p style={styles.subtitle}>
-          Thank you for your payment. Your Resilience Atlas report is being prepared and will be available shortly.
+          Thank you for your payment. Your Resilience Atlas report is now unlocked and ready to download.
         </p>
         {result && (
           <div style={styles.detail}>
@@ -45,8 +46,9 @@ export default function PaymentSuccess({ result, onNewPayment, onLogout }) {
             </div>
           </div>
         )}
-        <button style={styles.btnPrimary} onClick={onNewPayment}>Make Another Payment</button>
-        <button style={styles.btnSecondary} onClick={onLogout}>Sign Out</button>
+        <a href="/results" style={styles.btnPrimary}>View Your Results &amp; Download Report</a>
+        <button style={styles.btnSecondary} onClick={onNewPayment}>Make Another Payment</button>
+        <button style={styles.btnTertiary} onClick={onLogout}>Sign Out</button>
       </div>
     </div>
   );
