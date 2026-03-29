@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
-import RadarChart from '../components/RadarChart.jsx';
+import BrandCompass from '../components/BrandCompass.jsx';
 
 // ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
@@ -20,16 +20,19 @@ const TIER_FEATURES = {
     'Actionable starter practices',
   ],
   'atlas-navigator': [
-    'Everything in Atlas Starter',
-    'Deep dimension-by-dimension analysis',
-    'Personalised growth strategies',
-    'Evidence-based practices',
+    'Detailed explanation of all 6 resilience dimensions',
+    'Deeper interpretation of your strengths',
+    'Personalized narrative analysis',
+    'Recommended growth strategies',
+    'Expanded micro-practices for each dimension',
+    'Downloadable PDF report',
   ],
   'atlas-premium': [
     'Everything in Atlas Navigator',
-    'Lifetime access & future re-assessments',
-    'Unlimited re-downloads',
-    'Priority support',
+    'Resilience evolution tracking (historical comparison)',
+    'Unlimited reassessments',
+    'Personalized growth pathway',
+    'Micro-practice progress tracking',
   ],
 };
 
@@ -832,7 +835,7 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* Radar / compass chart — always visible after score summary */}
+        {/* Brand Compass — animated compass chart, always visible after score summary */}
         <div style={{
           background: 'rgba(255,255,255,0.04)',
           borderRadius: 16,
@@ -843,7 +846,7 @@ export default function ResultsPage() {
           <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 16, letterSpacing: 0.3 }}>
             🧭 Your Resilience Atlas Map
           </div>
-          <RadarChart scores={results.scores} size={340} />
+          <BrandCompass scores={results.scores} darkMode={true} />
         </div>
 
         {/* Dimension bars */}
