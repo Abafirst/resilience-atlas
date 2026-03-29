@@ -11,8 +11,13 @@
      4. If the user is not authenticated, redirects them to the Auth0
         Universal Login page.  The redirect_uri is always set to the quiz
         page so that Auth0 returns users here after successful login.
-     5. If the user IS authenticated, hides the loading overlay and lets
-        the rest of the page (quiz.js) proceed normally.
+     5. If the user IS authenticated:
+        a. Retrieves the Auth0 user profile (name, email).
+        b. Exposes it as window.__auth0User for other scripts to reference.
+        c. Pre-fills the intro form's First Name and Email Address fields
+           (only when those fields are currently empty, so any progress
+           already restored from localStorage is never overwritten).
+        d. Hides the loading overlay and lets quiz.js proceed normally.
 
    Auth0 Dashboard – Application settings required:
      Allowed Callback URLs : https://yourdomain.com/quiz.html,
@@ -108,7 +113,43 @@
       return;
     }
 
-    // ── 5. Authenticated – reveal the quiz ──────────────────────────────
+    // ── 5. Authenticated – pre-fill the intro form then reveal the quiz ──
+    // Retrieve the user profile to auto-populate the First Name and Email
+    // Address fields.  This saves authenticated users from retyping their
+    // details every time they take the assessment.
+    var user;
+    try {
+      user = await client.getUser();
+    } catch (err) {
+      // Non-fatal — we can still show the quiz, just without pre-filling.
+      console.warn('[quiz-auth] Could not retrieve user profile:', err);
+    }
+
+    if (user) {
+      // Expose the Auth0 user object globally so other scripts (e.g. quiz.js)
+      // can reference it when they need identity information.
+      window.__auth0User = user;
+
+      var firstNameEl = document.getElementById('firstName');
+      var emailEl     = document.getElementById('email');
+
+      // Prefer given_name (populated by most social/OIDC providers such as
+      // Google).  If absent, take the first token of the full name claim.
+      var givenName = user.given_name || '';
+      if (!givenName && user.name) {
+        givenName = user.name.split(' ')[0];
+      }
+
+      // Only fill a field if it is currently empty so that any value already
+      // restored from localStorage (saved progress) is never overwritten.
+      if (firstNameEl && givenName && !firstNameEl.value) {
+        firstNameEl.value = givenName;
+      }
+      if (emailEl && user.email && !emailEl.value) {
+        emailEl.value = user.email;
+      }
+    }
+
     hideSpinner();
   }
 
