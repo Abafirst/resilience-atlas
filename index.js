@@ -168,11 +168,18 @@ app.get('/register', (req, res) => {
     res.redirect('/');
 });
 
+// Serve React frontend from client/dist when the build is present
+const clientDist = path.join(__dirname, 'client', 'dist');
+
+// Results page: always served by the React SPA (must be before public static middleware
+// so the legacy public/legacy-results.html is never accidentally returned).
+app.get(['/results', '/results.html'], (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve React frontend from client/dist when the build is present
-const clientDist = path.join(__dirname, 'client', 'dist');
 app.use(express.static(clientDist));
 // Catch-all: serve React app for /app and all client-side sub-routes.
 // This route is intentionally registered last so all API routes above take precedence.

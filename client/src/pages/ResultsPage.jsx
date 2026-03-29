@@ -757,6 +757,7 @@ export default function ResultsPage() {
     if (!t) {
       if (tierId === 'atlas-starter') return '$4.99';
       if (tierId === 'atlas-navigator') return '$9.99';
+      if (tierId === 'atlas-premium') return '$49.99';
       return '$49.99';
     }
     return `$${Number(t.price).toFixed(2)}`;
@@ -1057,6 +1058,29 @@ export default function ResultsPage() {
                   aria-busy={checkoutLoading === 'atlas-navigator'}
                 >
                   {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : `Upgrade to Navigator · ${getPrice('atlas-navigator')}`}
+                </button>
+              </div>
+
+              {/* Atlas Premium */}
+              <div style={s.upgradeCard(false)}>
+                <div style={s.tierIcon}>⭐</div>
+                <span style={s.tierBadge('#7C3AED')}>LIFETIME</span>
+                <div style={s.tierName}>Atlas Premium</div>
+                <div style={s.tierPrice}>{getPrice('atlas-premium')}</div>
+                <div style={s.tierBilling}>one-time payment · USD</div>
+                <ul style={s.featureList}>
+                  {TIER_FEATURES['atlas-premium'].map(f => (
+                    <li key={f}><span style={s.checkmark}>✓</span>{f}</li>
+                  ))}
+                </ul>
+                <button
+                  type="button"
+                  style={s.buyBtn('#7C3AED', checkoutLoading === 'atlas-premium')}
+                  onClick={() => handleUpgrade('atlas-premium')}
+                  disabled={!!checkoutLoading}
+                  aria-busy={checkoutLoading === 'atlas-premium'}
+                >
+                  {checkoutLoading === 'atlas-premium' ? '⏳ Redirecting…' : `Upgrade to Premium · ${getPrice('atlas-premium')}`}
                 </button>
               </div>
             </div>
