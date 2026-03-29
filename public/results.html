@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Results — The Resilience Atlas™</title>
+  <meta name="description" content="View your personalized Resilience Atlas™ assessment results. See your radar chart across the Six Dimensions and discover your path forward." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="/icons/icons.css" />
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+  <style>
+    /* Results page specific styles */
+    .results-page-hero {
+      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 60%, #163351 100%);
+      color: #fff;
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .results-page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(79,70,229,.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .results-page-hero-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .results-page-hero .hero-eyebrow {
+      display: inline-block;
+      background: rgba(79,70,229,.25);
+      border: 1px solid rgba(79,70,229,.5);
+      color: #a5b4fc;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1.25rem;
+    }
+    .results-page-hero h1 {
+      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.18;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .results-page-hero .hero-subheadline {
+      font-size: clamp(.95rem, 2.2vw, 1.1rem);
+      color: #94a3b8;
+      max-width: 540px;
+      margin: 0 auto 2rem;
+      line-height: 1.65;
+    }
+
+    /* Results content layout */
+    .results-page-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Chart placeholder / chart container */
+    .results-chart-section {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: var(--radius-lg, 16px);
+      box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.10));
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .results-chart-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary, #1e293b);
+      margin-bottom: 1.5rem;
+    }
+    .results-chart-wrapper {
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+    }
+    #resilienceRadar {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Shown only when no results are in localStorage */
+    .results-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2.5rem 1rem;
+      background: var(--bg-secondary, #f8fafc);
+      border: 2px dashed var(--border-color, #e2e8f0);
+      border-radius: var(--radius-lg, 16px);
+    }
+    .results-placeholder-icon {
+      width: 56px;
+      height: 56px;
+      opacity: .45;
+    }
+    .results-placeholder p {
+      color: var(--text-secondary, #475569);
+      font-size: .97rem;
+      max-width: 360px;
+      line-height: 1.6;
+    }
+    .results-placeholder a {
+      color: var(--accent-primary, #4f46e5);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .results-placeholder a:hover { text-decoration: underline; }
+
+    /* Summary section */
+    .results-summary-section {
+      background: var(--surface, #fff);
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: var(--radius-lg, 16px);
+      box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,.10));
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .results-summary-section h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary, #1e293b);
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color, #e2e8f0);
+      padding-bottom: .75rem;
+    }
+    #results-summary-placeholder {
+      color: var(--text-secondary, #475569);
+      font-size: .97rem;
+      line-height: 1.7;
+    }
+
+    /* Dimension breakdown rows */
+    .dimension-scores-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+    }
+    .dimension-score-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .dimension-score-label {
+      flex: 0 0 200px;
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--text-primary, #1e293b);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dimension-score-bar-wrap {
+      flex: 1;
+      background: var(--bg-secondary, #f1f5f9);
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .dimension-score-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent-primary, #4f46e5);
+      transition: width .6s ease;
+    }
+    .dimension-score-value {
+      flex: 0 0 36px;
+      text-align: right;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text-secondary, #475569);
+    }
+
+    /* CTA section */
+    .results-cta-section {
+      text-align: center;
+      padding: 2rem 0 0;
+    }
+    .results-cta-section .results-actions {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 540px) {
+      .dimension-score-label { flex: 0 0 130px; font-size: .82rem; }
+      .results-chart-section,
+      .results-summary-section { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/assessment.html" class="nav-link">Assessment</a>
+        <a href="/research.html" class="nav-link">Research</a>
+        <a href="/team.html" class="nav-link">Teams</a>
+        <a href="/kids.html" class="nav-link">Kids</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+        <a class="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="results-page-hero" aria-label="Results header">
+    <div class="results-page-hero-inner">
+      <span class="hero-eyebrow">Assessment Complete</span>
+      <h1>Your Resilience Assessment Results</h1>
+      <p class="hero-subheadline">
+        Your personalized map across the Six Dimensions of Resilience is ready.
+        Explore where you are strong and where you have room to grow.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main results content -->
+  <main id="main-content" class="results-page-content" aria-label="Assessment results">
+
+    <!-- Radar chart section -->
+    <section class="results-chart-section" aria-labelledby="chartHeading">
+      <h2 id="chartHeading">Your Resilience Radar</h2>
+      <div class="results-chart-wrapper" id="radarChartContainer">
+        <!-- Chart is rendered here by results-chart.js when results exist in localStorage.
+             The placeholder below is shown until results load or if none are found. -->
+        <canvas id="resilienceRadar" role="img" aria-label="Radar chart of your resilience profile across six dimensions"></canvas>
+        <div class="results-placeholder" id="chartPlaceholder" aria-live="polite">
+          <img class="results-placeholder-icon" src="/assets/compass-icon.svg" alt="" aria-hidden="true">
+          <p>
+            Your radar chart will appear here once you complete the assessment.
+            <br>
+            <a href="/quiz.html">Take the assessment now &rarr;</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results summary section -->
+    <section class="results-summary-section" aria-labelledby="summaryHeading">
+      <h2 id="summaryHeading">Results Summary</h2>
+      <div id="results-summary-placeholder" aria-live="polite">
+        <!-- Dimension score bars are injected here by results.js -->
+        <ul class="dimension-scores-list" id="dimensionScoresList" aria-label="Dimension scores">
+          <!-- Populated dynamically -->
+        </ul>
+        <p id="noResultsMsg" style="margin-top:.5rem">
+          Complete the assessment to see your detailed results summary here.
+          <a href="/quiz.html">Start the assessment &rarr;</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Call-to-action buttons -->
+    <section class="results-cta-section" aria-label="Result actions">
+      <div class="results-actions">
+        <a href="/quiz.html" class="btn btn-primary" id="restartAssessmentBtn">
+          &#8635; Restart Assessment
+        </a>
+        <button type="button" class="btn btn-secondary" id="printResultsBtn" onclick="window.print()">
+          &#128438; Download / Print Results
+        </button>
+        <a href="/" class="btn btn-outline">
+          &#8592; Back to Home
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+        <a href="/results.html">My Results</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Foundations</a>
+        <a href="/research.html#dimensions">Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team.html">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+        <a href="/founder.html">Our Founder</a>
+        <a href="/research.html">Research</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p><strong>The Resilience Atlas&#8482; — Understand. Strengthen. Transform.</strong></p>
+      <p>A research-based resilience assessment platform founded on published 2013 doctoral research.</p>
+      <p>&copy; 2026 The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+  </footer>
+
+  <script src="/js/chart.js"></script>
+  <script src="/js/results-chart.js"></script>
+  <script src="/js/theme-toggle.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    // Dimension accent colors, matching results.js constants
+    var DIM_COLORS = {
+      'Cognitive-Narrative':   '#4F46E5',
+      'Relational-Connective': '#059669',
+      'Agentic-Generative':    '#D97706',
+      'Emotional-Adaptive':    '#DC2626',
+      'Spiritual-Reflective':  '#7C3AED',
+      'Somatic-Regulative':    '#0891B2',
+    };
+
+    function renderScoreBars(scores) {
+      var list = document.getElementById('dimensionScoresList');
+      var noMsg = document.getElementById('noResultsMsg');
+      if (!list) return;
+      list.innerHTML = '';
+      if (noMsg) noMsg.style.display = 'none';
+      Object.keys(scores).forEach(function (dim) {
+        var score = Math.round(scores[dim]);
+        var color = DIM_COLORS[dim] || 'var(--accent-primary)';
+        var li = document.createElement('li');
+        li.className = 'dimension-score-row';
+        li.innerHTML =
+          '<span class="dimension-score-label">' + dim + '</span>' +
+          '<div class="dimension-score-bar-wrap" role="progressbar" aria-valuenow="' + score + '" aria-valuemin="0" aria-valuemax="100" aria-label="' + dim + ' score">' +
+            '<div class="dimension-score-bar" style="width:' + score + '%;background:' + color + '"></div>' +
+          '</div>' +
+          '<span class="dimension-score-value">' + score + '</span>';
+        list.appendChild(li);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var stored = null;
+      try { stored = localStorage.getItem('resilience_results'); } catch (e) {}
+
+      var placeholder = document.getElementById('chartPlaceholder');
+      var canvas = document.getElementById('resilienceRadar');
+
+      if (stored) {
+        var results = null;
+        try { results = JSON.parse(stored); } catch (e) {}
+        if (results && results.scores) {
+          // Hide placeholder, show canvas
+          if (placeholder) placeholder.style.display = 'none';
+          if (canvas) canvas.style.display = 'block';
+          // Render dimension score bars
+          renderScoreBars(results.scores);
+          return;
+        }
+      }
+
+      // No results: hide canvas, show placeholder
+      if (canvas) canvas.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'flex';
+    });
+  }());
+  </script>
+
+</body>
+</html>
