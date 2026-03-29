@@ -412,7 +412,7 @@ function _applyInsightProgressVisibility() {
   if (!el) return;
   // Hide the teaser for anyone who has paid — either via current tier in
   // localStorage or via a prior purchase confirmed by the backend.
-  const isPaid = (window.PaymentGating && window.PaymentGating.isDeepReport()) ||
+  const isPaid = (window.PaymentGating && window.PaymentGating.isAnyPaidTier()) ||
                  Boolean(window._hasPriorPdfAccess);
   el.hidden = isPaid;
 }
@@ -423,6 +423,7 @@ function _applyInsightProgressVisibility() {
 // so the user can regenerate the exact report for that specific attempt.
 function renderPriorReportsSection(purchases) {
   var TIER_LABELS = {
+    'atlas-starter':   'Atlas Starter',
     'atlas-navigator': 'Atlas Navigator',
     'atlas-premium':   'Atlas Premium (Lifetime)',
     'starter':         'Atlas Team Starter',
@@ -706,8 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Render upgrade cards for free users ───────────────
   const upgradeContainer = document.getElementById('upgradeCardsContainer');
   if (upgradeContainer && window.UpgradeCards) {
-    const hasDeepReport = window.PaymentGating && window.PaymentGating.isDeepReport();
-    if (!hasDeepReport) {
+    const hasAnyPaidTier = window.PaymentGating && window.PaymentGating.isAnyPaidTier();
+    if (!hasAnyPaidTier) {
       upgradeContainer.innerHTML = window.UpgradeCards.renderComparisonCards();
     }
   }
@@ -723,11 +724,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Lock/style the PDF download button for free users ─
   // Show a visual "locked" state so users know purchase is required before clicking.
-  const hasDeepReportNow = window.PaymentGating && window.PaymentGating.isDeepReport();
+  const hasAnyPaidTierNow = window.PaymentGating && window.PaymentGating.isAnyPaidTier();
   const downloadBtnEl = document.getElementById('btnDownload');
-  if (downloadBtnEl && !hasDeepReportNow) {
+  if (downloadBtnEl && !hasAnyPaidTierNow) {
     downloadBtnEl.classList.add('btn-locked');
-    downloadBtnEl.setAttribute('aria-label', 'Unlock PDF download — requires Atlas Navigator or Atlas Premium');
+    downloadBtnEl.setAttribute('aria-label', 'Unlock PDF download — requires Atlas Starter or Atlas Navigator');
     downloadBtnEl.innerHTML =
       '<span aria-hidden="true">&#128274;</span> ' +
       '<span class="btn-label">Unlock PDF Download</span>';
@@ -804,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         // Allow download if the user has an active paid tier OR if a prior
         // purchase was confirmed by the backend (window._hasPriorPdfAccess).
-        if (window.PaymentGating && !window.PaymentGating.isDeepReport() && !window._hasPriorPdfAccess) {
+        if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
           // Direct free users to the upgrade/purchase flow instead of just an alert.
           // Scroll to upgrade cards and show a clear call-to-action.
           const upgradeEl = document.getElementById('upgradeCardsContainer');
@@ -817,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
               upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
           }
-          showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Choose a plan below to unlock.', 'error', 'lock');
+          showAlert('pdfAlert', 'PDF download requires an Atlas Starter or Atlas Navigator purchase. Choose a plan below to unlock.', 'error', 'lock');
           return;
         }
         const emailInputEl = document.getElementById('emailInput');
@@ -911,10 +912,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailInput) emailInput.focus();
         return;
       }
-      // Gate: a Deep Report purchase is required to email the PDF.
+      // Gate: a paid report purchase is required to email the PDF.
       // Allow if the user has an active tier OR a prior purchase confirmed by the backend.
-      if (window.PaymentGating && !window.PaymentGating.isDeepReport() && !window._hasPriorPdfAccess) {
-        showAlert('emailAlert', 'Sending your full PDF report requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
+      if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
+        showAlert('emailAlert', 'Sending your PDF report requires an Atlas Starter or Atlas Navigator purchase.', 'error', 'lock');
         const upgradeEl = document.getElementById('upgradeCardsContainer');
         upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;

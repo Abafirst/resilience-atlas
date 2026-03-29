@@ -987,7 +987,9 @@ export default function ResultsPage() {
                 ? 'Your Atlas Premium lifetime access lets you download this report any time.'
                 : tier === 'atlas-starter'
                   ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
-                  : 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                  : tier === 'atlas-navigator'
+                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                    : 'Your report is ready. Download your personalised PDF now.'
               }
             </p>
             {pdfError && (

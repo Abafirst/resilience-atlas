@@ -12,6 +12,13 @@
  */
 (function (window) {
 
+    const ATLAS_STARTER_FEATURES = [
+        'Full PDF summary report',
+        'Overall resilience score',
+        'Top dimension highlights',
+        'Actionable starter practices',
+    ];
+
     const ATLAS_NAVIGATOR_FEATURES = [
         'Detailed explanation of all 6 resilience dimensions',
         'Deeper interpretation of your strengths',
@@ -21,22 +28,14 @@
         'Downloadable PDF report',
     ];
 
-    const ATLAS_PREMIUM_FEATURES = [
-        'Everything in Atlas Navigator',
-        'Resilience evolution tracking (historical comparison)',
-        'Unlimited reassessments',
-        'Personalized growth pathway',
-        'Micro-practice progress tracking',
-    ];
-
     /** Human-readable tier titles keyed by tier id. */
     var TIER_TITLES = {
+        'atlas-starter':   'Atlas Starter',
         'atlas-navigator': 'Atlas Navigator',
-        'atlas-premium':   'Atlas Premium',
     };
 
     /** Fallback prices used when the backend is unreachable or fetch is unavailable. */
-    var FALLBACK_PRICES = { 'atlas-navigator': '$9.99', 'atlas-premium': '$49.99' };
+    var FALLBACK_PRICES = { 'atlas-starter': '$4.99', 'atlas-navigator': '$9.99' };
 
     /** Cache of fetched prices: { 'atlas-navigator': '$9.99', 'atlas-premium': '$49.99' } */
     var _prices = null;
@@ -89,7 +88,7 @@
                 var price = _prices[tier];
                 btn.setAttribute('aria-label', 'Unlock ' + title + ' for ' + price);
                 // Also update the button text label if it contains the price placeholder.
-                var prefix = tier === 'atlas-navigator' ? 'Get My Deep Report' : 'Unlock Lifetime Access';
+                var prefix = tier === 'atlas-starter' ? 'Get Starter Report' : 'Get My Deep Report';
                 btn.textContent = prefix + ' \u2014 ' + price;
             }
         });
@@ -97,21 +96,21 @@
 
     /**
      * Render a single upgrade card for the given tier.
-     * @param {'atlas-navigator'|'atlas-premium'} tier
+     * @param {'atlas-starter'|'atlas-navigator'} tier
      * @returns {string} HTML string
      */
     function renderUpgradeCard(tier) {
-        const isNavigator = tier === 'atlas-navigator';
+        const isStarter   = tier === 'atlas-starter';
         const title       = TIER_TITLES[tier] || tier;
         const price       = (_prices && _prices[tier]) ? _prices[tier] : '\u2026'; // '…' while loading
-        const features    = isNavigator ? ATLAS_NAVIGATOR_FEATURES : ATLAS_PREMIUM_FEATURES;
-        const badgeText   = isNavigator ? 'One-Time PDF Download' : 'Lifetime Access';
-        const badgeClass  = isNavigator ? 'badge-blue' : 'badge-gold';
-        const btnPrefix   = isNavigator ? 'Get My Deep Report' : 'Unlock Lifetime Access';
+        const features    = isStarter ? ATLAS_STARTER_FEATURES : ATLAS_NAVIGATOR_FEATURES;
+        const badgeText   = isStarter  ? 'STARTER'        : 'POPULAR';
+        const badgeClass  = isStarter  ? 'badge-green'    : 'badge-blue';
+        const btnPrefix   = isStarter  ? 'Get Starter Report' : 'Get My Deep Report';
         const btnLabel    = price !== '\u2026' ? `${btnPrefix} — ${price}` : btnPrefix;
-        const description = isNavigator
-            ? 'Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.'
-            : 'Unlimited reassessments, evolution tracking, and all future Deep Report PDFs. One payment, lifetime access.';
+        const description = isStarter
+            ? 'Get your personalised PDF summary with your overall score, top dimension highlights, and starter practices.'
+            : 'Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.';
 
         return `
             <div class="upgrade-card upgrade-card--${tier}" role="article" aria-labelledby="upgrade-title-${tier}">
@@ -146,13 +145,13 @@
     function renderComparisonCards() {
         return `
             <div class="upgrade-comparison" role="region" aria-label="Upgrade options">
-                <h2 class="upgrade-comparison__title">Download Your Deep Resilience Report</h2>
+                <h2 class="upgrade-comparison__title">Unlock Your Full Resilience Report</h2>
                 <p class="upgrade-comparison__subtitle">
-                    Choose the option that fits you best — a one-time PDF download or lifetime access for unlimited reassessments.
+                    Choose the option that fits you best — a concise PDF summary or a complete deep-dive report.
                 </p>
                 <div class="upgrade-cards-grid">
+                    ${renderUpgradeCard('atlas-starter')}
                     ${renderUpgradeCard('atlas-navigator')}
-                    ${renderUpgradeCard('atlas-premium')}
                 </div>
                 <p class="upgrade-comparison__disclaimer">
                     For educational and self-reflection purposes only. Not a clinical diagnosis.
