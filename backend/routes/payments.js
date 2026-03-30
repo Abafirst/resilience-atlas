@@ -77,6 +77,11 @@ const TIERS = {
         amount: 69900, // $699 one-time
         currency: 'usd',
     },
+    'enterprise': {
+        name: 'Atlas Enterprise',
+        amount: 249900, // Starting at $2,499 one-time
+        currency: 'usd',
+    },
 };
 
 // TIER_CONFIG is imported from backend/config/tiers.js — the canonical source
@@ -183,7 +188,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be one of: atlas-starter, atlas-navigator, atlas-premium, starter, pro.' });
+                .json({ error: 'Invalid tier. Must be one of: atlas-starter, atlas-navigator, atlas-premium, starter, pro, enterprise.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
@@ -236,8 +241,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             // unnecessary friction to the checkout flow.
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
-            success_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results'}?upgrade=cancelled`,
+            success_url: `${appUrl}/${['starter', 'pro', 'enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}/${['starter', 'pro', 'enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=cancelled`,
         });
 
         // Record pending purchase so the webhook can update it later.
@@ -398,10 +403,10 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
             );
         }
 
-        // Send confirmation email for team tiers (Basic/Premium) — self-serve only.
+        // Send confirmation email for team tiers (Basic/Premium/Enterprise) — self-serve only.
         // The purchase variable is non-null only when we are the first to mark
         // confirmationEmailSent = true, preventing duplicate sends with webhook.
-        const isTeamTier = tier === 'starter' || tier === 'pro';
+        const isTeamTier = tier === 'starter' || tier === 'pro' || tier === 'enterprise';
         if (isTeamTier && email && purchase) {
             const tierConfig = TIERS[tier] || {};
             const priceInDollars = tierConfig.amount ? `$${(tierConfig.amount / 100).toFixed(0)}` : '';
