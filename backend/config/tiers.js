@@ -41,7 +41,7 @@ const TIER_CONFIG = {
     },
     'atlas-starter': {
         name: 'Atlas Starter',
-        price: 499, // $4.99
+        price: 999, // $9.99
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
@@ -50,12 +50,12 @@ const TIER_CONFIG = {
         dataRetention: '6 months',
     },
     'atlas-navigator': {
-        name: 'Atlas Navigator',
-        price: 999, // $9.99
+        name: 'Atlas Navigator (Lifetime)',
+        price: 4999, // $49.99
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
-        features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies'],
+        features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies', 'Lifetime access'],
         gates: ['deep-report'],
         dataRetention: '1 year',
     },

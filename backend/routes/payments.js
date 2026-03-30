@@ -54,12 +54,12 @@ const HTML_ENTITY_DECODE_MAP = {
 const TIERS = {
     'atlas-starter': {
         name: 'Atlas Starter',
-        amount: 499, // $4.99
+        amount: 999, // $9.99
         currency: 'usd',
     },
     'atlas-navigator': {
-        name: 'Atlas Navigator',
-        amount: 999, // $9.99
+        name: 'Atlas Navigator (Lifetime)',
+        amount: 4999, // $49.99
         currency: 'usd',
     },
     'atlas-premium': {
