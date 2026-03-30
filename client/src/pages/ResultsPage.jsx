@@ -16,8 +16,8 @@ const UPSELL_VARIANT_COPY = {
   control: {
     'atlas-navigator': {
       headline: 'Unlock Your Full Resilience Analysis',
-      subtext:  'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment.',
-      ctaLabel: 'Get Deep Report — $9.99',
+      subtext:  'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment, lifetime access.',
+      ctaLabel: 'Get Deep Report — $49.99',
       offer:    null,
     },
     'atlas-premium': {
@@ -31,7 +31,7 @@ const UPSELL_VARIANT_COPY = {
     'atlas-navigator': {
       headline: "You're in the Top 20% — Unlock What's Holding You Back",
       subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
-      ctaLabel: 'Unlock My Deep Report ($9.99)',
+      ctaLabel: 'Unlock My Deep Report ($49.99)',
       offer:    null,
     },
     'atlas-premium': {
@@ -44,9 +44,9 @@ const UPSELL_VARIANT_COPY = {
   variant_b: {
     'atlas-navigator': {
       headline: '🎉 Complete Your Resilience Atlas',
-      subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep.",
-      ctaLabel: 'Get the Full Report — $9.99 One-Time',
-      offer:    null,
+      subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep forever.",
+      ctaLabel: 'Get the Full Report — $49.99 Lifetime',
+      offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
     },
     'atlas-premium': {
       headline: '⭐ Lifetime Access — No Subscriptions Ever',
@@ -59,7 +59,7 @@ const UPSELL_VARIANT_COPY = {
     'atlas-navigator': {
       headline: 'Your Resilience Profile Is Only Half Complete',
       subtext:  'The free report covers the basics. Upgrade to uncover the full picture: all 6 dimensions, your stress profile, and a 30-day action plan.',
-      ctaLabel: 'Complete My Profile — $9.99',
+      ctaLabel: 'Complete My Profile — $49.99',
       offer:    null,
     },
     'atlas-premium': {
@@ -321,6 +321,7 @@ const NAVIGATOR_FEATURES = [
   'Recommended growth strategies',
   'Expanded micro-practices for each dimension',
   'Downloadable PDF report',
+  'Lifetime access — one-time purchase, yours to keep forever',
 ];
 
 function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
@@ -368,7 +369,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
         <div className="upgrade-card upgrade-card--atlas-navigator" role="article" aria-labelledby="upgrade-title-atlas-navigator">
           <div className="upgrade-card__header">
             <span className="upgrade-badge badge-blue">POPULAR</span>
-            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
+            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator (Lifetime)</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
             <p className="upgrade-card__description">
               Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.
@@ -1614,7 +1615,7 @@ function tierLabel(tierId) {
   switch (tierId) {
     case 'atlas-premium':   return 'Atlas Premium (Lifetime)';
     case 'atlas-starter':   return 'Atlas Starter';
-    case 'atlas-navigator': return 'Atlas Navigator';
+    case 'atlas-navigator': return 'Atlas Navigator (Lifetime)';
     default:                return tierId || 'premium';
   }
 }
@@ -2197,8 +2198,8 @@ export default function ResultsPage() {
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
     if (!t) {
-      if (tierId === 'atlas-starter') return '$4.99';
-      if (tierId === 'atlas-navigator') return '$9.99';
+      if (tierId === 'atlas-starter') return '$9.99';
+      if (tierId === 'atlas-navigator') return '$49.99';
       if (tierId === 'atlas-premium') return '$49.99';
       return '$49.99';
     }
@@ -2263,7 +2264,7 @@ export default function ResultsPage() {
       {/* ── Promotional banner (flash offer for free users) ──────────── */}
       {promoBanner && (
         <PromoBanner
-          message="🎉 Get your complete Deep Resilience Report PDF for just $9.99"
+          message="🎉 Get your complete Deep Resilience Report PDF for just $49.99 — lifetime access"
           ctaLabel="Claim Offer"
           targetTier={promoBanner.tier}
           trigger={promoBanner.trigger}
