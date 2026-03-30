@@ -36,7 +36,8 @@ function normalizePlan(plan) {
  *   'facilitation' — action plans, workshop guides, discussion prompts
  *   'branding'     — custom logo/brand colors on dashboard & reports
  *   'webhooks'     — webhook event system
- *   'deep-report'  — individual deep report PDF
+ *   'basic-report' — Atlas Starter PDF summary report
+ *   'deep-report'  — Atlas Navigator/Premium individual deep report PDF
  *   'premium'      — atlas premium features (lifetime, unlimited reassessments)
  *
  * @param {string} plan        — org.plan value (e.g. 'teams-starter', 'pro')

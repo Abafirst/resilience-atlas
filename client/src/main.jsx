@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 import App from './App.jsx';
 
+// ===== SPA MARKER FOR DEBUGGING =====
+window._spaVersion = '2026-03-29-mytest';
+console.log('[DEBUG][SPA] Resilience Atlas SPA loaded, version:', window._spaVersion);
+// ====================================
 /**
  * Fetch Auth0 runtime configuration from the backend /config endpoint.
  *
