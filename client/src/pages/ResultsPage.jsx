@@ -2,6 +2,408 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 
+// ── Upsell system constants (ported from upsell-system.js) ─────────────────
+const UPSELL_COOLDOWN_KEY   = 'upsell_cooldown';
+const UPSELL_SESSION_KEY    = 'upsell_session_id';
+const UPSELL_VARIANT_KEY    = 'upsell_ab_variant';
+const UPSELL_COOLDOWN_MS    = 24 * 60 * 60 * 1000; // 24 hours
+const UPSELL_OFFER_HOURS    = 48;
+const UPSELL_FIRST_VISIT_KEY = 'first_visit_ts';
+const UPSELL_VARIANTS       = ['control', 'variant_a', 'variant_b', 'variant_c'];
+
+// A/B variant copy matrix
+const UPSELL_VARIANT_COPY = {
+  control: {
+    'atlas-navigator': {
+      headline: 'Unlock Your Full Resilience Analysis',
+      subtext:  'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment.',
+      ctaLabel: 'Get Deep Report — $9.99',
+      offer:    null,
+    },
+    'atlas-premium': {
+      headline: 'Take Your Resilience Journey Further',
+      subtext:  'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium licence.',
+      ctaLabel: 'Upgrade to Atlas Premium — $49.99',
+      offer:    null,
+    },
+  },
+  variant_a: {
+    'atlas-navigator': {
+      headline: "You're in the Top 20% — Unlock What's Holding You Back",
+      subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
+      ctaLabel: 'Unlock My Deep Report ($9.99)',
+      offer:    null,
+    },
+    'atlas-premium': {
+      headline: 'Most People See Results in 30 Days',
+      subtext:  'Atlas Premium members track their resilience growth over time. Lifetime access, zero subscriptions.',
+      ctaLabel: 'Start My Journey — $49.99',
+      offer:    null,
+    },
+  },
+  variant_b: {
+    'atlas-navigator': {
+      headline: '🎉 Complete Your Resilience Atlas',
+      subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep.",
+      ctaLabel: 'Get the Full Report — $9.99 One-Time',
+      offer:    null,
+    },
+    'atlas-premium': {
+      headline: '⭐ Lifetime Access — No Subscriptions Ever',
+      subtext:  'One payment. Unlimited reassessments, evolution tracking, growth pathways, and priority support. No recurring charges.',
+      ctaLabel: 'Unlock Atlas Premium — $49.99 Lifetime',
+      offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
+    },
+  },
+  variant_c: {
+    'atlas-navigator': {
+      headline: 'Your Resilience Profile Is Only Half Complete',
+      subtext:  'The free report covers the basics. Upgrade to uncover the full picture: all 6 dimensions, your stress profile, and a 30-day action plan.',
+      ctaLabel: 'Complete My Profile — $9.99',
+      offer:    null,
+    },
+    'atlas-premium': {
+      headline: 'Compare. Grow. Repeat.',
+      subtext:  'Atlas Premium unlocks side-by-side comparisons, historical trends, and unlimited retakes — so you can measure real progress.',
+      ctaLabel: 'Get Lifetime Access — $49.99',
+      offer:    null,
+    },
+  },
+};
+
+// Value propositions catalogue
+const UPSELL_VALUE_PROPS = {
+  detailed_analytics:  { icon: '📊', text: 'Detailed analytics across all 6 resilience dimensions' },
+  comparison:          { icon: '🔁', text: 'Side-by-side comparison with your previous assessments' },
+  priority_support:    { icon: '🛟', text: 'Priority email support from our resilience coaches' },
+  ad_free:             { icon: '🚫', text: 'Completely ad-free experience throughout the app' },
+  pdf_download:        { icon: '📄', text: 'Beautiful downloadable PDF report you keep forever' },
+  unlimited_retakes:   { icon: '🔄', text: 'Unlimited reassessments to track your growth' },
+  growth_roadmap:      { icon: '🗺️', text: '30-day personalised growth roadmap' },
+  benchmarking:        { icon: '📈', text: 'See how you rank against thousands of users' },
+};
+
+// ── Upsell helpers ────────────────────────────────────────────────────────
+function upsellGetSessionId() {
+  try {
+    let id = localStorage.getItem(UPSELL_SESSION_KEY);
+    if (!id) {
+      id = 'sess_' + Math.random().toString(36).slice(2, 10) +
+           Math.random().toString(36).slice(2, 10);
+      localStorage.setItem(UPSELL_SESSION_KEY, id);
+    }
+    return id;
+  } catch (_) { return 'sess_unknown'; }
+}
+
+function upsellGetVariant() {
+  try {
+    let v = localStorage.getItem(UPSELL_VARIANT_KEY);
+    if (!v || !UPSELL_VARIANTS.includes(v)) {
+      const id   = upsellGetSessionId();
+      const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+      v = UPSELL_VARIANTS[hash % UPSELL_VARIANTS.length];
+      localStorage.setItem(UPSELL_VARIANT_KEY, v);
+    }
+    return v;
+  } catch (_) { return 'control'; }
+}
+
+function upsellGetCopy(targetTier) {
+  const variant = upsellGetVariant();
+  return (UPSELL_VARIANT_COPY[variant] || UPSELL_VARIANT_COPY.control)[targetTier] ||
+         UPSELL_VARIANT_COPY.control[targetTier];
+}
+
+function upsellIsOnCooldown() {
+  try {
+    const last = parseInt(localStorage.getItem(UPSELL_COOLDOWN_KEY) || '0', 10);
+    return Date.now() - last < UPSELL_COOLDOWN_MS;
+  } catch (_) { return false; }
+}
+
+function upsellSetCooldown() {
+  try { localStorage.setItem(UPSELL_COOLDOWN_KEY, String(Date.now())); } catch (_) {}
+}
+
+function upsellIsOfferActive() {
+  try {
+    const metaEl = document.querySelector('meta[name="upsell-offer"]');
+    if (metaEl) {
+      const exp = metaEl.getAttribute('data-expires');
+      if (exp) return Date.now() < new Date(exp).getTime();
+      return true;
+    }
+    const firstVisit = parseInt(localStorage.getItem(UPSELL_FIRST_VISIT_KEY) || String(Date.now()), 10);
+    if (!localStorage.getItem(UPSELL_FIRST_VISIT_KEY)) {
+      localStorage.setItem(UPSELL_FIRST_VISIT_KEY, String(firstVisit));
+    }
+    return Date.now() - firstVisit < UPSELL_OFFER_HOURS * 60 * 60 * 1000;
+  } catch (_) { return false; }
+}
+
+function upsellTrack(eventType, trigger, targetTier, extra) {
+  try {
+    const payload = {
+      sessionId:  upsellGetSessionId(),
+      trigger,
+      variant:    upsellGetVariant(),
+      targetTier,
+      eventType,
+      userTier:   (localStorage.getItem('resilience_tier') || 'free'),
+      offerShown: Boolean(extra && extra.offerShown),
+      campaign:   (extra && extra.campaign) || null,
+      pageUrl:    window.location.pathname,
+    };
+    fetch('/api/upsell/event', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    }).catch(() => {});
+  } catch (_) {}
+}
+
+// ── UpsellModal component ─────────────────────────────────────────────────
+function UpsellModal({ targetTier, trigger, onClose, onUpgrade }) {
+  const copy        = upsellGetCopy(targetTier);
+  const offerActive = upsellIsOfferActive() && Boolean(copy && copy.offer);
+  const propKeys    = targetTier === 'atlas-navigator'
+    ? ['detailed_analytics', 'pdf_download', 'growth_roadmap', 'benchmarking']
+    : ['comparison', 'unlimited_retakes', 'detailed_analytics', 'ad_free'];
+
+  // Capture stable copies so the effect closure never goes stale.
+  const tierRef    = useRef(targetTier);
+  const triggerRef = useRef(trigger);
+  const offerRef   = useRef(offerActive);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    const t = tierRef.current, tr = triggerRef.current, of = offerRef.current;
+    upsellTrack('impression', tr, t, { offerShown: of });
+
+    function onKey(e) {
+      if (e.key === 'Escape') {
+        upsellTrack('dismiss', tr, t, { offerShown: of });
+        upsellSetCooldown();
+        onCloseRef.current();
+      }
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  function handleDismiss() {
+    upsellTrack('dismiss', trigger, targetTier, { offerShown: offerActive });
+    upsellSetCooldown();
+    onClose();
+  }
+
+  function handleCta() {
+    upsellTrack('click', trigger, targetTier, { offerShown: offerActive });
+    onClose();
+    onUpgrade(targetTier);
+  }
+
+  return (
+    <div
+      className="upsell-modal-backdrop"
+      id="upsell-modal-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="upsell-modal-title"
+      onClick={e => { if (e.target.id === 'upsell-modal-backdrop') handleDismiss(); }}
+    >
+      <div className="upsell-modal">
+        <button
+          className="upsell-modal__close"
+          id="upsell-modal-dismiss"
+          aria-label="Dismiss upgrade prompt"
+          onClick={handleDismiss}
+        >
+          &#10005;
+        </button>
+
+        {offerActive && copy.offer && (
+          <>
+            <div className="upsell-offer-badge">{copy.offer.label}</div>
+            <p className="upsell-offer-saving">{copy.offer.savingText}</p>
+          </>
+        )}
+
+        <div className="upsell-modal__header">
+          <span className="upsell-premium-badge">
+            ⭐ Premium
+          </span>
+          <h2 id="upsell-modal-title" className="upsell-modal__title">{copy.headline}</h2>
+          <p className="upsell-modal__subtext">{copy.subtext}</p>
+        </div>
+
+        <ul className="upsell-value-list" aria-label="Included features">
+          {propKeys.map(k => {
+            const p = UPSELL_VALUE_PROPS[k];
+            if (!p) return null;
+            return (
+              <li key={k} className="upsell-value-prop">
+                <span className="upsell-value-prop__icon" aria-hidden="true">{p.icon}</span>
+                <span>{p.text}</span>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="upsell-modal__actions">
+          <button
+            className="btn upsell-cta-btn"
+            id="upsell-cta"
+            data-tier={targetTier}
+            aria-label={copy.ctaLabel}
+            onClick={handleCta}
+          >
+            {copy.ctaLabel}
+          </button>
+          <button className="upsell-maybe-later" id="upsell-maybe-later" onClick={handleDismiss}>
+            Maybe later
+          </button>
+        </div>
+
+        <p className="upsell-trust-note">
+          🔒 Secure checkout · One-time payment · No recurring charges
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── PromoBanner component ─────────────────────────────────────────────────
+function PromoBanner({ message, ctaLabel, targetTier, trigger, onClose, onUpgrade }) {
+  const tierRef    = useRef(targetTier);
+  const triggerRef = useRef(trigger || 'banner');
+
+  useEffect(() => {
+    upsellTrack('impression', triggerRef.current, tierRef.current, {});
+  }, []);
+
+  function handleCta() {
+    upsellTrack('click', trigger || 'banner', targetTier, {});
+    onUpgrade(targetTier);
+  }
+
+  function handleClose() {
+    upsellTrack('dismiss', trigger || 'banner', targetTier, {});
+    upsellSetCooldown();
+    onClose();
+  }
+
+  return (
+    <div id="upsell-promo-banner" className="upsell-promo-banner" role="banner" aria-label="Special offer">
+      <span className="upsell-promo-banner__text">{message}</span>
+      <button className="upsell-promo-banner__cta" data-tier={targetTier} onClick={handleCta}>
+        {ctaLabel}
+      </button>
+      <button className="upsell-promo-banner__close" aria-label="Dismiss banner" onClick={handleClose}>
+        &#10005;
+      </button>
+    </div>
+  );
+}
+
+// ── UpgradeCardsSection component ─────────────────────────────────────────
+const STARTER_FEATURES   = [
+  'Full PDF summary report',
+  'Overall resilience score',
+  'Top dimension highlights',
+  'Actionable starter practices',
+];
+const NAVIGATOR_FEATURES = [
+  'Detailed explanation of all 6 resilience dimensions',
+  'Deeper interpretation of your strengths',
+  'Personalized narrative analysis',
+  'Recommended growth strategies',
+  'Expanded micro-practices for each dimension',
+  'Downloadable PDF report',
+];
+
+function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
+  return (
+    <div className="upgrade-comparison" role="region" aria-label="Upgrade options" id="upgradeCardsContainer">
+      <h2 className="upgrade-comparison__title">Unlock Your Full Resilience Report</h2>
+      <p className="upgrade-comparison__subtitle">
+        Choose the option that fits you best — a concise PDF summary or a complete deep-dive report.
+      </p>
+      <div className="upgrade-cards-grid">
+        {/* Atlas Starter */}
+        <div className="upgrade-card upgrade-card--atlas-starter" role="article" aria-labelledby="upgrade-title-atlas-starter">
+          <div className="upgrade-card__header">
+            <span className="upgrade-badge badge-green">STARTER</span>
+            <h3 id="upgrade-title-atlas-starter" className="upgrade-card__title">Atlas Starter</h3>
+            <p className="upgrade-card__price" data-price-tier="atlas-starter">{getPrice('atlas-starter')}</p>
+            <p className="upgrade-card__description">
+              Get your personalised PDF summary with your overall score, top dimension highlights, and starter practices.
+            </p>
+          </div>
+          <ul className="upgrade-card__features" aria-label="Features included in Atlas Starter">
+            {STARTER_FEATURES.map(f => (
+              <li key={f}><span aria-hidden="true">&#10003;</span> {f}</li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="btn btn-upgrade"
+            data-tier="atlas-starter"
+            aria-label={`Unlock Atlas Starter for ${getPrice('atlas-starter')}`}
+            onClick={() => onUpgrade('atlas-starter')}
+            disabled={!!checkoutLoading}
+            aria-busy={checkoutLoading === 'atlas-starter'}
+          >
+            {checkoutLoading === 'atlas-starter'
+              ? '⏳ Redirecting…'
+              : `Get Starter Report — ${getPrice('atlas-starter')}`}
+          </button>
+          <p className="upgrade-card__trust">
+            🔒 Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
+          </p>
+        </div>
+
+        {/* Atlas Navigator */}
+        <div className="upgrade-card upgrade-card--atlas-navigator" role="article" aria-labelledby="upgrade-title-atlas-navigator">
+          <div className="upgrade-card__header">
+            <span className="upgrade-badge badge-blue">POPULAR</span>
+            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
+            <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
+            <p className="upgrade-card__description">
+              Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.
+            </p>
+          </div>
+          <ul className="upgrade-card__features" aria-label="Features included in Atlas Navigator">
+            {NAVIGATOR_FEATURES.map(f => (
+              <li key={f}><span aria-hidden="true">&#10003;</span> {f}</li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="btn btn-upgrade"
+            data-tier="atlas-navigator"
+            aria-label={`Unlock Atlas Navigator for ${getPrice('atlas-navigator')}`}
+            onClick={() => onUpgrade('atlas-navigator')}
+            disabled={!!checkoutLoading}
+            aria-busy={checkoutLoading === 'atlas-navigator'}
+          >
+            {checkoutLoading === 'atlas-navigator'
+              ? '⏳ Redirecting…'
+              : `Get My Deep Report — ${getPrice('atlas-navigator')}`}
+          </button>
+          <p className="upgrade-card__trust">
+            🔒 Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
+          </p>
+        </div>
+      </div>
+      <p className="upgrade-comparison__disclaimer">
+        For educational and self-reflection purposes only. Not a clinical diagnosis.
+      </p>
+    </div>
+  );
+}
+
 // ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
   'Cognitive-Narrative':   '#4F46E5',
@@ -1221,6 +1623,10 @@ export default function ResultsPage() {
   const [pdfError, setPdfError]       = useState('');
   const [priorAccess, setPriorAccess] = useState(false);  // true if /api/report/access confirms prior purchase
 
+  // ── Upsell modal & promo-banner state ─────────────────────────────────
+  const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
+  const [promoBanner, setPromoBanner] = useState(null);   // null | { tier, trigger }
+
   // ── Reminder opt-in state ──────────────────────────────────────────────
   const [reminderChecked, setReminderChecked]   = useState(false);
   const [reminderLoading, setReminderLoading]   = useState(false);
@@ -1264,6 +1670,80 @@ export default function ResultsPage() {
       if (confettiCleanup) confettiCleanup();
     };
   }, [results]);
+
+  // ── Smart upsell triggers (assessment complete, scroll, exit intent, timer) ─
+  // Only active for free users without paid access; respect 24-hour cooldown.
+  const upsellScrollFiredRef = useRef(false);
+  const upsellScrollTargetRef = useRef(null);
+
+  useEffect(() => {
+    if (!results) return;
+    const isFree = tier === 'free' && !priorAccess;
+    if (!isFree) return;
+    if (upsellIsOnCooldown()) return;
+
+    // 1. Assessment-complete trigger — show after 1.2 s once results render.
+    const assessTimer = setTimeout(() => {
+      if (upsellIsOnCooldown()) return;
+      setUpsellModal({ tier: 'atlas-navigator', trigger: 'assessment_complete' });
+    }, 1200);
+
+    // 2. Scroll trigger — fire when the upgrade cards section scrolls into view.
+    const scrollTarget = document.getElementById('upgradeCardsContainer') ||
+                         document.querySelector('[data-upsell-scroll-target]');
+    upsellScrollTargetRef.current = scrollTarget;
+    let scrollObserver;
+    if (scrollTarget && typeof IntersectionObserver !== 'undefined') {
+      scrollObserver = new IntersectionObserver((entries) => {
+        if (!upsellScrollFiredRef.current && entries[0].isIntersecting) {
+          upsellScrollFiredRef.current = true;
+          scrollObserver.disconnect();
+          if (!upsellIsOnCooldown()) {
+            setTimeout(() => {
+              setUpsellModal({ tier: 'atlas-navigator', trigger: 'top_results_view' });
+            }, 800);
+          }
+        }
+      }, { threshold: 0.5 });
+      scrollObserver.observe(scrollTarget);
+    }
+
+    // 3. Exit-intent trigger (desktop only — mouse leaves viewport upward).
+    function onMouseLeave(e) {
+      if (e.clientY < 20) {
+        document.removeEventListener('mouseleave', onMouseLeave);
+        if (!upsellIsOnCooldown()) {
+          setUpsellModal({ tier: 'atlas-navigator', trigger: 'exit_intent' });
+        }
+      }
+    }
+    if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+      document.addEventListener('mouseleave', onMouseLeave);
+    }
+
+    // 4. Timer trigger — show after 90 seconds of engagement.
+    const timerHandle = setTimeout(() => {
+      if (!upsellIsOnCooldown()) {
+        setUpsellModal({ tier: 'atlas-navigator', trigger: 'timer' });
+      }
+    }, 90 * 1000);
+
+    // 5. Promo banner — show after 5 seconds if offer is active.
+    let promoTimer;
+    if (upsellIsOfferActive()) {
+      promoTimer = setTimeout(() => {
+        setPromoBanner({ tier: 'atlas-navigator', trigger: 'timer' });
+      }, 5000);
+    }
+
+    return () => {
+      clearTimeout(assessTimer);
+      clearTimeout(timerHandle);
+      clearTimeout(promoTimer);
+      document.removeEventListener('mouseleave', onMouseLeave);
+      if (scrollObserver) scrollObserver.disconnect();
+    };
+  }, [results, tier, priorAccess]);
 
   // ── Load tier pricing from API ─────────────────────────────────────────
   useEffect(() => {
@@ -1632,6 +2112,28 @@ export default function ResultsPage() {
       {/* Confetti canvas — positioned fixed, above all content */}
       <canvas ref={confettiRef} style={s.confettiCanvas} aria-hidden="true" />
 
+      {/* ── Promotional banner (flash offer for free users) ──────────── */}
+      {promoBanner && (
+        <PromoBanner
+          message="🎉 Get your complete Deep Resilience Report PDF for just $9.99"
+          ctaLabel="Claim Offer"
+          targetTier={promoBanner.tier}
+          trigger={promoBanner.trigger}
+          onClose={() => setPromoBanner(null)}
+          onUpgrade={handleUpgrade}
+        />
+      )}
+
+      {/* ── Upsell modal (smart-triggered) ───────────────────────────── */}
+      {upsellModal && !upsellIsOnCooldown() && (
+        <UpsellModal
+          targetTier={upsellModal.tier}
+          trigger={upsellModal.trigger}
+          onClose={() => setUpsellModal(null)}
+          onUpgrade={handleUpgrade}
+        />
+      )}
+
       {/* ── Site Header ──────────────────────────────────────────────── */}
       <header style={s.siteHeader} role="banner">
         <div style={s.headerInner}>
@@ -1842,83 +2344,37 @@ export default function ResultsPage() {
           </section>
         )}
 
-        {/* ── Upgrade Cards (free users) ───────────────────────────── */}
+        {/* ── Upgrade Cards (free users) — always visible, branded CSS ─── */}
         {!hasPremiumAccess && (
-          <>
-            <div style={s.upgradeHeading}>Unlock Your Full Report</div>
-            <p style={s.upgradeSubheading}>
-              Go deeper with personalised insights, evidence-based strategies, and a
-              downloadable PDF report tailored to your resilience profile.
-            </p>
-
-            <div style={s.upgradeCards}>
-              {/* Atlas Starter */}
-              <div style={s.upgradeCard(false)}>
-                <div style={s.tierIcon}>🌱</div>
-                <span style={s.tierBadge('#38a169')}>STARTER</span>
-                <div style={s.tierName}>Atlas Starter</div>
-                <div style={s.tierPrice}>{getPrice('atlas-starter')}</div>
-                <div style={s.tierBilling}>one-time payment · USD</div>
-                <ul style={s.featureList}>
-                  {TIER_FEATURES['atlas-starter'].map(f => (
-                    <li key={f}><span style={s.checkmark}>✓</span>{f}</li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  style={s.buyBtn('#38a169', checkoutLoading === 'atlas-starter')}
-                  onClick={() => handleUpgrade('atlas-starter')}
-                  disabled={!!checkoutLoading}
-                  aria-busy={checkoutLoading === 'atlas-starter'}
-                >
-                  {checkoutLoading === 'atlas-starter' ? '⏳ Redirecting…' : `Upgrade to Starter · ${getPrice('atlas-starter')}`}
-                </button>
-              </div>
-
-              {/* Atlas Navigator */}
-              <div style={s.upgradeCard(true)}>
-                <div style={s.tierIcon}>🗺️</div>
-                <span style={s.tierBadge('#4a90d9')}>POPULAR</span>
-                <div style={s.tierName}>Atlas Navigator</div>
-                <div style={s.tierPrice}>{getPrice('atlas-navigator')}</div>
-                <div style={s.tierBilling}>one-time payment · USD</div>
-                <ul style={s.featureList}>
-                  {TIER_FEATURES['atlas-navigator'].map(f => (
-                    <li key={f}><span style={s.checkmark}>✓</span>{f}</li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  style={s.buyBtn('#4a90d9', checkoutLoading === 'atlas-navigator')}
-                  onClick={() => handleUpgrade('atlas-navigator')}
-                  disabled={!!checkoutLoading}
-                  aria-busy={checkoutLoading === 'atlas-navigator'}
-                >
-                  {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : `Upgrade to Navigator · ${getPrice('atlas-navigator')}`}
-                </button>
-              </div>
-            </div>
-          </>
+          <UpgradeCardsSection
+            getPrice={getPrice}
+            onUpgrade={handleUpgrade}
+            checkoutLoading={checkoutLoading}
+          />
         )}
 
         {/* ── Deep Analysis (locked for free users) ────────────────── */}
         {!hasPremiumAccess && (
-          <section style={s.deepAnalysisSection} aria-labelledby="deepAnalysisHeading">
-            <div style={s.deepAnalysisHeading} id="deepAnalysisHeading">Deep Resilience Analysis</div>
-            <div style={s.deepAnalysisBlur} aria-hidden="true">
+          <section
+            className="premium-preview card locked"
+            data-tier="atlas-navigator"
+            aria-labelledby="deepAnalysisHeading"
+          >
+            <h2 id="deepAnalysisHeading">Deep Resilience Analysis</h2>
+            <div className="blur-preview" aria-hidden="true">
               <p>Comprehensive breakdown of all 6 resilience dimensions with personalized insights tailored to your unique profile.</p>
               <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
               <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalized development roadmap.</p>
             </div>
-            <div style={s.deepAnalysisOverlay} role="region" aria-label="Premium content — locked">
-              <div style={s.deepAnalysisOverlayInner}>
-                <div style={s.deepAnalysisLockIcon}>🔒</div>
-                <div style={s.deepAnalysisOverlayTitle}>Unlock Your Complete Resilience Map</div>
-                <p style={s.deepAnalysisOverlayDesc}>Go deeper to understand the full structure of your resilience system.</p>
+            <div className="premium-lock-message payment-overlay" role="region" aria-label="Premium content — locked">
+              <div className="payment-overlay__inner">
+                <span className="payment-overlay__icon" aria-hidden="true">🔒</span>
+                <h3>Unlock Your Complete Resilience Map</h3>
+                <p>Go deeper to understand the full structure of your resilience system.</p>
                 <button
                   type="button"
-                  style={s.deepAnalysisUnlockBtn(checkoutLoading === 'atlas-navigator')}
-                  onClick={() => handleUpgrade('atlas-navigator')}
+                  className="btn btn-upgrade btn-sm"
+                  onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'manual' })}
                   disabled={!!checkoutLoading}
                   aria-label="Unlock Deep Report"
                 >
@@ -1961,6 +2417,20 @@ export default function ResultsPage() {
               aria-busy={pdfLoading}
             >
               {pdfLoading ? '⏳ Generating PDF…' : '⬇ Download PDF Report'}
+            </button>
+          </div>
+        )}
+
+        {/* ── Locked PDF Download (free users) ─────────────────────── */}
+        {!hasPremiumAccess && (
+          <div id="pdfAlert" role="alert" className="btn-locked-row">
+            <button
+              type="button"
+              className="btn btn-locked btn-locked-pdf"
+              onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' })}
+              aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
+            >
+              🔒 Unlock PDF Download
             </button>
           </div>
         )}
