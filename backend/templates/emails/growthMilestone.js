@@ -30,7 +30,7 @@ function buildGrowthMilestoneEmail(vars) {
     whatHelped            = '',
     nextOpportunity       = '',
     nextOpportunityScore  = 0,
-    reportLink            = `${APP_URL}/results.html`,
+    reportLink            = `${APP_URL}/results`,
     unsubscribeUrl,
   } = vars;
 

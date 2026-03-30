@@ -460,11 +460,18 @@ app.get("/register", pageLimiter, (req, res) => {
 // Results route — serve React SPA
 // ==============================
 
-// /results and /results.html must always load the React SPA so the
-// ResultsHistory component can run.  This explicit route is placed before
-// the legacy public/ static middleware to prevent a stale public/results.html
-// (present on older deployments) from being served instead of the React app.
-app.get(["/results", "/results.html"], pageLimiter, (req, res) => {
+// Permanently redirect the legacy /results.html URL and any other stale
+// static-HTML results paths to the canonical SPA route /results.
+// These redirects are placed before the public/ static middleware so that
+// a physical file (e.g. public/legacy-results.html) can never be served
+// instead, bypassing the SPA's payment/tier enforcement.
+app.get(["/results.html", "/legacy-results.html"], pageLimiter, (req, res) => {
+  res.redirect(301, "/results");
+});
+
+// /results must always load the React SPA so the paywall and tier checks
+// enforced by ResultsPage run for every visitor.
+app.get("/results", pageLimiter, (req, res) => {
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
     if (err) {
       res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");

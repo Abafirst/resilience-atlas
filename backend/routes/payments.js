@@ -236,8 +236,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             // unnecessary friction to the checkout flow.
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
-            success_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results.html'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results.html'}?upgrade=cancelled`,
+            success_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}/${['starter', 'pro'].includes(tier) ? 'team.html' : 'results'}?upgrade=cancelled`,
         });
 
         // Record pending purchase so the webhook can update it later.
