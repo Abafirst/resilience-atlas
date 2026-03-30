@@ -446,7 +446,7 @@ export default function TeamPage() {
               </div>
 
               <div style={s.buttonRow}>
-                <a href="/team-analytics.html" style={s.primaryBtn}>
+                <a href="/team-analytics" style={s.primaryBtn}>
                   Open Team Dashboard
                 </a>
                 <a href="/assessment.html" style={s.secondaryBtn}>

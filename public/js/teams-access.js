@@ -258,10 +258,10 @@
                 'Purchase any Teams package to unlock all 31 resources instantly.' +
             '</p>' +
             '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
-                '<a href="/team.html#pricing" style="background:#4F46E5;color:#fff;border-radius:8px;' +
+                '<a href="/team#pricing" style="background:#4F46E5;color:#fff;border-radius:8px;' +
                     'padding:.65rem 1.5rem;font-weight:700;text-decoration:none;font-size:.95rem">' +
                     '🚀 View Teams Packages</a>' +
-                '<a href="/team.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
+                '<a href="/team" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
                     'border-radius:8px;padding:.65rem 1.5rem;font-weight:600;text-decoration:none;font-size:.95rem">' +
                     'Learn More</a>' +
             '</div>';
@@ -281,7 +281,7 @@
             btn.setAttribute('aria-label', 'Purchase a Teams package to unlock downloads');
             btn.onclick = function (e) {
                 e.preventDefault();
-                window.location.href = '/team.html#pricing';
+                window.location.href = '/team#pricing';
             };
         });
     }
@@ -335,10 +335,10 @@
                 'is available exclusively to Teams package holders.' +
             '</p>' +
             '<div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">' +
-                '<a href="/team.html#pricing" style="background:#4F46E5;color:#fff;border-radius:8px;' +
+                '<a href="/team#pricing" style="background:#4F46E5;color:#fff;border-radius:8px;' +
                     'padding:.65rem 1.5rem;font-weight:700;text-decoration:none;font-size:.95rem">' +
                     '🚀 Unlock Full Guide</a>' +
-                '<a href="/team.html" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
+                '<a href="/team" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
                     'border-radius:8px;padding:.65rem 1.5rem;font-weight:600;text-decoration:none;font-size:.95rem">' +
                     'View Packages</a>' +
             '</div>';
@@ -403,7 +403,7 @@
                     TEAMS_GATE_MSG +
                 '</p>' +
                 '<p style="color:#475569;margin:0 0 1rem;font-size:.9rem">Step-by-step instructions, facilitation tips, and reflection prompts are available to Teams package holders.</p>' +
-                '<a href="/team.html#pricing" style="display:inline-block;background:#4F46E5;color:#fff;' +
+                '<a href="/team#pricing" style="display:inline-block;background:#4F46E5;color:#fff;' +
                     'border-radius:8px;padding:.55rem 1.25rem;font-weight:700;text-decoration:none;font-size:.9rem">' +
                     '🚀 Unlock Full Guides</a>';
             insertTarget.insertBefore(gate, insertTarget.firstChild);
@@ -422,7 +422,7 @@
                     var notice = document.createElement('p');
                     notice.className = 'ta-gate-notice';
                     notice.style.cssText = 'margin:.5rem 0 0;font-size:.85rem;color:#1e40af;background:#eff6ff;border:1px solid #93c5fd;border-radius:6px;padding:.4rem .75rem';
-                    notice.innerHTML = '🔒 <strong>Teams package required.</strong> <a href="/team.html#pricing" style="color:#1e40af;font-weight:700">View packages →</a>';
+                    notice.innerHTML = '🔒 <strong>Teams package required.</strong> <a href="/team#pricing" style="color:#1e40af;font-weight:700">View packages →</a>';
                     btn.insertAdjacentElement('afterend', notice);
                 }
             }
@@ -458,7 +458,7 @@
                 '<a href="/login?returnTo=' + returnTo + '" style="background:#4F46E5;color:#fff;border-radius:8px;' +
                     'padding:.65rem 1.5rem;font-weight:700;text-decoration:none;font-size:.95rem">' +
                     '👤 Sign In</a>' +
-                '<a href="/team.html#pricing" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
+                '<a href="/team#pricing" style="background:#fff;color:#1e293b;border:1px solid #cbd5e1;' +
                     'border-radius:8px;padding:.65rem 1.5rem;font-weight:600;text-decoration:none;font-size:.95rem">' +
                     '🚀 View Teams Packages</a>' +
             '</div>';
@@ -537,7 +537,7 @@
             } else {
                 showActivitiesGate();
             }
-        } else if (page.includes('team.html') || page === '/' || page.endsWith('/team')) {
+        } else if (page === '/' || page.endsWith('/team')) {
             if (valid) {
                 showTeamPageResources();
             }
