@@ -1606,6 +1606,16 @@ function getStoredEmail() {
   } catch (_) { return ''; }
 }
 
+// ── Map tier ID to a human-readable access label ──────────────────────────
+function tierLabel(tierId) {
+  switch (tierId) {
+    case 'atlas-premium':   return 'Atlas Premium (Lifetime)';
+    case 'atlas-starter':   return 'Atlas Starter';
+    case 'atlas-navigator': return 'Atlas Navigator';
+    default:                return tierId || 'premium';
+  }
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
@@ -1654,7 +1664,22 @@ export default function ResultsPage() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem('resilience_results');
-      if (raw) setResults(JSON.parse(raw));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setResults(parsed);
+        // Expose to window so payment-gating.js can access email and scores
+        // without an additional localStorage parse step.
+        window.resilience_results = parsed;
+        // Ensure resilience_email is set so PaymentGating.startCheckout()
+        // finds the email without prompting the user.
+        if (parsed.email) {
+          try {
+            if (!localStorage.getItem('resilience_email')) {
+              localStorage.setItem('resilience_email', parsed.email);
+            }
+          } catch (_) { /* ignore storage errors */ }
+        }
+      }
     } catch (_) { /* ignore parse errors */ }
   }, []);
 
@@ -1763,6 +1788,27 @@ export default function ResultsPage() {
     }
 
     if (upgradeParam === 'success' && sessionId) {
+      // When payment-gating.js is loaded it handles verification via its
+      // DOMContentLoaded handler (which fires before React mounts).
+      // React only needs to read the tier it already wrote to localStorage and
+      // let the paymentVerified event listener (below) apply any live update.
+      if (window.PaymentGating && typeof window.PaymentGating.handleUpgradeSuccess === 'function') {
+        // Read tier that PaymentGating may have already written to localStorage.
+        try {
+          const stored = localStorage.getItem('resilience_tier');
+          if (stored && stored !== 'free') {
+            setTier(stored);
+            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${tierLabel(stored)} access.` });
+          } else {
+            // PaymentGating verification may still be in-flight; the
+            // paymentVerified listener will update state when it resolves.
+            setBanner({ type: 'success', message: '✅ Payment successful! Verifying your purchase…' });
+          }
+        } catch (_) { /* ignore */ }
+        return;
+      }
+
+      // Fallback: PaymentGating not loaded — verify inline.
       setTierLoading(true);
       setBanner({ type: 'success', message: '✅ Payment successful! Verifying your purchase…' });
       fetch(`/api/payments/verify?session_id=${encodeURIComponent(sessionId)}`)
@@ -1772,7 +1818,7 @@ export default function ResultsPage() {
             setTier(data.tier);
             // Persist tier to localStorage so the upgrade cards stay hidden on reload
             try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
-            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${data.tier === 'atlas-premium' ? 'Atlas Premium (Lifetime)' : data.tier === 'atlas-starter' ? 'Atlas Starter' : 'Atlas Navigator'} access.` });
+            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${tierLabel(data.tier)} access.` });
           } else {
             setBanner({ type: 'error', message: data.error || 'Could not verify payment. Please contact support.' });
           }
@@ -1811,6 +1857,24 @@ export default function ResultsPage() {
     }
   }, [upgradeParam, sessionId]);
 
+  // ── Listen for paymentVerified from payment-gating.js ─────────────────
+  // payment-gating.js dispatches this event after backend-confirmed payment
+  // so the React UI can unlock features instantly without a full page reload.
+  useEffect(() => {
+    function onPaymentVerified(e) {
+      const { tier: newTier } = (e && e.detail) || {};
+      if (newTier) {
+        setTier(newTier);
+        setBanner({
+          type: 'success',
+          message: `✅ Purchase confirmed! You now have ${tierLabel(newTier)} access.`,
+        });
+      }
+    }
+    document.addEventListener('paymentVerified', onPaymentVerified);
+    return () => document.removeEventListener('paymentVerified', onPaymentVerified);
+  }, []);
+
   // ── Check prior report access (/api/report/access) ────────────────────
   // Permanently unlock download for users who previously purchased, even if
   // their localStorage tier is stale or cleared (mirrors legacy results.js).
@@ -1831,6 +1895,27 @@ export default function ResultsPage() {
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
+    // Delegate to PaymentGating.startCheckout() when the legacy script is loaded.
+    // It handles Auth0 gating, email prompt, checkout session creation, and redirect.
+    if (window.PaymentGating && typeof window.PaymentGating.startCheckout === 'function') {
+      setCheckoutLoading(tierId);
+      // Ensure the email is available in localStorage before PaymentGating reads it,
+      // so the user is not prompted unnecessarily.
+      const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
+      if (email) {
+        try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
+      }
+      try {
+        await window.PaymentGating.startCheckout(tierId);
+      } catch (err) {
+        setBanner({ type: 'error', message: (err && err.message) || 'Could not start checkout. Please try again.' });
+      }
+      // Reset loading if the redirect didn't happen (e.g., user cancelled or error).
+      setCheckoutLoading('');
+      return;
+    }
+
+    // Fallback: PaymentGating not available — call checkout API directly.
     const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
     if (!email) {
       setBanner({ type: 'error', message: 'Please complete the assessment first so we know where to send your report.' });
