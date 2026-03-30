@@ -84,6 +84,10 @@ const TIERS = {
     },
 };
 
+// 'atlas-enterprise' is the canonical public-facing key; 'enterprise' is kept
+// as a legacy alias so existing Stripe sessions and webhooks are not broken.
+TIERS['atlas-enterprise'] = TIERS['enterprise'];
+
 // TIER_CONFIG is imported from backend/config/tiers.js — the canonical source
 // of truth for all plan names, features, and limits.  Do not duplicate it here.
 
@@ -188,7 +192,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
         if (!TIERS[tier]) {
             return res
                 .status(400)
-                .json({ error: 'Invalid tier. Must be one of: atlas-starter, atlas-navigator, atlas-premium, starter, pro, enterprise.' });
+                .json({ error: 'Invalid tier. Must be one of: atlas-starter, atlas-navigator, atlas-premium, starter, pro, enterprise, atlas-enterprise.' });
         }
         if (!email || typeof email !== 'string') {
             return res.status(400).json({ error: 'Email is required.' });
@@ -241,8 +245,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             // unnecessary friction to the checkout flow.
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
-            success_url: `${appUrl}/${['starter', 'pro', 'enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/${['starter', 'pro', 'enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=cancelled`,
+            success_url: `${appUrl}/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=cancelled`,
         });
 
         // Record pending purchase so the webhook can update it later.
