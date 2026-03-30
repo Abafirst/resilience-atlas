@@ -14,6 +14,10 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- payment-gating.js must load before the React module so window.PaymentGating
+         is available when the SPA mounts and the DOMContentLoaded handler can run
+         handleUpgradeSuccess() before React's first render. -->
+    <script src="/js/payment-gating.js"></script>
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://js.stripe.com/v3/"></script>
   </body>
