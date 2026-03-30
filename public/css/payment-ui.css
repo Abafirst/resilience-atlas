@@ -227,6 +227,11 @@
   color: #1e40af;
 }
 
+.badge-green {
+  background: #dcfce7;
+  color: #14532d;
+}
+
 .badge-gold {
   background: #fef3c7;
   color: #92400e;
@@ -348,6 +353,26 @@
 
 .btn-locked:hover {
   opacity: 0.9;
+}
+
+/* ── Centred locked PDF button row (React SPA) ───────────────── */
+.btn-locked-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.btn-locked-pdf {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  padding: 12px 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
 }
 
 /* ── Deep Analysis Preview (blurred placeholder) ─────────────── */
