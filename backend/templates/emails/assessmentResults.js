@@ -51,7 +51,7 @@ function buildAssessmentResultsEmail(vars) {
     dominantDimension = 'Balanced',
     scores          = {},
     topInsight      = '',
-    reportLink      = `${APP_URL}/results.html`,
+    reportLink      = `${APP_URL}/results`,
     retakeLink      = `${APP_URL}/quiz.html`,
     assessmentDate  = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     unsubscribeUrl,

@@ -216,7 +216,7 @@ function init() {
     if (!hasUnlimitedRetakes) {
       // Not allowed to retake for free — send them back to their results
       clearProgress();
-      window.location.href = 'results.html';
+      window.location.href = '/results';
       return;
     }
 
@@ -634,7 +634,7 @@ async function submitQuiz() {
     Spinner.hide();
 
     // Redirect immediately to results (feedback modal skipped for now)
-    window.location.href = 'results.html';
+    window.location.href = '/results';
   } catch (err) {
     Spinner.hide();
     if (submitAlert) {

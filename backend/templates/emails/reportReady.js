@@ -23,7 +23,7 @@ function buildReportReadyEmail(vars) {
   const {
     firstName     = 'Friend',
     downloadLink  = `${APP_URL}/report`,
-    reportLink    = `${APP_URL}/results.html`,
+    reportLink    = `${APP_URL}/results`,
     expiryDays    = 7,
     keyFindings   = [],
     isFreeTier    = false,

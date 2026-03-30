@@ -230,13 +230,12 @@ describe('GET /quiz.html', () => {
 });
 
 describe('GET /results.html', () => {
-    test('serves the React SPA for the results page (200 in prod, 503 without build)', async () => {
-        // /results.html is now served by the React SPA (client/dist/index.html).
-        // In production client/dist/index.html exists → 200.
-        // In CI/test environments without a frontend build → 503.
+    test('permanently redirects to /results (removes legacy bypass)', async () => {
+        // /results.html must now issue a 301 redirect to /results so that
+        // users always land on the React SPA which enforces tier/payment logic.
         const res = await request(app).get('/results.html');
-        expect([200, 503]).toContain(res.status);
-        expect(res.type).toMatch(/html/);
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/results');
     });
 });
 

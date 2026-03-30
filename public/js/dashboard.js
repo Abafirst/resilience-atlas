@@ -163,7 +163,7 @@
         '<td>' + overall + '</td>' +
         '<td>' + _esc(r.dominantType || '—') + '</td>' +
         '<td>' + date + '</td>' +
-        '<td><a href="/results.html?resultId=' + _esc(r._id || '') + '" class="table-action-link">View</a></td>' +
+        '<td><a href="/results?resultId=' + _esc(r._id || '') + '" class="table-action-link">View</a></td>' +
       '</tr>';
     }).join('');
   }

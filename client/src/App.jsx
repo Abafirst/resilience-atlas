@@ -9,7 +9,7 @@ import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 // Evaluated once at module load time — never changes during a session.
 const CURRENT_PATH = window.location.pathname.replace(/\/$/, '');
-const IS_RESULTS_ROUTE = CURRENT_PATH === '/results' || CURRENT_PATH === '/results.html';
+const IS_RESULTS_ROUTE = CURRENT_PATH === '/results';
 
 /**
  * AuthenticatedApp — rendered only when the user is authenticated and we are
