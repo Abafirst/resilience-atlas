@@ -480,6 +480,31 @@ app.get("/results", pageLimiter, (req, res) => {
 });
 
 // ==============================
+// Team route — serve React SPA
+// ==============================
+
+// Permanently redirect the legacy /team.html URL to the canonical SPA route
+// /team.  Placed before the public/ static middleware so that the physical
+// public/team.html file can never shadow the SPA's payment confirmation UX.
+app.get("/team.html", pageLimiter, (req, res) => {
+  // Preserve any query-string parameters (e.g. ?upgrade=success&session_id=...)
+  // so Stripe post-payment redirects that still point at team.html are forwarded
+  // correctly to the React SPA with all params intact.
+  const qs = req.originalUrl.slice('/team.html'.length);
+  res.redirect(301, `/team${qs}`);
+});
+
+// /team must always load the React SPA so the payment confirmation and tier
+// checks enforced by TeamPage run for every visitor.
+app.get("/team", pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
+  });
+});
+
+// ==============================
 // Public static files
 // ==============================
 

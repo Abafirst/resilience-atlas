@@ -5,11 +5,13 @@ import AssessmentHub from './pages/AssessmentHub.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
+import TeamPage from './pages/TeamPage.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 // Evaluated once at module load time — never changes during a session.
 const CURRENT_PATH = window.location.pathname.replace(/\/$/, '');
 const IS_RESULTS_ROUTE = CURRENT_PATH === '/results';
+const IS_TEAM_ROUTE = CURRENT_PATH === '/team';
 
 /**
  * AuthenticatedApp — rendered only when the user is authenticated and we are
@@ -76,6 +78,13 @@ export default function App() {
   // Results page is always accessible regardless of auth state.
   if (IS_RESULTS_ROUTE) {
     return <ResultsPage />;
+  }
+
+  // Team page is always accessible regardless of auth state.
+  // Handles Stripe post-payment redirects (?upgrade=success&session_id=...)
+  // for team/enterprise tier purchases.
+  if (IS_TEAM_ROUTE) {
+    return <TeamPage />;
   }
 
   // Show a loading spinner while Auth0 initialises.

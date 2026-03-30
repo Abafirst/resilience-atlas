@@ -2222,7 +2222,7 @@ export default function ResultsPage() {
               <a href="/" style={s.navLink}>Home</a>
               <a href="/assessment.html" style={s.navLink}>Assessment</a>
               <a href="/research.html" style={s.navLink}>Research</a>
-              <a href="/team.html" style={s.navLink}>Teams</a>
+              <a href="/team" style={s.navLink}>Teams</a>
               <a href="/kids.html" style={s.navLink}>Kids</a>
               <a href="/about.html" style={s.navLink}>About</a>
               <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
@@ -2294,7 +2294,7 @@ export default function ResultsPage() {
             <a href="/" style={s.navLink}>Home</a>
             <a href="/assessment.html" style={s.navLink}>Assessment</a>
             <a href="/research.html" style={s.navLink}>Research</a>
-            <a href="/team.html" style={s.navLink}>Teams</a>
+            <a href="/team" style={s.navLink}>Teams</a>
             <a href="/kids.html" style={s.navLink}>Kids</a>
             <a href="/about.html" style={s.navLink}>About</a>
             <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
@@ -2919,7 +2919,7 @@ export default function ResultsPage() {
             <div style={s.quicklinksGroup}>
               <div style={s.quicklinksGroupHeading}>Programs</div>
               <ul style={s.quicklinksGroupLinks}>
-                <li><a href="/team.html" style={s.quicklinkAnchor}>For Teams</a></li>
+                <li><a href="/team" style={s.quicklinkAnchor}>For Teams</a></li>
                 <li><a href="/kids.html" style={s.quicklinkAnchor}>For Kids</a></li>
               </ul>
             </div>

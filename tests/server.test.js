@@ -239,6 +239,22 @@ describe('GET /results.html', () => {
     });
 });
 
+describe('GET /team.html', () => {
+    test('permanently redirects to /team (SPA route)', async () => {
+        // /team.html must redirect to the canonical SPA route /team so that
+        // Stripe post-payment callbacks land on the React SPA.
+        const res = await request(app).get('/team.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/team');
+    });
+
+    test('preserves query-string params when redirecting', async () => {
+        const res = await request(app).get('/team.html?upgrade=success&session_id=cs_test_123');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/team?upgrade=success&session_id=cs_test_123');
+    });
+});
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
 describe('GET /api/auth/profile', () => {
