@@ -2,9 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 import App from './App.jsx';
-// Brand symbol CSS — loaded once at SPA root so all routes get consistent .ra-symbol sizing.
-// icons.css (.icon, .icon-md, .icon-lg, etc.) is linked via index.html.
-import '../../brand/symbol/css/symbol-styles.css';
 
 // ===== SPA MARKER FOR DEBUGGING =====
 window._spaVersion = '2026-03-29-mytest';
