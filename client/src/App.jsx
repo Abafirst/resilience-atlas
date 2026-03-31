@@ -1,3 +1,8 @@
+import './styles/styles.css';
+import './styles/landing.css';
+import './styles/kids.css';
+import './styles/icons.css';
+
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
