@@ -311,7 +311,7 @@ export default function FounderPage() {
             <a href="/kids.html" className="nav-link">Kids</a>
             <a href="/about" className="nav-link">About</a>
             <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
-            <a className="btn btn-primary" href="/quiz.html">Take the Assessment</a>
+            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
           </nav>
         </div>
       </header>
@@ -522,7 +522,7 @@ export default function FounderPage() {
       <section className="cta-band" aria-label="Explore the Resilience Atlas">
         <h2>Experience the Framework Janeen Built</h2>
         <p>Take the assessment grounded in 13 years of doctoral research and clinical practice.</p>
-        <a className="btn-white" href="/quiz.html">Take the Assessment</a>
+        <a className="btn-white" href="/quiz">Take the Assessment</a>
         <a className="btn-outline" href="/research">Explore the Research</a>
         <a className="btn-outline" href="/about">About the Atlas</a>
       </section>
@@ -532,7 +532,7 @@ export default function FounderPage() {
           <div className="footer-nav-group">
             <strong className="footer-nav-heading">Assessment</strong>
             <a href="/assessment">About the Assessment</a>
-            <a href="/quiz.html">Take the Quiz</a>
+            <a href="/quiz">Take the Quiz</a>
             <a href="/results">My Results</a>
           </div>
           <div className="footer-nav-group">

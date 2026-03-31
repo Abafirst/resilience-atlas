@@ -604,7 +604,7 @@ export default function ResearchPage() {
           </p>
         </div>
         <div className="credentials-cta">
-          <a href="/quiz.html" className="btn btn-primary">Take the Assessment</a>
+          <a href="/quiz" className="btn btn-primary">Take the Assessment</a>
           <a href="/founder" className="btn btn-light">Meet the Founder</a>
         </div>
       </section>
