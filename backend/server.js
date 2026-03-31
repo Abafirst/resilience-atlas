@@ -460,13 +460,47 @@ app.get("/register", pageLimiter, (req, res) => {
 // Results route — serve React SPA
 // ==============================
 
-// Permanently redirect the legacy /results.html URL and any other stale
-// static-HTML results paths to the canonical SPA route /results.
-// These redirects are placed before the public/ static middleware so that
-// a physical file (e.g. public/legacy-results.html) can never be served
-// instead, bypassing the SPA's payment/tier enforcement.
-app.get(["/results.html", "/legacy-results.html"], pageLimiter, (req, res) => {
-  res.redirect(301, "/results");
+// ── Legacy HTML → SPA route redirects (301 Permanent) ──────────────────────
+// Placed before the public/ static middleware so that physical HTML files
+// can never be served instead of the SPA's routes.
+const htmlRedirects = {
+  '/about.html': '/about',
+  '/research.html': '/research',
+  '/founder.html': '/founder',
+  '/assessment.html': '/assessment',
+  '/insights.html': '/insights',
+  '/join.html': '/join',
+  '/pricing-teams.html': '/pricing-teams',
+  '/resources.html': '/resources',
+  '/quiz.html': '/quiz',
+  '/kids.html': '/kids',
+  '/atlas.html': '/atlas',
+  '/comparison.html': '/comparison',
+  '/dashboard.html': '/dashboard',
+  '/dashboard-advanced.html': '/dashboard-advanced',
+  '/team-analytics.html': '/team-analytics',
+  '/teams-resources.html': '/teams-resources',
+  '/teams-facilitation.html': '/teams-facilitation',
+  '/teams-activities.html': '/teams-activities',
+  '/legacy-results.html': '/results',
+  '/results-legacy.html': '/results',
+  '/results.html': '/results',
+  '/insights/team-resilience.html': '/insights/team-resilience',
+  '/insights/six-resilience-dimensions.html': '/insights/six-resilience-dimensions',
+  '/insights/resilience-under-pressure.html': '/insights/resilience-under-pressure',
+  '/resources/workshop-guides/somatic-workshop.html': '/resources/workshop-guides/somatic',
+  '/resources/workshop-guides/emotional-workshop.html': '/resources/workshop-guides/emotional',
+  '/resources/workshop-guides/spiritual-workshop.html': '/resources/workshop-guides/spiritual',
+  '/resources/workshop-guides/cognitive-workshop.html': '/resources/workshop-guides/cognitive',
+  '/resources/workshop-guides/agentic-workshop.html': '/resources/workshop-guides/agentic',
+  '/resources/workshop-guides/relational-workshop.html': '/resources/workshop-guides/relational',
+  '/pages/leadership-report.html': '/leadership-report',
+  '/pages/org-dashboard.html': '/org-dashboard',
+  '/admin/leads.html': '/admin/leads',
+};
+
+Object.entries(htmlRedirects).forEach(([oldPath, newPath]) => {
+  app.get(oldPath, pageLimiter, (req, res) => res.redirect(301, newPath));
 });
 
 // /results must always load the React SPA so the paywall and tier checks
@@ -483,15 +517,10 @@ app.get("/results", pageLimiter, (req, res) => {
 // Team route — serve React SPA
 // ==============================
 
-// Permanently redirect the legacy /team.html URL to the canonical SPA route
-// /team.  Placed before the public/ static middleware so that the physical
-// public/team.html file can never shadow the SPA's payment confirmation UX.
+// /team.html is special: preserve query-string (Stripe post-payment redirects)
 app.get("/team.html", pageLimiter, (req, res) => {
-  // Preserve any query-string parameters (e.g. ?upgrade=success&session_id=...)
-  // so Stripe post-payment redirects that still point at team.html are forwarded
-  // correctly to the React SPA with all params intact.
   const qs = req.originalUrl.slice('/team.html'.length);
-  res.redirect(301, `/team${qs}`);
+  res.redirect(301, `/teams${qs}`);
 });
 
 // /team must always load the React SPA so the payment confirmation and tier
