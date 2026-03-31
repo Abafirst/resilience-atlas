@@ -32,7 +32,7 @@ function buildCongratulationsEmail(vars) {
     overallScore      = 0,
     dominantDimension = 'Balanced',
     primaryStrength   = '',
-    reportLink        = `${APP_URL}/results.html`,
+    reportLink        = `${APP_URL}/results`,
     upgradeLink       = `${APP_URL}/upgrade.html`,
     nextSteps         = DEFAULT_NEXT_STEPS,
     shareLink         = reportLink,

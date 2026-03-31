@@ -16,8 +16,8 @@ const UPSELL_VARIANT_COPY = {
   control: {
     'atlas-navigator': {
       headline: 'Unlock Your Full Resilience Analysis',
-      subtext:  'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment.',
-      ctaLabel: 'Get Deep Report — $9.99',
+      subtext:  'Get personalized insights for all 6 dimensions, a downloadable PDF report, and tailored growth strategies — one-time payment, lifetime access.',
+      ctaLabel: 'Get Deep Report — $49.99',
       offer:    null,
     },
     'atlas-premium': {
@@ -31,7 +31,7 @@ const UPSELL_VARIANT_COPY = {
     'atlas-navigator': {
       headline: "You're in the Top 20% — Unlock What's Holding You Back",
       subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
-      ctaLabel: 'Unlock My Deep Report ($9.99)',
+      ctaLabel: 'Unlock My Deep Report ($49.99)',
       offer:    null,
     },
     'atlas-premium': {
@@ -44,9 +44,9 @@ const UPSELL_VARIANT_COPY = {
   variant_b: {
     'atlas-navigator': {
       headline: '🎉 Complete Your Resilience Atlas',
-      subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep.",
-      ctaLabel: 'Get the Full Report — $9.99 One-Time',
-      offer:    null,
+      subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep forever.",
+      ctaLabel: 'Get the Full Report — $49.99 Lifetime',
+      offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
     },
     'atlas-premium': {
       headline: '⭐ Lifetime Access — No Subscriptions Ever',
@@ -59,7 +59,7 @@ const UPSELL_VARIANT_COPY = {
     'atlas-navigator': {
       headline: 'Your Resilience Profile Is Only Half Complete',
       subtext:  'The free report covers the basics. Upgrade to uncover the full picture: all 6 dimensions, your stress profile, and a 30-day action plan.',
-      ctaLabel: 'Complete My Profile — $9.99',
+      ctaLabel: 'Complete My Profile — $49.99',
       offer:    null,
     },
     'atlas-premium': {
@@ -321,6 +321,7 @@ const NAVIGATOR_FEATURES = [
   'Recommended growth strategies',
   'Expanded micro-practices for each dimension',
   'Downloadable PDF report',
+  'Lifetime access — one-time purchase, yours to keep forever',
 ];
 
 function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
@@ -368,7 +369,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
         <div className="upgrade-card upgrade-card--atlas-navigator" role="article" aria-labelledby="upgrade-title-atlas-navigator">
           <div className="upgrade-card__header">
             <span className="upgrade-badge badge-blue">POPULAR</span>
-            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
+            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator (Lifetime)</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
             <p className="upgrade-card__description">
               Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.
@@ -1560,18 +1561,21 @@ function SocialFollowLink({ label, icon, href, bg }) {
 const MAX_POLLING_ATTEMPTS = 60;   // 2 minutes at 2 s intervals
 const POLLING_INTERVAL_MS  = 2000; // 2 seconds between status checks
 
-async function triggerPdfDownload(results) {
+async function triggerPdfDownload(results, email) {
   const scoresStr = JSON.stringify(results.scores);
   const params = new URLSearchParams({
     overall: String(results.overall),
     dominantType: results.dominantType,
     scores: scoresStr,
   });
+  if (email) params.set('email', email);
 
   const genRes = await fetch(`/api/report/generate?${params.toString()}`);
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
-    throw new Error(body.error || 'Failed to start report generation');
+    const err = new Error(body.error || 'Failed to start report generation');
+    if (genRes.status === 402) err.upgradeRequired = true;
+    throw err;
   }
   const { hash } = await genRes.json();
 
@@ -1606,6 +1610,21 @@ function getStoredEmail() {
   } catch (_) { return ''; }
 }
 
+// ── Map tier ID to a human-readable access label ──────────────────────────
+function tierLabel(tierId) {
+  switch (tierId) {
+    case 'atlas-premium':   return 'Atlas Premium (Lifetime)';
+    case 'atlas-starter':   return 'Atlas Starter';
+    case 'atlas-navigator': return 'Atlas Navigator (Lifetime)';
+    default:                return tierId || 'premium';
+  }
+}
+
+// ── Returns true for any tier that grants paid report access ──────────────
+function isPaidTier(tierId) {
+  return tierId === 'atlas-starter' || tierId === 'atlas-navigator' || tierId === 'atlas-premium';
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
@@ -1622,6 +1641,10 @@ export default function ResultsPage() {
   const [pdfLoading, setPdfLoading]   = useState(false);
   const [pdfError, setPdfError]       = useState('');
   const [priorAccess, setPriorAccess] = useState(false);  // true if /api/report/access confirms prior purchase
+  // Tracks whether both tier checks (payments/status and report/access) have completed.
+  // The download button is only shown once the backend has confirmed the tier, preventing
+  // stale localStorage values from granting premature access.
+  const [tierCheckComplete, setTierCheckComplete] = useState(false);
 
   // ── Upsell modal & promo-banner state ─────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
@@ -1654,7 +1677,22 @@ export default function ResultsPage() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem('resilience_results');
-      if (raw) setResults(JSON.parse(raw));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setResults(parsed);
+        // Expose to window so payment-gating.js can access email and scores
+        // without an additional localStorage parse step.
+        window.resilience_results = parsed;
+        // Ensure resilience_email is set so PaymentGating.startCheckout()
+        // finds the email without prompting the user.
+        if (parsed.email) {
+          try {
+            if (!localStorage.getItem('resilience_email')) {
+              localStorage.setItem('resilience_email', parsed.email);
+            }
+          } catch (_) { /* ignore storage errors */ }
+        }
+      }
     } catch (_) { /* ignore parse errors */ }
   }, []);
 
@@ -1763,6 +1801,33 @@ export default function ResultsPage() {
     }
 
     if (upgradeParam === 'success' && sessionId) {
+      // When payment-gating.js is loaded it handles verification via its
+      // DOMContentLoaded handler (which fires before React mounts).
+      // React only needs to read the tier it already wrote to localStorage and
+      // let the paymentVerified event listener (below) apply any live update.
+      if (window.PaymentGating && typeof window.PaymentGating.handleUpgradeSuccess === 'function') {
+        // Read tier that PaymentGating may have already written to localStorage.
+        // PaymentGating only writes this after successful backend verification,
+        // so it is safe to trust here. The /api/report/access check (below, in
+        // a separate useEffect) provides an additional backstop — if the tier is
+        // somehow stale it will be cleared when that check completes.
+        try {
+          const stored = localStorage.getItem('resilience_tier');
+          if (stored && stored !== 'free') {
+            setTier(stored);
+            setTierCheckComplete(true);
+            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${tierLabel(stored)} access.` });
+          } else {
+            // PaymentGating verification may still be in-flight; the
+            // paymentVerified listener will update state and set tierCheckComplete
+            // when it resolves.
+            setBanner({ type: 'success', message: '✅ Payment successful! Verifying your purchase…' });
+          }
+        } catch (_) { /* ignore */ }
+        return;
+      }
+
+      // Fallback: PaymentGating not loaded — verify inline.
       setTierLoading(true);
       setBanner({ type: 'success', message: '✅ Payment successful! Verifying your purchase…' });
       fetch(`/api/payments/verify?session_id=${encodeURIComponent(sessionId)}`)
@@ -1770,9 +1835,10 @@ export default function ResultsPage() {
         .then(data => {
           if (data.success && data.tier) {
             setTier(data.tier);
+            setTierCheckComplete(true);
             // Persist tier to localStorage so the upgrade cards stay hidden on reload
             try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
-            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${data.tier === 'atlas-premium' ? 'Atlas Premium (Lifetime)' : data.tier === 'atlas-starter' ? 'Atlas Starter' : 'Atlas Navigator'} access.` });
+            setBanner({ type: 'success', message: `✅ Purchase confirmed! You now have ${tierLabel(data.tier)} access.` });
           } else {
             setBanner({ type: 'error', message: data.error || 'Could not verify payment. Please contact support.' });
           }
@@ -1788,49 +1854,115 @@ export default function ResultsPage() {
     }
 
     // ── Check persisted tier from prior payment ──────────────────────────
-    try {
-      const stored = localStorage.getItem('resilience_tier');
-      if (stored && stored !== 'free') {
-        setTier(stored);
-      }
-    } catch (_) { /* ignore */ }
-
-    // ── Also check server-side status for signed-in users ─────────────────
+    // When no email is available we cannot perform a backend check.
+    // tierCheckComplete is set by the /api/report/access useEffect below
+    // (which also handles the no-email case), so we do not set it here.
+    // If the localStorage tier is stale the download attempt will fail with
+    // 402 and handleDownloadPdf will reset the state at that point.
     const email = getStoredEmail();
 
-    if (email) {
-      fetch(`/api/payments/status?email=${encodeURIComponent(email)}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.tier && data.tier !== 'free') {
-            setTier(data.tier);
-            try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
-          }
-        })
-        .catch(() => { /* non-fatal */ });
+    if (!email) {
+      try {
+        const stored = localStorage.getItem('resilience_tier');
+        if (stored && stored !== 'free') {
+          setTier(stored);
+        }
+      } catch (_) { /* ignore */ }
+      return;
     }
+
+    // ── Verify tier with the backend (email available) ─────────────────────
+    // Do NOT read localStorage here — only trust the backend response so that
+    // a stale 'atlas-navigator' in localStorage does not grant false access.
+    fetch(`/api/payments/status?email=${encodeURIComponent(email)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.tier && data.tier !== 'free') {
+          setTier(data.tier);
+          try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
+        } else {
+          // Backend confirmed free tier — clear any stale paid tier from localStorage.
+          setTier('free');
+          try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
+        }
+      })
+      .catch(() => { /* non-fatal — tier stays 'free' */ });
   }, [upgradeParam, sessionId]);
+
+  // ── Listen for paymentVerified from payment-gating.js ─────────────────
+  // payment-gating.js dispatches this event after backend-confirmed payment
+  // so the React UI can unlock features instantly without a full page reload.
+  useEffect(() => {
+    function onPaymentVerified(e) {
+      const { tier: newTier } = (e && e.detail) || {};
+      if (newTier) {
+        setTier(newTier);
+        setTierCheckComplete(true);
+        setBanner({
+          type: 'success',
+          message: `✅ Purchase confirmed! You now have ${tierLabel(newTier)} access.`,
+        });
+      }
+    }
+    document.addEventListener('paymentVerified', onPaymentVerified);
+    return () => document.removeEventListener('paymentVerified', onPaymentVerified);
+  }, []);
 
   // ── Check prior report access (/api/report/access) ────────────────────
   // Permanently unlock download for users who previously purchased, even if
   // their localStorage tier is stale or cleared (mirrors legacy results.js).
+  // Conversely, if the backend says no access, reset any stale localStorage tier.
+  // Sets tierCheckComplete so the download UI only renders after backend responds.
   useEffect(() => {
     const email = getStoredEmail();
-    if (!email) return;
+    if (!email) {
+      // No email to check with — mark as complete so UI renders (tier stays 'free').
+      setTierCheckComplete(true);
+      return;
+    }
     fetch(`/api/report/access?email=${encodeURIComponent(email)}`)
       .then(r => r.json())
       .then(data => {
         if (data.hasAccess) {
           setPriorAccess(true);
+        } else {
+          // Backend confirmed no access — clear any stale paid tier from localStorage
+          // so the UI returns to the locked/upgrade state.
+          setTier('free');
+          try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
         }
       })
       .catch(err => {
         console.warn('[ResultsPage] Prior access check failed:', err.message);
+      })
+      .finally(() => {
+        setTierCheckComplete(true);
       });
   }, []);
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
+    // Delegate to PaymentGating.startCheckout() when the legacy script is loaded.
+    // It handles Auth0 gating, email prompt, checkout session creation, and redirect.
+    if (window.PaymentGating && typeof window.PaymentGating.startCheckout === 'function') {
+      setCheckoutLoading(tierId);
+      // Ensure the email is available in localStorage before PaymentGating reads it,
+      // so the user is not prompted unnecessarily.
+      const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
+      if (email) {
+        try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
+      }
+      try {
+        await window.PaymentGating.startCheckout(tierId);
+      } catch (err) {
+        setBanner({ type: 'error', message: (err && err.message) || 'Could not start checkout. Please try again.' });
+      }
+      // Reset loading if the redirect didn't happen (e.g., user cancelled or error).
+      setCheckoutLoading('');
+      return;
+    }
+
+    // Fallback: PaymentGating not available — call checkout API directly.
     const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
     if (!email) {
       setBanner({ type: 'error', message: 'Please complete the assessment first so we know where to send your report.' });
@@ -1868,12 +2000,26 @@ export default function ResultsPage() {
   // ── PDF download ───────────────────────────────────────────────────────
   const handleDownloadPdf = useCallback(async () => {
     if (!results) return;
+    const email = (results && results.email) || getStoredEmail();
     setPdfLoading(true);
     setPdfError('');
     try {
-      await triggerPdfDownload(results);
+      await triggerPdfDownload(results, email);
     } catch (err) {
-      setPdfError(err.message || 'Download failed. Please try again.');
+      if (err && err.upgradeRequired) {
+        // Backend denied access — reset to locked state and expose upgrade path
+        setTier('free');
+        setPriorAccess(false);
+        try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
+        setBanner({ type: 'error', message: 'A paid report purchase is required to download the PDF. Please select an upgrade option below.' });
+        // Scroll to upgrade cards so the user can immediately purchase
+        setTimeout(() => {
+          const upgradeEl = document.getElementById('upgradeCardsContainer');
+          if (upgradeEl) upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        setPdfError(err.message || 'Download failed. Please try again.');
+      }
     } finally {
       setPdfLoading(false);
     }
@@ -2037,7 +2183,10 @@ export default function ResultsPage() {
   }, [results]);
 
   // ── Derived values ─────────────────────────────────────────────────────
-  const hasPremiumAccess = tier === 'atlas-starter' || tier === 'atlas-navigator' || tier === 'atlas-premium' || priorAccess;
+  // hasPremiumAccess is only true once the backend has confirmed the tier
+  // (tierCheckComplete). This prevents localStorage-only values from granting
+  // access before the server has verified the purchase.
+  const hasPremiumAccess = tierCheckComplete && (isPaidTier(tier) || priorAccess);
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -2049,8 +2198,8 @@ export default function ResultsPage() {
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
     if (!t) {
-      if (tierId === 'atlas-starter') return '$4.99';
-      if (tierId === 'atlas-navigator') return '$9.99';
+      if (tierId === 'atlas-starter') return '$9.99';
+      if (tierId === 'atlas-navigator') return '$49.99';
       if (tierId === 'atlas-premium') return '$49.99';
       return '$49.99';
     }
@@ -2073,7 +2222,7 @@ export default function ResultsPage() {
               <a href="/" style={s.navLink}>Home</a>
               <a href="/assessment.html" style={s.navLink}>Assessment</a>
               <a href="/research.html" style={s.navLink}>Research</a>
-              <a href="/team.html" style={s.navLink}>Teams</a>
+              <a href="/team" style={s.navLink}>Teams</a>
               <a href="/kids.html" style={s.navLink}>Kids</a>
               <a href="/about.html" style={s.navLink}>About</a>
               <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
@@ -2115,7 +2264,7 @@ export default function ResultsPage() {
       {/* ── Promotional banner (flash offer for free users) ──────────── */}
       {promoBanner && (
         <PromoBanner
-          message="🎉 Get your complete Deep Resilience Report PDF for just $9.99"
+          message="🎉 Get your complete Deep Resilience Report PDF for just $49.99 — lifetime access"
           ctaLabel="Claim Offer"
           targetTier={promoBanner.tier}
           trigger={promoBanner.trigger}
@@ -2145,7 +2294,7 @@ export default function ResultsPage() {
             <a href="/" style={s.navLink}>Home</a>
             <a href="/assessment.html" style={s.navLink}>Assessment</a>
             <a href="/research.html" style={s.navLink}>Research</a>
-            <a href="/team.html" style={s.navLink}>Teams</a>
+            <a href="/team" style={s.navLink}>Teams</a>
             <a href="/kids.html" style={s.navLink}>Kids</a>
             <a href="/about.html" style={s.navLink}>About</a>
             <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
@@ -2257,7 +2406,7 @@ export default function ResultsPage() {
         </section>
 
         {/* ── Insight Progress Indicator (free users only) ──────────── */}
-        {!hasPremiumAccess && (
+        {!hasPremiumAccess && tierCheckComplete && (
           <div style={s.insightProgress} aria-hidden="true">
             <p style={s.insightProgressLabel}>Your resilience insights unlocked</p>
             <div style={s.insightProgressBarWrap} role="progressbar" aria-valuenow={40} aria-valuemin={0} aria-valuemax={100}>
@@ -2344,8 +2493,8 @@ export default function ResultsPage() {
           </section>
         )}
 
-        {/* ── Upgrade Cards (free users) — always visible, branded CSS ─── */}
-        {!hasPremiumAccess && (
+        {/* ── Upgrade Cards (free users) — shown only after backend confirms free tier ─── */}
+        {!hasPremiumAccess && tierCheckComplete && (
           <UpgradeCardsSection
             getPrice={getPrice}
             onUpgrade={handleUpgrade}
@@ -2354,7 +2503,7 @@ export default function ResultsPage() {
         )}
 
         {/* ── Deep Analysis (locked for free users) ────────────────── */}
-        {!hasPremiumAccess && (
+        {!hasPremiumAccess && tierCheckComplete && (
           <section
             className="premium-preview card locked"
             data-tier="atlas-navigator"
@@ -2424,14 +2573,25 @@ export default function ResultsPage() {
         {/* ── Locked PDF Download (free users) ─────────────────────── */}
         {!hasPremiumAccess && (
           <div id="pdfAlert" role="alert" className="btn-locked-row">
-            <button
-              type="button"
-              className="btn btn-locked btn-locked-pdf"
-              onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' })}
-              aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
-            >
-              🔒 Unlock PDF Download
-            </button>
+            {!tierCheckComplete ? (
+              <button
+                type="button"
+                className="btn btn-locked btn-locked-pdf"
+                disabled
+                aria-label="Verifying your access…"
+              >
+                ⏳ Verifying your access…
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-locked btn-locked-pdf"
+                onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' })}
+                aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
+              >
+                🔒 Unlock PDF Download
+              </button>
+            )}
           </div>
         )}
 
@@ -2759,7 +2919,7 @@ export default function ResultsPage() {
             <div style={s.quicklinksGroup}>
               <div style={s.quicklinksGroupHeading}>Programs</div>
               <ul style={s.quicklinksGroupLinks}>
-                <li><a href="/team.html" style={s.quicklinkAnchor}>For Teams</a></li>
+                <li><a href="/team" style={s.quicklinkAnchor}>For Teams</a></li>
                 <li><a href="/kids.html" style={s.quicklinkAnchor}>For Kids</a></li>
               </ul>
             </div>

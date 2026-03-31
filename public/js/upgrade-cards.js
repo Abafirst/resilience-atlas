@@ -26,18 +26,19 @@
         'Recommended growth strategies',
         'Expanded micro-practices for each dimension',
         'Downloadable PDF report',
+        'Lifetime access — one-time purchase, yours to keep forever',
     ];
 
     /** Human-readable tier titles keyed by tier id. */
     var TIER_TITLES = {
         'atlas-starter':   'Atlas Starter',
-        'atlas-navigator': 'Atlas Navigator',
+        'atlas-navigator': 'Atlas Navigator (Lifetime)',
     };
 
     /** Fallback prices used when the backend is unreachable or fetch is unavailable. */
-    var FALLBACK_PRICES = { 'atlas-starter': '$4.99', 'atlas-navigator': '$9.99' };
+    var FALLBACK_PRICES = { 'atlas-starter': '$9.99', 'atlas-navigator': '$49.99' };
 
-    /** Cache of fetched prices: { 'atlas-navigator': '$9.99', 'atlas-premium': '$49.99' } */
+    /** Cache of fetched prices: { 'atlas-navigator': '$49.99' } */
     var _prices = null;
 
     /**

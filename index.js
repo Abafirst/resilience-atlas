@@ -171,9 +171,14 @@ app.get('/register', (req, res) => {
 // Serve React frontend from client/dist when the build is present
 const clientDist = path.join(__dirname, 'client', 'dist');
 
+// Permanently redirect legacy results URLs to the canonical SPA route.
+app.get(['/results.html', '/legacy-results.html'], (req, res) => {
+    res.redirect(301, '/results');
+});
+
 // Results page: always served by the React SPA (must be before public static middleware
 // so the legacy public/legacy-results.html is never accidentally returned).
-app.get(['/results', '/results.html'], (req, res) => {
+app.get('/results', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
 });
 

@@ -36,12 +36,12 @@
             dataRetention: '1 month',
         },
         'atlas-navigator': {
-            name: 'Atlas Navigator',
-            price: 999, // $9.99
+            name: 'Atlas Navigator (Lifetime)',
+            price: 4999, // $49.99
             billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
-            features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies'],
+            features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies', 'Lifetime access'],
             dataRetention: '1 year',
         },
         'atlas-premium': {
@@ -108,7 +108,7 @@
     }
 
     /**
-     * True for Atlas Starter ($4.99 one-time) — grants access to the basic
+     * True for Atlas Starter ($9.99 one-time) — grants access to the basic
      * PDF summary report.  Does NOT unlock deep-report sections (use
      * isDeepReport() for those), but does allow PDF download.
      */

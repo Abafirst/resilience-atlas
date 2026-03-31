@@ -1,0 +1,145 @@
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+
+const GAMIFICATION_API = '/api/gamification';
+
+/**
+ * Custom hook that manages all gamification state and API interactions.
+ *
+ * Returns:
+ *   progress        — current GamificationProgress document (or null)
+ *   loading         — true while the initial fetch is in flight
+ *   error           — error message string, or null
+ *   refresh         — function to re-fetch progress
+ *   recordPractice  — (practiceId, dimension?) → Promise<result>
+ *   setChallenge    — (dimension, difficulty) → Promise<progress>
+ *   enableLeaderboard — () → Promise<void>
+ *   fetchLeaderboard  — (period?) → Promise<entries>
+ *   toasts          — array of { id, message, type }
+ *   dismissToast    — (id) → void
+ *   addToast        — (message, type) → void
+ */
+export default function useGamification() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+
+  const [progress, setProgress] = useState(null);
+  const [loading, setLoading]   = useState(true);
+  const [error, setError]       = useState(null);
+  const [toasts, setToasts]     = useState([]);
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+
+  const getHeaders = useCallback(async () => {
+    const headers = { 'Content-Type': 'application/json' };
+    try {
+      const token = await getAccessTokenSilently();
+      if (token) headers.Authorization = `Bearer ${token}`;
+    } catch (_) {
+      // No token available — fall back to localStorage (legacy path)
+      const stored = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (stored) headers.Authorization = `Bearer ${stored}`;
+    }
+    return headers;
+  }, [getAccessTokenSilently]);
+
+  const apiFetch = useCallback(async (path, options = {}) => {
+    const headers = await getHeaders();
+    const res = await fetch(`${GAMIFICATION_API}${path}`, {
+      ...options,
+      headers: { ...headers, ...(options.headers || {}) },
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    return data;
+  }, [getHeaders]);
+
+  // ── Toast helpers ─────────────────────────────────────────────────────────
+
+  const addToast = useCallback((message, type = 'success') => {
+    const id = Date.now() + Math.random();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 4000);
+  }, []);
+
+  const dismissToast = useCallback((id) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  // ── Fetch progress ────────────────────────────────────────────────────────
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiFetch('/progress');
+      setProgress(data.progress);
+    } catch (err) {
+      setError(err.message || 'Could not load gamification data.');
+    } finally {
+      setLoading(false);
+    }
+  }, [apiFetch]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      refresh();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated, refresh]);
+
+  // ── Actions ───────────────────────────────────────────────────────────────
+
+  const recordPractice = useCallback(async (practiceId, dimension) => {
+    const data = await apiFetch('/practice', {
+      method: 'POST',
+      body: JSON.stringify({ practiceId, ...(dimension ? { dimension } : {}) }),
+    });
+    if (data.newBadges && data.newBadges.length > 0) {
+      data.newBadges.forEach(name => addToast(`🏅 Badge unlocked: ${name}`, 'success'));
+    }
+    if (data.streakUpdated) {
+      addToast(`🔥 ${data.currentStreak}-day streak!`, 'info');
+    }
+    await refresh();
+    return data;
+  }, [apiFetch, addToast, refresh]);
+
+  const setChallenge = useCallback(async (dimension, difficulty = 'medium') => {
+    const data = await apiFetch('/challenge', {
+      method: 'POST',
+      body: JSON.stringify({ dimension, difficulty }),
+    });
+    await refresh();
+    return data;
+  }, [apiFetch, refresh]);
+
+  const enableLeaderboard = useCallback(async () => {
+    await apiFetch('/preferences', {
+      method: 'PUT',
+      body: JSON.stringify({ leaderboardOptIn: true }),
+    });
+    await refresh();
+  }, [apiFetch, refresh]);
+
+  const fetchLeaderboard = useCallback(async (period = 'weekly') => {
+    const data = await apiFetch(`/leaderboard?period=${period}`);
+    return data.entries || [];
+  }, [apiFetch]);
+
+  return {
+    progress,
+    loading,
+    error,
+    refresh,
+    recordPractice,
+    setChallenge,
+    enableLeaderboard,
+    fetchLeaderboard,
+    toasts,
+    dismissToast,
+    addToast,
+  };
+}

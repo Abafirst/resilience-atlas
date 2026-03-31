@@ -1,22 +1,50 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+
+// Existing pages
 import LandingPage from './pages/LandingPage.jsx';
 import AssessmentHub from './pages/AssessmentHub.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
+import TeamPage from './pages/TeamPage.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
-// Evaluated once at module load time — never changes during a session.
-const CURRENT_PATH = window.location.pathname.replace(/\/$/, '');
-const IS_RESULTS_ROUTE = CURRENT_PATH === '/results' || CURRENT_PATH === '/results.html';
+// New migrated pages
+import AboutPage from './pages/AboutPage.jsx';
+import ResearchPage from './pages/ResearchPage.jsx';
+import FounderPage from './pages/FounderPage.jsx';
+import AssessmentPage from './pages/AssessmentPage.jsx';
+import InsightsPage from './pages/InsightsPage.jsx';
+import JoinPage from './pages/JoinPage.jsx';
+import TeamsLandingPage from './pages/TeamsLandingPage.jsx';
+import PricingTeamsPage from './pages/PricingTeamsPage.jsx';
+import ResourcesPage from './pages/ResourcesPage.jsx';
+import QuizPage from './pages/QuizPage.jsx';
+import KidsPage from './pages/KidsPage.jsx';
+import AtlasPage from './pages/AtlasPage.jsx';
+import ComparisonPage from './pages/ComparisonPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+import DashboardAdvancedPage from './pages/DashboardAdvancedPage.jsx';
+import TeamAnalyticsPage from './pages/TeamAnalyticsPage.jsx';
+import TeamsResourcesPage from './pages/TeamsResourcesPage.jsx';
+import TeamsFacilitationPage from './pages/TeamsFacilitationPage.jsx';
+import TeamsActivitiesPage from './pages/TeamsActivitiesPage.jsx';
+import InsightsTeamResiliencePage from './pages/InsightsTeamResiliencePage.jsx';
+import InsightsSixDimensionsPage from './pages/InsightsSixDimensionsPage.jsx';
+import InsightsResilienceUnderPressurePage from './pages/InsightsResilienceUnderPressurePage.jsx';
+import WorkshopSomaticPage from './pages/WorkshopSomaticPage.jsx';
+import WorkshopEmotionalPage from './pages/WorkshopEmotionalPage.jsx';
+import WorkshopSpiritualPage from './pages/WorkshopSpiritualPage.jsx';
+import WorkshopCognitivePage from './pages/WorkshopCognitivePage.jsx';
+import WorkshopAgenticPage from './pages/WorkshopAgenticPage.jsx';
+import WorkshopRelationalPage from './pages/WorkshopRelationalPage.jsx';
+import LeadershipReportPage from './pages/LeadershipReportPage.jsx';
+import OrgDashboardPage from './pages/OrgDashboardPage.jsx';
+import AdminLeadsPage from './pages/AdminLeadsPage.jsx';
+import GamificationPage from './pages/GamificationPage.jsx';
 
-/**
- * AuthenticatedApp — rendered only when the user is authenticated and we are
- * NOT on the /results route.  Keeping hooks in their own component avoids a
- * Rules-of-Hooks violation that would arise from hoisting them above the
- * early return inside App.
- */
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
   const [paymentResult, setPaymentResult] = useState(null);
@@ -49,8 +77,6 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
     );
   }
 
-  // Payment page — only shown when the user explicitly requests the full
-  // premium report (e.g. by clicking "Unlock Full Report" on the hub page).
   if (page === 'payment') {
     return (
       <>
@@ -60,7 +86,6 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
     );
   }
 
-  // Default: assessment hub — free quiz access + premium upgrade option.
   return (
     <AssessmentHub
       userEmail={user?.email}
@@ -70,15 +95,9 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   );
 }
 
-export default function App() {
+function HomeRoute() {
   const { isLoading, isAuthenticated, user, getAccessTokenSilently, logout } = useAuth0();
 
-  // Results page is always accessible regardless of auth state.
-  if (IS_RESULTS_ROUTE) {
-    return <ResultsPage />;
-  }
-
-  // Show a loading spinner while Auth0 initialises.
   if (isLoading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
@@ -86,19 +105,66 @@ export default function App() {
       </div>
     );
   }
+  if (!isAuthenticated) return <LandingPage />;
+  return <AuthenticatedApp user={user} getAccessTokenSilently={getAccessTokenSilently} logout={logout} />;
+}
 
-  // Public landing page — shown to unauthenticated visitors.
-  // Auth0 login is only triggered when the user clicks "Start Assessment".
-  if (!isAuthenticated) {
-    return <LandingPage />;
-  }
-
-  // Default: assessment hub — free quiz access + premium upgrade option.
+export default function App() {
   return (
-    <AuthenticatedApp
-      user={user}
-      getAccessTokenSilently={getAccessTokenSilently}
-      logout={logout}
-    />
+    <BrowserRouter>
+      <Routes>
+        {/* Public informational pages */}
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/research" element={<ResearchPage />} />
+        <Route path="/founder" element={<FounderPage />} />
+        <Route path="/assessment" element={<AssessmentPage />} />
+        <Route path="/insights" element={<InsightsPage />} />
+        <Route path="/join" element={<JoinPage />} />
+        <Route path="/teams" element={<TeamsLandingPage />} />
+        <Route path="/pricing-teams" element={<PricingTeamsPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
+
+        {/* Insight sub-pages */}
+        <Route path="/insights/team-resilience" element={<InsightsTeamResiliencePage />} />
+        <Route path="/insights/six-resilience-dimensions" element={<InsightsSixDimensionsPage />} />
+        <Route path="/insights/resilience-under-pressure" element={<InsightsResilienceUnderPressurePage />} />
+
+        {/* Workshop guides */}
+        <Route path="/resources/workshop-guides/somatic" element={<WorkshopSomaticPage />} />
+        <Route path="/resources/workshop-guides/emotional" element={<WorkshopEmotionalPage />} />
+        <Route path="/resources/workshop-guides/spiritual" element={<WorkshopSpiritualPage />} />
+        <Route path="/resources/workshop-guides/cognitive" element={<WorkshopCognitivePage />} />
+        <Route path="/resources/workshop-guides/agentic" element={<WorkshopAgenticPage />} />
+        <Route path="/resources/workshop-guides/relational" element={<WorkshopRelationalPage />} />
+
+        {/* Assessment routes */}
+        <Route path="/quiz" element={<QuizPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/legacy-results" element={<Navigate to="/results" replace />} />
+
+        {/* App routes */}
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/kids" element={<KidsPage />} />
+        <Route path="/atlas" element={<AtlasPage />} />
+        <Route path="/comparison" element={<ComparisonPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/dashboard-advanced" element={<DashboardAdvancedPage />} />
+        <Route path="/team-analytics" element={<TeamAnalyticsPage />} />
+        <Route path="/teams-resources" element={<TeamsResourcesPage />} />
+        <Route path="/teams-facilitation" element={<TeamsFacilitationPage />} />
+        <Route path="/teams-activities" element={<TeamsActivitiesPage />} />
+
+        {/* Admin & org pages */}
+        <Route path="/admin/leads" element={<AdminLeadsPage />} />
+        <Route path="/leadership-report" element={<LeadershipReportPage />} />
+        <Route path="/org-dashboard" element={<OrgDashboardPage />} />
+
+        {/* Gamification */}
+        <Route path="/gamification" element={<GamificationPage />} />
+
+        {/* Default auth-gated home route */}
+        <Route path="/*" element={<HomeRoute />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

@@ -167,6 +167,33 @@ describe('GET /api/report/generate', () => {
         expect(res.body).toHaveProperty('upgradeRequired', true);
         delete process.env.STRIPE_SECRET_KEY;
     });
+
+    test('returns 402 with upgradeRequired=true when email provided but no purchase', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const Purchase = require('../backend/models/Purchase');
+        Purchase.findOne.mockResolvedValueOnce(null); // no Purchase record
+        const User = require('../backend/models/User');
+        User.findOne.mockResolvedValueOnce(null); // no User record
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'test@example.com' });
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
+        expect(res.body.error).toMatch(/paid report purchase/i);
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+
+    test('returns 200 when STRIPE_SECRET_KEY is set and email has a completed purchase', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const Purchase = require('../backend/models/Purchase');
+        Purchase.findOne.mockResolvedValueOnce({ tier: 'atlas-navigator', status: 'completed' });
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'paid@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('hash');
+        delete process.env.STRIPE_SECRET_KEY;
+    });
 });
 
 // ── /api/report/status ───────────────────────────────────────────────────────

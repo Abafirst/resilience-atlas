@@ -460,11 +460,72 @@ app.get("/register", pageLimiter, (req, res) => {
 // Results route — serve React SPA
 // ==============================
 
-// /results and /results.html must always load the React SPA so the
-// ResultsHistory component can run.  This explicit route is placed before
-// the legacy public/ static middleware to prevent a stale public/results.html
-// (present on older deployments) from being served instead of the React app.
-app.get(["/results", "/results.html"], pageLimiter, (req, res) => {
+// ── Legacy HTML → SPA route redirects (301 Permanent) ──────────────────────
+// Placed before the public/ static middleware so that physical HTML files
+// can never be served instead of the SPA's routes.
+const htmlRedirects = {
+  '/about.html': '/about',
+  '/research.html': '/research',
+  '/founder.html': '/founder',
+  '/assessment.html': '/assessment',
+  '/insights.html': '/insights',
+  '/join.html': '/join',
+  '/pricing-teams.html': '/pricing-teams',
+  '/resources.html': '/resources',
+  '/quiz.html': '/quiz',
+  '/kids.html': '/kids',
+  '/atlas.html': '/atlas',
+  '/comparison.html': '/comparison',
+  '/dashboard.html': '/dashboard',
+  '/dashboard-advanced.html': '/dashboard-advanced',
+  '/team-analytics.html': '/team-analytics',
+  '/teams-resources.html': '/teams-resources',
+  '/teams-facilitation.html': '/teams-facilitation',
+  '/teams-activities.html': '/teams-activities',
+  '/legacy-results.html': '/results',
+  '/results-legacy.html': '/results',
+  '/results.html': '/results',
+  '/insights/team-resilience.html': '/insights/team-resilience',
+  '/insights/six-resilience-dimensions.html': '/insights/six-resilience-dimensions',
+  '/insights/resilience-under-pressure.html': '/insights/resilience-under-pressure',
+  '/resources/workshop-guides/somatic-workshop.html': '/resources/workshop-guides/somatic',
+  '/resources/workshop-guides/emotional-workshop.html': '/resources/workshop-guides/emotional',
+  '/resources/workshop-guides/spiritual-workshop.html': '/resources/workshop-guides/spiritual',
+  '/resources/workshop-guides/cognitive-workshop.html': '/resources/workshop-guides/cognitive',
+  '/resources/workshop-guides/agentic-workshop.html': '/resources/workshop-guides/agentic',
+  '/resources/workshop-guides/relational-workshop.html': '/resources/workshop-guides/relational',
+  '/pages/leadership-report.html': '/leadership-report',
+  '/pages/org-dashboard.html': '/org-dashboard',
+  '/admin/leads.html': '/admin/leads',
+};
+
+Object.entries(htmlRedirects).forEach(([oldPath, newPath]) => {
+  app.get(oldPath, pageLimiter, (req, res) => res.redirect(301, newPath));
+});
+
+// /results must always load the React SPA so the paywall and tier checks
+// enforced by ResultsPage run for every visitor.
+app.get("/results", pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
+  });
+});
+
+// ==============================
+// Team route — serve React SPA
+// ==============================
+
+// /team.html is special: preserve query-string (Stripe post-payment redirects)
+app.get("/team.html", pageLimiter, (req, res) => {
+  const qs = req.originalUrl.slice('/team.html'.length);
+  res.redirect(301, `/teams${qs}`);
+});
+
+// /team must always load the React SPA so the payment confirmation and tier
+// checks enforced by TeamPage run for every visitor.
+app.get("/team", pageLimiter, (req, res) => {
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
     if (err) {
       res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");

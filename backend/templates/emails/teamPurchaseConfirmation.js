@@ -24,7 +24,7 @@ function buildTeamPurchaseConfirmationEmail(vars) {
     planName       = 'Atlas Team',
     planPrice      = '',
     email          = '',
-    dashboardUrl   = `${APP_URL}/team-analytics.html`,
+    dashboardUrl   = `${APP_URL}/team`,
     supportEmail   = process.env.SUPPORT_EMAIL || process.env.EMAIL_FROM || 'support@resilience-atlas.app',
     unsubscribeUrl,
   } = vars;
@@ -104,7 +104,7 @@ function buildPlainText(vars) {
     planName     = 'Atlas Team',
     planPrice    = '',
     email        = '',
-    dashboardUrl = `${APP_URL}/team-analytics.html`,
+    dashboardUrl = `${APP_URL}/team`,
     supportEmail = process.env.SUPPORT_EMAIL || process.env.EMAIL_FROM || 'support@resilience-atlas.app',
   } = vars;
 

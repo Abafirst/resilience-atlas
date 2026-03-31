@@ -8,12 +8,31 @@
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; background: #f5f7fa; color: #333; }
     </style>
+    <!--
+      GLOBAL CSS CONVENTION:
+      All global/shared CSS must be placed in /public/css/ (or subdirectories such as
+      /public/brand/symbol/css/) and loaded via <link> tags here.
+      Do NOT import /public or /brand CSS files in SPA JS/JSX files — Vite only bundles
+      files within the client/ build context. Use <link> tags for all public-folder CSS.
+      Per-component CSS that should only apply to one page/component should live in
+      /client/src/ and be imported directly in that component file.
+    -->
+    <!-- Global legacy app styles (site-header, nav, quiz, etc.) -->
+    <link rel="stylesheet" href="/styles.css" />
     <!-- Upsell & payment-gating branded CSS (used by ResultsPage upgrade cards, modals, and overlays) -->
     <link rel="stylesheet" href="/css/payment-ui.css" />
     <link rel="stylesheet" href="/css/upsell.css" />
+    <!-- Icon sizing system (.icon, .icon-xs, .icon-sm, .icon-md, .icon-lg, .icon-xl) -->
+    <link rel="stylesheet" href="/icons/icons.css" />
+    <!-- Brand symbol sizing (.ra-symbol, .ra-symbol--small, .ra-symbol--medium, .ra-symbol--large) -->
+    <link rel="stylesheet" href="/brand/symbol/css/symbol-styles.css" />
   </head>
   <body>
     <div id="root"></div>
+    <!-- payment-gating.js must load before the React module so window.PaymentGating
+         is available when the SPA mounts and the DOMContentLoaded handler can run
+         handleUpgradeSuccess() before React's first render. -->
+    <script src="/js/payment-gating.js"></script>
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://js.stripe.com/v3/"></script>
   </body>

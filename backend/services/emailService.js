@@ -144,7 +144,7 @@ async function sendQuizReport(to, name, report) {
     dominantDimension: report.dominantType,
     scores,
     topInsight:        report.summary,
-    reportLink:        `${process.env.APP_URL || 'https://resilience-atlas.app'}/results.html`,
+    reportLink:        `${process.env.APP_URL || 'https://resilience-atlas.app'}/results`,
     retakeLink:        `${process.env.APP_URL || 'https://resilience-atlas.app'}/quiz.html`,
   };
   return sendAssessmentResults(to, vars);
