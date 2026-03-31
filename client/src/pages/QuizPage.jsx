@@ -253,9 +253,8 @@ function FeedbackModal({ visible, onSubmit, onSkip }) {
   async function handleSubmit() {
     setSubmitting(true);
     try {
-      await onSubmit(feedbackText);
       setStatus('Thank you for your feedback!');
-      setTimeout(() => {}, 1200); // onSubmit handles navigation
+      await onSubmit(feedbackText); // onSubmit handles navigation after a short delay
     } catch (_) {
       setStatus('Could not send feedback, but your results are saved.');
     } finally {
@@ -334,29 +333,38 @@ export default function QuizPage() {
   const [submitError, setSubmitError]     = useState('');
   const [submitting, setSubmitting]       = useState(false);
   const [showFeedback, setShowFeedback]   = useState(false);
-  const [dmHintVisible, setDmHintVisible] = useState(false);
+  const [dmHintDismissed, setDmHintDismissed] = useState(false);
 
   // ── Autosave restore banner ────────────────────────────────────────────
   const [savedProgress, setSavedProgress] = useState(null);
 
+  // ── Theme toggle state ─────────────────────────────────────────────────
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
   // ── Theme ──────────────────────────────────────────────────────────────
   useEffect(() => {
+    // Set page title
+    document.title = 'Take the Assessment \u2014 The Resilience Atlas\u2122';
+
     try {
       const t = localStorage.getItem('ra-theme');
-      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-      else if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
-      else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        document.documentElement.setAttribute('data-theme', 'dark');
+      let theme;
+      if (t === 'dark') {
+        theme = 'dark';
+      } else if (t === 'light') {
+        theme = 'light';
+      } else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        theme = 'dark';
+      } else {
+        theme = 'light';
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+      setIsDarkTheme(theme === 'dark');
     } catch (_) {}
   }, []);
 
   // ── Dark-mode hint (show when dark theme is active) ───────────────────
-  useEffect(() => {
-    try {
-      const theme = document.documentElement.getAttribute('data-theme');
-      setDmHintVisible(theme === 'dark');
-    } catch (_) {}
-  }, []);
+  // Derived from isDarkTheme — no separate effect needed
 
   // ── Auth check + initial state setup ─────────────────────────────────
   useEffect(() => {
@@ -675,6 +683,16 @@ export default function QuizPage() {
     navigate('/results');
   }
 
+  // ── Theme toggle handler ───────────────────────────────────────────────
+  function handleThemeToggle() {
+    try {
+      const next = isDarkTheme ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ra-theme', next);
+      setIsDarkTheme(next === 'dark');
+    } catch (_) {}
+  }
+
   // ── Render ─────────────────────────────────────────────────────────────
   // Determine the current question for the question step
   const currentQ = typeof step === 'number' && questionOrder.length > 0
@@ -697,9 +715,6 @@ export default function QuizPage() {
 
   return (
     <>
-      {/* ── Page title ─────────────────────────────────── */}
-      <title>Take the Assessment — The Resilience Atlas™</title>
-
       {/* ── Spinner overlay ────────────────────────────── */}
       {(!authChecked || submitting) && (
         <SpinnerOverlay
@@ -709,7 +724,7 @@ export default function QuizPage() {
       )}
 
       {/* ── Dark-mode readability hint ──────────────────── */}
-      {dmHintVisible && (
+      {isDarkTheme && !dmHintDismissed && (
         <div className="dm-quiz-hint" role="note" aria-label="Accessibility tip">
           <span aria-hidden="true">💡</span>
           {' '}Finding quiz content hard to read? Select the{' '}
@@ -718,7 +733,7 @@ export default function QuizPage() {
             type="button"
             className="dm-quiz-hint-close"
             aria-label="Dismiss accessibility tip"
-            onClick={() => setDmHintVisible(false)}
+            onClick={() => setDmHintDismissed(true)}
           >
             &#x2715;
           </button>
@@ -752,9 +767,10 @@ export default function QuizPage() {
             <a href="/about" className="nav-link">About</a>
             <button
               className="theme-toggle"
-              aria-label="Switch to dark mode"
-              aria-pressed="false"
+              aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-pressed={isDarkTheme ? 'true' : 'false'}
               title="Toggle dark mode"
+              onClick={handleThemeToggle}
             />
           </nav>
         </div>
