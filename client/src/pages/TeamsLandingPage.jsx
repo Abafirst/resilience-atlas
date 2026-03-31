@@ -588,9 +588,6 @@ export default function TeamsLandingPage() {
     </div>
   </section>
 
-    </div>
-  </section>
-
   {/* Team Building Activities */}
   <section className="landing-section alt-bg" aria-labelledby="teamActivitiesHeading" id="team-activities">
     <div className="section-header" style={{ marginBottom: '2.5rem' }}>
