@@ -11,12 +11,11 @@
  *  • Review/Submit step with POST to /api/quiz
  *  • Autosave to localStorage (7-day expiry), restore banner
  *  • Spinner/loading overlays
- *  • Post-quiz feedback modal
  *  • Accessible labels, keyboard support
  *  • On success: clears autosave and redirects to /results
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -234,82 +233,6 @@ function QuestionCard({ question, displayIdx, answer, isFlagged, onAnswer, onTog
   );
 }
 
-/** Post-quiz feedback modal */
-function FeedbackModal({ visible, onSubmit, onSkip }) {
-  const [feedbackText, setFeedbackText] = useState('');
-  const [status, setStatus] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const textareaRef = useRef(null);
-
-  // Focus the textarea when the modal opens for accessibility
-  useEffect(() => {
-    if (visible && textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  }, [visible]);
-
-  if (!visible) return null;
-
-  async function handleSubmit() {
-    setSubmitting(true);
-    try {
-      setStatus('Thank you for your feedback!');
-      await onSubmit(feedbackText); // onSubmit handles navigation after a short delay
-    } catch (_) {
-      setStatus('Could not send feedback, but your results are saved.');
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <div
-      className="feedback-modal-overlay"
-      role="dialog"
-      aria-labelledby="feedbackModalTitle"
-      aria-modal="true"
-    >
-      <div className="feedback-modal-card">
-        <h2 id="feedbackModalTitle" className="feedback-modal-title">How did the assessment feel?</h2>
-        <p className="feedback-modal-desc">Help us improve! Share any thoughts on the assessment experience.</p>
-        <label htmlFor="feedbackTextarea" className="feedback-modal-label">Your feedback (optional)</label>
-        <textarea
-          id="feedbackTextarea"
-          ref={textareaRef}
-          className="feedback-modal-textarea"
-          rows={4}
-          maxLength={2000}
-          placeholder="e.g. Some questions were unclear, or I\u2019d love more context for the Somatic dimension\u2026"
-          aria-label="Assessment improvement feedback"
-          value={feedbackText}
-          onChange={(e) => setFeedbackText(e.target.value)}
-        />
-        {status && (
-          <p className="feedback-modal-status" aria-live="polite">{status}</p>
-        )}
-        <div className="feedback-modal-actions">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-            disabled={submitting}
-          >
-            Send Feedback &amp; See Results
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={onSkip}
-            disabled={submitting}
-          >
-            Skip &rarr; See My Results
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ── Main QuizPage component ────────────────────────────────────────────────
 export default function QuizPage() {
   const navigate = useNavigate();
@@ -332,7 +255,6 @@ export default function QuizPage() {
   const [questionError, setQuestionError] = useState(false);
   const [submitError, setSubmitError]     = useState('');
   const [submitting, setSubmitting]       = useState(false);
-  const [showFeedback, setShowFeedback]   = useState(false);
   const [dmHintDismissed, setDmHintDismissed] = useState(false);
 
   // ── Autosave restore banner ────────────────────────────────────────────
@@ -654,33 +576,11 @@ export default function QuizPage() {
       clearProgress();
       setSubmitting(false);
 
-      // Show feedback modal before redirecting to results
-      setShowFeedback(true);
+      navigate('/results');
     } catch (err) {
       setSubmitting(false);
       setSubmitError(err.message || 'Something went wrong. Please try again.');
     }
-  }
-
-  // ── Feedback modal handlers ────────────────────────────────────────────
-  async function handleFeedbackSubmit(text) {
-    try {
-      await fetch('/api/quiz/feedback', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          email:            email.trim(),
-          firstName:        firstName.trim(),
-          flaggedQuestions: Array.from(flaggedQuestions),
-          feedbackText:     text,
-        }),
-      });
-    } catch (_) {}
-    setTimeout(() => navigate('/results'), 1200);
-  }
-
-  function handleFeedbackSkip() {
-    navigate('/results');
   }
 
   // ── Theme toggle handler ───────────────────────────────────────────────
@@ -976,12 +876,6 @@ export default function QuizPage() {
         </div>
       </footer>
 
-      {/* ── Post-quiz feedback modal ────────────────────── */}
-      <FeedbackModal
-        visible={showFeedback}
-        onSubmit={handleFeedbackSubmit}
-        onSkip={handleFeedbackSkip}
-      />
     </>
   );
 }
