@@ -43,6 +43,7 @@ import WorkshopRelationalPage from './pages/WorkshopRelationalPage.jsx';
 import LeadershipReportPage from './pages/LeadershipReportPage.jsx';
 import OrgDashboardPage from './pages/OrgDashboardPage.jsx';
 import AdminLeadsPage from './pages/AdminLeadsPage.jsx';
+import GamificationPage from './pages/GamificationPage.jsx';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
@@ -157,6 +158,9 @@ export default function App() {
         <Route path="/admin/leads" element={<AdminLeadsPage />} />
         <Route path="/leadership-report" element={<LeadershipReportPage />} />
         <Route path="/org-dashboard" element={<OrgDashboardPage />} />
+
+        {/* Gamification */}
+        <Route path="/gamification" element={<GamificationPage />} />
 
         {/* Default auth-gated home route */}
         <Route path="/*" element={<HomeRoute />} />
