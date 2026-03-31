@@ -43,7 +43,7 @@ export default function WorkshopSpiritualPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className="guide">
-        <a href="/dashboard-advanced.html" className="back-link">← Back to Dashboard</a>
+        <a href="/dashboard-advanced" className="back-link">← Back to Dashboard</a>
         <button className="print-btn" onClick={() => window.print()} type="button">🖨️ Print / Save as PDF</button>
 
         <header className="guide-header">
@@ -110,7 +110,7 @@ export default function WorkshopSpiritualPage() {
             <li>Consider reassessing your team's resilience profile in 30 days to track growth.</li>
           </ul>
           <div className="tip-box">
-            <p><strong>Track progress:</strong> Return to your <a href="/dashboard-advanced.html" style={{ color: '#1e40af' }}>Team Dashboard</a> after your next assessment cycle to see how your scores have shifted.</p>
+            <p><strong>Track progress:</strong> Return to your <a href="/dashboard-advanced" style={{ color: '#1e40af' }}>Team Dashboard</a> after your next assessment cycle to see how your scores have shifted.</p>
           </div>
         </section>
 

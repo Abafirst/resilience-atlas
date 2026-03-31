@@ -367,7 +367,7 @@ export default function PricingTeamsPage() {
     <a href="/" style={{ fontWeight: 700, color: '#1a2e5a', textDecoration: 'none', fontSize: '0.95rem' }}>The Resilience Atlas™</a>
     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
       <a href="/quiz" style={{ fontSize: '0.875rem', color: '#64748b', textDecoration: 'none' }}>Take Assessment</a>
-      <a href="/dashboard-advanced.html" style={{ fontSize: '0.875rem', color: '#64748b', textDecoration: 'none' }}>Dashboard</a>
+      <a href="/dashboard-advanced" style={{ fontSize: '0.875rem', color: '#64748b', textDecoration: 'none' }}>Dashboard</a>
       <button className="btn btn--primary btn--sm" type="button" onClick={() => scrollToPlans()}>View Plans</button>
     </div>
   </nav>

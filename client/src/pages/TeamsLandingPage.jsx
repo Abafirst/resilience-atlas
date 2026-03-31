@@ -402,7 +402,7 @@ export default function TeamsLandingPage() {
         <a href="/assessment" className="nav-link">Assessment</a>
         <a href="/research" className="nav-link">Research</a>
         <a href="/teams" className="nav-link active">Teams</a>
-        <a href="/kids.html" className="nav-link">Kids</a>
+        <a href="/kids" className="nav-link">Kids</a>
         <a href="/about" className="nav-link">About</a>
         <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
         <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
@@ -846,9 +846,9 @@ export default function TeamsLandingPage() {
     <div id="teams-resource-hub" hidden style={{ textAlign: 'center', marginTop: '2rem' }}>
       <p style={{ color: '#166534', fontWeight: 600, fontSize: '.95rem', margin: '0 0 .75rem' }}>✓ Your Teams purchase includes full access to all resources below.</p>
       <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/teams-resources.html" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>📥 Browse &amp; Download All Resources →</a>
-        <a href="/teams-facilitation.html" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>📋 Full Facilitation Guide</a>
-        <a href="/teams-activities.html" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>🎯 Activity Library</a>
+        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>📥 Browse &amp; Download All Resources →</a>
+        <a href="/teams-facilitation" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>📋 Full Facilitation Guide</a>
+        <a href="/teams-activities" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>🎯 Activity Library</a>
       </div>
     </div>
   </section>
@@ -1002,10 +1002,10 @@ export default function TeamsLandingPage() {
       <div className="footer-nav-group">
         <strong className="footer-nav-heading">Programs</strong>
         <a href="/teams">For Teams</a>
-        <a href="/teams-activities.html">Team Activities</a>
-        <a href="/teams-resources.html">Team Resources</a>
-        <a href="/teams-facilitation.html">Facilitation Guide</a>
-        <a href="/kids.html">For Kids</a>
+        <a href="/teams-activities">Team Activities</a>
+        <a href="/teams-resources">Team Resources</a>
+        <a href="/teams-facilitation">Facilitation Guide</a>
+        <a href="/kids">For Kids</a>
       </div>
       <div className="footer-nav-group">
         <strong className="footer-nav-heading">Company</strong>
