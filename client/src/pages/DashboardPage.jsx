@@ -1,5 +1,158 @@
-import React from 'react';
-import LegacyPage from '../components/LegacyPage.jsx';
+import React, { useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { AFFIRMATIONS_BY_DIMENSION, getDailyAffirmationAny } from '../data/affirmations';
+
+const DIMENSIONS = [
+  { key: 'Agentic',    label: 'Agentic',    icon: '⚡', description: 'Self-direction & initiative' },
+  { key: 'Relational', label: 'Relational',  icon: '🤝', description: 'Connection & support' },
+  { key: 'Spiritual',  label: 'Spiritual',   icon: '✨', description: 'Meaning & purpose' },
+  { key: 'Emotional',  label: 'Emotional',   icon: '💛', description: 'Feeling & adapting' },
+  { key: 'Somatic',    label: 'Somatic',     icon: '🌿', description: 'Body awareness & regulation' },
+  { key: 'Cognitive',  label: 'Cognitive',   icon: '🧠', description: 'Thought & narrative' },
+];
+
 export default function DashboardPage() {
-  return <LegacyPage src="/dashboard.html" title="Dashboard — The Resilience Atlas™" />;
+  useEffect(() => {
+    document.title = 'My Dashboard — The Resilience Atlas™';
+  }, []);
+
+  /* TODO: load real scores from API */
+  const scores = null;
+
+  const hasScores = scores !== null;
+
+  const dailyAffirmation = useMemo(() => getDailyAffirmationAny(), []);
+
+  return (
+    <main id="main-content" className="dash-layout" aria-live="polite">
+
+      {/* ── Page heading ──────────────────────────────────────────── */}
+      <div className="dash-card" style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>My Resilience Dashboard</h1>
+            <p style={{ margin: '0.25rem 0 0', color: 'var(--text-muted, #666)', fontSize: '0.95rem' }}>
+              Your personal resilience snapshot
+            </p>
+          </div>
+          <Link to="/quiz" className="btn btn--primary">
+            {hasScores ? 'Retake Assessment' : 'Take Assessment'}
+          </Link>
+        </div>
+
+        {!hasScores && (
+          <p
+            role="status"
+            style={{
+              marginTop: '1rem',
+              padding: '0.75rem 1rem',
+              background: 'var(--surface-alt, #f5f5f5)',
+              borderRadius: '6px',
+              fontSize: '0.9rem',
+              color: 'var(--text-muted, #555)',
+            }}
+          >
+            📋 Connect your assessment results to see your scores.
+          </p>
+        )}
+      </div>
+
+      {/* ── Dimension score cards ─────────────────────────────────── */}
+      <section aria-labelledby="dim-scores-heading">
+        <h2 id="dim-scores-heading" className="dash-card__title" style={{ marginBottom: '1rem' }}>
+          Dimension Scores
+        </h2>
+        <div className="dim-cards">
+          {DIMENSIONS.map(({ key, label, icon, description }) => {
+            const score = hasScores ? scores[key] : null;
+            const affirmations = AFFIRMATIONS_BY_DIMENSION[key] || [];
+            const sampleAffirmation = affirmations.find(a => a.difficulty === 'foundational');
+
+            return (
+              <div key={key} className="dim-card" aria-label={`${label} resilience dimension`}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                  <span aria-hidden="true" style={{ fontSize: '1.3rem' }}>{icon}</span>
+                  <span className="dim-card__name">{label}</span>
+                </div>
+                <div
+                  className="dim-card__val"
+                  aria-label={score !== null ? `${score}%` : 'No score yet'}
+                >
+                  {score !== null ? `${score}%` : '—'}
+                </div>
+                {score !== null && (
+                  <>
+                    <div className="dim-bar-track" role="progressbar" aria-valuenow={score} aria-valuemin={0} aria-valuemax={100}>
+                      <div className="dim-bar-fill" style={{ width: `${score}%` }} />
+                    </div>
+                    <span className="dim-badge">{label}</span>
+                  </>
+                )}
+                <p style={{ margin: '0.5rem 0 0', fontSize: '0.8rem', color: 'var(--text-muted, #666)' }}>
+                  {description}
+                </p>
+                {sampleAffirmation && (
+                  <blockquote style={{ margin: '0.6rem 0 0', padding: 0, border: 0 }}>
+                    <p style={{ margin: 0, fontSize: '0.78rem', fontStyle: 'italic', color: 'var(--text-muted, #777)' }}>
+                      "{sampleAffirmation.text}"
+                    </p>
+                  </blockquote>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Daily Affirmation ─────────────────────────────────────── */}
+      {dailyAffirmation && (
+        <section
+          className="dash-card"
+          aria-labelledby="daily-aff-heading"
+          style={{ marginTop: '2rem' }}
+        >
+          <h2 id="daily-aff-heading" className="dash-card__title">Daily Affirmation</h2>
+          <blockquote
+            style={{
+              margin: '0.75rem 0 0',
+              padding: '1rem 1.25rem',
+              borderLeft: '4px solid var(--brand-accent, #7c3aed)',
+              background: 'var(--surface-alt, #f9f9ff)',
+              borderRadius: '0 6px 6px 0',
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '1.05rem', fontStyle: 'italic' }}>
+              &ldquo;{dailyAffirmation.text}&rdquo;
+            </p>
+            <footer style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted, #666)' }}>
+              — {dailyAffirmation.resilience_type} Resilience
+            </footer>
+          </blockquote>
+          <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--text-muted, #888)' }}>
+            Framework: {dailyAffirmation.actPrinciple} (ACT) · {dailyAffirmation.difficulty}
+          </p>
+        </section>
+      )}
+
+      {/* ── CTA ───────────────────────────────────────────────────── */}
+      <section
+        className="dash-card"
+        aria-labelledby="cta-heading"
+        style={{ marginTop: '2rem', textAlign: 'center' }}
+      >
+        <h2 id="cta-heading" className="dash-card__title">
+          {hasScores ? 'Ready to grow?' : 'Get your resilience scores'}
+        </h2>
+        <p style={{ color: 'var(--text-muted, #555)', marginBottom: '1.25rem' }}>
+          {hasScores
+            ? 'Retake the assessment to track your progress over time.'
+            : 'Complete the Resilience Atlas assessment to unlock your full dimension breakdown.'}
+        </p>
+        <Link to="/quiz" className="btn btn--primary" style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}>
+          {hasScores ? 'Retake Assessment' : 'Take Assessment'}
+        </Link>
+      </section>
+
+    </main>
+  );
 }

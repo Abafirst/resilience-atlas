@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { KIDS_DIMENSION_ICON_MAP, KIDS_ACTIVITIES } from '../data/kidsActivities';
 
 const AGE_GROUPS = [
   { id: 'age-5-7',    label: 'Ages 5–7' },
@@ -8,36 +9,13 @@ const AGE_GROUPS = [
   { id: 'age-18plus', label: '18+' },
 ];
 
-const ACTIVITIES = {
-  'age-5-7': [
-    { title: 'Feelings Weather Report', desc: 'Draw your feelings as weather — sunny, cloudy, or stormy — and talk about what made the weather change.', time: '10 min', level: 'beginner' },
-    { title: 'Kindness Scavenger Hunt', desc: 'Find three ways to be kind to someone today and share what happened.', time: '15 min', level: 'beginner' },
-    { title: 'Belly Breathing Buddy', desc: 'Place a stuffed animal on your tummy and breathe deeply to make it rise and fall.', time: '5 min', level: 'beginner' },
-  ],
-  'age-8-10': [
-    { title: 'Reframe the Story', desc: 'Take something that went wrong this week and write two different endings — one where you learned something, one where you helped someone.', time: '15 min', level: 'beginner' },
-    { title: 'Gratitude Map', desc: "Draw a map of your day and mark three moments you're grateful for with a star.", time: '10 min', level: 'beginner' },
-    { title: 'Body Scan Check-In', desc: 'Close your eyes and slowly notice each part of your body from head to toe, noting any tension.', time: '8 min', level: 'intermediate' },
-  ],
-  'age-11-14': [
-    { title: 'Values Compass', desc: 'List five things that matter most to you. Then reflect: did your choices this week point toward those values?', time: '20 min', level: 'intermediate' },
-    { title: 'Stress Audit', desc: 'Track your stress triggers for three days, then identify one pattern and a coping strategy.', time: '3 days', level: 'intermediate' },
-    { title: 'Peer Connection Challenge', desc: "Reach out to someone you haven't talked to in a while with a genuine compliment or question.", time: '15 min', level: 'beginner' },
-  ],
-  'age-15-18': [
-    { title: 'Identity Narrative', desc: 'Write 300 words about a challenge you overcame and how it shaped who you are today.', time: '30 min', level: 'intermediate' },
-    { title: 'Future Self Letter', desc: 'Write a letter from your 30-year-old self back to the person you are now — what wisdom would you share?', time: '25 min', level: 'advanced' },
-    { title: 'Mindful Social Media Audit', desc: 'Track how you feel before and after using social media for one week. What patterns do you notice?', time: '1 week', level: 'intermediate' },
-  ],
-};
-
 const SKILLS = [
-  { emoji: '🧭', name: 'Agentic-Generative',   tag: 'Ages 8+',   desc: 'Building purpose, initiative, and the drive to create positive change.' },
-  { emoji: '🤝', name: 'Relational-Connective', tag: 'All Ages',  desc: 'Nurturing healthy friendships, empathy, and community belonging.' },
-  { emoji: '🌟', name: 'Spiritual-Reflective',  tag: 'Ages 10+',  desc: 'Exploring meaning, values, and a sense of something bigger than oneself.' },
-  { emoji: '💙', name: 'Emotional-Adaptive',    tag: 'All Ages',  desc: 'Recognizing feelings, managing emotions, and bouncing back from setbacks.' },
-  { emoji: '🧘', name: 'Somatic-Regulative',    tag: 'All Ages',  desc: 'Connecting body and mind through breath, movement, and rest.' },
-  { emoji: '📖', name: 'Cognitive-Narrative',   tag: 'Ages 6+',   desc: 'Reframing stories, building growth mindset, and shaping personal identity.' },
+  { name: 'Agentic-Generative',   tag: 'Ages 8+',   desc: 'Building purpose, initiative, and the drive to create positive change.' },
+  { name: 'Relational-Connective', tag: 'All Ages',  desc: 'Nurturing healthy friendships, empathy, and community belonging.' },
+  { name: 'Spiritual-Reflective',  tag: 'Ages 10+',  desc: 'Exploring meaning, values, and a sense of something bigger than oneself.' },
+  { name: 'Emotional-Adaptive',    tag: 'All Ages',  desc: 'Recognizing feelings, managing emotions, and bouncing back from setbacks.' },
+  { name: 'Somatic-Regulative',    tag: 'All Ages',  desc: 'Connecting body and mind through breath, movement, and rest.' },
+  { name: 'Cognitive-Narrative',   tag: 'Ages 6+',   desc: 'Reframing stories, building growth mindset, and shaping personal identity.' },
 ];
 
 export default function KidsPage() {
@@ -68,7 +46,9 @@ export default function KidsPage() {
         <div className="skills-grid">
           {SKILLS.map(skill => (
             <article key={skill.name} className="skill-card">
-              <div className="skill-card-emoji">{skill.emoji}</div>
+              <div className="skill-card-emoji">
+                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" width="40" height="40" />
+              </div>
               <div className="skill-card-name">{skill.name}</div>
               <span className="skill-card-tag">{skill.tag}</span>
               <p>{skill.desc}</p>
@@ -108,9 +88,17 @@ export default function KidsPage() {
             hidden={selectedAge !== id}
           >
             <ul className="activity-list">
-              {(ACTIVITIES[id] || []).map(activity => (
+              {(KIDS_ACTIVITIES[id] || []).map(activity => (
                 <li key={activity.title} className="activity-item">
-                  <div className="activity-item-title">{activity.title}</div>
+                  <div className="activity-item-title">
+                    {activity.icon && (
+                      <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
+                    )}
+                    {activity.title}
+                  </div>
+                  {activity.subtype && (
+                    <div className="activity-item-subtype">{activity.subtype}</div>
+                  )}
                   <div className="activity-item-desc">{activity.desc}</div>
                   <div className="activity-item-meta">
                     <span className="activity-meta-tag">{activity.time}</span>
