@@ -98,7 +98,7 @@ function TierGateModal({ item, onClose }) {
               fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
             }}
           >
-            <span aria-hidden="true"><img src="/icons/star.svg" alt="" className="icon icon-xs" style={{ verticalAlign: 'middle', marginRight: '.35rem' }} /></span> Compare &amp; Unlock Tiers
+            <img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-xs" style={{ verticalAlign: 'middle', marginRight: '.35rem' }} /> Compare &amp; Unlock Tiers
           </a>
           <button
             type="button"
@@ -446,7 +446,7 @@ export default function TeamsResourcesPage() {
                   id="handouts-heading"
                   style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
                 >
-                  <img src="/icons/checkmark.svg" alt="" aria-hidden="true" className="icon icon-sm" style={{ verticalAlign: 'middle' }} /> Handouts &amp; Templates
+                  <img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" style={{ verticalAlign: 'middle' }} /> Handouts &amp; Templates
                   <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Workshop guides, templates, cards</span>
                 </h2>
                 <div

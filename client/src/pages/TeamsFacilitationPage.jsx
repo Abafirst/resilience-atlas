@@ -82,10 +82,9 @@ const SECTIONS = [
   },
   {
     id: 'psychological-safety',
-    icon: '/icons/lock.svg',
-    title: 'Creating Psychological Safety',
+    icon: '/icons/unlock.svg',
     intro: 'Psychological safety — the belief that you can speak up, take risks, and be yourself without fear of punishment or humiliation — is the single most important condition for effective team resilience work.',
-    callout: { type: 'warn', icon: '/icons/lock.svg', content: <><strong>Warning Sign:</strong> If team members are giving "safe" answers, watching the leader's reactions before speaking, or going silent when hard topics arise — psychological safety needs attention before you can go deeper.</> },
+    callout: { type: 'warn', icon: '/icons/somatic-regulative.svg', content: <><strong>Warning Sign:</strong> If team members are giving "safe" answers, watching the leader's reactions before speaking, or going silent when hard topics arise — psychological safety needs attention before you can go deeper.</> },
     items: [
       {
         id: 'ps-build',
