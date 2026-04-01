@@ -29,3 +29,5 @@ assets/social/generated/*.png
 # Optional npm cache directory
 .npmsendgrid.env
 sendgrid.env
+legacy_backup_list.txt
+public_list.txt
