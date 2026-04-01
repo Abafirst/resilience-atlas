@@ -69,7 +69,7 @@ export default function KidsPage() {
             { emoji: '🧭', name: 'Agentic-Generative', tag: 'Ages 8+', desc: 'Building purpose, initiative, and the drive to create positive change.' },
             { emoji: '🤝', name: 'Relational-Connective', tag: 'All Ages', desc: 'Nurturing healthy friendships, empathy, and community belonging.' },
             { emoji: '🌟', name: 'Spiritual-Reflective', tag: 'Ages 10+', desc: 'Exploring meaning, values, and a sense of something bigger than oneself.' },
-            { emoji: '💙', name: 'Emotional-Adaptive', tag: 'All Ages', desc: 'Recognising feelings, managing emotions, and bouncing back from setbacks.' },
+            { emoji: '💙', name: 'Emotional-Adaptive', tag: 'All Ages', desc: 'Recognizing feelings, managing emotions, and bouncing back from setbacks.' },
             { emoji: '🧘', name: 'Somatic-Regulative', tag: 'All Ages', desc: 'Connecting body and mind through breath, movement, and rest.' },
             { emoji: '📖', name: 'Cognitive-Narrative', tag: 'Ages 6+', desc: 'Reframing stories, building growth mindset, and shaping personal identity.' },
           ].map(skill => (
