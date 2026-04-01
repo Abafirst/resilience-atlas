@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Your Team — The Resilience Atlas™</title>
+  <meta name="description" content="Accept your invitation to join your team on The Resilience Atlas™ assessment platform." />
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --brand-primary: #2c5f8a;
+      --brand-dark:    #1a3e5c;
+      --brand-accent:  #4caf8a;
+      --text-main:     #1a2533;
+      --text-muted:    #6b7a8d;
+      --bg-page:       #f4f7fb;
+      --bg-card:       #ffffff;
+      --border:        #dce4ef;
+      --shadow:        0 2px 16px rgba(44,95,138,0.13);
+      --radius:        12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+    .brand {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .org-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--brand-dark);
+      margin: 0.25rem 0 0.5rem;
+    }
+    .invite-detail {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0 0 1.75rem;
+    }
+    .invite-badge {
+      display: inline-block;
+      background: #e8f0fa;
+      color: var(--brand-primary);
+      border-radius: 20px;
+      padding: 0.25rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+    .btn--primary { background: var(--brand-primary); color: #fff; }
+    .btn--secondary {
+      background: transparent;
+      border: 2px solid var(--brand-primary);
+      color: var(--brand-primary);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin: 0.25rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    #status-msg {
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+    #status-msg.error   { background:#fde8e8; color:#c0392b; border-left:3px solid #c0392b; text-align:left; }
+    #status-msg.info    { background:#e8f0fa; color:var(--brand-dark); border-left:3px solid var(--brand-primary); text-align:left; }
+    #status-msg.success { background:#e8f9ef; color:#1e7e4a; border-left:3px solid var(--brand-accent); text-align:left; }
+    .spinner {
+      display: inline-block;
+      width: 32px; height: 32px;
+      border: 3px solid #dce4ef;
+      border-top-color: var(--brand-primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap { padding: 2rem 0; }
+    #invite-info { display:none; }
+    #not-found   { display:none; }
+  </style>
+  <!-- Prevent flash of unstyled theme -->
+  <script>(function(){try{var t=localStorage.getItem('ra-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');else if(t==='light')document.documentElement.setAttribute('data-theme','light');else if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.setAttribute('data-theme','dark');}catch(e){}}());</script>
+</head>
+<body>
+
+  <div class="card" role="main" aria-live="polite">
+
+    <!-- Loading -->
+    <div id="loading-wrap" class="loading-wrap">
+      <div class="spinner" aria-label="Loading invitation…"></div>
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.75rem">Verifying your invitation…</p>
+    </div>
+
+    <!-- Not found / expired -->
+    <div id="not-found">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem">❌</div>
+      <h1 style="font-size:1.25rem;color:var(--brand-dark);margin:0 0 0.5rem">Invitation Not Found</h1>
+      <p id="not-found-msg" style="color:var(--text-muted);font-size:0.9rem;margin:0 0 1.5rem">
+        This invitation link is invalid or has expired.
+      </p>
+      <a href="/" class="btn btn--primary">Go to Resilience Atlas</a>
+    </div>
+
+    <!-- Valid invite -->
+    <div id="invite-info">
+      <div class="brand">The Resilience Atlas™</div>
+      <div style="font-size:2.5rem;margin-bottom:0.5rem">🤝</div>
+      <h1 class="org-name" id="org-display">Join Your Team</h1>
+      <p class="invite-detail">
+        You've been invited to participate in a team resilience assessment.
+      </p>
+      <div id="invite-badges" style="margin-bottom:1.25rem"></div>
+
+      <div id="status-msg" role="alert"></div>
+
+      <div class="actions" id="action-buttons">
+        <button class="btn btn--primary" id="btn-accept-logged-in" style="display:none">
+          ✅ Accept &amp; Join Organization
+        </button>
+        <a id="btn-signup" href="/register" class="btn btn--primary">
+          🚀 Create Account &amp; Join
+        </a>
+        <div class="divider">or</div>
+        <a id="btn-login" href="/login" class="btn btn--secondary">
+          🔑 Log In to Accept
+        </a>
+        <button class="btn btn--ghost" onclick="window.location.href='/'">Decline</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var TOKEN_KEY = 'resilience_invite_token';
+    var inviteToken = new URLSearchParams(window.location.search).get('token');
+
+    function $(id) { return document.getElementById(id); }
+    function showStatus(msg, type) {
+      var el = $('status-msg');
+      el.textContent = msg;
+      el.className = type;
+      el.style.display = 'block';
+    }
+
+    function getAuthToken() {
+      return localStorage.getItem('token') || sessionStorage.getItem('token') || null;
+    }
+
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+    }
+
+    async function loadInvite() {
+      if (!inviteToken) {
+        $('loading-wrap').style.display = 'none';
+        $('not-found').style.display    = 'block';
+        return;
+      }
+
+      // Persist token so signup/login can pick it up afterward
+      try { sessionStorage.setItem(TOKEN_KEY, inviteToken); } catch (_) {}
+
+      try {
+        var res  = await fetch('/api/org/join?token=' + encodeURIComponent(inviteToken));
+        var data = await res.json();
+
+        $('loading-wrap').style.display = 'none';
+
+        if (!res.ok || !data.valid) {
+          $('not-found-msg').textContent = data.error || 'This invitation link is invalid or has expired.';
+          $('not-found').style.display   = 'block';
+          return;
+        }
+
+        var invite = data.invite;
+
+        // Populate org name
+        var orgName = (invite.organization && invite.organization.name) || 'Your Team';
+        $('org-display').textContent = 'Join ' + orgName;
+        document.title = 'Join ' + orgName + ' — The Resilience Atlas™';
+
+        // Badges
+        var badgesEl = $('invite-badges');
+        if (invite.team_name) {
+          badgesEl.innerHTML += '<span class="invite-badge">Team: ' + escHtml(invite.team_name) + '</span> ';
+        }
+        if (invite.role && invite.role !== 'member') {
+          badgesEl.innerHTML += '<span class="invite-badge" style="background:#fff3e0;color:#a07800">Role: ' + capitalize(escHtml(invite.role)) + '</span>';
+        }
+
+        $('invite-info').style.display = 'block';
+
+        // Point signup/login links to Auth0 Universal Login (invite token is
+        // preserved in sessionStorage so it can be read after the user returns).
+        var signupHref = '/register';
+        var loginHref  = '/login';
+        $('btn-signup').href = signupHref;
+        $('btn-login').href  = loginHref;
+
+        // If user is already authenticated, show "Accept" button directly
+        var authToken = getAuthToken();
+        if (authToken) {
+          var acceptBtn = $('btn-accept-logged-in');
+          acceptBtn.style.display = 'block';
+          $('btn-signup').style.display = 'none';
+          $('btn-login').style.display  = 'none';
+
+          acceptBtn.addEventListener('click', function () {
+            acceptInvite(authToken);
+          });
+        }
+
+      } catch (err) {
+        $('loading-wrap').style.display  = 'none';
+        $('not-found-msg').textContent   = 'Unable to load invitation. Please try again.';
+        $('not-found').style.display     = 'block';
+      }
+    }
+
+    async function acceptInvite(authToken) {
+      var btn = $('btn-accept-logged-in');
+      btn.disabled    = true;
+      btn.textContent = 'Accepting…';
+      showStatus('', '');
+
+      try {
+        var res  = await fetch('/api/org/join', {
+          method:  'POST',
+          headers: {
+            'Content-Type':  'application/json',
+            'Authorization': 'Bearer ' + authToken,
+          },
+          body: JSON.stringify({ token: inviteToken }),
+        });
+        var data = await res.json();
+
+        if (res.ok && data.success) {
+          showStatus('🎉 You have joined the organization! Redirecting to your assessment…', 'success');
+          try { sessionStorage.removeItem(TOKEN_KEY); } catch (_) {}
+          setTimeout(function () { window.location.href = '/quiz.html'; }, 2000);
+        } else {
+          showStatus(data.error || 'Failed to accept invitation. Please try again.', 'error');
+          btn.disabled    = false;
+          btn.textContent = '✅ Accept & Join Organization';
+        }
+      } catch (err) {
+        showStatus('Network error. Please try again.', 'error');
+        btn.disabled    = false;
+        btn.textContent = '✅ Accept & Join Organization';
+      }
+    }
+
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    loadInvite();
+  })();
+  </script>
+
+<script src="/js/theme-toggle.js"></script>
+</body>
+</html>

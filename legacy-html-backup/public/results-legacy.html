@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Resilience Profile — The Resilience Atlas™</title>
+<meta name="description" content="View your personalized resilience profile from The Resilience Atlas™, download a PDF.">
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/evidence-practices.css" />
+  <link rel="stylesheet" href="css/payment-ui.css" />
+  <link rel="stylesheet" href="css/upsell.css" />
+  <link rel="stylesheet" href="css/sharing.css" />
+</head>
+<body>
+  <!-- Confetti celebration canvas (hidden until triggered) -->
+  <canvas id="confettiCanvas" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;" aria-hidden="true"></canvas>
+
+  <!-- ── Header ──────────────────────────────────────── -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a class="logo" href="/">
+      <div class="logo-icon" aria-hidden="true">
+        <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36">
+      </div>
+      The Resilience Atlas&#8482;
+    </a>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/assessment.html" class="nav-link">Assessment</a>
+      <a href="/research.html" class="nav-link">Research</a>
+      <a href="/team" class="nav-link">Teams</a>
+      <a href="/kids.html" class="nav-link">Kids</a>
+      <a href="/about.html" class="nav-link">About</a>
+      <a class="btn btn-secondary" href="/quiz.html">Retake Quiz</a>
+    </nav>
+  </div>
+</header>
+  <!-- ── Spinner overlay ──────────────────────────────── -->
+  <div id="spinnerOverlay" class="spinner-overlay" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="spinnerText" class="spinner-text">Processing&hellip;</p>
+  </div>
+
+  <main>
+    <div class="results-page">
+      <div class="results-wrapper">
+
+        <!-- Greeting / Results Header -->
+        <div class="results-header">
+          <h1 id="greeting" class="results-greeting">Your Resilience Profile</h1>
+          <p class="results-header-desc">Your resilience system reveals how you adapt, recover, and grow through challenge.</p>
+          <p id="resultsSubtitle" class="results-subtitle"></p>
+        </div>
+
+        <!-- Free Brief Report (compact snapshot — visible to all users) -->
+        <div id="freeBriefReport"></div>
+
+        <!-- Primary Resilience Mode -->
+        <section class="primary-type-card card" aria-labelledby="primaryTypeHeading">
+          <h2 id="primaryTypeHeading">Your Primary Resilience Mode</h2>
+          <div class="primary-type-name" id="primaryType">—</div>
+          <p class="primary-type-description" id="primaryDescription"></p>
+        </section>
+
+        <!-- Atlas Map (radar chart — visible to all users for free) -->
+
+<section class="atlas-section card" aria-labelledby="radarHeading">
+          <h2 id="radarHeading">Your Resilience Compass</h2>
+          <p class="atlas-description">This compass visualizes the balance of your resilience system across six core dimensions.</p>
+<div id="radarChartContainer" aria-label="Resilience compass visualization">
+  <canvas id="radarChart"></canvas>
+</div>
+          <div class="atlas-highlight">
+            Your strongest resilience system is: <span id="primaryDimensionLabel"></span>
+          </div>
+          <div class="dominant-dimension-section" id="dominantDimensionSection" aria-live="polite">
+            <h3 class="dominant-dimension-heading">Dominant Dimension</h3>
+            <div class="dominant-dimension-name" id="dominantDimensionName">—</div>
+          </div>
+        </section>
+
+        <!-- Insight Progress Indicator -->
+        <div class="insight-progress" aria-hidden="true">
+          <p>Your resilience insights unlocked</p>
+          <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill"></div>
+          </div>
+          <p>Upgrade to unlock your complete resilience atlas</p>
+        </div>
+
+        <!-- Core Strengths Grid -->
+        <section class="strengths-section" aria-labelledby="strengthsHeading">
+          <h2 id="strengthsHeading">Your Core Resilience Strengths</h2>
+          <div class="strength-grid">
+            <div class="strength-card-premium">
+              <h3>Primary Strength</h3>
+              <div id="primaryStrength">—</div>
+            </div>
+            <div class="strength-card-premium">
+              <h3>Solid Strength</h3>
+              <div id="solidStrength">—</div>
+            </div>
+            <div class="strength-card-premium">
+              <h3>Emerging Strength</h3>
+              <div id="emergingStrength">—</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Personalized Report (visible to all users — free overview) -->
+<section class="report-section card" aria-labelledby="reportHeading">
+  <h2 id="reportHeading">Your Personalized Report</h2>
+  <div id="reportText" class="report-text-card" role="region" aria-live="polite" aria-busy="true">
+    Loading your report…
+  </div>
+</section>
+
+        <!-- Tier Upgrade Cards (shown for free users below the free overview) -->
+        <div id="upgradeCardsContainer"></div>
+
+        <!-- Deep Analysis (locked for free users — premium only) -->
+        <section
+          class="premium-preview card locked"
+          data-tier="atlas-navigator"
+          aria-labelledby="deepAnalysisHeading"
+        >
+          <h2 id="deepAnalysisHeading">Deep Resilience Analysis</h2>
+          <div class="blur-preview" aria-hidden="true">
+            <p>Comprehensive breakdown of all 6 resilience dimensions with personalized insights tailored to your unique profile.</p>
+            <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
+            <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalized development roadmap.</p>
+          </div>
+          <!-- Overlay injected by payment-gating.js -->
+          <div class="premium-lock-message payment-overlay" role="region" aria-label="Premium content — locked">
+            <div class="payment-overlay__inner">
+              <span class="payment-overlay__icon" aria-hidden="true">&#128274;</span>
+              <h3>Unlock Your Complete Resilience Map</h3>
+              <p>Go deeper to understand the full structure of your resilience system.</p>
+              <button
+                class="btn btn-upgrade btn-sm"
+                onclick="PaymentGating.startCheckout('atlas-navigator')"
+                aria-label="Unlock Deep Report"
+              >
+                Unlock Now
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Prior Report Downloads (shown when user has a prior purchase) -->
+        <div id="priorReportsSection" hidden aria-label="Previous report purchases"></div>
+
+        <!-- PDF Alert -->
+        <div id="pdfAlert" class="alert" role="alert"></div>
+
+        <!-- Action Buttons -->
+        <div class="results-actions">
+          <!-- For free users, this button is replaced by a locked-upgrade button via results.js -->
+          <button type="button" id="btnDownload" class="btn btn-primary">
+            <span aria-hidden="true">&#8681;</span>
+            <span class="btn-label">Download PDF</span>
+          </button>
+
+          <button type="button" id="btnRetake" class="btn btn-secondary">
+            <span aria-hidden="true">&#8635;</span>
+            <span class="btn-label">Retake Quiz</span>
+          </button>
+
+          <!-- Shown by results.js for users without atlas-premium (unlimited retakes) -->
+          <div id="retakeLockedMsg" class="retake-locked-msg" hidden>
+            <span aria-hidden="true">&#128274;</span>
+            <span>Unlimited retakes require the <strong>Atlas Premium</strong> plan ($49.99 lifetime).</span>
+            <button
+              type="button"
+              class="btn btn-upgrade btn-sm"
+              onclick="PaymentGating.startCheckout('atlas-premium')"
+              aria-label="Unlock unlimited retakes"
+            >Unlock Unlimited Retakes</button>
+          </div>
+        </div>
+
+        <!-- Business tier: link to team dashboard -->
+        <div class="business-dashboard-link" hidden style="text-align:center;margin-top:1rem">
+          <a href="/dashboard.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4em">
+            <span aria-hidden="true">&#128202;</span>
+            View on Team Dashboard
+          </a>
+        </div>
+
+        <!-- Email Section -->
+        <section aria-labelledby="emailHeading" class="text-center mt-8">
+          <h3 id="emailHeading" class="mb-4">Email Your Report</h3>
+          <div class="email-input-row">
+            <label for="emailInput" class="hidden">Email address</label>
+            <input
+              type="email"
+              id="emailInput"
+              name="email"
+              autocomplete="email"
+              placeholder="Enter your email address"
+              aria-label="Email address to send report"
+            />
+            <button type="button" id="btnEmail" class="btn btn-teal">
+              <span aria-hidden="true">&#9993;</span>
+              <span class="btn-label">Send Report</span>
+            </button>
+          </div>
+          <div id="emailAlert" class="alert" role="alert"></div>
+        </section>
+
+        <!-- Evidence-Based Micro-Practices Section -->
+        <div id="evidencePracticesContainer"></div>
+
+        <!-- Personalized Next Steps Section -->
+        <div id="personalizedNextStepsContainer"></div>
+
+        <!-- Resilience Affirmations Section -->
+        <div id="affirmationsContainer"></div>
+
+        <!-- ── Reminder Opt-In ─────────────────────────────── -->
+        <section id="reminderOptInSection" class="reminder-optin-section card" hidden aria-labelledby="reminderOptInHeading">
+          <h3 id="reminderOptInHeading">🔔 Set a Reassessment Reminder</h3>
+          <p>Resilience grows over time. Would you like a reminder to retake the assessment in 30 days to track your progress?</p>
+          <div class="reminder-optin-row">
+            <label class="reminder-optin-label">
+              <input type="checkbox" id="reminderOptInCheckbox" aria-label="Opt in to 30-day reassessment reminder" />
+              <span>Yes, remind me in 30 days to retake the assessment</span>
+            </label>
+          </div>
+          <button type="button" id="btnReminderOptIn" class="btn btn-primary btn-sm">
+            Set Reminder
+          </button>
+          <p id="reminderOptInStatus" class="reminder-optin-status" aria-live="polite"></p>
+        </section>
+
+        <!-- ── Sharing Section ──────────────────────────────── -->
+        <section class="share-section" aria-labelledby="shareHeading">
+          <h3 id="shareHeading">Share Your Resilience Dimension</h3>
+          <p class="share-desc">Discovered your strongest dimension? Share it and invite others to map theirs.</p>
+          <div class="share-buttons" role="group" aria-label="Share options">
+            <button type="button" id="btnShareLinkedIn" class="btn-share btn-share-linkedin" aria-label="Share on LinkedIn">
+              <span class="share-icon" aria-hidden="true">in</span> LinkedIn
+            </button>
+            <button type="button" id="btnShareTwitter" class="btn-share btn-share-twitter" aria-label="Share on X (Twitter)">
+              <span class="share-icon" aria-hidden="true">&#x1D54F;</span> X / Twitter
+            </button>
+            <button type="button" id="btnShareInstagram" class="btn-share btn-share-instagram" aria-label="Share on Instagram">
+              <span class="share-icon" aria-hidden="true">&#128247;</span> Instagram
+            </button>
+            <button type="button" id="btnShareFacebook" class="btn-share btn-share-facebook" aria-label="Share on Facebook">
+              <span class="share-icon" aria-hidden="true">f</span> Facebook
+            </button>
+            <button type="button" id="btnShareCopy" class="btn-share btn-share-copy" aria-label="Copy share link">
+              <span class="share-icon" aria-hidden="true">&#128279;</span> Copy Link
+            </button>
+            <button type="button" id="btnShareDownload" class="btn-share btn-share-download" aria-label="Download radar chart as PNG">
+              <span class="share-icon" aria-hidden="true">&#8681;</span> Download Radar
+            </button>
+          </div>
+          <p class="share-preview-text" id="sharePreviewText" aria-live="polite"></p>
+          <p class="share-instagram-hint">&#128247; <strong>Instagram tip:</strong> Click <em>Instagram</em> above to download your radar graphic, then post it and tag <a href="https://www.instagram.com/atlas.resilience/" target="_blank" rel="noopener noreferrer">@atlas.resilience</a>!</p>
+        </section>
+
+        <!-- ── Invite Colleagues ─────────────────────────────── -->
+        <section class="invite-section" aria-labelledby="inviteHeading">
+          <h3 id="inviteHeading">Compare with Your Team</h3>
+          <p>Invite a colleague to take the assessment and compare your Six Dimensions of Resilience profiles.</p>
+          <form class="invite-form" id="inviteColleagueForm" novalidate>
+            <label for="inviteEmailInput" class="hidden">Colleague email</label>
+            <input
+              type="email"
+              id="inviteEmailInput"
+              placeholder="colleague@company.com"
+              autocomplete="email"
+              aria-label="Colleague email address"
+            />
+            <button type="submit" class="btn-invite">Send Invite</button>
+          </form>
+          <p class="invite-status" id="inviteStatus" aria-live="polite"></p>
+        </section>
+
+      </div><!-- /.results-wrapper -->
+    </div><!-- /.results-page -->
+  </main>
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+
+  <!-- Privacy guarantee banner -->
+  <div class="privacy-guarantee" role="note" aria-label="Data privacy guarantee">
+    <span class="privacy-guarantee__icon" aria-hidden="true">🔒</span>
+    <span class="privacy-guarantee__text">
+      <strong>You control your data.</strong>
+      Delete your account and results anytime —
+      <a href="/about.html#privacy">learn more about our privacy commitment</a>.
+    </span>
+  </div>
+
+  <footer class="site-footer" role="contentinfo">
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Assessment</strong>
+        <a href="/assessment.html">About the Assessment</a>
+        <a href="/quiz.html">Take the Quiz</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Research</strong>
+        <a href="/research.html">Learn About the Six Dimensions</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Programs</strong>
+        <a href="/team">For Teams</a>
+        <a href="/kids.html">For Kids</a>
+      </div>
+      <div class="footer-nav-group">
+        <strong class="footer-nav-heading">Company</strong>
+        <a href="/about.html">About</a>
+      </div>
+    </nav>
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+  </footer>
+<script src="/js/brand-compass.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/visualizations.js"></script>
+<script src="/js/payment-gating.js"></script>
+<script src="/js/upgrade-cards.js"></script>
+<script src="/js/upsell-system.js"></script>
+<script src="/js/pdf-progress.js"></script>
+<script src="/js/results.js"></script>
+<script src="/js/evidence-based-practices.js"></script>
+<script src="/js/sharing.js"></script>
+<script>
+  // Initialise sharing after results are loaded.
+  // results.js sets window.dominantDimension once scoring is complete.
+  document.addEventListener('resultsLoaded', function (e) {
+    var dim = (e && e.detail && e.detail.dominantDimension) || window.dominantDimension || '';
+    if (window.ResilienceSharing) ResilienceSharing.init(dim);
+  });
+  // Fallback: init after a short delay in case event was already fired.
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (window.ResilienceSharing) {
+        ResilienceSharing.init(window.dominantDimension || '');
+      }
+    }, 1200);
+  });
+</script>
+</body>
+</html>
+

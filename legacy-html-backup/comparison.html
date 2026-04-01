@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resilience Profile Comparison — The Resilience Atlas™</title>
+  <meta name="description" content="Compare resilience profiles side-by-side, track growth over time, and discover synergies with colleagues.">
+  <link rel="icon" href="/brand/symbol/web/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Comparison page layout ─────────────────────────────────────────── */
+    .comparison-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .comparison-hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .comparison-hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--blue-dark, #1a2e5a);
+    }
+    .comparison-hero p {
+      color: var(--slate-600, #475569);
+      margin-top: .5rem;
+    }
+
+    /* ── Tab navigation ─────────────────────────────────────────────────── */
+    .comparison-tabs {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--slate-200, #e2e8f0);
+    }
+    .comparison-tab {
+      padding: .65rem 1.2rem;
+      border: none;
+      background: none;
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--slate-500, #64748b);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: color .15s, border-color .15s;
+    }
+    .comparison-tab.active {
+      color: var(--blue-dark, #1a2e5a);
+      border-bottom-color: var(--blue-dark, #1a2e5a);
+    }
+    .comparison-tab:hover { color: var(--blue-dark, #1a2e5a); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Score big numbers ─────────────────────────────────────────────── */
+    .score-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .score-card {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .score-card .score-name {
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--slate-500, #64748b);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .5rem;
+    }
+    .score-card .score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--blue-dark, #1a2e5a);
+      line-height: 1;
+    }
+    .score-card .score-label {
+      font-size: .85rem;
+      color: var(--slate-500, #64748b);
+      margin-top: .25rem;
+    }
+    .score-vs {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--slate-400, #94a3b8);
+    }
+
+    /* ── Dual radar ────────────────────────────────────────────────────── */
+    .radar-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .radar-card {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .radar-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--blue-dark, #1a2e5a);
+      margin-bottom: 1rem;
+    }
+    .radar-card canvas { width: 100% !important; max-width: 300px; }
+
+    /* ── Dimension table ───────────────────────────────────────────────── */
+    .dimension-table-wrap {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .dimension-table-wrap h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue-dark, #1a2e5a);
+      padding: 1rem 1.25rem .75rem;
+      border-bottom: 1px solid var(--slate-200, #e2e8f0);
+    }
+    .dimension-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .dimension-table th, .dimension-table td {
+      padding: .75rem 1.25rem;
+      text-align: left;
+      font-size: .9rem;
+    }
+    .dimension-table thead th {
+      background: var(--slate-50, #f8fafc);
+      font-weight: 600;
+      color: var(--slate-600, #475569);
+      text-transform: uppercase;
+      font-size: .78rem;
+      letter-spacing: .04em;
+    }
+    .dimension-table tbody tr:not(:last-child) {
+      border-bottom: 1px solid var(--slate-100, #f1f5f9);
+    }
+    .delta-positive { color: #16a34a; font-weight: 600; }
+    .delta-negative { color: #dc2626; font-weight: 600; }
+    .delta-neutral  { color: var(--slate-400, #94a3b8); }
+
+    /* ── Analysis cards ────────────────────────────────────────────────── */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .analysis-card {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    .analysis-card .analysis-icon {
+      font-size: 1.6rem;
+      margin-bottom: .5rem;
+    }
+    .analysis-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--blue-dark, #1a2e5a);
+      margin-bottom: .75rem;
+    }
+    .analysis-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .analysis-card ul li {
+      font-size: .875rem;
+      color: var(--slate-600, #475569);
+      padding: .4rem 0;
+      border-bottom: 1px solid var(--slate-100, #f1f5f9);
+      line-height: 1.5;
+    }
+    .analysis-card ul li:last-child { border-bottom: none; }
+
+    /* ── Growth chart ──────────────────────────────────────────────────── */
+    .growth-chart-wrap {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .growth-chart-wrap h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue-dark, #1a2e5a);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Milestone badges ──────────────────────────────────────────────── */
+    .milestone-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 2rem;
+    }
+    .milestone-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: .35rem .85rem;
+      font-size: .83rem;
+      font-weight: 600;
+    }
+
+    /* ── Team score banner ─────────────────────────────────────────────── */
+    .team-score-banner {
+      background: linear-gradient(135deg, #1a2e5a 0%, #2563eb 100%);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+    .team-score-banner .ts-label {
+      font-size: .9rem;
+      opacity: .8;
+      margin-bottom: .25rem;
+    }
+    .team-score-banner .ts-number {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .team-score-banner .ts-desc {
+      font-size: .85rem;
+      opacity: .75;
+      margin-top: .25rem;
+    }
+
+    /* ── Comparison input form ─────────────────────────────────────────── */
+    .compare-form-card {
+      background: var(--white, #fff);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .compare-form-card h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue-dark, #1a2e5a);
+      margin-bottom: 1rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-size: .875rem;
+      font-weight: 600;
+      color: var(--slate-700, #334155);
+      margin-bottom: .35rem;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: .6rem .9rem;
+      border: 1px solid var(--slate-300, #cbd5e1);
+      border-radius: .5rem;
+      font-size: .925rem;
+      color: var(--slate-800, #1e293b);
+      background: #fff;
+      box-sizing: border-box;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: 2px solid var(--blue-dark, #1a2e5a);
+      outline-offset: 2px;
+    }
+    .form-status {
+      margin-top: .75rem;
+      font-size: .875rem;
+      color: var(--slate-600, #475569);
+      min-height: 1.2em;
+    }
+    .form-status.error { color: #dc2626; }
+    .form-status.success { color: #16a34a; }
+
+    /* ── Share bar ─────────────────────────────────────────────────────── */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: var(--slate-50, #f8fafc);
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: .75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .share-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: .45rem .75rem;
+      border: 1px solid var(--slate-300, #cbd5e1);
+      border-radius: .5rem;
+      font-size: .875rem;
+      background: #fff;
+    }
+
+    /* ── History list ──────────────────────────────────────────────────── */
+    .history-list { list-style: none; padding: 0; margin: 0 0 2rem; }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .85rem 1rem;
+      border: 1px solid var(--slate-200, #e2e8f0);
+      border-radius: .75rem;
+      margin-bottom: .6rem;
+      background: #fff;
+    }
+    .history-item .hi-type {
+      font-size: .75rem;
+      font-weight: 700;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .hi-type-individual { background: #dbeafe; color: #1e40af; }
+    .hi-type-growth     { background: #dcfce7; color: #166534; }
+    .hi-type-team       { background: #fef3c7; color: #92400e; }
+    .history-item .hi-info { flex: 1; font-size: .9rem; color: var(--slate-700, #334155); }
+    .history-item .hi-date { font-size: .8rem; color: var(--slate-400, #94a3b8); }
+
+    /* ── Loading / empty states ────────────────────────────────────────── */
+    .loading-spinner {
+      text-align: center;
+      padding: 3rem;
+      color: var(--slate-500, #64748b);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--slate-500, #64748b);
+    }
+    .empty-state p { margin-top: .5rem; font-size: .95rem; }
+
+    /* ── Responsive ────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .score-row { grid-template-columns: 1fr; text-align: center; }
+      .score-vs { display: none; }
+      .radar-section { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="logo" href="/">
+        <div class="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36">
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/results" class="nav-link">My Results</a>
+        <a href="/quiz.html" class="nav-link">Take Quiz</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="comparison-page">
+
+      <div class="comparison-hero">
+        <h1 id="pageTitle">Resilience Profile Comparison</h1>
+        <p id="pageSubtitle">Compare profiles, track your growth, and discover team synergies.</p>
+      </div>
+
+      <!-- ── Tab navigation ──────────────────────────────────────── -->
+      <div class="comparison-tabs" role="tablist" aria-label="Comparison views">
+        <button class="comparison-tab active" role="tab" aria-selected="true"
+          aria-controls="panel-individual" id="tab-individual"
+          data-panel="individual">&#x1F465; Compare Profiles</button>
+        <button class="comparison-tab" role="tab" aria-selected="false"
+          aria-controls="panel-growth" id="tab-growth"
+          data-panel="growth">&#x1F4C8; My Growth</button>
+        <button class="comparison-tab" role="tab" aria-selected="false"
+          aria-controls="panel-team" id="tab-team"
+          data-panel="team">&#x1F3C6; Team Benchmark</button>
+        <button class="comparison-tab" role="tab" aria-selected="false"
+          aria-controls="panel-history" id="tab-history"
+          data-panel="history">&#x1F4CB; History</button>
+      </div>
+
+      <!-- ═══ PANEL: Individual Comparison ═════════════════════════════ -->
+      <section class="tab-panel active" id="panel-individual" role="tabpanel" aria-labelledby="tab-individual">
+
+        <!-- Input form -->
+        <div class="compare-form-card" id="individualFormCard">
+          <h2>Compare with a Colleague</h2>
+          <div class="form-group">
+            <label for="colleagueAssessmentId">Colleague's Assessment ID</label>
+            <input type="text" id="colleagueAssessmentId"
+              placeholder="Paste their assessment ID here"
+              autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label for="colleagueName">Colleague's Name (optional)</label>
+            <input type="text" id="colleagueName" placeholder="e.g. Alex" maxlength="60" />
+          </div>
+          <button class="btn btn-primary" id="btnCreateIndividual">Compare Profiles</button>
+          <p class="form-status" id="individualStatus" aria-live="polite"></p>
+        </div>
+
+        <!-- Results (hidden until comparison is created) -->
+        <div id="individualResults" style="display:none;">
+
+          <!-- Share bar -->
+          <div class="share-bar" id="individualShareBar">
+            <strong>🔗 Share this comparison:</strong>
+            <input type="text" id="shareUrlInput" readonly aria-label="Shareable comparison URL" />
+            <button class="btn btn-secondary btn-sm" id="btnCopyLink">Copy Link</button>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+              <input type="checkbox" id="chkPublic" style="margin-right:.4rem;" />
+              Make public
+            </label>
+          </div>
+
+          <!-- Score row -->
+          <div class="score-row" id="indScoreRow">
+            <div class="score-card">
+              <div class="score-name" id="ind-name1">You</div>
+              <div class="score-number" id="ind-score1">—</div>
+              <div class="score-label" id="ind-type1"></div>
+            </div>
+            <div class="score-vs">VS</div>
+            <div class="score-card">
+              <div class="score-name" id="ind-name2">Colleague</div>
+              <div class="score-number" id="ind-score2">—</div>
+              <div class="score-label" id="ind-type2"></div>
+            </div>
+          </div>
+
+          <!-- Team score -->
+          <div class="team-score-banner">
+            <div class="ts-label">Combined Team Score</div>
+            <div class="ts-number" id="ind-teamScore">—</div>
+            <div class="ts-desc">Your combined resilience strength</div>
+          </div>
+
+          <!-- Dual radar charts -->
+          <div class="radar-section">
+            <div class="radar-card">
+              <h3 id="radarLabel1">Your Profile</h3>
+              <canvas id="radarChart1" width="300" height="300" aria-label="Your resilience radar chart"></canvas>
+            </div>
+            <div class="radar-card">
+              <h3 id="radarLabel2">Colleague's Profile</h3>
+              <canvas id="radarChart2" width="300" height="300" aria-label="Colleague's resilience radar chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Dimension table -->
+          <div class="dimension-table-wrap">
+            <h2>Dimension Breakdown</h2>
+            <table class="dimension-table" aria-label="Dimension comparison table">
+              <thead>
+                <tr>
+                  <th>Dimension</th>
+                  <th id="thName1">You</th>
+                  <th id="thName2">Colleague</th>
+                  <th>Difference</th>
+                </tr>
+              </thead>
+              <tbody id="dimensionTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Analysis cards -->
+          <div class="analysis-grid">
+            <div class="analysis-card" id="synergiesCard">
+              <div class="analysis-icon">✨</div>
+              <h3>Shared Strengths</h3>
+              <ul id="synergiesList"></ul>
+            </div>
+            <div class="analysis-card" id="complementCard">
+              <div class="analysis-icon">🤝</div>
+              <h3>Complementary Strengths</h3>
+              <ul id="complementList"></ul>
+            </div>
+            <div class="analysis-card" id="gapsCard">
+              <div class="analysis-icon">🌱</div>
+              <h3>Joint Growth Areas</h3>
+              <ul id="gapsList"></ul>
+            </div>
+            <div class="analysis-card" id="recsCard">
+              <div class="analysis-icon">💡</div>
+              <h3>Collaboration Tips</h3>
+              <ul id="recsList"></ul>
+            </div>
+          </div>
+
+        </div><!-- /#individualResults -->
+      </section>
+
+      <!-- ═══ PANEL: Growth Tracking ════════════════════════════════════ -->
+      <section class="tab-panel" id="panel-growth" role="tabpanel" aria-labelledby="tab-growth">
+
+        <!-- Period filter -->
+        <div style="display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;">
+          <strong style="color:var(--blue-dark,#1a2e5a)">View period:</strong>
+          <button class="btn btn-secondary btn-sm growth-period-btn active" data-period="all">All time</button>
+          <button class="btn btn-secondary btn-sm growth-period-btn" data-period="1y">1 year</button>
+          <button class="btn btn-secondary btn-sm growth-period-btn" data-period="90d">90 days</button>
+        </div>
+
+        <div id="growthContent">
+          <div class="loading-spinner">Loading your growth history…</div>
+        </div>
+
+      </section>
+
+      <!-- ═══ PANEL: Team Benchmark ═════════════════════════════════════ -->
+      <section class="tab-panel" id="panel-team" role="tabpanel" aria-labelledby="tab-team">
+
+        <div class="compare-form-card">
+          <h2>Compare with Your Team</h2>
+          <p style="color:var(--slate-600,#475569);font-size:.9rem;margin-bottom:1rem;">
+            Compare your latest resilience profile against your organisation's team average.
+            Requires a team membership.
+          </p>
+          <button class="btn btn-primary" id="btnCreateTeam">Generate Team Comparison</button>
+          <p class="form-status" id="teamStatus" aria-live="polite"></p>
+        </div>
+
+        <div id="teamResults" style="display:none;"></div>
+
+      </section>
+
+      <!-- ═══ PANEL: History ════════════════════════════════════════════ -->
+      <section class="tab-panel" id="panel-history" role="tabpanel" aria-labelledby="tab-history">
+
+        <div id="historyContent">
+          <div class="loading-spinner">Loading comparison history…</div>
+        </div>
+
+      </section>
+
+    </div><!-- /.comparison-page -->
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-bottom">
+      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
+      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
+    </div>
+  </footer>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="/js/comparison-view.js"></script>
+</body>
+</html>
