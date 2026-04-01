@@ -47,7 +47,7 @@ export default function KidsPage() {
           {SKILLS.map(skill => (
             <article key={skill.name} className="skill-card">
               <div className="skill-card-emoji">
-                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt={skill.name} width="40" height="40" />
+                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" width="40" height="40" />
               </div>
               <div className="skill-card-name">{skill.name}</div>
               <span className="skill-card-tag">{skill.tag}</span>
@@ -92,7 +92,7 @@ export default function KidsPage() {
                 <li key={activity.title} className="activity-item">
                   <div className="activity-item-title">
                     {activity.icon && (
-                      <img src={activity.icon} alt={activity.dimension} width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
+                      <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
                     )}
                     {activity.title}
                   </div>
