@@ -798,7 +798,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Connection dimension including discussion prompts, 3 activities, reflection questions, and facilitator tips.',
       icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-002',
@@ -811,7 +813,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Thinking dimension with reframing activities, critical thinking exercises, and discussion frameworks.',
       icon: '/icons/cognitive-narrative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-003',
@@ -824,7 +828,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Action dimension with goal-setting templates, habit tracking tools, and accountability frameworks.',
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-004',
@@ -837,7 +843,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Feeling dimension with psychological safety building, stress protocol development, and emotional regulation tools.',
       icon: '/icons/emotional-adaptive.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-005',
@@ -850,7 +858,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Hope dimension with purpose clarification exercises, values alignment, and vision-building tools.',
       icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-006',
@@ -863,7 +873,9 @@ export const TEAMS_CONTENT = {
       description: 'Complete facilitation guide for the Meaning dimension with strengths mapping, contribution storytelling, and legacy conversation tools.',
       icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
 
     // Templates
@@ -878,7 +890,9 @@ export const TEAMS_CONTENT = {
       description: 'One-page team resilience profile with dimension scores, strengths, and growth edges. Pre/post assessment version included.',
       icon: '/icons/compass.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-008',
@@ -891,7 +905,9 @@ export const TEAMS_CONTENT = {
       description: 'Printable 30-day habit tracker for individual and team resilience habits. Includes celebration milestones and reflection prompts.',
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-009',
@@ -904,7 +920,9 @@ export const TEAMS_CONTENT = {
       description: 'Structured template for translating team insights into specific actions with owners, timelines, and success metrics.',
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-010',
@@ -917,7 +935,9 @@ export const TEAMS_CONTENT = {
       description: 'Color-coded discussion starter sheets, one per dimension. Organized by difficulty: warm-up, explore, deepen. Includes psychological safety reminders.',
       icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'starter',
+      minTierLabel: 'Teams Starter'
     },
     {
       id: 'hand-011',
@@ -930,7 +950,9 @@ export const TEAMS_CONTENT = {
       description: 'Personal reflection journal for team members. Includes guided prompts per dimension, weekly check-ins, and learning capture pages.',
       icon: '/icons/cognitive-narrative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-012',
@@ -943,7 +965,9 @@ export const TEAMS_CONTENT = {
       description: 'Pre-workshop checklist for facilitators to assess and build psychological safety. Includes warning signs and quick interventions.',
       icon: '/icons/emotional-adaptive.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-013',
@@ -956,7 +980,9 @@ export const TEAMS_CONTENT = {
       description: 'Word-for-word script for opening your first team resilience session. Includes framing, ground rules, and first activity setup.',
       icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-014',
@@ -969,7 +995,9 @@ export const TEAMS_CONTENT = {
       description: '50 printable values cards for the Values Alignment Exercise. Cut and sort. Works for small groups and large teams.',
       icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-015',
@@ -982,7 +1010,9 @@ export const TEAMS_CONTENT = {
       description: '40 printable strengths cards for the Strengths Finder Workshop. Includes brief description and reflection prompt on each card.',
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-016',
@@ -995,7 +1025,9 @@ export const TEAMS_CONTENT = {
       description: 'Structured goal-setting worksheet using the SMART framework with team and individual goal sections. Includes accountability partner space.',
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'hand-017',
@@ -1008,7 +1040,9 @@ export const TEAMS_CONTENT = {
       description: 'Practical guide for handling common facilitation challenges: resistant participants, dominant voices, emotional moments, and time management.',
       icon: '/icons/compass.svg',
       downloadUrl: '#',
-      format: 'PDF'
+      format: 'PDF',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     }
   ],
 
@@ -1025,7 +1059,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '4"×6" (per card)'
+      printSize: '4"×6" (per card)',
+      minTier: 'starter',
+      minTierLabel: 'Teams Starter'
     },
     {
       id: 'vis-002',
@@ -1036,7 +1072,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '8.5"×11"'
+      printSize: '8.5"×11"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-003',
@@ -1047,7 +1085,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '11"×17"'
+      printSize: '11"×17"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-004',
@@ -1058,7 +1098,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '8.5"×11"'
+      printSize: '8.5"×11"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-005',
@@ -1069,7 +1111,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '11"×17"'
+      printSize: '11"×17"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-006',
@@ -1080,7 +1124,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '8.5"×11"'
+      printSize: '8.5"×11"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-007',
@@ -1091,7 +1137,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/relational-connective.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-008',
@@ -1102,7 +1150,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/cognitive-narrative.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-009',
@@ -1113,7 +1163,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/agentic-generative.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-010',
@@ -1124,7 +1176,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/emotional-adaptive.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-011',
@@ -1135,7 +1189,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-012',
@@ -1146,7 +1202,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '18"×24"'
+      printSize: '18"×24"',
+      minTier: 'pro',
+      minTierLabel: 'Teams Pro'
     },
     {
       id: 'vis-013',
@@ -1157,7 +1215,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '24"×36"'
+      printSize: '24"×36"',
+      minTier: 'enterprise',
+      minTierLabel: 'Teams Enterprise'
     },
     {
       id: 'vis-014',
@@ -1168,7 +1228,9 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
-      printSize: '3"×5" (per card)'
+      printSize: '3"×5" (per card)',
+      minTier: 'starter',
+      minTierLabel: 'Teams Starter'
     }
   ]
 

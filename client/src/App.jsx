@@ -166,8 +166,11 @@ export default function App() {
         <Route path="/dashboard-advanced" element={<DashboardAdvancedPage />} />
         <Route path="/team-analytics" element={<TeamAnalyticsPage />} />
         <Route path="/teams-resources" element={<TeamsResourcesPage />} />
+        <Route path="/teams/resources" element={<TeamsResourcesPage />} />
         <Route path="/teams-facilitation" element={<TeamsFacilitationPage />} />
+        <Route path="/teams/facilitation" element={<TeamsFacilitationPage />} />
         <Route path="/teams-activities" element={<TeamsActivitiesPage />} />
+        <Route path="/teams/activities" element={<TeamsActivitiesPage />} />
 
         {/* Admin & org pages */}
         <Route path="/admin/leads" element={<AdminLeadsPage />} />

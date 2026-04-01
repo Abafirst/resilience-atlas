@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-/* TODO: add tier-gating logic */
-
 const SECTIONS = [
   {
     id: 'getting-started',
