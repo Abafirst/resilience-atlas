@@ -1,152 +1,116 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const styles = {
-  container: {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '40px 20px',
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-  },
-  hero: {
-    textAlign: 'center',
-    maxWidth: 640,
-  },
-  eyebrow: {
-    display: 'inline-block',
-    background: 'rgba(74, 144, 217, 0.15)',
-    color: '#4a90d9',
-    borderRadius: 20,
-    padding: '4px 16px',
-    fontSize: 13,
-    fontWeight: 600,
-    letterSpacing: '0.05em',
-    marginBottom: 24,
-    textTransform: 'uppercase',
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: 800,
-    color: '#e8f0fe',
-    lineHeight: 1.2,
-    marginBottom: 20,
-    margin: '0 0 20px',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#a0aec0',
-    lineHeight: 1.7,
-    marginBottom: 40,
-  },
-  ctaBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 10,
-    background: '#4a90d9',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 10,
-    padding: '16px 36px',
-    fontSize: 18,
-    fontWeight: 700,
-    cursor: 'pointer',
-    boxShadow: '0 4px 24px rgba(74, 144, 217, 0.35)',
-    transition: 'background 0.2s, box-shadow 0.2s',
-  },
-  features: {
-    display: 'flex',
-    gap: 32,
-    marginTop: 48,
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  feature: {
-    background: 'rgba(255,255,255,0.05)',
-    borderRadius: 10,
-    padding: '20px 24px',
-    maxWidth: 180,
-    textAlign: 'center',
-    border: '1px solid rgba(255,255,255,0.08)',
-  },
-  featureIcon: {
-    fontSize: 28,
-    marginBottom: 10,
-  },
-  featureTitle: {
-    color: '#e8f0fe',
-    fontWeight: 600,
-    fontSize: 14,
-    marginBottom: 6,
-  },
-  featureText: {
-    color: '#718096',
-    fontSize: 13,
-    lineHeight: 1.5,
-  },
-  loginLink: {
-    marginTop: 24,
-    color: '#718096',
-    fontSize: 14,
-  },
-  loginLinkBtn: {
-    background: 'none',
-    border: 'none',
-    color: '#4a90d9',
-    cursor: 'pointer',
-    fontSize: 14,
-    padding: '0 4px',
-    textDecoration: 'underline',
-  },
-};
+const DIMENSIONS = [
+  { key: 'relational',  icon: '🤝', name: 'Relational-Connective',  desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
+  { key: 'cognitive',   icon: '📖', name: 'Cognitive-Narrative',     desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
+  { key: 'somatic',     icon: '🧘', name: 'Somatic-Regulative',      desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
+  { key: 'emotional',   icon: '💙', name: 'Emotional-Adaptive',      desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
+  { key: 'spiritual',   icon: '🌟', name: 'Spiritual-Reflective',    desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
+  { key: 'agentic',     icon: '🧭', name: 'Agentic-Generative',      desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
+];
 
 export default function LandingPage() {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <div style={styles.container}>
-      <div style={styles.hero}>
-        <span style={styles.eyebrow}>Resilience is Learnable</span>
-        <h1 style={styles.title}>Build the Resilience You Already Have</h1>
-        <p style={styles.subtitle}>
-          In 10 minutes, discover your personalized map across six dimensions of resilience
-          and get a clear path forward. Start where you are. Grow from here.
-        </p>
-        <button type="button" style={styles.ctaBtn} onClick={() => loginWithRedirect()}>
-          <span aria-hidden="true">&#9654;</span> Start Assessment
-        </button>
-        <div style={styles.features}>
-          <div style={styles.feature}>
-            <div style={styles.featureIcon}>🧭</div>
-            <div style={styles.featureTitle}>6 Dimensions</div>
-            <div style={styles.featureText}>Map all six resilience capacities</div>
-          </div>
-          <div style={styles.feature}>
-            <div style={styles.featureIcon}>⏱</div>
-            <div style={styles.featureTitle}>10 Minutes</div>
-            <div style={styles.featureText}>Quick, research-backed assessment</div>
-          </div>
-          <div style={styles.feature}>
-            <div style={styles.featureIcon}>📊</div>
-            <div style={styles.featureTitle}>Full Report</div>
-            <div style={styles.featureText}>Personalized insights and action plan</div>
+    <>
+      {/* Hero */}
+      <section className="hero">
+        <div className="hero-inner">
+          <span className="hero-eyebrow">Research-Based • Clinically Validated</span>
+          <h1>Build the Resilience You Already Have</h1>
+          <p className="hero-subheadline">
+            In 10 minutes, discover your personalized map across six dimensions of resilience
+            and get a clear path forward. Start where you are. Grow from here.
+          </p>
+          <div className="hero-ctas">
+            <button
+              type="button"
+              className="btn-hero-primary"
+              onClick={() => loginWithRedirect()}
+            >
+              <span aria-hidden="true">&#9654;</span> Start Free Assessment
+            </button>
+            <button
+              type="button"
+              className="btn-hero-secondary"
+              onClick={() => loginWithRedirect()}
+            >
+              Log in
+            </button>
           </div>
         </div>
-        <p style={styles.loginLink}>
-          Already have an account?{' '}
-          <button
-            type="button"
-            style={styles.loginLinkBtn}
-            aria-label="Log in to your account"
-            onClick={() => loginWithRedirect()}
-          >
-            Log in
-          </button>
-        </p>
-      </div>
-    </div>
+      </section>
+
+      {/* Six Dimensions */}
+      <section className="landing-section">
+        <div className="section-header">
+          <span className="section-label">The Six Dimensions</span>
+          <h2>A Complete Map of Human Resilience</h2>
+          <p>
+            Resilience isn't one thing — it's six interconnected capacities. Understanding
+            yours gives you a clear, actionable roadmap for growth.
+          </p>
+        </div>
+        <div className="dimensions-grid">
+          {DIMENSIONS.map(({ key, icon, name, desc }) => (
+            <div key={key} className="dimension-card">
+              <div className={`dimension-icon dimension-icon--${key}`}>
+                <span role="img" aria-label={name}>{icon}</span>
+              </div>
+              <h3>{name}</h3>
+              <p>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Why Section */}
+      <section className="landing-section alt-bg">
+        <div className="section-header">
+          <span className="section-label">Why It Works</span>
+          <h2>Grounded in Research, Built for Real Life</h2>
+        </div>
+        <div className="why-grid">
+          <div className="why-card">
+            <h4>Validated Framework</h4>
+            <p>Built on decades of resilience research across clinical, positive psychology, and neuroscience fields.</p>
+          </div>
+          <div className="why-card">
+            <h4>Personalized Insights</h4>
+            <p>Your results reflect your unique profile — not a generic score that flattens nuance.</p>
+          </div>
+          <div className="why-card">
+            <h4>Actionable Roadmap</h4>
+            <p>Each dimension comes with targeted practices you can start today, matched to your level.</p>
+          </div>
+          <div className="why-card">
+            <h4>Track Progress Over Time</h4>
+            <p>Reassess as you grow. Watch your resilience profile shift as you build new capacities.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="landing-section">
+        <div className="final-cta">
+          <h2>Ready to Discover Your Resilience Profile?</h2>
+          <p>
+            Join thousands of people who have mapped their strengths, identified their gaps,
+            and started building lasting resilience.
+          </p>
+          <div className="hero-ctas">
+            <button
+              type="button"
+              className="btn-hero-primary"
+              onClick={() => loginWithRedirect()}
+            >
+              Start Free Assessment
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
