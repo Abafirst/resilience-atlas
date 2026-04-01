@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   KIDS_DIMENSION_ICON_MAP,
   KIDS_ACTIVITIES,
@@ -153,8 +153,41 @@ function SkillBuilderCard({ builder }) {
   return <ReflectionBuilder builder={builder} />;
 }
 
+/* ── Story Modal ── */
+function StoryModal({ story, onClose }) {
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  return (
+    <div className="story-modal" role="dialog" aria-modal="true" aria-labelledby="story-modal-title" onClick={handleBackdropClick}>
+      <div className="story-modal-inner">
+        <button className="story-modal-close" onClick={onClose} aria-label="Close story">&#x2715;</button>
+        <p className="story-modal-title" id="story-modal-title">{story.title}</p>
+        <p className="story-modal-meta">{story.meta}</p>
+        <div className="story-modal-body">
+          {story.body.map((para, i) => <p key={i}>{para}</p>)}
+        </div>
+        <div className="story-lesson">{story.lesson}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function KidsPage() {
   const [selectedAge, setSelectedAge] = useState('age-5-7');
+  const [activeStory, setActiveStory] = useState(null);
+  const closeStory = useCallback(() => setActiveStory(null), []);
 
   useEffect(() => {
     document.title = 'Kids & Teen Resilience Program — The Resilience Atlas™';
@@ -162,6 +195,7 @@ export default function KidsPage() {
 
   return (
     <>
+      {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
       {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">
         <h1 id="kids-heading">Resilience Grows With You</h1>
@@ -173,16 +207,17 @@ export default function KidsPage() {
       </section>
 
       {/* Six Skills */}
-      <section className="landing-section">
+      <section className="skills-section" id="skills" aria-labelledby="skills-heading">
         <div className="section-header">
-          <h2>Six Skills for Life</h2>
+          <span className="section-label">The Six Resilience Skills</span>
+          <h2 id="skills-heading">Six Skills for Life</h2>
           <p>Each dimension of resilience maps to everyday situations kids and teens face.</p>
         </div>
         <div className="skills-grid">
           {SKILLS.map(skill => (
             <article key={skill.name} className="skill-card">
-              <div className="skill-card-emoji">
-                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" width="40" height="40" />
+              <div className="skill-icon">
+                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" className="icon icon-md" />
               </div>
               <div className="skill-card-name">{skill.name}</div>
               <span className="skill-card-tag">{skill.tag}</span>
@@ -236,6 +271,13 @@ export default function KidsPage() {
                 <p className="story-subtitle">{story.subtitle}</p>
                 <h3 className="story-title">{story.title}</h3>
                 <p className="story-preview">{story.preview}</p>
+                <button
+                  className="btn-story"
+                  onClick={() => setActiveStory(story)}
+                  aria-label={`Read ${story.title}`}
+                >
+                  Read Story &#8594;
+                </button>
               </div>
             ))}
           </div>
@@ -259,6 +301,13 @@ export default function KidsPage() {
                 <p className="story-subtitle">{story.subtitle}</p>
                 <h3 className="story-title">{story.title}</h3>
                 <p className="story-preview">{story.preview}</p>
+                <button
+                  className="btn-story"
+                  onClick={() => setActiveStory(story)}
+                  aria-label={`Read ${story.title}`}
+                >
+                  Read Story &#8594;
+                </button>
               </div>
             ))}
           </div>
@@ -282,70 +331,72 @@ export default function KidsPage() {
       </section>
 
       {/* Age-group activities */}
-      <section className="landing-section alt-bg" id="activity-guides" aria-labelledby="activity-guides-heading">
-        <div className="section-header">
-          <span className="section-label">Activity Guides</span>
-          <h2 id="activity-guides-heading">Activities by Age</h2>
-          <p>Developmentally matched activities for every stage.</p>
-        </div>
+      <section className="activity-guides-section" id="activity-guides" aria-labelledby="activity-guides-heading">
+        <div className="section-inner">
+          <div className="section-header">
+            <span className="section-label">Activity Guides</span>
+            <h2 id="activity-guides-heading">Activities by Age</h2>
+            <p>Developmentally matched activities for every stage.</p>
+          </div>
 
-        <div className="age-tabs" role="tablist" aria-label="Age group activities">
-          {AGE_GROUPS.map(({ id, label }) => (
-            <button
+          <div className="age-tabs" role="tablist" aria-label="Age group activities">
+            {AGE_GROUPS.map(({ id, label }) => (
+              <button
+                key={id}
+                className="age-tab"
+                role="tab"
+                data-group={id}
+                aria-selected={selectedAge === id}
+                onClick={() => setSelectedAge(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {AGE_GROUPS.filter(g => g.id !== 'age-18plus').map(({ id }) => (
+            <div
               key={id}
-              className="age-tab"
-              role="tab"
-              data-group={id}
-              aria-selected={selectedAge === id}
-              onClick={() => setSelectedAge(id)}
+              id={id}
+              className={selectedAge === id ? 'age-content active' : 'age-content'}
+              hidden={selectedAge !== id}
             >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {AGE_GROUPS.filter(g => g.id !== 'age-18plus').map(({ id }) => (
-          <div
-            key={id}
-            id={id}
-            className={selectedAge === id ? 'age-content active' : 'age-content'}
-            hidden={selectedAge !== id}
-          >
-            <ul className="activity-list">
-              {(KIDS_ACTIVITIES[id] || []).map(activity => (
-                <li key={activity.title} className="activity-item">
-                  <div className="activity-item-title">
-                    {activity.icon && (
-                      <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
+              <ul className="activity-list">
+                {(KIDS_ACTIVITIES[id] || []).map(activity => (
+                  <li key={activity.title} className="activity-item">
+                    <div className="activity-item-title">
+                      {activity.icon && (
+                        <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
+                      )}
+                      {activity.title}
+                    </div>
+                    {activity.subtype && (
+                      <div className="activity-item-subtype">{activity.subtype}</div>
                     )}
-                    {activity.title}
-                  </div>
-                  {activity.subtype && (
-                    <div className="activity-item-subtype">{activity.subtype}</div>
-                  )}
-                  <div className="activity-item-desc">{activity.desc}</div>
-                  <div className="activity-item-meta">
-                    <span className="activity-meta-tag">{activity.time}</span>
-                    <span className={`activity-meta-tag ${activity.level}`}>{activity.level.charAt(0).toUpperCase() + activity.level.slice(1)}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-
-        {selectedAge === 'age-18plus' && (
-          <div className="age-18plus-panel">
-            <div className="dimension-pills">
-              {['Agentic', 'Relational', 'Spiritual', 'Emotional', 'Somatic', 'Cognitive'].map(d => (
-                <span key={d} className="dim-pill">{d}</span>
-              ))}
+                    <div className="activity-item-desc">{activity.desc}</div>
+                    <div className="activity-item-meta">
+                      <span className="activity-meta-tag">{activity.time}</span>
+                      <span className={`activity-meta-tag ${activity.level}`}>{activity.level.charAt(0).toUpperCase() + activity.level.slice(1)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <h3>Ready for the Full Assessment?</h3>
-            <p>Take the complete Resilience Atlas assessment and get your personalised report across all six dimensions.</p>
-            <a href="/quiz" className="btn-cta">Take the Assessment</a>
-          </div>
-        )}
+          ))}
+
+          {selectedAge === 'age-18plus' && (
+            <div className="age-18plus-panel">
+              <div className="dimension-pills">
+                {['Agentic', 'Relational', 'Spiritual', 'Emotional', 'Somatic', 'Cognitive'].map(d => (
+                  <span key={d} className="dim-pill">{d}</span>
+                ))}
+              </div>
+              <h3>Ready for the Full Assessment?</h3>
+              <p>Take the complete Resilience Atlas assessment and get your personalised report across all six dimensions.</p>
+              <a href="/quiz" className="btn-cta">Take the Assessment</a>
+            </div>
+          )}
+        </div>
       </section>
     </>
   );
