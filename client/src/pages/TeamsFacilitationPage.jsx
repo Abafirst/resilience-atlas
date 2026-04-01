@@ -8,7 +8,7 @@ const SECTIONS = [
     icon: '🚀',
     title: 'Getting Started',
     intro: 'Before your first team resilience session, take time to understand your context. Effective facilitation begins with preparation, not the moment you walk in the door.',
-    callout: { type: 'tip', icon: '💡', content: <><strong>Facilitator\'s Mindset:</strong> Your job is not to teach resilience — it\'s to create the conditions where a team can discover their own resilience together. Curiosity over expertise.</> },
+    callout: { type: 'tip', icon: '💡', content: <><strong>Facilitator's Mindset:</strong> Your job is not to teach resilience — it's to create the conditions where a team can discover their own resilience together. Curiosity over expertise.</> },
     items: [
       {
         id: 'gs-roles',
