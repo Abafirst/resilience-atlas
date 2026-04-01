@@ -1,7 +1,121 @@
 import React, { useState, useMemo } from 'react';
 import { TEAMS_CONTENT } from '../data/teamsContent';
 
-/* TODO: add tier-gating logic */
+/* ── Tier badge colors ───────────────────────────────────────────────────── */
+const TIER_BADGE = {
+  starter:    { bg: '#dbeafe', color: '#1d4ed8', label: 'Starter' },
+  pro:        { bg: '#ede9fe', color: '#6d28d9', label: 'Pro' },
+  enterprise: { bg: '#fce7f3', color: '#be185d', label: 'Enterprise' },
+};
+
+/* ── Gating modal ────────────────────────────────────────────────────────── */
+function TierGateModal({ item, onClose }) {
+  const tier = TIER_BADGE[item.minTier] || TIER_BADGE.pro;
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gate-modal-title"
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'rgba(15,23,42,.55)',
+      }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        background: '#fff', borderRadius: 16, padding: '2.5rem 2rem',
+        maxWidth: 460, width: '90%', boxShadow: '0 20px 60px rgba(0,0,0,.18)',
+        position: 'relative',
+      }}>
+        <button
+          type="button"
+          aria-label="Close"
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: 14, right: 16,
+            background: 'none', border: 'none', fontSize: '1.4rem',
+            color: '#94a3b8', cursor: 'pointer', lineHeight: 1,
+          }}
+        >×</button>
+
+        <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
+          <span style={{ fontSize: '2.5rem' }}>🔒</span>
+        </div>
+
+        <h2
+          id="gate-modal-title"
+          style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', marginBottom: '.5rem' }}
+        >
+          {item.minTierLabel || 'Teams Tier'} Required
+        </h2>
+
+        <p style={{ color: '#475569', fontSize: '.95rem', textAlign: 'center', lineHeight: 1.65, marginBottom: '1rem' }}>
+          <strong>{item.title}</strong> is available on the{' '}
+          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Teams Pro'}</span>{' '}
+          plan and above. Unlock this resource and the full library by upgrading your Teams tier.
+        </p>
+
+        <div style={{
+          background: '#f8fafc', borderRadius: 10, padding: '.85rem 1rem',
+          fontSize: '.85rem', color: '#334155', marginBottom: '1.25rem',
+          border: '1px solid #e2e8f0',
+        }}>
+          <strong>Included in {item.minTierLabel}:</strong>
+          {item.minTier === 'starter' && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>Basic discussion prompts &amp; reference cards</li>
+              <li>Team dashboard &amp; radar chart</li>
+              <li>CSV &amp; PDF export</li>
+            </ul>
+          )}
+          {item.minTier === 'pro' && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>6 pre-built workshop guides</li>
+              <li>Full facilitation resource library</li>
+              <li>Dynamic discussion prompts, templates &amp; activity cards</li>
+              <li>Dimension heatmap &amp; trend analysis</li>
+            </ul>
+          )}
+          {item.minTier === 'enterprise' && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>All Pro features</li>
+              <li>Custom branding (logo + colors)</li>
+              <li>SSO / SAML, self-service data export</li>
+              <li>Branded PDF reports</li>
+            </ul>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', gap: '.75rem', flexDirection: 'column' }}>
+          <a
+            href="/pricing-teams"
+            aria-label="Compare Teams tiers and unlock access"
+            style={{
+              display: 'block', textAlign: 'center',
+              background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+              color: '#fff', borderRadius: 10, padding: '.75rem 1.5rem',
+              fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
+            }}
+          >
+            <span aria-hidden="true">🚀</span> Compare &amp; Unlock Tiers
+          </a>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'none', border: '1px solid #cbd5e1', borderRadius: 10,
+              padding: '.65rem 1.5rem', fontSize: '.95rem', color: '#64748b',
+              cursor: 'pointer', fontFamily: 'inherit',
+            }}
+          >
+            Maybe later
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const TYPE_LABELS = {
   'workshop-guide': 'Workshop Guide',
@@ -35,10 +149,11 @@ const TYPE_COLORS = {
   'culture-poster': '#ec4899',
 };
 
-function ResourceCard({ item, isVisual }) {
+function ResourceCard({ item, isVisual, onGate }) {
   const color = TYPE_COLORS[item.type] || '#64748b';
   const typeLabel = item.typeLabel || TYPE_LABELS[item.type] || item.type;
   const fallbackIcon = isVisual ? '/icons/compass.svg' : '/icons/checkmark.svg';
+  const tierBadge = item.minTier ? TIER_BADGE[item.minTier] : null;
 
   return (
     <div className="tr-card">
@@ -50,12 +165,29 @@ function ResourceCard({ item, isVisual }) {
         )}
       </div>
       <div className="tr-card__body">
-        <span
-          className="tr-card__type-badge"
-          style={{ background: `${color}20`, color, borderColor: color }}
-        >
-          {typeLabel}
-        </span>
+        <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '.25rem' }}>
+          <span
+            className="tr-card__type-badge"
+            style={{ background: `${color}20`, color, borderColor: color }}
+          >
+            {typeLabel}
+          </span>
+          {tierBadge && (
+            <span
+              title={`Requires ${item.minTierLabel}`}
+              aria-label={`Requires ${item.minTierLabel}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '.25rem',
+                fontSize: '.7rem', fontWeight: 700, padding: '.15rem .55rem',
+                borderRadius: 999, border: `1px solid ${tierBadge.color}40`,
+                background: tierBadge.bg, color: tierBadge.color,
+                textTransform: 'uppercase', letterSpacing: '.04em',
+              }}
+            >
+              <span aria-hidden="true">🔒</span> {tierBadge.label}
+            </span>
+          )}
+        </div>
         <h3 className="tr-card__title">{item.title}</h3>
         <p className="tr-card__desc">{item.description}</p>
         <div className="tr-card__meta">
@@ -70,14 +202,15 @@ function ResourceCard({ item, isVisual }) {
           )}
           <span className="tr-card__meta-item">📁 {item.format || 'PDF'}</span>
         </div>
-        <a
-          href="#"
+        <button
+          type="button"
           className="tr-card__download-btn"
-          aria-label={`Download ${item.title}`}
-          onClick={e => e.preventDefault()}
+          aria-label={`Unlock download of ${item.title} — requires ${item.minTierLabel || 'a Teams tier'}`}
+          onClick={() => onGate(item)}
+          style={{ cursor: 'pointer', fontFamily: 'inherit' }}
         >
-          ⬇ Download
-        </a>
+          <span aria-hidden="true">🔒</span> Unlock Download
+        </button>
       </div>
     </div>
   );
@@ -87,6 +220,7 @@ export default function TeamsResourcesPage() {
   const [category, setCategory] = useState('all');
   const [dimension, setDimension] = useState('all');
   const [search, setSearch] = useState('');
+  const [gateItem, setGateItem] = useState(null);
 
   const handouts = useMemo(
     () => (TEAMS_CONTENT.handouts || []).filter(item => {
@@ -321,7 +455,7 @@ export default function TeamsResourcesPage() {
                   style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}
                 >
                   {handouts.map(item => (
-                    <ResourceCard key={item.id} item={item} isVisual={false} />
+                    <ResourceCard key={item.id} item={item} isVisual={false} onGate={setGateItem} />
                   ))}
                 </div>
               </section>
@@ -343,7 +477,7 @@ export default function TeamsResourcesPage() {
                   style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}
                 >
                   {visuals.map(item => (
-                    <ResourceCard key={item.id} item={item} isVisual />
+                    <ResourceCard key={item.id} item={item} isVisual onGate={setGateItem} />
                   ))}
                 </div>
               </section>
@@ -351,6 +485,8 @@ export default function TeamsResourcesPage() {
           </>
         )}
       </main>
+
+      {gateItem && <TierGateModal item={gateItem} onClose={() => setGateItem(null)} />}
     </>
   );
 }
