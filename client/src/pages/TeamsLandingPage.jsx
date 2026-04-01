@@ -417,7 +417,7 @@ export default function TeamsLandingPage() {
   </section>
 
   {/* Team Pricing Tiers */}
-  <section className="landing-section" aria-labelledby="pricingHeading" style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem' }}>
+  <section id="pricing" className="landing-section" aria-labelledby="pricingHeading" style={{ paddingTop: '3.5rem', paddingBottom: '3.5rem' }}>
     <div className="section-header" style={{ marginBottom: '2.5rem' }}>
       <span className="section-label">Pricing</span>
       <h2 id="pricingHeading">Plans for Every Team</h2>
@@ -840,13 +840,13 @@ export default function TeamsLandingPage() {
       </div>
 
     </div>
-    <p id="teams-resource-gate-msg" style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.93rem', color: '#64748b' }}>
-      All facilitation materials are available with Teams packages. <a href="#pricing" style={{ color: '#4F46E5', fontWeight: 600 }}>View packages →</a>
-    </p>
-    <div id="teams-resource-hub" hidden style={{ textAlign: 'center', marginTop: '2rem' }}>
-      <p style={{ color: '#166534', fontWeight: 600, fontSize: '.95rem', margin: '0 0 .75rem' }}>✓ Your Teams purchase includes full access to all resources below.</p>
+    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+      <p style={{ fontSize: '.93rem', color: '#64748b', marginBottom: '1rem' }}>
+        All facilitation materials are included with every Teams plan.{' '}
+        <a href="#pricing" style={{ color: '#4F46E5', fontWeight: 600 }}>View packages →</a>
+      </p>
       <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>Browse &amp; Download All Resources →</a>
+        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>Browse All Resources →</a>
         <a href="/teams-facilitation" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Full Facilitation Guide</a>
         <a href="/teams-activities" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Activity Library</a>
       </div>

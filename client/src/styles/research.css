@@ -363,6 +363,10 @@ a:hover { text-decoration: underline; }
 .accent-orange .key-concepts h4 { color: #b45309; }
 .accent-orange .key-concepts li::before { color: var(--research-orange); }
 
+/* Prevent global accent gradient backgrounds from bleeding into research containers */
+.research-container.accent-teal,
+.research-container.accent-orange { background: none; }
+
 /* ── Author Credentials ───────────────────────────────────────── */
 .credentials-section {
   background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
