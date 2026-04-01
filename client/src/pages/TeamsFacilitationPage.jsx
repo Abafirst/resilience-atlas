@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 const SECTIONS = [
   {
     id: 'getting-started',
-    icon: '🚀',
+    icon: '/icons/compass.svg',
     title: 'Getting Started',
     intro: 'Before your first team resilience session, take time to understand your context. Effective facilitation begins with preparation, not the moment you walk in the door.',
-    callout: { type: 'tip', icon: '💡', content: <><strong>Facilitator's Mindset:</strong> Your job is not to teach resilience — it's to create the conditions where a team can discover their own resilience together. Curiosity over expertise.</> },
+    callout: { type: 'tip', icon: '/icons/star.svg', content: <><strong>Facilitator's Mindset:</strong> Your job is not to teach resilience — it's to create the conditions where a team can discover their own resilience together. Curiosity over expertise.</> },
     items: [
       {
         id: 'gs-roles',
@@ -82,10 +82,10 @@ const SECTIONS = [
   },
   {
     id: 'psychological-safety',
-    icon: '🛡️',
+    icon: '/icons/lock.svg',
     title: 'Creating Psychological Safety',
     intro: 'Psychological safety — the belief that you can speak up, take risks, and be yourself without fear of punishment or humiliation — is the single most important condition for effective team resilience work.',
-    callout: { type: 'warn', icon: '⚠️', content: <><strong>Warning Sign:</strong> If team members are giving "safe" answers, watching the leader's reactions before speaking, or going silent when hard topics arise — psychological safety needs attention before you can go deeper.</> },
+    callout: { type: 'warn', icon: '/icons/lock.svg', content: <><strong>Warning Sign:</strong> If team members are giving "safe" answers, watching the leader's reactions before speaking, or going silent when hard topics arise — psychological safety needs attention before you can go deeper.</> },
     items: [
       {
         id: 'ps-build',
@@ -139,7 +139,7 @@ const SECTIONS = [
   },
   {
     id: 'tough-conversations',
-    icon: '💬',
+    icon: '/icons/relational-connective.svg',
     title: 'Facilitating Tough Conversations',
     intro: 'Resilience work often surfaces real pain — burnout, conflict, loss, and systemic inequities. Your role is not to fix these, but to hold space and help the team navigate them constructively.',
     items: [
@@ -188,7 +188,7 @@ const SECTIONS = [
   },
   {
     id: 'group-dynamics',
-    icon: '👥',
+    icon: '/icons/agentic-generative.svg',
     title: 'Managing Group Dynamics',
     intro: 'Every group has dynamics — power patterns, social hierarchies, communication styles, and unspoken rules. Effective facilitators work with these dynamics, not around them.',
     items: [
@@ -248,7 +248,7 @@ const SECTIONS = [
   },
   {
     id: 'measurement',
-    icon: '📊',
+    icon: '/icons/cognitive-narrative.svg',
     title: 'Measurement & Progress',
     intro: 'Sustainable resilience programs need evidence. Measurement helps teams see progress, adjust course, and make the case for continued investment.',
     items: [
@@ -301,10 +301,10 @@ const SECTIONS = [
   },
   {
     id: 'best-practices',
-    icon: '✅',
+    icon: '/icons/checkmark.svg',
     title: 'Best Practices',
     intro: null,
-    callout: { type: 'tip', icon: '💡', content: <><strong>The 30-Second Rule:</strong> After asking a question to a group, wait at least 30 seconds before filling the silence. Silence is processing, not failure. The team that gets comfortable with silence becomes more thoughtful and honest.</> },
+    callout: { type: 'tip', icon: '/icons/star.svg', content: <><strong>The 30-Second Rule:</strong> After asking a question to a group, wait at least 30 seconds before filling the silence. Silence is processing, not failure. The team that gets comfortable with silence becomes more thoughtful and honest.</> },
     doList: [
       'Start small and build over time',
       'Co-create norms with the team',
@@ -329,7 +329,7 @@ const SECTIONS = [
   },
   {
     id: 'scripts',
-    icon: '🎙️',
+    icon: '/icons/emotional-adaptive.svg',
     title: 'Facilitation Scripts',
     intro: 'Use these scripts as starting points — they should feel natural, so adapt them to your own voice.',
     items: [
@@ -461,9 +461,9 @@ export default function TeamsFacilitationPage() {
           style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}
         >
           {[
-            { href: '/teams/activities', label: '🎯 Activities' },
-            { href: '/teams/resources', label: '📥 Handouts & Visuals' },
-            { href: '/teams/facilitation', label: '📋 Facilitation Guide', active: true },
+            { href: '/teams/activities', label: 'Activities' },
+            { href: '/teams/resources', label: 'Handouts & Visuals' },
+            { href: '/teams/facilitation', label: 'Facilitation Guide', active: true },
             { href: '/team', label: '← Team Home' },
           ].map(({ href, label, active }) => (
             <a
@@ -531,7 +531,7 @@ export default function TeamsFacilitationPage() {
                 id={`${sec.id}-heading`}
                 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
               >
-                {sec.icon} {sec.title}
+                <img src={sec.icon} alt="" aria-hidden="true" className="icon icon-sm" style={{ flexShrink: 0 }} /> {sec.title}
               </h2>
 
               {sec.intro && (
@@ -542,7 +542,7 @@ export default function TeamsFacilitationPage() {
                 <div
                   style={{ ...CALLOUT_STYLES[sec.callout.type], borderRadius: 10, padding: '1rem 1.25rem', margin: '1rem 0', fontSize: '.9rem', lineHeight: 1.65, display: 'flex', gap: '.75rem', alignItems: 'flex-start' }}
                 >
-                  <span aria-hidden="true" style={{ flexShrink: 0, fontSize: '1.1rem' }}>{sec.callout.icon}</span>
+                  <img src={sec.callout.icon} alt="" aria-hidden="true" className="icon icon-xs" style={{ flexShrink: 0, marginTop: '.1rem' }} />
                   <div>{sec.callout.content}</div>
                 </div>
               )}
@@ -551,13 +551,13 @@ export default function TeamsFacilitationPage() {
               {sec.doList && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
                   <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '1.25rem' }}>
-                    <h3 style={{ color: '#14532d', fontSize: '.97rem', margin: '0 0 .75rem' }}>✅ Do</h3>
+                    <h3 style={{ color: '#14532d', fontSize: '.97rem', margin: '0 0 .75rem' }}>Do</h3>
                     <ul style={{ margin: '0 0 0 1rem', padding: 0, fontSize: '.9rem', color: '#14532d', lineHeight: 1.65 }}>
                       {sec.doList.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>
                   </div>
                   <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '1.25rem' }}>
-                    <h3 style={{ color: '#991b1b', fontSize: '.97rem', margin: '0 0 .75rem' }}>❌ Don't</h3>
+                    <h3 style={{ color: '#991b1b', fontSize: '.97rem', margin: '0 0 .75rem' }}>Don't</h3>
                     <ul style={{ margin: '0 0 0 1rem', padding: 0, fontSize: '.9rem', color: '#991b1b', lineHeight: 1.65 }}>
                       {sec.dontList.map((item, i) => <li key={i}>{item}</li>)}
                     </ul>

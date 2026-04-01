@@ -57,7 +57,7 @@ function ActivityCard({ act }) {
 
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <span style={{ fontSize: '.83rem', color: '#64748b' }}>⏱ {act.duration}</span>
-        <span style={{ fontSize: '.83rem', color: '#64748b' }}>👥 {(act.teamSize || []).join(', ')}</span>
+        <span style={{ fontSize: '.83rem', color: '#64748b' }}>{(act.teamSize || []).join(', ')}</span>
       </div>
 
       <button
@@ -202,9 +202,9 @@ export default function TeamsActivitiesPage() {
           style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}
         >
           {[
-            { href: '/teams/activities', label: '🎯 Activities', active: true },
-            { href: '/teams/resources', label: '📥 Handouts & Visuals' },
-            { href: '/teams/facilitation', label: '📋 Facilitation Guide' },
+            { href: '/teams/activities', label: 'Activities', active: true },
+            { href: '/teams/resources', label: 'Handouts & Visuals' },
+            { href: '/teams/facilitation', label: 'Facilitation Guide' },
             { href: '/team', label: '← Team Home' },
           ].map(({ href, label, active }) => (
             <a

@@ -52,7 +52,7 @@ export default function WorkshopAgenticPage() {
           <p className="guide-header__sub">A facilitated team session to explore and strengthen Agentic-Generative resilience</p>
           <div className="guide-meta">
             <span>⏱ 60–90 minutes</span>
-            <span>👥 5–25 participants</span>
+            <span>5–25 participants</span>
             <span>🎯 Team development</span>
           </div>
         </header>

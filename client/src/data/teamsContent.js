@@ -800,7 +800,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-002',
@@ -815,7 +815,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-003',
@@ -830,7 +830,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-004',
@@ -845,7 +845,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-005',
@@ -860,7 +860,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-006',
@@ -875,7 +875,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
 
     // Templates
@@ -892,7 +892,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-008',
@@ -907,7 +907,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-009',
@@ -922,7 +922,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-010',
@@ -937,7 +937,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'starter',
-      minTierLabel: 'Teams Starter'
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-011',
@@ -952,7 +952,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-012',
@@ -967,7 +967,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-013',
@@ -982,7 +982,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-014',
@@ -997,7 +997,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-015',
@@ -1012,7 +1012,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-016',
@@ -1027,7 +1027,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'hand-017',
@@ -1042,7 +1042,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       format: 'PDF',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     }
   ],
 
@@ -1061,7 +1061,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '4"×6" (per card)',
       minTier: 'starter',
-      minTierLabel: 'Teams Starter'
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'vis-002',
@@ -1074,7 +1074,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '8.5"×11"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-003',
@@ -1087,7 +1087,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '11"×17"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-004',
@@ -1100,7 +1100,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '8.5"×11"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-005',
@@ -1113,7 +1113,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '11"×17"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-006',
@@ -1126,7 +1126,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '8.5"×11"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-007',
@@ -1139,7 +1139,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-008',
@@ -1152,7 +1152,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-009',
@@ -1165,7 +1165,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-010',
@@ -1178,7 +1178,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-011',
@@ -1191,7 +1191,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-012',
@@ -1204,7 +1204,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '18"×24"',
       minTier: 'pro',
-      minTierLabel: 'Teams Pro'
+      minTierLabel: 'Atlas Team Premium'
     },
     {
       id: 'vis-013',
@@ -1230,7 +1230,7 @@ export const TEAMS_CONTENT = {
       downloadUrl: '#',
       printSize: '3"×5" (per card)',
       minTier: 'starter',
-      minTierLabel: 'Teams Starter'
+      minTierLabel: 'Atlas Team Basic'
     }
   ]
 
