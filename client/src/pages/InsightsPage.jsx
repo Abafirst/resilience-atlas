@@ -95,7 +95,7 @@ export default function InsightsPage() {
           </a>
           <nav aria-label="Main navigation" style={{display:'flex',alignItems:'center',gap:'1rem'}}>
             <a href="/insights" style={{fontSize:'.92rem',color:'#4F46E5',fontWeight:'600'}}>Insights</a>
-            <a href="/team" style={{fontSize:'.92rem',color:'var(--slate-600)',fontWeight:'500'}}>For Teams</a>
+            <a href="/teams" style={{fontSize:'.92rem',color:'var(--slate-600)',fontWeight:'500'}}>For Teams</a>
             <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
             <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
           </nav>
@@ -216,7 +216,7 @@ export default function InsightsPage() {
         <p className="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
         <nav aria-label="Footer navigation" style={{marginTop:'1rem',display:'flex',gap:'1.25rem',justifyContent:'center',flexWrap:'wrap'}}>
           <a href="/" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>Home</a>
-          <a href="/team" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>For Teams</a>
+          <a href="/teams" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>For Teams</a>
           <a href="/quiz" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>Take Assessment</a>
         </nav>
       </footer>

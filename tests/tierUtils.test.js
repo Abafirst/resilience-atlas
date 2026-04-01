@@ -196,7 +196,7 @@ describe('getTierConfig()', () => {
     it('returns the config for a known plan', () => {
         const cfg = getTierConfig('enterprise');
         expect(cfg).not.toBeNull();
-        expect(cfg.name).toBe('Atlas Team Enterprise');
+        expect(cfg.name).toBe('Atlas Enterprise');
     });
 
     it('resolves aliases before returning config', () => {

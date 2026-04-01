@@ -428,7 +428,6 @@ export default function TeamsLandingPage() {
       {/* Starter */}
       <div className="team-tier-card">
         <div className="ttc-header">
-          <span className="ttc-badge ttc-badge--blue">Most Popular</span>
           <h3 className="ttc-name">Atlas Team Basic</h3>
           <div className="ttc-price">
             <span className="ttc-amount">$299</span>
@@ -452,7 +451,7 @@ export default function TeamsLandingPage() {
       {/* Pro */}
       <div className="team-tier-card team-tier-card--featured">
         <div className="ttc-header">
-          <span className="ttc-badge ttc-badge--gold">Best Value</span>
+          <span className="ttc-badge ttc-badge--blue">Most Popular</span>
           <h3 className="ttc-name">Atlas Team Premium</h3>
           <div className="ttc-price">
             <span className="ttc-amount">$699</span>
@@ -477,13 +476,13 @@ export default function TeamsLandingPage() {
       <div className="team-tier-card">
         <div className="ttc-header">
           <span className="ttc-badge ttc-badge--slate">Enterprise</span>
-          <h3 className="ttc-name">Atlas Team Enterprise</h3>
+          <h3 className="ttc-name">Atlas Enterprise</h3>
           <div className="ttc-price">
             <span className="ttc-amount">Starting at $2,499</span>
           </div>
           <p className="ttc-desc">Built for large organizations who want full control. Self-manage your team, branding, authentication, and data — no white-glove setup or support required.</p>
         </div>
-        <ul className="ttc-features" aria-label="Atlas Team Enterprise features">
+        <ul className="ttc-features" aria-label="Atlas Enterprise features">
           <li><span aria-hidden="true">&#10003;</span> Unlimited users &amp; teams</li>
           <li><span aria-hidden="true">&#10003;</span> Org-managed branding (logos, colors, domain)</li>
           <li><span aria-hidden="true">&#10003;</span> SSO / SAML integration — configure yourself</li>
@@ -502,7 +501,7 @@ export default function TeamsLandingPage() {
   {/* Enterprise Contact Form (Enterprise plan only) */}
   <section className="landing-section alt-bg" aria-labelledby="formHeading" id="teamLeadForm">
     <div className="lead-form-wrap">
-      <h2 id="formHeading">Atlas Team Enterprise Inquiry</h2>
+      <h2 id="formHeading">Atlas Enterprise Inquiry</h2>
       <p>Tell us about your organization and we will be in touch within one business day to discuss your custom Enterprise plan.</p>
 
       <form id="teamLeadFormEl" noValidate>
@@ -672,7 +671,7 @@ export default function TeamsLandingPage() {
             <li>Explore: How does this map to how we actually work together? Are gaps causing friction? (10 min).</li>
             <li>Identify: Who on the team has natural strength in each dimension? How can we use that? (10 min).</li>
           </ol>
-          <p style={{ margin: '.75rem 0 0' }}><strong>Requires:</strong> Teams Pro or Enterprise tier for aggregated dashboard access.</p>
+          <p style={{ margin: '.75rem 0 0' }}><strong>Requires:</strong> Teams Premium or Enterprise tier for aggregated dashboard access.</p>
         </div>
       </div>
 

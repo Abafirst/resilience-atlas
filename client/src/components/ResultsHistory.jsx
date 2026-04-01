@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 const TIER_LABELS = {
   'atlas-navigator': 'Atlas Navigator',
   'atlas-premium': 'Atlas Premium (Lifetime)',
-  'starter': 'Atlas Team Starter',
-  'pro': 'Atlas Team Pro',
-  'enterprise': 'Atlas Team Enterprise',
+  'starter': 'Atlas Team Basic',
+  'pro': 'Atlas Team Premium',
+  'enterprise': 'Atlas Enterprise',
 };
 
 const styles = {

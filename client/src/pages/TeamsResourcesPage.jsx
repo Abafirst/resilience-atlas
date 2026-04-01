@@ -3,8 +3,8 @@ import { TEAMS_CONTENT } from '../data/teamsContent';
 
 /* ── Tier badge colors ───────────────────────────────────────────────────── */
 const TIER_BADGE = {
-  starter:    { bg: '#dbeafe', color: '#1d4ed8', label: 'Starter' },
-  pro:        { bg: '#ede9fe', color: '#6d28d9', label: 'Pro' },
+  starter:    { bg: '#dbeafe', color: '#1d4ed8', label: 'Basic' },
+  pro:        { bg: '#ede9fe', color: '#6d28d9', label: 'Premium' },
   enterprise: { bg: '#fce7f3', color: '#be185d', label: 'Enterprise' },
 };
 
@@ -52,7 +52,7 @@ function TierGateModal({ item, onClose }) {
 
         <p style={{ color: '#475569', fontSize: '.95rem', textAlign: 'center', lineHeight: 1.65, marginBottom: '1rem' }}>
           <strong>{item.title}</strong> is available on the{' '}
-          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Teams Pro'}</span>{' '}
+          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Teams Premium'}</span>{' '}
           plan and above. Unlock this resource and the full library by upgrading your Teams tier.
         </p>
 
@@ -305,7 +305,7 @@ export default function TeamsResourcesPage() {
             { href: '/teams/activities', label: 'Activities' },
             { href: '/teams/resources', label: 'Handouts & Visuals', active: true },
             { href: '/teams/facilitation', label: 'Facilitation Guide' },
-            { href: '/team', label: '← Team Home' },
+            { href: '/teams', label: '← Team Home' },
           ].map(({ href, label, active }) => (
             <a
               key={href}
