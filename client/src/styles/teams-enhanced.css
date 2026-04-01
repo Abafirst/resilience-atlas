@@ -884,11 +884,11 @@
   --teams-success:      #34d399;
   --teams-warning:      #fbbf24;
   --teams-danger:       #f87171;
-  --teams-surface:      #ffffff;
+  --teams-surface:      #1e293b;
   --teams-bg:           #0f172a;
-  --teams-border:       #e2e8f0;
-  --teams-text:         #1e293b;
-  --teams-text-muted:   #64748b;
+  --teams-border:       #334155;
+  --teams-text:         #f1f5f9;
+  --teams-text-muted:   #94a3b8;
   --teams-shadow:       0 1px 3px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.1);
   --teams-shadow-lg:    0 4px 6px rgba(0,0,0,.12), 0 12px 24px rgba(0,0,0,.1);
 }

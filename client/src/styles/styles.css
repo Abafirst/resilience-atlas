@@ -1753,6 +1753,7 @@ main { flex: 1; }
     max-width: 100%;
     padding: 1rem;
   }
+}
 
 /* Radar chart sizing */
 #radarChartContainer svg {
