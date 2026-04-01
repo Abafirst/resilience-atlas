@@ -154,7 +154,7 @@ export default function AssessmentPage() {
             <a href="/" className="nav-link">Home</a>
             <a href="/assessment" className="nav-link active">Assessment</a>
             <a href="/research" className="nav-link">Research</a>
-            <a href="/team" className="nav-link">Teams</a>
+            <a href="/teams" className="nav-link">Teams</a>
             <a href="/kids" className="nav-link">Kids</a>
             <a href="/about" className="nav-link">About</a>
             <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
@@ -306,7 +306,7 @@ export default function AssessmentPage() {
           </div>
           <div className="footer-nav-group">
             <strong className="footer-nav-heading">Programs</strong>
-            <a href="/team">For Teams</a>
+            <a href="/teams">For Teams</a>
             <a href="/kids">For Kids</a>
           </div>
           <div className="footer-nav-group">

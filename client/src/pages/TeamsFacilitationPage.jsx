@@ -464,7 +464,7 @@ export default function TeamsFacilitationPage() {
             { href: '/teams/activities', label: '🎯 Activities' },
             { href: '/teams/resources', label: '📥 Handouts & Visuals' },
             { href: '/teams/facilitation', label: '📋 Facilitation Guide', active: true },
-            { href: '/team', label: '← Team Home' },
+            { href: '/teams', label: '← Team Home' },
           ].map(({ href, label, active }) => (
             <a
               key={href}

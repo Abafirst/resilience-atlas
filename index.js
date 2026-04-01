@@ -176,6 +176,11 @@ app.get(['/results.html', '/legacy-results.html'], (req, res) => {
     res.redirect(301, '/results');
 });
 
+// Redirect legacy /team (singular) to /teams (plural) — the canonical Teams landing page.
+app.get('/team', (req, res) => {
+    res.redirect(301, '/teams');
+});
+
 // Results page: always served by the React SPA (must be before public static middleware
 // so the legacy public/legacy-results.html is never accidentally returned).
 app.get('/results', (req, res) => {

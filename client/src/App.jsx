@@ -23,7 +23,6 @@ import AssessmentHub from './pages/AssessmentHub.jsx';
 import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
-import TeamPage from './pages/TeamPage.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
 
 // New migrated pages
@@ -158,7 +157,7 @@ export default function App() {
         <Route path="/legacy-results" element={<Navigate to="/results" replace />} />
 
         {/* App routes */}
-        <Route path="/team" element={<TeamPage />} />
+        <Route path="/team" element={<Navigate to="/teams" replace />} />
         <Route path="/kids" element={<KidsPage />} />
         <Route path="/atlas" element={<AtlasPage />} />
         <Route path="/comparison" element={<ComparisonPage />} />

@@ -80,7 +80,7 @@ const TIER_CONFIG = {
         dataRetention: '1 year',
     },
     'starter': {
-        name: 'Atlas Team Starter',
+        name: 'Atlas Team Basic',
         price: 29900, // $299 one-time
         billing: 'one-time',
         maxUsers: 15,
@@ -90,7 +90,7 @@ const TIER_CONFIG = {
         dataRetention: '1 year',
     },
     'pro': {
-        name: 'Atlas Team Professional',
+        name: 'Atlas Team Premium',
         price: 69900, // $699 one-time
         billing: 'one-time',
         maxUsers: 30,
@@ -100,7 +100,7 @@ const TIER_CONFIG = {
         dataRetention: '3 years',
     },
     'enterprise': {
-        name: 'Atlas Team Enterprise',
+        name: 'Atlas Enterprise',
         price: 249900, // Starting at $2,499 one-time
         billing: 'one-time',
         maxUsers: Infinity,
