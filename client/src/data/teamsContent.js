@@ -796,7 +796,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Connection',
       pages: 8,
       description: 'Complete facilitation guide for the Connection dimension including discussion prompts, 3 activities, reflection questions, and facilitator tips.',
-      icon: '🤝',
+      icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -809,7 +809,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Thinking',
       pages: 8,
       description: 'Complete facilitation guide for the Thinking dimension with reframing activities, critical thinking exercises, and discussion frameworks.',
-      icon: '🧠',
+      icon: '/icons/cognitive-narrative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -822,7 +822,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Action',
       pages: 8,
       description: 'Complete facilitation guide for the Action dimension with goal-setting templates, habit tracking tools, and accountability frameworks.',
-      icon: '⚡',
+      icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -835,7 +835,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Feeling',
       pages: 8,
       description: 'Complete facilitation guide for the Feeling dimension with psychological safety building, stress protocol development, and emotional regulation tools.',
-      icon: '💙',
+      icon: '/icons/emotional-adaptive.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -848,7 +848,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Hope',
       pages: 8,
       description: 'Complete facilitation guide for the Hope dimension with purpose clarification exercises, values alignment, and vision-building tools.',
-      icon: '🌟',
+      icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -861,7 +861,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Meaning',
       pages: 8,
       description: 'Complete facilitation guide for the Meaning dimension with strengths mapping, contribution storytelling, and legacy conversation tools.',
-      icon: '✨',
+      icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -876,7 +876,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 4,
       description: 'One-page team resilience profile with dimension scores, strengths, and growth edges. Pre/post assessment version included.',
-      icon: '📊',
+      icon: '/icons/compass.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -889,7 +889,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Action',
       pages: 2,
       description: 'Printable 30-day habit tracker for individual and team resilience habits. Includes celebration milestones and reflection prompts.',
-      icon: '📅',
+      icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -902,7 +902,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 3,
       description: 'Structured template for translating team insights into specific actions with owners, timelines, and success metrics.',
-      icon: '📋',
+      icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -915,7 +915,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 6,
       description: 'Color-coded discussion starter sheets, one per dimension. Organized by difficulty: warm-up, explore, deepen. Includes psychological safety reminders.',
-      icon: '💬',
+      icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -928,7 +928,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 12,
       description: 'Personal reflection journal for team members. Includes guided prompts per dimension, weekly check-ins, and learning capture pages.',
-      icon: '📝',
+      icon: '/icons/cognitive-narrative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -941,7 +941,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Feeling',
       pages: 2,
       description: 'Pre-workshop checklist for facilitators to assess and build psychological safety. Includes warning signs and quick interventions.',
-      icon: '🛡️',
+      icon: '/icons/emotional-adaptive.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -954,7 +954,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 3,
       description: 'Word-for-word script for opening your first team resilience session. Includes framing, ground rules, and first activity setup.',
-      icon: '🎙️',
+      icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -967,7 +967,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Hope',
       pages: 6,
       description: '50 printable values cards for the Values Alignment Exercise. Cut and sort. Works for small groups and large teams.',
-      icon: '🃏',
+      icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -980,7 +980,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Meaning',
       pages: 5,
       description: '40 printable strengths cards for the Strengths Finder Workshop. Includes brief description and reflection prompt on each card.',
-      icon: '💪',
+      icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -993,7 +993,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'Action',
       pages: 2,
       description: 'Structured goal-setting worksheet using the SMART framework with team and individual goal sections. Includes accountability partner space.',
-      icon: '🎯',
+      icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF'
     },
@@ -1006,7 +1006,7 @@ export const TEAMS_CONTENT = {
       dimensionLabel: 'All Dimensions',
       pages: 4,
       description: 'Practical guide for handling common facilitation challenges: resistant participants, dominant voices, emotional moments, and time management.',
-      icon: '🔧',
+      icon: '/icons/compass.svg',
       downloadUrl: '#',
       format: 'PDF'
     }
@@ -1022,7 +1022,7 @@ export const TEAMS_CONTENT = {
       type: 'dimension-card',
       typeLabel: 'Reference Cards',
       description: 'Six-card set, one per dimension. Icon, name, description, key behaviors at high and low levels, and sample practices. Print-ready.',
-      icon: '🃏',
+      icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '4"×6" (per card)'
@@ -1033,7 +1033,7 @@ export const TEAMS_CONTENT = {
       type: 'infographic',
       typeLabel: 'Infographic',
       description: 'Visual guide to reading and interpreting team radar charts. Shows what each section means, common profiles, and how to identify growth priorities.',
-      icon: '📡',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '8.5"×11"'
@@ -1044,7 +1044,7 @@ export const TEAMS_CONTENT = {
       type: 'timeline',
       typeLabel: 'Planning Timeline',
       description: 'Month-by-month workshop sequence with activities mapped to dimensions. Shows progression from awareness to practice to integration.',
-      icon: '📆',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '11"×17"'
@@ -1055,7 +1055,7 @@ export const TEAMS_CONTENT = {
       type: 'infographic',
       typeLabel: 'Infographic',
       description: 'Visual spectrum showing each dimension from low to high. Illustrates development trajectory, common patterns, and key turning points.',
-      icon: '📈',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '8.5"×11"'
@@ -1066,7 +1066,7 @@ export const TEAMS_CONTENT = {
       type: 'pathway',
       typeLabel: 'Development Map',
       description: '6-month progression map with activities, expected outcomes, measurement points, and wins at each stage. High-level visual roadmap.',
-      icon: '🗺️',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '11"×17"'
@@ -1077,7 +1077,7 @@ export const TEAMS_CONTENT = {
       type: 'matrix',
       typeLabel: 'Decision Matrix',
       description: 'Visual grid to choose the right activity for your team\'s needs. Organized by time available, group size, and learning objective.',
-      icon: '🔲',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '8.5"×11"'
@@ -1088,7 +1088,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Connection dimension. Motivational messaging, key concepts, and discussion starters. Print for workshop walls.',
-      icon: '🖼️',
+      icon: '/icons/relational-connective.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1099,7 +1099,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Thinking dimension. Reframing prompts, perspective-shifting visuals, and key principles.',
-      icon: '🖼️',
+      icon: '/icons/cognitive-narrative.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1110,7 +1110,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Action dimension. Goal-setting reminders, momentum principles, and accountability prompts.',
-      icon: '🖼️',
+      icon: '/icons/agentic-generative.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1121,7 +1121,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Feeling dimension. Emotional safety cues, calming practice reminders, and recognition prompts.',
-      icon: '🖼️',
+      icon: '/icons/emotional-adaptive.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1132,7 +1132,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Hope dimension. Purpose prompts, values anchors, and vision-building inspiration.',
-      icon: '🖼️',
+      icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1143,7 +1143,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Workshop Poster',
       description: 'Large-format poster for the Meaning dimension. Strengths affirmations, contribution questions, and legacy prompts.',
-      icon: '🖼️',
+      icon: '/icons/spiritual-reflective.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '18"×24"'
@@ -1154,7 +1154,7 @@ export const TEAMS_CONTENT = {
       type: 'poster',
       typeLabel: 'Culture Poster',
       description: 'All six dimensions in one integrated visual. Shows how dimensions interact, team culture elements, and shared language.',
-      icon: '🗺️',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '24"×36"'
@@ -1165,7 +1165,7 @@ export const TEAMS_CONTENT = {
       type: 'reference-card',
       typeLabel: 'Quick Reference',
       description: 'Pocket-sized reference cards, one per dimension. Key practices, prompts, and guidance for when to use each dimension in daily leadership.',
-      icon: '📇',
+      icon: '/icons/compass.svg',
       format: 'PDF',
       downloadUrl: '#',
       printSize: '3"×5" (per card)'

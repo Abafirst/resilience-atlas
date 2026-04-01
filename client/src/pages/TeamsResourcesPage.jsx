@@ -38,10 +38,17 @@ const TYPE_COLORS = {
 function ResourceCard({ item, isVisual }) {
   const color = TYPE_COLORS[item.type] || '#64748b';
   const typeLabel = item.typeLabel || TYPE_LABELS[item.type] || item.type;
+  const fallbackIcon = isVisual ? '/icons/compass.svg' : '/icons/checkmark.svg';
 
   return (
     <div className="tr-card">
-      <div className="tr-card__icon" aria-hidden="true">{item.icon || (isVisual ? '🖼️' : '📄')}</div>
+      <div className="tr-card__icon" aria-hidden="true">
+        {item.icon && item.icon.startsWith('/icons/') ? (
+          <img src={item.icon} alt="" className="icon icon-md" />
+        ) : (
+          <img src={fallbackIcon} alt="" className="icon icon-md" />
+        )}
+      </div>
       <div className="tr-card__body">
         <span
           className="tr-card__type-badge"
@@ -161,9 +168,9 @@ export default function TeamsResourcesPage() {
           style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}
         >
           {[
-            { href: '/teams/activities', label: '🎯 Activities' },
-            { href: '/teams/resources', label: '📥 Handouts & Visuals', active: true },
-            { href: '/teams/facilitation', label: '📋 Facilitation Guide' },
+            { href: '/teams/activities', label: 'Activities' },
+            { href: '/teams/resources', label: 'Handouts & Visuals', active: true },
+            { href: '/teams/facilitation', label: 'Facilitation Guide' },
             { href: '/team', label: '← Team Home' },
           ].map(({ href, label, active }) => (
             <a
@@ -259,12 +266,12 @@ export default function TeamsResourcesPage() {
               style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit' }}
             >
               <option value="all">All Dimensions</option>
-              <option value="connection">🤝 Connection</option>
-              <option value="thinking">🧠 Thinking</option>
-              <option value="action">⚡ Action</option>
-              <option value="feeling">💙 Feeling</option>
-              <option value="hope">🌟 Hope</option>
-              <option value="meaning">✨ Meaning</option>
+              <option value="connection">Connection (Relational)</option>
+              <option value="thinking">Thinking (Cognitive)</option>
+              <option value="action">Action (Agentic)</option>
+              <option value="feeling">Feeling (Emotional)</option>
+              <option value="hope">Hope (Spiritual)</option>
+              <option value="meaning">Meaning (Somatic)</option>
             </select>
           </label>
           <span style={{ fontSize: '.85rem', color: '#64748b', alignSelf: 'flex-end', whiteSpace: 'nowrap' }}>
@@ -326,7 +333,8 @@ export default function TeamsResourcesPage() {
                   id="visuals-heading"
                   style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
                 >
-                  🖼️ Visual Resources
+                  <img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" />
+                  Visual Resources
                   <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Infographics, posters, reference cards</span>
                 </h2>
                 <div

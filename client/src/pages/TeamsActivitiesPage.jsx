@@ -249,12 +249,12 @@ export default function TeamsActivitiesPage() {
             Dimension
             <select value={dimension} onChange={e => setDimension(e.target.value)} aria-label="Filter by dimension" style={filterSelectStyle}>
               <option value="all">All Dimensions</option>
-              <option value="connection">🤝 Connection</option>
-              <option value="thinking">🧠 Thinking</option>
-              <option value="action">⚡ Action</option>
-              <option value="feeling">💙 Feeling</option>
-              <option value="hope">🌟 Hope</option>
-              <option value="meaning">✨ Meaning</option>
+              <option value="connection">Connection (Relational)</option>
+              <option value="thinking">Thinking (Cognitive)</option>
+              <option value="action">Action (Agentic)</option>
+              <option value="feeling">Feeling (Emotional)</option>
+              <option value="hope">Hope (Spiritual)</option>
+              <option value="meaning">Meaning (Somatic)</option>
             </select>
           </label>
           <label style={filterLabelStyle}>

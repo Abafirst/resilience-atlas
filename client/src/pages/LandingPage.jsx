@@ -2,12 +2,12 @@ import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const DIMENSIONS = [
-  { key: 'relational',  icon: '🤝', name: 'Relational-Connective',  desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
-  { key: 'cognitive',   icon: '📖', name: 'Cognitive-Narrative',     desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
-  { key: 'somatic',     icon: '🧘', name: 'Somatic-Regulative',      desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
-  { key: 'emotional',   icon: '💙', name: 'Emotional-Adaptive',      desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
-  { key: 'spiritual',   icon: '🌟', name: 'Spiritual-Reflective',    desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
-  { key: 'agentic',     icon: '🧭', name: 'Agentic-Generative',      desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
+  { key: 'relational',  icon: '/icons/relational-connective.svg',  name: 'Relational-Connective',  desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
+  { key: 'cognitive',   icon: '/icons/cognitive-narrative.svg',    name: 'Cognitive-Narrative',     desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
+  { key: 'somatic',     icon: '/icons/somatic-regulative.svg',     name: 'Somatic-Regulative',      desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
+  { key: 'emotional',   icon: '/icons/emotional-adaptive.svg',     name: 'Emotional-Adaptive',      desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
+  { key: 'spiritual',   icon: '/icons/spiritual-reflective.svg',   name: 'Spiritual-Reflective',    desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
+  { key: 'agentic',     icon: '/icons/agentic-generative.svg',     name: 'Agentic-Generative',      desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
 ];
 
 export default function LandingPage() {
@@ -57,7 +57,7 @@ export default function LandingPage() {
           {DIMENSIONS.map(({ key, icon, name, desc }) => (
             <div key={key} className="dimension-card">
               <div className={`dimension-icon dimension-icon--${key}`}>
-                <span role="img" aria-label={name}>{icon}</span>
+                <img src={icon} alt="" aria-hidden="true" className="icon icon-md" />
               </div>
               <h3>{name}</h3>
               <p>{desc}</p>

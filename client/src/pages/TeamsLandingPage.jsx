@@ -846,9 +846,9 @@ export default function TeamsLandingPage() {
     <div id="teams-resource-hub" hidden style={{ textAlign: 'center', marginTop: '2rem' }}>
       <p style={{ color: '#166534', fontWeight: 600, fontSize: '.95rem', margin: '0 0 .75rem' }}>✓ Your Teams purchase includes full access to all resources below.</p>
       <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>📥 Browse &amp; Download All Resources →</a>
-        <a href="/teams-facilitation" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>📋 Full Facilitation Guide</a>
-        <a href="/teams-activities" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>🎯 Activity Library</a>
+        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>Browse &amp; Download All Resources →</a>
+        <a href="/teams-facilitation" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Full Facilitation Guide</a>
+        <a href="/teams-activities" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Activity Library</a>
       </div>
     </div>
   </section>
