@@ -182,6 +182,12 @@ app.get('/results', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
 });
 
+// /kids SPA route — must be before the public/ static middleware so the legacy
+// public/kids.html is never accidentally returned instead of the React component.
+app.get('/kids', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
 
