@@ -1,0 +1,1849 @@
+/**
+ * Resilience Atlas — Kids Games Styles
+ * All styling for the Kids Interactive Games System.
+ */
+
+/* ── Hub Wrapper ── */
+.kg-hub-wrapper {
+  position: relative;
+}
+
+/* ── Hub Header ── */
+.kg-hub-header {
+  text-align: center;
+  padding: 1rem 1.5rem 0;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.kg-hub-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: .5rem 0 .75rem;
+}
+
+.kg-hub-subtitle {
+  color: #475569;
+  font-size: .95rem;
+  line-height: 1.65;
+  margin: 0 auto 1.5rem;
+}
+
+/* ── Hub Stats ── */
+.kg-hub-stats {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.kg-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .75rem 1.25rem;
+  min-width: 80px;
+  gap: .15rem;
+}
+
+.kg-stat-icon {
+  font-size: 1.4rem;
+}
+
+.kg-stat-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+}
+
+.kg-stat-label {
+  font-size: .72rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* ── Age Selector ── */
+.kg-age-selector {
+  display: flex;
+  gap: .75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kg-age-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: .85rem 1.5rem;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+  min-width: 120px;
+}
+
+.kg-age-tab:hover {
+  border-color: #4f46e5;
+  box-shadow: 0 4px 12px rgba(79,70,229,.1);
+}
+
+.kg-age-tab.active {
+  border-color: #4f46e5;
+  background: #ede9fe;
+}
+
+.kg-age-tab-label {
+  font-size: .95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.kg-age-tab-sub {
+  font-size: .75rem;
+  color: #64748b;
+  margin-top: .15rem;
+}
+
+/* ── Game Cards Grid ── */
+.kg-game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  max-width: 1040px;
+  margin: 0 auto 2.5rem;
+}
+
+/* ── Game Card ── */
+.kg-game-card {
+  background: var(--card-color, #f8fafc);
+  border: 2px solid var(--card-accent, #e2e8f0);
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.kg-game-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.1);
+}
+
+.kg-game-card-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+.kg-game-card-age {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #64748b;
+}
+
+.kg-game-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-game-card-desc {
+  font-size: .88rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.kg-game-card-btn {
+  margin-top: .75rem;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: .7rem 1.25rem;
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+
+.kg-game-card-btn:hover {
+  background: #4338ca;
+}
+
+/* ── Badge Shelf ── */
+.kg-badge-shelf {
+  padding: 0 1.5rem 2.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.kg-badge-shelf-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.kg-badge-shelf-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.kg-shelf-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .65rem .85rem;
+  min-width: 72px;
+  gap: .2rem;
+  transition: transform .15s;
+}
+
+.kg-shelf-badge:hover {
+  transform: scale(1.06);
+}
+
+.kg-shelf-badge-emoji {
+  font-size: 1.5rem;
+}
+
+.kg-shelf-badge-label {
+  font-size: .68rem;
+  font-weight: 600;
+  color: #334155;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── Global Badge Toast ── */
+.kg-badge-toast-global {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  background: #fef9c3;
+  border: 2px solid #fbbf24;
+  border-radius: 14px;
+  padding: .9rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  max-width: 340px;
+  animation: kg-slide-in .3s ease-out;
+}
+
+.kg-badge-toast-emoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+@keyframes kg-slide-in {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ── Game Container (shared by all games) ── */
+.kg-game-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  position: relative;
+}
+
+/* ── Back Button ── */
+.kg-back-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: .45rem .9rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 1.25rem;
+  transition: background .15s;
+}
+
+.kg-back-btn:hover {
+  background: #f1f5f9;
+}
+
+/* ── Game Header ── */
+.kg-game-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.kg-game-emoji {
+  font-size: 3rem;
+  line-height: 1;
+  margin-bottom: .5rem;
+}
+
+.kg-game-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 .3rem;
+}
+
+.kg-game-subtitle {
+  color: #64748b;
+  font-size: .9rem;
+  margin: 0 0 .75rem;
+}
+
+.kg-score-badge {
+  display: inline-block;
+  background: #ede9fe;
+  color: #4c1d95;
+  font-size: .85rem;
+  font-weight: 700;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+}
+
+/* ── Progress Bar ── */
+.kg-progress-bar-wrap {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 14px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.kg-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+
+.kg-progress-label {
+  position: absolute;
+  right: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: .68rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+/* ── Compass Spinner ── */
+.kg-target-box {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.kg-target-label {
+  font-size: .85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: .5rem;
+}
+
+.kg-target-word {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border-radius: 14px;
+  padding: .85rem 1.5rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+  border: 3px solid rgba(0,0,0,.08);
+  margin-bottom: .5rem;
+}
+
+.kg-target-emoji {
+  font-size: 1.8rem;
+}
+
+.kg-target-text {
+  font-size: 1.35rem;
+}
+
+.kg-target-hint {
+  font-size: .82rem;
+  color: #64748b;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Spinner wheel */
+.kg-spinner-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto 1.5rem;
+}
+
+.kg-spinner-wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  border: 4px solid #e2e8f0;
+}
+
+.kg-spinner-segment {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  border-left: 140px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 140px solid transparent;
+  display: none; /* CSS pie segments are complex — use background approach */
+}
+
+/* Simplified approach: colored circle with labels */
+.kg-spinner-wheel {
+  background: conic-gradient(
+    #fef9c3 0% 8.33%,
+    #ede9fe 8.33% 16.67%,
+    #e0f2fe 16.67% 25%,
+    #dcfce7 25% 33.33%,
+    #fef3c7 33.33% 41.67%,
+    #ffe4e6 41.67% 50%,
+    #fef9c3 50% 58.33%,
+    #ede9fe 58.33% 66.67%,
+    #e0f2fe 66.67% 75%,
+    #dcfce7 75% 83.33%,
+    #fef3c7 83.33% 91.67%,
+    #ffe4e6 91.67% 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kg-spinner-segment {
+  display: none;
+}
+
+.kg-spinner-needle {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  color: #4f46e5;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.3));
+  z-index: 2;
+}
+
+/* Wheel center label */
+.kg-spinner-wheel::after {
+  content: '🧭';
+  font-size: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Spin Button ── */
+.kg-spin-btn {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity .15s, transform .15s;
+  letter-spacing: .02em;
+}
+
+.kg-spin-btn:hover:not(:disabled) {
+  opacity: .9;
+  transform: scale(1.02);
+}
+
+.kg-spin-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* ── Feedback ── */
+.kg-feedback {
+  margin-top: 1.25rem;
+  padding: .85rem 1.1rem;
+  border-radius: 12px;
+  font-size: .9rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.kg-feedback-match {
+  background: #dcfce7;
+  color: #14532d;
+  border: 2px solid #86efac;
+}
+
+.kg-feedback-miss {
+  background: #fef3c7;
+  color: #78350f;
+  border: 2px solid #fde68a;
+}
+
+.kg-landed-info {
+  margin-top: 1rem;
+  padding: .85rem 1.1rem;
+  border-radius: 12px;
+  font-size: .88rem;
+  line-height: 1.5;
+  border: 2px solid rgba(0,0,0,.06);
+}
+
+/* ── Map Collector ── */
+.kg-map-area {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 aspect ratio */
+  background: linear-gradient(160deg, #e0f7fa 0%, #b2dfdb 40%, #a5d6a7 100%);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid #81d4fa;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+
+.kg-map-bg-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.kg-map-bg-deco span {
+  position: absolute;
+  font-size: 1.6rem;
+}
+
+.kg-map-item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.kg-map-item.glowing {
+  animation: kg-glow 1.6s ease-in-out infinite alternate;
+  box-shadow: 0 0 12px rgba(79,70,229,.4);
+}
+
+.kg-map-item.collected {
+  opacity: .55;
+  cursor: default;
+  animation: none;
+}
+
+.kg-map-item:hover:not(.collected):not(:disabled) {
+  transform: translate(-50%, -50%) scale(1.18);
+}
+
+.kg-map-item-emoji {
+  font-size: 1.35rem;
+}
+
+.kg-map-item-check {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: .65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+@keyframes kg-glow {
+  from { box-shadow: 0 0 6px rgba(79,70,229,.3); }
+  to   { box-shadow: 0 0 18px rgba(79,70,229,.6); }
+}
+
+/* ── Builder Badges ── */
+.kg-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.kg-badge-card {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+  text-align: center;
+}
+
+.kg-badge-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0,0,0,.1);
+}
+
+.kg-badge-unlocked {
+  transform: scale(1.02);
+}
+
+.kg-badge-card-emoji {
+  font-size: 2.25rem;
+}
+
+.kg-badge-card-title {
+  font-size: .92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.kg-badge-card-desc {
+  font-size: .78rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.kg-badge-card-earned {
+  font-size: .75rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* Badge toast in-game */
+.kg-badge-toast {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  border: 2px solid;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  margin-bottom: 1.25rem;
+  animation: kg-slide-in .3s ease-out;
+}
+
+/* ── Completion Panel ── */
+.kg-completion-panel {
+  text-align: center;
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+}
+
+.kg-completion-emoji {
+  font-size: 3rem;
+  margin-bottom: .75rem;
+}
+
+/* ── Quest / Navigator ── */
+.kg-quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.kg-quest-card {
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 1.25rem;
+  transition: box-shadow .15s;
+}
+
+.kg-quest-card:hover {
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.kg-quest-done {
+  opacity: .75;
+}
+
+.kg-quest-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+
+.kg-quest-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-quest-card-char {
+  font-size: .82rem;
+  color: #475569;
+  margin: .1rem 0 0;
+}
+
+.kg-quest-done-badge {
+  margin-left: auto;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.kg-quest-start-btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .55rem 1.1rem;
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity .15s;
+}
+
+.kg-quest-start-btn:hover {
+  opacity: .88;
+}
+
+/* Quest header in active quest */
+.kg-quest-header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.kg-quest-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.kg-quest-char {
+  font-size: .82rem;
+  color: #475569;
+}
+
+.kg-quest-step-count {
+  margin-left: auto;
+  font-size: .82rem;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+/* Step dots */
+.kg-step-dots {
+  display: flex;
+  gap: .5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.kg-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  transition: background .2s;
+}
+
+.kg-step-dot.active {
+  background: #4f46e5;
+  transform: scale(1.3);
+}
+
+.kg-step-dot.done {
+  background: #16a34a;
+}
+
+/* Quest step */
+.kg-quest-step {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.kg-step-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 .5rem;
+}
+
+.kg-step-prompt {
+  font-size: .9rem;
+  color: #334155;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+/* Choice grid */
+.kg-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+
+.kg-choice-btn {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .75rem .85rem;
+  font-size: .88rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.45;
+  transition: all .15s;
+  color: #334155;
+}
+
+.kg-choice-btn:hover:not(:disabled) {
+  border-color: #4f46e5;
+  background: #ede9fe;
+}
+
+.kg-choice-btn.selected {
+  border-color: #4f46e5;
+  background: #ede9fe;
+  color: #1e1b4b;
+  font-weight: 600;
+}
+
+.kg-choice-btn.correct {
+  border-color: #16a34a;
+  background: #dcfce7;
+  color: #14532d;
+  font-weight: 700;
+}
+
+.kg-choice-btn.wrong {
+  border-color: #dc2626;
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+.kg-choice-btn:disabled {
+  cursor: default;
+}
+
+/* Encourage */
+.kg-encourage {
+  background: #fef3c7;
+  border: 2px solid #fde68a;
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  font-size: .88rem;
+  color: #78350f;
+  font-weight: 600;
+  margin-top: .75rem;
+  line-height: 1.5;
+}
+
+/* Reveal box */
+.kg-reveal-box {
+  border: 2px solid;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.kg-reveal-message {
+  font-size: .92rem;
+  color: #1e293b;
+  line-height: 1.65;
+  font-style: italic;
+  margin: 0 0 .75rem;
+}
+
+.kg-story-unlock {
+  font-size: .85rem;
+  font-weight: 700;
+  color: #4c1d95;
+  padding: .55rem .85rem;
+  background: rgba(255,255,255,.6);
+  border-radius: 8px;
+  border: 1px solid rgba(79,70,229,.2);
+}
+
+/* Advance button */
+.kg-advance-btn {
+  display: block;
+  width: 100%;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: .85rem 1.25rem;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 1rem;
+  transition: opacity .15s;
+}
+
+.kg-advance-btn:hover:not(:disabled) {
+  opacity: .88;
+}
+
+.kg-advance-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* ── Resilience Mountain ── */
+.kg-mountain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.kg-peak-card {
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  transition: transform .15s, box-shadow .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+}
+
+.kg-peak-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+}
+
+.kg-peak-summited {
+  border-width: 3px;
+}
+
+.kg-peak-emoji {
+  font-size: 2rem;
+}
+
+.kg-peak-name {
+  font-size: .92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.kg-peak-char {
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.kg-peak-progress-wrap {
+  width: 100%;
+  background: rgba(0,0,0,.1);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  margin: .25rem 0;
+}
+
+.kg-peak-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+
+.kg-peak-level {
+  font-size: .75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.kg-peak-summit-flag {
+  position: absolute;
+  top: -.5rem;
+  right: -.5rem;
+  font-size: 1.25rem;
+}
+
+/* Peak detail */
+.kg-peak-detail-header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.kg-peak-detail-emoji {
+  font-size: 2rem;
+}
+
+.kg-peak-detail-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-peak-detail-char {
+  font-size: .82rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.kg-peak-intro {
+  font-size: .88rem;
+  color: #475569;
+  margin-bottom: 1rem;
+  line-height: 1.55;
+}
+
+.kg-peak-activities {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+/* Activity steps (shared with quest log) */
+.kg-activity-step {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+
+.kg-activity-step.done {
+  opacity: .75;
+}
+
+.kg-activity-step.locked {
+  opacity: .45;
+}
+
+.kg-activity-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .88rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.kg-activity-step-content {
+  flex: 1;
+}
+
+.kg-activity-step-title {
+  font-size: .9rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-activity-badge-label {
+  font-size: .72rem;
+  color: #d97706;
+  font-weight: 600;
+}
+
+.kg-activity-complete-btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .45rem .85rem;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+
+.kg-activity-complete-btn:hover {
+  opacity: .88;
+}
+
+.kg-activity-locked {
+  font-size: 1.1rem;
+}
+
+/* ── Treasure Explorer ── */
+.kg-island-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.kg-island-card {
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+}
+
+.kg-island-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+}
+
+.kg-island-emoji {
+  font-size: 2.5rem;
+}
+
+.kg-island-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.kg-island-dim {
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.kg-island-unlocked {
+  font-size: .82rem;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.kg-island-hint {
+  font-size: .82rem;
+  color: #64748b;
+}
+
+.kg-island-done .kg-island-name {
+  color: #065f46;
+}
+
+/* Island header */
+.kg-island-header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.kg-island-header-emoji {
+  font-size: 2rem;
+}
+
+.kg-island-header-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-island-desc {
+  font-size: .9rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.kg-challenge-box {
+  border: 2px solid;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.kg-challenge-label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0 0 .5rem;
+}
+
+.kg-challenge-question {
+  font-size: .95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+/* Treasure reveal */
+.kg-treasure-reveal {
+  text-align: center;
+  border: 3px solid;
+  border-radius: 20px;
+  padding: 2rem;
+  animation: kg-pop-in .35s ease-out;
+}
+
+.kg-treasure-icon {
+  font-size: 3.5rem;
+  margin-bottom: .75rem;
+}
+
+.kg-treasure-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 .5rem;
+}
+
+.kg-treasure-story-title {
+  font-size: 1rem;
+  color: #1e293b;
+  margin: 0 0 .5rem;
+}
+
+.kg-treasure-preview {
+  font-size: .88rem;
+  color: #475569;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+@keyframes kg-pop-in {
+  from { transform: scale(.8); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+
+/* ── Navigator Challenges ── */
+.kg-intro-rules {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: .9rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.kg-intro-rules ul {
+  margin: .5rem 0 0 1.25rem;
+  padding: 0;
+}
+
+.kg-intro-rules li {
+  margin-bottom: .35rem;
+}
+
+.kg-challenge-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1rem;
+  background: #0f172a;
+  border-radius: 12px;
+  margin-bottom: .75rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.kg-hud-score {
+  color: #fde68a;
+}
+
+.kg-hud-progress {
+  color: #94a3b8;
+}
+
+.kg-hud-timer {
+  color: #7dd3fc;
+  font-variant-numeric: tabular-nums;
+}
+
+.kg-hud-timer.urgent {
+  color: #f87171;
+  animation: kg-pulse .5s ease-in-out infinite alternate;
+}
+
+@keyframes kg-pulse {
+  from { opacity: 1; }
+  to   { opacity: .5; }
+}
+
+.kg-timer-bar-wrap {
+  background: #e2e8f0;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.kg-timer-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s linear;
+}
+
+.kg-streak-toast {
+  text-align: center;
+  background: #fff7ed;
+  border: 2px solid #fb923c;
+  border-radius: 10px;
+  padding: .5rem;
+  font-size: .88rem;
+  font-weight: 700;
+  color: #9a3412;
+  margin-bottom: .75rem;
+}
+
+.kg-challenge-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.kg-challenge-dimension {
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #4f46e5;
+  margin-bottom: .5rem;
+}
+
+.kg-challenge-scenario {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
+
+/* Results */
+.kg-results-summary {
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+}
+
+.kg-results-score {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #4f46e5;
+  line-height: 1;
+  margin-bottom: .25rem;
+}
+
+.kg-results-score span {
+  font-size: 1.75rem;
+  color: #94a3b8;
+}
+
+.kg-results-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.kg-streak-note,
+.kg-pb-note {
+  font-size: .9rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin: .35rem 0 0;
+}
+
+.kg-pb-note {
+  color: #d97706;
+}
+
+.kg-results-review {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.kg-result-item {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+}
+
+.kg-result-item.correct {
+  border-color: #86efac;
+}
+
+.kg-result-item.incorrect {
+  border-color: #fca5a5;
+}
+
+.kg-result-q {
+  font-size: .85rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: .35rem;
+}
+
+.kg-result-correct {
+  color: #16a34a;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.kg-result-miss {
+  color: #dc2626;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.kg-result-explain {
+  font-size: .82rem;
+  color: #64748b;
+  margin: .35rem 0 0;
+  font-style: italic;
+}
+
+/* ── Arena Battles ── */
+.kg-arena-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.kg-arena-char-card {
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .15s, box-shadow .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+}
+
+.kg-arena-char-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 20px rgba(0,0,0,.1);
+}
+
+.kg-arena-char-emoji {
+  font-size: 2rem;
+}
+
+.kg-arena-char-name {
+  font-size: .85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.kg-arena-char-cta {
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.kg-battle-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .85rem 1.25rem;
+  background: #0f172a;
+  border-radius: 12px;
+  margin-bottom: .75rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.kg-battle-player {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  color: #7dd3fc;
+}
+
+.kg-battle-vs {
+  font-size: .75rem;
+  color: #64748b;
+  letter-spacing: .1em;
+}
+
+.kg-battle-opponent {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.kg-battle-result {
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.kg-battle-result-emoji {
+  font-size: 3rem;
+  margin-bottom: .75rem;
+}
+
+.kg-battle-result-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 .5rem;
+}
+
+.kg-battle-result-score {
+  font-size: .9rem;
+  color: #475569;
+  margin-bottom: .75rem;
+}
+
+.kg-battle-tip {
+  font-size: .85rem;
+  color: #4c1d95;
+  font-style: italic;
+  background: #ede9fe;
+  border-radius: 10px;
+  padding: .75rem 1rem;
+  margin-top: .75rem;
+}
+
+/* ── Quest Log ── */
+.kg-quest-parts {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+
+.kg-part-type {
+  font-size: .72rem;
+  color: #64748b;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.kg-part-content {
+  padding-top: 1rem;
+}
+
+.kg-read-content {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+  font-size: .9rem;
+  color: #334155;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.kg-read-content p {
+  margin: 0 0 .85rem;
+}
+
+.kg-reflection-prompt {
+  background: #fef9c3;
+  border: 2px solid #fde68a;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  font-size: .9rem;
+  color: #78350f;
+}
+
+.kg-reframe-list {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.kg-reframe-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  transition: all .25s;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: .9rem;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.kg-reframe-card:hover {
+  border-color: #4f46e5;
+}
+
+.kg-reframe-card.flipped {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.kg-reframe-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.kg-reframe-back {
+  display: none;
+}
+
+.kg-reframe-card.flipped .kg-reframe-front {
+  display: none;
+}
+
+.kg-reframe-card.flipped .kg-reframe-back {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.kg-story-starter {
+  background: #ede9fe;
+  border-left: 4px solid #7c3aed;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: .95rem;
+  color: #4c1d95;
+  line-height: 1.65;
+}
+
+.kg-writing-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .75rem;
+}
+
+.kg-hint-chip {
+  background: #e0f2fe;
+  color: #075985;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .25rem .65rem;
+  border-radius: 999px;
+}
+
+.kg-rquiz-item {
+  margin-bottom: 1.25rem;
+}
+
+.kg-rquiz-question {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 .75rem;
+}
+
+.kg-toolkit-group {
+  margin-bottom: 1.25rem;
+}
+
+.kg-toolkit-emotion {
+  font-size: .92rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 .5rem;
+}
+
+.kg-connection-map {
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+
+.kg-connection-ring {
+  border: 2px solid;
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.kg-ring-label {
+  font-size: .92rem;
+  font-weight: 700;
+  margin: 0 0 .25rem;
+}
+
+.kg-ring-desc {
+  font-size: .82rem;
+  color: #64748b;
+  margin: 0 0 .5rem;
+}
+
+.kg-challenge-list {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+
+.kg-challenge-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  font-size: .9rem;
+  color: #334155;
+  width: 100%;
+  transition: all .15s;
+}
+
+.kg-challenge-item:hover {
+  border-color: #4f46e5;
+}
+
+.kg-challenge-item.done {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.kg-challenge-item-emoji {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.kg-check {
+  margin-left: auto;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .kg-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kg-game-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+
+  .kg-badge-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kg-mountain-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kg-arena-select-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kg-spinner-wrapper {
+    width: 240px;
+    height: 240px;
+  }
+
+  .kg-hub-title {
+    font-size: 1.6rem;
+  }
+
+  .kg-age-tab {
+    min-width: 100px;
+    padding: .7rem 1.1rem;
+  }
+
+  .kg-game-container {
+    padding: 1rem;
+  }
+}

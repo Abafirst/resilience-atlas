@@ -7,6 +7,7 @@ import {
   KIDS_MORE_STORIES,
   KIDS_SKILL_BUILDERS,
 } from '../data/kidsActivities';
+import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 
 const AGE_GROUPS = [
   { id: 'age-5-7',    label: 'Ages 5–7' },
@@ -328,6 +329,18 @@ export default function KidsPage() {
             <SkillBuilderCard key={builder.name} builder={builder} />
           ))}
         </div>
+      </section>
+
+      {/* Interactive Games Hub */}
+      <section className="games-section" id="games" aria-labelledby="games-heading">
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <span className="section-label">Play &amp; Learn</span>
+          <h2 id="games-heading">Interactive Games</h2>
+          <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+            Fun games that build resilience skills! Earn stars, collect badges, and go on adventures with your favourite characters.
+          </p>
+        </div>
+        <KidsGamesHub />
       </section>
 
       {/* Age-group activities */}

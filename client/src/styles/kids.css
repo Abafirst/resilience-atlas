@@ -629,3 +629,16 @@
     font-size: 1.75rem;
   }
 }
+
+/* ── Games Section ── */
+.games-section {
+  background: var(--slate-50, #f8fafc);
+  padding: 4rem 0;
+}
+
+.games-section .section-header {
+  padding: 0 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
