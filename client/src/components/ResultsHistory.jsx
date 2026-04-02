@@ -16,13 +16,16 @@ const styles = {
     maxWidth: 680,
   },
   heading: {
-    color: '#e8f0fe',
+    color: '#2d3748',
     fontSize: 18,
     fontWeight: 700,
     marginBottom: 6,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
   },
   desc: {
-    color: '#a0aec0',
+    color: '#718096',
     fontSize: 13,
     marginBottom: 16,
     lineHeight: 1.5,
@@ -36,10 +39,11 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 10,
     padding: '14px 18px',
+    boxShadow: '0 1px 6px rgba(0,0,0,0.04)',
   },
   info: {
     display: 'flex',
@@ -47,17 +51,17 @@ const styles = {
     gap: 2,
   },
   tier: {
-    color: '#e8f0fe',
+    color: '#1a202c',
     fontWeight: 600,
     fontSize: 14,
   },
   date: {
-    color: '#a0aec0',
+    color: '#718096',
     fontSize: 12,
   },
   btn: {
     padding: '6px 14px',
-    background: '#4a90d9',
+    background: '#667eea',
     color: '#fff',
     border: 'none',
     borderRadius: 6,
@@ -74,9 +78,9 @@ const styles = {
   },
   errorBox: {
     marginTop: 10,
-    color: '#fc8181',
-    background: 'rgba(252,129,129,0.1)',
-    border: '1px solid rgba(252,129,129,0.3)',
+    color: '#991b1b',
+    background: '#fee2e2',
+    border: '1px solid #fecaca',
     borderRadius: 6,
     padding: '8px 12px',
     fontSize: 13,
@@ -169,7 +173,10 @@ export default function ResultsHistory({ email }) {
   return (
     <section style={styles.section} aria-labelledby="priorReportsHeading">
       <h3 id="priorReportsHeading" style={styles.heading}>
-        💾 Prior Report Purchases
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667eea" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+          <polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>
+        </svg>
+        Prior Report Purchases
       </h3>
       <p style={styles.desc}>
         Each purchased report is always available for re-download. Use the{' '}

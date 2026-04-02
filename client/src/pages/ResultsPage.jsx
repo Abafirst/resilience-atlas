@@ -2,6 +2,73 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 
+// ── Branded SVG Icon set ───────────────────────────────────────────────────
+const BRAND_ICONS = {
+  chart: (
+    <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>
+  ),
+  compass: (
+    <><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></>
+  ),
+  map: (
+    <><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></>
+  ),
+  document: (
+    <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>
+  ),
+  flask: (
+    <><path d="M6 2v6l-2 3.5A4 4 0 0 0 7.5 18h9a4 4 0 0 0 3.5-6.5L18 8V2"/><line x1="6" y1="2" x2="18" y2="2"/><line x1="9" y1="11" x2="15" y2="11"/></>
+  ),
+  target: (
+    <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>
+  ),
+  sparkle: (
+    <><path d="M12 2 L14.4 9.6 L22 12 L14.4 14.4 L12 22 L9.6 14.4 L2 12 L9.6 9.6 Z"/></>
+  ),
+  star: (
+    <><path d="M12 2l2.4 7.4H22l-6.2 4.5L18.2 22 12 17.8 5.8 22l2.4-8.1L2 9.4h7.6z"/></>
+  ),
+  bell: (
+    <><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></>
+  ),
+  megaphone: (
+    <><path d="M3 11l19-9-9 19-2-8-8-2z"/></>
+  ),
+  users: (
+    <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>
+  ),
+  archive: (
+    <><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></>
+  ),
+  lock: (
+    <><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>
+  ),
+  mail: (
+    <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></>
+  ),
+};
+
+function BrandIcon({ name, size = 18, color = 'currentColor', style: extraStyle }) {
+  const paths = BRAND_ICONS[name];
+  if (!paths) return null;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0, ...extraStyle }}
+    >
+      {paths}
+    </svg>
+  );
+}
+
 // ── Upsell system constants (ported from upsell-system.js) ─────────────────
 const UPSELL_COOLDOWN_KEY   = 'upsell_cooldown';
 const UPSELL_SESSION_KEY    = 'upsell_session_id';
@@ -642,13 +709,14 @@ function runConfetti(canvas) {
 const s = {
   // ── Site Header ──
   siteHeader: {
-    background: 'rgba(15,35,65,0.97)',
-    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    background: 'rgba(255,255,255,0.97)',
+    borderBottom: '1px solid #e2e8f0',
     backdropFilter: 'blur(10px)',
     position: 'sticky',
     top: 0,
     zIndex: 100,
     padding: '0 24px',
+    boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
   },
   headerInner: {
     maxWidth: 1100,
@@ -663,7 +731,7 @@ const s = {
     display: 'flex',
     alignItems: 'center',
     gap: 10,
-    color: '#e8f0fe',
+    color: '#1a202c',
     textDecoration: 'none',
     fontWeight: 700,
     fontSize: 15,
@@ -676,16 +744,16 @@ const s = {
     flexWrap: 'wrap',
   },
   navLink: {
-    color: '#a0aec0',
+    color: '#4a5568',
     textDecoration: 'none',
     fontSize: 13,
     fontWeight: 500,
   },
   retakeBtn: {
     padding: '7px 16px',
-    background: 'rgba(74,144,217,0.15)',
-    color: '#60a5fa',
-    border: '1px solid rgba(74,144,217,0.4)',
+    background: 'rgba(102,126,234,0.1)',
+    color: '#667eea',
+    border: '1px solid rgba(102,126,234,0.4)',
     borderRadius: 8,
     fontSize: 13,
     fontWeight: 600,
@@ -695,9 +763,9 @@ const s = {
   },
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+    background: 'linear-gradient(135deg, #f0f4ff 0%, #fafbff 60%, #f0fbff 100%)',
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    color: '#e8f0fe',
+    color: '#1a202c',
     padding: '40px 20px 80px',
   },
   container: {
@@ -708,22 +776,23 @@ const s = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 6,
-    color: '#a0aec0',
+    color: '#718096',
     textDecoration: 'none',
     fontSize: 14,
     marginBottom: 28,
   },
   // ── No-results state ──
   emptyCard: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '48px 32px',
     textAlign: 'center',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
   },
   emptyIcon: { fontSize: 48, marginBottom: 16 },
-  emptyTitle: { fontSize: 22, fontWeight: 700, marginBottom: 12 },
-  emptyDesc: { color: '#a0aec0', fontSize: 15, marginBottom: 28, lineHeight: 1.6 },
+  emptyTitle: { fontSize: 22, fontWeight: 700, marginBottom: 12, color: '#1a202c' },
+  emptyDesc: { color: '#718096', fontSize: 15, marginBottom: 28, lineHeight: 1.6 },
   // ── Banner ──
   banner: (type) => ({
     borderRadius: 10,
@@ -732,17 +801,17 @@ const s = {
     fontSize: 14,
     lineHeight: 1.5,
     background: type === 'success'
-      ? 'rgba(16,185,129,0.15)'
+      ? '#dcfce7'
       : type === 'warning'
-        ? 'rgba(245,158,11,0.15)'
-        : 'rgba(252,129,129,0.12)',
-    border: `1px solid ${type === 'success' ? 'rgba(16,185,129,0.4)' : type === 'warning' ? 'rgba(245,158,11,0.4)' : 'rgba(252,129,129,0.4)'}`,
-    color: type === 'success' ? '#6ee7b7' : type === 'warning' ? '#fcd34d' : '#fc8181',
+        ? '#fef9c3'
+        : '#fee2e2',
+    border: `1px solid ${type === 'success' ? '#bbf7d0' : type === 'warning' ? '#fde68a' : '#fecaca'}`,
+    color: type === 'success' ? '#065f46' : type === 'warning' ? '#92400e' : '#991b1b',
   }),
   // ── Score hero ──
   scoreHero: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '32px',
     marginBottom: 24,
@@ -750,6 +819,7 @@ const s = {
     alignItems: 'center',
     gap: 28,
     flexWrap: 'wrap',
+    boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
   },
   scoreCircle: {
     width: 100,
@@ -762,30 +832,31 @@ const s = {
     justifyContent: 'center',
     flexShrink: 0,
   },
-  scoreNum: { fontSize: 30, fontWeight: 800, lineHeight: 1 },
-  scorePct: { fontSize: 13, opacity: 0.75 },
+  scoreNum: { fontSize: 30, fontWeight: 800, lineHeight: 1, color: '#ffffff' },
+  scorePct: { fontSize: 13, opacity: 0.85, color: '#ffffff' },
   scoreInfo: { flex: 1 },
-  scoreName: { fontSize: 22, fontWeight: 700, marginBottom: 6 },
-  scoreSub: { color: '#a0aec0', fontSize: 14, lineHeight: 1.5 },
+  scoreName: { fontSize: 22, fontWeight: 700, marginBottom: 6, color: '#1a202c' },
+  scoreSub: { color: '#718096', fontSize: 14, lineHeight: 1.5 },
   // ── Dimension bars ──
   dimSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  dimHeading: { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#c7d9f0' },
+  dimHeading: { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#2d3748' },
   dimRow: {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
     marginBottom: 12,
   },
-  dimLabel: { minWidth: 190, fontSize: 13, color: '#c7d9f0' },
+  dimLabel: { minWidth: 190, fontSize: 13, color: '#374151' },
   dimBarWrap: {
     flex: 1,
-    background: 'rgba(255,255,255,0.08)',
+    background: '#e2e8f0',
     borderRadius: 4,
     height: 10,
     overflow: 'hidden',
@@ -797,7 +868,7 @@ const s = {
     borderRadius: 4,
     transition: 'width 0.6s ease',
   }),
-  dimPct: { minWidth: 38, textAlign: 'right', fontSize: 13, color: '#a0aec0' },
+  dimPct: { minWidth: 38, textAlign: 'right', fontSize: 13, color: '#718096' },
   // ── Upgrade section ──
   upgradeHeading: {
     fontSize: 20,
@@ -806,7 +877,7 @@ const s = {
     textAlign: 'center',
   },
   upgradeSubheading: {
-    color: '#a0aec0',
+    color: '#718096',
     fontSize: 14,
     marginBottom: 24,
     textAlign: 'center',
@@ -820,10 +891,11 @@ const s = {
   },
   upgradeCard: (highlight) => ({
     flex: '1 1 240px',
-    background: highlight ? 'rgba(124,58,237,0.12)' : 'rgba(74,144,217,0.1)',
+    background: highlight ? '#faf5ff' : '#f0f7ff',
     border: `1px solid ${highlight ? 'rgba(124,58,237,0.4)' : 'rgba(74,144,217,0.3)'}`,
     borderRadius: 14,
     padding: '24px 22px',
+    boxShadow: highlight ? '0 4px 20px rgba(124,58,237,0.1)' : '0 2px 12px rgba(0,0,0,0.04)',
   }),
   tierIcon: { fontSize: 28, marginBottom: 10 },
   tierBadge: (color) => ({
@@ -838,17 +910,17 @@ const s = {
     marginBottom: 10,
     textTransform: 'uppercase',
   }),
-  tierName: { fontSize: 17, fontWeight: 700, marginBottom: 4 },
-  tierPrice: { fontSize: 26, fontWeight: 800, marginBottom: 2 },
-  tierBilling: { color: '#a0aec0', fontSize: 12, marginBottom: 14 },
-  featureList: { listStyle: 'none', padding: 0, margin: '0 0 20px', fontSize: 13, color: '#c7d9f0', lineHeight: 1.9 },
+  tierName: { fontSize: 17, fontWeight: 700, marginBottom: 4, color: '#1a202c' },
+  tierPrice: { fontSize: 26, fontWeight: 800, marginBottom: 2, color: '#1a202c' },
+  tierBilling: { color: '#718096', fontSize: 12, marginBottom: 14 },
+  featureList: { listStyle: 'none', padding: 0, margin: '0 0 20px', fontSize: 13, color: '#374151', lineHeight: 1.9 },
   checkmark: { color: '#10b981', marginRight: 6 },
   buyBtn: (color, disabled) => ({
     display: 'block',
     width: '100%',
     padding: '11px 0',
-    background: disabled ? 'rgba(255,255,255,0.08)' : color,
-    color: disabled ? '#a0aec0' : '#fff',
+    background: disabled ? '#e2e8f0' : color,
+    color: disabled ? '#718096' : '#fff',
     border: 'none',
     borderRadius: 8,
     fontSize: 14,
@@ -858,15 +930,16 @@ const s = {
   }),
   // ── PDF download section ──
   downloadSection: {
-    background: 'rgba(16,185,129,0.1)',
+    background: '#f0fdf4',
     border: '1px solid rgba(16,185,129,0.3)',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 28,
     textAlign: 'center',
+    boxShadow: '0 2px 12px rgba(16,185,129,0.08)',
   },
-  downloadHeading: { fontSize: 18, fontWeight: 700, marginBottom: 8 },
-  downloadDesc: { color: '#a0aec0', fontSize: 13, marginBottom: 20, lineHeight: 1.5 },
+  downloadHeading: { fontSize: 18, fontWeight: 700, marginBottom: 8, color: '#065f46' },
+  downloadDesc: { color: '#4b5563', fontSize: 13, marginBottom: 20, lineHeight: 1.5 },
   downloadBtn: (loading) => ({
     display: 'inline-flex',
     alignItems: 'center',
@@ -899,7 +972,7 @@ const s = {
     marginTop: 12,
   },
   retakeLink: {
-    color: '#a0aec0',
+    color: '#718096',
     fontSize: 13,
     textDecoration: 'underline',
     cursor: 'pointer',
@@ -909,13 +982,14 @@ const s = {
   },
   // ── Narrative / guidance section ──
   narrativeSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  narrativeHeading: { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#c7d9f0' },
+  narrativeHeading: { fontSize: 15, fontWeight: 700, marginBottom: 16, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
   strengthRow: (color) => ({
     borderLeft: `3px solid ${color}`,
     paddingLeft: 14,
@@ -926,7 +1000,7 @@ const s = {
     fontWeight: 700,
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
-    color: '#a0aec0',
+    color: '#718096',
     marginBottom: 2,
   },
   strengthName: (color) => ({
@@ -937,23 +1011,24 @@ const s = {
   }),
   strengthDesc: {
     fontSize: 13,
-    color: '#c7d9f0',
+    color: '#374151',
     lineHeight: 1.6,
     margin: 0,
   },
   // ── Next steps section ──
   nextStepsSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  nextStepsHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#c7d9f0' },
-  nextStepsIntro: { color: '#a0aec0', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
+  nextStepsHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
+  nextStepsIntro: { color: '#718096', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
   nextStepsCard: (color) => ({
     borderLeft: `4px solid ${color}`,
-    background: 'rgba(255,255,255,0.03)',
+    background: '#f8fafc',
     borderRadius: 8,
     padding: '14px 16px',
     marginBottom: 14,
@@ -965,7 +1040,7 @@ const s = {
     marginBottom: 10,
   },
   nextStepsDimName: (color) => ({ fontSize: 14, fontWeight: 700, color }),
-  nextStepsDimScore: { fontSize: 12, color: '#a0aec0' },
+  nextStepsDimScore: { fontSize: 12, color: '#718096' },
   nextStepsList: { listStyle: 'none', padding: 0, margin: 0 },
   nextStepItem: {
     display: 'flex',
@@ -974,21 +1049,22 @@ const s = {
     alignItems: 'flex-start',
   },
   nextStepIcon: { fontSize: 18, flexShrink: 0, lineHeight: 1.4 },
-  nextStepTitle: { fontSize: 13, fontWeight: 600, color: '#e8f0fe', display: 'block', marginBottom: 2 },
-  nextStepDesc: { fontSize: 12, color: '#a0aec0', lineHeight: 1.5, margin: 0 },
+  nextStepTitle: { fontSize: 13, fontWeight: 600, color: '#1a202c', display: 'block', marginBottom: 2 },
+  nextStepDesc: { fontSize: 12, color: '#718096', lineHeight: 1.5, margin: 0 },
   // ── Reminder opt-in section ──
   reminderSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  reminderHeading: { fontSize: 15, fontWeight: 700, marginBottom: 8, color: '#c7d9f0' },
-  reminderDesc: { color: '#a0aec0', fontSize: 13, marginBottom: 14, lineHeight: 1.5 },
+  reminderHeading: { fontSize: 15, fontWeight: 700, marginBottom: 8, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
+  reminderDesc: { color: '#718096', fontSize: 13, marginBottom: 14, lineHeight: 1.5 },
   reminderCheckRow: { display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 14 },
   reminderCheckbox: { marginTop: 2, accentColor: '#10b981', width: 16, height: 16, cursor: 'pointer', flexShrink: 0 },
-  reminderCheckLabel: { fontSize: 13, color: '#c7d9f0', lineHeight: 1.5, cursor: 'pointer' },
+  reminderCheckLabel: { fontSize: 13, color: '#374151', lineHeight: 1.5, cursor: 'pointer' },
   reminderBtn: (disabled) => ({
     padding: '10px 22px',
     background: disabled ? 'rgba(16,185,129,0.3)' : '#10b981',
@@ -1018,14 +1094,15 @@ const s = {
   },
   // ── Social share section ──
   shareSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  shareHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#c7d9f0' },
-  shareDesc: { color: '#a0aec0', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
+  shareHeading: { fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
+  shareDesc: { color: '#718096', fontSize: 13, marginBottom: 16, lineHeight: 1.5 },
   shareButtons: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -1041,13 +1118,13 @@ const s = {
   },
   shareInstagramHint: {
     fontSize: 12,
-    color: '#a0aec0',
+    color: '#718096',
     lineHeight: 1.5,
     margin: 0,
   },
   // ── Quicklinks / footer nav section ──
   quicklinksSection: {
-    borderTop: '1px solid rgba(255,255,255,0.1)',
+    borderTop: '1px solid #e2e8f0',
     paddingTop: 32,
     marginTop: 8,
     marginBottom: 24,
@@ -1076,7 +1153,7 @@ const s = {
     margin: 0,
   },
   quicklinkAnchor: {
-    color: '#a0aec0',
+    color: '#718096',
     fontSize: 13,
     textDecoration: 'none',
     lineHeight: 2,
@@ -1099,7 +1176,7 @@ const s = {
     flexShrink: 0,
   },
   footerBottom: {
-    borderTop: '1px solid rgba(255,255,255,0.06)',
+    borderTop: '1px solid #e2e8f0',
     paddingTop: 16,
     fontSize: 12,
     color: '#4a5568',
@@ -1108,42 +1185,44 @@ const s = {
   },
   // ── Free Brief Report ──
   freeBriefReport: {
-    background: 'rgba(79,70,229,0.08)',
-    border: '1px solid rgba(79,70,229,0.25)',
+    background: 'rgba(102,126,234,0.06)',
+    border: '1px solid rgba(102,126,234,0.2)',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(102,126,234,0.06)',
   },
-  fbrHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#c7d9f0' },
+  fbrHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
   fbrHint: { fontSize: 12, color: '#718096', marginTop: 12, fontStyle: 'italic', lineHeight: 1.5 },
   // ── Primary Resilience Mode ──
   primaryTypeCard: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.12)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  primaryTypeHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 10 },
+  primaryTypeHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 10 },
   primaryTypeName: (color) => ({
     fontSize: 22,
     fontWeight: 800,
-    color: color || '#e8f0fe',
+    color: color || '#1a202c',
     marginBottom: 10,
   }),
-  primaryTypeDesc: { fontSize: 14, color: '#a0aec0', lineHeight: 1.7, margin: 0 },
+  primaryTypeDesc: { fontSize: 14, color: '#718096', lineHeight: 1.7, margin: 0 },
   // ── Insight Progress Indicator (free users) ──
   insightProgress: {
-    background: 'rgba(79,70,229,0.06)',
-    border: '1px solid rgba(79,70,229,0.2)',
+    background: 'rgba(102,126,234,0.06)',
+    border: '1px solid rgba(102,126,234,0.2)',
     borderRadius: 12,
     padding: '16px 24px',
     marginBottom: 24,
     textAlign: 'center',
   },
-  insightProgressLabel: { fontSize: 13, color: '#a0aec0', marginBottom: 8 },
+  insightProgressLabel: { fontSize: 13, color: '#4a5568', marginBottom: 8 },
   insightProgressBarWrap: {
-    background: 'rgba(255,255,255,0.08)',
+    background: '#e2e8f0',
     borderRadius: 999,
     height: 10,
     overflow: 'hidden',
@@ -1159,14 +1238,15 @@ const s = {
   insightProgressHint: { fontSize: 12, color: '#718096', margin: 0 },
   // ── Personalized Report ──
   reportSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  reportHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#c7d9f0' },
-  reportOverview: { fontSize: 14, color: '#a0aec0', marginBottom: 16, lineHeight: 1.7 },
+  reportHeading: { fontSize: 15, fontWeight: 700, marginBottom: 14, color: '#2d3748', display: 'flex', alignItems: 'center', gap: 8 },
+  reportOverview: { fontSize: 14, color: '#4a5568', marginBottom: 16, lineHeight: 1.7 },
   reportNrSection: (color) => ({
     borderLeft: `3px solid ${color}`,
     paddingLeft: 14,
@@ -1188,28 +1268,29 @@ const s = {
     fontWeight: 700,
   }),
   reportNrName: (color) => ({ fontSize: 15, fontWeight: 700, color, marginBottom: 4 }),
-  reportNrDesc: { fontSize: 13, color: '#c7d9f0', lineHeight: 1.6, marginBottom: 4 },
+  reportNrDesc: { fontSize: 13, color: '#374151', lineHeight: 1.6, marginBottom: 4 },
   reportNrInsight: { fontSize: 12, color: '#718096', fontStyle: 'italic', lineHeight: 1.5, margin: 0 },
-  reportSuggestions: { marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)' },
-  reportSuggestionsTitle: { fontSize: 13, fontWeight: 700, color: '#c7d9f0', marginBottom: 8 },
-  reportSuggestionsList: { listStyle: 'none', padding: 0, margin: 0, fontSize: 13, color: '#a0aec0', lineHeight: 1.9 },
+  reportSuggestions: { marginTop: 16, paddingTop: 14, borderTop: '1px solid #e2e8f0' },
+  reportSuggestionsTitle: { fontSize: 13, fontWeight: 700, color: '#2d3748', marginBottom: 8 },
+  reportSuggestionsList: { listStyle: 'none', padding: 0, margin: 0, fontSize: 13, color: '#4a5568', lineHeight: 1.9 },
   reportSuggestionsLi: { display: 'flex', gap: 8, alignItems: 'flex-start' },
   // ── Deep Analysis locked section ──
   deepAnalysisSection: {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
     position: 'relative',
     overflow: 'hidden',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  deepAnalysisHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 10 },
-  deepAnalysisBlur: { filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none', color: '#a0aec0', fontSize: 13, lineHeight: 1.7 },
+  deepAnalysisHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 10 },
+  deepAnalysisBlur: { filter: 'blur(4px)', userSelect: 'none', pointerEvents: 'none', color: '#4a5568', fontSize: 13, lineHeight: 1.7 },
   deepAnalysisOverlay: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(26,26,46,0.7)',
+    background: 'rgba(255,255,255,0.9)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1218,8 +1299,8 @@ const s = {
   },
   deepAnalysisOverlayInner: { textAlign: 'center', padding: '24px 32px' },
   deepAnalysisLockIcon: { fontSize: 28, marginBottom: 10 },
-  deepAnalysisOverlayTitle: { fontSize: 16, fontWeight: 700, color: '#e8f0fe', marginBottom: 8 },
-  deepAnalysisOverlayDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.6 },
+  deepAnalysisOverlayTitle: { fontSize: 16, fontWeight: 700, color: '#1a202c', marginBottom: 8 },
+  deepAnalysisOverlayDesc: { fontSize: 13, color: '#4a5568', marginBottom: 16, lineHeight: 1.6 },
   deepAnalysisUnlockBtn: (loading) => ({
     padding: '10px 24px',
     background: loading ? 'rgba(74,144,217,0.4)' : '#4a90d9',
@@ -1232,15 +1313,16 @@ const s = {
   }),
   // ── Email section ──
   emailSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
     textAlign: 'center',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  emailHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
-  emailDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  emailHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' },
+  emailDesc: { fontSize: 13, color: '#4a5568', marginBottom: 16, lineHeight: 1.5 },
   emailInputRow: {
     display: 'flex',
     gap: 10,
@@ -1252,10 +1334,10 @@ const s = {
     flex: '1 1 220px',
     maxWidth: 320,
     padding: '10px 14px',
-    background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.15)',
+    background: '#ffffff',
+    border: '1px solid #d1d5db',
     borderRadius: 8,
-    color: '#e8f0fe',
+    color: '#1a202c',
     fontSize: 14,
     outline: 'none',
   },
@@ -1278,17 +1360,18 @@ const s = {
   }),
   // ── Evidence-based practices ──
   practicesSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  practicesHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
-  practicesSubheading: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  practicesHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 },
+  practicesSubheading: { fontSize: 13, color: '#4a5568', marginBottom: 16, lineHeight: 1.5 },
   practiceCard: (color) => ({
     borderLeft: `4px solid ${color}`,
-    background: 'rgba(255,255,255,0.03)',
+    background: '#f8fafc',
     borderRadius: 8,
     padding: '16px 18px',
     marginBottom: 14,
@@ -1300,11 +1383,11 @@ const s = {
     marginBottom: 8,
   },
   practiceEmoji: { fontSize: 20, flexShrink: 0 },
-  practiceTitle: { fontSize: 14, fontWeight: 700, color: '#e8f0fe', flex: 1 },
+  practiceTitle: { fontSize: 14, fontWeight: 700, color: '#1a202c', flex: 1 },
   practiceTags: { display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' },
   practiceTag: {
-    background: 'rgba(255,255,255,0.08)',
-    color: '#a0aec0',
+    background: '#f1f5f9',
+    color: '#4a5568',
     borderRadius: 4,
     padding: '2px 8px',
     fontSize: 11,
@@ -1325,52 +1408,54 @@ const s = {
     fontWeight: 700,
     letterSpacing: '0.04em',
   }),
-  practiceSteps: { listStyle: 'decimal', paddingLeft: 18, margin: '0 0 10px', fontSize: 12, color: '#a0aec0', lineHeight: 2 },
+  practiceSteps: { listStyle: 'decimal', paddingLeft: 18, margin: '0 0 10px', fontSize: 12, color: '#4a5568', lineHeight: 2 },
   // ── Affirmations section ──
   affirmationsSection: {
-    background: 'rgba(124,58,237,0.06)',
+    background: 'rgba(124,58,237,0.05)',
     border: '1px solid rgba(124,58,237,0.2)',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(124,58,237,0.06)',
   },
-  affirmationsHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 4 },
-  affirmationsSubtitle: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  affirmationsHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 },
+  affirmationsSubtitle: { fontSize: 13, color: '#4a5568', marginBottom: 16, lineHeight: 1.5 },
   affirmationDailyWidget: {
-    background: 'rgba(124,58,237,0.12)',
-    border: '1px solid rgba(124,58,237,0.3)',
+    background: 'rgba(124,58,237,0.08)',
+    border: '1px solid rgba(124,58,237,0.25)',
     borderRadius: 10,
     padding: '16px 20px',
     marginBottom: 16,
     textAlign: 'center',
   },
-  affirmationDailyTitle: { fontSize: 12, fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 },
-  affirmationDailyText: { fontSize: 15, color: '#e8f0fe', lineHeight: 1.7, fontStyle: 'italic', margin: 0 },
+  affirmationDailyTitle: { fontSize: 12, fontWeight: 700, color: '#6d28d9', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' },
+  affirmationDailyText: { fontSize: 15, color: '#1a202c', lineHeight: 1.7, fontStyle: 'italic', margin: 0 },
   affirmationCardsGrid: {
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
   },
   affirmationCard: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e8e0ff',
     borderRadius: 10,
     padding: '14px 18px',
     fontSize: 13,
-    color: '#c7d9f0',
+    color: '#374151',
     lineHeight: 1.65,
     fontStyle: 'italic',
   },
   // ── Invite colleagues ──
   inviteSection: {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: '#ffffff',
+    border: '1px solid #e2e8f0',
     borderRadius: 14,
     padding: '24px 28px',
     marginBottom: 24,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
   },
-  inviteHeading: { fontSize: 15, fontWeight: 700, color: '#c7d9f0', marginBottom: 6 },
-  inviteDesc: { fontSize: 13, color: '#a0aec0', marginBottom: 16, lineHeight: 1.5 },
+  inviteHeading: { fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 },
+  inviteDesc: { fontSize: 13, color: '#4a5568', marginBottom: 16, lineHeight: 1.5 },
   inviteForm: {
     display: 'flex',
     gap: 10,
@@ -1380,10 +1465,10 @@ const s = {
     flex: '1 1 220px',
     maxWidth: 300,
     padding: '10px 14px',
-    background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.15)',
+    background: '#ffffff',
+    border: '1px solid #d1d5db',
     borderRadius: 8,
-    color: '#e8f0fe',
+    color: '#1a202c',
     fontSize: 14,
     outline: 'none',
   },
@@ -1415,12 +1500,12 @@ const s = {
     alignItems: 'flex-start',
     gap: 12,
     fontSize: 13,
-    color: '#a0aec0',
+    color: '#4a5568',
     lineHeight: 1.6,
   },
   privacyIcon: { fontSize: 18, flexShrink: 0 },
   privacyText: { margin: 0 },
-  privacyLink: { color: '#6ee7b7', textDecoration: 'underline' },
+  privacyLink: { color: '#059669', textDecoration: 'underline' },
 };
 
 // ── Social share URLs ──────────────────────────────────────────────────────
@@ -1503,9 +1588,9 @@ function socialFollowBtnStyle(bg, hovered) {
     alignItems: 'center',
     gap: 6,
     padding: '7px 13px',
-    background: hovered ? bg : 'rgba(255,255,255,0.07)',
-    color: hovered ? '#fff' : '#a0aec0',
-    border: `1px solid ${hovered ? bg : 'rgba(255,255,255,0.12)'}`,
+    background: hovered ? bg : '#f8fafc',
+    color: hovered ? '#fff' : '#4a5568',
+    border: `1px solid ${hovered ? bg : '#e2e8f0'}`,
     borderRadius: 20,
     fontSize: 12,
     fontWeight: 600,
@@ -2306,12 +2391,12 @@ export default function ResultsPage() {
             </div>
             <p style={s.scoreSub}>
               Your resilience system reveals how you adapt, recover, and grow through challenge.{' '}
-              You demonstrate a <strong style={{ color: '#e8f0fe' }}>{level}</strong> resilience
+              You demonstrate a <strong style={{ color: '#2d3748' }}>{level}</strong> resilience
               foundation.{' '}
               {rankedDims[0] && (
                 <>
                   Your primary strength is{' '}
-                  <strong style={{ color: DIM_COLORS[rankedDims[0][0]] || '#e8f0fe' }}>
+                  <strong style={{ color: DIM_COLORS[rankedDims[0][0]] || '#667eea' }}>
                     {rankedDims[0][0]}
                   </strong>
                   {' '}({Math.round(rankedDims[0][1].percentage)}%).
@@ -2323,7 +2408,7 @@ export default function ResultsPage() {
 
         {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
         <div style={s.freeBriefReport} role="region" aria-label="Your Resilience Snapshot">
-          <div style={s.fbrHeading}>📊 Your Resilience Snapshot</div>
+          <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Snapshot</div>
           {rankedDims.map(([dim, score]) => {
             const pct   = Math.round(score.percentage);
             const color = DIM_COLORS[dim] || '#667eea';
@@ -2365,24 +2450,25 @@ export default function ResultsPage() {
 
         {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
         <section style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
           borderRadius: 16,
           padding: '28px 20px 20px',
           marginBottom: 24,
           textAlign: 'center',
+          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
         }} aria-labelledby="radarHeading">
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', marginBottom: 4, letterSpacing: 0.3 }} id="radarHeading">
-            🧭 Your Resilience Compass
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
+            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
           </div>
-          <p style={{ fontSize: 13, color: '#a0aec0', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
           </p>
-          <BrandCompass scores={results.scores} darkMode={true} />
+          <BrandCompass scores={results.scores} darkMode={false} />
           {dominantType && (
-            <p style={{ fontSize: 13, color: '#a0aec0', marginTop: 14 }}>
+            <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
               Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong>
+              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
             </p>
           )}
         </section>
@@ -2401,7 +2487,7 @@ export default function ResultsPage() {
         {/* ── Core Strengths Grid ───────────────────────────────────── */}
         {rankedDims.length >= 3 && (
           <div style={s.narrativeSection}>
-            <div style={s.narrativeHeading}>🗺️ Your Core Resilience Strengths</div>
+            <div style={s.narrativeHeading}><BrandIcon name="map" size={17} color="#0891B2" /> Your Core Resilience Strengths</div>
             {[
               { label: 'Primary Strength', dimEntry: rankedDims[0] },
               { label: 'Solid Strength',   dimEntry: rankedDims[1] },
@@ -2430,9 +2516,9 @@ export default function ResultsPage() {
         {/* ── Personalized Report (narrative analysis) ─────────────── */}
         {rankedDims.length >= 3 && (
           <section style={s.reportSection} aria-labelledby="reportHeading">
-            <div style={s.reportHeading} id="reportHeading">📝 Your Personalized Report</div>
+            <div style={s.reportHeading} id="reportHeading"><BrandIcon name="document" size={17} color="#667eea" /> Your Personalized Report</div>
             <p style={s.reportOverview}>
-              Your overall resilience score is <strong style={{ color: '#e8f0fe' }}>{results.overall}%</strong> — a{' '}
+              Your overall resilience score is <strong style={{ color: '#2d3748' }}>{results.overall}%</strong> — a{' '}
               {level === 'strong' ? 'strong foundation' : level === 'solid' ? 'solid foundation' : level === 'developing' ? 'developing foundation' : 'emerging foundation'}{' '}
               across six key dimensions.
             </p>
@@ -2604,7 +2690,7 @@ export default function ResultsPage() {
 
         {/* ── Email Report Section ──────────────────────────────────── */}
         <section style={s.emailSection} aria-labelledby="emailHeading">
-          <div style={s.emailHeading} id="emailHeading">✉️ Email Your Report</div>
+          <div style={s.emailHeading} id="emailHeading"><BrandIcon name="mail" size={17} color="#0891B2" /> Email Your Report</div>
           <p style={s.emailDesc}>
             Send your resilience profile to your inbox for future reference.
           </p>
@@ -2636,9 +2722,9 @@ export default function ResultsPage() {
         {/* ── Evidence-Based Practices ──────────────────────────────── */}
         {dominantType && EVIDENCE_PRACTICES[dominantType] && (
           <section style={s.practicesSection} aria-labelledby="practicesHeading">
-            <div style={s.practicesHeading} id="practicesHeading">🔬 Evidence-Based Micro-Practices</div>
+            <div style={s.practicesHeading} id="practicesHeading"><BrandIcon name="flask" size={17} color="#10b981" /> Evidence-Based Micro-Practices</div>
             <p style={s.practicesSubheading}>
-              Practices for <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong> —
+              Practices for <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong> —
               grounded in Acceptance and Commitment Therapy (ACT) and Applied Behavior Analysis (ABA).
             </p>
             {EVIDENCE_PRACTICES[dominantType].map((practice) => {
@@ -2674,7 +2760,7 @@ export default function ResultsPage() {
         {/* ── Personalized Next Steps ──────────────────────────────── */}
         {rankedDims.length > 0 && (
           <div style={s.nextStepsSection}>
-            <div style={s.nextStepsHeading}>🎯 Your Personalized Next Steps</div>
+            <div style={s.nextStepsHeading}><BrandIcon name="target" size={17} color="#f59e0b" /> Your Personalized Next Steps</div>
             <p style={s.nextStepsIntro}>
               {rankedDims.length === 1
                 ? 'Here are actionable practices to build your resilience:'
@@ -2711,10 +2797,10 @@ export default function ResultsPage() {
         {/* ── Resilience Affirmations ───────────────────────────────── */}
         {dominantType && AFFIRMATIONS[dominantType] && (
           <section style={s.affirmationsSection} aria-labelledby="affirmationsHeading">
-            <div style={s.affirmationsHeading} id="affirmationsHeading">✨ Your Resilience Affirmations</div>
+            <div style={s.affirmationsHeading} id="affirmationsHeading"><BrandIcon name="sparkle" size={17} color="#7c3aed" /> Your Resilience Affirmations</div>
             <p style={s.affirmationsSubtitle}>
               Strength statements aligned with your{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#e8f0fe' }}>{dominantType}</strong> resilience profile.
+              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong> resilience profile.
             </p>
             <p style={{ fontSize: 11, color: '#4a5568', marginBottom: 14, lineHeight: 1.5 }}>
               ℹ️ <strong style={{ color: '#718096' }}>Educational Note:</strong> These affirmations support self-reflection and psychological flexibility.
@@ -2723,7 +2809,7 @@ export default function ResultsPage() {
             {/* Daily affirmation widget */}
             {AFFIRMATIONS[dominantType][0] && (
               <div style={s.affirmationDailyWidget}>
-                <div style={s.affirmationDailyTitle}>🌟 Your Affirmation for Today</div>
+                <div style={s.affirmationDailyTitle}><BrandIcon name="star" size={14} color="#6d28d9" /> Your Affirmation for Today</div>
                 <blockquote style={s.affirmationDailyText}>
                   &ldquo;{AFFIRMATIONS[dominantType][0]}&rdquo;
                 </blockquote>
@@ -2743,7 +2829,7 @@ export default function ResultsPage() {
         {/* ── Reminder Opt-In ──────────────────────────────────────── */}
         {results && (results.email || localStorage.getItem('resilience_email')) && !reminderDone && (
           <div style={s.reminderSection} aria-labelledby="reminderOptInHeading">
-            <div style={s.reminderHeading} id="reminderOptInHeading">🔔 Set a Reassessment Reminder</div>
+            <div style={s.reminderHeading} id="reminderOptInHeading"><BrandIcon name="bell" size={17} color="#10b981" /> Set a Reassessment Reminder</div>
             <p style={s.reminderDesc}>
               Resilience grows over time. Would you like a reminder to retake the assessment in 30 days
               to track your progress?
@@ -2779,7 +2865,7 @@ export default function ResultsPage() {
         {/* ── Social Sharing + Quicklinks ───────────────────────────── */}
         {results && (
           <section style={s.shareSection} aria-labelledby="shareResultsHeading">
-            <div style={s.shareHeading} id="shareResultsHeading">📣 Share Your Resilience Dimension</div>
+            <div style={s.shareHeading} id="shareResultsHeading"><BrandIcon name="megaphone" size={17} color="#0891B2" /> Share Your Resilience Dimension</div>
             <p style={s.shareDesc}>
               Discovered your strongest dimension? Share it and invite others to map theirs.
             </p>
@@ -2844,7 +2930,7 @@ export default function ResultsPage() {
                 href={SOCIAL_URLS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#a0aec0' }}
+                style={{ color: '#718096' }}
               >
                 @atlas.resilience
               </a>!
@@ -2854,7 +2940,7 @@ export default function ResultsPage() {
 
         {/* ── Invite Colleagues ─────────────────────────────────────── */}
         <section style={s.inviteSection} aria-labelledby="inviteHeading">
-          <div style={s.inviteHeading} id="inviteHeading">👥 Compare with Your Team</div>
+          <div style={s.inviteHeading} id="inviteHeading"><BrandIcon name="users" size={17} color="#667eea" /> Compare with Your Team</div>
           <p style={s.inviteDesc}>
             Invite a colleague to take the assessment and compare your Six Dimensions of Resilience profiles.
           </p>
@@ -2888,7 +2974,7 @@ export default function ResultsPage() {
         <div style={s.privacyGuarantee} role="note" aria-label="Data privacy guarantee">
           <span style={s.privacyIcon}>🔒</span>
           <p style={s.privacyText}>
-            <strong style={{ color: '#e8f0fe' }}>You control your data.</strong>{' '}
+            <strong style={{ color: '#2d3748' }}>You control your data.</strong>{' '}
             Delete your account and results anytime —{' '}
             <a href="/privacy" style={s.privacyLink}>Learn about data control</a>.
           </p>
