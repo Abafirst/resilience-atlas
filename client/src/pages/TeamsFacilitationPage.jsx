@@ -516,10 +516,62 @@ export default function TeamsFacilitationPage() {
             <strong>Need resources?</strong><br />
             Download printable guides at <a href="/teams/resources" style={{ color: '#1d4ed8', fontWeight: 600 }}>the resource library →</a>
           </div>
+          <div style={{ marginTop: '1rem', padding: '.85rem 1rem', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: 8, fontSize: '.85rem', color: '#92400e' }}>
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14, verticalAlign: 'middle', marginRight: 4 }} />
+            <strong>Teams tier required</strong> for downloadable PDF guides and workshop materials.
+            <a
+              href="/pricing-teams"
+              style={{ display: 'block', marginTop: '.5rem', color: '#1d4ed8', fontWeight: 700, textDecoration: 'none' }}
+            >
+              Unlock with a Teams plan →
+            </a>
+          </div>
         </aside>
 
         {/* Content */}
         <div>
+          {/* Tier unlock notice */}
+          <div
+            role="region"
+            aria-label="Teams tier required"
+            style={{
+              background: 'linear-gradient(135deg,#1e3a8a,#4338ca)',
+              borderRadius: 12,
+              padding: '1.25rem 1.5rem',
+              marginBottom: '1.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              flexWrap: 'wrap',
+            }}
+          >
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 24, height: 24, flexShrink: 0, filter: 'brightness(0) invert(1)' }} />
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <p style={{ color: '#fff', fontWeight: 700, fontSize: '.97rem', margin: '0 0 .2rem' }}>
+                Teams Tier Required for Downloadable Guides
+              </p>
+              <p style={{ color: 'rgba(255,255,255,.78)', fontSize: '.87rem', margin: 0 }}>
+                The content on this page is a free preview. PDF facilitation guides and workshop materials are included with Atlas Team Basic and above.
+              </p>
+            </div>
+            <a
+              href="/pricing-teams"
+              style={{
+                background: '#fff',
+                color: '#1e3a8a',
+                fontWeight: 700,
+                fontSize: '.9rem',
+                padding: '.55rem 1.2rem',
+                borderRadius: 8,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+              }}
+            >
+              View Plans &amp; Unlock
+            </a>
+          </div>
+
           {SECTIONS.map(sec => (
             <section
               key={sec.id}
