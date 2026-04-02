@@ -847,7 +847,7 @@ export default function TeamsLandingPage() {
     <div className="handouts-grid">
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128196;</div>
+        <div className="handout-icon" aria-hidden="true">🧭</div>
         <div className="handout-body">
           <div className="handout-title">Six Dimensions Quick Reference</div>
           <p className="handout-desc">A one-page overview of all six resilience dimensions with definitions, archetypes, and key signals. Perfect for workshop prep or team onboarding.</p>
@@ -856,7 +856,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#127919;</div>
+        <div className="handout-icon" aria-hidden="true">🗺️</div>
         <div className="handout-body">
           <div className="handout-title">Team Resilience Workshop Agenda</div>
           <p className="handout-desc">A 90-minute structured workshop agenda with timing, talking points, and debrief questions. Designed for HR facilitators and team leads.</p>
@@ -865,7 +865,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128202;</div>
+        <div className="handout-icon" aria-hidden="true">📡</div>
         <div className="handout-body">
           <div className="handout-title">Team Dashboard Interpretation Guide</div>
           <p className="handout-desc">How to read and discuss your team's aggregated radar chart. Includes facilitation questions and action-planning prompts for each dimension.</p>
@@ -874,7 +874,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#129488;</div>
+        <div className="handout-icon" aria-hidden="true">🪞</div>
         <div className="handout-body">
           <div className="handout-title">Individual Reflection Worksheet</div>
           <p className="handout-desc">A fillable worksheet for participants to use before or after taking the assessment. Includes personal scoring, dimension reflections, and goal-setting prompts.</p>
@@ -883,7 +883,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128170;</div>
+        <div className="handout-icon" aria-hidden="true">🛡️</div>
         <div className="handout-body">
           <div className="handout-title">Resilience Under Pressure Card</div>
           <p className="handout-desc">A pocket-sized reference card with grounding techniques, reframing prompts, and regulation strategies for each dimension — for use in real-time high-stress moments.</p>
@@ -892,7 +892,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128221;</div>
+        <div className="handout-icon" aria-hidden="true">⚓</div>
         <div className="handout-body">
           <div className="handout-title">Team Values Charter Template</div>
           <p className="handout-desc">A structured template for teams to document their shared values, working principles, and resilience commitments — for display, onboarding, and quarterly review.</p>
@@ -901,7 +901,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128269;</div>
+        <div className="handout-icon" aria-hidden="true">🔭</div>
         <div className="handout-body">
           <div className="handout-title">Dimension Signals Observer Sheet</div>
           <p className="handout-desc">A tool for managers and coaches to observe and recognize resilience dimension signals in team members' behavior — useful for coaching conversations and performance support.</p>
@@ -910,7 +910,7 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">&#128640;</div>
+        <div className="handout-icon" aria-hidden="true">🏔️</div>
         <div className="handout-body">
           <div className="handout-title">90-Day Resilience Action Plan</div>
           <p className="handout-desc">A structured plan template for individuals and teams to set resilience development goals, identify support, and track progress across a quarter.</p>
