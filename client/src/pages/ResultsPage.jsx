@@ -2161,14 +2161,16 @@ export default function ResultsPage() {
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const scale = 2; // render at 2× for sharper output
-        canvas.width  = svg.width.baseVal.value  * scale || 680;
-        canvas.height = svg.height.baseVal.value * scale || 680;
+        const svgW = svg.width.baseVal.value  || 340;
+        const svgH = svg.height.baseVal.value || 340;
+        canvas.width  = svgW * scale;
+        canvas.height = svgH * scale;
         const ctx = canvas.getContext('2d');
-        ctx.scale(scale, scale);
-        // Fill with the page background so labels are readable
+        // Fill with the page background so labels are readable (before scaling)
         ctx.fillStyle = '#1a1a2e';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0, svgW, svgH);
         URL.revokeObjectURL(url);
         const link = document.createElement('a');
         link.download = 'resilience-atlas-radar.png';
