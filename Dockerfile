@@ -19,7 +19,7 @@ ENV VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY
 RUN npm run build
 
 # Stage 2: Express backend + React static assets
-FROM node:20-slim
+FROM node:20-bullseye
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
