@@ -576,3 +576,56 @@
 .value-chip:hover, .value-chip.selected { background: #059669; color: #fff; border-color: #059669; }
 
 .value-result { background: #d1fae5; border-radius: 8px; padding: .65rem .9rem; }
+
+/* ── Kids Hero ────────────────────────────────────────────────────────────── */
+.kids-hero {
+  background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 70%, #1e4a6e 100%);
+  color: #fff;
+  padding: 5rem 1.25rem 4rem;
+  text-align: center;
+}
+
+.kids-hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: #4a9eca;
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
+}
+
+.kids-hero p {
+  font-size: 1.1rem;
+  color: #a8c4d8;
+  max-width: 640px;
+  margin: 0 auto 1.75rem;
+  line-height: 1.7;
+}
+
+.kids-hero .btn-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, #4a9eca, #2563eb);
+  color: #fff;
+  padding: .85rem 2.25rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: opacity .2s, transform .15s;
+  border: none;
+  cursor: pointer;
+}
+
+.kids-hero .btn-cta:hover {
+  opacity: .9;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .kids-hero {
+    padding: 3rem 1.25rem 2.5rem;
+  }
+
+  .kids-hero h1 {
+    font-size: 1.75rem;
+  }
+}
