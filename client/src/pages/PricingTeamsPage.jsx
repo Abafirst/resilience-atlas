@@ -392,14 +392,24 @@ export default function PricingTeamsPage() {
 
 
   {/* ── Navigation ─────────────────────────────────────────────────────────── */}
-  <nav style={{ background: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0.875rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-    <a href="/" style={{ fontWeight: 700, color: '#1a2e5a', textDecoration: 'none', fontSize: '0.95rem' }}>The Resilience Atlas™</a>
-    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-      <a href="/quiz" style={{ fontSize: '0.875rem', color: '#64748b', textDecoration: 'none' }}>Take Assessment</a>
-      <a href="/dashboard-advanced" style={{ fontSize: '0.875rem', color: '#64748b', textDecoration: 'none' }}>Dashboard</a>
-      <button className="btn btn--primary btn--sm" type="button" onClick={() => scrollToPlans()}>View Plans</button>
+  <header className="site-header" role="banner">
+    <div className="header-inner">
+      <a className="logo" href="/">
+        <div className="logo-icon" aria-hidden="true">
+          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36" />
+        </div>
+        The Resilience Atlas&#8482;
+      </a>
+      <nav className="header-nav" aria-label="Main navigation">
+        <a href="/" className="nav-link">Home</a>
+        <a href="/assessment" className="nav-link">Assessment</a>
+        <a href="/teams" className="nav-link active">Teams</a>
+        <a href="/about" className="nav-link">About</a>
+        <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+        <button className="btn btn-primary" type="button" onClick={() => scrollToPlans()}>View Plans</button>
+      </nav>
     </div>
-  </nav>
+  </header>
 
   {/* ── Header ─────────────────────────────────────────────────────────────── */}
   <header className="pricing-header">
@@ -594,12 +604,13 @@ export default function PricingTeamsPage() {
         <tr><td>Custom logo &amp; colors</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
         <tr><td>Custom assessment intro</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
         <tr><td>SSO / SAML</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
-        <tr><td>Self-service data export</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Self-service data export (CSV, PDF, ZIP)</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
 
-        <tr className="category-row"><td colSpan="4">Support</td></tr>
-        <tr><td>Email support</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
-        <tr><td>Priority support</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="dash">—</span></td></tr>
-        <tr><td>Self-service admin resources</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
+        <tr className="category-row"><td colSpan="4">Data &amp; Privacy</td></tr>
+        <tr><td>Self-service team management</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Download all your data anytime</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>No data tracking or retention on our end</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Enterprise email support (access issues)</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
       </tbody>
     </table>
   </section>
@@ -645,7 +656,7 @@ export default function PricingTeamsPage() {
 
     <details className="faq-item">
       <summary>Is our assessment data private and secure?</summary>
-      <p>Yes. All data is encrypted in transit and at rest. Individual member scores are never shared with other organizations. Aggregated team reports anonymise individual responses. We are GDPR-compliant.</p>
+      <p>Yes. All data is encrypted in transit and at rest. Individual member scores are never shared with other organizations. Aggregated team reports anonymize individual responses. Teams are responsible for managing and exporting their own data — we do not track or retain analytics on your behalf. <a href="/privacy" style={{ color: '#4F46E5' }}>Learn about our data model →</a></p>
     </details>
 
     <details className="faq-item">
@@ -654,11 +665,43 @@ export default function PricingTeamsPage() {
     </details>
   </section>
 
-  {/* ── Scripts ────────────────────────────────────────────────────────────── */}
-  
-  
+  {/* ── Self-Service Data Note ─────────────────────────────────────────────── */}
+  <section style={{ background: '#f0fdf4', borderTop: '1px solid #bbf7d0', padding: '1.5rem', textAlign: 'center' }}>
+    <p style={{ fontSize: '.9rem', color: '#166534', margin: 0, lineHeight: 1.7 }}>
+      🔒 <strong>Self-service platform.</strong> All tiers include data export (CSV, PDF, ZIP).
+      Teams manage their own data — we don't track or retain analytics on your end.{' '}
+      <a href="/privacy" style={{ color: '#15803d', fontWeight: 700 }}>Learn about our data model →</a>
+    </p>
+  </section>
 
-
+  {/* ── Footer ─────────────────────────────────────────────────────────────── */}
+  <footer className="site-footer" role="contentinfo">
+    <nav className="footer-nav" aria-label="Footer navigation">
+      <div className="footer-nav-group">
+        <strong className="footer-nav-heading">Assessment</strong>
+        <a href="/assessment">About the Assessment</a>
+        <a href="/quiz">Take the Quiz</a>
+      </div>
+      <div className="footer-nav-group">
+        <strong className="footer-nav-heading">Teams</strong>
+        <a href="/teams">Teams Overview</a>
+        <a href="/pricing-teams" aria-current="page">Pricing</a>
+        <a href="/teams/resources">Resources</a>
+      </div>
+      <div className="footer-nav-group">
+        <strong className="footer-nav-heading">Company</strong>
+        <a href="/about">About</a>
+        <a href="/founder">Founder</a>
+      </div>
+      <div className="footer-nav-group">
+        <strong className="footer-nav-heading">Legal</strong>
+        <a href="/privacy">Privacy &amp; Data Control</a>
+      </div>
+    </nav>
+    <div className="footer-bottom">
+      <p>&copy; {new Date().getFullYear()} The Resilience Atlas&#8482;</p>
+    </div>
+  </footer>
 
     </>
   );

@@ -2900,7 +2900,7 @@ export default function ResultsPage() {
           <p style={s.privacyText}>
             <strong style={{ color: '#e8f0fe' }}>You control your data.</strong>{' '}
             Delete your account and results anytime —{' '}
-            <a href="/about.html#privacy" style={s.privacyLink}>learn more about our privacy commitment</a>.
+            <a href="/privacy" style={s.privacyLink}>Learn about data control</a>.
           </p>
         </div>
 
@@ -2935,6 +2935,7 @@ export default function ResultsPage() {
                 <li><a href="/about.html" style={s.quicklinkAnchor}>About</a></li>
                 <li><a href="/founder.html" style={s.quicklinkAnchor}>Our Founder</a></li>
                 <li><a href="/research.html" style={s.quicklinkAnchor}>Research</a></li>
+                <li><a href="/privacy" style={s.quicklinkAnchor}>Privacy &amp; Data</a></li>
               </ul>
             </div>
           </div>

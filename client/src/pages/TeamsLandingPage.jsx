@@ -421,7 +421,11 @@ export default function TeamsLandingPage() {
     <div className="section-header" style={{ marginBottom: '2.5rem' }}>
       <span className="section-label">Pricing</span>
       <h2 id="pricingHeading">Plans for Every Team</h2>
-      <p style={{ color: '#475569', margin: '0.5rem auto 0', maxWidth: '520px', fontSize: '1rem', lineHeight: 1.6 }}>Choose the plan that fits your organization. All plans include the full Six Dimensions assessment for every team member.</p>
+      <p style={{ color: '#475569', margin: '0.5rem auto 0', maxWidth: '580px', fontSize: '1rem', lineHeight: 1.6 }}>
+        Choose the plan that fits your organization. All plans are self-service — teams manage their own data, exports, and members.
+        No ongoing data management required on our end.{' '}
+        <a href="/privacy" style={{ color: '#4F46E5', fontWeight: 600 }}>Learn about our data model →</a>
+      </p>
     </div>
     <div className="team-pricing-grid">
 
@@ -440,8 +444,9 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> 1 team</li>
           <li><span aria-hidden="true">&#10003;</span> Team dashboard</li>
           <li><span aria-hidden="true">&#10003;</span> Aggregated radar chart</li>
-          <li><span aria-hidden="true">&#10003;</span> CSV export</li>
+          <li><span aria-hidden="true">&#10003;</span> Self-service CSV &amp; PDF export</li>
           <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
+          <li><span aria-hidden="true">&#10003;</span> Download all your data anytime</li>
         </ul>
         <button className="ttc-btn ttc-btn--primary" type="button" onClick={() => startTeamCheckout('starter')}>
           Get Started — $299 one-time
@@ -462,10 +467,11 @@ export default function TeamsLandingPage() {
         <ul className="ttc-features" aria-label="Atlas Team Premium features">
           <li><span aria-hidden="true">&#10003;</span> Up to 30 users</li>
           <li><span aria-hidden="true">&#10003;</span> Multiple teams</li>
-          <li><span aria-hidden="true">&#10003;</span> Advanced analytics</li>
-          <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports</li>
-          <li><span aria-hidden="true">&#10003;</span> Facilitation tools</li>
+          <li><span aria-hidden="true">&#10003;</span> Advanced analytics (downloadable)</li>
+          <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports (PDF)</li>
+          <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library</li>
           <li><span aria-hidden="true">&#10003;</span> Everything in Basic</li>
+          <li><span aria-hidden="true">&#10003;</span> Self-service team management</li>
         </ul>
         <button className="ttc-btn ttc-btn--featured" type="button" onClick={() => startTeamCheckout('pro')}>
           Get Started — $699 one-time
@@ -1009,6 +1015,7 @@ export default function TeamsLandingPage() {
       <div className="footer-nav-group">
         <strong className="footer-nav-heading">Company</strong>
         <a href="/about">About</a>
+        <a href="/privacy">Privacy &amp; Data Control</a>
       </div>
     </nav>
     <div className="footer-bottom">
