@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { ARENA_QUESTIONS } from '../../data/kidsGameChallenges';
-import { KIDS_CHARACTERS } from '../../data/kidsActivities';
 
 const CHARACTERS_FOR_ARENA = [
   { name: 'Kai — The Builder',     color: '#fef9c3', accentColor: '#854d0e', emoji: '🔨' },

@@ -27,6 +27,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
   });
   const [results, setResults] = useState([]);
   const timerRef = useRef(null);
+  const handleAnswerRef = useRef(null);
 
   const startGame = useCallback(() => {
     const shuffled = shuffle(NAVIGATOR_CHALLENGES).slice(0, ROUND_SIZE);
@@ -41,23 +42,6 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
     setResults([]);
     setView('playing');
   }, []);
-
-  // Timer
-  useEffect(() => {
-    if (view !== 'playing' || answered) return;
-    timerRef.current = setInterval(() => {
-      setTimeLeft(t => {
-        if (t <= 1) {
-          clearInterval(timerRef.current);
-          // Time up — auto-advance
-          handleAnswer(null, true);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [view, questionIdx, answered]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswer = useCallback((optionIdx, timedOut = false) => {
     clearInterval(timerRef.current);
@@ -107,6 +91,27 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
       }
     }, 1500);
   }, [questions, questionIdx, score, onEarnBadge]);
+
+  // Keep ref in sync so timer can call latest version without stale closure
+  useEffect(() => {
+    handleAnswerRef.current = handleAnswer;
+  }, [handleAnswer]);
+
+  // Timer
+  useEffect(() => {
+    if (view !== 'playing' || answered) return;
+    timerRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(timerRef.current);
+          handleAnswerRef.current(null, true);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [view, questionIdx, answered]);
 
   if (view === 'intro') {
     return (
