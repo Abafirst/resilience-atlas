@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import SiteHeader from '../components/SiteHeader.jsx';
 
 const styles = `
     .insights-hero {
@@ -85,22 +86,13 @@ export default function InsightsPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
 
-      <header className="site-header">
-        <div className="header-inner">
-          <a className="logo" href="/">
-            <div className="logo-icon" aria-hidden="true">
-              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36" />
-            </div>
-            The Resilience Atlas&#8482;
-          </a>
-          <nav aria-label="Main navigation" style={{display:'flex',alignItems:'center',gap:'1rem'}}>
-            <a href="/insights" style={{fontSize:'.92rem',color:'#4F46E5',fontWeight:'600'}}>Insights</a>
-            <a href="/teams" style={{fontSize:'.92rem',color:'var(--slate-600)',fontWeight:'500'}}>For Teams</a>
-            <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
-            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader
+        activePage="insights"
+        navItems={[
+          { href: '/insights', label: 'Insights', key: 'insights' },
+          { href: '/teams', label: 'For Teams', key: 'teams' },
+        ]}
+      />
 
       <section className="insights-hero" aria-label="Insights hub hero">
         <span className="hero-eyebrow">Knowledge Hub</span>

@@ -55,40 +55,7 @@ a:hover { text-decoration: underline; }
 .skip-link:focus { left: 8px; }
 
 /* ── Header ───────────────────────────────────────────────────── */
-.site-header {
-  background: var(--research-white);
-  border-bottom: 1px solid var(--research-slate-200);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;
-  padding: 0 1.25rem;
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--research-slate-900);
-  text-decoration: none;
-}
-.logo:hover { text-decoration: none; }
-
-.logo-icon { display: flex; align-items: center; }
-.logo-icon img { width: 36px; height: 36px; display: block; }
-
-.header-nav { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+/* Header styles are handled by the shared SiteHeader component via styles.css */
 
 /* ── Buttons ──────────────────────────────────────────────────── */
 .btn {
@@ -562,13 +529,11 @@ a:hover { text-decoration: underline; }
   .dimensions-grid { grid-template-columns: 1fr; }
   .foundation-content { grid-template-columns: 1fr; }
   .implications-cards { grid-template-columns: 1fr; }
-  .header-nav { gap: 0.4rem; }
   .btn { padding: 0.5rem 0.9rem; font-size: 0.875rem; }
   .dimensions-bridge-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 400px) {
-  .header-nav .btn-secondary { display: none; }
 }
 
 /* ── Dark Mode ────────────────────────────────────────────────── */
@@ -577,13 +542,6 @@ a:hover { text-decoration: underline; }
   background: #0f172a;
   color: #e2e8f0;
 }
-
-[data-theme="dark"] .site-header {
-  background: #1e293b;
-  border-bottom-color: #334155;
-}
-
-[data-theme="dark"] .logo { color: #f1f5f9; }
 
 [data-theme="dark"] .btn-secondary {
   background: #1e293b;
@@ -637,13 +595,6 @@ a:hover { text-decoration: underline; }
     background: #0f172a;
     color: #e2e8f0;
   }
-
-  :root:not([data-theme="light"]) .site-header {
-    background: #1e293b;
-    border-bottom-color: #334155;
-  }
-
-  :root:not([data-theme="light"]) .logo { color: #f1f5f9; }
 
   :root:not([data-theme="light"]) .btn-secondary {
     background: #1e293b;

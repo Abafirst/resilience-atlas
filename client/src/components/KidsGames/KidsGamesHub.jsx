@@ -274,8 +274,10 @@ export default function KidsGamesHub() {
             );
           })}
         </div>
+      )}
       </div>
     </div>
+  </div>
   );
 }
 

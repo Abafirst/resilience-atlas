@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import SiteHeader from '../components/SiteHeader.jsx';
 
 const styles = `
 
@@ -392,24 +393,16 @@ export default function PricingTeamsPage() {
 
 
   {/* ── Navigation ─────────────────────────────────────────────────────────── */}
-  <header className="site-header" role="banner">
-    <div className="header-inner">
-      <a className="logo" href="/">
-        <div className="logo-icon" aria-hidden="true">
-          <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36" />
-        </div>
-        The Resilience Atlas&#8482;
-      </a>
-      <nav className="header-nav" aria-label="Main navigation">
-        <a href="/" className="nav-link">Home</a>
-        <a href="/assessment" className="nav-link">Assessment</a>
-        <a href="/teams" className="nav-link active">Teams</a>
-        <a href="/about" className="nav-link">About</a>
-        <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
-        <button className="btn btn-primary" type="button" onClick={() => scrollToPlans()}>View Plans</button>
-      </nav>
-    </div>
-  </header>
+  <SiteHeader
+    activePage="teams"
+    navItems={[
+      { href: '/', label: 'Home', key: 'home' },
+      { href: '/assessment', label: 'Assessment', key: 'assessment' },
+      { href: '/teams', label: 'Teams', key: 'teams' },
+      { href: '/about', label: 'About', key: 'about' },
+    ]}
+    ctaButton={<button className="btn btn-primary" type="button" onClick={() => scrollToPlans()}>View Plans</button>}
+  />
 
   {/* ── Header ─────────────────────────────────────────────────────────────── */}
   <header className="pricing-header">
