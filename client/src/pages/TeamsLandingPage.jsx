@@ -399,6 +399,7 @@ export default function TeamsLandingPage() {
     if (!email) {
       const input = window.prompt('Please enter your email address to continue with checkout:');
       if (!input || !input.trim()) {
+        setCheckoutError('An email address is required to start checkout.');
         setCheckoutLoading('');
         return;
       }
