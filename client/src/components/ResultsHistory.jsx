@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const TIER_LABELS = {
+  'atlas-starter': 'Atlas Starter',
   'atlas-navigator': 'Atlas Navigator',
   'atlas-premium': 'Atlas Premium (Lifetime)',
   'starter': 'Atlas Team Basic',
@@ -82,7 +83,7 @@ const styles = {
   },
 };
 
-async function downloadPdfForPurchase(purchase) {
+async function downloadPdfForPurchase(purchase, email) {
   const { assessmentData } = purchase;
   const scoresStr = JSON.stringify(assessmentData.scores);
   const params = new URLSearchParams({
@@ -90,6 +91,7 @@ async function downloadPdfForPurchase(purchase) {
     dominantType: assessmentData.dominantType,
     scores: scoresStr,
   });
+  if (email) params.set('email', email);
 
   const genRes = await fetch(`/api/report/generate?${params.toString()}`);
   if (!genRes.ok) {
@@ -156,7 +158,7 @@ export default function ResultsHistory({ email }) {
     setDownloadingIdx(idx);
     setDownloadError('');
     try {
-      await downloadPdfForPurchase(purchase);
+      await downloadPdfForPurchase(purchase, email);
     } catch (err) {
       setDownloadError(err.message || 'Download failed. Please try again.');
     } finally {
