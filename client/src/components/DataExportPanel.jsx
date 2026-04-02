@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 export default function DataExportPanel({ orgId, token }) {
   const [downloading, setDownloading] = useState(null);
   const [errors, setErrors] = useState({});
-
   async function handleDownload(type) {
     setDownloading(type);
     setErrors(prev => ({ ...prev, [type]: null }));
@@ -86,6 +85,7 @@ export default function DataExportPanel({ orgId, token }) {
 
   return (
     <section aria-labelledby="data-export-heading">
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       <div style={{ marginBottom: '1.25rem' }}>
         <h2
           id="data-export-heading"
