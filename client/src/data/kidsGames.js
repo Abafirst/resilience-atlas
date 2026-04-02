@@ -199,7 +199,7 @@ export const GAME_CARDS = {
     {
       id: 'compass-spinner',
       title: 'Compass Spinner',
-      emoji: '🧭',
+      icon: '/icons/compass.svg',
       ageRange: 'Ages 5–8',
       description: 'Spin the compass and match resilience words! Collect points and earn sticker badges.',
       cta: 'Spin the Compass!',
@@ -209,7 +209,7 @@ export const GAME_CARDS = {
     {
       id: 'map-collector',
       title: 'Map Collector',
-      emoji: '🗺️',
+      icon: '/icons/game-map.svg',
       ageRange: 'Ages 5–8',
       description: 'Tap glowing items on a resilience map! Collect one item from each dimension to fill your map.',
       cta: 'Explore the Map!',
@@ -219,7 +219,7 @@ export const GAME_CARDS = {
     {
       id: 'builder-badges',
       title: 'Builder Badges',
-      emoji: '🌟',
+      icon: '/icons/badge.svg',
       ageRange: 'Ages 5–8',
       description: 'Tap to earn fun achievement badges! Collect stickers for your resilience journey.',
       cta: 'Collect Badges!',
@@ -231,7 +231,7 @@ export const GAME_CARDS = {
     {
       id: 'navigator-quest',
       title: 'Navigator Quest',
-      emoji: '🎯',
+      icon: '/icons/game-target.svg',
       ageRange: 'Ages 8–12',
       description: 'Go on a multi-step adventure! Choose a dimension, solve challenges, unlock story chapters.',
       cta: 'Start Adventure!',
@@ -241,7 +241,7 @@ export const GAME_CARDS = {
     {
       id: 'resilience-mountain',
       title: 'Resilience Mountain',
-      emoji: '🏔️',
+      icon: '/icons/game-mountain.svg',
       ageRange: 'Ages 8–12',
       description: 'Climb a mountain with 6 peaks — one for each resilience dimension. Reach the summit!',
       cta: 'Start Climbing!',
@@ -251,7 +251,7 @@ export const GAME_CARDS = {
     {
       id: 'treasure-explorer',
       title: 'Treasure Explorer',
-      emoji: '💎',
+      icon: '/icons/game-diamond.svg',
       ageRange: 'Ages 8–12',
       description: 'Explore islands, solve challenges, and find story treasures. How many can you unlock?',
       cta: 'Find Treasure!',
@@ -263,7 +263,7 @@ export const GAME_CARDS = {
     {
       id: 'navigator-challenges',
       title: 'Navigator Challenges',
-      emoji: '🎯',
+      icon: '/icons/game-target.svg',
       ageRange: 'Ages 12+',
       description: 'Timed resilience challenges! Quick-fire scenarios, scoring system, and personal bests.',
       cta: 'Take a Challenge!',
@@ -273,7 +273,7 @@ export const GAME_CARDS = {
     {
       id: 'arena-battles',
       title: 'Arena Battles',
-      emoji: '🏆',
+      icon: '/icons/game-shield.svg',
       ageRange: 'Ages 12+',
       description: 'Quiz the resilience characters! Beat the Builder, challenge the Thinker, and earn battle badges.',
       cta: 'Enter the Arena!',
@@ -283,7 +283,7 @@ export const GAME_CARDS = {
     {
       id: 'quest-log',
       title: 'Quest Log',
-      emoji: '📜',
+      icon: '/icons/game-scroll.svg',
       ageRange: 'Ages 12+',
       description: 'Multi-part story quests tied to each dimension. Read, reflect, and create your own story.',
       cta: 'Open Quest Log!',

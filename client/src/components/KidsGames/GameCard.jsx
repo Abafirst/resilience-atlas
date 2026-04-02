@@ -9,7 +9,9 @@ export default function GameCard({ game, onPlay }) {
       className="kg-game-card"
       style={{ '--card-color': game.color, '--card-accent': game.accentColor }}
     >
-      <div className="kg-game-card-emoji" aria-hidden="true">{game.emoji}</div>
+      <div className="kg-game-card-icon" aria-hidden="true">
+        <img src={game.icon} alt="" className="kg-game-card-icon-img" />
+      </div>
       <div className="kg-game-card-age">{game.ageRange}</div>
       <h3 className="kg-game-card-title">{game.title}</h3>
       <p className="kg-game-card-desc">{game.description}</p>
