@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import AgeSelector from './AgeSelector';
 import GameCard from './GameCard';
 import CompassSpinner from './CompassSpinner';
@@ -40,6 +40,7 @@ export default function KidsGamesHub() {
     try { return JSON.parse(localStorage.getItem('kg-badges') || '[]'); } catch { return []; }
   });
   const [badgeToast, setBadgeToast] = useState(null);
+  const gameContainerRef = useRef(null);
 
   const handleEarnBadge = useCallback((badgeId) => {
     if (earnedBadges.includes(badgeId)) return;
@@ -62,7 +63,12 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Wait for React to re-render the game container before scrolling into view
+    setTimeout(() => {
+      if (gameContainerRef.current) {
+        gameContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   }, []);
 
   const goBack = useCallback(() => {
@@ -83,7 +89,7 @@ export default function KidsGamesHub() {
       );
     }
     return (
-      <div className="kg-hub-wrapper">
+      <div className="kg-hub-wrapper" ref={gameContainerRef}>
         {badgeToast && <BadgeToast badge={badgeToast} />}
         <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
       </div>

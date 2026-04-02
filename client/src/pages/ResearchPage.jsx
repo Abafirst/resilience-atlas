@@ -235,6 +235,36 @@ export default function ResearchPage() {
               </div>
             </div>
 
+            {/* Bridge: Six Dimensions Overview */}
+            <div className="dimensions-bridge" aria-label="Six dimensions overview">
+              <p className="dimensions-bridge-intro">
+                Resilience isn't a single trait — it's six interconnected capacities that each
+                contribute to how you navigate adversity, uncertainty, and change. Together, they
+                form a complete picture of your resilience profile.
+              </p>
+              <div className="dimensions-bridge-stats" role="list" aria-label="Key resilience statistics">
+                <div className="dim-stat" role="listitem">
+                  <span className="dim-stat-number">6</span>
+                  <span className="dim-stat-label">Interconnected dimensions</span>
+                </div>
+                <div className="dim-stat" role="listitem">
+                  <span className="dim-stat-number">72</span>
+                  <span className="dim-stat-label">Assessment questions</span>
+                </div>
+                <div className="dim-stat" role="listitem">
+                  <span className="dim-stat-number">13+</span>
+                  <span className="dim-stat-label">Years of refinement</span>
+                </div>
+                <div className="dim-stat" role="listitem">
+                  <span className="dim-stat-number">18</span>
+                  <span className="dim-stat-label">Resilience exemplars studied</span>
+                </div>
+              </div>
+              <a href="/quiz" className="dimensions-bridge-cta" aria-label="Take the assessment to discover your resilience dimensions">
+                Take the Assessment to Discover Yours <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
             {/* Dimension Cards */}
             <div className="dimensions-grid">
 

@@ -1,9 +1,9 @@
 import React from 'react';
 
 const AGE_GROUPS = [
-  { id: 'young',  label: '🧒 Ages 5–8',  sublabel: 'Simple & fun' },
-  { id: 'middle', label: '🧑 Ages 8–12', sublabel: 'Story-driven' },
-  { id: 'older',  label: '👦 Ages 12+',  sublabel: 'Competitive' },
+  { id: 'young',  label: '🎉 Ages 5–8',  sublabel: 'Simple & fun' },
+  { id: 'middle', label: '🗺️ Ages 8–12', sublabel: 'Story-driven' },
+  { id: 'older',  label: '🏆 Ages 12+',  sublabel: 'Competitive' },
 ];
 
 /**
