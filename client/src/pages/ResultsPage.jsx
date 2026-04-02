@@ -2656,10 +2656,11 @@ export default function ResultsPage() {
           </div>
           <div style={s.scoreInfo}>
             <div style={s.scoreName}>
-              {name ? `${name}'s Resilience Profile` : 'Your Resilience Profile'}
+              {name ? `${name}'s Resilience Map` : 'Your Resilience Map'}
             </div>
             <p style={s.scoreSub}>
-              Your resilience system reveals how you adapt, recover, and grow through challenge.{' '}
+              This is where you stand. An honest, multidimensional portrait of how you navigate
+              adversity across six key capacities.{' '}
               You demonstrate a <strong style={{ color: '#2d3748' }}>{level}</strong> resilience
               foundation.{' '}
               {rankedDims[0] && (
@@ -2676,8 +2677,8 @@ export default function ResultsPage() {
         </div>
 
         {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
-        <div style={s.freeBriefReport} role="region" aria-label="Your Resilience Snapshot">
-          <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Snapshot</div>
+        <div style={s.freeBriefReport} role="region" aria-label="Your Resilience Terrain">
+          <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Terrain</div>
           {rankedDims.map(([dim, score]) => {
             const pct   = Math.round(score.percentage);
             const color = DIM_COLORS[dim] || '#667eea';
@@ -2699,7 +2700,7 @@ export default function ResultsPage() {
           })}
           {!hasPremiumAccess && (
             <p style={s.fbrHint}>
-              Unlock your full report for personalised insights &amp; growth strategies.
+              Unlock your full map for personalised insights &amp; growth compass points.
             </p>
           )}
         </div>
@@ -2756,11 +2757,11 @@ export default function ResultsPage() {
         {/* ── Core Strengths Grid ───────────────────────────────────── */}
         {rankedDims.length >= 3 && (
           <div style={s.narrativeSection}>
-            <div style={s.narrativeHeading}><BrandIcon name="map" size={17} color="#0891B2" /> Your Core Resilience Strengths</div>
+            <div style={s.narrativeHeading}><BrandIcon name="map" size={17} color="#0891B2" /> Your Resilience Constellation</div>
             {[
               { label: 'Primary Strength', dimEntry: rankedDims[0] },
-              { label: 'Solid Strength',   dimEntry: rankedDims[1] },
-              { label: 'Emerging Strength', dimEntry: rankedDims[rankedDims.length - 1] },
+              { label: 'Secondary Strength',   dimEntry: rankedDims[1] },
+              { label: 'Emerging Edge', dimEntry: rankedDims[rankedDims.length - 1] },
             ].map(({ label, dimEntry }) => {
               const [dim, score] = dimEntry;
               const color = DIM_COLORS[dim] || '#667eea';
@@ -2776,8 +2777,8 @@ export default function ResultsPage() {
               );
             })}
             <p style={{ margin: '16px 0 0', fontSize: 12, color: '#718096', lineHeight: 1.5 }}>
-              Leverage your primary strength as a foundation. Develop your emerging strength to significantly
-              expand your overall resilience capacity.
+              Your primary strength is your anchor under pressure. Cultivating your emerging edge will
+              significantly expand your overall resilience capacity.
             </p>
           </div>
         )}
@@ -2785,16 +2786,16 @@ export default function ResultsPage() {
         {/* ── Personalized Report (narrative analysis) ─────────────── */}
         {rankedDims.length >= 3 && (
           <section style={s.reportSection} aria-labelledby="reportHeading">
-            <div style={s.reportHeading} id="reportHeading"><BrandIcon name="document" size={17} color="#667eea" /> Your Personalized Report</div>
+            <div style={s.reportHeading} id="reportHeading"><BrandIcon name="document" size={17} color="#667eea" /> Your Resilience Map Report</div>
             <p style={s.reportOverview}>
-              Your overall resilience score is <strong style={{ color: '#2d3748' }}>{results.overall}%</strong> — a{' '}
+              Your overall resilience dimension profile is <strong style={{ color: '#2d3748' }}>{results.overall}%</strong> — a{' '}
               {level === 'strong' ? 'strong foundation' : level === 'solid' ? 'solid foundation' : level === 'developing' ? 'developing foundation' : 'emerging foundation'}{' '}
-              across six key dimensions.
+              across six interconnected dimensions. Not a final destination. A starting point.
             </p>
             {[
               { sectionLabel: 'Primary Strength', entry: rankedDims[0], insight: 'Leverage this strength as a foundation for growth across other dimensions.' },
-              { sectionLabel: 'Solid Strength',   entry: rankedDims[1], insight: 'This complements your primary strength and creates a robust resilience foundation.' },
-              { sectionLabel: 'Growth Opportunity', entry: rankedDims[rankedDims.length - 1], insight: 'Intentionally developing this area can significantly expand your overall resilience capacity.' },
+              { sectionLabel: 'Secondary Strength',   entry: rankedDims[1], insight: 'This complements your primary strength and creates a robust resilience foundation.' },
+              { sectionLabel: 'Emerging Edge', entry: rankedDims[rankedDims.length - 1], insight: 'This is where you\'re still building capacity. Edges are where growth happens.' },
             ].map(({ sectionLabel, entry, insight }) => {
               const [dim, score] = entry;
               const color = DIM_COLORS[dim] || '#667eea';
@@ -2812,13 +2813,13 @@ export default function ResultsPage() {
               );
             })}
             <div style={s.reportSuggestions}>
-              <div style={s.reportSuggestionsTitle}>Growth Suggestions</div>
+              <div style={s.reportSuggestionsTitle}>Compass Points for Your Journey</div>
               <ul style={s.reportSuggestionsList}>
                 {[
-                  `Build on your ${rankedDims[0][0]} strength by helping others develop it`,
-                  `Practice integrating ${rankedDims[1][0]} with ${rankedDims[rankedDims.length - 1][0]}`,
-                  `Start small with one daily habit that develops ${rankedDims[rankedDims.length - 1][0]}`,
-                  'Track your progress monthly to recognize growth patterns',
+                  `Strengthen your ${rankedDims[0][0]} capacity by helping others develop it`,
+                  `Explore how ${rankedDims[1][0]} and ${rankedDims[rankedDims.length - 1][0]} connect in your daily life`,
+                  `Start small: one daily practice to cultivate ${rankedDims[rankedDims.length - 1][0]}`,
+                  'Track your progress monthly to recognize how your constellation shifts',
                 ].map(s2 => (
                   <li key={s2} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                     <span aria-hidden="true" style={{ color: '#10b981', flexShrink: 0 }}>✓</span>
@@ -3141,7 +3142,7 @@ export default function ResultsPage() {
             <p style={s.nextStepsIntro}>
               {rankedDims.length === 1
                 ? 'Here are actionable practices to build your resilience:'
-                : 'Based on your lowest-scoring dimensions, here are actionable practices to build your resilience:'
+                : 'Based on your emerging dimensions, here are compass points to develop your resilience:'
               }
             </p>
             {rankedDims.slice(-Math.min(2, rankedDims.length)).reverse().map(([dim, score]) => {

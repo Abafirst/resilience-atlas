@@ -444,11 +444,11 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="about-hero" aria-labelledby="about-heading">
         <span className="about-hero hero-tagline">About the Resilience Atlas</span>
-        <h1 id="about-heading">The Resilience Atlas&#8482;<br />Understand. Strengthen. Transform.</h1>
+        <h1 id="about-heading">The Resilience Atlas&#8482;<br />Maps, Not Formulas.</h1>
         <p className="hero-sub">
-          A research-based resilience assessment platform founded on published doctoral research —
-          mapping six dimensions of resilience for individuals, teams, and organizations.
-          Grounded in science. Designed for impact.
+          A research-based resilience platform founded on published doctoral research&mdash;mapping
+          six interconnected dimensions of resilience for individuals, teams, and organizations.
+          Grounded in science and lived experience. Designed for genuine impact.
         </p>
         <div className="hero-stats" role="list" aria-label="Key research credentials">
           <div className="stat-item" role="listitem">
@@ -511,7 +511,7 @@ export default function AboutPage() {
 
           {/* Personal Story & Lived Experience */}
           <section className="about-section" aria-labelledby="story-heading">
-            <h2 id="story-heading">A Mission Born from Lived Experience</h2>
+            <h2 id="story-heading">The Map Comes from Real Navigation</h2>
             <p>
               The Resilience Atlas did not begin in a laboratory. It began in life. Janeen Molchany's
               journey through the foster care system gave her an intimate, firsthand understanding of
@@ -532,25 +532,26 @@ export default function AboutPage() {
               of capacities that interact in complex, personal, and deeply human ways.
             </p>
             <p>
-              The Resilience Atlas was created to reflect that complexity — giving people a map, not just
-              a number, for understanding how they adapt under pressure.
+              The Resilience Atlas was created to reflect that complexity&mdash;giving people a map, not just
+              a number, for understanding how they navigate under pressure.
             </p>
           </section>
 
           {/* Mission */}
           <section className="about-section" aria-labelledby="mission-heading">
-            <h2 id="mission-heading">Our Mission</h2>
+            <h2 id="mission-heading">Mission: To Create Maps, Not Formulas</h2>
             <div className="mission-callout">
               <p>
-                "To make the science of resilience legible, personal, and actionable — so that every person
-                can understand, cultivate, and share their capacity to grow through adversity."
+                "We believe resilience is not something you either have or don&rsquo;t have. It&rsquo;s a
+                constellation of six interconnected capacities&mdash;multidimensional, complex, and
+                deeply personal. The Resilience Atlas exists to make that complexity visible, give
+                you a map of where you stand, and orient you toward genuine growth."
               </p>
             </div>
             <p>
-              We believe resilience is not something you either have or don't have. It is a set of
-              learnable, developable capacities — and the first step is understanding where you already
-              are and where you have room to grow. The Resilience Atlas exists to make that understanding
-              possible for individuals, teams, and organizations.
+              We&rsquo;re not here to fix you. You&rsquo;re not broken. We&rsquo;re here to help you navigate&mdash;to
+              understand how you currently show up, where your strengths live, and where your
+              edges are waiting to expand.
             </p>
           </section>
 
@@ -740,11 +741,11 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="cta-band" aria-label="Get started with the Resilience Atlas">
-        <h2>Understand. Strengthen. Transform.</h2>
-        <p>Take the assessment, explore the research, or bring the Resilience Atlas to your team.</p>
-        <a className="btn-white" href="/quiz">Take the Assessment</a>
+        <h2>Your Map is Waiting.</h2>
+        <p>Explore your resilience, navigate your terrain, or bring the Atlas to your team.</p>
+        <a className="btn-white" href="/quiz">Explore Your Map</a>
         <a className="btn-outline" href="/founder">Meet the Founder</a>
-        <a className="btn-outline" href="/research">Read the Research</a>
+        <a className="btn-outline" href="/research">Navigate the Research</a>
       </section>
 
       <footer className="site-footer" role="contentinfo">

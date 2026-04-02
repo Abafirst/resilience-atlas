@@ -469,8 +469,8 @@ export default function TeamsLandingPage() {
 
   <section className="team-hero" aria-label="Team page hero">
     <span className="hero-eyebrow">Business Tier</span>
-    <h1>Resilience Atlas for Teams</h1>
-    <p>Bring the Six Dimensions of Resilience to your organization. Aggregate insights, team dashboards, and tools for HR and L&amp;D professionals.</p>
+    <h1>Navigate Team Resilience Together</h1>
+    <p>When your team understands how each person navigates challenges&mdash;their strengths, patterns, and emerging edges&mdash;everything changes. The Resilience Atlas doesn&rsquo;t fix teams. It orients them.</p>
   </section>
 
   {/* Team Pricing Tiers */}
@@ -630,38 +630,38 @@ export default function TeamsLandingPage() {
   <section className="landing-section" aria-labelledby="featuresHeading">
     <div className="section-header">
       <span className="section-label">What You Get</span>
-      <h2 id="featuresHeading">Everything Your Team Needs</h2>
+      <h2 id="featuresHeading">Your Team&rsquo;s Navigation Toolkit</h2>
     </div>
     <div className="features-list">
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/cognitive-narrative.svg" alt="" className="icon icon-md" /></div>
         <h4>Team Dashboard</h4>
-        <p>Centralized view of all team assessments with aggregated dimension scores and completion tracking.</p>
+        <p>A shared map of your team&rsquo;s collective resilience&mdash;aggregated dimension profiles and completion tracking in one place.</p>
       </div>
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/compass.svg" alt="" className="icon icon-md" /></div>
-        <h4>Radar Chart Aggregation</h4>
-        <p>Visualize your team's collective Six Dimensions of Resilience profile on a single radar chart.</p>
+        <h4>Team Compass</h4>
+        <p>Visualize your team&rsquo;s collective Six Dimensions profile on a single compass. See where strengths cluster and where edges exist.</p>
       </div>
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" className="icon icon-md" /></div>
-        <h4>CSV Export</h4>
-        <p>Download all member results with dimension scores for your own analysis or HR reporting.</p>
+        <h4>Data Export</h4>
+        <p>Download all member maps with dimension profiles for your own analysis or organizational reporting.</p>
       </div>
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" className="icon icon-md" /></div>
-        <h4>Individual Reports</h4>
-        <p>Each team member receives their personalized resilience profile and dimension narrative.</p>
+        <h4>Individual Navigation Guides</h4>
+        <p>Each team member receives their personalized resilience map and dimension narrative&mdash;their own guide for growth.</p>
       </div>
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" className="icon icon-md" /></div>
-        <h4>Bulk Invitations</h4>
-        <p>Invite your entire team via email with a single click. Simple onboarding, no friction.</p>
+        <h4>Simple Onboarding</h4>
+        <p>Invite your entire team via email with a single click. Minimal friction, maximum participation.</p>
       </div>
       <div className="feature-item">
         <div className="feature-icon" aria-hidden="true"><img src="/icons/lock.svg" alt="" className="icon icon-md" /></div>
         <h4>Secure &amp; Private</h4>
-        <p>Individual data is always private by default. Admins see only aggregated team insights unless individuals choose to share.</p>
+        <p>Individual maps are always private by default. Admins see only aggregated team insights unless individuals choose to share.</p>
       </div>
     </div>
   </section>

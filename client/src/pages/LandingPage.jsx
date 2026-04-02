@@ -18,11 +18,12 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner">
-          <span className="hero-eyebrow">Research-Based • Clinically Validated</span>
-          <h1>Build the Resilience You Already Have</h1>
+          <span className="hero-eyebrow">13 Years of Research &amp; Lived Experience</span>
+          <h1>Map Your Resilience</h1>
           <p className="hero-subheadline">
-            In 10 minutes, discover your personalized map across six dimensions of resilience
-            and get a clear path forward. Start where you are. Grow from here.
+            Your resilience isn&rsquo;t one thing&mdash;it&rsquo;s a constellation of six interconnected capacities.
+            Discover how you navigate challenges, where you&rsquo;re strongest, and where you&rsquo;re emerging.
+            Not a score. A map.
           </p>
           <div className="hero-ctas">
             <button
@@ -30,7 +31,7 @@ export default function LandingPage() {
               className="btn-hero-primary"
               onClick={() => loginWithRedirect()}
             >
-              <span aria-hidden="true">&#9654;</span> Start Free Assessment
+              <span aria-hidden="true">&#9654;</span> Explore Your Map
             </button>
             <button
               type="button"
@@ -47,10 +48,10 @@ export default function LandingPage() {
       <section className="landing-section">
         <div className="section-header">
           <span className="section-label">The Six Dimensions</span>
-          <h2>A Complete Map of Human Resilience</h2>
+          <h2>Your Resilience Is a Constellation, Not a Score</h2>
           <p>
-            Resilience isn't one thing — it's six interconnected capacities. Understanding
-            yours gives you a clear, actionable roadmap for growth.
+            Resilience isn&rsquo;t one thing&mdash;it&rsquo;s six interconnected capacities. Your profile
+            shows where your strengths live, and where new capacity is waiting to emerge.
           </p>
         </div>
         <div className="dimensions-grid">
@@ -70,24 +71,24 @@ export default function LandingPage() {
       <section className="landing-section alt-bg">
         <div className="section-header">
           <span className="section-label">Why It Works</span>
-          <h2>Grounded in Research, Built for Real Life</h2>
+          <h2>Grounded in Research and Lived Experience</h2>
         </div>
         <div className="why-grid">
           <div className="why-card">
-            <h4>Validated Framework</h4>
-            <p>Built on decades of resilience research across clinical, positive psychology, and neuroscience fields.</p>
+            <h4>A Map, Not a Formula</h4>
+            <p>Built on 13 years of doctoral research and clinical practice. This isn&rsquo;t a generic quiz&mdash;it&rsquo;s a genuine portrait of how you navigate adversity.</p>
           </div>
           <div className="why-card">
-            <h4>Personalized Insights</h4>
-            <p>Your results reflect your unique profile — not a generic score that flattens nuance.</p>
+            <h4>Your Unique Profile</h4>
+            <p>Your results show the specific shape of your resilience&mdash;not a single number that flattens nuance. A real map of where you stand.</p>
           </div>
           <div className="why-card">
-            <h4>Actionable Roadmap</h4>
-            <p>Each dimension comes with targeted practices you can start today, matched to your level.</p>
+            <h4>Compass Points for Growth</h4>
+            <p>Each dimension comes with practical next steps you can start today. Targeted guidance matched to your specific terrain.</p>
           </div>
           <div className="why-card">
-            <h4>Track Progress Over Time</h4>
-            <p>Reassess as you grow. Watch your resilience profile shift as you build new capacities.</p>
+            <h4>Watch Your Journey Unfold</h4>
+            <p>Reassess as you grow. Watch your constellation shift as you cultivate new capacities and deepen existing ones.</p>
           </div>
         </div>
       </section>
@@ -95,10 +96,10 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section className="landing-section">
         <div className="final-cta">
-          <h2>Ready to Discover Your Resilience Profile?</h2>
+          <h2>Ready to Map Your Resilience?</h2>
           <p>
-            Join thousands of people who have mapped their strengths, identified their gaps,
-            and started building lasting resilience.
+            This is your starting position&mdash;honest, multidimensional, and genuinely useful.
+            Understand where you stand. Discover where you&rsquo;re growing.
           </p>
           <div className="hero-ctas">
             <button
@@ -106,7 +107,7 @@ export default function LandingPage() {
               className="btn-hero-primary"
               onClick={() => loginWithRedirect()}
             >
-              Start Free Assessment
+              Begin Your Navigation
             </button>
           </div>
         </div>

@@ -203,20 +203,20 @@ export default function KidsPage() {
 
       {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">
-        <h1 id="kids-heading">Resilience Grows With You</h1>
+        <h1 id="kids-heading">Build Resilience Together</h1>
         <p>
-          A developmentally appropriate program for ages 5–18+. Activities, stories, and
-          skills mapped to the Six Dimensions of Resilience.
+          Resilience isn&rsquo;t about being tough. It&rsquo;s about understanding yourself, knowing your
+          strengths, and having people who get it. Activities and stories for ages 5–18+.
         </p>
-        <a href="/quiz" className="btn-cta">Take the Assessment</a>
+        <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
       </section>
 
       {/* Six Skills */}
       <section className="skills-section" id="skills" aria-labelledby="skills-heading">
         <div className="section-header">
-          <span className="section-label">The Six Resilience Skills</span>
-          <h2 id="skills-heading">Six Skills for Life</h2>
-          <p>Each dimension of resilience maps to everyday situations kids and teens face.</p>
+          <span className="section-label">The Six Resilience Dimensions</span>
+          <h2 id="skills-heading">Your Resilience Looks Different from Everyone Else&rsquo;s</h2>
+          <p>That&rsquo;s not a problem&mdash;it&rsquo;s the point. Each dimension shows up in everyday situations young people actually face.</p>
         </div>
         <div className="skills-grid">
           {SKILLS.map(skill => (
@@ -235,10 +235,10 @@ export default function KidsPage() {
       {/* Characters */}
       <section className="characters-section" aria-labelledby="characters-heading">
         <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <span className="section-label">Meet the Characters</span>
+          <span className="section-label">Meet the Guides</span>
           <h2 id="characters-heading">Your Six Resilience Guides</h2>
           <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-            Each character represents one resilience skill and is here to help you learn, grow, and face challenges with confidence.
+            Each character represents one resilience dimension. They&rsquo;re here to help young people discover their own strengths&mdash;and to show that resilience looks different for everyone.
           </p>
         </div>
         <div className="character-grid">
@@ -338,10 +338,10 @@ export default function KidsPage() {
       {/* Interactive Games Hub */}
       <section className="games-section" id="games" aria-labelledby="games-heading">
         <div className="section-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span className="section-label">Play &amp; Learn</span>
-          <h2 id="games-heading">Interactive Games</h2>
+          <span className="section-label">Play &amp; Discover</span>
+          <h2 id="games-heading">Interactive Discovery Games</h2>
           <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-            Fun games that build resilience skills! Earn stars, collect badges, and go on adventures with your favourite characters.
+            Not lessons. Discovery. Games that help young people explore their resilience map, earn badges for what they learn, and find out their version is valid.
           </p>
         </div>
         <KidsGamesHub />
