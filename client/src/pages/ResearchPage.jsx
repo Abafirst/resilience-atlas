@@ -260,8 +260,8 @@ export default function ResearchPage() {
                   <span className="dim-stat-label">Resilience exemplars studied</span>
                 </div>
               </div>
-              <a href="/quiz" className="dimensions-bridge-cta">
-                Take the Assessment to Discover Yours →
+              <a href="/quiz" className="dimensions-bridge-cta" aria-label="Take the assessment to discover your resilience dimensions">
+                Take the Assessment to Discover Yours <span aria-hidden="true">→</span>
               </a>
             </div>
 

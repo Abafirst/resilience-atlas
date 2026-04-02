@@ -38,7 +38,7 @@ export function getCurrentTeamsTier() {
     if (user?.plan) {
       if (user.plan === 'teams-starter' || user.plan === 'starter') return TEAM_TIERS.basic;
       if (user.plan === 'teams-pro' || user.plan === 'pro') return TEAM_TIERS.premium;
-      if (user.plan === 'enterprise') return TEAM_TIERS.enterprise;
+      if (user.plan === 'enterprise' || user.plan === 'ent' || user.plan === 'teams-enterprise') return TEAM_TIERS.enterprise;
     }
   } catch {}
   return TEAM_TIERS.none;

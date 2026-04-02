@@ -63,7 +63,7 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
-    // Scroll the game container into view after state update
+    // Wait for React to re-render the game container before scrolling into view
     setTimeout(() => {
       if (gameContainerRef.current) {
         gameContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -51,7 +51,7 @@ export default function FacilitationGateModal({ userTier, onClose }) {
         <p style={styles.desc}>
           {isNonCustomer
             ? 'Facilitation guides are available to Atlas Team Premium and Enterprise customers. Get started today to unlock 6+ workshop guides, templates, and facilitation resources.'
-            : `You currently have ${TIER_NAMES[userTier]}. Facilitation guides are included in Atlas Team Premium and above.`}
+            : `You currently have ${TIER_NAMES[userTier] || 'your current plan'}. Facilitation guides are included in Atlas Team Premium and above.`}
         </p>
 
         {isBasic && (
