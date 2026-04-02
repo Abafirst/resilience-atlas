@@ -62,14 +62,16 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
-    // Scroll to the game container after it renders, not to top of page
-    setTimeout(() => {
-      const el = document.getElementById('kg-game-active');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 50);
   }, []);
+
+  // Scroll to the game container after it mounts, not to the top of the page
+  useEffect(() => {
+    if (!activeGame) return;
+    const el = document.getElementById('kg-game-active');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeGame]);
 
   const goBack = useCallback(() => {
     setActiveGame(null);
