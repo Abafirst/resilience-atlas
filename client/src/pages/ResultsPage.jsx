@@ -2147,42 +2147,18 @@ export default function ResultsPage() {
 
   // ── Download radar chart as PNG ────────────────────────────────────────
   const handleDownloadRadar = useCallback(() => {
-    // The radar chart is rendered as SVG — serialize it and convert to PNG.
-    const svg = document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
-    if (!svg) {
+    // The radar chart is rendered as a canvas by BrandCompass.
+    const canvas = document.querySelector('canvas[aria-label="Animated resilience compass showing your six dimension scores"]');
+    if (!canvas) {
       alert('Radar chart not found. Please wait for the chart to load.');
       return;
     }
     try {
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const scale = 2; // render at 2× for sharper output
-        const svgW = svg.width.baseVal.value  || 340;
-        const svgH = svg.height.baseVal.value || 340;
-        canvas.width  = svgW * scale;
-        canvas.height = svgH * scale;
-        const ctx = canvas.getContext('2d');
-        // Fill with the page background so labels are readable (before scaling)
-        ctx.fillStyle = '#1a1a2e';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.scale(scale, scale);
-        ctx.drawImage(img, 0, 0, svgW, svgH);
-        URL.revokeObjectURL(url);
-        const link = document.createElement('a');
-        link.download = 'resilience-atlas-radar.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        trackShareEvent('download_radar', (results && results.dominantType) || '');
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        alert('Could not download radar chart. Please try taking a screenshot.');
-      };
-      img.src = url;
+      const link = document.createElement('a');
+      link.download = 'resilience-atlas-radar.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      trackShareEvent('download_radar', (results && results.dominantType) || '');
     } catch (_) {
       alert('Could not download radar chart. Please try taking a screenshot.');
     }
@@ -2592,7 +2568,16 @@ export default function ResultsPage() {
               <button
                 type="button"
                 className="btn btn-locked btn-locked-pdf"
-                onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' })}
+                onClick={() => {
+                  // Scroll to upgrade cards showing both Atlas Starter ($9.99) and
+                  // Atlas Navigator ($49.99) so the user can select the right tier.
+                  const upgradeEl = document.getElementById('upgradeCardsContainer');
+                  if (upgradeEl) {
+                    upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  } else {
+                    setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' });
+                  }
+                }}
                 aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
               >
                 🔒 Unlock PDF Download
@@ -2606,7 +2591,12 @@ export default function ResultsPage() {
           <button
             type="button"
             style={s.retakeLink}
-            onClick={() => { window.location.href = '/quiz.html'; }}
+            onClick={() => {
+              // Clear stored tier so the payment check runs fresh on the next
+              // results page visit after completing the new assessment.
+              try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
+              window.location.href = '/quiz.html';
+            }}
           >
             ↺ Re-take the assessment
           </button>

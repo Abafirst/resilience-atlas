@@ -377,6 +377,8 @@ const styles = `
 export default function TeamsLandingPage() {
   const [showGateModal, setShowGateModal] = useState(false);
   const [userTier, setUserTier] = useState('none');
+  const [checkoutLoading, setCheckoutLoading] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
 
   useEffect(() => {
     try {
@@ -388,6 +390,39 @@ export default function TeamsLandingPage() {
     } catch(e) {}
     setUserTier(getCurrentTeamsTier());
   }, []);
+
+  const startTeamCheckout = async (tier) => {
+    setCheckoutError('');
+    setCheckoutLoading(tier);
+    // Collect email from localStorage or prompt if not available
+    let email = localStorage.getItem('resilience_email') || '';
+    if (!email) {
+      const input = window.prompt('Please enter your email address to continue with checkout:');
+      if (!input || !input.trim()) {
+        setCheckoutLoading('');
+        return;
+      }
+      email = input.trim();
+      try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
+    }
+    try {
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier, email }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned from server');
+      }
+    } catch (err) {
+      setCheckoutError(err.message || 'Could not start checkout. Please try again.');
+      setCheckoutLoading('');
+    }
+  };
 
   const handleFacilitationGuideClick = (e) => {
     if (canAccessFacilitationGuides()) {
@@ -458,6 +493,11 @@ export default function TeamsLandingPage() {
         <a href="/privacy" style={{ color: '#4F46E5', fontWeight: 600 }}>Learn about our data model →</a>
       </p>
     </div>
+    {checkoutError && (
+      <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.85rem 1.5rem', textAlign: 'center', fontSize: '0.9rem', marginBottom: '1rem', borderRadius: 8 }}>
+        {checkoutError}
+      </div>
+    )}
     <div className="team-pricing-grid">
 
       {/* Starter */}
@@ -479,8 +519,8 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
           <li><span aria-hidden="true">&#10003;</span> Download all your data anytime</li>
         </ul>
-        <button className="ttc-btn ttc-btn--primary" type="button" onClick={() => startTeamCheckout('starter')}>
-          Get Started — $299 one-time
+        <button className="ttc-btn ttc-btn--primary" type="button" disabled={!!checkoutLoading} onClick={() => startTeamCheckout('starter')}>
+          {checkoutLoading === 'starter' ? '⏳ Redirecting…' : 'Get Started — $299 one-time'}
         </button>
       </div>
 
@@ -505,8 +545,8 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library (30+ guides)</li>
           <li><span aria-hidden="true">&#10003;</span> Self-service team management</li>
         </ul>
-        <button className="ttc-btn ttc-btn--featured" type="button" onClick={() => startTeamCheckout('pro')}>
-          Get Started — $699 one-time
+        <button className="ttc-btn ttc-btn--featured" type="button" disabled={!!checkoutLoading} onClick={() => startTeamCheckout('pro')}>
+          {checkoutLoading === 'pro' ? '⏳ Redirecting…' : 'Get Started — $699 one-time'}
         </button>
       </div>
 
