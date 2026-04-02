@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Mountain peak -->
+  <polygon points="32,6 56,54 8,54" fill="#DCFCE7" stroke="#15803D" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Snow cap -->
+  <polygon points="32,6 40,22 24,22" fill="#fff" stroke="#15803D" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Path / trail -->
+  <path d="M16 54 Q24 42 32 38 Q40 34 48 54" stroke="#15803D" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2" fill="none"/>
+  <!-- Summit flag -->
+  <line x1="32" y1="6" x2="32" y2="16" stroke="#1D4ED8" stroke-width="1.5"/>
+  <polygon points="32,6 40,9 32,12" fill="#F59E0B"/>
+</svg>

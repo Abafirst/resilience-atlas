@@ -482,6 +482,15 @@ const DIM_COLORS = {
   'Somatic-Regulative':    '#0891B2',
 };
 
+const DIM_ICONS = {
+  'Cognitive-Narrative':   '/icons/cognitive-narrative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Agentic-Generative':    '/icons/agentic-generative.svg',
+  'Emotional-Adaptive':    '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective':  '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':    '/icons/somatic-regulative.svg',
+};
+
 const TIER_FEATURES = {
   'atlas-starter': [
     'Full PDF summary report',
@@ -3006,7 +3015,7 @@ export default function ResultsPage() {
                       <span style={s.gamStatLabel}>Completed</span>
                     </div>
                     <div style={s.gamStat}>
-                      <span style={s.gamStatValue}>⭐ {gamData.points}</span>
+                      <span style={s.gamStatValue}><img src="/icons/games/star-earned.svg" alt="" aria-hidden="true" width="18" height="18" style={{ verticalAlign: 'middle', marginRight: 2 }} />{gamData.points}</span>
                       <span style={s.gamStatLabel}>Points</span>
                     </div>
                     <div style={s.gamStat}>
@@ -3034,9 +3043,14 @@ export default function ResultsPage() {
 
             {Object.entries(EVIDENCE_PRACTICES).map(([dim, practices]) => {
               const color = DIM_COLORS[dim] || '#667eea';
+              const dimIcon = DIM_ICONS[dim];
               return (
                 <div key={dim}>
                   <div style={s.practiceDimHeader(color)} aria-label={`${dim} practices`}>
+                    {dimIcon && (
+                      <img src={dimIcon} alt="" aria-hidden="true" width="20" height="20"
+                        style={{ verticalAlign: 'middle', marginRight: 6, flexShrink: 0 }} />
+                    )}
                     <span>{dim}</span>
                   </div>
                   {practices.map((practice) => {
@@ -3137,6 +3151,10 @@ export default function ResultsPage() {
               return (
                 <div key={dim} style={s.nextStepsCard(color)}>
                   <div style={s.nextStepsCardHeader}>
+                    {DIM_ICONS[dim] && (
+                      <img src={DIM_ICONS[dim]} alt="" aria-hidden="true" width="18" height="18"
+                        style={{ verticalAlign: 'middle', marginRight: 4, flexShrink: 0 }} />
+                    )}
                     <span style={s.nextStepsDimName(color)}>{dim}</span>
                     <span style={s.nextStepsDimScore}>{pct}% — Growth Focus</span>
                   </div>

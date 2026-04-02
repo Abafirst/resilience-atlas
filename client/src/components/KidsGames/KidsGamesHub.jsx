@@ -201,18 +201,16 @@ export default function KidsGamesHub() {
         <div className="kg-hub-stats" aria-label="Your progress">
           <div className="kg-stat">
             <span className="kg-stat-icon" aria-hidden="true">
-              <img src="/icons/star.svg" alt="" className="kg-stat-icon-img" />
+              <img src="/icons/games/star-earned.svg" alt="" className="kg-stat-icon-img" />
             </span>
             <span className="kg-stat-num">{stars}</span>
             <span className="kg-stat-label">Stars</span>
           </div>
           <div className="kg-stat">
-            <span className="kg-stat-icon" aria-hidden="true">🏅</span>
-            <span className="kg-stat-num">{earnedBadges.length}/{totalBadges}</span>
             <span className="kg-stat-icon" aria-hidden="true">
-              <img src="/icons/badge.svg" alt="" className="kg-stat-icon-img" />
+              <img src="/icons/games/builder-badges.svg" alt="" className="kg-stat-icon-img" />
             </span>
-            <span className="kg-stat-num">{earnedBadges.length}</span>
+            <span className="kg-stat-num">{earnedBadges.length}/{totalBadges}</span>
             <span className="kg-stat-label">Badges</span>
           </div>
           {/* Sound toggle */}
@@ -242,7 +240,8 @@ export default function KidsGamesHub() {
       {/* Badge collection — show all badges (locked + unlocked) */}
       <div className="kg-badge-shelf" aria-label="Your badge collection">
         <h3 className="kg-badge-shelf-title">
-          🏅 Your Badges ({earnedBadges.length}/{totalBadges} unlocked)
+          <img src="/icons/games/builder-badges.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
+          Your Badges ({earnedBadges.length}/{totalBadges} unlocked)
         </h3>
         <div className="kg-badge-shelf-row">
           {KIDS_BADGES.map(badge => {
@@ -274,31 +273,6 @@ export default function KidsGamesHub() {
               </div>
             );
           })}
-      {/* Badge shelf */}
-      {earnedBadges.length > 0 && (
-        <div className="kg-badge-shelf" aria-label="Your collected badges">
-          <h3 className="kg-badge-shelf-title">
-            <img src="/icons/badge.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
-            Your Badge Collection
-          </h3>
-          <div className="kg-badge-shelf-row">
-            {earnedBadges.map(id => {
-              const badge = getBadgeById(id);
-              if (!badge) return null;
-              return (
-                <div
-                  key={id}
-                  className="kg-shelf-badge"
-                  style={{ background: badge.color, borderColor: badge.border }}
-                  title={badge.label}
-                  aria-label={`${badge.label}: ${badge.desc}`}
-                >
-                  <span className="kg-shelf-badge-emoji" aria-hidden="true">{badge.emoji}</span>
-                  <span className="kg-shelf-badge-label">{badge.label}</span>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     </div>

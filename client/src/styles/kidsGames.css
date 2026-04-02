@@ -182,6 +182,27 @@
   display: block;
 }
 
+/* ── GameIcon component states ── */
+.game-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.game-icon--locked {
+  filter: grayscale(100%) opacity(0.45);
+}
+
+.game-icon--earned {
+  filter: none;
+  opacity: 1;
+}
+
+.game-icon--premium {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
+}
+
 .kg-game-card-age {
   font-size: .72rem;
   font-weight: 700;
