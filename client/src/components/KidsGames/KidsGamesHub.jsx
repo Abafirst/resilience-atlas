@@ -3,7 +3,7 @@ import AgeSelector from './AgeSelector';
 import GameCard from './GameCard';
 import CompassSpinner from './CompassSpinner';
 import MapCollector from './MapCollector';
-import BuilderBadges from './BuilderBadges';
+import BadgeQuestGame from './BadgeQuestGame';
 import NavigatorQuest from './NavigatorQuest';
 import ResilienceMountain from './ResilienceMountain';
 import TreasureExplorer from './TreasureExplorer';
@@ -18,7 +18,7 @@ import '../../styles/kidsGames.css';
 const GAME_COMPONENTS = {
   'compass-spinner':       CompassSpinner,
   'map-collector':         MapCollector,
-  'builder-badges':        BuilderBadges,
+  'builder-badges':        BadgeQuestGame,
   'navigator-quest':       NavigatorQuest,
   'resilience-mountain':   ResilienceMountain,
   'treasure-explorer':     TreasureExplorer,
@@ -166,7 +166,7 @@ export default function KidsGamesHub() {
           />
         )}
         {badgeToast && <BadgeToast badge={badgeToast} />}
-        <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
+        <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} ageGroup={ageGroup} />
       </div>
     );
   }

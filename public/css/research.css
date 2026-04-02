@@ -121,7 +121,7 @@ a:hover { text-decoration: underline; }
 .btn-secondary:hover { background: var(--research-slate-100); text-decoration: none; }
 
 /* ── Layout ───────────────────────────────────────────────────── */
-.research-main { padding-bottom: 4rem; }
+.research-main { padding-bottom: 2.5rem; }
 
 .research-container {
   max-width: 960px;
@@ -130,7 +130,7 @@ a:hover { text-decoration: underline; }
 }
 
 .research-section {
-  padding: 4rem 0;
+  padding: 2.5rem 0;
 }
 
 .research-section + .research-section {
@@ -492,7 +492,7 @@ a:hover { text-decoration: underline; }
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .research-hero { padding: 3rem 1.25rem 2.5rem; }
-  .research-section { padding: 2.5rem 0; }
+  .research-section { padding: 1.5rem 0; }
   .dimensions-grid { grid-template-columns: 1fr; }
   .foundation-content { grid-template-columns: 1fr; }
   .implications-cards { grid-template-columns: 1fr; }

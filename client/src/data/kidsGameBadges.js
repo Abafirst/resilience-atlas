@@ -55,6 +55,23 @@ export const KIDS_BADGES = [
   { id: 'log-starter',      emoji: '📜', label: 'Log Starter',      desc: 'You started your first Quest Log!',            color: '#f0fdf4', border: '#16a34a' },
   { id: 'story-shaper',     emoji: '✍️', label: 'Story Shaper',    desc: 'You wrote your own resilience story!',          color: '#e0f2fe', border: '#0284c7' },
   { id: 'quest-legend',     emoji: '🌠', label: 'Quest Legend',     desc: 'You completed all Quest Log parts!',            color: '#fef9c3', border: '#ca8a04' },
+
+  /* ── Badge Quest Challenge Badges ── */
+  { id: 'bq-calm',          emoji: '🧘', label: 'Calm Champion',    desc: 'You know how to calm yourself down!',           color: '#e0f2fe', border: '#0284c7' },
+  { id: 'bq-brave',         emoji: '🌱', label: 'Brave Learner',    desc: 'You embrace trying new things!',                color: '#f0fdf4', border: '#16a34a' },
+  { id: 'bq-growth',        emoji: '🔨', label: 'Growth Hero',      desc: 'You keep trying after mistakes!',               color: '#fef9c3', border: '#fbbf24' },
+  { id: 'bq-helper',        emoji: '🤝', label: 'Kind Helper',      desc: 'You show up for friends who are sad!',          color: '#ede9fe', border: '#7c3aed' },
+  { id: 'bq-courage',       emoji: '🦁', label: 'Courage Star',     desc: 'You understand what true bravery means!',       color: '#fff7ed', border: '#ea580c' },
+  { id: 'bq-mindset',       emoji: '🧠', label: 'Mindset Master',   desc: 'You understand the growth mindset!',            color: '#ede9fe', border: '#7c3aed' },
+  { id: 'bq-bounce',        emoji: '🏀', label: 'Bounce Back',      desc: 'You know resilience means bouncing back!',      color: '#dcfce7', border: '#16a34a' },
+  { id: 'bq-cope',          emoji: '🌬️', label: 'Coping Pro',      desc: 'You have healthy coping strategies!',           color: '#e0f2fe', border: '#0284c7' },
+  { id: 'bq-eq',            emoji: '💜', label: 'Emotion Expert',   desc: 'You understand emotional intelligence!',        color: '#fdf4ff', border: '#a21caf' },
+  { id: 'bq-team',          emoji: '🤝', label: 'Team Player',      desc: 'You value the power of teamwork!',              color: '#dcfce7', border: '#16a34a' },
+  { id: 'bq-neuro',         emoji: '🔬', label: 'Neuro Thinker',    desc: 'You understand how the brain can change!',      color: '#e0f2fe', border: '#0284c7' },
+  { id: 'bq-psych',         emoji: '💪', label: 'Resilience Ace',   desc: 'You grasp psychological resilience!',           color: '#fef3c7', border: '#d97706' },
+  { id: 'bq-compassion',    emoji: '🌸', label: 'Self-Compassion',  desc: 'You understand compassion over criticism!',     color: '#fdf4ff', border: '#a21caf' },
+  { id: 'bq-social',        emoji: '🫂', label: 'Social Strength',  desc: 'You value relationships and support!',          color: '#ede9fe', border: '#7c3aed' },
+  { id: 'bq-growth-adv',    emoji: '🌟', label: 'Growth Pioneer',   desc: 'You understand post-traumatic growth!',         color: '#fef9c3', border: '#ca8a04' },
 ];
 
 /** Get a badge by its ID */
