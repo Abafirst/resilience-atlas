@@ -23,7 +23,7 @@ const BRAND_ICONS = {
     <><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></>
   ),
   sparkle: (
-    <><path d="M12 2l2.4 7.4H22l-6.2 4.5L18.2 22 12 17.8 5.8 22l2.4-8.1L2 9.4h7.6z"/></>
+    <><path d="M12 2 L14.4 9.6 L22 12 L14.4 14.4 L12 22 L9.6 14.4 L2 12 L9.6 9.6 Z"/></>
   ),
   star: (
     <><path d="M12 2l2.4 7.4H22l-6.2 4.5L18.2 22 12 17.8 5.8 22l2.4-8.1L2 9.4h7.6z"/></>
@@ -2396,7 +2396,7 @@ export default function ResultsPage() {
               {rankedDims[0] && (
                 <>
                   Your primary strength is{' '}
-                  <strong style={{ color: DIM_COLORS[rankedDims[0][0]] || '#2d3748' }}>
+                  <strong style={{ color: DIM_COLORS[rankedDims[0][0]] || '#667eea' }}>
                     {rankedDims[0][0]}
                   </strong>
                   {' '}({Math.round(rankedDims[0][1].percentage)}%).
@@ -2468,7 +2468,7 @@ export default function ResultsPage() {
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
               Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#2d3748' }}>{dominantType}</strong>
+              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
             </p>
           )}
         </section>
