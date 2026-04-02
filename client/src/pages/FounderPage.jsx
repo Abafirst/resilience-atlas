@@ -493,13 +493,13 @@ export default function FounderPage() {
             <h2 id="vision-heading">Vision &amp; Mission</h2>
             <p>
               Janeen's vision for The Resilience Atlas&#8482; is rooted in both her personal history and her
-              professional expertise: a world in which every person — regardless of background, resources,
-              or circumstance — has access to an honest, multidimensional map of their own resilience.
+              professional expertise: a world in which every person&mdash;regardless of background, resources,
+              or circumstance&mdash;has access to an honest, multidimensional map of their own resilience.
             </p>
             <div className="pullquote">
               <p>
                 "The Resilience Atlas&#8482; exists because resilience is too important to remain locked inside
-                academic journals. Every person deserves a map of their own inner terrain — and the tools
+                academic journals. Every person deserves a map of their own inner terrain&mdash;and the tools
                 to navigate it."
               </p>
             </div>

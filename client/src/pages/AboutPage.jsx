@@ -550,7 +550,7 @@ export default function AboutPage() {
               of capacities that interact in complex, personal, and deeply human ways.
             </p>
             <p>
-              The Resilience Atlas was created to reflect that complexity — giving people a map, not just
+              The Resilience Atlas was created to reflect that complexity&mdash;giving people a map, not just
               a number, for understanding how they navigate under pressure.
             </p>
           </section>
