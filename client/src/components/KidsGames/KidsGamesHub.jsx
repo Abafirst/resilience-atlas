@@ -10,6 +10,7 @@ import TreasureExplorer from './TreasureExplorer';
 import NavigatorChallenges from './NavigatorChallenges';
 import ArenaBattles from './ArenaBattles';
 import QuestLog from './QuestLog';
+import BadgeUnlockModal from './BadgeUnlockModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
 import '../../styles/kidsGames.css';
@@ -26,40 +27,102 @@ const GAME_COMPONENTS = {
   'quest-log':             QuestLog,
 };
 
+/** Persistent storage helpers */
+function loadJSON(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) ?? 'null') ?? fallback; } catch { return fallback; }
+}
+function saveJSON(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+/**
+ * Derive a "next badge hint" for the modal by looking at the first
+ * KIDS_BADGES entry the player hasn't earned yet.
+ */
+function getNextHint(currentBadgeId, earnedIds) {
+  const next = KIDS_BADGES.find(b => b.id !== currentBadgeId && !earnedIds.includes(b.id));
+  return next ? `${next.emoji} ${next.label} — ${next.desc}` : null;
+}
+
 /**
  * KidsGamesHub — Main games hub section for the Kids page.
  * Manages age selection, game routing, badge collection, and stars.
  */
 export default function KidsGamesHub() {
-  const [ageGroup, setAgeGroup] = useState('young');
-  const [activeGame, setActiveGame] = useState(null);
-  const [stars, setStars] = useState(() => {
-    try { return parseInt(localStorage.getItem('kg-stars') || '0', 10); } catch { return 0; }
-  });
-  const [earnedBadges, setEarnedBadges] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('kg-badges') || '[]'); } catch { return []; }
-  });
-  const [badgeToast, setBadgeToast] = useState(null);
-  const gameContainerRef = useRef(null);
+  const [ageGroup, setAgeGroup]         = useState('young');
+  const [activeGame, setActiveGame]     = useState(null);
+  const [soundOn, setSoundOn]           = useState(() => loadJSON('kg-sound', true));
+  const [stars, setStars]               = useState(() => loadJSON('kg-stars', 0));
+  const [earnedBadges, setEarnedBadges] = useState(() => loadJSON('kg-badges', []));
+  /* { [badgeId]: ISO date string } — when the badge was earned */
+  const [badgeDates, setBadgeDates]     = useState(() => loadJSON('kg-badge-dates', {}));
+  /* Set of gameIds completed at least once */
+  const [completedGames, setCompletedGames] = useState(() => new Set(loadJSON('kg-completed-games', [])));
 
+  const [modalBadge, setModalBadge]     = useState(null);   // badge currently shown in modal
+  const [modalQueue, setModalQueue]     = useState([]);      // queue of badges to display sequentially
+  const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
+  const gameContainerRef                = useRef(null);
+
+  /* ── Process modal queue ── */
+  useEffect(() => {
+    if (modalBadge || modalQueue.length === 0) return;
+    const [next, ...rest] = modalQueue;
+    setModalQueue(rest);
+    setModalBadge(next);
+  }, [modalBadge, modalQueue]);
+
+  const closeModal = useCallback(() => setModalBadge(null), []);
+
+  /* ── Earn a badge ── */
   const handleEarnBadge = useCallback((badgeId) => {
-    if (earnedBadges.includes(badgeId)) return;
     setEarnedBadges(prev => {
+      if (prev.includes(badgeId)) return prev;
       const next = [...prev, badgeId];
-      try { localStorage.setItem('kg-badges', JSON.stringify(next)); } catch {}
+      saveJSON('kg-badges', next);
+
+      const now = new Date().toISOString();
+      setBadgeDates(dates => {
+        const updated = { ...dates, [badgeId]: now };
+        saveJSON('kg-badge-dates', updated);
+        return updated;
+      });
+
+      // Stars
+      setStars(s => {
+        const ns = s + 5;
+        saveJSON('kg-stars', ns);
+        return ns;
+      });
+
+      // Queue the modal
+      const badge = getBadgeById(badgeId);
+      if (badge) {
+        setModalQueue(q => [...q, badge]);
+        // Also show the legacy toast
+        setBadgeToast(badge);
+        setTimeout(() => setBadgeToast(null), 3500);
+      }
+
       return next;
     });
-    setStars(s => {
-      const next = s + 5;
-      try { localStorage.setItem('kg-stars', String(next)); } catch {}
+  }, []);
+
+  /* ── Mark a game as completed (for cross-game achievement tracking) ── */
+  const handleGameComplete = useCallback((gameId) => {
+    setCompletedGames(prev => {
+      if (prev.has(gameId)) return prev;
+      const next = new Set(prev);
+      next.add(gameId);
+      saveJSON('kg-completed-games', [...next]);
+
+      // Cross-game achievements
+      if (next.size === 1) handleEarnBadge('first-step');
+      if (next.size >= 2) handleEarnBadge('game-starter');
+
       return next;
     });
-    const badge = getBadgeById(badgeId);
-    if (badge) {
-      setBadgeToast(badge);
-      setTimeout(() => setBadgeToast(null), 3500);
-    }
-  }, [earnedBadges]);
+  }, [handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
@@ -75,12 +138,13 @@ export default function KidsGamesHub() {
   }, [activeGame]);
 
   const goBack = useCallback(() => {
+    if (activeGame) handleGameComplete(activeGame);
     setActiveGame(null);
-  }, []);
+  }, [activeGame, handleGameComplete]);
 
   const games = GAME_CARDS[ageGroup] || [];
 
-  // If a game is active, render it
+  /* ── Active game view ── */
   if (activeGame) {
     const GameComponent = GAME_COMPONENTS[activeGame];
     if (!GameComponent) {
@@ -92,15 +156,34 @@ export default function KidsGamesHub() {
       );
     }
     return (
-        <div className="kg-hub-wrapper" id="kg-game-active" ref={gameContainerRef}>
+      <div className="kg-hub-wrapper" id="kg-game-active" ref={gameContainerRef}>
+        {modalBadge && (
+          <BadgeUnlockModal
+            badge={modalBadge}
+            nextHint={getNextHint(modalBadge.id, earnedBadges)}
+            onClose={closeModal}
+            soundOn={soundOn}
+          />
+        )}
         {badgeToast && <BadgeToast badge={badgeToast} />}
         <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
       </div>
     );
   }
 
+  /* ── Hub view ── */
+  const totalBadges = KIDS_BADGES.length;
+
   return (
     <div className="kg-hub-wrapper">
+      {modalBadge && (
+        <BadgeUnlockModal
+          badge={modalBadge}
+          nextHint={getNextHint(modalBadge.id, earnedBadges)}
+          onClose={closeModal}
+          soundOn={soundOn}
+        />
+      )}
       {badgeToast && <BadgeToast badge={badgeToast} />}
 
       {/* Hub header */}
@@ -124,12 +207,25 @@ export default function KidsGamesHub() {
             <span className="kg-stat-label">Stars</span>
           </div>
           <div className="kg-stat">
+            <span className="kg-stat-icon" aria-hidden="true">🏅</span>
+            <span className="kg-stat-num">{earnedBadges.length}/{totalBadges}</span>
             <span className="kg-stat-icon" aria-hidden="true">
               <img src="/icons/badge.svg" alt="" className="kg-stat-icon-img" />
             </span>
             <span className="kg-stat-num">{earnedBadges.length}</span>
             <span className="kg-stat-label">Badges</span>
           </div>
+          {/* Sound toggle */}
+          <button
+            className="kg-sound-toggle"
+            onClick={() => {
+              setSoundOn(v => { saveJSON('kg-sound', !v); return !v; });
+            }}
+            aria-label={soundOn ? 'Mute celebration sounds' : 'Unmute celebration sounds'}
+            title={soundOn ? 'Sounds on — click to mute' : 'Sounds off — click to unmute'}
+          >
+            {soundOn ? '🔊' : '🔇'}
+          </button>
         </div>
       </div>
 
@@ -143,6 +239,41 @@ export default function KidsGamesHub() {
         ))}
       </div>
 
+      {/* Badge collection — show all badges (locked + unlocked) */}
+      <div className="kg-badge-shelf" aria-label="Your badge collection">
+        <h3 className="kg-badge-shelf-title">
+          🏅 Your Badges ({earnedBadges.length}/{totalBadges} unlocked)
+        </h3>
+        <div className="kg-badge-shelf-row">
+          {KIDS_BADGES.map(badge => {
+            const isEarned = earnedBadges.includes(badge.id);
+            const dateStr  = badgeDates[badge.id]
+              ? new Date(badgeDates[badge.id]).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+              : null;
+            return (
+              <div
+                key={badge.id}
+                className={`kg-shelf-badge${isEarned ? ' kg-shelf-badge-earned' : ' kg-shelf-badge-locked'}`}
+                style={isEarned
+                  ? { background: badge.color, borderColor: badge.border }
+                  : { background: '#f1f5f9', borderColor: '#cbd5e1' }}
+                title={isEarned ? `${badge.label}: ${badge.desc}` : `🔒 ${badge.label} — not yet earned`}
+                aria-label={isEarned
+                  ? `${badge.label} badge earned${dateStr ? ` on ${dateStr}` : ''}: ${badge.desc}`
+                  : `${badge.label} badge — locked`}
+              >
+                <span className="kg-shelf-badge-emoji" aria-hidden="true">
+                  {isEarned ? badge.emoji : '🔒'}
+                </span>
+                <span className="kg-shelf-badge-label">
+                  {badge.label}
+                </span>
+                {isEarned && dateStr && (
+                  <span className="kg-shelf-badge-date" aria-hidden="true">{dateStr}</span>
+                )}
+              </div>
+            );
+          })}
       {/* Badge shelf */}
       {earnedBadges.length > 0 && (
         <div className="kg-badge-shelf" aria-label="Your collected badges">
@@ -169,7 +300,7 @@ export default function KidsGamesHub() {
             })}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

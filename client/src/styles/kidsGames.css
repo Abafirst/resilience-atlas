@@ -1889,3 +1889,423 @@
     padding: 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   Badge Unlock Modal & Confetti
+═══════════════════════════════════════════════════ */
+
+/* Full-screen overlay */
+.kg-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: kg-fade-in .25s ease-out;
+}
+
+@keyframes kg-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Confetti canvas — sits behind the card */
+.kg-confetti-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Modal card */
+.kg-modal-card {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border: 3px solid;
+  border-radius: 24px;
+  padding: 2.5rem 2rem 2rem;
+  max-width: 380px;
+  width: calc(100% - 2rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .65rem;
+  animation: kg-pop-in .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes kg-pop-in {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* Animated badge icon */
+.kg-modal-badge-icon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  margin-bottom: .5rem;
+  animation: kg-glow 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes kg-glow {
+  from { box-shadow: 0 0 10px rgba(124, 58, 237, 0.35); }
+  to   { box-shadow: 0 0 28px rgba(124, 58, 237, 0.75), 0 0 50px rgba(124, 58, 237, 0.3); }
+}
+
+.kg-modal-congrats {
+  font-size: 1.1rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.kg-modal-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0;
+}
+
+.kg-modal-badge-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.kg-modal-desc {
+  font-size: .9rem;
+  color: #475569;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.kg-modal-next-hint {
+  font-size: .82rem;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: .55rem .85rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kg-modal-close-btn {
+  margin-top: .5rem;
+  padding: .8rem 2.2rem;
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.kg-modal-close-btn:hover,
+.kg-modal-close-btn:focus-visible {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  outline: 3px solid #a855f7;
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════
+   Sound Toggle Button
+═══════════════════════════════════════════════════ */
+
+.kg-sound-toggle {
+  background: none;
+  border: 2px solid #e2e8f0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color .15s, background .15s;
+  flex-shrink: 0;
+}
+
+.kg-sound-toggle:hover {
+  border-color: #7c3aed;
+  background: #ede9fe;
+}
+
+/* ═══════════════════════════════════════════════════
+   Badge Shelf — locked / unlocked states
+═══════════════════════════════════════════════════ */
+
+.kg-shelf-badge-locked {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.kg-shelf-badge-earned {
+  opacity: 1;
+}
+
+.kg-shelf-badge-date {
+  font-size: .6rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════
+   BuilderBadges — Challenge Panel Styles
+═══════════════════════════════════════════════════ */
+
+.kg-challenge-panel {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: .85rem;
+}
+
+.kg-challenge-story {
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: .9rem;
+  line-height: 1.6;
+  color: #1e293b;
+}
+
+.kg-challenge-prompt {
+  font-size: .98rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  text-align: center;
+}
+
+.kg-challenge-options {
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+
+.kg-challenge-option {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  text-align: left;
+  font-family: inherit;
+  font-size: .9rem;
+  color: #334155;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.kg-challenge-option:not(:disabled):hover {
+  border-color: #7c3aed;
+  background: #faf5ff;
+}
+
+.kg-challenge-option.correct {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #14532d;
+  font-weight: 700;
+}
+
+.kg-challenge-option.wrong {
+  background: #fee2e2;
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+.kg-challenge-option.show-correct {
+  background: #dcfce7;
+  border-color: #16a34a;
+  opacity: 0.75;
+}
+
+.kg-challenge-try-again {
+  font-size: .85rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.kg-challenge-retry-btn {
+  padding: .45rem 1.2rem;
+  border: 2px solid #7c3aed;
+  border-radius: 50px;
+  background: transparent;
+  color: #7c3aed;
+  font-family: inherit;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.kg-challenge-retry-btn:hover {
+  background: #7c3aed;
+  color: #fff;
+}
+
+.kg-challenge-success {
+  font-size: .92rem;
+  font-weight: 700;
+  color: #16a34a;
+  text-align: center;
+  margin: 0;
+  animation: kg-fade-in .3s ease-out;
+}
+
+/* Pick challenge */
+.kg-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .6rem;
+}
+
+.kg-pick-option {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: .75rem .85rem;
+  text-align: center;
+  font-family: inherit;
+  font-size: .85rem;
+  color: #334155;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, transform .12s;
+}
+
+.kg-pick-option:not(:disabled):hover {
+  border-color: #7c3aed;
+  background: #faf5ff;
+}
+
+.kg-pick-option.selected {
+  font-weight: 700;
+  transform: scale(1.03);
+}
+
+.kg-pick-count {
+  font-size: .85rem;
+  color: #64748b;
+  text-align: center;
+  margin: 0;
+}
+
+.kg-challenge-confirm-btn {
+  padding: .8rem 2rem;
+  border: none;
+  border-radius: 50px;
+  background: #e2e8f0;
+  color: #64748b;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .15s, box-shadow .15s;
+  align-self: center;
+}
+
+.kg-challenge-confirm-btn:not(:disabled) {
+  color: #fff;
+  transform: none;
+}
+
+.kg-challenge-confirm-btn:not(:disabled):hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* Breathe challenge */
+.kg-breathe-panel {
+  align-items: center;
+}
+
+.kg-breathe-bubble {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 4px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform .6s ease-in-out, box-shadow .4s;
+  flex-shrink: 0;
+}
+
+.kg-breathe-bubble.expanding {
+  transform: scale(1.35);
+  box-shadow: 0 0 32px rgba(6, 182, 212, 0.45);
+}
+
+.kg-breathe-bubble:not(:disabled):hover {
+  box-shadow: 0 6px 24px rgba(6, 182, 212, 0.35);
+}
+
+.kg-breathe-emoji {
+  font-size: 2.2rem;
+}
+
+.kg-breathe-label {
+  font-size: .7rem;
+  font-weight: 600;
+  color: #334155;
+  text-align: center;
+  max-width: 100px;
+  line-height: 1.3;
+}
+
+/* Badge card call-to-action hint */
+.kg-badge-card-cta {
+  font-size: .72rem;
+  font-weight: 600;
+  color: #7c3aed;
+  margin-top: .15rem;
+}
+
+.kg-badge-locked {
+  opacity: 0.85;
+}
+
+@media (max-width: 480px) {
+  .kg-modal-card {
+    padding: 2rem 1.25rem 1.5rem;
+  }
+
+  .kg-modal-badge-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 2.2rem;
+  }
+
+  .kg-pick-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
