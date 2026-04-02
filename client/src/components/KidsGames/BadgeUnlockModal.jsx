@@ -43,7 +43,7 @@ function ConfettiCanvas() {
     }));
 
     let frame = 0;
-    const TOTAL_FRAMES = 150; // ~5 s at 30 fps
+    const TOTAL_FRAMES = 150; // 5 s at 30 fps
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -95,6 +95,7 @@ function playCelebrationSound() {
     if (!AudioCtx) return;
     const ctx = new AudioCtx();
     const notes = [523.25, 659.25, 783.99, 1046.50]; // C5 E5 G5 C6
+    const CELEBRATION_VOLUME = 0.35; // quiet enough to not startle, audible enough to reward
     notes.forEach((freq, i) => {
       const osc  = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -104,7 +105,7 @@ function playCelebrationSound() {
       osc.frequency.value = freq;
       const start = ctx.currentTime + i * 0.12;
       gain.gain.setValueAtTime(0, start);
-      gain.gain.linearRampToValueAtTime(0.35, start + 0.04);
+      gain.gain.linearRampToValueAtTime(CELEBRATION_VOLUME, start + 0.04);
       gain.gain.exponentialRampToValueAtTime(0.001, start + 0.35);
       osc.start(start);
       osc.stop(start + 0.4);
