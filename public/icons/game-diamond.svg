@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Background -->
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#FFFBEB"/>
+  <!-- Diamond shape -->
+  <polygon points="32,10 54,28 32,54 10,28" fill="#FDE68A" stroke="#D97706" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Top facet -->
+  <polygon points="32,10 44,28 20,28" fill="#FCD34D" stroke="#D97706" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Shine -->
+  <line x1="36" y1="16" x2="40" y2="24" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+</svg>

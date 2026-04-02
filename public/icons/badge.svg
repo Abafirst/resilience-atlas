@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Shield background -->
+  <path d="M32 6 L54 15 L54 34 C54 46 44 56 32 58 C20 56 10 46 10 34 L10 15 Z" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Star in centre -->
+  <polygon points="32,20 34.5,27 42,27 36,31.5 38.5,39 32,34.5 25.5,39 28,31.5 22,27 29.5,27" fill="#7C3AED"/>
+</svg>

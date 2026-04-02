@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Circle background -->
+  <circle cx="32" cy="32" r="27" fill="#FFFBEB" stroke="#D97706" stroke-width="2.5"/>
+  <!-- Trophy cup -->
+  <path d="M22 14 L42 14 L42 32 C42 39 37 43 32 43 C27 43 22 39 22 32 Z" fill="#FCD34D" stroke="#D97706" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Trophy handles -->
+  <path d="M22 18 C16 18 14 24 18 26 C20 27 22 26 22 26" stroke="#D97706" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M42 18 C48 18 50 24 46 26 C44 27 42 26 42 26" stroke="#D97706" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Base stem -->
+  <rect x="29" y="43" width="6" height="6" fill="#D97706"/>
+  <!-- Base plate -->
+  <rect x="22" y="49" width="20" height="4" rx="2" fill="#D97706"/>
+  <!-- Star inside cup -->
+  <polygon points="32,20 33.5,24.5 38,24.5 34.5,27 36,32 32,29 28,32 29.5,27 26,24.5 30.5,24.5" fill="#fff" opacity="0.8"/>
+</svg>

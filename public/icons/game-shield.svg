@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Shield shape -->
+  <path d="M32 6 L56 16 L56 36 C56 48 44 57 32 59 C20 57 8 48 8 36 L8 16 Z" fill="#EDE9FE" stroke="#6D28D9" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Lightning bolt / battle mark -->
+  <polygon points="36,14 28,32 34,32 28,50 36,32 30,32" fill="#6D28D9"/>
+</svg>
