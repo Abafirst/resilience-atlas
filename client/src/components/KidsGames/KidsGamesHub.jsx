@@ -63,13 +63,16 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
-    // Wait for React to re-render the game container before scrolling into view
-    setTimeout(() => {
-      if (gameContainerRef.current) {
-        gameContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 50);
   }, []);
+
+  // Scroll to the game container after it mounts, not to the top of the page
+  useEffect(() => {
+    if (!activeGame) return;
+    const el = document.getElementById('kg-game-active');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeGame]);
 
   const goBack = useCallback(() => {
     setActiveGame(null);
@@ -89,6 +92,7 @@ export default function KidsGamesHub() {
       );
     }
     return (
+      <div className="kg-hub-wrapper" id="kg-game-active">
       <div className="kg-hub-wrapper" ref={gameContainerRef}>
         {badgeToast && <BadgeToast badge={badgeToast} />}
         <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
@@ -103,7 +107,7 @@ export default function KidsGamesHub() {
       {/* Hub header */}
       <div className="kg-hub-header">
         <span className="section-label">Interactive Games</span>
-        <h2 className="kg-hub-title">🎮 Resilience Games</h2>
+        <h2 className="kg-hub-title">🧭 Resilience Games</h2>
         <p className="kg-hub-subtitle">
           Fun games that teach resilience skills! Earn stars, collect badges, and go on adventures with Maya, Kai, Jordan, Alex, Sam, and River.
         </p>

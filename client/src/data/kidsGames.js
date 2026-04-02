@@ -231,10 +231,10 @@ export const GAME_CARDS = {
     {
       id: 'navigator-quest',
       title: 'Navigator Quest',
-      emoji: '⚔️',
+      emoji: '🎯',
       ageRange: 'Ages 8–12',
       description: 'Go on a multi-step adventure! Choose a dimension, solve challenges, unlock story chapters.',
-      cta: 'Start Quest!',
+      cta: 'Start Adventure!',
       color: '#e0f2fe',
       accentColor: '#0284c7',
     },
