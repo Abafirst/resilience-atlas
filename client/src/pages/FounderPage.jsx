@@ -336,7 +336,7 @@ export default function FounderPage() {
 
           {/* Personal Journey */}
           <section className="founder-section" aria-labelledby="journey-heading">
-            <h2 id="journey-heading">A Mission Born from Lived Experience</h2>
+            <h2 id="journey-heading">The Map Comes from Real Navigation</h2>
             <p>
               Janeen Molchany's journey to founding The Resilience Atlas&#8482; did not begin in an office
               or a laboratory. It began in the foster care system.
@@ -349,8 +349,8 @@ export default function FounderPage() {
             </p>
             <p>
               That lived experience planted a question that would guide her entire career: <em>What makes
-              resilience possible? And why are some people able to navigate hardship and emerge stronger,
-              while others remain stuck?</em>
+              resilience possible? And why are some people able to navigate hardship and emerge transformed,
+              while others feel stuck?</em>
             </p>
             <div className="pullquote">
               <p>
@@ -494,24 +494,23 @@ export default function FounderPage() {
             <p>
               Janeen's vision for The Resilience Atlas&#8482; is rooted in both her personal history and her
               professional expertise: a world in which every person — regardless of background, resources,
-              or circumstance — has access to evidence-based tools for understanding and building their
-              resilience.
+              or circumstance — has access to an honest, multidimensional map of their own resilience.
             </p>
             <div className="pullquote">
               <p>
                 "The Resilience Atlas&#8482; exists because resilience is too important to remain locked inside
-                academic journals. Every person deserves a map of their own inner strength — and the tools
-                to cultivate it."
+                academic journals. Every person deserves a map of their own inner terrain — and the tools
+                to navigate it."
               </p>
             </div>
             <p>
               That mission is especially close to her heart for the populations she knows best: foster youth,
               families navigating disability, communities facing systemic adversity, and anyone who has ever
-              wondered whether they are resilient enough to survive what life has thrown at them.
+              wondered whether they have what it takes to navigate what life has thrown at them.
             </p>
             <p>
               The answer, the research consistently shows, is yes — and The Resilience Atlas&#8482; is here
-              to help you understand how.
+              to help you understand exactly how.
             </p>
           </section>
 
@@ -520,10 +519,10 @@ export default function FounderPage() {
 
       {/* CTA */}
       <section className="cta-band" aria-label="Explore the Resilience Atlas">
-        <h2>Experience the Framework Janeen Built</h2>
-        <p>Take the assessment grounded in 13 years of doctoral research and clinical practice.</p>
-        <a className="btn-white" href="/quiz">Take the Assessment</a>
-        <a className="btn-outline" href="/research">Explore the Research</a>
+        <h2>Navigate the Framework Janeen Built</h2>
+        <p>Explore your resilience map, grounded in 13 years of doctoral research and lived experience.</p>
+        <a className="btn-white" href="/quiz">Explore Your Map</a>
+        <a className="btn-outline" href="/research">Navigate the Research</a>
         <a className="btn-outline" href="/about">About the Atlas</a>
       </section>
 

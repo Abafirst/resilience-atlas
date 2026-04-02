@@ -166,20 +166,20 @@ export default function AssessmentPage() {
       {/* Hero */}
       <section className="assessment-hero" aria-labelledby="assessment-heading">
         <span className="hero-eyebrow">The Resilience Atlas Assessment</span>
-        <h1 id="assessment-heading">Map Your Six Dimensions of Resilience</h1>
+        <h1 id="assessment-heading">72 Questions. One Map.</h1>
         <p>
-          The Resilience Atlas Assessment is a 72-question resilience assessment grounded in doctoral research.
-          It maps your resilience across six dimensions, revealing how you adapt, recover, and
-          grow under pressure.
+          In the next 15 minutes, you&rsquo;ll explore how you show up under pressure across six
+          key dimensions of resilience. This isn&rsquo;t pass/fail. It&rsquo;s a snapshot of how you currently
+          navigate challenges&mdash;a compass point on your resilience landscape.
         </p>
         <div className="assessment-meta">
           <span className="meta-chip">10–15 minutes</span>
           <span className="meta-chip">72 questions</span>
-          <span className="meta-chip">Personalized results</span>
+          <span className="meta-chip">Personalized map</span>
           <span className="meta-chip">No account required</span>
         </div>
         <a className="btn-hero-primary" href="/quiz">
-          <span aria-hidden="true">&#9654;</span> Start the Assessment
+          <span aria-hidden="true">&#9654;</span> Establish My Position
         </a>
       </section>
 
@@ -187,26 +187,26 @@ export default function AssessmentPage() {
       <section className="assessment-how" aria-labelledby="how-heading">
         <div className="section-header" style={{textAlign:'center',marginBottom:'2rem'}}>
           <span className="section-label">How It Works</span>
-          <h2 id="how-heading">Simple, Structured, Insightful</h2>
+          <h2 id="how-heading">Your Navigation Guide</h2>
           <p style={{color:'var(--slate-600)',maxWidth:'560px',margin:'.75rem auto 0'}}>
-            Three straightforward steps from start to personalized resilience profile.
+            Three steps to establish your starting position on the resilience landscape.
           </p>
         </div>
         <div className="how-steps">
           <div className="how-step">
             <div className="how-step-num">1</div>
             <h3>Answer 72 Questions</h3>
-            <p>Rate each statement on a 1–5 scale. Questions span all six resilience dimensions. Take your time — there are no right or wrong answers.</p>
+            <p>Rate each statement on a 1–5 scale. Questions span all six resilience dimensions. There are no right or wrong answers&mdash;only honest ones.</p>
           </div>
           <div className="how-step">
             <div className="how-step-num">2</div>
-            <h3>See Your Profile</h3>
-            <p>Your answers are scored instantly across six dimensions. A radar chart reveals your unique resilience shape — your strengths and growth edges.</p>
+            <h3>See Your Map</h3>
+            <p>Your answers are scored across six dimensions. A compass reveals your unique resilience shape&mdash;your primary strengths and your emerging edges.</p>
           </div>
           <div className="how-step">
             <div className="how-step-num">3</div>
-            <h3>Get Your Narrative Report</h3>
-            <p>Receive a personalized report with interpretation, growth suggestions, and an evolution summary if you've taken the assessment before.</p>
+            <h3>Navigate from Here</h3>
+            <p>Receive a personalized report with interpretation, compass points for growth, and an evolution summary if you&rsquo;ve mapped your resilience before.</p>
           </div>
         </div>
       </section>
@@ -215,8 +215,8 @@ export default function AssessmentPage() {
       <section className="dimensions-section" aria-labelledby="dim-heading" id="dimensions">
         <div className="section-header">
           <span className="section-label">What We Measure</span>
-          <h2 id="dim-heading">The Six Dimensions of Resilience</h2>
-          <p>Each dimension reflects a distinct capacity that contributes to how you navigate adversity. The assessment measures all six.</p>
+          <h2 id="dim-heading">The Six Dimensions of Your Map</h2>
+          <p>Each dimension reflects a distinct capacity that shapes how you navigate adversity. Together, they form your complete resilience constellation.</p>
         </div>
         <div className="dim-cards">
           <div className="dim-card">
@@ -286,9 +286,9 @@ export default function AssessmentPage() {
 
       {/* CTA */}
       <section className="cta-band" aria-label="Start assessment">
-        <h2>Ready to Map Your Resilience?</h2>
-        <p>Takes 10–15 minutes. No account required. Personalized results immediately.</p>
-        <a className="btn-cta" href="/quiz">Take the Assessment &rarr;</a>
+        <h2>Ready to Establish Your Position?</h2>
+        <p>Takes 10–15 minutes. No account required. Your resilience map, immediately.</p>
+        <a className="btn-cta" href="/quiz">Navigate My Resilience &rarr;</a>
       </section>
 
       <footer className="site-footer" role="contentinfo">
