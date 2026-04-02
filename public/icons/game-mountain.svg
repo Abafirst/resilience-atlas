@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Sky background -->
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#ECFDF5"/>
+  <!-- Back mountain -->
+  <polygon points="40,12 58,52 22,52" fill="#A7F3D0" stroke="#059669" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Front mountain -->
+  <polygon points="22,18 46,52 -2,52" fill="#10B981" stroke="#059669" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Snow cap -->
+  <polygon points="22,18 26,28 18,28" fill="#fff" stroke="#059669" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Summit flag -->
+  <line x1="22" y1="18" x2="22" y2="10" stroke="#059669" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="22,10 30,13 22,16" fill="#F59E0B"/>
+</svg>

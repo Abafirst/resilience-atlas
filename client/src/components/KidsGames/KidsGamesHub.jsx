@@ -189,7 +189,10 @@ export default function KidsGamesHub() {
       {/* Hub header */}
       <div className="kg-hub-header">
         <span className="section-label">Interactive Games</span>
-        <h2 className="kg-hub-title">🧭 Resilience Games</h2>
+        <h2 className="kg-hub-title">
+          <img src="/icons/compass.svg" alt="" aria-hidden="true" className="kg-hub-title-icon" />
+          Resilience Games
+        </h2>
         <p className="kg-hub-subtitle">
           Fun games that teach resilience skills! Earn stars, collect badges, and go on adventures with Maya, Kai, Jordan, Alex, Sam, and River.
         </p>
@@ -197,13 +200,19 @@ export default function KidsGamesHub() {
         {/* Stars & badges summary */}
         <div className="kg-hub-stats" aria-label="Your progress">
           <div className="kg-stat">
-            <span className="kg-stat-icon" aria-hidden="true">⭐</span>
+            <span className="kg-stat-icon" aria-hidden="true">
+              <img src="/icons/star.svg" alt="" className="kg-stat-icon-img" />
+            </span>
             <span className="kg-stat-num">{stars}</span>
             <span className="kg-stat-label">Stars</span>
           </div>
           <div className="kg-stat">
             <span className="kg-stat-icon" aria-hidden="true">🏅</span>
             <span className="kg-stat-num">{earnedBadges.length}/{totalBadges}</span>
+            <span className="kg-stat-icon" aria-hidden="true">
+              <img src="/icons/badge.svg" alt="" className="kg-stat-icon-img" />
+            </span>
+            <span className="kg-stat-num">{earnedBadges.length}</span>
             <span className="kg-stat-label">Badges</span>
           </div>
           {/* Sound toggle */}
@@ -265,6 +274,31 @@ export default function KidsGamesHub() {
               </div>
             );
           })}
+      {/* Badge shelf */}
+      {earnedBadges.length > 0 && (
+        <div className="kg-badge-shelf" aria-label="Your collected badges">
+          <h3 className="kg-badge-shelf-title">
+            <img src="/icons/badge.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
+            Your Badge Collection
+          </h3>
+          <div className="kg-badge-shelf-row">
+            {earnedBadges.map(id => {
+              const badge = getBadgeById(id);
+              if (!badge) return null;
+              return (
+                <div
+                  key={id}
+                  className="kg-shelf-badge"
+                  style={{ background: badge.color, borderColor: badge.border }}
+                  title={badge.label}
+                  aria-label={`${badge.label}: ${badge.desc}`}
+                >
+                  <span className="kg-shelf-badge-emoji" aria-hidden="true">{badge.emoji}</span>
+                  <span className="kg-shelf-badge-label">{badge.label}</span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
@@ -281,7 +315,7 @@ function BadgeToast({ badge }) {
     >
       <span className="kg-badge-toast-emoji" aria-hidden="true">{badge.emoji}</span>
       <div>
-        <strong>🏅 Badge Unlocked: {badge.label}!</strong>
+        <strong><img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
         <p style={{ margin: 0, fontSize: '.82rem' }}>{badge.desc}</p>
       </div>
     </div>
