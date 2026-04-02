@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  KIDS_DIMENSION_ICON_MAP,
+import SiteHeader from '../components/SiteHeader.jsx';
+import {  KIDS_DIMENSION_ICON_MAP,
   KIDS_ACTIVITIES,
   KIDS_CHARACTERS,
   KIDS_STORIES,
@@ -199,26 +199,7 @@ export default function KidsPage() {
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
-      <header className="site-header" role="banner">
-        <div className="header-inner">
-          <a className="logo" href="/">
-            <div className="logo-icon" aria-hidden="true">
-              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36" />
-            </div>
-            The Resilience Atlas&#8482;
-          </a>
-          <nav className="header-nav" aria-label="Main navigation">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/assessment" className="nav-link">Assessment</a>
-            <a href="/research" className="nav-link">Research</a>
-            <a href="/teams" className="nav-link">Teams</a>
-            <a href="/kids" className="nav-link active">Kids</a>
-            <a href="/about" className="nav-link">About</a>
-            <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
-            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader activePage="kids" />
 
       {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">

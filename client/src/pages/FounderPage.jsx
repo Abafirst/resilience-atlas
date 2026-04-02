@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import SiteHeader from '../components/SiteHeader.jsx';
 
 const styles = `
     .founder-hero {
@@ -295,26 +296,7 @@ export default function FounderPage() {
 
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
-      <header className="site-header" role="banner">
-        <div className="header-inner">
-          <a className="logo" href="/">
-            <div className="logo-icon" aria-hidden="true">
-              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas" width="36" height="36" />
-            </div>
-            The Resilience Atlas&#8482;
-          </a>
-          <nav className="header-nav" aria-label="Main navigation">
-            <a href="/" className="nav-link">Home</a>
-            <a href="/assessment" className="nav-link">Assessment</a>
-            <a href="/research" className="nav-link">Research</a>
-            <a href="/teams" className="nav-link">Teams</a>
-            <a href="/kids" className="nav-link">Kids</a>
-            <a href="/about" className="nav-link">About</a>
-            <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
-            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader activePage="about" />
 
       {/* Hero */}
       <section className="founder-hero" aria-labelledby="founder-heading">

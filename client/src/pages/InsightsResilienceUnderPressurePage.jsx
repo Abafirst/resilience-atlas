@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import SiteHeader from '../components/SiteHeader.jsx';
 
 const styles = `
   .article-body { max-width:720px; margin:0 auto; padding:3rem 1.25rem 4rem; }
@@ -25,15 +26,11 @@ export default function InsightsResilienceUnderPressurePage() {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <header className="site-header">
-        <div className="header-inner">
-          <a className="logo" href="/">The Resilience Atlas&#8482;</a>
-          <nav style={{display:'flex',alignItems:'center',gap:'1rem'}}>
-            <a href="/insights" style={{fontSize:'.92rem',color:'#4F46E5',fontWeight:600}}>Insights</a>
-            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader
+        navItems={[
+          { href: '/insights', label: 'Insights', key: 'insights' },
+        ]}
+      />
 
       <article className="article-body" aria-labelledby="articleHeading">
         <p className="article-meta">Resilience Atlas Insights &mdash; Applied Research</p>
