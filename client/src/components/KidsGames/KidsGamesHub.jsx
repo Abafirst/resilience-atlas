@@ -3,7 +3,7 @@ import AgeSelector from './AgeSelector';
 import GameCard from './GameCard';
 import CompassSpinner from './CompassSpinner';
 import MapCollector from './MapCollector';
-import BuilderBadges from './BuilderBadges';
+import BadgeQuestGame from './BadgeQuestGame';
 import NavigatorQuest from './NavigatorQuest';
 import ResilienceMountain from './ResilienceMountain';
 import TreasureExplorer from './TreasureExplorer';
@@ -18,7 +18,7 @@ import '../../styles/kidsGames.css';
 const GAME_COMPONENTS = {
   'compass-spinner':       CompassSpinner,
   'map-collector':         MapCollector,
-  'builder-badges':        BuilderBadges,
+  'builder-badges':        BadgeQuestGame,
   'navigator-quest':       NavigatorQuest,
   'resilience-mountain':   ResilienceMountain,
   'treasure-explorer':     TreasureExplorer,
@@ -166,7 +166,7 @@ export default function KidsGamesHub() {
           />
         )}
         {badgeToast && <BadgeToast badge={badgeToast} />}
-        <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
+        <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} ageGroup={ageGroup} />
       </div>
     );
   }
@@ -274,31 +274,6 @@ export default function KidsGamesHub() {
               </div>
             );
           })}
-      {/* Badge shelf */}
-      {earnedBadges.length > 0 && (
-        <div className="kg-badge-shelf" aria-label="Your collected badges">
-          <h3 className="kg-badge-shelf-title">
-            <img src="/icons/badge.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
-            Your Badge Collection
-          </h3>
-          <div className="kg-badge-shelf-row">
-            {earnedBadges.map(id => {
-              const badge = getBadgeById(id);
-              if (!badge) return null;
-              return (
-                <div
-                  key={id}
-                  className="kg-shelf-badge"
-                  style={{ background: badge.color, borderColor: badge.border }}
-                  title={badge.label}
-                  aria-label={`${badge.label}: ${badge.desc}`}
-                >
-                  <span className="kg-shelf-badge-emoji" aria-hidden="true">{badge.emoji}</span>
-                  <span className="kg-shelf-badge-label">{badge.label}</span>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     </div>
