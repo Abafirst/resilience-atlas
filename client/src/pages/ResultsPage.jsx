@@ -1409,6 +1409,18 @@ const s = {
     letterSpacing: '0.04em',
   }),
   practiceSteps: { listStyle: 'decimal', paddingLeft: 18, margin: '0 0 10px', fontSize: 12, color: '#4a5568', lineHeight: 2 },
+  practiceDimHeader: (color) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    fontSize: 14,
+    fontWeight: 700,
+    color: color,
+    borderBottom: `2px solid ${color}`,
+    paddingBottom: 8,
+    marginBottom: 14,
+    marginTop: 20,
+  }),
   // ── Gamification (Atlas Starter+) ──
   gamHeader: {
     background: 'linear-gradient(135deg, #f0fdf4, #ecfdf5)',
@@ -2972,11 +2984,11 @@ export default function ResultsPage() {
         </section>
 
         {/* ── Evidence-Based Practices ──────────────────────────────── */}
-        {dominantType && EVIDENCE_PRACTICES[dominantType] && (
+        {Object.keys(EVIDENCE_PRACTICES).length > 0 && (
           <section style={s.practicesSection} aria-labelledby="practicesHeading">
             <div style={s.practicesHeading} id="practicesHeading"><BrandIcon name="flask" size={17} color="#10b981" /> Evidence-Based Micro-Practices</div>
             <p style={s.practicesSubheading}>
-              Practices for <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong> —
+              Practices across all 6 resilience dimensions —
               grounded in Acceptance and Commitment Therapy (ACT) and Applied Behavior Analysis (ABA).
             </p>
 
@@ -3020,79 +3032,88 @@ export default function ResultsPage() {
               );
             })()}
 
-            {EVIDENCE_PRACTICES[dominantType].map((practice) => {
-              const color = DIM_COLORS[dominantType] || '#667eea';
-              const practiceKey = practice.title;
-              const isCompleted = !!(gamData.completions[practiceKey]);
-              const isTimerActive = timerData && timerData.practiceKey === practiceKey;
-              const timerFinished = isTimerActive && timerData.secondsLeft === 0;
-              const durSecs = parseDurationSecs(practice.duration);
+            {Object.entries(EVIDENCE_PRACTICES).map(([dim, practices]) => {
+              const color = DIM_COLORS[dim] || '#667eea';
               return (
-                <div
-                  key={practice.title}
-                  style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
-                >
-                  <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
-                      <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
-                    </div>
-                    {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed">✅</span>}
+                <div key={dim}>
+                  <div style={s.practiceDimHeader(color)} aria-label={`${dim} practices`}>
+                    <span>{dim}</span>
                   </div>
-                  <div style={s.practiceTags}>
-                    <span style={s.practiceTag}>⏱ {practice.duration}</span>
-                    <span style={s.practiceTag}>{practice.difficulty}</span>
-                  </div>
-                  <div style={s.practicePrinciples}>
-                    <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
-                    <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
-                  </div>
-                  <ol style={s.practiceSteps}>
-                    {practice.instructions.map((step, i) => (
-                      <li key={i}>{step}</li>
-                    ))}
-                  </ol>
-                  <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
-                    Educational note: These practices support self-reflection. Not therapeutic treatment.
-                  </p>
-
-                  {/* ── Gamification controls (Atlas Starter+) ────────── */}
-                  {hasPremiumAccess && (
-                    <div style={s.gamActions}>
-                      {/* Timer */}
-                      {durSecs > 0 && !isCompleted && !isTimerActive && (
-                        <button
-                          type="button"
-                          style={s.gamTimerBtn}
-                          onClick={() => startTimer(practiceKey, durSecs)}
-                          aria-label={`Start ${practice.duration} timer for ${practice.title}`}
-                        >
-                          ⏱ Start Timer
-                        </button>
-                      )}
-                      {isTimerActive && (
-                        <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
-                          <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
-                          {!timerFinished && (
-                            <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
-                              {timerData.running ? '⏸' : '▶'}
-                            </button>
-                          )}
-                          <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
-                        </div>
-                      )}
-                      {/* Mark complete */}
-                      <button
-                        type="button"
-                        style={s.gamCompleteBtn(isCompleted)}
-                        onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
-                        aria-pressed={isCompleted}
-                        aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                  {practices.map((practice) => {
+                    const practiceKey = practice.title;
+                    const isCompleted = !!(gamData.completions[practiceKey]);
+                    const isTimerActive = timerData && timerData.practiceKey === practiceKey;
+                    const timerFinished = isTimerActive && timerData.secondsLeft === 0;
+                    const durSecs = parseDurationSecs(practice.duration);
+                    return (
+                      <div
+                        key={practice.title}
+                        style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
                       >
-                        {isCompleted ? '✅ Completed!' : '☐ Mark Complete'}
-                      </button>
-                    </div>
-                  )}
+                        <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
+                            <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
+                          </div>
+                          {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed">✅</span>}
+                        </div>
+                        <div style={s.practiceTags}>
+                          <span style={s.practiceTag}>⏱ {practice.duration}</span>
+                          <span style={s.practiceTag}>{practice.difficulty}</span>
+                        </div>
+                        <div style={s.practicePrinciples}>
+                          <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
+                          <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
+                        </div>
+                        <ol style={s.practiceSteps}>
+                          {practice.instructions.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ol>
+                        <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
+                          Educational note: These practices support self-reflection. Not therapeutic treatment.
+                        </p>
+
+                        {/* ── Gamification controls (Atlas Starter+) ────────── */}
+                        {hasPremiumAccess && (
+                          <div style={s.gamActions}>
+                            {/* Timer */}
+                            {durSecs > 0 && !isCompleted && !isTimerActive && (
+                              <button
+                                type="button"
+                                style={s.gamTimerBtn}
+                                onClick={() => startTimer(practiceKey, durSecs)}
+                                aria-label={`Start ${practice.duration} timer for ${practice.title}`}
+                              >
+                                ⏱ Start Timer
+                              </button>
+                            )}
+                            {isTimerActive && (
+                              <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
+                                <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
+                                {!timerFinished && (
+                                  <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
+                                    {timerData.running ? '⏸' : '▶'}
+                                  </button>
+                                )}
+                                <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
+                              </div>
+                            )}
+                            {/* Mark complete */}
+                            <button
+                              type="button"
+                              style={s.gamCompleteBtn(isCompleted)}
+                              onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
+                              aria-pressed={isCompleted}
+                              aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                            >
+                              {isCompleted ? '✅ Completed!' : '☐ Mark Complete'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })}
