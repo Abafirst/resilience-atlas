@@ -1850,9 +1850,10 @@ function calcGamStreak(completions) {
   for (let i = dates.length - 1; i >= 0; i--) {
     if (dates[i] === checkDate) {
       streak++;
-      const d = new Date(checkDate + 'T00:00:00');
-      d.setDate(d.getDate() - 1);
-      checkDate = d.toISOString().slice(0, 10);
+      // Parse year/month/day to avoid timezone-related shifts
+      const [y, mo, dy] = checkDate.split('-').map(Number);
+      const d = new Date(y, mo - 1, dy - 1);
+      checkDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     } else if (dates[i] < checkDate) {
       break;
     }
@@ -1947,8 +1948,9 @@ export default function ResultsPage() {
   }, [gamData]);
 
   // ── Timer tick effect ──────────────────────────────────────────────────
+  const timerRunning = timerData ? timerData.running : false;
   useEffect(() => {
-    if (timerData && timerData.running) {
+    if (timerRunning) {
       timerIntervalRef.current = setInterval(() => {
         setTimerData(prev => {
           if (!prev || !prev.running) return prev;
@@ -1964,7 +1966,7 @@ export default function ResultsPage() {
       clearInterval(timerIntervalRef.current);
     }
     return () => clearInterval(timerIntervalRef.current);
-  }, [timerData && timerData.running]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [timerRunning]);
 
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
@@ -2489,6 +2491,12 @@ export default function ResultsPage() {
     setTimerData(null);
   }, []);
 
+  /** Combined handler: toggle practice completion and stop its timer if running. */
+  const handleTogglePractice = useCallback((practiceKey, isTimerActive) => {
+    togglePractice(practiceKey);
+    if (isTimerActive) stopTimer();
+  }, [togglePractice, stopTimer]);
+
   // ── Derived values ─────────────────────────────────────────────────────
   // hasPremiumAccess is only true once the backend has confirmed the tier
   // (tierCheckComplete). This prevents localStorage-only values from granting
@@ -2997,7 +3005,7 @@ export default function ResultsPage() {
                   <div style={s.gamProgressTrack} role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100} aria-label={`${progressPct}% of all practices completed`}>
                     <div style={s.gamProgressFill(progressPct)} />
                   </div>
-                  <div style={s.gamProgressLabel}>{progressPct}% of all practices completed this week</div>
+                  <div style={s.gamProgressLabel}>{progressPct}% of all practices completed</div>
                   {gamData.badges.length > 0 && (
                     <div style={s.gamBadgesRow} aria-label="Earned badges">
                       {gamData.badges.map(b => (
@@ -3077,7 +3085,7 @@ export default function ResultsPage() {
                       <button
                         type="button"
                         style={s.gamCompleteBtn(isCompleted)}
-                        onClick={() => { togglePractice(practiceKey); if (isTimerActive) stopTimer(); }}
+                        onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
                         aria-pressed={isCompleted}
                         aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
                       >
