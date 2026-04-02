@@ -463,7 +463,7 @@ export default function PrivacyPage() {
             ))}
           </div>
 
-          <a className="privacy-cta-btn" href="/team-analytics" aria-label="Open team dashboard to download your data">
+          <a className="privacy-cta-btn" href="/team" aria-label="Open team dashboard to download your data">
             Open Team Dashboard →
           </a>
         </section>

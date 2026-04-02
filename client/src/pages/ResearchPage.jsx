@@ -228,6 +228,44 @@ export default function ResearchPage() {
               Every person has resilience — and every person has the potential to grow.
             </p>
 
+            {/* Six Dimensions Overview */}
+            <div className="dimensions-overview" style={{ margin: '2rem 0 1.5rem' }}>
+              <p style={{ fontSize: '1rem', color: 'var(--research-slate-600)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+                Resilience is built on <strong>six interacting capacities</strong>. Each dimension represents
+                a different way you navigate challenges — and together they form a complete picture of your
+                resilience profile. Strengthening any one dimension can positively influence the others.
+              </p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '1rem',
+                marginBottom: '1.5rem',
+              }}>
+                {[
+                  { name: 'Relational-Connective', color: '#7C3AED', bg: '#EDE9FE', desc: 'Sustaining supportive relationships' },
+                  { name: 'Cognitive-Narrative',   color: '#2563EB', bg: '#DBEAFE', desc: 'Interpreting challenges constructively' },
+                  { name: 'Somatic-Regulative',    color: '#059669', bg: '#D1FAE5', desc: 'Regulating the body\'s stress response' },
+                  { name: 'Emotional-Adaptive',    color: '#DC2626', bg: '#FEE2E2', desc: 'Processing difficult emotions effectively' },
+                  { name: 'Agentic-Generative',    color: '#D97706', bg: '#FEF3C7', desc: 'Taking purposeful action under pressure' },
+                  { name: 'Spiritual-Reflective',  color: '#0891B2', bg: '#CFFAFE', desc: 'Drawing on meaning, values, and purpose' },
+                ].map(dim => (
+                  <div key={dim.name} style={{
+                    background: dim.bg,
+                    border: `1.5px solid ${dim.color}30`,
+                    borderLeft: `4px solid ${dim.color}`,
+                    borderRadius: '8px',
+                    padding: '0.85rem 1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.25rem',
+                  }}>
+                    <span style={{ fontWeight: 700, fontSize: '0.9rem', color: dim.color }}>{dim.name}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--research-slate-600)', lineHeight: 1.5 }}>{dim.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Circular Compass Layout */}
             <div className="compass-layout" role="img" aria-label="Animated brand compass showing all six resilience dimensions with a rotating needle indicating the dominant dimension">
               <div className="compass-center" aria-hidden="true">

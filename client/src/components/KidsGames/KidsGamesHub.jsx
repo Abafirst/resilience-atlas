@@ -62,7 +62,13 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to the game container after it renders, not to top of page
+    setTimeout(() => {
+      const el = document.getElementById('kg-game-active');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   }, []);
 
   const goBack = useCallback(() => {
@@ -83,7 +89,7 @@ export default function KidsGamesHub() {
       );
     }
     return (
-      <div className="kg-hub-wrapper">
+      <div className="kg-hub-wrapper" id="kg-game-active">
         {badgeToast && <BadgeToast badge={badgeToast} />}
         <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
       </div>
@@ -97,7 +103,7 @@ export default function KidsGamesHub() {
       {/* Hub header */}
       <div className="kg-hub-header">
         <span className="section-label">Interactive Games</span>
-        <h2 className="kg-hub-title">🎮 Resilience Games</h2>
+        <h2 className="kg-hub-title">🧭 Resilience Games</h2>
         <p className="kg-hub-subtitle">
           Fun games that teach resilience skills! Earn stars, collect badges, and go on adventures with Maya, Kai, Jordan, Alex, Sam, and River.
         </p>
