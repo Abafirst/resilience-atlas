@@ -888,6 +888,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canRetake) {
       retakeButton.addEventListener('click', () => {
         localStorage.removeItem('resilience_results');
+        // Clear the stored tier so payment gating runs fresh on the next
+        // results page visit, ensuring the new assessment is properly gated.
+        localStorage.removeItem('resilience_tier');
         window.location.href = 'quiz.html';
       });
     } else {

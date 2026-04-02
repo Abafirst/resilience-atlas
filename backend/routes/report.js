@@ -455,9 +455,11 @@ router.get('/access', accessLimiter, async (req, res) => {
         return res.status(400).json({ error: 'Missing email parameter', hasAccess: false });
     }
 
-    // In dev/test environments (no Stripe key) grant access so that local
-    // development can exercise the download flow without needing real purchases.
-    if (!process.env.STRIPE_SECRET_KEY) {
+    // In dev/test environments (no Stripe key and not production) grant access
+    // so that local development can exercise the download flow without real purchases.
+    // In production (NODE_ENV=production) we always check the database even if
+    // STRIPE_SECRET_KEY is missing, to prevent accidental free access.
+    if (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production') {
         return res.json({ hasAccess: true, purchases: [] });
     }
 
