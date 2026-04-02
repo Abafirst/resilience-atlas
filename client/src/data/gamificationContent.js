@@ -19,14 +19,20 @@ export const TIER_DISPLAY = {
   'atlas-navigator': 'Atlas Navigator',
 };
 
+/** Tiers that include Atlas Starter access (or above). */
+const STARTER_AND_ABOVE = ['atlas-starter', 'atlas-navigator', 'atlas-premium'];
+
+/** Tiers that include Atlas Navigator access (or above). */
+const NAVIGATOR_AND_ABOVE = ['atlas-navigator', 'atlas-premium'];
+
 /** Returns true when the tier grants Atlas Starter (or above) access. */
 export function isStarterOrAbove(tier) {
-  return ['atlas-starter', 'atlas-navigator', 'atlas-premium'].includes(tier);
+  return STARTER_AND_ABOVE.includes(tier);
 }
 
 /** Returns true when the tier grants Atlas Navigator (or above) access. */
 export function isNavigatorOrAbove(tier) {
-  return ['atlas-navigator', 'atlas-premium'].includes(tier);
+  return NAVIGATOR_AND_ABOVE.includes(tier);
 }
 
 // ── Navigation Milestones (Atlas Starter) ─────────────────────────────────────

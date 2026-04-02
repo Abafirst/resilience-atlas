@@ -151,7 +151,7 @@ export default function ResilienceMap({ progress, fetchLeaderboard, onEnableLead
         <button
           style={s.optInBtn}
           onClick={async () => {
-            try { await onEnableLeaderboard(); } catch (_) { /* toasts handled by hook */ }
+            try { await onEnableLeaderboard(); } catch (err) { /* toasts handled by hook */ }
           }}
         >
           Join Navigator Rankings 🗺️

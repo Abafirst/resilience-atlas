@@ -265,7 +265,7 @@ export default function GamificationDashboard() {
       setTierLoading(false);
       return;
     }
-    const email = (user && user.email) || '';
+    const email = user?.email || '';
     setTierLoading(true);
     fetchUserTier(email)
       .then(tier => setUserTier(tier))
