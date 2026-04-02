@@ -1409,6 +1409,126 @@ const s = {
     letterSpacing: '0.04em',
   }),
   practiceSteps: { listStyle: 'decimal', paddingLeft: 18, margin: '0 0 10px', fontSize: 12, color: '#4a5568', lineHeight: 2 },
+  // ── Gamification (Atlas Starter+) ──
+  gamHeader: {
+    background: 'linear-gradient(135deg, #f0fdf4, #ecfdf5)',
+    border: '1px solid #a7f3d0',
+    borderRadius: 12,
+    padding: '16px 20px',
+    marginBottom: 16,
+  },
+  gamStats: {
+    display: 'flex',
+    gap: 20,
+    flexWrap: 'wrap',
+    marginBottom: 12,
+  },
+  gamStat: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    minWidth: 60,
+  },
+  gamStatValue: { fontSize: 20, fontWeight: 800, color: '#065f46', lineHeight: 1 },
+  gamStatLabel: { fontSize: 10, color: '#047857', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 2 },
+  gamProgressTrack: {
+    background: '#d1fae5',
+    borderRadius: 99,
+    height: 8,
+    overflow: 'hidden',
+    marginBottom: 6,
+  },
+  gamProgressFill: (pct) => ({
+    background: 'linear-gradient(90deg, #10b981, #059669)',
+    borderRadius: 99,
+    height: '100%',
+    width: `${pct}%`,
+    transition: 'width 0.4s ease',
+  }),
+  gamProgressLabel: { fontSize: 11, color: '#065f46', fontWeight: 600 },
+  gamBadgesRow: {
+    display: 'flex',
+    gap: 8,
+    flexWrap: 'wrap',
+    marginTop: 10,
+  },
+  gamBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 4,
+    background: '#fff',
+    border: '1px solid #6ee7b7',
+    borderRadius: 99,
+    padding: '3px 10px',
+    fontSize: 11,
+    fontWeight: 700,
+    color: '#065f46',
+  },
+  gamActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 10,
+    flexWrap: 'wrap',
+  },
+  gamCompleteBtn: (done) => ({
+    padding: '6px 14px',
+    borderRadius: 8,
+    border: done ? '1.5px solid #10b981' : '1.5px solid #d1d5db',
+    background: done ? '#ecfdf5' : '#fff',
+    color: done ? '#065f46' : '#374151',
+    fontSize: 12,
+    fontWeight: 700,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+    transition: 'all 0.2s',
+  }),
+  gamTimerBtn: {
+    padding: '6px 12px',
+    borderRadius: 8,
+    border: '1.5px solid #bfdbfe',
+    background: '#eff6ff',
+    color: '#1d4ed8',
+    fontSize: 12,
+    fontWeight: 700,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+  },
+  gamTimerDisplay: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    background: '#eff6ff',
+    border: '1.5px solid #bfdbfe',
+    borderRadius: 8,
+    padding: '4px 12px',
+  },
+  gamTimerCount: { fontSize: 16, fontWeight: 800, color: '#1d4ed8', fontVariantNumeric: 'tabular-nums', minWidth: 40 },
+  gamTimerPauseBtn: {
+    fontSize: 11,
+    fontWeight: 700,
+    color: '#1d4ed8',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '2px 6px',
+  },
+  gamTimerStopBtn: {
+    fontSize: 11,
+    fontWeight: 600,
+    color: '#6b7280',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '2px 4px',
+  },
+  gamCompleteCard: {
+    opacity: 0.75,
+  },
   // ── Affirmations section ──
   affirmationsSection: {
     background: 'rgba(124,58,237,0.05)',
@@ -1710,6 +1830,63 @@ function isPaidTier(tierId) {
   return tierId === 'atlas-starter' || tierId === 'atlas-navigator' || tierId === 'atlas-premium';
 }
 
+// ── Gamification helpers ───────────────────────────────────────────────────
+const GAM_KEY = 'resilience_gamification';
+
+const GAM_BADGE_DEFS = [
+  { name: 'First Step',       icon: '🌱', desc: 'Completed your first practice',                 test: (c)        => Object.keys(c).length >= 1  },
+  { name: 'Week Warrior',     icon: '⚔️', desc: '5 practices completed',                         test: (c)        => Object.keys(c).length >= 5  },
+  { name: 'Dimension Master', icon: '🗺️', desc: '10 practices completed across dimensions',       test: (c)        => Object.keys(c).length >= 10 },
+  { name: 'Champion',         icon: '🏆', desc: 'All 12 practices completed!',                   test: (c)        => Object.keys(c).length >= 12 },
+  { name: 'Streak Master',    icon: '🔥', desc: '7 consecutive days of practice',                test: (_, streak) => streak >= 7                },
+];
+
+function calcGamStreak(completions) {
+  const dates = [...new Set(Object.values(completions).map(c => c.date))].sort();
+  if (dates.length === 0) return 0;
+  const today = new Date().toISOString().slice(0, 10);
+  let streak = 0;
+  let checkDate = today;
+  for (let i = dates.length - 1; i >= 0; i--) {
+    if (dates[i] === checkDate) {
+      streak++;
+      const d = new Date(checkDate + 'T00:00:00');
+      d.setDate(d.getDate() - 1);
+      checkDate = d.toISOString().slice(0, 10);
+    } else if (dates[i] < checkDate) {
+      break;
+    }
+  }
+  return streak;
+}
+
+function calcGamBadges(completions, streak) {
+  return GAM_BADGE_DEFS.filter(b => b.test(completions, streak)).map(b => ({ name: b.name, icon: b.icon, desc: b.desc }));
+}
+
+/** Parse a duration string like "3 min", "5 min", "15 min" to seconds. */
+function parseDurationSecs(durStr) {
+  if (!durStr) return 0;
+  const m = durStr.match(/(\d+)\s*min/);
+  if (m) return parseInt(m[1], 10) * 60;
+  const s = durStr.match(/(\d+)\s*sec/);
+  if (s) return parseInt(s[1], 10);
+  return 0;
+}
+
+/** Format seconds as M:SS. */
+function fmtSecs(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+const GAM_EMPTY = { completions: {}, streak: 0, lastDate: null, points: 0, badges: [] };
+
+function loadGamData() {
+  try { return JSON.parse(localStorage.getItem(GAM_KEY)) || GAM_EMPTY; } catch { return GAM_EMPTY; }
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
@@ -1755,8 +1932,39 @@ export default function ResultsPage() {
   const [inviteLoading, setInviteLoading] = useState(false);
   const [inviteStatus, setInviteStatus]   = useState(null); // { success, message }
 
+  // ── Gamification state (Atlas Starter+ localStorage-based) ─────────────
+  const [gamData, setGamData] = useState(() => loadGamData());
+  // null | { practiceKey, secondsLeft, total, running }
+  const [timerData, setTimerData] = useState(null);
+  const timerIntervalRef = useRef(null);
+
   // ── Confetti canvas ref ────────────────────────────────────────────────
   const confettiRef = useRef(null);
+
+  // ── Persist gamification data to localStorage whenever it changes ──────
+  useEffect(() => {
+    try { localStorage.setItem(GAM_KEY, JSON.stringify(gamData)); } catch (_) { /* ignore */ }
+  }, [gamData]);
+
+  // ── Timer tick effect ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (timerData && timerData.running) {
+      timerIntervalRef.current = setInterval(() => {
+        setTimerData(prev => {
+          if (!prev || !prev.running) return prev;
+          const next = prev.secondsLeft - 1;
+          if (next <= 0) {
+            clearInterval(timerIntervalRef.current);
+            return { ...prev, secondsLeft: 0, running: false };
+          }
+          return { ...prev, secondsLeft: next };
+        });
+      }, 1000);
+    } else {
+      clearInterval(timerIntervalRef.current);
+    }
+    return () => clearInterval(timerIntervalRef.current);
+  }, [timerData && timerData.running]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
@@ -2249,6 +2457,38 @@ export default function ResultsPage() {
     }
   }, [results]);
 
+  // ── Gamification: toggle practice completion ───────────────────────────
+  const togglePractice = useCallback((practiceKey) => {
+    setGamData(prev => {
+      const newCompletions = { ...prev.completions };
+      const today = new Date().toISOString().slice(0, 10);
+      if (newCompletions[practiceKey]) {
+        delete newCompletions[practiceKey];
+      } else {
+        newCompletions[practiceKey] = { date: today };
+      }
+      const streak = calcGamStreak(newCompletions);
+      const points = Object.keys(newCompletions).length * 10;
+      const badges = calcGamBadges(newCompletions, streak);
+      return { completions: newCompletions, streak, lastDate: today, points, badges };
+    });
+  }, []);
+
+  // ── Gamification: timer controls ──────────────────────────────────────
+  const startTimer = useCallback((practiceKey, totalSecs) => {
+    clearInterval(timerIntervalRef.current);
+    setTimerData({ practiceKey, secondsLeft: totalSecs, total: totalSecs, running: true });
+  }, []);
+
+  const pauseTimer = useCallback(() => {
+    setTimerData(prev => prev ? { ...prev, running: !prev.running } : prev);
+  }, []);
+
+  const stopTimer = useCallback(() => {
+    clearInterval(timerIntervalRef.current);
+    setTimerData(null);
+  }, []);
+
   // ── Derived values ─────────────────────────────────────────────────────
   // hasPremiumAccess is only true once the backend has confirmed the tier
   // (tierCheckComplete). This prevents localStorage-only values from granting
@@ -2678,9 +2918,13 @@ export default function ResultsPage() {
             type="button"
             style={s.retakeLink}
             onClick={() => {
-              // Clear stored tier so the payment check runs fresh on the next
-              // results page visit after completing the new assessment.
-              try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
+              // Clear stored assessment data so quiz.js doesn't detect existing
+              // results and redirect back here before the new quiz starts.
+              try {
+                localStorage.removeItem('resilience_tier');
+                localStorage.removeItem('resilience_results');
+                localStorage.removeItem('resilience_email');
+              } catch (_) { /* ignore */ }
               window.location.href = '/quiz.html';
             }}
           >
@@ -2727,13 +2971,65 @@ export default function ResultsPage() {
               Practices for <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong> —
               grounded in Acceptance and Commitment Therapy (ACT) and Applied Behavior Analysis (ABA).
             </p>
+
+            {/* ── Gamification header (Atlas Starter+) ────────────────── */}
+            {hasPremiumAccess && (() => {
+              const allPracticeKeys = Object.values(EVIDENCE_PRACTICES).flat().map(p => p.title);
+              const totalAll = allPracticeKeys.length;
+              const completedAll = allPracticeKeys.filter(k => gamData.completions[k]).length;
+              const progressPct = totalAll > 0 ? Math.round((completedAll / totalAll) * 100) : 0;
+              return (
+                <div style={s.gamHeader} role="region" aria-label="Practice progress dashboard">
+                  <div style={s.gamStats}>
+                    <div style={s.gamStat}>
+                      <span style={s.gamStatValue}>{completedAll}/{totalAll}</span>
+                      <span style={s.gamStatLabel}>Completed</span>
+                    </div>
+                    <div style={s.gamStat}>
+                      <span style={s.gamStatValue}>⭐ {gamData.points}</span>
+                      <span style={s.gamStatLabel}>Points</span>
+                    </div>
+                    <div style={s.gamStat}>
+                      <span style={s.gamStatValue}>🔥 {gamData.streak}</span>
+                      <span style={s.gamStatLabel}>Day Streak</span>
+                    </div>
+                  </div>
+                  <div style={s.gamProgressTrack} role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100} aria-label={`${progressPct}% of all practices completed`}>
+                    <div style={s.gamProgressFill(progressPct)} />
+                  </div>
+                  <div style={s.gamProgressLabel}>{progressPct}% of all practices completed this week</div>
+                  {gamData.badges.length > 0 && (
+                    <div style={s.gamBadgesRow} aria-label="Earned badges">
+                      {gamData.badges.map(b => (
+                        <div key={b.name} style={s.gamBadge} title={b.desc} role="img" aria-label={`Badge: ${b.name} — ${b.desc}`}>
+                          <span aria-hidden="true">{b.icon}</span>
+                          <span>{b.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {EVIDENCE_PRACTICES[dominantType].map((practice) => {
               const color = DIM_COLORS[dominantType] || '#667eea';
+              const practiceKey = practice.title;
+              const isCompleted = !!(gamData.completions[practiceKey]);
+              const isTimerActive = timerData && timerData.practiceKey === practiceKey;
+              const timerFinished = isTimerActive && timerData.secondsLeft === 0;
+              const durSecs = parseDurationSecs(practice.duration);
               return (
-                <div key={practice.title} style={s.practiceCard(color)}>
-                  <div style={s.practiceCardHeader}>
-                    <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
-                    <span style={s.practiceTitle}>{practice.title}</span>
+                <div
+                  key={practice.title}
+                  style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
+                >
+                  <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
+                      <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
+                    </div>
+                    {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed">✅</span>}
                   </div>
                   <div style={s.practiceTags}>
                     <span style={s.practiceTag}>⏱ {practice.duration}</span>
@@ -2751,6 +3047,44 @@ export default function ResultsPage() {
                   <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
                     Educational note: These practices support self-reflection. Not therapeutic treatment.
                   </p>
+
+                  {/* ── Gamification controls (Atlas Starter+) ────────── */}
+                  {hasPremiumAccess && (
+                    <div style={s.gamActions}>
+                      {/* Timer */}
+                      {durSecs > 0 && !isCompleted && !isTimerActive && (
+                        <button
+                          type="button"
+                          style={s.gamTimerBtn}
+                          onClick={() => startTimer(practiceKey, durSecs)}
+                          aria-label={`Start ${practice.duration} timer for ${practice.title}`}
+                        >
+                          ⏱ Start Timer
+                        </button>
+                      )}
+                      {isTimerActive && (
+                        <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
+                          <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
+                          {!timerFinished && (
+                            <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
+                              {timerData.running ? '⏸' : '▶'}
+                            </button>
+                          )}
+                          <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
+                        </div>
+                      )}
+                      {/* Mark complete */}
+                      <button
+                        type="button"
+                        style={s.gamCompleteBtn(isCompleted)}
+                        onClick={() => { togglePractice(practiceKey); if (isTimerActive) stopTimer(); }}
+                        aria-pressed={isCompleted}
+                        aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                      >
+                        {isCompleted ? '✅ Completed!' : '☐ Mark Complete'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
