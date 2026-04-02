@@ -219,6 +219,7 @@ export default function ResearchPage() {
 
         {/* ── Section 2: Six Dimensions ─────────────────────── */}
         <section className="research-section" id="dimensions" aria-labelledby="dimensions-heading">
+        <section id="dimensions" className="research-section" aria-labelledby="dimensions-heading">
           <div className="research-container">
             <span className="section-label">Framework</span>
             <h2 className="section-headline" id="dimensions-heading">Resilience is Multidimensional</h2>
