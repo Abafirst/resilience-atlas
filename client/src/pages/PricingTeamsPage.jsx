@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 const styles = `
 
@@ -346,6 +346,35 @@ const styles = `
 `;
 
 export default function PricingTeamsPage() {
+  const [checkoutLoading, setCheckoutLoading] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
+
+  const startCheckout = useCallback(async (tier) => {
+    setCheckoutError('');
+    setCheckoutLoading(tier);
+    try {
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned from server');
+      }
+    } catch (err) {
+      setCheckoutError(err.message || 'Could not start checkout. Please try again.');
+      setCheckoutLoading('');
+    }
+  }, []);
+
+  const scrollToPlans = () => {
+    document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     try {
       const t = localStorage.getItem('ra-theme');
@@ -379,6 +408,13 @@ export default function PricingTeamsPage() {
     <p className="pricing-header__sub">From emerging startups to global enterprises, we have a plan that grows with you. No subscriptions — pay once and keep access.</p>
   </header>
 
+  {/* ── Checkout error ─────────────────────────────────────────────────────── */}
+  {checkoutError && (
+    <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.85rem 1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
+      {checkoutError}
+    </div>
+  )}
+
   {/* ── Plans ──────────────────────────────────────────────────────────────── */}
   <section className="plans-section" id="plans">
     <div className="plans-grid">
@@ -402,8 +438,9 @@ export default function PricingTeamsPage() {
         </div>
 
         <button className="plan-cta plan-cta--outline" type="button"
+          disabled={!!checkoutLoading}
           onClick={() => startCheckout('starter')}>
-          Get Started — $299
+          {checkoutLoading === 'starter' ? '⏳ Redirecting…' : 'Get Started — $299'}
         </button>
 
         <p className="plan-features-label">What's included</p>
@@ -439,8 +476,9 @@ export default function PricingTeamsPage() {
         </div>
 
         <button className="plan-cta plan-cta--primary" type="button"
+          disabled={!!checkoutLoading}
           onClick={() => startCheckout('pro')}>
-          Get Started — $699
+          {checkoutLoading === 'pro' ? '⏳ Redirecting…' : 'Get Started — $699'}
         </button>
 
         <p className="plan-features-label">Everything in Basic, plus</p>

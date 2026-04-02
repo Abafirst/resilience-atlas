@@ -1942,27 +1942,8 @@ export default function ResultsPage() {
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
-    // Delegate to PaymentGating.startCheckout() when the legacy script is loaded.
-    // It handles Auth0 gating, email prompt, checkout session creation, and redirect.
-    if (window.PaymentGating && typeof window.PaymentGating.startCheckout === 'function') {
-      setCheckoutLoading(tierId);
-      // Ensure the email is available in localStorage before PaymentGating reads it,
-      // so the user is not prompted unnecessarily.
-      const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
-      if (email) {
-        try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
-      }
-      try {
-        await window.PaymentGating.startCheckout(tierId);
-      } catch (err) {
-        setBanner({ type: 'error', message: (err && err.message) || 'Could not start checkout. Please try again.' });
-      }
-      // Reset loading if the redirect didn't happen (e.g., user cancelled or error).
-      setCheckoutLoading('');
-      return;
-    }
-
-    // Fallback: PaymentGating not available — call checkout API directly.
+    // Call the checkout API directly to avoid Auth0 intermediate redirects
+    // that can cause callback URL mismatch errors.
     const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
     if (!email) {
       setBanner({ type: 'error', message: 'Please complete the assessment first so we know where to send your report.' });
@@ -2166,17 +2147,40 @@ export default function ResultsPage() {
 
   // ── Download radar chart as PNG ────────────────────────────────────────
   const handleDownloadRadar = useCallback(() => {
-    const canvas = document.querySelector('canvas[aria-label="Resilience compass"], canvas');
-    if (!canvas) {
+    // The radar chart is rendered as SVG — serialize it and convert to PNG.
+    const svg = document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
+    if (!svg) {
       alert('Radar chart not found. Please wait for the chart to load.');
       return;
     }
     try {
-      const link = document.createElement('a');
-      link.download = 'resilience-atlas-radar.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      trackShareEvent('download_radar', (results && results.dominantType) || '');
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const scale = 2; // render at 2× for sharper output
+        canvas.width  = svg.width.baseVal.value  * scale || 680;
+        canvas.height = svg.height.baseVal.value * scale || 680;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(scale, scale);
+        // Fill with the page background so labels are readable
+        ctx.fillStyle = '#1a1a2e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        const link = document.createElement('a');
+        link.download = 'resilience-atlas-radar.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        trackShareEvent('download_radar', (results && results.dominantType) || '');
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        alert('Could not download radar chart. Please try taking a screenshot.');
+      };
+      img.src = url;
     } catch (_) {
       alert('Could not download radar chart. Please try taking a screenshot.');
     }

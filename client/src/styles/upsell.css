@@ -74,7 +74,6 @@
   inset: 0;
   z-index: 1200;
   background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
