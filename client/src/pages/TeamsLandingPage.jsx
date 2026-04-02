@@ -671,7 +671,7 @@ export default function TeamsLandingPage() {
             <li>Explore: How does this map to how we actually work together? Are gaps causing friction? (10 min).</li>
             <li>Identify: Who on the team has natural strength in each dimension? How can we use that? (10 min).</li>
           </ol>
-          <p style={{ margin: '.75rem 0 0' }}><strong>Requires:</strong> Teams Premium or Enterprise tier for aggregated dashboard access.</p>
+          <p style={{ margin: '.75rem 0 0' }}><strong>Requires:</strong> Atlas Team Premium or Enterprise tier for aggregated dashboard access.</p>
         </div>
       </div>
 

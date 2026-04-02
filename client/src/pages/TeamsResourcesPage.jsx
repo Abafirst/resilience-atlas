@@ -3,9 +3,9 @@ import { TEAMS_CONTENT } from '../data/teamsContent';
 
 /* ── Tier badge colors ───────────────────────────────────────────────────── */
 const TIER_BADGE = {
-  starter:    { bg: '#dbeafe', color: '#1d4ed8', label: 'Basic' },
-  pro:        { bg: '#ede9fe', color: '#6d28d9', label: 'Premium' },
-  enterprise: { bg: '#fce7f3', color: '#be185d', label: 'Enterprise' },
+  starter:    { bg: '#dbeafe', color: '#1d4ed8', label: 'Atlas Team Basic' },
+  pro:        { bg: '#ede9fe', color: '#6d28d9', label: 'Atlas Team Premium' },
+  enterprise: { bg: '#fce7f3', color: '#be185d', label: 'Atlas Team Enterprise' },
 };
 
 /* ── Gating modal ────────────────────────────────────────────────────────── */
@@ -40,7 +40,7 @@ function TierGateModal({ item, onClose }) {
         >×</button>
 
         <div style={{ textAlign: 'center', marginBottom: '1.25rem' }}>
-          <span style={{ fontSize: '2.5rem' }}>🔒</span>
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 40, height: 40 }} />
         </div>
 
         <h2
@@ -52,7 +52,7 @@ function TierGateModal({ item, onClose }) {
 
         <p style={{ color: '#475569', fontSize: '.95rem', textAlign: 'center', lineHeight: 1.65, marginBottom: '1rem' }}>
           <strong>{item.title}</strong> is available on the{' '}
-          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Teams Premium'}</span>{' '}
+          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Atlas Team Premium'}</span>{' '}
           plan and above. Unlock this resource and the full library by upgrading your Teams tier.
         </p>
 
@@ -98,7 +98,7 @@ function TierGateModal({ item, onClose }) {
               fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
             }}
           >
-            <span aria-hidden="true">🚀</span> Compare &amp; Unlock Tiers
+            <img src="/icons/unlock.svg" alt="" aria-hidden="true" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /> Compare &amp; Unlock Tiers
           </a>
           <button
             type="button"
@@ -184,7 +184,7 @@ function ResourceCard({ item, isVisual, onGate }) {
                 textTransform: 'uppercase', letterSpacing: '.04em',
               }}
             >
-              <span aria-hidden="true">🔒</span> {tierBadge.label}
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} /> {tierBadge.label}
             </span>
           )}
         </div>
@@ -192,15 +192,23 @@ function ResourceCard({ item, isVisual, onGate }) {
         <p className="tr-card__desc">{item.description}</p>
         <div className="tr-card__meta">
           {item.dimensionLabel && (
-            <span className="tr-card__meta-item">🔷 {item.dimensionLabel}</span>
+            <span className="tr-card__meta-item">
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.dimensionLabel}
+            </span>
           )}
           {isVisual && item.printSize && (
-            <span className="tr-card__meta-item">📐 {item.printSize}</span>
+            <span className="tr-card__meta-item">
+              <img src="/icons/star.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.printSize}
+            </span>
           )}
           {!isVisual && item.pages && (
-            <span className="tr-card__meta-item">📄 {item.pages} pages</span>
+            <span className="tr-card__meta-item">
+              <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.pages} pages
+            </span>
           )}
-          <span className="tr-card__meta-item">📁 {item.format || 'PDF'}</span>
+          <span className="tr-card__meta-item">
+            <img src="/icons/checkmark.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.format || 'PDF'}
+          </span>
         </div>
         <button
           type="button"
@@ -209,7 +217,7 @@ function ResourceCard({ item, isVisual, onGate }) {
           onClick={() => onGate(item)}
           style={{ cursor: 'pointer', fontFamily: 'inherit' }}
         >
-          <span aria-hidden="true">🔒</span> Unlock Download
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14 }} /> Unlock Download
         </button>
       </div>
     </div>
@@ -446,7 +454,7 @@ export default function TeamsResourcesPage() {
                   id="handouts-heading"
                   style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '1.25rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
                 >
-                  📄 Handouts &amp; Templates
+                  <img src="/icons/checkmark.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Handouts &amp; Templates
                   <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Workshop guides, templates, cards</span>
                 </h2>
                 <div
