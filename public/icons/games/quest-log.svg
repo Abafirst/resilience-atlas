@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Scroll body -->
+  <rect x="14" y="14" width="36" height="38" rx="2" fill="#F0FDF4" stroke="#065F46" stroke-width="2.5"/>
+  <!-- Scroll top roll -->
+  <ellipse cx="32" cy="14" rx="18" ry="5" fill="#BBFAD4" stroke="#065F46" stroke-width="2"/>
+  <!-- Scroll bottom roll -->
+  <ellipse cx="32" cy="52" rx="18" ry="5" fill="#BBFAD4" stroke="#065F46" stroke-width="2"/>
+  <!-- Text lines -->
+  <line x1="20" y1="24" x2="44" y2="24" stroke="#065F46" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="20" y1="31" x2="44" y2="31" stroke="#065F46" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="20" y1="38" x2="36" y2="38" stroke="#065F46" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Quill pen -->
+  <path d="M40 38 Q46 28 50 20 Q46 24 40 38 Z" fill="#F59E0B" stroke="#D97706" stroke-width="1"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Star (earned / gold) -->
+  <polygon points="32,6 37.5,22 55,22 41,33 46.5,49 32,38 17.5,49 23,33 9,22 26.5,22" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Inner star highlight -->
+  <polygon points="32,14 35.5,24 46,24 37.5,30 41,40 32,34 23,40 26.5,30 18,24 28.5,24" fill="#FCD34D" opacity="0.6"/>
+</svg>

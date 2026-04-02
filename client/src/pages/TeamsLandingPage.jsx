@@ -119,6 +119,14 @@ const styles = `
 
     .ttc-header { margin-bottom: 1.25rem; }
 
+    .ttc-tier-icon {
+      margin-bottom: 0.75rem;
+    }
+
+    .ttc-tier-icon img {
+      display: block;
+    }
+
     .ttc-badge {
       display: inline-block;
       padding: 0.2rem 0.65rem;
@@ -504,6 +512,9 @@ export default function TeamsLandingPage() {
       {/* Starter */}
       <div className="team-tier-card">
         <div className="ttc-header">
+          <div className="ttc-tier-icon" aria-hidden="true">
+            <img src="/icons/games/tier-starter.svg" alt="" width="48" height="48" className="icon icon-lg" />
+          </div>
           <h3 className="ttc-name">Atlas Team Basic</h3>
           <div className="ttc-price">
             <span className="ttc-amount">$299</span>
@@ -529,6 +540,9 @@ export default function TeamsLandingPage() {
       <div className="team-tier-card team-tier-card--featured">
         <div className="ttc-header">
           <span className="ttc-badge ttc-badge--blue">Most Popular</span>
+          <div className="ttc-tier-icon" aria-hidden="true">
+            <img src="/icons/games/tier-team.svg" alt="" width="48" height="48" className="icon icon-lg" />
+          </div>
           <h3 className="ttc-name">Atlas Team Premium</h3>
           <div className="ttc-price">
             <span className="ttc-amount">$699</span>
@@ -555,6 +569,9 @@ export default function TeamsLandingPage() {
       <div className="team-tier-card">
         <div className="ttc-header">
           <span className="ttc-badge ttc-badge--slate">Enterprise</span>
+          <div className="ttc-tier-icon" aria-hidden="true">
+            <img src="/icons/games/tier-enterprise.svg" alt="" width="48" height="48" className="icon icon-lg" />
+          </div>
           <h3 className="ttc-name">Atlas Enterprise</h3>
           <div className="ttc-price">
             <span className="ttc-amount">Starting at $2,499</span>

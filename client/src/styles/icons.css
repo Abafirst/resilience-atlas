@@ -62,3 +62,52 @@
 .icon-compass   { background-image: url('/icons/compass.svg'); }
 .icon-checkmark { background-image: url('/icons/checkmark.svg'); }
 .icon-success   { background-image: url('/icons/success.svg'); }
+
+/* ── Game / Gamification icons ─────────────────────────────────────────────── */
+
+/* Game card icons */
+.icon-game-compass-spinner    { background-image: url('/icons/games/compass-spinner.svg'); }
+.icon-game-map-collector      { background-image: url('/icons/games/map-collector.svg'); }
+.icon-game-builder-badges     { background-image: url('/icons/games/builder-badges.svg'); }
+.icon-game-badge-quest        { background-image: url('/icons/games/badge-quest.svg'); }
+.icon-game-story-listener     { background-image: url('/icons/games/story-listener.svg'); }
+.icon-game-feelings-explorer  { background-image: url('/icons/games/feelings-explorer.svg'); }
+.icon-game-navigator-quest    { background-image: url('/icons/games/navigator-quest.svg'); }
+.icon-game-resilience-mountain { background-image: url('/icons/games/resilience-mountain.svg'); }
+.icon-game-treasure-explorer  { background-image: url('/icons/games/treasure-explorer.svg'); }
+.icon-game-navigator-challenges { background-image: url('/icons/games/navigator-challenges.svg'); }
+.icon-game-arena-battles      { background-image: url('/icons/games/arena-battles.svg'); }
+.icon-game-quest-log          { background-image: url('/icons/games/quest-log.svg'); }
+
+/* Tier icons */
+.icon-tier-starter    { background-image: url('/icons/games/tier-starter.svg'); }
+.icon-tier-team       { background-image: url('/icons/games/tier-team.svg'); }
+.icon-tier-enterprise { background-image: url('/icons/games/tier-enterprise.svg'); }
+
+/* Star earned / locked */
+.icon-star-earned { background-image: url('/icons/games/star-earned.svg'); }
+.icon-star-locked { background-image: url('/icons/games/star-locked.svg'); }
+
+/* ── Gamification component states ────────────────────────────────────────── */
+
+/* game-icon is used by the GameIcon React component */
+.game-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.game-icon--locked {
+  filter: grayscale(100%) opacity(0.45);
+}
+
+.game-icon--earned {
+  filter: none;
+  opacity: 1;
+}
+
+.game-icon--premium {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
+}
+
