@@ -425,6 +425,7 @@ main { flex: 1; }
     gap: 2px;
     padding: 8px 0 12px;
     border-top: 1px solid var(--slate-200);
+    background: var(--white);
   }
 
   .header-nav.mobile-open {
