@@ -24,7 +24,7 @@ export const MAP_ITEMS = [
   { id: 'helper-1',  emoji: '👩‍⚕️', label: 'A Caring Doctor',     dimension: 'Relational-Connective', x: 18, y: 22, color: '#ede9fe' },
   { id: 'helper-2',  emoji: '👨‍🏫', label: 'A Wise Teacher',       dimension: 'Relational-Connective', x: 68, y: 18, color: '#ede9fe' },
   { id: 'helper-3',  emoji: '👩‍👧', label: 'A Loving Parent',      dimension: 'Relational-Connective', x: 42, y: 60, color: '#ede9fe' },
-  { id: 'feeling-1', emoji: '💛', label: 'Happy Feeling',           dimension: 'Emotional-Adaptive',    x: 28, y: 45, color: '#ffe4e6' },
+  { id: 'feeling-1', emoji: '🎉', label: 'Happy Feeling',           dimension: 'Emotional-Adaptive',    x: 28, y: 45, color: '#ffe4e6' },
   { id: 'feeling-2', emoji: '💪', label: 'Brave Feeling',           dimension: 'Emotional-Adaptive',    x: 78, y: 55, color: '#ffe4e6' },
   { id: 'calm-1',    emoji: '🌿', label: 'Calm Corner',             dimension: 'Somatic-Regulative',    x: 55, y: 30, color: '#dcfce7' },
   { id: 'calm-2',    emoji: '🌬️', label: 'Breathing Spot',         dimension: 'Somatic-Regulative',    x: 15, y: 70, color: '#dcfce7' },

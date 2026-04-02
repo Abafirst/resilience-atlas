@@ -514,7 +514,6 @@ export default function PricingTeamsPage() {
           <li className="plus-feature">Automated invitation reminders</li>
           <li className="plus-feature">PDF &amp; CSV exports</li>
           <li className="plus-feature">Scheduled auto-exports (weekly/monthly)</li>
-          <li>Priority email support</li>
         </ul>
       </div>
 
@@ -547,10 +546,8 @@ export default function PricingTeamsPage() {
           <li className="plus-feature"><strong>Enterprise Tracking:</strong> Advanced parental/manager dashboards, real-time analytics</li>
           <li className="plus-feature">Org-managed branding (logo, colors, domain)</li>
           <li className="plus-feature">Branded PDF reports with org logo</li>
-          <li className="plus-feature">Custom assessment intro message</li>
           <li className="plus-feature">SSO / SAML authentication — self-service setup</li>
-          <li className="plus-feature">Self-service data export (assessments, reports &amp; activity)</li>
-          <li className="plus-feature">Self-custody: download and own all your org's data</li>
+          <li className="plus-feature">Self-service data export &amp; self-custody</li>
         </ul>
       </div>
 
@@ -570,6 +567,20 @@ export default function PricingTeamsPage() {
         </tr>
       </thead>
       <tbody>
+        <tr className="category-row"><td colSpan="4">Gamification &amp; Engagement</td></tr>
+        <tr><td>Personal badges, streaks &amp; milestones</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Team badges &amp; team challenges</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Team leaderboards</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Parental views (monitor team member growth)</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Visual progress dashboards</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Advanced team challenges (customizable)</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Achievement tracking &amp; unlockables</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Multi-team leaderboards &amp; dimension rankings</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Advanced parental tracking (detailed progress)</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Custom badge creation</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Org-wide leaderboards &amp; rankings</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
+        <tr><td>Gamification analytics &amp; insights</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td><span className="check">✓</span></td></tr>
+
         <tr className="category-row"><td colSpan="4">Capacity &amp; Access</td></tr>
         <tr><td>Team members</td><td>Up to 15</td><td>Up to 30</td><td>Unlimited</td></tr>
         <tr><td>Teams / departments</td><td>1</td><td>Unlimited</td><td>Unlimited</td></tr>

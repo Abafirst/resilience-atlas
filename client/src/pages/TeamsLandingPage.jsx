@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import FacilitationGateModal from '../components/FacilitationGateModal';
+import { getCurrentTeamsTier, canAccessFacilitationGuides } from '../utils/tierGating';
 
 const styles = `
 
@@ -373,6 +375,9 @@ const styles = `
 `;
 
 export default function TeamsLandingPage() {
+  const [showGateModal, setShowGateModal] = useState(false);
+  const [userTier, setUserTier] = useState('none');
+
   useEffect(() => {
     try {
       const t = localStorage.getItem('ra-theme');
@@ -381,10 +386,36 @@ export default function TeamsLandingPage() {
       else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.setAttribute('data-theme', 'dark');
     } catch(e) {}
+    setUserTier(getCurrentTeamsTier());
   }, []);
+
+  const handleFacilitationGuideClick = (e) => {
+    if (canAccessFacilitationGuides()) {
+      // User has access — toggle the panel normally
+      const btn = e.currentTarget;
+      const panel = btn.nextElementSibling;
+      if (!panel) return;
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isExpanded));
+      if (!isExpanded) {
+        panel.removeAttribute('hidden');
+      } else {
+        panel.setAttribute('hidden', '');
+      }
+    } else {
+      // No access — show upgrade modal
+      setShowGateModal(true);
+    }
+  };
 
   return (
     <>
+      {showGateModal && (
+        <FacilitationGateModal
+          userTier={userTier}
+          onClose={() => setShowGateModal(false)}
+        />
+      )}
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       {/* BODY CONTENT */}
 
@@ -471,8 +502,7 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> <strong>Parental Controls:</strong> Detailed team member progress tracking</li>
           <li><span aria-hidden="true">&#10003;</span> Advanced analytics (downloadable)</li>
           <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports (PDF)</li>
-          <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library</li>
-          <li><span aria-hidden="true">&#10003;</span> Everything in Basic</li>
+          <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library (30+ guides)</li>
           <li><span aria-hidden="true">&#10003;</span> Self-service team management</li>
         </ul>
         <button className="ttc-btn ttc-btn--featured" type="button" onClick={() => startTeamCheckout('pro')}>
@@ -497,7 +527,6 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> Org-managed branding (logos, colors, domain)</li>
           <li><span aria-hidden="true">&#10003;</span> SSO / SAML integration — configure yourself</li>
           <li><span aria-hidden="true">&#10003;</span> Self-service data export — download your org's data anytime</li>
-          <li><span aria-hidden="true">&#10003;</span> Everything in Premium</li>
           <li><span aria-hidden="true">&#10003;</span> Self-custody: you own and control all purchased materials</li>
         </ul>
         <a href="#teamLeadForm" className="ttc-btn ttc-btn--primary" onClick={(e) => { e.preventDefault(); document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'}) }}>
@@ -620,7 +649,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Each team member shares which of the Six Dimensions feels strongest and which is a current growth edge. The group identifies patterns and creates a collective resilience profile together.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -646,7 +675,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Team members share brief stories of navigating a professional challenge. The group identifies which resilience dimension was most active — building empathy, insight, and shared language.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -672,7 +701,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Using individual assessment results, plot the team's collective dimension scores on a shared radar chart. Identify team strengths and coverage gaps — then assign roles accordingly.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -697,7 +726,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Emotional-Adaptive</span>
         </div>
         <p className="tac-desc">Teams explore how pressure affects performance and emotional regulation. They identify their collective early warning signs and build a shared "pressure protocol" for high-stakes moments.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -723,7 +752,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Spiritual-Reflective</span>
         </div>
         <p className="tac-desc">Team members clarify their personal top values and compare with the team's stated values. The group identifies alignment, tensions, and opportunities — and commits to shared working principles.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -750,7 +779,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Relational-Connective</span>
         </div>
         <p className="tac-desc">Teams visually map their internal connections, support networks, and collaboration patterns. They identify who might feel isolated, who is over-relied upon, and what gaps need bridging.</p>
-        <button className="tac-toggle" onClick={(e) => toggleTeamActivity(e.currentTarget)} aria-expanded="false">View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>

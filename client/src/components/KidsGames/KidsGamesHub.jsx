@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import AgeSelector from './AgeSelector';
 import GameCard from './GameCard';
 import CompassSpinner from './CompassSpinner';
@@ -40,6 +40,7 @@ export default function KidsGamesHub() {
     try { return JSON.parse(localStorage.getItem('kg-badges') || '[]'); } catch { return []; }
   });
   const [badgeToast, setBadgeToast] = useState(null);
+  const gameContainerRef = useRef(null);
 
   const handleEarnBadge = useCallback((badgeId) => {
     if (earnedBadges.includes(badgeId)) return;
@@ -92,6 +93,7 @@ export default function KidsGamesHub() {
     }
     return (
       <div className="kg-hub-wrapper" id="kg-game-active">
+      <div className="kg-hub-wrapper" ref={gameContainerRef}>
         {badgeToast && <BadgeToast badge={badgeToast} />}
         <GameComponent onBack={goBack} onEarnBadge={handleEarnBadge} />
       </div>

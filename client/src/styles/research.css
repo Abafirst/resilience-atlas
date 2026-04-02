@@ -493,6 +493,68 @@ a:hover { text-decoration: underline; }
 .site-footer strong { color: #fff; }
 .site-footer p + p { margin-top: 0.5rem; }
 
+/* ── Dimensions Bridge Section ────────────────────────────────── */
+.dimensions-bridge {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f4fd 100%);
+  border: 1px solid #c7d7f5;
+  border-radius: var(--research-radius);
+  padding: 2rem 2rem 1.75rem;
+  margin: 0 0 2.5rem;
+  text-align: center;
+}
+
+.dimensions-bridge-intro {
+  font-size: 1rem;
+  color: var(--research-slate-600);
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 0 auto 1.5rem;
+}
+
+.dimensions-bridge-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dim-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dim-stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b5bdb;
+  line-height: 1;
+}
+
+.dim-stat-label {
+  font-size: 0.78rem;
+  color: var(--research-slate-500, #64748b);
+  text-align: center;
+  line-height: 1.35;
+}
+
+.dimensions-bridge-cta {
+  display: inline-block;
+  background: #3b5bdb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.93rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.dimensions-bridge-cta:hover {
+  background: #2f4ac0;
+}
+
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .research-hero { padding: 3rem 1.25rem 2.5rem; }
@@ -502,6 +564,7 @@ a:hover { text-decoration: underline; }
   .implications-cards { grid-template-columns: 1fr; }
   .header-nav { gap: 0.4rem; }
   .btn { padding: 0.5rem 0.9rem; font-size: 0.875rem; }
+  .dimensions-bridge-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 400px) {
