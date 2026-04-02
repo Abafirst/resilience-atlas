@@ -845,7 +845,7 @@ export default function QuizPage() {
         <span className="privacy-guarantee__text">
           <strong>You control your data.</strong>
           {' '}Delete your account and results anytime —{' '}
-          <a href="/about#privacy">learn more</a>.
+          <a href="/privacy">Learn about data control</a>.
         </span>
       </div>
 
@@ -868,6 +868,7 @@ export default function QuizPage() {
           <div className="footer-nav-group">
             <strong className="footer-nav-heading">Company</strong>
             <a href="/about">About</a>
+            <a href="/privacy">Privacy &amp; Data Control</a>
           </div>
         </nav>
         <div className="footer-bottom">

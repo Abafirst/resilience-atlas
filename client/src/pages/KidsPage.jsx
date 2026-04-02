@@ -197,6 +197,29 @@ export default function KidsPage() {
   return (
     <>
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
+
+      {/* ── Header ──────────────────────────────────────────────────────── */}
+      <header className="site-header" role="banner">
+        <div className="header-inner">
+          <a className="logo" href="/">
+            <div className="logo-icon" aria-hidden="true">
+              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="36" height="36" />
+            </div>
+            The Resilience Atlas&#8482;
+          </a>
+          <nav className="header-nav" aria-label="Main navigation">
+            <a href="/" className="nav-link">Home</a>
+            <a href="/assessment" className="nav-link">Assessment</a>
+            <a href="/research" className="nav-link">Research</a>
+            <a href="/teams" className="nav-link">Teams</a>
+            <a href="/kids" className="nav-link active">Kids</a>
+            <a href="/about" className="nav-link">About</a>
+            <button className="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false" title="Toggle dark mode"></button>
+            <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
+          </nav>
+        </div>
+      </header>
+
       {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">
         <h1 id="kids-heading">Resilience Grows With You</h1>

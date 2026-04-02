@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DataExportPanel from '../components/DataExportPanel.jsx';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -500,15 +501,20 @@ export default function TeamPage() {
 
           {/* Links to team resources */}
           <div style={{ textAlign: 'center', marginTop: 16 }}>
-            <a href="/teams-resources.html" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none', marginRight: 24 }}>
+            <a href="/teams/resources" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none', marginRight: 24 }}>
               Team Resources →
             </a>
-            <a href="/teams-activities.html" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none', marginRight: 24 }}>
+            <a href="/teams/activities" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none', marginRight: 24 }}>
               Team Activities →
             </a>
-            <a href="/teams-facilitation.html" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none' }}>
+            <a href="/teams/facilitation" style={{ color: '#2563eb', fontSize: 14, textDecoration: 'none' }}>
               Facilitation Guide →
             </a>
+          </div>
+
+          {/* Data Export Section */}
+          <div style={{ marginTop: '2.5rem', background: '#fff', borderRadius: 12, border: '1px solid #e2e8f0', padding: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+            <DataExportPanel orgId="team" />
           </div>
         </main>
 
@@ -516,7 +522,9 @@ export default function TeamPage() {
         <footer style={s.footer} role="contentinfo">
           <p style={{ margin: 0 }}>
             &copy; {new Date().getFullYear()} The Resilience Atlas™ &nbsp;·&nbsp;{' '}
-            <a href="/about.html" style={s.footerLink}>About</a>{' '}
+            <a href="/about" style={s.footerLink}>About</a>{' '}
+            &nbsp;·&nbsp;{' '}
+            <a href="/privacy" style={s.footerLink}>Privacy &amp; Data</a>{' '}
             &nbsp;·&nbsp;{' '}
             <a href="/results" style={s.footerLink}>My Results</a>
           </p>

@@ -155,20 +155,62 @@ function ResourceCard({ item, isVisual, onGate }) {
   const fallbackIcon = isVisual ? '/icons/compass.svg' : '/icons/checkmark.svg';
   const tierBadge = item.minTier ? TIER_BADGE[item.minTier] : null;
 
+  /* dimension accent colors */
+  const DIM_COLORS = {
+    action: '#f97316',
+    connection: '#ec4899',
+    hope: '#8b5cf6',
+    feeling: '#3b82f6',
+    meaning: '#22c55e',
+    thinking: '#6366f1',
+  };
+  const dimAccent = item.dimension ? (DIM_COLORS[item.dimension] || '#4F46E5') : '#4F46E5';
+
   return (
-    <div className="tr-card">
-      <div className="tr-card__icon" aria-hidden="true">
-        {item.icon && item.icon.startsWith('/icons/') ? (
-          <img src={item.icon} alt="" className="icon icon-md" />
-        ) : (
-          <img src={fallbackIcon} alt="" className="icon icon-md" />
-        )}
-      </div>
-      <div className="tr-card__body">
-        <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '.25rem' }}>
+    <div
+      className="tr-card"
+      style={{
+        background: '#fff',
+        border: `1px solid #e2e8f0`,
+        borderTop: `3px solid ${dimAccent}`,
+        borderRadius: 12,
+        padding: '1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '.75rem',
+        boxShadow: '0 2px 8px rgba(0,0,0,.06)',
+        transition: 'box-shadow .2s, transform .2s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+    >
+      {/* Icon + badges row */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.5rem' }}>
+        <div
+          className="tr-card__icon"
+          aria-hidden="true"
+          style={{
+            fontSize: '2.5rem',
+            width: 56,
+            height: 56,
+            borderRadius: 12,
+            background: `${dimAccent}15`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          {item.icon && item.icon.startsWith('/icons/') ? (
+            <img src={item.icon} alt="" style={{ width: 28, height: 28 }} />
+          ) : (
+            <img src={fallbackIcon} alt="" style={{ width: 28, height: 28 }} />
+          )}
+        </div>
+        <div style={{ display: 'flex', gap: '.35rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
           <span
             className="tr-card__type-badge"
-            style={{ background: `${color}20`, color, borderColor: color }}
+            style={{ background: `${color}18`, color, borderColor: `${color}40`, border: '1px solid', borderRadius: 999, fontSize: '.7rem', fontWeight: 700, padding: '.2rem .65rem', textTransform: 'uppercase', letterSpacing: '.04em' }}
           >
             {typeLabel}
           </span>
@@ -178,7 +220,7 @@ function ResourceCard({ item, isVisual, onGate }) {
               aria-label={`Requires ${item.minTierLabel}`}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '.25rem',
-                fontSize: '.7rem', fontWeight: 700, padding: '.15rem .55rem',
+                fontSize: '.7rem', fontWeight: 700, padding: '.2rem .55rem',
                 borderRadius: 999, border: `1px solid ${tierBadge.color}40`,
                 background: tierBadge.bg, color: tierBadge.color,
                 textTransform: 'uppercase', letterSpacing: '.04em',
@@ -188,38 +230,65 @@ function ResourceCard({ item, isVisual, onGate }) {
             </span>
           )}
         </div>
-        <h3 className="tr-card__title">{item.title}</h3>
-        <p className="tr-card__desc">{item.description}</p>
-        <div className="tr-card__meta">
-          {item.dimensionLabel && (
-            <span className="tr-card__meta-item">
-              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.dimensionLabel}
-            </span>
-          )}
-          {isVisual && item.printSize && (
-            <span className="tr-card__meta-item">
-              <img src="/icons/star.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.printSize}
-            </span>
-          )}
-          {!isVisual && item.pages && (
-            <span className="tr-card__meta-item">
-              <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.pages} pages
-            </span>
-          )}
-          <span className="tr-card__meta-item">
-            <img src="/icons/checkmark.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.format || 'PDF'}
-          </span>
-        </div>
-        <button
-          type="button"
-          className="tr-card__download-btn"
-          aria-label={`Unlock download of ${item.title} — requires ${item.minTierLabel || 'a Teams tier'}`}
-          onClick={() => onGate(item)}
-          style={{ cursor: 'pointer', fontFamily: 'inherit' }}
-        >
-          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14 }} /> Unlock Download
-        </button>
       </div>
+
+      {/* Title + description */}
+      <div className="tr-card__body" style={{ flex: 1 }}>
+        <h3 className="tr-card__title" style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .4rem', lineHeight: 1.35 }}>{item.title}</h3>
+        <p className="tr-card__desc" style={{ fontSize: '.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>{item.description}</p>
+      </div>
+
+      {/* Meta */}
+      <div className="tr-card__meta" style={{ display: 'flex', gap: '.6rem', flexWrap: 'wrap', marginTop: '.25rem' }}>
+        {item.dimensionLabel && (
+          <span className="tr-card__meta-item" style={{ fontSize: '.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '.25rem' }}>
+            <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.dimensionLabel}
+          </span>
+        )}
+        {isVisual && item.printSize && (
+          <span className="tr-card__meta-item" style={{ fontSize: '.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '.25rem' }}>
+            <img src="/icons/star.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.printSize}
+          </span>
+        )}
+        {!isVisual && item.pages && (
+          <span className="tr-card__meta-item" style={{ fontSize: '.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '.25rem' }}>
+            <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.pages} pages
+          </span>
+        )}
+        <span className="tr-card__meta-item" style={{ fontSize: '.78rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '.25rem' }}>
+          <img src="/icons/checkmark.svg" alt="" aria-hidden="true" style={{ width: 12, height: 12 }} /> {item.format || 'PDF'}
+        </span>
+      </div>
+
+      {/* Download button */}
+      <button
+        type="button"
+        className="tr-card__download-btn"
+        aria-label={`Unlock download of ${item.title} — requires ${item.minTierLabel || 'a Teams tier'}`}
+        onClick={() => onGate(item)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '.5rem',
+          marginTop: '.5rem',
+          background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: 8,
+          padding: '.7rem 1.25rem',
+          fontSize: '.9rem',
+          fontWeight: 700,
+          cursor: 'pointer',
+          fontFamily: 'inherit',
+          width: '100%',
+          transition: 'opacity .15s, transform .15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.opacity = '.88'; }}
+        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+      >
+        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Unlock Download
+      </button>
     </div>
   );
 }
@@ -347,7 +416,7 @@ export default function TeamsResourcesPage() {
           position: 'sticky',
           top: 0,
           zIndex: 50,
-          boxShadow: '0 2px 8px rgba(0,0,0,.06)',
+          boxShadow: '0 4px 12px rgba(0,0,0,.08)',
         }}
       >
         <div
@@ -369,7 +438,9 @@ export default function TeamsResourcesPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               aria-label="Search resources"
-              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit' }}
+              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.55rem .85rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,.06)', transition: 'border-color .15s, box-shadow .15s' }}
+              onFocus={e => { e.target.style.borderColor = '#4F46E5'; e.target.style.boxShadow = '0 0 0 3px rgba(79,70,229,.12)'; }}
+              onBlur={e => { e.target.style.borderColor = '#cbd5e1'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,.06)'; }}
             />
           </label>
           <label style={{ fontSize: '.8rem', fontWeight: 600, color: '#475569', display: 'flex', flexDirection: 'column', gap: '.25rem', flex: 1, minWidth: 160 }}>
@@ -378,7 +449,7 @@ export default function TeamsResourcesPage() {
               value={category}
               onChange={e => setCategory(e.target.value)}
               aria-label="Filter by category"
-              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit' }}
+              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.55rem .85rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}
             >
               <option value="all">All Types</option>
               <optgroup label="Handouts">
@@ -405,7 +476,7 @@ export default function TeamsResourcesPage() {
               value={dimension}
               onChange={e => setDimension(e.target.value)}
               aria-label="Filter by dimension"
-              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.5rem .75rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit' }}
+              style={{ border: '1px solid #cbd5e1', borderRadius: 8, padding: '.55rem .85rem', fontSize: '.9rem', background: '#f8fafc', color: '#1e293b', outline: 'none', fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,.06)' }}
             >
               <option value="all">All Dimensions</option>
               <option value="connection">Connection (Relational)</option>
@@ -416,13 +487,27 @@ export default function TeamsResourcesPage() {
               <option value="meaning">Meaning (Somatic)</option>
             </select>
           </label>
-          <span style={{ fontSize: '.85rem', color: '#64748b', alignSelf: 'flex-end', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: '.85rem', color: '#64748b', alignSelf: 'flex-end', whiteSpace: 'nowrap', fontWeight: 600 }}>
             {total} resource{total !== 1 ? 's' : ''}
           </span>
           <button
             type="button"
             onClick={clearFilters}
-            style={{ background: 'none', border: '1px solid #cbd5e1', borderRadius: 8, padding: '.5rem 1rem', fontSize: '.85rem', color: '#64748b', cursor: 'pointer', whiteSpace: 'nowrap', alignSelf: 'flex-end' }}
+            style={{
+              background: 'none',
+              border: '1px solid #cbd5e1',
+              borderRadius: 8,
+              padding: '.5rem 1.1rem',
+              fontSize: '.85rem',
+              color: '#475569',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              alignSelf: 'flex-end',
+              fontWeight: 600,
+              transition: 'background .15s, border-color .15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#94a3b8'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = '#cbd5e1'; }}
           >
             Clear Filters
           </button>
@@ -432,7 +517,7 @@ export default function TeamsResourcesPage() {
       {/* Main content */}
       <main
         id="main-content"
-        style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}
+        style={{ maxWidth: 1200, margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}
       >
         {total === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#64748b' }}>
@@ -460,7 +545,7 @@ export default function TeamsResourcesPage() {
                 <div
                   className="tr-grid"
                   aria-live="polite"
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}
+                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}
                 >
                   {handouts.map(item => (
                     <ResourceCard key={item.id} item={item} isVisual={false} onGate={setGateItem} />
@@ -482,7 +567,7 @@ export default function TeamsResourcesPage() {
                 <div
                   className="tr-grid"
                   aria-live="polite"
-                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}
+                  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}
                 >
                   {visuals.map(item => (
                     <ResourceCard key={item.id} item={item} isVisual onGate={setGateItem} />
