@@ -226,7 +226,7 @@ const GAMIFICATION_FEATURES = [
   {
     id: 'custom-badges',
     title: 'Custom Badges',
-    description: 'Design fully branded badges with your organization\'s identity. Unlimited challenges and org-wide leaderboards for maximum engagement.',
+    description: 'Design fully branded badges with your organization\'s logo and colors. Recognize achievements in a way that reflects your unique culture and identity.',
     icon: '✨',
     minTier: 'enterprise',
     minTierLabel: 'Atlas Team Enterprise',
