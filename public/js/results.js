@@ -532,7 +532,9 @@ async function checkPriorReportAccess(email) {
 
     // Flag that access has been verified so the download handler can
     // bypass the tier-gating check on the frontend.
-    if (data.hasAccess) {
+    // Use hasActiveAccess (non-expired purchase) for the current download gate.
+    // atlas-starter purchases expire after 30 days; atlas-navigator/premium are permanent.
+    if (data.hasActiveAccess) {
       window._hasPriorPdfAccess = true;
     }
 
