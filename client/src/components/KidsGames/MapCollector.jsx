@@ -13,26 +13,27 @@ export default function MapCollector({ onBack, onEarnBadge }) {
 
   const tapItem = useCallback((item) => {
     if (collected.has(item.id)) return;
-    setCollected(prev => {
-      const next = new Set(prev);
-      next.add(item.id);
 
-      const newSize = next.size;
-      if (newSize === 1 && onEarnBadge) onEarnBadge('map-starter');
-      if (newSize >= MAP_ITEMS.length) {
-        if (onEarnBadge) onEarnBadge('map-master');
-        setCompleted(true);
-      }
+    // Compute new collected state synchronously so we can fire onEarnBadge
+    // OUTSIDE the state updater (calling it inside causes the modal to not appear).
+    const newCollected = new Set(collected);
+    newCollected.add(item.id);
+    const newSize = newCollected.size;
 
-      // Check if all helpers found
-      const helperIds = MAP_ITEMS.filter(i => i.id.startsWith('helper')).map(i => i.id);
-      const allHelpers = helperIds.every(id => next.has(id));
-      if (allHelpers && onEarnBadge) onEarnBadge('helper-finder');
-
-      return next;
-    });
+    setCollected(newCollected);
     setLastCollected(item);
     setScore(s => s + 1);
+
+    if (newSize === 1 && onEarnBadge) onEarnBadge('map-starter');
+    if (newSize >= MAP_ITEMS.length) {
+      if (onEarnBadge) onEarnBadge('map-master');
+      setCompleted(true);
+    }
+
+    // Check if all helpers found
+    const helperIds = MAP_ITEMS.filter(i => i.id.startsWith('helper')).map(i => i.id);
+    const allHelpers = helperIds.every(id => newCollected.has(id));
+    if (allHelpers && onEarnBadge) onEarnBadge('helper-finder');
   }, [collected, onEarnBadge]);
 
   const reset = useCallback(() => {

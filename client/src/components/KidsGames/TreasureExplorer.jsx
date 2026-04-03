@@ -26,18 +26,26 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
     if (selectedAnswer === activeIsland.challengeCorrect) {
       // Correct!
       setTimeout(() => {
-        setUnlocked(prev => {
-          const next = new Set(prev);
-          next.add(activeIsland.id);
-          if (next.size === 1 && onEarnBadge) onEarnBadge('treasure-hunter');
-          if (next.size === TREASURE_ISLANDS.length && onEarnBadge) onEarnBadge('treasure-master');
-          return next;
-        });
-        if (onEarnBadge) onEarnBadge(activeIsland.badge);
+        // Compute new unlocked state synchronously so we can determine which
+        // badges to award OUTSIDE the state updater (calling onEarnBadge inside
+        // a state updater function is an anti-pattern that prevents the modal
+        // from appearing).
+        const newUnlocked = new Set(unlocked);
+        newUnlocked.add(activeIsland.id);
+        setUnlocked(newUnlocked);
+
+        if (onEarnBadge) {
+          // Collect badges to earn as a Set to avoid duplicates
+          const badgesToEarn = new Set();
+          if (newUnlocked.size === 1) badgesToEarn.add('treasure-hunter');
+          if (newUnlocked.size === TREASURE_ISLANDS.length) badgesToEarn.add('treasure-master');
+          if (activeIsland.badge) badgesToEarn.add(activeIsland.badge);
+          badgesToEarn.forEach(b => onEarnBadge(b));
+        }
         setShowTreasure(true);
       }, 1000);
     }
-  }, [selectedAnswer, activeIsland, onEarnBadge]);
+  }, [selectedAnswer, activeIsland, onEarnBadge, unlocked]);
 
   if (view === 'map') {
     return (
