@@ -2339,16 +2339,12 @@ export default function ResultsPage() {
       await triggerPdfDownload(results, email);
     } catch (err) {
       if (err && err.upgradeRequired) {
-        // Backend denied access — reset to locked state and expose upgrade path
+        // Backend denied access — reset to locked state and show unlock modal
         setTier('free');
         setPriorAccess(false);
+        setIsCurrentAssessmentUnlocked(false);
         try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
-        setBanner({ type: 'error', message: 'A paid report purchase is required to download the PDF. Please select an upgrade option below.' });
-        // Scroll to upgrade cards so the user can immediately purchase
-        setTimeout(() => {
-          const upgradeEl = document.getElementById('upgradeCardsContainer');
-          if (upgradeEl) upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+        setShowUnlockModal(true);
       } else {
         setPdfError(err.message || 'Download failed. Please try again.');
       }
@@ -2667,6 +2663,13 @@ export default function ResultsPage() {
           onUnlock={(tierId) => {
             setShowUnlockModal(false);
             handleUpgrade(tierId);
+          }}
+          onUnlockSuccess={() => {
+            setShowUnlockModal(false);
+            setIsCurrentAssessmentUnlocked(true);
+            setPriorAccess(true);
+            // Auto-download the PDF now that the report is unlocked
+            handleDownloadPdf();
           }}
           checkoutLoading={checkoutLoading}
         />
