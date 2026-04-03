@@ -462,7 +462,7 @@ describe('GET /api/report/access', () => {
 
     test('returns hasActiveAccess=true for a recent atlas-starter purchase (within 30 days)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
-        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
+        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago — within 30-day window
         const mockPurchase = {
             tier: 'atlas-starter',
             purchasedAt: recentDate,
@@ -485,7 +485,7 @@ describe('GET /api/report/access', () => {
 
     test('returns hasAccess=true but hasActiveAccess=false for an expired atlas-starter purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
-        const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago (expired)
+        const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago — 10 days past 30-day expiry
         const mockPurchase = {
             tier: 'atlas-starter',
             purchasedAt: oldDate,
@@ -562,6 +562,9 @@ describe('GET /api/report/access', () => {
 
 describe('isPurchaseActive', () => {
     const { isPurchaseActive } = require('../backend/routes/report');
+    // Keep these constants in sync with backend/routes/report.js
+    const EXPIRY_DAYS = 30;
+    const DAY_MS = 24 * 60 * 60 * 1000;
 
     test('atlas-navigator is always active (permanent tier)', () => {
         expect(isPurchaseActive({ tier: 'atlas-navigator', purchasedAt: new Date('2020-01-01') })).toBe(true);
@@ -572,17 +575,17 @@ describe('isPurchaseActive', () => {
     });
 
     test('atlas-starter is active when purchased within 30 days', () => {
-        const recentDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000); // 10 days ago
+        const recentDate = new Date(Date.now() - 10 * DAY_MS); // 10 days ago — well within window
         expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: recentDate })).toBe(true);
     });
 
     test('atlas-starter is expired when purchased more than 30 days ago', () => {
-        const oldDate = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000); // 35 days ago
+        const oldDate = new Date(Date.now() - (EXPIRY_DAYS + 5) * DAY_MS); // 5 days past expiry
         expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: oldDate })).toBe(false);
     });
 
     test('atlas-starter falls back to createdAt when purchasedAt is absent', () => {
-        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        const recentDate = new Date(Date.now() - 5 * DAY_MS); // 5 days ago — within window
         expect(isPurchaseActive({ tier: 'atlas-starter', createdAt: recentDate })).toBe(true);
     });
 
