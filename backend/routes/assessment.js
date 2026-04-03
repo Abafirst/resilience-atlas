@@ -263,6 +263,14 @@ router.get('/history', async (req, res) => {
             );
             const pdfUnlocked = navigatorAccess || unlockedHashSet.has(hash);
             const purchase     = hashToPurchase[hash];
+            let unlockedTier   = null;
+            if (pdfUnlocked) {
+                if (navigatorAccess) {
+                    unlockedTier = 'atlas-navigator';
+                } else if (purchase) {
+                    unlockedTier = purchase.tier;
+                }
+            }
             return {
                 hash,
                 overall:      r.overall,
@@ -270,10 +278,8 @@ router.get('/history', async (req, res) => {
                 scores:       scoresObj,
                 createdAt:    r.createdAt,
                 pdfUnlocked,
-                tier:         pdfUnlocked
-                    ? (navigatorAccess ? 'atlas-navigator' : (purchase ? purchase.tier : null))
-                    : null,
-                unlockedAt:   purchase ? (purchase.purchasedAt || purchase.createdAt) : null,
+                tier:       unlockedTier,
+                unlockedAt: purchase ? (purchase.purchasedAt || purchase.createdAt) : null,
             };
         });
 

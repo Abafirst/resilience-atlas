@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { STARTER_PRICE_LABEL } from '../constants/unlockPricing.js';
 
 /**
  * AssessmentHistory — shows all past assessments with unlock status.
@@ -272,7 +273,7 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading }) 
                       >
                         🔓 Unlock PDF
                       </button>
-                      <div style={s.unlockNote}>from $9.99</div>
+                      <div style={s.unlockNote}>from {STARTER_PRICE_LABEL}</div>
                     </div>
                   )}
                 </div>

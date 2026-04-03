@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { UNLOCK_TIERS } from '../constants/unlockPricing.js';
 
 /**
  * UnlockReportModal — shown after an assessment is completed.
@@ -207,25 +208,6 @@ const s = {
   },
 };
 
-const UNLOCK_OPTIONS = [
-  {
-    tier:        'atlas-starter',
-    name:        'Atlas Starter',
-    price:       '$9.99',
-    badge:       '1 Report',
-    description: 'Unlock this report only. Pay $9.99 each time you want to download a new report.',
-    highlighted: false,
-  },
-  {
-    tier:        'atlas-navigator',
-    name:        'Atlas Navigator',
-    price:       '$49.99',
-    badge:       'Best Value',
-    description: 'Lifetime access to unlimited PDF reports and gamification — one payment forever.',
-    highlighted: true,
-  },
-];
-
 export default function UnlockReportModal({ results, onClose, onUnlock, checkoutLoading }) {
   const [hoveredTier, setHoveredTier] = useState(null);
 
@@ -280,7 +262,7 @@ export default function UnlockReportModal({ results, onClose, onUnlock, checkout
           Taking the assessment is always free. Choose a plan to download your PDF report and access gamification features.
         </div>
         <div style={s.optionsList}>
-          {UNLOCK_OPTIONS.map(({ tier, name, price, badge, description, highlighted }) => {
+          {UNLOCK_TIERS.map(({ tier, name, price, badge, description, highlighted }) => {
             const isLoading = checkoutLoading === tier;
             return (
               <div
