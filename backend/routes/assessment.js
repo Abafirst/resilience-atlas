@@ -63,7 +63,7 @@ function isValidEmail(email) {
     if (atIdx < 1) return false; // no '@' or '@' at start
     const local  = email.slice(0, atIdx);
     const domain = email.slice(atIdx + 1);
-    return local.length > 0 && domain.length > 3 && domain.includes('.');
+    return local.length > 0 && domain.length >= 3 && domain.includes('.');
 }
 
 const router = express.Router();
