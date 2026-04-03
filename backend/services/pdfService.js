@@ -287,7 +287,9 @@ function buildCoverPage(doc, report, overall) {
         { align: 'center', width: CONTENT_WIDTH, lineBreak: false }
     );
 
-    // Bottom accent
+    // Bottom accent – disable bottom margin first so drawing below the content
+    // area does not trigger PDFKit's automatic page-break mechanism.
+    doc.page.margins.bottom = 0;
     fillColor(doc, '#312e81');
     doc.rect(0, PAGE_HEIGHT - 50, PAGE_WIDTH, 50).fill();
     fillColor(doc, '#818cf8');
@@ -308,12 +310,14 @@ function buildCoverPage(doc, report, overall) {
 function buildJourneyMapPage(doc, report) {
     newPage(doc);
 
-    // Outline logo centred at the top of the page
+    // Outline logo centred at the top of the page.
+    // doc.image() with explicit (x, y) already advances doc.y by the image
+    // height, so only add the extra gap below the logo.
     if (_logoPngPath) {
         const logoSize = 64;
         const logoX = PAGE_WIDTH / 2 - logoSize / 2;
         doc.image(_logoPngPath, logoX, doc.y, { width: logoSize, height: logoSize });
-        doc.y += logoSize + 8;
+        doc.y += 8;
     }
 
     sectionHeader(doc, 'YOUR RESILIENCE JOURNEY \u2014 EXECUTIVE SUMMARY', COLORS.primary);
@@ -429,9 +433,9 @@ function buildDashboardPage(doc, report) {
         doc.y = rowY + barRowH + 10;
     }
 
-    // Legend
-    ensureSpace(doc, 50);
-    doc.y += 6;
+    // Score Legend – add clear vertical gap so it doesn't crowd the last bar.
+    ensureSpace(doc, 80);
+    doc.y += 16;
     sectionHeader(doc, 'SCORE LEGEND', COLORS.textMid);
 
     const levels = [
@@ -443,24 +447,25 @@ function buildDashboardPage(doc, report) {
 
     const legColW = (CONTENT_WIDTH - 12) / 2;
     const legStartY = doc.y;
+    const legRowH = 30;
     for (let i = 0; i < levels.length; i++) {
         const col = i % 2;
         const row = Math.floor(i / 2);
         const x = PAGE_MARGIN + col * (legColW + 12);
-        const y = legStartY + row * 26;
+        const y = legStartY + row * legRowH;
         fillColor(doc, LEVEL_COLORS[levels[i].key]);
-        doc.roundedRect(x, y, 10, 10, 2).fill();
+        doc.roundedRect(x, y + 1, 10, 10, 2).fill();
         fillColor(doc, COLORS.text);
-        doc.fontSize(9).font('Helvetica-Bold').text(levels[i].label, x + 14, y, {
+        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].label, x + 14, y, {
             continued: true, lineBreak: false,
         });
         fillColor(doc, COLORS.textLight);
-        doc.fontSize(9).font('Helvetica').text('  \u2014 ' + levels[i].desc, { width: legColW - 30, lineBreak: false });
+        doc.fontSize(8).font('Helvetica').text('  \u2014 ' + levels[i].desc, { width: legColW - 32, lineBreak: false });
         fillColor(doc, COLORS.text);
     }
-    doc.y = legStartY + Math.ceil(levels.length / 2) * 26 + 8;
+    doc.y = legStartY + Math.ceil(levels.length / 2) * legRowH + 10;
 
-    ensureSpace(doc, 40);
+    ensureSpace(doc, 48);
     infoBox(
         doc,
         'Your coordinates have been plotted. The following pages explore each territory in detail \u2014 with personalised insights, life applications, and your daily navigation tools.',
