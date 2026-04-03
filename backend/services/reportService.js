@@ -414,7 +414,17 @@ function generateRecommendedResources(scores) {
  * @param {Date}    [options.assessmentDate] - Date of assessment
  * @returns {Object} Comprehensive report object
  */
-function buildComprehensiveReport({ userId, overall, dominantType, scores, resultsHash, assessmentDate }) {
+function buildComprehensiveReport({ userId, overall, dominantType: _dominantType, scores, resultsHash, assessmentDate }) {
+    // Recalculate dominantType from scores (highest percentage) so that it
+    // matches the compass needle logic and is never stale.
+    const dominantType = Object.entries(scores || {}).reduce(
+        (best, [type, s]) => {
+            const pct = typeof s === 'object' ? (s.percentage || 0) : (s || 0);
+            return pct > best[1] ? [type, pct] : best;
+        },
+        ['', -1]
+    )[0] || _dominantType || '';
+
     // Build per-dimension analysis
     const dimensionAnalysis = {};
     for (const [dim, data] of Object.entries(scores)) {
