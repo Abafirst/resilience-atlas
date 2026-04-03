@@ -2544,7 +2544,7 @@ export default function ResultsPage() {
     ? Object.entries(results.scores).sort((a, b) => b[1].percentage - a[1].percentage)
     : [];
 
-  const dominantType = (results && results.dominantType) || '';
+  const dominantType = rankedDims.length > 0 ? rankedDims[0][0] : '';
 
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
