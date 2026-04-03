@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 const styles = ``;
 
 export default function ResearchPage() {
@@ -20,6 +21,7 @@ export default function ResearchPage() {
 
       {/* ── Header ────────────────────────────────────────────── */}
       <SiteHeader activePage="research" />
+      <DarkModeHint />
 
       {/* ── Hero / Overview ───────────────────────────────────── */}
       <section className="research-hero" aria-labelledby="hero-heading">

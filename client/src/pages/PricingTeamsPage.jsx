@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
 
@@ -403,6 +404,7 @@ export default function PricingTeamsPage() {
     ]}
     ctaButton={<button className="btn btn-primary" type="button" onClick={() => scrollToPlans()}>View Plans</button>}
   />
+  <DarkModeHint />
 
   {/* ── Header ─────────────────────────────────────────────────────────────── */}
   <header className="pricing-header">

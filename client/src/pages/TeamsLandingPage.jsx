@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FacilitationGateModal from '../components/FacilitationGateModal';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getCurrentTeamsTier, canAccessFacilitationGuides } from '../utils/tierGating';
 
 const styles = `
@@ -466,6 +467,7 @@ export default function TeamsLandingPage() {
 
 
   <SiteHeader activePage="teams" />
+  <DarkModeHint />
 
   <section className="team-hero" aria-label="Team page hero">
     <span className="hero-eyebrow">Business Tier</span>

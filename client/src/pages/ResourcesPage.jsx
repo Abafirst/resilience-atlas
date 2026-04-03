@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
 
@@ -494,7 +495,7 @@ export default function ResourcesPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       {/* BODY CONTENT */}
-
+      <DarkModeHint />
 
 {/* ── Hero / Search ──────────────────────────────────────────────────────── */}
 <section className="rl-hero">
