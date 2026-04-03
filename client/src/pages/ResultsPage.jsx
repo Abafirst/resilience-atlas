@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
@@ -1917,6 +1918,9 @@ export default function ResultsPage() {
   const upgradeParam  = params.get('upgrade');   // 'success' | 'cancelled'
   const sessionId     = params.get('session_id');
 
+  // ── Auth0 ──────────────────────────────────────────────────────────────
+  const { user: auth0User, isAuthenticated, isLoading: auth0Loading } = useAuth0();
+
   // ── State ──────────────────────────────────────────────────────────────
   const [results, setResults]         = useState(null);
   const [tier, setTier]               = useState('free'); // 'free' | 'atlas-starter' | 'atlas-navigator' | 'atlas-premium'
@@ -1995,6 +1999,30 @@ export default function ResultsPage() {
     }
     return () => clearInterval(timerIntervalRef.current);
   }, [timerRunning]);
+
+  // ── Resolve the current user's email from all available sources ────────
+  // Prefers the email embedded in the current assessment results, then Auth0,
+  // then the value stored in localStorage.  Use this helper throughout the
+  // component to avoid repeating the same fallback chain.
+  const getEffectiveEmail = useCallback(
+    () => (results && results.email) || (isAuthenticated && auth0User?.email) || getStoredEmail(),
+    [results, isAuthenticated, auth0User]
+  );
+
+  // ── Sync Auth0 email to localStorage so the rest of the page finds it ─
+  // When an Auth0 user is authenticated, persist their email to localStorage
+  // under the same key used by the quiz flow.  This ensures getStoredEmail()
+  // and downstream payment / access checks can find the email even when the
+  // user navigates directly to /results without completing a new assessment.
+  // Always write (not only when absent) so that if the Auth0 email differs
+  // from any stale value, the stored email stays current.
+  useEffect(() => {
+    if (!auth0Loading && isAuthenticated && auth0User?.email) {
+      try {
+        localStorage.setItem('resilience_email', auth0User.email);
+      } catch (_) { /* ignore storage errors */ }
+    }
+  }, [auth0Loading, isAuthenticated, auth0User]);
 
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
@@ -2191,7 +2219,7 @@ export default function ResultsPage() {
     // (which also handles the no-email case), so we do not set it here.
     // If the localStorage tier is stale the download attempt will fail with
     // 402 and handleDownloadPdf will reset the state at that point.
-    const email = getStoredEmail();
+    const email = getEffectiveEmail();
 
     if (!email) {
       try {
@@ -2219,7 +2247,7 @@ export default function ResultsPage() {
         }
       })
       .catch(() => { /* non-fatal — tier stays 'free' */ });
-  }, [upgradeParam, sessionId]);
+  }, [upgradeParam, sessionId, auth0Loading, isAuthenticated, auth0User, results]);
 
   // ── Listen for paymentVerified from payment-gating.js ─────────────────
   // payment-gating.js dispatches this event after backend-confirmed payment
@@ -2245,8 +2273,14 @@ export default function ResultsPage() {
   // user has any existing purchases.  Passes assessment data to the endpoint
   // so the backend can check per-assessment access for Atlas Starter users.
   // Sets tierCheckComplete so the download UI only renders after backend responds.
+  // Waits for Auth0 to finish loading so the user's email is available.
   useEffect(() => {
-    const email = getStoredEmail();
+    if (auth0Loading) {
+      // Auth0 is still initialising — hold off until we know the user's identity.
+      return;
+    }
+
+    const email = getEffectiveEmail();
     if (!email) {
       // No email to check with — mark as complete so UI renders (tier stays 'free').
       setIsCurrentAssessmentUnlocked(false);
@@ -2289,13 +2323,13 @@ export default function ResultsPage() {
       .finally(() => {
         setTierCheckComplete(true);
       });
-  }, []);
+  }, [auth0Loading, isAuthenticated, auth0User, results]);
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
     // Call the checkout API directly to avoid Auth0 intermediate redirects
     // that can cause callback URL mismatch errors.
-    const email = (results && results.email) || localStorage.getItem('resilience_email') || '';
+    const email = getEffectiveEmail();
     if (!email) {
       setBanner({ type: 'error', message: 'Please complete the assessment first so we know where to send your report.' });
       return;
@@ -2327,12 +2361,12 @@ export default function ResultsPage() {
       setBanner({ type: 'error', message: err.message || 'Could not start checkout. Please try again.' });
       setCheckoutLoading('');
     }
-  }, [results]);
+  }, [results, isAuthenticated, auth0User, getEffectiveEmail]);
 
   // ── PDF download ───────────────────────────────────────────────────────
   const handleDownloadPdf = useCallback(async () => {
     if (!results) return;
-    const email = (results && results.email) || getStoredEmail();
+    const email = getEffectiveEmail();
     setPdfLoading(true);
     setPdfError('');
     try {
@@ -2351,7 +2385,7 @@ export default function ResultsPage() {
     } finally {
       setPdfLoading(false);
     }
-  }, [results]);
+  }, [results, isAuthenticated, auth0User, getEffectiveEmail]);
 
   // ── Reminder opt-in handler (ported from legacy results.js) ───────────
   const handleReminderOptIn = useCallback(async () => {
@@ -2360,7 +2394,7 @@ export default function ResultsPage() {
       setReminderMessage('Please check the box to opt in.');
       return;
     }
-    const email     = (results && results.email) || localStorage.getItem('resilience_email') || '';
+    const email     = getEffectiveEmail();
     const firstName = (results && (results.firstName || results.name)) || localStorage.getItem('resilience_name') || '';
     const lastScore = results ? results.overall : 0;
     setReminderLoading(true);
@@ -2387,7 +2421,7 @@ export default function ResultsPage() {
       setReminderMessage('Network error. Please try again.');
       setReminderLoading(false);
     }
-  }, [results, reminderChecked]);
+  }, [results, reminderChecked, getEffectiveEmail]);
 
   // ── Copy link handler ─────────────────────────────────────────────────
   const handleCopyLink = useCallback(() => {
@@ -2424,7 +2458,7 @@ export default function ResultsPage() {
 
   // ── Email report handler ───────────────────────────────────────────────
   const handleEmailReport = useCallback(async () => {
-    const email = emailInput.trim() || (results && results.email) || getStoredEmail();
+    const email = emailInput.trim() || getEffectiveEmail();
     if (!email) {
       setEmailAlert({ success: false, message: 'Please enter your email address.' });
       return;
@@ -2455,7 +2489,7 @@ export default function ResultsPage() {
     } finally {
       setEmailLoading(false);
     }
-  }, [results, emailInput]);
+  }, [results, emailInput, getEffectiveEmail]);
 
   // ── Invite colleague handler ───────────────────────────────────────────
   const handleInviteColleague = useCallback(async (e) => {
@@ -2468,7 +2502,7 @@ export default function ResultsPage() {
     setInviteLoading(true);
     setInviteStatus(null);
     try {
-      const senderEmail = (results && results.email) || getStoredEmail();
+      const senderEmail = getEffectiveEmail();
       const res = await fetch('/api/quiz/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2490,7 +2524,7 @@ export default function ResultsPage() {
     } finally {
       setInviteLoading(false);
     }
-  }, [results, inviteEmail]);
+  }, [results, inviteEmail, getEffectiveEmail]);
 
   // ── Download radar chart as PNG ────────────────────────────────────────
   const handleDownloadRadar = useCallback(() => {
@@ -2930,12 +2964,12 @@ export default function ResultsPage() {
 
         {/* ── Prior Purchases / ResultsHistory ─────────────────────── */}
         <ResultsHistory
-          email={(results && results.email) || getStoredEmail()}
+          email={getEffectiveEmail()}
         />
 
         {/* ── Assessment History with unlock status ────────────────── */}
         <AssessmentHistory
-          email={(results && results.email) || getStoredEmail()}
+          email={getEffectiveEmail()}
           onUnlock={(assessment) => {
             // Store the assessment hash in sessionStorage so the checkout
             // success flow can link the purchase to this specific assessment.
