@@ -511,6 +511,7 @@ async function downloadPdfForAssessment(assessmentData, email) {
  * Async: query /api/report/access to check whether this email has a prior
  * completed PDF purchase.  If it does, unlock the download button regardless
  * of the current localStorage tier (which may be stale or missing).
+ * Also checks assessmentCount to grant free PDF access for the first assessment.
  * This ensures users always retain access to content they have paid for.
  */
 async function checkPriorReportAccess(email) {
@@ -521,11 +522,19 @@ async function checkPriorReportAccess(email) {
     const res = await fetch(url.toString());
     if (!res.ok) return;
     const data = await res.json();
-    if (!data.hasAccess) return;
 
-    // Flag that a prior purchase was verified so the download handler can
+    // Grant free access for the first assessment (assessmentCount ≤ 1).
+    if (typeof data.assessmentCount === 'number' && data.assessmentCount <= 1) {
+      window._isFirstAssessment = true;
+    }
+
+    if (!data.hasAccess && !window._isFirstAssessment) return;
+
+    // Flag that access has been verified so the download handler can
     // bypass the tier-gating check on the frontend.
-    window._hasPriorPdfAccess = true;
+    if (data.hasAccess) {
+      window._hasPriorPdfAccess = true;
+    }
 
     // Unlock the download button if it was showing the locked state.
     const dlBtn = document.getElementById('btnDownload');
@@ -537,7 +546,7 @@ async function checkPriorReportAccess(email) {
         '<span class="btn-label">Download PDF</span>';
     }
 
-    // Hide the "upgrade to unlock" upsell elements — user already paid.
+    // Hide the "upgrade to unlock" upsell elements — user has access.
     const upgradeContainerEl = document.getElementById('upgradeCardsContainer');
     if (upgradeContainerEl) upgradeContainerEl.innerHTML = '';
     _applyInsightProgressVisibility();
@@ -804,8 +813,9 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.addEventListener('click', () => {
       try {
         // Allow download if the user has an active paid tier OR if a prior
-        // purchase was confirmed by the backend (window._hasPriorPdfAccess).
-        if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
+        // purchase was confirmed by the backend (window._hasPriorPdfAccess),
+        // OR if this is their first assessment (window._isFirstAssessment).
+        if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess && !window._isFirstAssessment) {
           // Direct free users to the upgrade/purchase flow instead of just an alert.
           // Scroll to upgrade cards and show a clear call-to-action.
           const upgradeEl = document.getElementById('upgradeCardsContainer');
@@ -916,8 +926,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       // Gate: a paid report purchase is required to email the PDF.
-      // Allow if the user has an active tier OR a prior purchase confirmed by the backend.
-      if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
+      // Allow if the user has an active tier, a prior purchase confirmed by the backend,
+      // or this is their first assessment (free PDF).
+      if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess && !window._isFirstAssessment) {
         showAlert('emailAlert', 'Sending your PDF report requires an Atlas Starter or Atlas Navigator purchase.', 'error', 'lock');
         const upgradeEl = document.getElementById('upgradeCardsContainer');
         upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });

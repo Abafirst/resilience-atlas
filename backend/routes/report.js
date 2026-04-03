@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
+const ResilienceResult = require('../models/ResilienceResult');
 const { TIER_CONFIG } = require('../config/tiers');
 const { canAccessFeature } = require('../utils/tierUtils');
 
@@ -251,13 +252,16 @@ router.get('/generate', reportLimiter, async (req, res) => {
         }
 
         // ── Tier gating ────────────────────────────────────────────────────────
-        // Enforce an Atlas Navigator or Atlas Premium purchase before generating
-        // the full PDF report.
+        // PDF download access policy:
+        //   - First assessment (email has ≤ 1 submission in DB): FREE
+        //   - Second+ assessment: requires an Atlas Starter ($9.99) or
+        //     Atlas Navigator ($49.99) purchase.
         //
         // The check is skipped when STRIPE_SECRET_KEY is not set so that local
         // development and test environments can generate PDFs without payment.
         // In production, STRIPE_SECRET_KEY must be present and the purchase DB
-        // must contain a completed record for the provided email address.
+        // must contain a completed record for the provided email address
+        // (unless it is the user's first assessment).
         if (process.env.STRIPE_SECRET_KEY) {
             if (!email) {
                 return res.status(402).json({
@@ -267,30 +271,45 @@ router.get('/generate', reportLimiter, async (req, res) => {
             }
             try {
                 const cleanEmail = String(email).toLowerCase().trim();
-                // Check for a completed purchase whose tier grants report access.
-                // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature,
-                // so it stays in sync with tiers.js without hardcoding tier names.
-                const purchase = await Purchase.findOne({
-                    email: cleanEmail,
-                    tier: { $in: REPORT_ACCESS_TIERS },
-                    status: 'completed',
-                });
-                if (!purchase) {
-                    // Fallback: check the User record's purchasedDeepReport flag,
-                    // which covers users whose access was granted outside the
-                    // standard Stripe checkout flow (e.g. admin grants or migrations).
-                    let userHasAccess = false;
-                    try {
-                        const user = await User.findOne({ email: cleanEmail });
-                        userHasAccess = Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
-                    } catch (userErr) {
-                        console.warn('User access check skipped (DB unavailable):', userErr.message);
-                    }
-                    if (!userHasAccess) {
-                        return res.status(402).json({
-                            error: 'A paid report purchase is required to download the PDF.',
-                            upgradeRequired: true,
-                        });
+
+                // Count how many assessments this email has completed.
+                // If this is their first assessment (count ≤ 1), the PDF is free.
+                let assessmentCount = 0;
+                try {
+                    assessmentCount = await ResilienceResult.countDocuments({ email: cleanEmail });
+                } catch (countErr) {
+                    console.warn('Assessment count check failed (non-fatal):', countErr.message);
+                }
+
+                if (assessmentCount <= 1) {
+                    // First assessment — allow free PDF download, no payment needed.
+                    // Fall through to generation below.
+                } else {
+                    // Second or later assessment — verify a completed purchase.
+                    // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature,
+                    // so it stays in sync with tiers.js without hardcoding tier names.
+                    const purchase = await Purchase.findOne({
+                        email: cleanEmail,
+                        tier: { $in: REPORT_ACCESS_TIERS },
+                        status: 'completed',
+                    });
+                    if (!purchase) {
+                        // Fallback: check the User record's purchasedDeepReport flag,
+                        // which covers users whose access was granted outside the
+                        // standard Stripe checkout flow (e.g. admin grants or migrations).
+                        let userHasAccess = false;
+                        try {
+                            const user = await User.findOne({ email: cleanEmail });
+                            userHasAccess = Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
+                        } catch (userErr) {
+                            console.warn('User access check skipped (DB unavailable):', userErr.message);
+                        }
+                        if (!userHasAccess) {
+                            return res.status(402).json({
+                                error: 'A paid report purchase is required to download additional PDF reports.',
+                                upgradeRequired: true,
+                            });
+                        }
                     }
                 }
             } catch (dbErr) {
@@ -441,8 +460,11 @@ router.post('/email', async (req, res) => {
 /**
  * GET /api/report/access
  * Check whether an email address has a completed PDF-report purchase.
+ * Also returns the total number of assessments completed by this email,
+ * so the frontend can determine whether the next PDF download is free
+ * (first assessment) or requires payment (second assessment onwards).
  *
- * Returns { hasAccess: boolean, purchases: [{ tier, purchasedAt }] }
+ * Returns { hasAccess: boolean, purchases: [{ tier, purchasedAt }], assessmentCount: number }
  *
  * No auth required — the email functions as the access token (consistent
  * with /generate which also uses email for tier verification).
@@ -460,11 +482,20 @@ router.get('/access', accessLimiter, async (req, res) => {
     // In production (NODE_ENV=production) we always check the database even if
     // STRIPE_SECRET_KEY is missing, to prevent accidental free access.
     if (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production') {
-        return res.json({ hasAccess: true, purchases: [] });
+        return res.json({ hasAccess: true, purchases: [], assessmentCount: 0 });
     }
 
     try {
         const cleanEmail = String(email).toLowerCase().trim();
+
+        // Count total assessments for this email to determine if PDF is free
+        // (first assessment) or requires payment (second assessment onwards).
+        let assessmentCount = 0;
+        try {
+            assessmentCount = await ResilienceResult.countDocuments({ email: cleanEmail });
+        } catch (countErr) {
+            console.warn('Assessment count check failed (non-fatal):', countErr.message);
+        }
 
         // Find all completed purchases for this email that grant PDF access.
         // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature
@@ -486,6 +517,7 @@ router.get('/access', accessLimiter, async (req, res) => {
                     purchasedAt: p.purchasedAt || p.createdAt,
                     assessmentData: p.assessmentData || null,
                 })),
+                assessmentCount,
             });
         }
 
@@ -507,10 +539,11 @@ router.get('/access', accessLimiter, async (req, res) => {
                     purchasedAt: user.purchaseDate || null,
                     assessmentData: null,
                 }],
+                assessmentCount,
             });
         }
 
-        return res.json({ hasAccess: false, purchases: [] });
+        return res.json({ hasAccess: false, purchases: [], assessmentCount });
     } catch (dbErr) {
         console.warn('Purchase access check failed (DB unavailable):', dbErr.message);
         return res.status(503).json({
