@@ -62,14 +62,28 @@ function TierGateModal({ item, onClose }) {
           border: '1px solid #e2e8f0',
         }}>
           <strong>Included in {item.minTierLabel}:</strong>
-          {item.minTier === 'starter' && (
+          {item.minTier === 'starter' && item.isGamification && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>Personal &amp; team badges system</li>
+              <li>Streaks &amp; milestones tracking</li>
+              <li>Basic leaderboards &amp; progress dashboards</li>
+            </ul>
+          )}
+          {item.minTier === 'starter' && !item.isGamification && (
             <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
               <li>Basic discussion prompts &amp; reference cards</li>
               <li>Team dashboard &amp; radar chart</li>
               <li>CSV &amp; PDF export</li>
             </ul>
           )}
-          {item.minTier === 'pro' && (
+          {item.minTier === 'pro' && item.isGamification && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>Advanced team challenges &amp; achievement tracking</li>
+              <li>Multi-team leaderboards with dimension breakdowns</li>
+              <li>All Atlas Team Basic gamification features</li>
+            </ul>
+          )}
+          {item.minTier === 'pro' && !item.isGamification && (
             <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
               <li>6 pre-built workshop guides</li>
               <li>Full facilitation resource library</li>
@@ -77,7 +91,15 @@ function TierGateModal({ item, onClose }) {
               <li>Dimension heatmap &amp; trend analysis</li>
             </ul>
           )}
-          {item.minTier === 'enterprise' && (
+          {item.minTier === 'enterprise' && item.isGamification && (
+            <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
+              <li>Custom badges with your branding</li>
+              <li>Unlimited challenges</li>
+              <li>Org-wide leaderboards</li>
+              <li>All Premium gamification features</li>
+            </ul>
+          )}
+          {item.minTier === 'enterprise' && !item.isGamification && (
             <ul style={{ margin: '.4rem 0 0', paddingLeft: '1.25rem', lineHeight: 1.7 }}>
               <li>All Pro features</li>
               <li>Custom branding (logo + colors)</li>
@@ -148,6 +170,176 @@ const TYPE_COLORS = {
   'reference-card': '#0ea5e9',
   'culture-poster': '#ec4899',
 };
+
+/* ── Gamification features data ──────────────────────────────────────────── */
+const GAMIFICATION_FEATURES = [
+  {
+    id: 'badges-system',
+    title: 'Personal & Team Badges System',
+    description: 'Earn and award badges for resilience milestones, participation, and team achievements. Celebrate individual and collective growth.',
+    icon: '🏅',
+    minTier: 'starter',
+    minTierLabel: 'Atlas Team Basic',
+    accentColor: '#3b82f6',
+    isGamification: true,
+  },
+  {
+    id: 'streaks-milestones',
+    title: 'Streaks & Milestones',
+    description: 'Track continuous engagement with streaks and celebrate major milestones on your team\'s resilience journey.',
+    icon: '🔥',
+    minTier: 'starter',
+    minTierLabel: 'Atlas Team Basic',
+    accentColor: '#f97316',
+    isGamification: true,
+  },
+  {
+    id: 'basic-leaderboards',
+    title: 'Leaderboards',
+    description: 'Motivate teams with progress leaderboards. See where your team stands and celebrate top performers.',
+    icon: '📊',
+    minTier: 'starter',
+    minTierLabel: 'Atlas Team Basic',
+    accentColor: '#22c55e',
+    isGamification: true,
+  },
+  {
+    id: 'advanced-leaderboards',
+    title: 'Advanced Leaderboards',
+    description: 'Multi-team comparisons with dimension breakdowns. Identify strengths and growth areas across groups with detailed analytics.',
+    icon: '📈',
+    minTier: 'pro',
+    minTierLabel: 'Atlas Team Premium',
+    accentColor: '#6d28d9',
+    isGamification: true,
+  },
+  {
+    id: 'challenges-achievements',
+    title: 'Challenges & Achievement Tracking',
+    description: 'Create advanced team challenges and track achievement progress. Drive engagement with structured resilience missions.',
+    icon: '🎯',
+    minTier: 'pro',
+    minTierLabel: 'Atlas Team Premium',
+    accentColor: '#a855f7',
+    isGamification: true,
+  },
+  {
+    id: 'custom-badges',
+    title: 'Custom Badges',
+    description: 'Design fully branded badges with your organization\'s identity. Unlimited challenges and org-wide leaderboards for maximum engagement.',
+    icon: '✨',
+    minTier: 'enterprise',
+    minTierLabel: 'Atlas Team Enterprise',
+    accentColor: '#be185d',
+    isGamification: true,
+  },
+  {
+    id: 'org-leaderboards',
+    title: 'Org-wide Leaderboards',
+    description: 'Organization-wide leaderboards spanning all teams. Surface insights at the enterprise level and foster healthy competition across your entire organization.',
+    icon: '🏆',
+    minTier: 'enterprise',
+    minTierLabel: 'Atlas Team Enterprise',
+    accentColor: '#be185d',
+    isGamification: true,
+  },
+];
+
+/* ── Gamification card ───────────────────────────────────────────────────── */
+function GamificationCard({ feature, onGate }) {
+  const tierBadge = TIER_BADGE[feature.minTier];
+  const accentColor = feature.accentColor || '#4F46E5';
+
+  return (
+    <div
+      className="tr-card"
+      style={{
+        background: '#fff',
+        border: '1px solid #e2e8f0',
+        borderTop: `3px solid ${accentColor}`,
+        borderRadius: 12,
+        padding: '1.5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '.75rem',
+        boxShadow: '0 2px 8px rgba(0,0,0,.06)',
+        transition: 'box-shadow .2s, transform .2s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+    >
+      {/* Icon + tier badge row */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.5rem' }}>
+        <div
+          aria-hidden="true"
+          style={{
+            fontSize: '2rem',
+            width: 56,
+            height: 56,
+            borderRadius: 12,
+            background: `${accentColor}15`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+          }}
+        >
+          {feature.icon}
+        </div>
+        {tierBadge && (
+          <span
+            title={`Requires ${feature.minTierLabel}`}
+            aria-label={`Requires ${feature.minTierLabel}`}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '.25rem',
+              fontSize: '.7rem', fontWeight: 700, padding: '.2rem .55rem',
+              borderRadius: 999, border: `1px solid ${tierBadge.color}40`,
+              background: tierBadge.bg, color: tierBadge.color,
+              textTransform: 'uppercase', letterSpacing: '.04em', whiteSpace: 'nowrap',
+            }}
+          >
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} /> {tierBadge.label}
+          </span>
+        )}
+      </div>
+
+      {/* Title + description */}
+      <div style={{ flex: 1 }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .4rem', lineHeight: 1.35 }}>{feature.title}</h3>
+        <p style={{ fontSize: '.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>{feature.description}</p>
+      </div>
+
+      {/* CTA button */}
+      <button
+        type="button"
+        aria-label={`Unlock ${feature.title} — requires ${feature.minTierLabel}`}
+        onClick={() => onGate(feature)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '.5rem',
+          marginTop: '.5rem',
+          background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+          color: '#fff',
+          border: 'none',
+          borderRadius: 8,
+          padding: '.7rem 1.25rem',
+          fontSize: '.9rem',
+          fontWeight: 700,
+          cursor: 'pointer',
+          fontFamily: 'inherit',
+          width: '100%',
+          transition: 'opacity .15s, transform .15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.opacity = '.88'; }}
+        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+      >
+        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Unlock Feature
+      </button>
+    </div>
+  );
+}
 
 function ResourceCard({ item, isVisual, onGate }) {
   const color = TYPE_COLORS[item.type] || '#64748b';
@@ -577,6 +769,29 @@ export default function TeamsResourcesPage() {
             )}
           </>
         )}
+
+        {/* Gamifications section — always visible, independent of search/category filters */}
+        <section style={{ marginBottom: '3rem' }} aria-labelledby="gamifications-heading">
+          <h2
+            id="gamifications-heading"
+            style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '.5rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
+          >
+            <span aria-hidden="true" style={{ fontSize: '1.25rem', lineHeight: 1 }}>🏆</span>
+            Gamifications &amp; Achievements
+            <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Badges, leaderboards, challenges &amp; milestones</span>
+          </h2>
+          <p style={{ fontSize: '.92rem', color: '#64748b', marginBottom: '1.25rem', lineHeight: 1.6 }}>
+            Boost team engagement and celebrate resilience progress with tier-based gamification features. Unlock more powerful tools as your team grows.
+          </p>
+          <div
+            className="tr-grid"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}
+          >
+            {GAMIFICATION_FEATURES.map(feature => (
+              <GamificationCard key={feature.id} feature={feature} onGate={setGateItem} />
+            ))}
+          </div>
+        </section>
       </main>
 
       {gateItem && <TierGateModal item={gateItem} onClose={() => setGateItem(null)} />}
