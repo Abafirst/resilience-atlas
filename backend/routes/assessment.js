@@ -44,9 +44,26 @@ const HTML_ENTITY_DECODE_MAP = {
     '&amp;': '&', '&lt;': '<', '&gt;': '>',
 };
 
+const STRIPE_PLACEHOLDER_KEY = 'pk_test_placeholder';
+
 function decodeHtmlEntities(str) {
     if (typeof str !== 'string') return str;
     return str.replace(/&(?:[a-z]+|#\d+|#x[\da-f]+);/gi, (e) => HTML_ENTITY_DECODE_MAP[e] ?? e);
+}
+
+/**
+ * Validate an email address without a ReDoS-prone regex.
+ * Uses a length limit and split-based check rather than a complex regex.
+ * @param {string} email — normalised (lowercase, trimmed) email
+ * @returns {boolean}
+ */
+function isValidEmail(email) {
+    if (!email || email.length > 254) return false;
+    const atIdx = email.lastIndexOf('@');
+    if (atIdx < 1) return false; // no '@' or '@' at start
+    const local  = email.slice(0, atIdx);
+    const domain = email.slice(atIdx + 1);
+    return local.length > 0 && domain.length > 3 && domain.includes('.');
 }
 
 const router = express.Router();
@@ -348,7 +365,7 @@ router.post('/unlock-payment', async (req, res) => {
     // Normalise email.
     const cleanEmail = decodeHtmlEntities(String(email))
         .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
-    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    if (!isValidEmail(cleanEmail)) {
         return res.status(400).json({ error: 'Valid email is required.' });
     }
 
@@ -439,7 +456,7 @@ router.post('/unlock-payment/confirm', async (req, res) => {
     const cleanEmail = decodeHtmlEntities(String(email))
         .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
 
-    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+    if (!isValidEmail(cleanEmail)) {
         return res.status(400).json({ error: 'Valid email is required.' });
     }
 
@@ -469,9 +486,13 @@ router.post('/unlock-payment/confirm', async (req, res) => {
             };
         }
 
+        // Use the already-validated paymentIntentId (regex-checked above) as a
+        // plain string to prevent operator injection in the MongoDB query.
+        const safeIntentId = String(paymentIntentId);
+
         // Mark the pending purchase created in unlock-payment as completed.
         const purchase = await Purchase.findOneAndUpdate(
-            { stripeSessionId: paymentIntentId, email: cleanEmail },
+            { stripeSessionId: safeIntentId, email: cleanEmail },
             update,
             { new: true }
         );
@@ -485,7 +506,7 @@ router.post('/unlock-payment/confirm', async (req, res) => {
                 currency:       'usd',
                 status:         'completed',
                 purchasedAt:    now,
-                stripeSessionId: paymentIntentId,
+                stripeSessionId: safeIntentId,
                 ...(overall !== undefined && dominantType !== undefined && parsedScores
                     ? { assessmentData: { overall: Number(overall), dominantType: String(dominantType), scores: parsedScores } }
                     : {}),

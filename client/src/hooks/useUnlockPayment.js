@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement } from '@stripe/react-stripe-js';
 
+/** Placeholder key used in development environments without real Stripe credentials. */
+const STRIPE_PLACEHOLDER_KEY = 'pk_test_placeholder';
+
 /**
  * useUnlockPayment — manages the inline Stripe payment flow for unlocking a
  * PDF report from the UnlockReportModal.
@@ -36,7 +39,7 @@ export function useUnlockPayment({ results, onUnlockSuccess }) {
         fetch('/config')
             .then((r) => r.json())
             .then(({ stripePublishableKey }) => {
-                if (!stripePublishableKey || stripePublishableKey === 'pk_test_placeholder') {
+                if (!stripePublishableKey || stripePublishableKey === STRIPE_PLACEHOLDER_KEY) {
                     setStripeLoadError('Payment system is not configured. Please contact support.');
                     return;
                 }
