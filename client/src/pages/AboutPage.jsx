@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
     .about-hero {
@@ -440,6 +441,7 @@ export default function AboutPage() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <SiteHeader activePage="about" />
+      <DarkModeHint />
 
       {/* Hero */}
       <section className="about-hero" aria-labelledby="about-heading">

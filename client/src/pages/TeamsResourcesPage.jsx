@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 import { TEAMS_CONTENT } from '../data/teamsContent';
 
 /* ── Tier badge colors ───────────────────────────────────────────────────── */
@@ -525,6 +526,7 @@ export default function TeamsResourcesPage() {
 
   return (
     <>
+      <DarkModeHint />
       <section
         className="tr-hero"
         aria-label="Page hero"
