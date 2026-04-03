@@ -64,6 +64,11 @@ export default function KidsGamesHub() {
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
   const gameContainerRef                = useRef(null);
 
+  // Ref mirrors earnedBadges and is updated immediately (before re-render) so
+  // handleEarnBadge always reads the latest value without stale closure issues.
+  const earnedBadgesRef = useRef(earnedBadges);
+  earnedBadgesRef.current = earnedBadges;
+
   /* ── Process modal queue ── */
   useEffect(() => {
     if (modalBadge || modalQueue.length === 0) return;
@@ -76,12 +81,16 @@ export default function KidsGamesHub() {
 
   /* ── Earn a badge ── */
   const handleEarnBadge = useCallback((badgeId) => {
-    // Skip if already earned (fast check using current state from closure)
-    if (earnedBadges.includes(badgeId)) return;
+    // Use the ref for a fast, always-current duplicate check — this prevents
+    // double modal queuing when the same badge is awarded multiple times before
+    // React has committed a re-render with the updated earnedBadges state.
+    if (earnedBadgesRef.current.includes(badgeId)) return;
+    // Immediately update the ref so rapid successive calls see the new entry.
+    earnedBadgesRef.current = [...earnedBadgesRef.current, badgeId];
 
     const now = new Date().toISOString();
 
-    // Update earned badges (functional update guards against concurrent calls)
+    // Update earned badges (functional update guards against concurrent React batches)
     setEarnedBadges(prev => {
       if (prev.includes(badgeId)) return prev;
       const next = [...prev, badgeId];
@@ -112,7 +121,7 @@ export default function KidsGamesHub() {
       setBadgeToast(badge);
       setTimeout(() => setBadgeToast(null), 3500);
     }
-  }, [earnedBadges]);
+  }, []); // empty deps — reads/writes earnedBadges only through earnedBadgesRef
 
   /* ── Mark a game as completed (for cross-game achievement tracking) ── */
   const handleGameComplete = useCallback((gameId) => {
