@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Shield background -->
+  <path d="M32 6 L52 14 L52 32 C52 44 43 54 32 57 C21 54 12 44 12 32 L12 14 Z" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Ribbon left -->
+  <path d="M20 50 L24 57 L28 50" fill="#3B82F6" stroke="#3B82F6" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Ribbon right -->
+  <path d="M44 50 L40 57 L36 50" fill="#3B82F6" stroke="#3B82F6" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Star in centre -->
+  <polygon points="32,18 34.8,26 43,26 36.6,31 39.1,39 32,34.5 24.9,39 27.4,31 21,26 29.2,26" fill="#3B82F6"/>
+</svg>

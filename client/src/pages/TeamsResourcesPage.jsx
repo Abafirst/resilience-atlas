@@ -177,7 +177,7 @@ const GAMIFICATION_FEATURES = [
     id: 'badges-system',
     title: 'Personal & Team Badges System',
     description: 'Earn and award badges for resilience milestones, participation, and team achievements. Celebrate individual and collective growth.',
-    icon: '🏅',
+    icon: '/icons/badges.svg',
     minTier: 'starter',
     minTierLabel: 'Atlas Team Basic',
     accentColor: '#3b82f6',
@@ -187,7 +187,7 @@ const GAMIFICATION_FEATURES = [
     id: 'streaks-milestones',
     title: 'Streaks & Milestones',
     description: 'Track continuous engagement with streaks and celebrate major milestones on your team\'s resilience journey.',
-    icon: '🔥',
+    icon: '/icons/streaks.svg',
     minTier: 'starter',
     minTierLabel: 'Atlas Team Basic',
     accentColor: '#f97316',
@@ -197,7 +197,7 @@ const GAMIFICATION_FEATURES = [
     id: 'basic-leaderboards',
     title: 'Leaderboards',
     description: 'Motivate teams with progress leaderboards. See where your team stands and celebrate top performers.',
-    icon: '📊',
+    icon: '/icons/leaderboards.svg',
     minTier: 'starter',
     minTierLabel: 'Atlas Team Basic',
     accentColor: '#22c55e',
@@ -207,7 +207,7 @@ const GAMIFICATION_FEATURES = [
     id: 'advanced-leaderboards',
     title: 'Advanced Leaderboards',
     description: 'Multi-team comparisons with dimension breakdowns. Identify strengths and growth areas across groups with detailed analytics.',
-    icon: '📈',
+    icon: '/icons/advanced-leaderboards.svg',
     minTier: 'pro',
     minTierLabel: 'Atlas Team Premium',
     accentColor: '#6d28d9',
@@ -217,7 +217,7 @@ const GAMIFICATION_FEATURES = [
     id: 'challenges-achievements',
     title: 'Challenges & Achievement Tracking',
     description: 'Create advanced team challenges and track achievement progress. Drive engagement with structured resilience missions.',
-    icon: '🎯',
+    icon: '/icons/challenges.svg',
     minTier: 'pro',
     minTierLabel: 'Atlas Team Premium',
     accentColor: '#a855f7',
@@ -227,7 +227,7 @@ const GAMIFICATION_FEATURES = [
     id: 'custom-badges',
     title: 'Custom Badges',
     description: 'Design fully branded badges with your organization\'s logo and colors. Recognize achievements in a way that reflects your unique culture and identity.',
-    icon: '✨',
+    icon: '/icons/custom-badges.svg',
     minTier: 'enterprise',
     minTierLabel: 'Atlas Team Enterprise',
     accentColor: '#be185d',
@@ -237,7 +237,7 @@ const GAMIFICATION_FEATURES = [
     id: 'org-leaderboards',
     title: 'Org-wide Leaderboards',
     description: 'Organization-wide leaderboards spanning all teams. Surface insights at the enterprise level and foster healthy competition across your entire organization.',
-    icon: '🏆',
+    icon: '/icons/org-leaderboards.svg',
     minTier: 'enterprise',
     minTierLabel: 'Atlas Team Enterprise',
     accentColor: '#be185d',
@@ -273,7 +273,6 @@ function GamificationCard({ feature, onGate }) {
         <div
           aria-hidden="true"
           style={{
-            fontSize: '2rem',
             width: 56,
             height: 56,
             borderRadius: 12,
@@ -284,7 +283,7 @@ function GamificationCard({ feature, onGate }) {
             flexShrink: 0,
           }}
         >
-          {feature.icon}
+          <img src={feature.icon} alt={`${feature.title} icon`} style={{ width: 28, height: 28 }} />
         </div>
         {tierBadge && (
           <span

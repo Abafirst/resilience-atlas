@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Center person (leader) -->
+  <circle cx="32" cy="18" r="6" fill="#FCE7F3" stroke="#BE185D" stroke-width="2"/>
+  <path d="M22 36 C22 29 42 29 42 36 L42 40 L22 40 Z" fill="#FCE7F3" stroke="#BE185D" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Left person -->
+  <circle cx="14" cy="26" r="4.5" fill="#FCE7F3" stroke="#BE185D" stroke-width="1.5"/>
+  <path d="M6 40 C6 34 22 34 22 40" fill="#FCE7F3" stroke="#BE185D" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Right person -->
+  <circle cx="50" cy="26" r="4.5" fill="#FCE7F3" stroke="#BE185D" stroke-width="1.5"/>
+  <path d="M42 40 C42 34 58 34 58 40" fill="#FCE7F3" stroke="#BE185D" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Connecting lines -->
+  <line x1="32" y1="24" x2="14" y2="30" stroke="#BE185D" stroke-width="1.5" stroke-dasharray="2 2" stroke-linecap="round"/>
+  <line x1="32" y1="24" x2="50" y2="30" stroke="#BE185D" stroke-width="1.5" stroke-dasharray="2 2" stroke-linecap="round"/>
+  <!-- Trophy at bottom -->
+  <path d="M26 48 L26 52 L38 52 L38 48 C38 44 42 42 42 42 L22 42 C22 42 26 44 26 48Z" fill="#FCE7F3" stroke="#BE185D" stroke-width="1.5" stroke-linejoin="round"/>
+  <rect x="28" y="52" width="8" height="3" rx="1" fill="#BE185D" opacity="0.5"/>
+</svg>
