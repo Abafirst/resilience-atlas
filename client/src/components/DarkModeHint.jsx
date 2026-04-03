@@ -10,7 +10,7 @@ const DISMISSED_KEY = 'ra-dm-hint-dismissed';
  * and hides permanently once dismissed (stored in localStorage).
  */
 export default function DarkModeHint() {
-  const [isDark, setIsDark]       = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function DarkModeHint() {
     <div className="dm-quiz-hint" role="note" aria-label="Accessibility tip">
       <span aria-hidden="true">💡</span>
       {' '}Finding content hard to read? Select the{' '}
-      <strong>&#9728;&#65039; sun icon</strong> (top right) to switch to <strong>Light Mode</strong>.
+      <strong><span aria-hidden="true">&#9728;&#65039;</span> sun icon</strong> (top right) to switch to <strong>Light Mode</strong>.
       <button
         type="button"
         className="dm-quiz-hint-close"
