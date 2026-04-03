@@ -48,12 +48,29 @@ const styles = {
   info: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 2,
+    gap: 4,
+  },
+  tierRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
   },
   tier: {
     color: '#1a202c',
     fontWeight: 600,
     fontSize: 14,
+  },
+  badge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 3,
+    padding: '2px 7px',
+    borderRadius: 20,
+    fontSize: 11,
+    fontWeight: 600,
+    background: '#dcfce7',
+    color: '#16a34a',
+    border: '1px solid #bbf7d0',
   },
   date: {
     color: '#718096',
@@ -124,6 +141,9 @@ async function downloadPdfForPurchase(purchase, email) {
  * ResultsHistory — lists prior PDF report purchases for the authenticated
  * user and provides a per-purchase "Download PDF" button so they can
  * re-download the exact report for each specific assessment attempt.
+ *
+ * Each purchase displays an "Unlocked" badge since the new access model makes
+ * all purchases permanent — there is no expiry for previously paid reports.
  */
 export default function ResultsHistory({ email }) {
   const [purchases, setPurchases] = useState([]);
@@ -179,7 +199,7 @@ export default function ResultsHistory({ email }) {
         Prior Report Purchases
       </h3>
       <p style={styles.desc}>
-        Each purchased report is always available for re-download. Use the{' '}
+        Each purchased report is permanently available for re-download. Use the{' '}
         <strong>Download PDF</strong> button next to a specific purchase to
         regenerate that exact report.
       </p>
@@ -193,7 +213,10 @@ export default function ResultsHistory({ email }) {
           return (
             <div key={`${purchase.tier}-${purchase.purchasedAt || idx}`} style={styles.row}>
               <div style={styles.info}>
-                <span style={styles.tier}>{tierLabel}</span>
+                <div style={styles.tierRow}>
+                  <span style={styles.tier}>{tierLabel}</span>
+                  <span style={styles.badge}>✓ Unlocked</span>
+                </div>
                 <span style={styles.date}>Purchased {date}</span>
               </div>
               <button

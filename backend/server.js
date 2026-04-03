@@ -322,6 +322,8 @@ app.use("/api/upsell", require("./routes/upsell"));
 console.log("✅ Mounted route: /api/upsell");
 app.use("/api/report", require("./routes/report"));
 console.log("✅ Mounted route: /api/report");
+app.use("/api/assessment", require("./routes/assessment"));
+console.log("✅ Mounted route: /api/assessment");
 app.use("/api/tiers", require("./routes/tiers"));
 console.log("✅ Mounted route: /api/tiers");
 app.use("/api/evidence-practices", require("./routes/evidence-practices"));

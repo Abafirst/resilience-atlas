@@ -176,7 +176,7 @@ describe('GET /api/report/generate', () => {
         delete process.env.STRIPE_SECRET_KEY;
     });
 
-    test('returns 402 with upgradeRequired=true when email provided but no purchase (second assessment)', async () => {
+    test('returns 402 with upgradeRequired=true when email provided but no purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const Purchase = require('../backend/models/Purchase');
         Purchase.find.mockReturnValueOnce({
@@ -186,8 +186,6 @@ describe('GET /api/report/generate', () => {
         });
         const User = require('../backend/models/User');
         User.findOne.mockResolvedValueOnce(null); // no User record
-        const ResilienceResult = require('../backend/models/ResilienceResult');
-        ResilienceResult.countDocuments.mockResolvedValueOnce(2); // second assessment
         const res = await request(app)
             .get('/api/report/generate')
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'test@example.com' });
@@ -197,22 +195,27 @@ describe('GET /api/report/generate', () => {
         delete process.env.STRIPE_SECRET_KEY;
     });
 
-    test('returns 200 (free) when STRIPE_SECRET_KEY is set and this is the first assessment (count=1)', async () => {
+    test('returns 402 for the first assessment when no purchase exists (no "first assessment free")', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
-        const ResilienceResult = require('../backend/models/ResilienceResult');
-        ResilienceResult.countDocuments.mockResolvedValueOnce(1); // one completed assessment — first PDF is free (count ≤ 1)
+        const Purchase = require('../backend/models/Purchase');
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([]), // no purchases — first assessment is NOT free
+        });
+        const User = require('../backend/models/User');
+        User.findOne.mockResolvedValueOnce(null);
         const res = await request(app)
             .get('/api/report/generate')
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'newuser@example.com' });
-        expect(res.status).toBe(200);
-        expect(res.body).toHaveProperty('hash');
+        // In the new model every assessment requires a purchase — there is no free first assessment.
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
         delete process.env.STRIPE_SECRET_KEY;
     });
 
     test('returns 200 when STRIPE_SECRET_KEY is set and email has an active atlas-navigator purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
-        const ResilienceResult = require('../backend/models/ResilienceResult');
-        ResilienceResult.countDocuments.mockResolvedValueOnce(2); // second assessment
         const Purchase = require('../backend/models/Purchase');
         const purchaseDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
         Purchase.find.mockReturnValueOnce({
@@ -483,9 +486,9 @@ describe('GET /api/report/access', () => {
         expect(res.body.purchases[0].isExpired).toBe(false);
     });
 
-    test('returns hasAccess=true but hasActiveAccess=false for an expired atlas-starter purchase', async () => {
+    test('returns hasAccess=true AND hasActiveAccess=true even for an old atlas-starter purchase (no expiry in new model)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
-        const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago — 10 days past 30-day expiry
+        const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago
         const mockPurchase = {
             tier: 'atlas-starter',
             purchasedAt: oldDate,
@@ -499,11 +502,12 @@ describe('GET /api/report/access', () => {
 
         const res = await request(app)
             .get('/api/report/access')
-            .query({ email: 'expired@example.com' });
+            .query({ email: 'old-starter@example.com' });
         expect(res.status).toBe(200);
-        expect(res.body.hasAccess).toBe(true);        // purchase exists (for prior reports)
-        expect(res.body.hasActiveAccess).toBe(false); // but it's expired (new downloads blocked)
-        expect(res.body.purchases[0].isExpired).toBe(true);
+        expect(res.body.hasAccess).toBe(true);
+        // All purchases are now permanent — no expiry in the new access model.
+        expect(res.body.hasActiveAccess).toBe(true);
+        expect(res.body.purchases[0].isExpired).toBe(false);
     });
 
     test('returns hasAccess=true via User fallback when purchasedDeepReport flag is set', async () => {
@@ -558,42 +562,28 @@ describe('GET /api/report/access', () => {
     });
 });
 
-// ── isPurchaseActive unit tests ───────────────────────────────────────────────
+// ── Access control unit tests (replaces isPurchaseActive) ────────────────────
+// The new access model makes ALL purchases permanent (no expiry).
+// atlas-navigator/atlas-premium/Teams tiers grant blanket access.
+// atlas-starter grants per-assessment access (hash match).
 
-describe('isPurchaseActive', () => {
-    const { isPurchaseActive } = require('../backend/routes/report');
-    // Keep these constants in sync with backend/routes/report.js
-    const EXPIRY_DAYS = 30;
-    const DAY_MS = 24 * 60 * 60 * 1000;
+describe('access control - BLANKET_ACCESS_TIERS', () => {
+    const report = require('../backend/routes/report');
 
-    test('atlas-navigator is always active (permanent tier)', () => {
-        expect(isPurchaseActive({ tier: 'atlas-navigator', purchasedAt: new Date('2020-01-01') })).toBe(true);
+    test('buildJobHash is exported', () => {
+        expect(typeof report.buildJobHash).toBe('function');
     });
 
-    test('atlas-premium is always active (permanent tier)', () => {
-        expect(isPurchaseActive({ tier: 'atlas-premium', purchasedAt: new Date('2020-01-01') })).toBe(true);
+    test('buildJobHash produces consistent output', () => {
+        const h1 = report.buildJobHash('75', 'Cognitive-Narrative', '{"a":1}');
+        const h2 = report.buildJobHash('75', 'Cognitive-Narrative', '{"a":1}');
+        expect(h1).toBe(h2);
+        expect(h1).toHaveLength(32); // MD5 hex
     });
 
-    test('atlas-starter is active when purchased within 30 days', () => {
-        const recentDate = new Date(Date.now() - 10 * DAY_MS); // 10 days ago — well within window
-        expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: recentDate })).toBe(true);
-    });
-
-    test('atlas-starter is expired when purchased more than 30 days ago', () => {
-        const oldDate = new Date(Date.now() - (EXPIRY_DAYS + 5) * DAY_MS); // 5 days past expiry
-        expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: oldDate })).toBe(false);
-    });
-
-    test('atlas-starter falls back to createdAt when purchasedAt is absent', () => {
-        const recentDate = new Date(Date.now() - 5 * DAY_MS); // 5 days ago — within window
-        expect(isPurchaseActive({ tier: 'atlas-starter', createdAt: recentDate })).toBe(true);
-    });
-
-    test('atlas-starter returns false when no date is available', () => {
-        expect(isPurchaseActive({ tier: 'atlas-starter' })).toBe(false);
-    });
-
-    test('Teams starter tier is always active (permanent)', () => {
-        expect(isPurchaseActive({ tier: 'starter', purchasedAt: new Date('2020-01-01') })).toBe(true);
+    test('buildJobHash differs when inputs differ', () => {
+        const h1 = report.buildJobHash('75', 'Cognitive-Narrative', '{"a":1}');
+        const h2 = report.buildJobHash('80', 'Cognitive-Narrative', '{"a":1}');
+        expect(h1).not.toBe(h2);
     });
 });

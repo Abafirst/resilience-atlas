@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
+import UnlockReportModal from '../components/UnlockReportModal.jsx';
+import AssessmentHistory from '../components/AssessmentHistory.jsx';
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
 const BRAND_ICONS = {
@@ -1929,9 +1931,11 @@ export default function ResultsPage() {
   // The download button is only shown once the backend has confirmed the tier, preventing
   // stale localStorage values from granting premature access.
   const [tierCheckComplete, setTierCheckComplete] = useState(false);
-  // Number of assessments this email has completed (from /api/report/access).
-  // null = not yet loaded; 0 or 1 = first assessment (PDF is free).
-  const [assessmentCount, setAssessmentCount] = useState(null);
+  // Whether the current assessment's PDF has been unlocked (either via Navigator or Starter).
+  // null = not yet loaded from backend.
+  const [isCurrentAssessmentUnlocked, setIsCurrentAssessmentUnlocked] = useState(null);
+  // Whether user has unlock modal open (shown automatically for users without PDF access).
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
 
   // ── Upsell modal & promo-banner state ─────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
@@ -2028,8 +2032,29 @@ export default function ResultsPage() {
     };
   }, [results]);
 
-  // ── Smart upsell triggers (assessment complete, scroll, exit intent, timer) ─
-  // Only active for free users without paid access; respect 24-hour cooldown.
+  // ── Smart unlock modal trigger (replaces old upsell modal for new assessments) ─
+  // Show the UnlockReportModal automatically 1.5 s after results load when the
+  // backend has confirmed this assessment is NOT yet unlocked.
+  // Only fires once per page load; respects the existing upsell cooldown.
+  const unlockModalFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (!results || !tierCheckComplete) return;
+    if (isCurrentAssessmentUnlocked) return;  // already unlocked — no need to prompt
+    if (unlockModalFiredRef.current) return;  // already fired this session
+    if (upsellIsOnCooldown()) return;
+
+    const timer = setTimeout(() => {
+      if (isCurrentAssessmentUnlocked) return;
+      unlockModalFiredRef.current = true;
+      setShowUnlockModal(true);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [results, tierCheckComplete, isCurrentAssessmentUnlocked]);
+
+  // ── Smart upsell triggers (scroll, exit intent, timer) ─────────────────
+  // Still active for free users to promote upgrade via the existing upsell cards.
   const upsellScrollFiredRef = useRef(false);
   const upsellScrollTargetRef = useRef(null);
 
@@ -2038,12 +2063,6 @@ export default function ResultsPage() {
     const isFree = tier === 'free' && !priorAccess;
     if (!isFree) return;
     if (upsellIsOnCooldown()) return;
-
-    // 1. Assessment-complete trigger — show after 1.2 s once results render.
-    const assessTimer = setTimeout(() => {
-      if (upsellIsOnCooldown()) return;
-      setUpsellModal({ tier: 'atlas-navigator', trigger: 'assessment_complete' });
-    }, 1200);
 
     // 2. Scroll trigger — fire when the upgrade cards section scrolls into view.
     const scrollTarget = document.getElementById('upgradeCardsContainer') ||
@@ -2055,11 +2074,6 @@ export default function ResultsPage() {
         if (!upsellScrollFiredRef.current && entries[0].isIntersecting) {
           upsellScrollFiredRef.current = true;
           scrollObserver.disconnect();
-          if (!upsellIsOnCooldown()) {
-            setTimeout(() => {
-              setUpsellModal({ tier: 'atlas-navigator', trigger: 'top_results_view' });
-            }, 800);
-          }
         }
       }, { threshold: 0.5 });
       scrollObserver.observe(scrollTarget);
@@ -2094,7 +2108,6 @@ export default function ResultsPage() {
     }
 
     return () => {
-      clearTimeout(assessTimer);
       clearTimeout(timerHandle);
       clearTimeout(promoTimer);
       document.removeEventListener('mouseleave', onMouseLeave);
@@ -2228,39 +2241,50 @@ export default function ResultsPage() {
   }, []);
 
   // ── Check prior report access (/api/report/access) ────────────────────
-  // Permanently unlock download for users who previously purchased, even if
-  // their localStorage tier is stale or cleared (mirrors legacy results.js).
-  // Conversely, if the backend says no access, reset any stale localStorage tier.
+  // Checks whether the current assessment's PDF is unlocked, and whether the
+  // user has any existing purchases.  Passes assessment data to the endpoint
+  // so the backend can check per-assessment access for Atlas Starter users.
   // Sets tierCheckComplete so the download UI only renders after backend responds.
-  // Also reads assessmentCount to determine if PDF is free (first assessment).
   useEffect(() => {
     const email = getStoredEmail();
     if (!email) {
       // No email to check with — mark as complete so UI renders (tier stays 'free').
+      setIsCurrentAssessmentUnlocked(false);
       setTierCheckComplete(true);
       return;
     }
-    fetch(`/api/report/access?email=${encodeURIComponent(email)}`)
+
+    // Build URL with current assessment data so the backend can check per-assessment unlock.
+    let accessUrl = `/api/report/access?email=${encodeURIComponent(email)}`;
+    try {
+      const raw = localStorage.getItem('resilience_results');
+      if (raw) {
+        const r = JSON.parse(raw);
+        if (r.overall !== undefined && r.scores) {
+          accessUrl += `&overall=${encodeURIComponent(String(r.overall))}`;
+          accessUrl += `&dominantType=${encodeURIComponent(r.dominantType || '')}`;
+          accessUrl += `&scores=${encodeURIComponent(JSON.stringify(r.scores))}`;
+        }
+      }
+    } catch (_) { /* ignore */ }
+
+    fetch(accessUrl)
       .then(r => r.json())
       .then(data => {
-        // hasActiveAccess = non-expired purchase exists (introduced with expiry fix).
-        // Fall back to hasAccess for older/dev responses that lack the field.
-        const activeAccess = data.hasActiveAccess ?? data.hasAccess;
-        if (activeAccess) {
+        // isCurrentAssessmentUnlocked: this specific assessment's PDF is accessible.
+        const unlocked = data.isCurrentAssessmentUnlocked ?? (data.hasActiveAccess ?? data.hasAccess);
+        setIsCurrentAssessmentUnlocked(!!unlocked);
+        if (unlocked) {
           setPriorAccess(true);
         } else {
-          // Backend confirmed no active access — clear any stale paid tier from localStorage
-          // so the UI returns to the locked/upgrade state.
+          // Backend confirmed no access for this assessment — clear stale localStorage tier.
           setTier('free');
           try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
-        }
-        // Track assessment count so UI can grant free PDF for the first assessment.
-        if (typeof data.assessmentCount === 'number') {
-          setAssessmentCount(data.assessmentCount);
         }
       })
       .catch(err => {
         console.warn('[ResultsPage] Prior access check failed:', err.message);
+        setIsCurrentAssessmentUnlocked(false);
       })
       .finally(() => {
         setTierCheckComplete(true);
@@ -2531,13 +2555,14 @@ export default function ResultsPage() {
 
   // ── Derived values ─────────────────────────────────────────────────────
   // hasPremiumAccess is only true once the backend has confirmed the tier
-  // (tierCheckComplete). This prevents localStorage-only values from granting
-  // access before the server has verified the purchase.
+  // (tierCheckComplete) AND the current assessment is unlocked.
   //
-  // isFirstAssessment: PDF is free for users on their first assessment
-  // (assessmentCount ≤ 1). Null means the backend hasn't responded yet.
-  const isFirstAssessment = assessmentCount !== null && assessmentCount <= 1;
-  const hasPremiumAccess = tierCheckComplete && (isFirstAssessment || isPaidTier(tier) || priorAccess);
+  // New access model:
+  //   - Atlas Navigator: blanket access to all assessments (isCurrentAssessmentUnlocked = true)
+  //   - Atlas Starter: per-assessment access (isCurrentAssessmentUnlocked = true only for
+  //     assessments with a matching purchase)
+  //   - No "first assessment free" exception.
+  const hasPremiumAccess = tierCheckComplete && (isCurrentAssessmentUnlocked === true || isPaidTier(tier) || priorAccess);
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -2631,6 +2656,19 @@ export default function ResultsPage() {
           trigger={upsellModal.trigger}
           onClose={() => setUpsellModal(null)}
           onUpgrade={handleUpgrade}
+        />
+      )}
+
+      {/* ── Unlock Report Modal ───────────────────────────────────────── */}
+      {showUnlockModal && (
+        <UnlockReportModal
+          results={results}
+          onClose={() => setShowUnlockModal(false)}
+          onUnlock={(tierId) => {
+            setShowUnlockModal(false);
+            handleUpgrade(tierId);
+          }}
+          checkoutLoading={checkoutLoading}
         />
       )}
 
@@ -2892,6 +2930,20 @@ export default function ResultsPage() {
           email={(results && results.email) || getStoredEmail()}
         />
 
+        {/* ── Assessment History with unlock status ────────────────── */}
+        <AssessmentHistory
+          email={(results && results.email) || getStoredEmail()}
+          onUnlock={(assessment) => {
+            // Store the assessment hash in sessionStorage so the checkout
+            // success flow can link the purchase to this specific assessment.
+            try {
+              sessionStorage.setItem('pending_unlock_hash', assessment.hash || '');
+            } catch (_) { /* ignore */ }
+            setShowUnlockModal(true);
+          }}
+          checkoutLoading={checkoutLoading}
+        />
+
         {/* ── PDF Download + Action Buttons ─────────────────────────── */}
         {hasPremiumAccess && (
           <div style={s.downloadSection}>
@@ -2899,15 +2951,13 @@ export default function ResultsPage() {
               🎉 Your Full Report is Ready
             </div>
             <p style={s.downloadDesc}>
-              {isFirstAssessment
-                ? 'Your first assessment PDF report is ready — download it free as our welcome gift.'
-                : isAtlasPremium
-                  ? 'Your Atlas Premium lifetime access lets you download this report any time.'
-                  : tier === 'atlas-starter'
-                    ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
-                    : tier === 'atlas-navigator'
-                      ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
-                      : 'Your report is ready. Download your personalised PDF now.'
+              {isAtlasPremium
+                ? 'Your Atlas Premium lifetime access lets you download this report any time.'
+                : tier === 'atlas-starter'
+                  ? 'Your Atlas Starter report is ready. Download your personalised PDF report now.'
+                  : tier === 'atlas-navigator'
+                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                    : 'Your report is ready. Download your personalised PDF now.'
               }
             </p>
             {pdfError && (
@@ -2925,7 +2975,7 @@ export default function ResultsPage() {
           </div>
         )}
 
-        {/* ── Locked PDF Download (free users) ─────────────────────── */}
+        {/* ── Locked PDF Download (users without access to this assessment) ── */}
         {!hasPremiumAccess && (
           <div id="pdfAlert" role="alert" className="btn-locked-row">
             {!tierCheckComplete ? (
@@ -2941,16 +2991,7 @@ export default function ResultsPage() {
               <button
                 type="button"
                 className="btn btn-locked btn-locked-pdf"
-                onClick={() => {
-                  // Scroll to upgrade cards showing both Atlas Starter ($9.99) and
-                  // Atlas Navigator ($49.99) so the user can select the right tier.
-                  const upgradeEl = document.getElementById('upgradeCardsContainer');
-                  if (upgradeEl) {
-                    upgradeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  } else {
-                    setUpsellModal({ tier: 'atlas-navigator', trigger: 'pdf_download_attempt' });
-                  }
-                }}
+                onClick={() => setShowUnlockModal(true)}
                 aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
               >
                 🔒 Unlock PDF Download
