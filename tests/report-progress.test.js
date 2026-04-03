@@ -75,7 +75,10 @@ jest.mock('../backend/models/User', () => {
     MockUser.find = jest.fn().mockResolvedValue([]);
     return MockUser;
 });
-jest.mock('../backend/models/ResilienceResult', () => ({ create: jest.fn().mockResolvedValue({}) }));
+jest.mock('../backend/models/ResilienceResult', () => ({
+    create: jest.fn().mockResolvedValue({}),
+    countDocuments: jest.fn().mockResolvedValue(0),
+}));
 jest.mock('../backend/models/PracticeCompletion', () => ({
     create: jest.fn().mockResolvedValue({ _id: 'comp001' }),
     find: jest.fn().mockReturnValue({ sort: jest.fn().mockReturnValue({ limit: jest.fn().mockResolvedValue([]) }) }),
@@ -168,12 +171,14 @@ describe('GET /api/report/generate', () => {
         delete process.env.STRIPE_SECRET_KEY;
     });
 
-    test('returns 402 with upgradeRequired=true when email provided but no purchase', async () => {
+    test('returns 402 with upgradeRequired=true when email provided but no purchase (second assessment)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const Purchase = require('../backend/models/Purchase');
         Purchase.findOne.mockResolvedValueOnce(null); // no Purchase record
         const User = require('../backend/models/User');
         User.findOne.mockResolvedValueOnce(null); // no User record
+        const ResilienceResult = require('../backend/models/ResilienceResult');
+        ResilienceResult.countDocuments.mockResolvedValueOnce(2); // second assessment
         const res = await request(app)
             .get('/api/report/generate')
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'test@example.com' });
@@ -183,8 +188,22 @@ describe('GET /api/report/generate', () => {
         delete process.env.STRIPE_SECRET_KEY;
     });
 
+    test('returns 200 (free) when STRIPE_SECRET_KEY is set and this is the first assessment (count=1)', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const ResilienceResult = require('../backend/models/ResilienceResult');
+        ResilienceResult.countDocuments.mockResolvedValueOnce(1); // first assessment
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'newuser@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('hash');
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+
     test('returns 200 when STRIPE_SECRET_KEY is set and email has a completed purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const ResilienceResult = require('../backend/models/ResilienceResult');
+        ResilienceResult.countDocuments.mockResolvedValueOnce(2); // second assessment
         const Purchase = require('../backend/models/Purchase');
         Purchase.findOne.mockResolvedValueOnce({ tier: 'atlas-navigator', status: 'completed' });
         const res = await request(app)

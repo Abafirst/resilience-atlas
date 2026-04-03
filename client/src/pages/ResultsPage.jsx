@@ -1929,6 +1929,9 @@ export default function ResultsPage() {
   // The download button is only shown once the backend has confirmed the tier, preventing
   // stale localStorage values from granting premature access.
   const [tierCheckComplete, setTierCheckComplete] = useState(false);
+  // Number of assessments this email has completed (from /api/report/access).
+  // null = not yet loaded; 0 or 1 = first assessment (PDF is free).
+  const [assessmentCount, setAssessmentCount] = useState(null);
 
   // ── Upsell modal & promo-banner state ─────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
@@ -2229,6 +2232,7 @@ export default function ResultsPage() {
   // their localStorage tier is stale or cleared (mirrors legacy results.js).
   // Conversely, if the backend says no access, reset any stale localStorage tier.
   // Sets tierCheckComplete so the download UI only renders after backend responds.
+  // Also reads assessmentCount to determine if PDF is free (first assessment).
   useEffect(() => {
     const email = getStoredEmail();
     if (!email) {
@@ -2246,6 +2250,10 @@ export default function ResultsPage() {
           // so the UI returns to the locked/upgrade state.
           setTier('free');
           try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
+        }
+        // Track assessment count so UI can grant free PDF for the first assessment.
+        if (typeof data.assessmentCount === 'number') {
+          setAssessmentCount(data.assessmentCount);
         }
       })
       .catch(err => {
@@ -2522,7 +2530,11 @@ export default function ResultsPage() {
   // hasPremiumAccess is only true once the backend has confirmed the tier
   // (tierCheckComplete). This prevents localStorage-only values from granting
   // access before the server has verified the purchase.
-  const hasPremiumAccess = tierCheckComplete && (isPaidTier(tier) || priorAccess);
+  //
+  // isFirstAssessment: PDF is free for users on their first assessment
+  // (assessmentCount ≤ 1). Null means the backend hasn't responded yet.
+  const isFirstAssessment = assessmentCount !== null && assessmentCount <= 1;
+  const hasPremiumAccess = tierCheckComplete && (isFirstAssessment || isPaidTier(tier) || priorAccess);
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -2884,13 +2896,15 @@ export default function ResultsPage() {
               🎉 Your Full Report is Ready
             </div>
             <p style={s.downloadDesc}>
-              {isAtlasPremium
-                ? 'Your Atlas Premium lifetime access lets you download this report any time.'
-                : tier === 'atlas-starter'
-                  ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
-                  : tier === 'atlas-navigator'
-                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
-                    : 'Your report is ready. Download your personalised PDF now.'
+              {isFirstAssessment
+                ? 'Your first assessment PDF report is ready — download it free as our welcome gift.'
+                : isAtlasPremium
+                  ? 'Your Atlas Premium lifetime access lets you download this report any time.'
+                  : tier === 'atlas-starter'
+                    ? 'Your Atlas Starter report is ready. Download your personalised PDF summary now.'
+                    : tier === 'atlas-navigator'
+                      ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                      : 'Your report is ready. Download your personalised PDF now.'
               }
             </p>
             {pdfError && (
