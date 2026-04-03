@@ -107,7 +107,7 @@ export default function LandingPage() {
               className="btn-hero-primary"
               onClick={() => loginWithRedirect()}
             >
-              Begin Your Navigation
+              Discover Your Dimensions
             </button>
           </div>
         </div>

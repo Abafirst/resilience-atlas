@@ -161,7 +161,7 @@ export default function AssessmentPage() {
           <span className="meta-chip">No account required</span>
         </div>
         <a className="btn-hero-primary" href="/quiz">
-          <span aria-hidden="true">&#9654;</span> Establish My Position
+          <span aria-hidden="true">&#9654;</span> Begin My Assessment
         </a>
       </section>
 
@@ -268,9 +268,9 @@ export default function AssessmentPage() {
 
       {/* CTA */}
       <section className="cta-band" aria-label="Start assessment">
-        <h2>Ready to Establish Your Position?</h2>
+        <h2>Ready to Begin Your Assessment?</h2>
         <p>Takes 10–15 minutes. No account required. Your resilience map, immediately.</p>
-        <a className="btn-cta" href="/quiz">Navigate My Resilience &rarr;</a>
+        <a className="btn-cta" href="/quiz">Begin My Assessment &rarr;</a>
       </section>
 
       <footer className="site-footer" role="contentinfo">
