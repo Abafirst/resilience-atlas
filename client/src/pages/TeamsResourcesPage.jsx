@@ -283,7 +283,7 @@ function GamificationCard({ feature, onGate }) {
             flexShrink: 0,
           }}
         >
-          <img src={feature.icon} alt="" style={{ width: 28, height: 28 }} />
+          <img src={feature.icon} alt={`${feature.title} icon`} style={{ width: 28, height: 28 }} />
         </div>
         {tierBadge && (
           <span
