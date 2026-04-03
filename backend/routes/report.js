@@ -306,7 +306,7 @@ router.get('/generate', reportLimiter, async (req, res) => {
                         }
                         if (!userHasAccess) {
                             return res.status(402).json({
-                                error: 'A paid report purchase is required to download the PDF report for your second assessment.',
+                                error: 'A paid report purchase is required to download additional PDF reports.',
                                 upgradeRequired: true,
                             });
                         }

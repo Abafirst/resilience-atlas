@@ -191,7 +191,7 @@ describe('GET /api/report/generate', () => {
     test('returns 200 (free) when STRIPE_SECRET_KEY is set and this is the first assessment (count=1)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const ResilienceResult = require('../backend/models/ResilienceResult');
-        ResilienceResult.countDocuments.mockResolvedValueOnce(1); // first assessment
+        ResilienceResult.countDocuments.mockResolvedValueOnce(1); // one completed assessment — first PDF is free (count ≤ 1)
         const res = await request(app)
             .get('/api/report/generate')
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'newuser@example.com' });
