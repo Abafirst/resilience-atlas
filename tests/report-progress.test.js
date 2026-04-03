@@ -51,6 +51,11 @@ jest.mock('mongoose', () => {
 jest.mock('../backend/models/Purchase', () => ({
     create: jest.fn().mockResolvedValue({ _id: 'purchase001' }),
     findOne: jest.fn().mockResolvedValue(null),
+    find: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        sort:   jest.fn().mockReturnThis(),
+        lean:   jest.fn().mockResolvedValue([]),
+    }),
     findOneAndUpdate: jest.fn().mockResolvedValue({}),
 }));
 
@@ -174,7 +179,11 @@ describe('GET /api/report/generate', () => {
     test('returns 402 with upgradeRequired=true when email provided but no purchase (second assessment)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const Purchase = require('../backend/models/Purchase');
-        Purchase.findOne.mockResolvedValueOnce(null); // no Purchase record
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([]), // no Purchase records
+        });
         const User = require('../backend/models/User');
         User.findOne.mockResolvedValueOnce(null); // no User record
         const ResilienceResult = require('../backend/models/ResilienceResult');
@@ -200,12 +209,19 @@ describe('GET /api/report/generate', () => {
         delete process.env.STRIPE_SECRET_KEY;
     });
 
-    test('returns 200 when STRIPE_SECRET_KEY is set and email has a completed purchase', async () => {
+    test('returns 200 when STRIPE_SECRET_KEY is set and email has an active atlas-navigator purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const ResilienceResult = require('../backend/models/ResilienceResult');
         ResilienceResult.countDocuments.mockResolvedValueOnce(2); // second assessment
         const Purchase = require('../backend/models/Purchase');
-        Purchase.findOne.mockResolvedValueOnce({ tier: 'atlas-navigator', status: 'completed' });
+        const purchaseDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([
+                { tier: 'atlas-navigator', status: 'completed', purchasedAt: purchaseDate, createdAt: purchaseDate },
+            ]),
+        });
         const res = await request(app)
             .get('/api/report/generate')
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'paid@example.com' });
@@ -393,6 +409,7 @@ describe('GET /api/report/access', () => {
             .query({ email: 'user@example.com' });
         expect(res.status).toBe(200);
         expect(res.body.hasAccess).toBe(true);
+        expect(res.body.hasActiveAccess).toBe(true);
         expect(Array.isArray(res.body.purchases)).toBe(true);
     });
 
@@ -415,10 +432,11 @@ describe('GET /api/report/access', () => {
             .query({ email: 'nopurchase@example.com' });
         expect(res.status).toBe(200);
         expect(res.body.hasAccess).toBe(false);
+        expect(res.body.hasActiveAccess).toBe(false);
         expect(res.body.purchases).toHaveLength(0);
     });
 
-    test('returns hasAccess=true with purchases when a completed Purchase record exists', async () => {
+    test('returns hasAccess=true and hasActiveAccess=true for atlas-navigator (permanent)', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const mockPurchase = {
             tier: 'atlas-navigator',
@@ -436,8 +454,56 @@ describe('GET /api/report/access', () => {
             .query({ email: 'buyer@example.com' });
         expect(res.status).toBe(200);
         expect(res.body.hasAccess).toBe(true);
+        expect(res.body.hasActiveAccess).toBe(true);
         expect(res.body.purchases).toHaveLength(1);
         expect(res.body.purchases[0].tier).toBe('atlas-navigator');
+        expect(res.body.purchases[0].isExpired).toBe(false);
+    });
+
+    test('returns hasActiveAccess=true for a recent atlas-starter purchase (within 30 days)', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000); // 5 days ago
+        const mockPurchase = {
+            tier: 'atlas-starter',
+            purchasedAt: recentDate,
+            createdAt:   recentDate,
+        };
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([mockPurchase]),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'starter@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);
+        expect(res.body.hasActiveAccess).toBe(true);
+        expect(res.body.purchases[0].isExpired).toBe(false);
+    });
+
+    test('returns hasAccess=true but hasActiveAccess=false for an expired atlas-starter purchase', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const oldDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago (expired)
+        const mockPurchase = {
+            tier: 'atlas-starter',
+            purchasedAt: oldDate,
+            createdAt:   oldDate,
+        };
+        Purchase.find = jest.fn().mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([mockPurchase]),
+        });
+
+        const res = await request(app)
+            .get('/api/report/access')
+            .query({ email: 'expired@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body.hasAccess).toBe(true);        // purchase exists (for prior reports)
+        expect(res.body.hasActiveAccess).toBe(false); // but it's expired (new downloads blocked)
+        expect(res.body.purchases[0].isExpired).toBe(true);
     });
 
     test('returns hasAccess=true via User fallback when purchasedDeepReport flag is set', async () => {
@@ -461,6 +527,7 @@ describe('GET /api/report/access', () => {
             .query({ email: 'legacy@example.com' });
         expect(res.status).toBe(200);
         expect(res.body.hasAccess).toBe(true);
+        expect(res.body.hasActiveAccess).toBe(true);
         expect(res.body.purchases).toHaveLength(1);
         expect(res.body.purchases[0].tier).toBe('atlas-navigator');
     });
@@ -486,6 +553,44 @@ describe('GET /api/report/access', () => {
             .query({ email: 'premium@example.com' });
         expect(res.status).toBe(200);
         expect(res.body.hasAccess).toBe(true);
+        expect(res.body.hasActiveAccess).toBe(true);
         expect(res.body.purchases[0].tier).toBe('atlas-premium');
+    });
+});
+
+// ── isPurchaseActive unit tests ───────────────────────────────────────────────
+
+describe('isPurchaseActive', () => {
+    const { isPurchaseActive } = require('../backend/routes/report');
+
+    test('atlas-navigator is always active (permanent tier)', () => {
+        expect(isPurchaseActive({ tier: 'atlas-navigator', purchasedAt: new Date('2020-01-01') })).toBe(true);
+    });
+
+    test('atlas-premium is always active (permanent tier)', () => {
+        expect(isPurchaseActive({ tier: 'atlas-premium', purchasedAt: new Date('2020-01-01') })).toBe(true);
+    });
+
+    test('atlas-starter is active when purchased within 30 days', () => {
+        const recentDate = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000); // 10 days ago
+        expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: recentDate })).toBe(true);
+    });
+
+    test('atlas-starter is expired when purchased more than 30 days ago', () => {
+        const oldDate = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000); // 35 days ago
+        expect(isPurchaseActive({ tier: 'atlas-starter', purchasedAt: oldDate })).toBe(false);
+    });
+
+    test('atlas-starter falls back to createdAt when purchasedAt is absent', () => {
+        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        expect(isPurchaseActive({ tier: 'atlas-starter', createdAt: recentDate })).toBe(true);
+    });
+
+    test('atlas-starter returns false when no date is available', () => {
+        expect(isPurchaseActive({ tier: 'atlas-starter' })).toBe(false);
+    });
+
+    test('Teams starter tier is always active (permanent)', () => {
+        expect(isPurchaseActive({ tier: 'starter', purchasedAt: new Date('2020-01-01') })).toBe(true);
     });
 });

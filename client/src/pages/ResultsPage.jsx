@@ -2243,10 +2243,13 @@ export default function ResultsPage() {
     fetch(`/api/report/access?email=${encodeURIComponent(email)}`)
       .then(r => r.json())
       .then(data => {
-        if (data.hasAccess) {
+        // hasActiveAccess = non-expired purchase exists (introduced with expiry fix).
+        // Fall back to hasAccess for older/dev responses that lack the field.
+        const activeAccess = data.hasActiveAccess ?? data.hasAccess;
+        if (activeAccess) {
           setPriorAccess(true);
         } else {
-          // Backend confirmed no access — clear any stale paid tier from localStorage
+          // Backend confirmed no active access — clear any stale paid tier from localStorage
           // so the UI returns to the locked/upgrade state.
           setTier('free');
           try { localStorage.removeItem('resilience_tier'); } catch (_) { /* ignore */ }
