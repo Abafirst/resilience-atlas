@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { CardElement } from '@stripe/react-stripe-js';
 
 /**
  * useUnlockPayment — manages the inline Stripe payment flow for unlocking a
@@ -93,7 +94,7 @@ export function useUnlockPayment({ results, onUnlockSuccess }) {
         setLoading(true);
         try {
             const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: { card: elements.getElement('card') },
+                payment_method: { card: elements.getElement(CardElement) },
             });
             if (stripeError) throw new Error(stripeError.message);
 

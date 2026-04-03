@@ -348,7 +348,7 @@ router.post('/unlock-payment', async (req, res) => {
     // Normalise email.
     const cleanEmail = decodeHtmlEntities(String(email))
         .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
-    if (!cleanEmail.includes('@')) {
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
         return res.status(400).json({ error: 'Valid email is required.' });
     }
 
@@ -430,8 +430,18 @@ router.post('/unlock-payment/confirm', async (req, res) => {
         return res.status(400).json({ error: 'paymentIntentId, email, and tier are required.' });
     }
 
+    // Validate paymentIntentId format: Stripe IDs start with "pi_" and contain
+    // only alphanumeric characters, underscores, and hyphens.
+    if (!/^pi_[A-Za-z0-9_-]+$/.test(String(paymentIntentId))) {
+        return res.status(400).json({ error: 'Invalid paymentIntentId format.' });
+    }
+
     const cleanEmail = decodeHtmlEntities(String(email))
         .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
+
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+        return res.status(400).json({ error: 'Valid email is required.' });
+    }
 
     let parsedScores = null;
     if (scores) {

@@ -79,7 +79,6 @@ const s = {
   headerSub: {
     fontSize:    14,
     opacity:     0.85,
-    marginTop:   6,
     margin:      '6px 0 0',
   },
   briefResults: {
