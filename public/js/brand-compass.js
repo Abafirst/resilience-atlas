@@ -80,30 +80,30 @@
 
   // ── Dimensions ─────────────────────────────────────────────────────────────
   var DIMENSIONS = [
-    'Relational-Connective',
-    'Cognitive-Narrative',
-    'Somatic-Regulative',
-    'Emotional-Adaptive',
-    'Spiritual-Reflective',
     'Agentic-Generative',
+    'Relational-Connective',
+    'Spiritual-Reflective',
+    'Emotional-Adaptive',
+    'Somatic-Regulative',
+    'Cognitive-Narrative',
   ];
 
   var DIM_SHORT = [
-    'Relational',
-    'Cognitive',
-    'Somatic',
-    'Emotional',
-    'Spiritual',
     'Agentic',
+    'Relational',
+    'Spiritual',
+    'Emotional',
+    'Somatic',
+    'Cognitive',
   ];
 
   var ICON_SRCS = [
-    '/icons/relational-connective.svg',
-    '/icons/cognitive-narrative.svg',
-    '/icons/somatic-regulative.svg',
-    '/icons/emotional-adaptive.svg',
-    '/icons/spiritual-reflective.svg',
     '/icons/agentic-generative.svg',
+    '/icons/relational-connective.svg',
+    '/icons/spiritual-reflective.svg',
+    '/icons/emotional-adaptive.svg',
+    '/icons/somatic-regulative.svg',
+    '/icons/cognitive-narrative.svg',
   ];
 
   // Preload icons once
