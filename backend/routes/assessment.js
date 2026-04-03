@@ -4,10 +4,12 @@
  * backend/routes/assessment.js — Assessment access-control endpoints.
  *
  * Endpoints:
- *   GET  /api/assessment/access          — Check if user can download a specific report.
- *   GET  /api/assessment/unlock-options  — Return available purchase options.
- *   GET  /api/assessment/unlocked-reports — List all unlocked report hashes for an email.
- *   GET  /api/assessment/history         — Get user's assessment history with unlock status.
+ *   GET  /api/assessment/access               — Check if user can download a specific report.
+ *   GET  /api/assessment/unlock-options       — Return available purchase options.
+ *   GET  /api/assessment/unlocked-reports     — List all unlocked report hashes for an email.
+ *   GET  /api/assessment/history              — Get user's assessment history with unlock status.
+ *   POST /api/assessment/unlock-payment       — Create Stripe payment intent for inline checkout.
+ *   POST /api/assessment/unlock-payment/confirm — Confirm payment and mark purchase complete.
  *
  * All endpoints use email-based identification (consistent with /api/report/*).
  * Authentication is not required since email is the primary identifier in the
@@ -18,6 +20,7 @@ const express    = require('express');
 const rateLimit  = require('express-rate-limit');
 const Purchase   = require('../models/Purchase');
 const ResilienceResult = require('../models/ResilienceResult');
+const stripe     = require('../config/stripe');
 const {
     canDownloadReport,
     getUnlockOptions,
@@ -27,6 +30,41 @@ const {
     BLANKET_ACCESS_TIERS,
 } = require('../services/assessmentAccessControl');
 const logger = require('../utils/logger');
+
+/** Per-tier amounts in cents used for inline payment intent creation. */
+const UNLOCK_TIER_AMOUNTS = {
+    'atlas-starter':   999,  // $9.99
+    'atlas-navigator': 4999, // $49.99
+};
+
+/** HTML entities potentially introduced by the sanitisation middleware. */
+const HTML_ENTITY_DECODE_MAP = {
+    '&quot;': '"', '&#34;': '"', '&#x22;': '"',
+    '&apos;': "'", '&#39;': "'", '&#x27;': "'",
+    '&amp;': '&', '&lt;': '<', '&gt;': '>',
+};
+
+const STRIPE_PLACEHOLDER_KEY = 'pk_test_placeholder';
+
+function decodeHtmlEntities(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/&(?:[a-z]+|#\d+|#x[\da-f]+);/gi, (e) => HTML_ENTITY_DECODE_MAP[e] ?? e);
+}
+
+/**
+ * Validate an email address without a ReDoS-prone regex.
+ * Uses a length limit and split-based check rather than a complex regex.
+ * @param {string} email — normalised (lowercase, trimmed) email
+ * @returns {boolean}
+ */
+function isValidEmail(email) {
+    if (!email || email.length > 254) return false;
+    const atIdx = email.lastIndexOf('@');
+    if (atIdx < 1) return false; // no '@' or '@' at start
+    const local  = email.slice(0, atIdx);
+    const domain = email.slice(atIdx + 1);
+    return local.length > 0 && domain.length >= 3 && domain.includes('.');
+}
 
 const router = express.Router();
 
@@ -289,6 +327,197 @@ router.get('/history', async (req, res) => {
         return res.status(503).json({
             error: 'Unable to retrieve assessment history at this time.',
         });
+    }
+});
+
+// ── POST /api/assessment/unlock-payment ──────────────────────────────────────
+
+/**
+ * Create a Stripe payment intent for inline (embedded) checkout.
+ * The client confirms the payment using Stripe.js and then calls
+ * /api/assessment/unlock-payment/confirm to record the purchase.
+ *
+ * Body:
+ *   email        (required) — user email
+ *   tier         (required) — 'atlas-starter' | 'atlas-navigator'
+ *   overall      (optional) — assessment score (needed for atlas-starter hash)
+ *   dominantType (optional) — assessment dominant type
+ *   scores       (optional) — JSON object of dimension scores
+ *
+ * Response:
+ *   { clientSecret, paymentIntentId }
+ */
+router.post('/unlock-payment', async (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY) {
+        return res.status(503).json({ error: 'Payment service is not configured.' });
+    }
+
+    const { tier, overall, dominantType } = req.body;
+    let { email, scores } = req.body;
+
+    if (!email || typeof email !== 'string') {
+        return res.status(400).json({ error: 'email is required.' });
+    }
+    if (!UNLOCK_TIER_AMOUNTS[tier]) {
+        return res.status(400).json({ error: 'Invalid tier. Must be atlas-starter or atlas-navigator.' });
+    }
+
+    // Normalise email.
+    const cleanEmail = decodeHtmlEntities(String(email))
+        .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
+    if (!isValidEmail(cleanEmail)) {
+        return res.status(400).json({ error: 'Valid email is required.' });
+    }
+
+    // Parse scores if passed as a string.
+    let parsedScores = null;
+    if (scores) {
+        try {
+            parsedScores = typeof scores === 'string' ? JSON.parse(decodeHtmlEntities(scores)) : scores;
+        } catch (_) { /* ignore parse failures */ }
+    }
+
+    try {
+        const amount   = UNLOCK_TIER_AMOUNTS[tier];
+        const currency = 'usd';
+
+        // Create a Stripe Payment Intent for inline checkout.
+        const intent = await stripe.paymentIntents.create({
+            amount,
+            currency,
+            metadata: { tier, email: cleanEmail },
+            description: tier === 'atlas-starter'
+                ? 'Atlas Starter — Unlock single PDF report'
+                : 'Atlas Navigator — Lifetime unlimited PDF reports',
+        });
+
+        // Create a pending Purchase record so we can fulfil on confirmation.
+        const purchaseDoc = {
+            email:          cleanEmail,
+            tier,
+            amount,
+            currency,
+            status:         'pending',
+            stripeSessionId: intent.id, // reuse field to store payment intent id
+        };
+
+        if (overall !== undefined && dominantType !== undefined && parsedScores) {
+            purchaseDoc.assessmentData = {
+                overall:     Number(overall),
+                dominantType: String(dominantType),
+                scores:      parsedScores,
+            };
+        }
+
+        await Purchase.create(purchaseDoc);
+
+        return res.json({ clientSecret: intent.client_secret, paymentIntentId: intent.id });
+    } catch (err) {
+        logger.error('[assessment/unlock-payment] Stripe error:', err.message);
+        return res.status(500).json({ error: 'Failed to create payment. Please try again.' });
+    }
+});
+
+// ── POST /api/assessment/unlock-payment/confirm ───────────────────────────────
+
+/**
+ * Confirm a completed payment intent and mark the purchase as unlocked.
+ * Called by the frontend after stripe.confirmCardPayment() succeeds.
+ *
+ * Body:
+ *   paymentIntentId (required) — Stripe payment intent ID (pi_…)
+ *   email           (required) — user email
+ *   tier            (required) — 'atlas-starter' | 'atlas-navigator'
+ *   overall         (optional) — included so we can update assessmentData if missing
+ *   dominantType    (optional)
+ *   scores          (optional) — JSON object
+ *
+ * Response:
+ *   { success: true, tier, purchasedAt }
+ */
+router.post('/unlock-payment/confirm', async (req, res) => {
+    if (!process.env.STRIPE_SECRET_KEY) {
+        return res.status(503).json({ error: 'Payment service is not configured.' });
+    }
+
+    const { paymentIntentId, tier, overall, dominantType } = req.body;
+    let { email, scores } = req.body;
+
+    if (!paymentIntentId || !email || !tier) {
+        return res.status(400).json({ error: 'paymentIntentId, email, and tier are required.' });
+    }
+
+    // Validate paymentIntentId format: Stripe IDs start with "pi_" and contain
+    // only alphanumeric characters, underscores, and hyphens.
+    if (!/^pi_[A-Za-z0-9_-]+$/.test(String(paymentIntentId))) {
+        return res.status(400).json({ error: 'Invalid paymentIntentId format.' });
+    }
+
+    const cleanEmail = decodeHtmlEntities(String(email))
+        .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
+
+    if (!isValidEmail(cleanEmail)) {
+        return res.status(400).json({ error: 'Valid email is required.' });
+    }
+
+    let parsedScores = null;
+    if (scores) {
+        try {
+            parsedScores = typeof scores === 'string' ? JSON.parse(decodeHtmlEntities(scores)) : scores;
+        } catch (_) { /* ignore */ }
+    }
+
+    try {
+        // Verify the payment intent is actually paid.
+        const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        if (intent.status !== 'succeeded') {
+            return res.status(402).json({ error: 'Payment has not been completed.' });
+        }
+
+        const now = new Date();
+        const update = { status: 'completed', purchasedAt: now };
+
+        // Ensure assessmentData is stored (may have been missing on creation).
+        if (overall !== undefined && dominantType !== undefined && parsedScores) {
+            update.assessmentData = {
+                overall:     Number(overall),
+                dominantType: String(dominantType),
+                scores:      parsedScores,
+            };
+        }
+
+        // Use the already-validated paymentIntentId (regex-checked above) as a
+        // plain string to prevent operator injection in the MongoDB query.
+        const safeIntentId = String(paymentIntentId);
+
+        // Mark the pending purchase created in unlock-payment as completed.
+        const purchase = await Purchase.findOneAndUpdate(
+            { stripeSessionId: safeIntentId, email: cleanEmail },
+            update,
+            { new: true }
+        );
+
+        if (!purchase) {
+            // Fallback: create a completed purchase if the pending record is missing.
+            const newPurchase = await Purchase.create({
+                email:          cleanEmail,
+                tier,
+                amount:         UNLOCK_TIER_AMOUNTS[tier] || 999,
+                currency:       'usd',
+                status:         'completed',
+                purchasedAt:    now,
+                stripeSessionId: safeIntentId,
+                ...(overall !== undefined && dominantType !== undefined && parsedScores
+                    ? { assessmentData: { overall: Number(overall), dominantType: String(dominantType), scores: parsedScores } }
+                    : {}),
+            });
+            return res.json({ success: true, tier, purchasedAt: newPurchase.purchasedAt });
+        }
+
+        return res.json({ success: true, tier, purchasedAt: purchase.purchasedAt });
+    } catch (err) {
+        logger.error('[assessment/unlock-payment/confirm] error:', err.message);
+        return res.status(500).json({ error: 'Failed to confirm payment. Please contact support.' });
     }
 });
 
