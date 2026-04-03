@@ -45,9 +45,17 @@ const TIER_CONFIG = {
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
-        features: ['Full PDF report', 'Core dimension scores', 'Resilience level summary'],
+        features: [
+            'Full PDF Report (1 report per purchase)',
+            'Gamification Access (when report unlocked)',
+            'Assessment History',
+            'Unlimited Free Assessment Taking',
+            'Brief Results Always Free',
+        ],
         gates: ['basic-report'],
-        dataRetention: '6 months',
+        dataRetention: 'Unlimited',
+        // Human-readable description for pricing pages and unlock modals.
+        description: 'Unlock one full PDF report and gamification access. Pay $9.99 for each new report you want to download.',
     },
     'atlas-navigator': {
         name: 'Atlas Navigator (Lifetime)',
@@ -55,9 +63,17 @@ const TIER_CONFIG = {
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
-        features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies', 'Lifetime access'],
-        gates: ['deep-report'],
-        dataRetention: '1 year',
+        features: [
+            'Unlimited Full PDF Reports',
+            'Unlimited Gamification Access',
+            'Unlimited Free Assessment Taking',
+            'Full Assessment History',
+            'Brief Results Always Free',
+        ],
+        gates: ['deep-report', 'gamification'],
+        dataRetention: 'Unlimited',
+        // Human-readable description for pricing pages and unlock modals.
+        description: 'One-time $49.99 payment gives lifetime access to unlimited PDF reports, assessments, and gamification.',
     },
     'atlas-premium': {
         name: 'Atlas Premium',

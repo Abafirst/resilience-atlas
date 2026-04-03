@@ -14,46 +14,21 @@ const { canAccessFeature } = require('../utils/tierUtils');
  * changing a tier in tiers.js automatically updates this set — no hardcoding.
  */
 const REPORT_ACCESS_TIERS = Object.keys(TIER_CONFIG).filter(
-    (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report')
+    (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report') || canAccessFeature(tier, 'gamification')
 );
 
 /**
- * Number of days an Atlas Starter purchase remains active.
- * After this window the purchase is considered expired and a new purchase is required.
+ * Tiers that grant blanket (all-assessment) PDF access.
+ * Atlas Starter is intentionally excluded — it grants per-assessment access only.
+ * All purchases are permanent (no expiry).
  */
-const ATLAS_STARTER_EXPIRY_DAYS = 30;
-
-/**
- * Tiers that grant permanent (non-expiring) PDF access.
- * atlas-starter is intentionally excluded — it has a time-limited window.
- */
-const PERMANENT_ACCESS_TIERS = new Set([
+const BLANKET_ACCESS_TIERS = new Set([
     'atlas-navigator',
     'atlas-premium',
     'starter',
     'pro',
     'enterprise',
 ]);
-
-/**
- * Returns true if a purchase record is still within its access window.
- *
- * - atlas-navigator / atlas-premium / Teams tiers: permanent — never expire.
- * - atlas-starter: expires ATLAS_STARTER_EXPIRY_DAYS after purchasedAt (or createdAt).
- *
- * @param {{ tier: string, purchasedAt?: Date|string, createdAt?: Date|string }} purchase
- * @returns {boolean}
- */
-function isPurchaseActive(purchase) {
-    if (PERMANENT_ACCESS_TIERS.has(purchase.tier)) return true;
-    if (purchase.tier === 'atlas-starter') {
-        const purchasedAt = purchase.purchasedAt || purchase.createdAt;
-        if (!purchasedAt) return false; // no timestamp — treat as expired to be safe
-        const expiryMs = ATLAS_STARTER_EXPIRY_DAYS * 24 * 60 * 60 * 1000;
-        return (Date.now() - new Date(purchasedAt).getTime()) < expiryMs;
-    }
-    return false;
-}
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
@@ -318,33 +293,26 @@ router.get('/generate', reportLimiter, async (req, res) => {
             try {
                 const cleanEmail = String(email).toLowerCase().trim();
 
-                // Count how many assessments this email has completed.
-                // If this is their first assessment (count ≤ 1), the PDF is free.
-                let assessmentCount = 0;
-                try {
-                    assessmentCount = await ResilienceResult.countDocuments({ email: cleanEmail });
-                } catch (countErr) {
-                    console.warn('Assessment count check failed (non-fatal):', countErr.message);
-                }
+                // Access control policy (new tiered model):
+                //   - Atlas Navigator / atlas-premium / Teams tiers → blanket access
+                //     (any completed purchase at these tiers allows ALL assessments).
+                //   - Atlas Starter → per-assessment access: the purchase must have
+                //     assessmentData whose hash matches the current request's hash.
+                //   - All purchases are permanent — no 30-day expiry.
+                //   - There is no "first assessment free" exception.
+                const allPurchases = await Purchase.find({
+                    email: cleanEmail,
+                    tier: { $in: REPORT_ACCESS_TIERS },
+                    status: 'completed',
+                }).lean();
 
-                if (assessmentCount <= 1) {
-                    // First assessment — allow free PDF download, no payment needed.
-                    // Fall through to generation below.
-                } else {
-                    // Second or later assessment — verify purchase access.
-                    // Fetch all completed purchases for this email so we can:
-                    //   a) Check if this is a re-download of a previously paid assessment.
-                    //   b) Verify an active (non-expired) purchase exists for new downloads.
-                    const allPurchases = await Purchase.find({
-                        email: cleanEmail,
-                        tier: { $in: REPORT_ACCESS_TIERS },
-                        status: 'completed',
-                    }).lean();
+                // 1. Blanket access: Navigator / Premium / Teams.
+                const hasBlanketAccess = allPurchases.some((p) => BLANKET_ACCESS_TIERS.has(p.tier));
 
-                    // Re-download check: if the request's scores/dominantType/overall
-                    // match a purchase's stored assessmentData, always allow it.
-                    // This ensures previously paid-for assessments are always downloadable.
-                    const isRedownload = allPurchases.some((p) => {
+                if (!hasBlanketAccess) {
+                    // 2. Per-assessment access: any purchase whose stored assessmentData
+                    //    hash matches the current assessment's hash.
+                    const isAssessmentUnlocked = allPurchases.some((p) => {
                         if (!p.assessmentData || !p.assessmentData.scores) return false;
                         const pHash = buildJobHash(
                             String(p.assessmentData.overall),
@@ -354,28 +322,21 @@ router.get('/generate', reportLimiter, async (req, res) => {
                         return pHash === hash;
                     });
 
-                    if (!isRedownload) {
-                        // Not a re-download — require an active (non-expired) purchase.
-                        const hasActivePurchase = allPurchases.some((p) => isPurchaseActive(p));
-
-                        if (!hasActivePurchase) {
-                            // Fallback: check the User record's purchasedDeepReport flag,
-                            // which covers users whose access was granted outside the
-                            // standard Stripe checkout flow (e.g. admin grants or migrations).
-                            // User flags are treated as permanent (atlas-premium equivalent).
-                            let userHasAccess = false;
-                            try {
-                                const user = await User.findOne({ email: cleanEmail });
-                                userHasAccess = Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
-                            } catch (userErr) {
-                                console.warn('User access check skipped (DB unavailable):', userErr.message);
-                            }
-                            if (!userHasAccess) {
-                                return res.status(402).json({
-                                    error: 'A paid report purchase is required to download additional PDF reports.',
-                                    upgradeRequired: true,
-                                });
-                            }
+                    if (!isAssessmentUnlocked) {
+                        // 3. Fallback: check the User record's purchasedDeepReport flag
+                        //    (covers admin grants / legacy migrations).
+                        let userHasAccess = false;
+                        try {
+                            const user = await User.findOne({ email: cleanEmail });
+                            userHasAccess = Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
+                        } catch (userErr) {
+                            console.warn('User access check skipped (DB unavailable):', userErr.message);
+                        }
+                        if (!userHasAccess) {
+                            return res.status(402).json({
+                                error: 'A paid report purchase is required to download the PDF. Please unlock this report to continue.',
+                                upgradeRequired: true,
+                            });
                         }
                     }
                 }
@@ -521,19 +482,37 @@ router.post('/email', async (req, res) => {
 
 /**
  * GET /api/report/access
- * Check whether an email address has a completed PDF-report purchase.
- * Also returns the total number of assessments completed by this email,
- * so the frontend can determine whether the next PDF download is free
- * (first assessment) or requires payment (second assessment onwards).
+ * Check whether an email address has PDF report access, and optionally whether
+ * a specific assessment is unlocked.
  *
- * Returns { hasAccess: boolean, purchases: [{ tier, purchasedAt }], assessmentCount: number }
+ * Access model:
+ *   - Atlas Navigator / Premium / Teams → blanket access (all assessments).
+ *   - Atlas Starter → per-assessment access (matched by assessmentData hash).
+ *   - All purchases are permanent (no expiry).
+ *
+ * Query params:
+ *   email        (required)
+ *   overall      (optional) — overall score for the current assessment
+ *   dominantType (optional) — dominant dimension for the current assessment
+ *   scores       (optional) — JSON-encoded scores for the current assessment
+ *
+ * Response:
+ *   {
+ *     hasAccess:                    boolean,  // any purchase exists
+ *     hasActiveAccess:              boolean,  // same as hasAccess (all purchases are permanent now)
+ *     isCurrentAssessmentUnlocked:  boolean,  // specific to provided assessment data
+ *     hasNavigatorAccess:           boolean,  // user has blanket/navigator access
+ *     purchases:                    [...],
+ *     assessmentCount:              number,
+ *   }
  *
  * No auth required — the email functions as the access token (consistent
  * with /generate which also uses email for tier verification).
  * Rate-limited to prevent enumeration abuse.
  */
 router.get('/access', accessLimiter, async (req, res) => {
-    const { email } = req.query;
+    const { email, overall, dominantType } = req.query;
+    const scoresRaw = unescapeHtmlEntities(req.query.scores || '');
 
     if (!email) {
         return res.status(400).json({ error: 'Missing email parameter', hasAccess: false });
@@ -544,14 +523,20 @@ router.get('/access', accessLimiter, async (req, res) => {
     // In production (NODE_ENV=production) we always check the database even if
     // STRIPE_SECRET_KEY is missing, to prevent accidental free access.
     if (!process.env.STRIPE_SECRET_KEY && process.env.NODE_ENV !== 'production') {
-        return res.json({ hasAccess: true, hasActiveAccess: true, purchases: [], assessmentCount: 0 });
+        return res.json({
+            hasAccess: true,
+            hasActiveAccess: true,
+            isCurrentAssessmentUnlocked: true,
+            hasNavigatorAccess: true,
+            purchases: [],
+            assessmentCount: 0,
+        });
     }
 
     try {
         const cleanEmail = String(email).toLowerCase().trim();
 
-        // Count total assessments for this email to determine if PDF is free
-        // (first assessment) or requires payment (second assessment onwards).
+        // Count total assessments for this email.
         let assessmentCount = 0;
         try {
             assessmentCount = await ResilienceResult.countDocuments({ email: cleanEmail });
@@ -560,8 +545,6 @@ router.get('/access', accessLimiter, async (req, res) => {
         }
 
         // Find all completed purchases for this email that grant PDF access.
-        // REPORT_ACCESS_TIERS is derived from TIER_CONFIG via canAccessFeature
-        // so it stays in sync with tiers.js without hardcoding tier names.
         const purchases = await Purchase.find({
             email: cleanEmail,
             tier: { $in: REPORT_ACCESS_TIERS },
@@ -572,25 +555,50 @@ router.get('/access', accessLimiter, async (req, res) => {
             .lean();
 
         if (purchases.length > 0) {
-            // hasActiveAccess is true only when at least one purchase is still within
-            // its access window.  atlas-starter expires after ATLAS_STARTER_EXPIRY_DAYS;
-            // all other tiers (atlas-navigator, atlas-premium, Teams) are permanent.
-            const hasActiveAccess = purchases.some((p) => isPurchaseActive(p));
+            // All purchases are now permanent — no expiry check needed.
+            const hasNavigatorAccess = purchases.some((p) => BLANKET_ACCESS_TIERS.has(p.tier));
+
+            // Build hash for the current assessment (if data was provided).
+            let currentHash = null;
+            if (overall && scoresRaw) {
+                try {
+                    const scoresObj = JSON.parse(scoresRaw);
+                    currentHash = buildJobHash(String(overall), dominantType || '', JSON.stringify(scoresObj));
+                } catch { /* ignore invalid JSON */ }
+            }
+
+            // isCurrentAssessmentUnlocked:
+            //   - true if user has blanket (Navigator) access, OR
+            //   - true if a Starter purchase matches the current assessment hash.
+            let isCurrentAssessmentUnlocked = hasNavigatorAccess;
+            if (!isCurrentAssessmentUnlocked && currentHash) {
+                isCurrentAssessmentUnlocked = purchases.some((p) => {
+                    if (!p.assessmentData || !p.assessmentData.scores) return false;
+                    const pHash = buildJobHash(
+                        String(p.assessmentData.overall),
+                        p.assessmentData.dominantType || '',
+                        JSON.stringify(p.assessmentData.scores)
+                    );
+                    return pHash === currentHash;
+                });
+            }
+
             return res.json({
                 hasAccess: true,
-                hasActiveAccess,
+                hasActiveAccess: true,        // backwards compat — all purchases are permanent
+                isCurrentAssessmentUnlocked,
+                hasNavigatorAccess,
                 purchases: purchases.map((p) => ({
-                    tier: p.tier,
-                    purchasedAt: p.purchasedAt || p.createdAt,
+                    tier:           p.tier,
+                    purchasedAt:    p.purchasedAt || p.createdAt,
                     assessmentData: p.assessmentData || null,
-                    isExpired: !isPurchaseActive(p),
+                    isExpired:      false,    // all purchases are now permanent
                 })),
                 assessmentCount,
             });
         }
 
         // Fallback: check the User record's flags (covers admin grants / migrations).
-        // User-level flags (purchasedDeepReport / atlasPremium) are treated as permanent.
         let user = null;
         try {
             user = await User.findOne({ email: cleanEmail })
@@ -604,17 +612,26 @@ router.get('/access', accessLimiter, async (req, res) => {
             return res.json({
                 hasAccess: true,
                 hasActiveAccess: true,
+                isCurrentAssessmentUnlocked: true,
+                hasNavigatorAccess: true,
                 purchases: [{
-                    tier: user.atlasPremium ? 'atlas-premium' : 'atlas-navigator',
-                    purchasedAt: user.purchaseDate || null,
+                    tier:           user.atlasPremium ? 'atlas-premium' : 'atlas-navigator',
+                    purchasedAt:    user.purchaseDate || null,
                     assessmentData: null,
-                    isExpired: false,
+                    isExpired:      false,
                 }],
                 assessmentCount,
             });
         }
 
-        return res.json({ hasAccess: false, hasActiveAccess: false, purchases: [], assessmentCount });
+        return res.json({
+            hasAccess: false,
+            hasActiveAccess: false,
+            isCurrentAssessmentUnlocked: false,
+            hasNavigatorAccess: false,
+            purchases: [],
+            assessmentCount,
+        });
     } catch (dbErr) {
         console.warn('Purchase access check failed (DB unavailable):', dbErr.message);
         return res.status(503).json({
@@ -627,4 +644,3 @@ router.get('/access', accessLimiter, async (req, res) => {
 module.exports = router;
 module.exports.jobStore = jobStore;
 module.exports.buildJobHash = buildJobHash;
-module.exports.isPurchaseActive = isPurchaseActive;
