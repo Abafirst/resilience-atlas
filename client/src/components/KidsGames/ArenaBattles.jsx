@@ -72,12 +72,11 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
             onEarnBadge('arena-warrior');
             if (opponent.name.includes('Builder')) onEarnBadge('builder-beater');
           }
-          setWins(w => {
-            const nw = w + 1;
-            try { localStorage.setItem('kg-arena-wins', String(nw)); } catch {}
-            if (nw >= 5 && onEarnBadge) onEarnBadge('unbeatable');
-            return nw;
-          });
+          const newWins = wins + 1;
+          setWins(newWins);
+          try { localStorage.setItem('kg-arena-wins', String(newWins)); } catch {}
+          // Award 'unbeatable' OUTSIDE the setWins updater to ensure the modal fires
+          if (newWins >= 5 && onEarnBadge) onEarnBadge('unbeatable');
           setView('victory');
         } else {
           setView('defeat');
@@ -88,7 +87,7 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
         setAnswered(false);
       }
     }, 1800);
-  }, [answered, questions, qIdx, playerScore, aiScore, opponent, onEarnBadge]);
+  }, [answered, questions, qIdx, playerScore, aiScore, opponent, onEarnBadge, wins]);
 
   if (view === 'select') {
     return (

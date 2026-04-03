@@ -64,6 +64,11 @@ export default function KidsGamesHub() {
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
   const gameContainerRef                = useRef(null);
 
+  // Ref mirrors earnedBadges and is updated immediately (before re-render) so
+  // handleEarnBadge always reads the latest value without stale closure issues.
+  const earnedBadgesRef = useRef(earnedBadges);
+  earnedBadgesRef.current = earnedBadges;
+
   /* ── Process modal queue ── */
   useEffect(() => {
     if (modalBadge || modalQueue.length === 0) return;
@@ -76,53 +81,62 @@ export default function KidsGamesHub() {
 
   /* ── Earn a badge ── */
   const handleEarnBadge = useCallback((badgeId) => {
+    // Use the ref for a fast, always-current duplicate check — this prevents
+    // double modal queuing when the same badge is awarded multiple times before
+    // React has committed a re-render with the updated earnedBadges state.
+    if (earnedBadgesRef.current.includes(badgeId)) return;
+    // Immediately update the ref so rapid successive calls see the new entry.
+    earnedBadgesRef.current = [...earnedBadgesRef.current, badgeId];
+
+    const now = new Date().toISOString();
+
+    // Update earned badges (functional update guards against concurrent React batches)
     setEarnedBadges(prev => {
       if (prev.includes(badgeId)) return prev;
       const next = [...prev, badgeId];
       saveJSON('kg-badges', next);
-
-      const now = new Date().toISOString();
-      setBadgeDates(dates => {
-        const updated = { ...dates, [badgeId]: now };
-        saveJSON('kg-badge-dates', updated);
-        return updated;
-      });
-
-      // Stars
-      setStars(s => {
-        const ns = s + 5;
-        saveJSON('kg-stars', ns);
-        return ns;
-      });
-
-      // Queue the modal
-      const badge = getBadgeById(badgeId);
-      if (badge) {
-        setModalQueue(q => [...q, badge]);
-        // Also show the legacy toast
-        setBadgeToast(badge);
-        setTimeout(() => setBadgeToast(null), 3500);
-      }
-
       return next;
     });
-  }, []);
+
+    // Update badge date — these must be OUTSIDE the setEarnedBadges updater
+    // because calling state setters inside state updater functions is an
+    // anti-pattern that breaks React's reconciliation (modal never appears).
+    setBadgeDates(dates => {
+      const updated = { ...dates, [badgeId]: now };
+      saveJSON('kg-badge-dates', updated);
+      return updated;
+    });
+
+    setStars(s => {
+      const ns = s + 5;
+      saveJSON('kg-stars', ns);
+      return ns;
+    });
+
+    // Queue the modal
+    const badge = getBadgeById(badgeId);
+    if (badge) {
+      setModalQueue(q => [...q, badge]);
+      // Also show the legacy toast
+      setBadgeToast(badge);
+      setTimeout(() => setBadgeToast(null), 3500);
+    }
+  }, []); // empty deps — reads/writes earnedBadges only through earnedBadgesRef
 
   /* ── Mark a game as completed (for cross-game achievement tracking) ── */
   const handleGameComplete = useCallback((gameId) => {
-    setCompletedGames(prev => {
-      if (prev.has(gameId)) return prev;
-      const next = new Set(prev);
-      next.add(gameId);
-      saveJSON('kg-completed-games', [...next]);
+    if (completedGames.has(gameId)) return;
 
-      // Cross-game achievements
-      if (next.size === 1) handleEarnBadge('first-step');
-      if (next.size >= 2) handleEarnBadge('game-starter');
+    const newCompleted = new Set(completedGames);
+    newCompleted.add(gameId);
+    setCompletedGames(newCompleted);
+    saveJSON('kg-completed-games', [...newCompleted]);
 
-      return next;
-    });
-  }, [handleEarnBadge]);
+    // Cross-game achievements — called OUTSIDE the state updater
+    const newSize = newCompleted.size;
+    if (newSize === 1) handleEarnBadge('first-step');
+    if (newSize >= 2) handleEarnBadge('game-starter');
+  }, [completedGames, handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
     setActiveGame(gameId);

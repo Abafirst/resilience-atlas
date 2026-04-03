@@ -13,33 +13,37 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
   const [allSummits, setAllSummits] = useState(new Set());
 
   const completeActivity = useCallback((peakId, activity) => {
+    const peak = peakProgress[peakId];
+    if (peak.completed.has(activity.id)) return;
+
+    // Compute new state synchronously so we can fire onEarnBadge OUTSIDE the
+    // state updater (calling it inside prevents the modal from appearing).
+    const nextCompleted = new Set(peak.completed);
+    nextCompleted.add(activity.id);
+    const nextLevel = nextCompleted.size;
+
     setPeakProgress(prev => {
-      const peak = prev[peakId];
-      if (peak.completed.has(activity.id)) return prev;
-
-      const nextCompleted = new Set(peak.completed);
-      nextCompleted.add(activity.id);
-      const nextLevel = nextCompleted.size;
-
-      // Earn badge if it's the final activity on this peak
-      if (activity.badge && onEarnBadge) {
-        onEarnBadge(activity.badge);
-        // Track summits
-        setAllSummits(s => {
-          const next = new Set(s);
-          next.add(peakId);
-          if (next.size === MOUNTAIN_PEAKS.length && onEarnBadge) {
-            onEarnBadge('summit-legend');
-          }
-          return next;
-        });
-      }
-
-      if (nextLevel === 1 && onEarnBadge) onEarnBadge('climber');
-
-      return { ...prev, [peakId]: { completed: nextCompleted, level: nextLevel } };
+      const prevPeak = prev[peakId];
+      if (prevPeak.completed.has(activity.id)) return prev;
+      const completed = new Set(prevPeak.completed);
+      completed.add(activity.id);
+      return { ...prev, [peakId]: { completed, level: completed.size } };
     });
-  }, [onEarnBadge]);
+
+    if (nextLevel === 1 && onEarnBadge) onEarnBadge('climber');
+
+    // Earn badge if it's the final activity on this peak
+    if (activity.badge && onEarnBadge) {
+      onEarnBadge(activity.badge);
+      // Track summits — compute outside state updater
+      const newAllSummits = new Set(allSummits);
+      newAllSummits.add(peakId);
+      setAllSummits(newAllSummits);
+      if (newAllSummits.size === MOUNTAIN_PEAKS.length) {
+        onEarnBadge('summit-legend');
+      }
+    }
+  }, [onEarnBadge, peakProgress, allSummits]);
 
   return (
     <div className="kg-game-container">
