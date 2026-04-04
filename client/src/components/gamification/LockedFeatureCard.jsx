@@ -76,8 +76,6 @@ export default function LockedFeatureCard({
           ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ tier, email, returnPath: effectiveReturnPath }),
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, email, returnPath: returnPath || '/gamification' }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
