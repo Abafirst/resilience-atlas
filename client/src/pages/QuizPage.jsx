@@ -311,9 +311,9 @@ export default function QuizPage() {
     }
 
     // Prefill the form fields only when they are still empty.
-    if (!firstName && givenName) setFirstName(givenName);
-    if (!email && auth0User.email) setEmail(auth0User.email);
-  }, [auth0Loading, isAuthenticated, auth0User]); // eslint-disable-line react-hooks/exhaustive-deps
+    setFirstName(prev => (!prev && givenName) ? givenName : prev);
+    setEmail(prev => (!prev && auth0User.email) ? auth0User.email : prev);
+  }, [auth0Loading, isAuthenticated, auth0User]);
 
   // ── Auth check + initial state setup ─────────────────────────────────
   useEffect(() => {
