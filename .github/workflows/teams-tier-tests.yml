@@ -4,30 +4,43 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'backend/**'
+      - 'tests/**'
+      - '.github/workflows/teams-tier-tests.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - 'tests/**'
+      - '.github/workflows/teams-tier-tests.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '20'
 
       - name: Install dependencies
-        run: |
-          npm install
+        run: npm install
 
       - name: Run Teams tier verification tests
         run: |
           mkdir -p test-results
-          jest --outputFile=test-results/teams-tier-results.json
+          node_modules/.bin/jest --forceExit \
+            --json --outputFile=test-results/teams-tier-results.json \
+            tests/teams-tier-verification.test.js
 
       - name: Upload test results
-        uses: actions/upload-artifact@v2
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: teams-tier-results
           path: test-results/teams-tier-results.json
