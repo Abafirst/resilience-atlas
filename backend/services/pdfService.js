@@ -177,10 +177,16 @@ function bullet(doc, text, indent) {
     doc.y += 2;
 }
 
-/** Add footers to every buffered page. */
+/** Add footers to every buffered page except the cover (page 0). */
 function addFooters(doc) {
     const range = doc.bufferedPageRange();
     for (let i = range.start; i < range.start + range.count; i++) {
+        // Skip the cover page — it has its own branded footer bar drawn in
+        // buildCoverPage().  Drawing the standard footer on top of it would
+        // create two overlapping footers and visual blending at the page 1/2
+        // boundary.
+        if (i === range.start) continue;
+
         doc.switchToPage(i);
         // Set bottom margin to 0 so footer text drawn below the normal content
         // boundary does not trigger PDFKit's auto page-break mechanism.

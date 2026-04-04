@@ -773,6 +773,12 @@ const s = {
     textDecoration: 'none',
     display: 'inline-block',
   },
+  journeyNavLink: {
+    color: '#7c3aed',
+    textDecoration: 'none',
+    fontSize: 13,
+    fontWeight: 600,
+  },
   page: {
     minHeight: '100vh',
     background: 'linear-gradient(135deg, #f0f4ff 0%, #fafbff 60%, #f0fbff 100%)',
@@ -2646,6 +2652,9 @@ export default function ResultsPage() {
               <a href="/teams" style={s.navLink}>Teams</a>
               <a href="/kids.html" style={s.navLink}>Kids</a>
               <a href="/about.html" style={s.navLink}>About</a>
+              {isPaidTier(tier) && (
+                <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress">🧭 Resilience Journey</a>
+              )}
               <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
             </nav>
           </div>
@@ -2773,6 +2782,9 @@ export default function ResultsPage() {
             <a href="/teams" style={s.navLink}>Teams</a>
             <a href="/kids.html" style={s.navLink}>Kids</a>
             <a href="/about.html" style={s.navLink}>About</a>
+            {isPaidTier(tier) && (
+              <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress">🧭 Resilience Journey</a>
+            )}
             <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
         </div>
@@ -2882,6 +2894,56 @@ export default function ResultsPage() {
             </p>
           )}
         </section>
+
+        {/* ── Resilience Journey CTA (paid users) ──────────────────── */}
+        {hasPremiumAccess && tierCheckComplete && (
+          <section
+            style={{
+              background: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)',
+              border: '1px solid #ddd6fe',
+              borderRadius: 16,
+              padding: '24px 28px',
+              marginBottom: 24,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 20,
+              flexWrap: 'wrap',
+              boxShadow: '0 2px 12px rgba(124,58,237,0.08)',
+            }}
+            aria-labelledby="journeyCTAHeading"
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1, minWidth: 200 }}>
+              <span style={{ fontSize: 32, flexShrink: 0 }} aria-hidden="true">🧭</span>
+              <div>
+                <div id="journeyCTAHeading" style={{ fontSize: 16, fontWeight: 700, color: '#4c1d95', marginBottom: 4 }}>
+                  Ready to build your practice?
+                </div>
+                <p style={{ fontSize: 13, color: '#6d28d9', margin: 0, lineHeight: 1.5 }}>
+                  Start your Resilience Journey with values-aligned micro-practices tailored to your unique resilience profile.
+                </p>
+              </div>
+            </div>
+            <a
+              href="/gamification"
+              style={{
+                display: 'inline-block',
+                padding: '10px 22px',
+                background: '#7c3aed',
+                color: '#ffffff',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 600,
+                textDecoration: 'none',
+                flexShrink: 0,
+                whiteSpace: 'nowrap',
+              }}
+              aria-label="Start your Resilience Journey — go to micro-practices"
+            >
+              Start Your Practice →
+            </a>
+          </section>
+        )}
 
         {/* ── Insight Progress Indicator (free users only) ──────────── */}
         {!hasPremiumAccess && tierCheckComplete && (

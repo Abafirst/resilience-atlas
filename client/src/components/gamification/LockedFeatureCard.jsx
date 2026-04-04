@@ -5,14 +5,15 @@ const s = {
     position: 'relative',
     borderRadius: 12,
     overflow: 'hidden',
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: '#fff',
+    border: '1px solid #e2e8f0',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
   },
   overlay: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(10,14,26,0.72)',
-    backdropFilter: 'blur(3px)',
+    background: 'rgba(248,250,252,0.82)',
+    backdropFilter: 'blur(1px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -26,25 +27,25 @@ const s = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 6,
-    background: 'rgba(255,255,255,0.1)',
-    border: '1px solid rgba(255,255,255,0.2)',
+    background: '#ede9fe',
+    border: '1px solid #c4b5fd',
     borderRadius: 20,
     padding: '4px 14px',
     fontSize: 13,
     fontWeight: 700,
-    color: '#e2e8f0',
+    color: '#5b21b6',
     marginBottom: 10,
     letterSpacing: '0.02em',
   },
   lockMsg: {
-    color: '#a0aec0',
+    color: '#475569',
     fontSize: 13,
     marginBottom: 14,
     lineHeight: 1.5,
   },
   unlockBtn: {
     display: 'inline-block',
-    background: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
+    background: 'linear-gradient(135deg, #4f46e5, #4338ca)',
     color: '#fff',
     fontWeight: 700,
     fontSize: 13,
@@ -53,12 +54,12 @@ const s = {
     textDecoration: 'none',
     border: 'none',
     cursor: 'pointer',
-    boxShadow: '0 2px 12px rgba(14,165,233,0.35)',
+    boxShadow: '0 2px 8px rgba(79,70,229,0.3)',
     transition: 'transform 0.15s, box-shadow 0.15s',
     letterSpacing: '0.02em',
   },
   preview: {
-    opacity: 0.25,
+    opacity: 0.65,
     pointerEvents: 'none',
     userSelect: 'none',
   },
@@ -89,7 +90,7 @@ export default function LockedFeatureCard({ locked, tierName, checkoutUrl, child
           🔒 Locked
         </div>
         <p style={s.lockMsg}>
-          Unlock with <strong style={{ color: '#e2e8f0' }}>{tierName}</strong> to access this feature
+          Unlock with <strong style={{ color: '#0f172a' }}>{tierName}</strong> to access this feature
           and start your resilience journey.
         </p>
         <a

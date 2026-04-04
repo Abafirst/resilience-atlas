@@ -9,6 +9,19 @@ const DEFAULT_NAV_ITEMS = [
   { href: '/about', label: 'About', key: 'about' },
 ];
 
+/** Tiers that include Atlas Starter access or above. */
+const STARTER_AND_ABOVE = ['atlas-starter', 'atlas-navigator', 'atlas-premium'];
+
+/** Returns true when the locally-stored tier grants Starter (or above) access. */
+function readIsStarterOrAbove() {
+  try {
+    const stored = localStorage.getItem('resilience_tier');
+    return STARTER_AND_ABOVE.includes(stored);
+  } catch (_) {
+    return false;
+  }
+}
+
 /**
  * SiteHeader — Shared responsive header/navigation component.
  *
@@ -27,6 +40,8 @@ export default function SiteHeader({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  // Lazy initializer: read tier once on mount; missing/non-paid tier returns false.
+  const [showJourneyLink, setShowJourneyLink] = useState(() => readIsStarterOrAbove());
   const navRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -123,6 +138,15 @@ export default function SiteHeader({
               {item.label}
             </a>
           ))}
+          {showJourneyLink && (
+            <a
+              href="/gamification"
+              className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
+              aria-label="Resilience Journey — your practices and progress"
+            >
+              🧭 Resilience Journey
+            </a>
+          )}
           <button
             className="theme-toggle"
             aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}

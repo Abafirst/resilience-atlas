@@ -382,6 +382,16 @@ main { flex: 1; }
   font-weight: 600;
 }
 
+.nav-link--journey {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.nav-link--journey:hover {
+  color: #6d28d9;
+  background: #f5f3ff;
+}
+
 .header-nav .btn {
   margin-left: .5rem;
 }

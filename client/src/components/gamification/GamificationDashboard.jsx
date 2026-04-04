@@ -38,24 +38,24 @@ async function fetchUserTier(email) {
 const s = {
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(180deg, #0a0e1a 0%, #0d1526 100%)',
+    background: '#f8fafc',
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    color: '#e2e8f0',
+    color: '#1e293b',
   },
   header: {
-    background: 'rgba(10,14,26,0.95)',
+    background: '#fff',
     padding: '0 24px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 60,
-    boxShadow: '0 1px 0 rgba(255,255,255,0.06)',
+    boxShadow: '0 1px 0 #e2e8f0',
     position: 'sticky',
     top: 0,
     zIndex: 10,
   },
   logo: {
-    color: '#fff',
+    color: '#1e293b',
     textDecoration: 'none',
     fontWeight: 700,
     fontSize: 17,
@@ -67,19 +67,19 @@ const s = {
     alignItems: 'center',
   },
   navLink: {
-    color: '#718096',
+    color: '#64748b',
     textDecoration: 'none',
     fontSize: 14,
   },
   navLinkActive: {
-    color: '#fff',
+    color: '#4f46e5',
     fontWeight: 600,
     textDecoration: 'none',
     fontSize: 14,
   },
   hero: {
-    background: 'linear-gradient(135deg, #0a0e1a 0%, #0d1a3d 60%, #102040 100%)',
-    borderBottom: '1px solid rgba(14,165,233,0.15)',
+    background: 'linear-gradient(135deg, #0f2942 0%, #1a3a5c 60%, #163351 100%)',
+    borderBottom: '1px solid rgba(79,70,229,0.15)',
     color: '#fff',
     textAlign: 'center',
     padding: '56px 24px 40px',
@@ -94,29 +94,32 @@ const s = {
     width: 500,
     height: 500,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%)',
     pointerEvents: 'none',
   },
   heroEyebrow: {
+    display: 'inline-block',
+    background: 'rgba(79,70,229,0.25)',
+    border: '1px solid rgba(79,70,229,0.5)',
+    color: '#a5b4fc',
     fontSize: 11,
     fontWeight: 700,
     textTransform: 'uppercase',
-    letterSpacing: '0.12em',
-    color: '#7aafc8',
-    marginBottom: 12,
+    letterSpacing: '0.08em',
+    padding: '4px 14px',
+    borderRadius: 999,
+    marginBottom: 16,
   },
   heroTitle: {
     fontSize: 32,
     fontWeight: 800,
     margin: '0 0 12px',
     lineHeight: 1.15,
-    background: 'linear-gradient(135deg, #e2e8f0 0%, #93c5fd 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
+    color: '#fff',
   },
   heroSub: {
     fontSize: 15,
-    color: '#718096',
+    color: '#94a3b8',
     margin: '0 auto',
     maxWidth: 520,
     lineHeight: 1.6,
@@ -130,8 +133,8 @@ const s = {
     gap: 40,
   },
   signInBanner: {
-    background: 'rgba(14,165,233,0.08)',
-    border: '1px solid rgba(14,165,233,0.2)',
+    background: '#eff6ff',
+    border: '1px solid #bfdbfe',
     borderRadius: 12,
     padding: '20px 24px',
     display: 'flex',
@@ -142,13 +145,13 @@ const s = {
   },
   signInText: {
     fontSize: 14,
-    color: '#94a3b8',
+    color: '#1e40af',
     flex: 1,
     margin: 0,
   },
   signInBtn: {
     display: 'inline-block',
-    background: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
+    background: 'linear-gradient(135deg, #4f46e5, #4338ca)',
     color: '#fff',
     fontWeight: 700,
     fontSize: 13,
@@ -156,21 +159,22 @@ const s = {
     borderRadius: 8,
     border: 'none',
     cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(14,165,233,0.3)',
+    boxShadow: '0 2px 8px rgba(79,70,229,0.3)',
     flexShrink: 0,
+    textDecoration: 'none',
   },
   loadingMsg: {
     textAlign: 'center',
     padding: '40px 24px',
     fontSize: 14,
-    color: '#4a5568',
+    color: '#64748b',
   },
   errorMsg: {
-    background: 'rgba(239,68,68,0.08)',
-    border: '1px solid rgba(239,68,68,0.2)',
+    background: '#fef2f2',
+    border: '1px solid #fecaca',
     borderRadius: 10,
     padding: '14px 18px',
-    color: '#fca5a5',
+    color: '#b91c1c',
     fontSize: 14,
   },
   tierSection: {
@@ -187,13 +191,13 @@ const s = {
   tierTitle: {
     fontSize: 18,
     fontWeight: 700,
-    color: '#e2e8f0',
+    color: '#0f172a',
     margin: 0,
   },
-  tierPill: (bg) => ({
+  tierPill: (bg, color) => ({
     display: 'inline-block',
     background: bg,
-    color: '#fff',
+    color: color || '#fff',
     fontSize: 10,
     fontWeight: 700,
     textTransform: 'uppercase',
@@ -203,7 +207,7 @@ const s = {
   }),
   tierDesc: {
     fontSize: 13,
-    color: '#4a5568',
+    color: '#475569',
     marginTop: 4,
     marginBottom: 14,
     lineHeight: 1.5,
@@ -218,18 +222,18 @@ const s = {
   },
   divider: {
     height: 1,
-    background: 'rgba(255,255,255,0.06)',
+    background: '#e2e8f0',
   },
   footer: {
-    background: 'rgba(10,14,26,0.95)',
-    borderTop: '1px solid rgba(255,255,255,0.06)',
-    color: '#4a5568',
+    background: '#fff',
+    borderTop: '1px solid #e2e8f0',
+    color: '#64748b',
     textAlign: 'center',
     padding: '24px',
     fontSize: 12,
   },
   footerLink: {
-    color: '#7aafc8',
+    color: '#4f46e5',
     textDecoration: 'none',
   },
 };
@@ -347,9 +351,8 @@ export default function GamificationDashboard() {
               <div style={s.tierHeading}>
                 <h2 id="starterSectionTitle" style={s.tierTitle}>🧭 Atlas Starter</h2>
                 <span style={s.tierPill(
-                  hasStarter
-                    ? 'linear-gradient(135deg, #059669, #047857)'
-                    : 'linear-gradient(135deg, #0ea5e9, #0284c7)'
+                  hasStarter ? '#dcfce7' : '#eff6ff',
+                  hasStarter ? '#15803d' : '#1d4ed8'
                 )}>
                   {hasStarter ? '✓ Unlocked' : 'From $9.99'}
                 </span>
@@ -390,9 +393,8 @@ export default function GamificationDashboard() {
               <div style={s.tierHeading}>
                 <h2 id="practiceHubTitle" style={s.tierTitle}>🧭 Practice Hub</h2>
                 <span style={s.tierPill(
-                  hasStarter
-                    ? 'linear-gradient(135deg, #059669, #047857)'
-                    : 'linear-gradient(135deg, #0ea5e9, #0284c7)'
+                  hasStarter ? '#dcfce7' : '#eff6ff',
+                  hasStarter ? '#15803d' : '#1d4ed8'
                 )}>
                   {hasStarter ? '✓ Unlocked' : 'From $9.99'}
                 </span>
@@ -419,9 +421,8 @@ export default function GamificationDashboard() {
               <div style={s.tierHeading}>
                 <h2 id="navigatorSectionTitle" style={s.tierTitle}>🗺️ Atlas Navigator</h2>
                 <span style={s.tierPill(
-                  hasNavigator
-                    ? 'linear-gradient(135deg, #059669, #047857)'
-                    : 'linear-gradient(135deg, #7c3aed, #4f46e5)'
+                  hasNavigator ? '#dcfce7' : '#ede9fe',
+                  hasNavigator ? '#15803d' : '#5b21b6'
                 )}>
                   {hasNavigator ? '✓ Unlocked' : 'Lifetime Access'}
                 </span>
