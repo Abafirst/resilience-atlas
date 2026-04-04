@@ -15,10 +15,12 @@ import AdultGameHub from './AdultGameHub.jsx';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
-async function fetchUserTier(email) {
+async function fetchUserTier(email, token) {
   if (!email) return 'free';
   try {
-    const res = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`);
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
     const data = await res.json().catch(() => ({}));
     if (!data.hasAccess || !Array.isArray(data.purchases) || data.purchases.length === 0) {
       return 'free';
@@ -249,7 +251,7 @@ const s = {
  *   atlas-navigator+  → all features unlocked + interactive
  */
 export default function GamificationDashboard() {
-  const { isAuthenticated, isLoading: auth0Loading, loginWithRedirect, user } = useAuth0();
+  const { isAuthenticated, isLoading: auth0Loading, loginWithRedirect, user, getAccessTokenSilently } = useAuth0();
   const {
     progress,
     loading: gamLoading,
@@ -273,10 +275,12 @@ export default function GamificationDashboard() {
     }
     const email = user?.email || '';
     setTierLoading(true);
-    fetchUserTier(email)
+    getAccessTokenSilently()
+      .catch(() => null)
+      .then(token => fetchUserTier(email, token))
       .then(tier => setUserTier(tier))
       .finally(() => setTierLoading(false));
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   // Handle return from Stripe after a successful purchase initiated on this page.
   // Stripe redirects to /gamification?upgrade=success&session_id=... (set via
@@ -324,11 +328,16 @@ export default function GamificationDashboard() {
     window.history.replaceState({}, document.title, window.location.pathname);
 
     const email = user?.email || '';
-    fetch('/api/payments/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tier: checkoutTier, email, returnPath: '/gamification' }),
-    })
+    getAccessTokenSilently()
+      .catch(() => null)
+      .then(token => fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ tier: checkoutTier, email, returnPath: '/gamification' }),
+      }))
       .then(res => res.json())
       .then(data => {
         if (data.url) {
@@ -339,7 +348,7 @@ export default function GamificationDashboard() {
         // Log the error; the user can retry by clicking the unlock button.
         console.warn('[GamificationDashboard] Auto-checkout after login failed:', err?.message || err);
       });
-  }, [auth0Loading, isAuthenticated, user]);
+  }, [auth0Loading, isAuthenticated, user, getAccessTokenSilently]);
 
   const hasStarter   = isStarterOrAbove(userTier);
   const hasNavigator = isNavigatorOrAbove(userTier);

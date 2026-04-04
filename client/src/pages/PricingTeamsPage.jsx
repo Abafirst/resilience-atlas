@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 
@@ -348,6 +349,7 @@ const styles = `
 `;
 
 export default function PricingTeamsPage() {
+  const { getAccessTokenSilently, user } = useAuth0();
   const [checkoutLoading, setCheckoutLoading] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
 
@@ -355,10 +357,16 @@ export default function PricingTeamsPage() {
     setCheckoutError('');
     setCheckoutLoading(tier);
     try {
+      const email = user?.email || localStorage.getItem('resilience_email') || '';
+      let token = null;
+      try { token = await getAccessTokenSilently(); } catch (_) { /* proceed without token */ }
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier }),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ tier, email }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
@@ -371,7 +379,7 @@ export default function PricingTeamsPage() {
       setCheckoutError(err.message || 'Could not start checkout. Please try again.');
       setCheckoutLoading('');
     }
-  }, []);
+  }, [getAccessTokenSilently, user]);
 
   const scrollToPlans = () => {
     document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
