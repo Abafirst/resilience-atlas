@@ -7,10 +7,12 @@ import ProgressDashboard from './ProgressDashboard.jsx';
 import GamificationToast from './GamificationToast.jsx';
 import { ADULT_BADGES } from '../../data/adultGames.js';
 
-async function fetchUserTier(email) {
+async function fetchUserTier(email, token) {
   if (!email) return 'free';
   try {
-    const res  = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`);
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res  = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
     const data = await res.json().catch(() => ({}));
     if (!data.hasAccess || !Array.isArray(data.purchases) || data.purchases.length === 0) return 'free';
     const tiers = data.purchases.map(p => p.tier);
@@ -80,18 +82,21 @@ const s = {
 };
 
 export default function AdultGameHub() {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
   const [tier, setTier]       = useState(null);
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
     if (isAuthenticated && user?.email) {
-      fetchUserTier(user.email).then(setTier);
+      getAccessTokenSilently()
+        .catch(() => null)
+        .then(token => fetchUserTier(user.email, token))
+        .then(setTier);
     } else if (!isAuthenticated) {
       setTier('free');
     }
-  }, [isAuthenticated, user?.email]);
+  }, [isAuthenticated, user?.email, getAccessTokenSilently]);
 
   const tierLabel = tier === 'atlas-navigator' ? 'Atlas Navigator' : tier === 'atlas-starter' ? 'Atlas Starter' : 'Free';
 

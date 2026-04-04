@@ -91,7 +91,14 @@
     if (window.location.search.includes('code=') &&
         window.location.search.includes('state=')) {
       try {
-        await client.handleRedirectCallback();
+        var callbackResult = await client.handleRedirectCallback();
+        // If a returnTo destination was encoded in the appState, navigate
+        // there after login instead of staying on quiz.html.
+        var callbackReturnTo = callbackResult && callbackResult.appState && callbackResult.appState.returnTo;
+        if (callbackReturnTo && typeof callbackReturnTo === 'string' && callbackReturnTo.startsWith('/')) {
+          window.location.replace(callbackReturnTo);
+          return;
+        }
         // Remove the Auth0 query params from the URL to keep it clean.
         window.history.replaceState({}, document.title, window.location.pathname);
       } catch (err) {
@@ -103,12 +110,20 @@
     var isAuthenticated = await client.isAuthenticated();
 
     if (!isAuthenticated) {
+      // Capture the page the user intended to visit (passed via ?returnTo=...)
+      // so we can restore it after the Auth0 login round-trip.
+      var returnToParam = new URLSearchParams(window.location.search).get('returnTo');
+      var appState = (returnToParam && returnToParam.startsWith('/'))
+        ? { returnTo: returnToParam }
+        : undefined;
+
       // Redirect to Auth0 Universal Login.
       // The spinner stays visible while the browser navigates away.
       await client.loginWithRedirect({
         authorizationParams: {
           redirect_uri: redirectUri,
         },
+        ...(appState ? { appState } : {}),
       });
       return;
     }
