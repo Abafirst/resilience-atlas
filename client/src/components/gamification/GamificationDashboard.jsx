@@ -11,6 +11,7 @@ import ResilienceMap from './ResilienceMap.jsx';
 import DailyCompassStreaks from './DailyCompassStreaks.jsx';
 import ExplorerAchievements from './ExplorerAchievements.jsx';
 import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
+import AdultGameHub from './AdultGameHub.jsx';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
@@ -378,6 +379,35 @@ export default function GamificationDashboard() {
                   />
                 </LockedFeatureCard>
               </div>
+            </section>
+          )}
+
+          {showContent && <div style={s.divider} />}
+
+          {/* ── Practice Hub (Adult Gamification — Starter + Navigator) ───── */}
+          {showContent && (
+            <section style={s.tierSection} aria-labelledby="practiceHubTitle">
+              <div style={s.tierHeading}>
+                <h2 id="practiceHubTitle" style={s.tierTitle}>🧭 Practice Hub</h2>
+                <span style={s.tierPill(
+                  hasStarter
+                    ? 'linear-gradient(135deg, #059669, #047857)'
+                    : 'linear-gradient(135deg, #0ea5e9, #0284c7)'
+                )}>
+                  {hasStarter ? '✓ Unlocked' : 'From $9.99'}
+                </span>
+              </div>
+              <p style={s.tierDesc}>
+                Values-aligned micro-practices, skill pathways, and ACT-informed choice scenarios.
+                Starter unlocks micro-commitment practices; Navigator unlocks all 6 skill pathways and the full reinforcement menu.
+              </p>
+              <LockedFeatureCard
+                locked={!hasStarter}
+                tierName="Atlas Starter"
+                checkoutUrl={CHECKOUT_URLS['atlas-starter']}
+              >
+                <AdultGameHub />
+              </LockedFeatureCard>
             </section>
           )}
 

@@ -310,4 +310,246 @@ router.get('/leaderboard', async (req, res) => {
   }
 });
 
+// ── POST /api/gamification/progress/quest-complete ───────────────────────────
+
+/**
+ * Log a Starter micro-quest completion.
+ *
+ * Body:
+ *   questId   {string}  required
+ *   dimension {string}  required
+ */
+router.post('/progress/quest-complete', async (req, res) => {
+  try {
+    const { questId, dimension } = req.body;
+
+    if (!questId || typeof questId !== 'string' || !questId.trim()) {
+      return res.status(400).json({ error: 'questId is required.' });
+    }
+    if (!dimension || typeof dimension !== 'string') {
+      return res.status(400).json({ error: 'dimension is required.' });
+    }
+
+    const cleanQuestId = questId.trim();
+    const uid  = userId(req);
+    const progress = await svc.getOrCreateProgress(uid);
+
+    // Idempotent: don't double-record the same quest
+    const alreadyDone = progress.microQuests.some(q => q.questId === cleanQuestId);
+    if (!alreadyDone) {
+      const points = 5; // 5 pts per micro-quest
+      progress.microQuests.push({ questId: cleanQuestId, dimension, pointsEarned: points });
+      progress.totalPoints += points;
+      progress.pointHistory.push({ type: 'micro_quest', points, description: `Micro-quest: ${cleanQuestId}` });
+
+      // Check for milestone badges
+      const newBadges = [];
+      const questCount = progress.microQuests.length;
+
+      const hasBadge = (name) => progress.badges.some(b => b.name === name);
+
+      if (questCount >= 1 && !hasBadge('First Step Navigator')) {
+        progress.badges.push({ name: 'First Step Navigator', rarity: 'common', icon: 'star.svg' });
+        newBadges.push('First Step Navigator');
+      }
+      if (questCount >= 3 && !hasBadge('Barrier Buster')) {
+        progress.badges.push({ name: 'Barrier Buster', rarity: 'uncommon', icon: 'game-shield.svg' });
+        newBadges.push('Barrier Buster');
+      }
+      if (questCount >= 6 && !hasBadge('Dimension Seeker')) {
+        progress.badges.push({ name: 'Dimension Seeker', rarity: 'rare', icon: 'compass.svg' });
+        newBadges.push('Dimension Seeker');
+      }
+
+      await progress.save();
+
+      return res.status(200).json({
+        message:     'Micro-quest completion recorded.',
+        totalPoints: progress.totalPoints,
+        newBadges,
+        questCount,
+      });
+    }
+
+    return res.status(200).json({
+      message:     'Already recorded.',
+      totalPoints: progress.totalPoints,
+      newBadges:   [],
+      questCount:  progress.microQuests.length,
+    });
+  } catch (err) {
+    logger.error('gamification/quest-complete error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// ── POST /api/gamification/progress/pathway-complete ─────────────────────────
+
+/**
+ * Log a Navigator skill pathway level completion.
+ *
+ * Body:
+ *   dimension {string}  required
+ *   level     {number}  required — 1, 2, or 3
+ */
+router.post('/progress/pathway-complete', async (req, res) => {
+  try {
+    const { dimension, level } = req.body;
+
+    if (!dimension || typeof dimension !== 'string') {
+      return res.status(400).json({ error: 'dimension is required.' });
+    }
+    const lvl = parseInt(level, 10);
+    if (isNaN(lvl) || lvl < 1 || lvl > 3) {
+      return res.status(400).json({ error: 'level must be 1, 2, or 3.' });
+    }
+
+    const DIMENSIONS = ['Agentic-Generative','Relational-Connective','Emotional-Adaptive','Spiritual-Reflective','Somatic-Regulative','Cognitive-Narrative'];
+    if (!DIMENSIONS.includes(dimension)) {
+      return res.status(400).json({ error: `dimension must be one of: ${DIMENSIONS.join(', ')}.` });
+    }
+
+    const uid      = userId(req);
+    const progress = await svc.getOrCreateProgress(uid);
+
+    // Idempotent
+    const alreadyDone = progress.skillPathways.some(
+      p => p.dimension === dimension && p.level === lvl
+    );
+    if (!alreadyDone) {
+      const POINTS_BY_LEVEL = { 1: 10, 2: 25, 3: 40 };
+      const pts = POINTS_BY_LEVEL[lvl] || 10;
+
+      progress.skillPathways.push({ dimension, level: lvl, pointsEarned: pts });
+      progress.totalPoints += pts;
+      progress.pointHistory.push({
+        type:        'pathway_complete',
+        points:      pts,
+        description: `${dimension} pathway level ${lvl}`,
+      });
+
+      const newBadges = [];
+      const hasBadge  = (name) => progress.badges.some(b => b.name === name);
+
+      // Full pathway bonus (all 3 levels for a dimension)
+      const completedLevels = progress.skillPathways
+        .filter(p => p.dimension === dimension)
+        .map(p => p.level);
+      if ([1, 2, 3].every(l => completedLevels.includes(l)) && !hasBadge(`${dimension} Pathway Complete`)) {
+        const bonus = 15;
+        progress.badges.push({ name: `${dimension} Pathway Complete`, rarity: 'rare', icon: 'game-mountain.svg' });
+        progress.totalPoints += bonus;
+        progress.pointHistory.push({ type: 'pathway_bonus', points: bonus, description: `${dimension} full pathway bonus` });
+        newBadges.push(`${dimension} Pathway Complete`);
+      }
+
+      // Compass Sage: all 6 dimensions full pathways
+      const allComplete = DIMENSIONS.every(dim =>
+        [1,2,3].every(l => progress.skillPathways.some(p => p.dimension === dim && p.level === l))
+      );
+      if (allComplete && !hasBadge('Compass Sage')) {
+        progress.badges.push({ name: 'Compass Sage', rarity: 'legendary', icon: 'compass.svg' });
+        newBadges.push('Compass Sage');
+      }
+
+      await progress.save();
+
+      return res.status(200).json({
+        message:     'Pathway completion recorded.',
+        totalPoints: progress.totalPoints,
+        newBadges,
+      });
+    }
+
+    return res.status(200).json({
+      message:     'Already recorded.',
+      totalPoints: progress.totalPoints,
+      newBadges:   [],
+    });
+  } catch (err) {
+    logger.error('gamification/pathway-complete error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// ── POST /api/gamification/choice-quest ──────────────────────────────────────
+
+/**
+ * Log a Navigator choice-quest response and return reinforcement feedback.
+ *
+ * Body:
+ *   scenarioId   {string}  required
+ *   choiceKey    {string}  required — 'A', 'B', or 'C'
+ *   actPrinciple {string}  optional — ACT principle label
+ */
+router.post('/choice-quest', async (req, res) => {
+  try {
+    const { scenarioId, choiceKey, actPrinciple = '' } = req.body;
+
+    if (!scenarioId || typeof scenarioId !== 'string') {
+      return res.status(400).json({ error: 'scenarioId is required.' });
+    }
+    if (!choiceKey || !['A','B','C'].includes(String(choiceKey).toUpperCase())) {
+      return res.status(400).json({ error: 'choiceKey must be A, B, or C.' });
+    }
+
+    const uid      = userId(req);
+    const progress = await svc.getOrCreateProgress(uid);
+
+    const pts = 8;
+    progress.choiceQuests.push({
+      scenarioId:   scenarioId.trim(),
+      choiceKey:    String(choiceKey).toUpperCase(),
+      actPrinciple: actPrinciple || '',
+      pointsEarned: pts,
+    });
+    progress.totalPoints += pts;
+    progress.pointHistory.push({
+      type:        'choice_quest',
+      points:      pts,
+      description: `Choice quest: ${scenarioId}`,
+    });
+
+    await progress.save();
+
+    res.status(200).json({
+      message:     'Choice quest response recorded.',
+      totalPoints: progress.totalPoints,
+      choiceCount: progress.choiceQuests.length,
+    });
+  } catch (err) {
+    logger.error('gamification/choice-quest error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// ── GET /api/gamification/reinforcement-menu ─────────────────────────────────
+
+/**
+ * Generate personalized practice suggestions based on reinforcement history.
+ * Returns up to 5 practices per dimension, filtering out already-completed ones.
+ *
+ * Query params:
+ *   dimension  {string}  optional — filter to a single dimension
+ */
+router.get('/reinforcement-menu', async (req, res) => {
+  try {
+    const uid      = userId(req);
+    const progress = await svc.getOrCreateProgress(uid);
+
+    // Build set of completed practice IDs
+    const completedIds = new Set(progress.reinforcementHistory.map(r => r.practiceId));
+
+    // Return metadata for the client to filter content from adultGames.js
+    res.status(200).json({
+      completedPracticeIds: [...completedIds],
+      totalPractices:       progress.reinforcementHistory.length,
+      choiceQuestCount:     progress.choiceQuests.length,
+    });
+  } catch (err) {
+    logger.error('gamification/reinforcement-menu error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 module.exports = router;
