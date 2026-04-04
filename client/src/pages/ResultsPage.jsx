@@ -2728,13 +2728,15 @@ export default function ResultsPage() {
                 <p style={s.emptyDesc}>
                   {isReturnFromPayment
                     ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
-                    : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
+                    : isAuthenticated
+                      ? 'Complete the free assessment to see your personalised resilience profile.'
+                      : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
                   }
                 </p>
                 <a href="/quiz.html" style={s.primaryBtn}>
                   {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
                 </a>
-                {!isReturnFromPayment && (
+                {!isReturnFromPayment && !isAuthenticated && (
                   <button
                     type="button"
                     style={s.secondaryBtn}
