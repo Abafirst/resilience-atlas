@@ -2653,7 +2653,7 @@ export default function ResultsPage() {
               <a href="/kids.html" style={s.navLink}>Kids</a>
               <a href="/about.html" style={s.navLink}>About</a>
               {isPaidTier(tier) && (
-                <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress">🧭 Resilience Journey</a>
+                <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
               )}
               <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
             </nav>
@@ -2783,7 +2783,7 @@ export default function ResultsPage() {
             <a href="/kids.html" style={s.navLink}>Kids</a>
             <a href="/about.html" style={s.navLink}>About</a>
             {isPaidTier(tier) && (
-              <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress">🧭 Resilience Journey</a>
+              <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
             )}
             <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
@@ -2914,7 +2914,7 @@ export default function ResultsPage() {
             aria-labelledby="journeyCTAHeading"
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1, minWidth: 200 }}>
-              <span style={{ fontSize: 32, flexShrink: 0 }} aria-hidden="true">🧭</span>
+              <img src="/icons/practice-banner.svg" alt="" aria-hidden="true" style={{ width: 40, height: 40, flexShrink: 0 }} />
               <div>
                 <div id="journeyCTAHeading" style={{ fontSize: 16, fontWeight: 700, color: '#4c1d95', marginBottom: 4 }}>
                   Ready to build your practice?

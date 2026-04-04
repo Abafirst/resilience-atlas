@@ -310,7 +310,7 @@ export default function GamificationDashboard() {
         {/* Hero */}
         <section style={s.hero} aria-labelledby="gamHeroTitle">
           <div style={s.heroGlow} aria-hidden="true" />
-          <div style={s.heroEyebrow}>🧭 Atlas Gamification</div>
+          <div style={s.heroEyebrow}><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14, verticalAlign: 'middle', marginRight: 6, filter: 'brightness(0) invert(1)' }} />Atlas Gamification</div>
           <h1 id="gamHeroTitle" style={s.heroTitle}>Your Resilience Journey</h1>
           <p style={s.heroSub}>
             Explore Navigation Milestones, earn Resilience Badges, navigate Pathways,
@@ -349,7 +349,7 @@ export default function GamificationDashboard() {
           {showContent && (
             <section style={s.tierSection} aria-labelledby="starterSectionTitle">
               <div style={s.tierHeading}>
-                <h2 id="starterSectionTitle" style={s.tierTitle}>🧭 Atlas Starter</h2>
+                <h2 id="starterSectionTitle" style={s.tierTitle}><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 6 }} />Atlas Starter</h2>
                 <span style={s.tierPill(
                   hasStarter ? '#dcfce7' : '#eff6ff',
                   hasStarter ? '#15803d' : '#1d4ed8'
@@ -391,7 +391,7 @@ export default function GamificationDashboard() {
           {showContent && (
             <section style={s.tierSection} aria-labelledby="practiceHubTitle">
               <div style={s.tierHeading}>
-                <h2 id="practiceHubTitle" style={s.tierTitle}>🧭 Practice Hub</h2>
+                <h2 id="practiceHubTitle" style={s.tierTitle}><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 6 }} />Practice Hub</h2>
                 <span style={s.tierPill(
                   hasStarter ? '#dcfce7' : '#eff6ff',
                   hasStarter ? '#15803d' : '#1d4ed8'
@@ -419,7 +419,7 @@ export default function GamificationDashboard() {
           {showContent && (
             <section style={s.tierSection} aria-labelledby="navigatorSectionTitle">
               <div style={s.tierHeading}>
-                <h2 id="navigatorSectionTitle" style={s.tierTitle}>🗺️ Atlas Navigator</h2>
+                <h2 id="navigatorSectionTitle" style={s.tierTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 6 }} />Atlas Navigator</h2>
                 <span style={s.tierPill(
                   hasNavigator ? '#dcfce7' : '#ede9fe',
                   hasNavigator ? '#15803d' : '#5b21b6'
