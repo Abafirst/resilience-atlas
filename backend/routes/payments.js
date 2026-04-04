@@ -91,6 +91,9 @@ TIERS['atlas-enterprise'] = TIERS['enterprise'];
 // TIER_CONFIG is imported from backend/config/tiers.js — the canonical source
 // of truth for all plan names, features, and limits.  Do not duplicate it here.
 
+/** Team tiers that use the /team page instead of /results after checkout. */
+const TEAM_TIER_SET = new Set(['starter', 'pro', 'enterprise', 'atlas-enterprise']);
+
 /** Rate limiter for all payment endpoints — low limit to prevent abuse. */
 const paymentsLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
@@ -162,7 +165,7 @@ function resolveReturnPath(tier, returnPath) {
     ) {
         return returnPath;
     }
-    return `/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}`;
+    return `/${TEAM_TIER_SET.has(tier) ? 'team' : 'results'}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

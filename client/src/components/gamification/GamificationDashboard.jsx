@@ -289,7 +289,13 @@ export default function GamificationDashboard() {
     if (!sessionId) return;
 
     // Clean the URL immediately so a page refresh doesn't re-trigger verification.
-    window.history.replaceState({}, document.title, '/gamification');
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    const TIER_NAMES = {
+      'atlas-starter':   'Atlas Starter',
+      'atlas-navigator': 'Atlas Navigator',
+      'atlas-premium':   'Atlas Premium',
+    };
 
     // Verify the Stripe session and refresh the displayed tier.
     fetch(`/api/payments/verify?session_id=${encodeURIComponent(sessionId)}`)
@@ -297,12 +303,13 @@ export default function GamificationDashboard() {
       .then(data => {
         if (data.success && data.tier) {
           setUserTier(data.tier);
-          setTierLoading(false);
           try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
-          setPaymentBanner({ type: 'success', message: `✅ Purchase confirmed! Your ${data.tier === 'atlas-starter' ? 'Atlas Starter' : 'Atlas Navigator'} features are now unlocked.` });
+          const tierName = TIER_NAMES[data.tier] || data.tier;
+          setPaymentBanner({ type: 'success', message: `✅ Purchase confirmed! Your ${tierName} features are now unlocked.` });
         }
       })
-      .catch(() => { /* non-fatal — tier will still be fetched via /api/report/access */ });
+      .catch(() => { /* non-fatal — tier will still be fetched via /api/report/access */ })
+      .finally(() => setTierLoading(false));
   }, [auth0Loading]);
 
   // Auto-start checkout when the user returns from Auth0 login with a
