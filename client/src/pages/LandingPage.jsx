@@ -29,14 +29,14 @@ export default function LandingPage() {
             <button
               type="button"
               className="btn-hero-primary"
-              onClick={() => loginWithRedirect()}
+              onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
             >
               <span aria-hidden="true">&#9654;</span> Explore Your Map
             </button>
             <button
               type="button"
               className="btn-hero-secondary"
-              onClick={() => loginWithRedirect()}
+              onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
             >
               Log in
             </button>
@@ -105,7 +105,7 @@ export default function LandingPage() {
             <button
               type="button"
               className="btn-hero-primary"
-              onClick={() => loginWithRedirect()}
+              onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
             >
               Discover Your Dimensions
             </button>

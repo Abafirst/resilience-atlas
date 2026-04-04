@@ -54,6 +54,21 @@ async function init() {
     return;
   }
 
+  // After Auth0 redirects back to the app, navigate to the path stored in
+  // appState.returnTo (set by loginWithRedirect callers).  If no returnTo is
+  // present we always fall back to "/" so users land on the landing/assessment
+  // hub instead of wherever the browser was last pointed.
+  const onRedirectCallback = (appState) => {
+    const target = appState?.returnTo;
+    // Validate that returnTo is a safe same-origin path before using it.
+    const safePath =
+      target && typeof target === 'string' && target.startsWith('/')
+        ? target
+        : '/';
+    console.debug('[Auth0] onRedirectCallback appState:', appState, '→ navigating to', safePath);
+    window.history.replaceState({}, document.title, safePath);
+  };
+
   ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
       <Auth0Provider
@@ -63,6 +78,10 @@ async function init() {
           redirect_uri: redirectUri,
           ...(audience ? { audience } : {}),
         }}
+        // After a successful login Auth0 calls this with the appState that was
+        // passed to loginWithRedirect.  We use it to navigate deterministically
+        // instead of letting Auth0 restore the browser's previous URL.
+        onRedirectCallback={onRedirectCallback}
         // Persist tokens in localStorage so that navigating between pages
         // (e.g. quiz → results) does not clear the in-memory cache and force
         // a silent-authentication round-trip on every page load.
