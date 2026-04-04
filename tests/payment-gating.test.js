@@ -491,3 +491,126 @@ describe('retake gating', () => {
         expect(lockedMsg.hidden).toBe(true);
     });
 });
+
+// ── startCheckout() Auth0 authentication flow ─────────────────────────────────
+
+describe('startCheckout() Auth0 authentication flow', () => {
+    beforeEach(() => {
+        localStorage.clear();
+        document.body.innerHTML = '';
+        delete window.PaymentGating;
+        window.history.replaceState({}, '', '/pricing.html');
+        global.fetch = undefined;
+        global.alert = jest.fn();
+        global.prompt = jest.fn();
+    });
+
+    afterEach(() => {
+        delete global.alert;
+        delete global.prompt;
+    });
+
+    test('authenticated user: email from Auth0 stored in localStorage, prompt skipped, checkout called', async () => {
+        // Simulate: /config → Auth0 configured; /api/auth/oidc-status → authenticated with email;
+        // /api/payments/checkout → returns a redirect URL.
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ auth0Domain: 'example.auth0.com' }),
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ authenticated: true, email: 'auth0user@example.com', name: 'Auth0 User' }),
+            })
+            .mockResolvedValueOnce({
+                ok: false,
+                json: async () => ({ error: 'test stop' }),
+            });
+
+        loadGatingScript();
+        await window.PaymentGating.startCheckout('atlas-navigator');
+
+        // Email from Auth0 should be saved in localStorage.
+        expect(localStorage.getItem('resilience_email')).toBe('auth0user@example.com');
+        // The email prompt should NOT have been shown.
+        expect(global.prompt).not.toHaveBeenCalled();
+        // /api/payments/checkout should have been called (i.e., we reached Stripe step).
+        const checkoutCall = global.fetch.mock.calls.find(c => c[0] === '/api/payments/checkout');
+        expect(checkoutCall).toBeDefined();
+        const body = JSON.parse(checkoutCall[1].body);
+        expect(body.email).toBe('auth0user@example.com');
+        expect(body.tier).toBe('atlas-navigator');
+    });
+
+    test('unauthenticated user: /api/payments/checkout is NOT called (login redirect occurs)', async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ auth0Domain: 'example.auth0.com' }),
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ authenticated: false }),
+            });
+
+        loadGatingScript();
+        await window.PaymentGating.startCheckout('atlas-navigator');
+
+        // Stripe checkout endpoint should NOT have been called.
+        const calls = global.fetch.mock.calls.map(c => c[0]);
+        expect(calls).not.toContain('/api/payments/checkout');
+        // oidc-status was checked.
+        expect(calls).toContain('/api/auth/oidc-status');
+    });
+
+    test('no Auth0 config: /api/auth/oidc-status is NOT called and checkout proceeds directly', async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({}), // no auth0Domain
+            })
+            .mockResolvedValueOnce({
+                ok: false,
+                json: async () => ({ error: 'test stop' }),
+            });
+
+        localStorage.setItem('resilience_email', 'direct@example.com');
+
+        loadGatingScript();
+        await window.PaymentGating.startCheckout('atlas-navigator');
+
+        // oidc-status should NOT have been called since Auth0 is not configured.
+        const calls = global.fetch.mock.calls.map(c => c[0]);
+        expect(calls).not.toContain('/api/auth/oidc-status');
+        // Checkout should have been attempted.
+        expect(calls).toContain('/api/payments/checkout');
+    });
+
+    test('authenticated user without email in Auth0 response: falls back to prompt', async () => {
+        global.fetch = jest.fn()
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ auth0Domain: 'example.auth0.com' }),
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({ authenticated: true, email: null }),
+            })
+            .mockResolvedValueOnce({
+                ok: false,
+                json: async () => ({ error: 'test stop' }),
+            });
+
+        global.prompt = jest.fn().mockReturnValue('prompted@example.com');
+
+        loadGatingScript();
+        await window.PaymentGating.startCheckout('atlas-navigator');
+
+        // Prompt should have been shown since Auth0 returned no email.
+        expect(global.prompt).toHaveBeenCalled();
+        expect(localStorage.getItem('resilience_email')).toBe('prompted@example.com');
+        // Checkout was still called.
+        const calls = global.fetch.mock.calls.map(c => c[0]);
+        expect(calls).toContain('/api/payments/checkout');
+    });
+});

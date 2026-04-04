@@ -458,8 +458,8 @@
 
         if (_auth0Config && _auth0Config.auth0Domain) {
             // Ask the backend whether the user has an active Auth0 session.
-            const isAuthed = await _checkAuth0Session();
-            if (!isAuthed) {
+            const authStatus = await _checkAuth0Session();
+            if (!authStatus.authenticated) {
                 // Not logged in — redirect to Auth0.  After login, Auth0 will
                 // redirect back to this page via the configured callback.  We
                 // pass `returnTo` so the user lands back here with the
@@ -468,6 +468,12 @@
                     '?checkout=' + encodeURIComponent(tier);
                 window.location.href = '/login?returnTo=' + encodeURIComponent(returnTo);
                 return;
+            }
+            // Already authenticated — pre-fill email from Auth0 so the user
+            // is taken directly to Stripe checkout without an email prompt.
+            if (authStatus.email) {
+                console.log('[PaymentGating] Auth0 session active; skipping login redirect for authenticated user.');
+                localStorage.setItem(EMAIL_KEY, authStatus.email);
             }
         }
 
@@ -528,16 +534,20 @@
     /**
      * Check whether the current user has an active Auth0 session.
      * Uses the backend's /api/auth/oidc-status endpoint (added for this flow).
-     * Returns a Promise<boolean>.
+     * Returns a Promise<{ authenticated: boolean, email: string|null, name: string|null }>.
      */
     async function _checkAuth0Session() {
         try {
             var r = await fetch('/api/auth/oidc-status', { credentials: 'include' });
-            if (!r.ok) return false;
+            if (!r.ok) return { authenticated: false, email: null, name: null };
             var d = await r.json();
-            return Boolean(d && d.authenticated);
+            return {
+                authenticated: Boolean(d && d.authenticated),
+                email: (d && d.email) || null,
+                name:  (d && d.name)  || null,
+            };
         } catch (_e) {
-            return false;
+            return { authenticated: false, email: null, name: null };
         }
     }
 
