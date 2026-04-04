@@ -328,11 +328,16 @@ export default function GamificationDashboard() {
     window.history.replaceState({}, document.title, window.location.pathname);
 
     const email = user?.email || '';
-    fetch('/api/payments/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tier: checkoutTier, email, returnPath: '/gamification' }),
-    })
+    getAccessTokenSilently()
+      .catch(() => null)
+      .then(token => fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ tier: checkoutTier, email, returnPath: '/gamification' }),
+      }))
       .then(res => res.json())
       .then(data => {
         if (data.url) {
@@ -343,7 +348,7 @@ export default function GamificationDashboard() {
         // Log the error; the user can retry by clicking the unlock button.
         console.warn('[GamificationDashboard] Auto-checkout after login failed:', err?.message || err);
       });
-  }, [auth0Loading, isAuthenticated, user]);
+  }, [auth0Loading, isAuthenticated, user, getAccessTokenSilently]);
 
   const hasStarter   = isStarterOrAbove(userTier);
   const hasNavigator = isNavigatorOrAbove(userTier);

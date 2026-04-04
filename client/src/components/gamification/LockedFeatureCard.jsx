@@ -33,7 +33,7 @@ export default function LockedFeatureCard({
   returnPath,
   children,
 }) {
-  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, user, getAccessTokenSilently } = useAuth0();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError]     = useState('');
 
@@ -62,11 +62,20 @@ export default function LockedFeatureCard({
     // Already authenticated — call the checkout API directly (same pattern as
     // ResultsPage.handleUpgrade) to avoid redirect/callback-URL mismatch errors.
     const email = user?.email || '';
+    // Default returnPath to '/gamification' so users return here after Stripe checkout.
+    const effectiveReturnPath = returnPath || '/gamification';
     setCheckoutLoading(true);
     setCheckoutError('');
     try {
+      let token = null;
+      try { token = await getAccessTokenSilently(); } catch (_) { /* proceed without token */ }
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ tier, email, returnPath: effectiveReturnPath }),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tier, email, returnPath: returnPath || '/gamification' }),
       });

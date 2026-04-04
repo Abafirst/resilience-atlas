@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import FacilitationGateModal from '../components/FacilitationGateModal';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
@@ -385,6 +386,7 @@ const styles = `
 `;
 
 export default function TeamsLandingPage() {
+  const { getAccessTokenSilently, user } = useAuth0();
   const [showGateModal, setShowGateModal] = useState(false);
   const [userTier, setUserTier] = useState('none');
   const [checkoutLoading, setCheckoutLoading] = useState('');
@@ -404,8 +406,8 @@ export default function TeamsLandingPage() {
   const startTeamCheckout = async (tier) => {
     setCheckoutError('');
     setCheckoutLoading(tier);
-    // Collect email from localStorage or prompt if not available
-    let email = localStorage.getItem('resilience_email') || '';
+    // Prefer email from Auth0 user profile, fall back to localStorage or prompt
+    let email = user?.email || localStorage.getItem('resilience_email') || '';
     if (!email) {
       const input = window.prompt('Please enter your email address to continue with checkout:');
       if (!input || !input.trim()) {
@@ -417,9 +419,14 @@ export default function TeamsLandingPage() {
       try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
     }
     try {
+      let token = null;
+      try { token = await getAccessTokenSilently(); } catch (_) { /* proceed without token */ }
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ tier, email }),
       });
       const data = await res.json();
