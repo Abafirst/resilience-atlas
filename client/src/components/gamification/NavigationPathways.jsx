@@ -156,7 +156,10 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
   return (
     <div style={s.widget} role="region" aria-label="Navigation Pathways">
       <div style={s.subtitle}>Atlas Navigator</div>
-      <h3 style={s.widgetTitle}>🧭 Navigate Resilience Pathways</h3>
+      <h3 style={s.widgetTitle}>
+        <img src="/icons/compass.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+        Navigate Resilience Pathways
+      </h3>
 
       {active && active.dimension && (
         <div style={s.detail} aria-live="polite">
@@ -210,7 +213,7 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
                     disabled={starting}
                     aria-label={`Start ${p.title} pathway`}
                   >
-                    {starting ? 'Starting…' : 'Start Pathway 🧭'}
+                    {starting ? 'Starting…' : <>Start Pathway <img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginLeft: 3 }} /></>}
                   </button>
                   <button style={s.closeBtn} onClick={() => setSelected(null)} aria-label="Cancel">
                     Cancel

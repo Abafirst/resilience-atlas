@@ -63,7 +63,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
                 {String.fromCharCode(65 + i)}
               </span>
               <span className="bq-option-text">{opt.text}</span>
-              {answered && opt.correct  && <span className="bq-option-icon" aria-hidden="true">✅</span>}
+              {answered && opt.correct  && <span className="bq-option-icon" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
               {answered && selected === opt && !opt.correct && <span className="bq-option-icon" aria-hidden="true">❌</span>}
             </button>
           );
@@ -131,7 +131,9 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
 
   return (
     <div className="bq-results-card" role="main" aria-label="Quiz results">
-      <div className="bq-results-trophy" aria-hidden="true">🏆</div>
+      <div className="bq-results-trophy" aria-hidden="true">
+        <img src="/icons/kids-trophy.svg" alt="" width={64} height={64} style={{ verticalAlign: 'middle' }} />
+      </div>
       <h2 className="bq-results-title">Quiz Complete!</h2>
 
       {/* Star rating */}
@@ -142,7 +144,7 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
             className={`bq-star ${s <= stars ? 'bq-star-lit' : 'bq-star-dim'}`}
             aria-hidden="true"
           >
-            ⭐
+            <img src="/icons/star.svg" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} />
           </span>
         ))}
       </div>
@@ -266,10 +268,12 @@ export default function BadgeQuestGame({ onBack, onEarnBadge, ageGroup = 'young'
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
 
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">🎯</div>
+          <div className="kg-game-emoji" aria-hidden="true">
+            <img src="/icons/game-target.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h2 className="kg-game-title">Badge Quest Challenge</h2>
           <p className="kg-game-subtitle">
-            Answer {total} resilience questions to earn badges! 🏅
+            Answer {total} resilience questions to earn badges!
           </p>
         </div>
 
@@ -311,10 +315,13 @@ export default function BadgeQuestGame({ onBack, onEarnBadge, ageGroup = 'young'
       <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
 
       <div className="kg-game-header">
-        <div className="kg-game-emoji" aria-hidden="true">🎯</div>
+        <div className="kg-game-emoji" aria-hidden="true">
+          <img src="/icons/game-target.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+        </div>
         <h2 className="kg-game-title">Badge Quest Challenge</h2>
         <div className="kg-score-badge" aria-live="polite">
-          🏅 {score}/{total} badges earned
+          <img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+          {score}/{total} badges earned
         </div>
       </div>
 

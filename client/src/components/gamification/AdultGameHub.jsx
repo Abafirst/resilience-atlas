@@ -120,7 +120,9 @@ export default function AdultGameHub() {
           <p style={s.subtitle}>ABA and ACT-informed practices for building durable resilience.</p>
         </div>
         <div style={s.lockedWrap}>
-          <div style={s.lockedIcon}>🔒</div>
+          <div style={s.lockedIcon}>
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h3 style={s.lockedTitle}>Unlock Your Practice Hub</h3>
           <p style={s.lockedText}>
             Access evidence-based, ABA and ACT-aligned micro-practices, skill pathways, and personalized reinforcement — available with Atlas Starter ($9.99) or Atlas Navigator ($49.99).
@@ -159,7 +161,8 @@ export default function AdultGameHub() {
               title="Available with Atlas Navigator"
               disabled
             >
-              🔒 {tab.label}
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+              {tab.label}
             </button>
           )
         ))}

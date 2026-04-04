@@ -87,7 +87,10 @@ export default function LeadershipReportPage() {
         {/* ── Privacy note ──────────────────────────────────────── */}
         <footer className="privacy-footer" role="contentinfo">
           <p>
-            <strong>🔒 Privacy Statement</strong>
+            <strong>
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+              Privacy Statement
+            </strong>
           </p>
           <p>
             This report contains <strong>only aggregated, anonymous statistics</strong>. No individual

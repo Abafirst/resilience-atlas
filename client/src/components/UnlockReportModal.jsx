@@ -440,7 +440,9 @@ export default function UnlockReportModal({
             ×
           </button>
           <span style={s.headerIcon} aria-hidden="true">
-            {paymentSuccess ? '✅' : '🔓'}
+            {paymentSuccess
+              ? <img src="/icons/checkmark.svg" alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />
+              : <img src="/icons/lock.svg" alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />}
           </span>
           <h2 id="unlockModalTitle" style={s.headerTitle}>
             {paymentSuccess ? 'Report Unlocked!' : 'Unlock Your Report'}
@@ -465,7 +467,8 @@ export default function UnlockReportModal({
             </div>
             {dominantType && (
               <div style={s.dimType}>
-                🧭 Dominant Dimension: <strong>{dominantType}</strong>
+                <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+                Dominant Dimension: <strong>{dominantType}</strong>
               </div>
             )}
           </div>

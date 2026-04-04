@@ -777,7 +777,7 @@ export default function TeamsResourcesPage() {
             id="gamifications-heading"
             style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '.5rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
           >
-            <span aria-hidden="true" style={{ fontSize: '1.25rem', lineHeight: 1 }}>🏆</span>
+            <img src="/icons/kids-trophy.svg" alt="" aria-hidden="true" style={{ width: '1.25rem', height: '1.25rem', verticalAlign: 'middle' }} />
             Gamifications &amp; Achievements
             <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Badges, leaderboards, challenges &amp; milestones</span>
           </h2>

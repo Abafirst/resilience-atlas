@@ -181,7 +181,9 @@ export default function AssessmentHub({ userEmail, onUpgrade, onLogout }) {
         <div style={styles.cards}>
           {/* Free assessment card */}
           <div style={styles.card}>
-            <div style={styles.cardIcon}>🧭</div>
+            <div style={styles.cardIcon}>
+              <img src="/icons/compass.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+            </div>
             <span style={styles.freeBadge}>FREE</span>
             <div style={styles.cardTitle}>Basic Assessment</div>
             <p style={styles.cardDesc}>

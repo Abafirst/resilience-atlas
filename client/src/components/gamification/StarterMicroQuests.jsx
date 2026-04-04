@@ -81,13 +81,13 @@ const s = {
   },
 };
 
-const DIM_EMOJI = {
-  'Agentic-Generative': '⚡',
-  'Relational-Connective': '🤝',
-  'Emotional-Adaptive': '💛',
-  'Spiritual-Reflective': '🧭',
-  'Somatic-Regulative': '🌿',
-  'Cognitive-Narrative': '💡',
+const DIM_ICONS = {
+  'Agentic-Generative':   '/icons/agentic-generative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Emotional-Adaptive':   '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective': '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':   '/icons/somatic-regulative.svg',
+  'Cognitive-Narrative':  '/icons/cognitive-narrative.svg',
 };
 
 export default function StarterMicroQuests({ tier, progress }) {
@@ -138,7 +138,9 @@ export default function StarterMicroQuests({ tier, progress }) {
     <div>
       {newBadge && (
         <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 20 }}>🏅</span>
+          <span style={{ fontSize: 20 }}>
+            <img src="/icons/badge.svg" alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+          </span>
           <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#34d399' }}>Badge Earned: {newBadge}</div>
             <div style={{ fontSize: 12, color: '#6b7280' }}>Keep building momentum through consistent micro-commitments.</div>
@@ -158,10 +160,13 @@ export default function StarterMicroQuests({ tier, progress }) {
             const colors = DIMENSION_COLORS[quest.dimension] || {};
             return (
               <div key={quest.id} style={s.card(quest.dimension, done)}>
-                {done && <span style={s.completedBadge}>✓ Complete</span>}
+                {done && <span style={s.completedBadge}>
+                  <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={10} height={10} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                  Complete
+                </span>}
                 <div style={s.cardHeader}>
                   <div style={{ ...s.dimIcon(quest.dimension), color: colors.accent }}>
-                    {DIM_EMOJI[quest.dimension] || '◆'}
+                    <img src={DIM_ICONS[quest.dimension] || '/icons/badge.svg'} alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
                   </div>
                   <div>
                     <div style={s.cardTitle}>{quest.title}</div>

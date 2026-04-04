@@ -128,15 +128,20 @@ export default function DailyCompassStreaks({ progress }) {
   const days       = progress?.currentStreak?.days ?? 0;
   const longest    = progress?.longestStreak ?? 0;
   const points     = progress?.totalPoints ?? 0;
-  const compassEmoji = days >= 30 ? '🧭✨' : days >= 7 ? '🧭' : days > 0 ? '🧭' : '💤';
+  const compassIcon = days >= 30 ? '/icons/kids-spark.svg' : days > 0 ? '/icons/compass.svg' : '/icons/goal.svg';
 
   return (
     <div style={s.widget} role="region" aria-label="Daily Compass Streak">
       <div style={s.subtitle}>Atlas Navigator</div>
-      <h3 style={s.widgetTitle}>🔥 Build Your Compass Streak</h3>
+      <h3 style={s.widgetTitle}>
+        <img src="/icons/streaks.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+        Build Your Compass Streak
+      </h3>
 
       <div style={s.streakRow}>
-        <span style={s.compassIcon} aria-hidden="true">{compassEmoji}</span>
+        <span style={s.compassIcon} aria-hidden="true">
+          <img src={compassIcon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} />
+        </span>
         <div style={s.streakInfo}>
           <span style={s.streakCount} aria-label={`${days} day streak`}>
             {days}

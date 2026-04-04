@@ -187,7 +187,10 @@ export default function LeaderboardWidget({ progress, fetchLeaderboard, onEnable
                 <td style={{ ...s.td, ...s.rank }}>{e.rank}</td>
                 <td style={s.td}>{e.username}</td>
                 <td style={{ ...s.td, ...s.points }}>{e.totalPoints}</td>
-                <td style={{ ...s.td, ...s.streak }}>{e.currentStreak} 🔥</td>
+                <td style={{ ...s.td, ...s.streak }}>
+                  {e.currentStreak}
+                  <img src="/icons/streaks.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginLeft: 3 }} />
+                </td>
               </tr>
             ))}
           </tbody>

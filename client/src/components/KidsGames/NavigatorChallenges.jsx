@@ -118,11 +118,16 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
       <div className="kg-game-container">
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">🎯</div>
+          <div className="kg-game-emoji" aria-hidden="true">
+            <img src="/icons/game-target.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h2 className="kg-game-title">Navigator Challenges</h2>
           <p className="kg-game-subtitle">Quick-fire resilience scenarios. {ROUND_SIZE} questions, {TIME_PER_QUESTION} seconds each!</p>
           {personalBest > 0 && (
-            <div className="kg-score-badge">🏅 Personal Best: {personalBest}/{ROUND_SIZE}</div>
+            <div className="kg-score-badge">
+              <img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+              Personal Best: {personalBest}/{ROUND_SIZE}
+            </div>
           )}
         </div>
         <div className="kg-intro-rules">
@@ -146,7 +151,9 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
     return (
       <div className="kg-game-container">
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">🎯</div>
+          <div className="kg-game-emoji" aria-hidden="true">
+            <img src="/icons/game-target.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h2 className="kg-game-title">Challenge Complete!</h2>
         </div>
         <div className="kg-results-summary">
@@ -154,9 +161,9 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
           <p className="kg-results-label">
             {finalScore === ROUND_SIZE ? '🏆 Perfect score!' : finalScore >= 4 ? '🌟 Outstanding!' : finalScore >= 3 ? '💪 Great effort!' : '🌱 Keep growing!'}
           </p>
-          {maxStreak >= 3 && <p className="kg-streak-note" aria-live="polite">🔥 Best streak: {maxStreak} in a row!</p>}
+          {maxStreak >= 3 && <p className="kg-streak-note" aria-live="polite"><img src="/icons/streaks.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />Best streak: {maxStreak} in a row!</p>}
           {finalScore > personalBest && (
-            <p className="kg-pb-note" aria-live="polite">🏅 New personal best!</p>
+            <p className="kg-pb-note" aria-live="polite"><img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />New personal best!</p>
           )}
         </div>
 
@@ -193,7 +200,10 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
     <div className="kg-game-container">
       {/* HUD */}
       <div className="kg-challenge-hud">
-        <div className="kg-hud-score">⭐ {score}</div>
+        <div className="kg-hud-score">
+          <img src="/icons/star.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+          {score}
+        </div>
         <div className="kg-hud-progress">{questionIdx + 1}/{ROUND_SIZE}</div>
         <div className={`kg-hud-timer${timeLeft <= 5 ? ' urgent' : ''}`} aria-live="polite">
           ⏱ {timeLeft}s
@@ -208,7 +218,8 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
       {/* Streak */}
       {streak >= 2 && (
         <div className="kg-streak-toast" aria-live="polite">
-          🔥 {streak} in a row!
+          <img src="/icons/streaks.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+          {streak} in a row!
         </div>
       )}
 

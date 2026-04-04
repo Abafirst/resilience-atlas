@@ -302,7 +302,8 @@ function UpsellModal({ targetTier, trigger, onClose, onUpgrade }) {
 
         <div className="upsell-modal__header">
           <span className="upsell-premium-badge">
-            ⭐ Premium
+            <img src="/icons/star.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            Premium
           </span>
           <h2 id="upsell-modal-title" className="upsell-modal__title">{copy.headline}</h2>
           <p className="upsell-modal__subtext">{copy.subtext}</p>
@@ -3240,7 +3241,10 @@ export default function ResultsPage() {
                       <span style={s.gamStatLabel}>Points</span>
                     </div>
                     <div style={s.gamStat}>
-                      <span style={s.gamStatValue}>🔥 {gamData.streak}</span>
+                      <span style={s.gamStatValue}>
+                        <img src="/icons/streaks.svg" alt="" aria-hidden="true" width="16" height="16" style={{ verticalAlign: 'middle', marginRight: 2 }} />
+                        {gamData.streak}
+                      </span>
                       <span style={s.gamStatLabel}>Day Streak</span>
                     </div>
                   </div>

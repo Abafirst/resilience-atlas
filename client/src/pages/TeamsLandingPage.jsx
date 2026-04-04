@@ -691,7 +691,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Each team member shares which of the Six Dimensions feels strongest and which is a current growth edge. The group identifies patterns and creates a collective resilience profile together.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -717,7 +717,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Team members share brief stories of navigating a professional challenge. The group identifies which resilience dimension was most active — building empathy, insight, and shared language.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -743,7 +743,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Using individual assessment results, plot the team's collective dimension scores on a shared radar chart. Identify team strengths and coverage gaps — then assign roles accordingly.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -768,7 +768,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Emotional-Adaptive</span>
         </div>
         <p className="tac-desc">Teams explore how pressure affects performance and emotional regulation. They identify their collective early warning signs and build a shared "pressure protocol" for high-stakes moments.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -794,7 +794,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Spiritual-Reflective</span>
         </div>
         <p className="tac-desc">Team members clarify their personal top values and compare with the team's stated values. The group identifies alignment, tensions, and opportunities — and commits to shared working principles.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -821,7 +821,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Relational-Connective</span>
         </div>
         <p className="tac-desc">Teams visually map their internal connections, support networks, and collaboration patterns. They identify who might feel isolated, who is over-relied upon, and what gaps need bridging.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><span aria-hidden="true">🔒</span> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -848,7 +848,9 @@ export default function TeamsLandingPage() {
     <div className="handouts-grid">
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🧭</div>
+        <div className="handout-icon" aria-hidden="true">
+          <img src="/icons/compass.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+        </div>
         <div className="handout-body">
           <div className="handout-title">Six Dimensions Quick Reference</div>
           <p className="handout-desc">A one-page overview of all six resilience dimensions with definitions, archetypes, and key signals. Perfect for workshop prep or team onboarding.</p>
@@ -857,7 +859,9 @@ export default function TeamsLandingPage() {
       </div>
 
       <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🗺️</div>
+        <div className="handout-icon" aria-hidden="true">
+          <img src="/icons/game-map.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+        </div>
         <div className="handout-body">
           <div className="handout-title">Team Resilience Workshop Agenda</div>
           <p className="handout-desc">A 90-minute structured workshop agenda with timing, talking points, and debrief questions. Designed for HR facilitators and team leads.</p>

@@ -50,10 +50,15 @@ export default function MapCollector({ onBack, onEarnBadge }) {
       <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
 
       <div className="kg-game-header">
-        <div className="kg-game-emoji" aria-hidden="true">🗺️</div>
+        <div className="kg-game-emoji" aria-hidden="true">
+          <img src="/icons/game-map.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+        </div>
         <h2 className="kg-game-title">Map Collector</h2>
         <p className="kg-game-subtitle">Tap the glowing items to collect them all!</p>
-        <div className="kg-score-badge" aria-live="polite">🗺️ {collected.size}/{MAP_ITEMS.length} collected</div>
+        <div className="kg-score-badge" aria-live="polite">
+          <img src="/icons/game-map.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+          {collected.size}/{MAP_ITEMS.length} collected
+        </div>
       </div>
 
       {/* Progress bar */}
@@ -100,7 +105,7 @@ export default function MapCollector({ onBack, onEarnBadge }) {
                   disabled={isCollected}
                 >
                   <span className="kg-map-item-emoji" aria-hidden="true">{item.emoji}</span>
-                  {isCollected && <span className="kg-map-item-check" aria-hidden="true">✓</span>}
+                  {isCollected && <span className="kg-map-item-check" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
                 </button>
               );
             })}
