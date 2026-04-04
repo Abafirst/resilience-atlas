@@ -113,7 +113,8 @@ export default function ResilienceBadgesWidget({ earnedBadges = [], showNavigato
     <div style={s.widget} role="region" aria-label={`Resilience Badges (${totalEarned} earned)`}>
       <div style={s.subtitle}>Atlas Starter &amp; Navigator</div>
       <h3 style={s.widgetTitle}>
-        🏅 Resilience Badges
+        <img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle' }} />
+        {' '}Resilience Badges
         <span style={s.count}>{totalEarned} earned</span>
       </h3>
 
@@ -131,7 +132,9 @@ export default function ResilienceBadgesWidget({ earnedBadges = [], showNavigato
                 aria-label={`${b.name}${b.earned ? ' (earned)' : ' (locked)'}`}
               >
                 <span style={s.badgeIcon} aria-hidden="true">
-                  {b.earned ? b.icon : '🔒'}
+                  {b.earned
+                    ? <img src={b.icon} alt="" width={15} height={15} style={{ verticalAlign: 'middle' }} />
+                    : <img src="/icons/lock.svg" alt="" width={15} height={15} style={{ verticalAlign: 'middle' }} />}
                 </span>
                 <span>{b.name}</span>
               </div>
@@ -152,7 +155,9 @@ export default function ResilienceBadgesWidget({ earnedBadges = [], showNavigato
                 aria-label={`${b.name}${b.earned ? ' (earned)' : ' (locked)'}`}
               >
                 <span style={s.badgeIcon} aria-hidden="true">
-                  {b.earned ? b.icon : '🔒'}
+                  {b.earned
+                    ? <img src={b.icon} alt="" width={15} height={15} style={{ verticalAlign: 'middle' }} />
+                    : <img src="/icons/lock.svg" alt="" width={15} height={15} style={{ verticalAlign: 'middle' }} />}
                 </span>
                 <span>{b.name}</span>
               </div>

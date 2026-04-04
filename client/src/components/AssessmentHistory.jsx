@@ -243,11 +243,16 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading }) 
                   <div style={s.scoreRow}>
                     <span style={s.overallScore}>{Math.round(a.overall)}% Overall</span>
                     <span aria-label={unlocked ? 'PDF unlocked' : 'PDF locked'} style={s.badge(unlocked)}>
-                      {unlocked ? '✓ Unlocked' : '🔒 Locked'}
+                      {unlocked
+                        ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />Unlocked</>
+                        : <><img src="/icons/lock.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />Locked</>}
                     </span>
                   </div>
                   {a.dominantType && (
-                    <span style={s.dominantType}>🧭 {a.dominantType}</span>
+                    <span style={s.dominantType}>
+                      <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                      {a.dominantType}
+                    </span>
                   )}
                   <span style={s.date}>Taken {date}</span>
                 </div>

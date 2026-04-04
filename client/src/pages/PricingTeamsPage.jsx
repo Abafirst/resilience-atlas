@@ -692,7 +692,8 @@ export default function PricingTeamsPage() {
   {/* ── Self-Service Data Note ─────────────────────────────────────────────── */}
   <section style={{ background: '#f0fdf4', borderTop: '1px solid #bbf7d0', padding: '1.5rem', textAlign: 'center' }}>
     <p style={{ fontSize: '.9rem', color: '#166534', margin: 0, lineHeight: 1.7 }}>
-      🔒 <strong>Self-service platform.</strong> All tiers include data export (CSV, PDF, ZIP).
+      <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+      <strong>Self-service platform.</strong> All tiers include data export (CSV, PDF, ZIP).
       Teams manage their own data — we don't track or retain analytics on your end.{' '}
       <a href="/privacy" style={{ color: '#15803d', fontWeight: 700 }}>Learn about our data model →</a>
     </p>

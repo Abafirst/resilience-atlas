@@ -29,13 +29,13 @@ const s = {
   pts: { fontSize: 11, color: '#7aafc8' },
 };
 
-const DIM_EMOJI = {
-  'Agentic-Generative': '⚡',
-  'Relational-Connective': '🤝',
-  'Emotional-Adaptive': '💛',
-  'Spiritual-Reflective': '🧭',
-  'Somatic-Regulative': '🌿',
-  'Cognitive-Narrative': '💡',
+const DIM_ICONS = {
+  'Agentic-Generative':   '/icons/agentic-generative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Emotional-Adaptive':   '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective': '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':   '/icons/somatic-regulative.svg',
+  'Cognitive-Narrative':  '/icons/cognitive-narrative.svg',
 };
 
 export default function NavigatorSkillPaths({ progress }) {
@@ -110,7 +110,7 @@ export default function NavigatorSkillPaths({ progress }) {
     <div>
       {earnedBadge && (
         <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 20 }}>🏔</span>
+          <img src="/icons/game-mountain.svg" alt="" aria-hidden="true" width={20} height={20} style={{ flexShrink: 0 }} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#34d399' }}>Achievement Unlocked: {earnedBadge}</div>
             <div style={{ fontSize: 12, color: '#6b7280' }}>Your commitment to this pathway is reflected in your progress record.</div>
@@ -145,11 +145,17 @@ export default function NavigatorSkillPaths({ progress }) {
             >
               <div style={s.pathHeader}>
                 <div>
-                  <div style={s.pathTitle}>{DIM_EMOJI[pathway.dimension]} {pathway.title}</div>
+                  <div style={s.pathTitle}>
+                    <img src={DIM_ICONS[pathway.dimension]} alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+                    {pathway.title}
+                  </div>
                   <div style={s.pathDim}>{pathway.dimension}</div>
                 </div>
                 {allDone ? (
-                  <span style={s.completedTag}>✓ Complete</span>
+                  <span style={s.completedTag}>
+                    <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={11} height={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                    Complete
+                  </span>
                 ) : (
                   <span style={s.pts}>{totalPts} pts</span>
                 )}

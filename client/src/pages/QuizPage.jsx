@@ -848,7 +848,9 @@ export default function QuizPage() {
 
       {/* ── Footer ─────────────────────────────────────── */}
       <div className="privacy-guarantee" role="note" aria-label="Data privacy guarantee">
-        <span className="privacy-guarantee__icon" aria-hidden="true">🔒</span>
+        <span className="privacy-guarantee__icon" aria-hidden="true">
+          <img src="/icons/lock.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+        </span>
         <span className="privacy-guarantee__text">
           <strong>You control your data.</strong>
           {' '}Delete your account and results anytime —{' '}

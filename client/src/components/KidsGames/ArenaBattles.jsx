@@ -94,10 +94,15 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
       <div className="kg-game-container">
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">🏆</div>
+          <div className="kg-game-emoji" aria-hidden="true">
+            <img src="/icons/kids-trophy.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h2 className="kg-game-title">Arena Battles</h2>
           <p className="kg-game-subtitle">Choose a character to battle! Answer resilience questions to win.</p>
-          {wins > 0 && <div className="kg-score-badge">🏅 {wins} battle wins</div>}
+          {wins > 0 && <div className="kg-score-badge">
+            <img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+            {wins} battle wins
+          </div>}
         </div>
 
         <div className="kg-arena-select-grid" role="list" aria-label="Select a character to battle">
@@ -127,7 +132,11 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
     return (
       <div className="kg-game-container">
         <div className="kg-battle-result" style={{ background: won ? '#f0fdf4' : '#fff7ed' }}>
-          <div className="kg-battle-result-emoji" aria-hidden="true">{won ? '🏆' : '💪'}</div>
+          <div className="kg-battle-result-emoji" aria-hidden="true">
+            {won
+              ? <img src="/icons/kids-trophy.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+              : <img src="/icons/strength.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />}
+          </div>
           <h2 className="kg-battle-result-title">
             {won ? `You beat ${opponent.name}!` : `${opponent.name} wins this time!`}
           </h2>
@@ -157,7 +166,9 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
       {/* Battle HUD */}
       <div className="kg-battle-hud">
         <div className="kg-battle-player">
-          <span aria-hidden="true">🧭</span>
+          <span aria-hidden="true">
+            <img src="/icons/compass.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+          </span>
           <span>You: {playerScore}</span>
         </div>
         <div className="kg-battle-vs">VS</div>

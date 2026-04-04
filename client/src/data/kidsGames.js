@@ -39,7 +39,7 @@ export const MAP_ITEMS = [
 export const BUILDER_BADGE_CARDS = [
   {
     id: 'bb-first-step',
-    emoji: '👣',
+    icon: '/icons/badge.svg',
     title: 'First Step',
     desc: 'Answer correctly to start your resilience journey!',
     unlockMessage: '🎉 Amazing! You took your first step on the resilience journey!',
@@ -58,7 +58,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-story-listener',
-    emoji: '👂',
+    icon: '/icons/story.svg',
     title: 'Story Listener',
     desc: 'Read Maya\'s story, then answer the question to earn this badge.',
     unlockMessage: '📖 Wonderful! Stories teach us how to be brave and kind.',
@@ -78,7 +78,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-feelings-explorer',
-    emoji: '💭',
+    icon: '/icons/emotion.svg',
     title: 'Feelings Explorer',
     desc: 'Tap 3 feelings you have felt today to earn this badge.',
     unlockMessage: '💜 Brilliant! Knowing your feelings is Jordan\'s biggest superpower.',
@@ -103,7 +103,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-helper-hero',
-    emoji: '🤝',
+    icon: '/icons/connection.svg',
     title: 'Helper Hero',
     desc: 'Choose 2 people who help you when things get tough.',
     unlockMessage: '🌟 Superstar! Maya the Connector would be so proud of you!',
@@ -126,7 +126,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-calm-champion',
-    emoji: '🧘',
+    icon: '/icons/breathing.svg',
     title: 'Calm Champion',
     desc: 'Do 3 bubble breaths with Sam to earn this badge!',
     unlockMessage: '🌊 Excellent! Sam the Grounder knows: calm starts from inside.',
@@ -141,7 +141,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-brave-builder',
-    emoji: '🔨',
+    icon: '/icons/goal.svg',
     title: 'Brave Builder',
     desc: 'Answer correctly to show you kept going even when it was hard!',
     unlockMessage: '🏗️ YES! Kai the Builder says: one small step at a time!',

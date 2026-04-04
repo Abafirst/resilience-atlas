@@ -143,7 +143,10 @@ export default function ResilienceMap({ progress, fetchLeaderboard, onEnableLead
     return (
       <div style={s.widget} role="region" aria-label="Resilience Map">
         <div style={s.subtitle}>Atlas Navigator</div>
-        <h3 style={s.widgetTitle}>🗺️ Your Resilience Map</h3>
+        <h3 style={s.widgetTitle}>
+          <img src="/icons/game-map.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+          Your Resilience Map
+        </h3>
         <p style={s.optInMsg}>
           Join the Navigator Rankings — an opt-in map showing resilience progress across
           the Atlas community. Your position is highlighted.
@@ -154,7 +157,8 @@ export default function ResilienceMap({ progress, fetchLeaderboard, onEnableLead
             try { await onEnableLeaderboard(); } catch (err) { /* toasts handled by hook */ }
           }}
         >
-          Join Navigator Rankings 🗺️
+          Join Navigator Rankings
+          <img src="/icons/game-map.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginLeft: 5 }} />
         </button>
       </div>
     );
@@ -163,7 +167,10 @@ export default function ResilienceMap({ progress, fetchLeaderboard, onEnableLead
   return (
     <div style={s.widget} role="region" aria-label={`${periodLabel} Navigator Rankings`}>
       <div style={s.subtitle}>Atlas Navigator</div>
-      <h3 style={s.widgetTitle}>🗺️ Navigator Rankings — {periodLabel}</h3>
+      <h3 style={s.widgetTitle}>
+        <img src="/icons/game-map.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
+        Navigator Rankings — {periodLabel}
+      </h3>
 
       <div style={s.tabs} role="tablist" aria-label="Rankings period">
         {PERIODS.map(p => (
@@ -202,7 +209,10 @@ export default function ResilienceMap({ progress, fetchLeaderboard, onEnableLead
                 <td style={{ ...s.td, ...s.rank }}>{e.rank}</td>
                 <td style={s.td}>{e.username}</td>
                 <td style={{ ...s.td, ...s.points }}>{e.totalPoints}</td>
-                <td style={{ ...s.td, ...s.streak }}>{e.currentStreak} 🧭</td>
+                <td style={{ ...s.td, ...s.streak }}>
+                  {e.currentStreak}
+                  <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginLeft: 3 }} />
+                </td>
               </tr>
             ))}
           </tbody>

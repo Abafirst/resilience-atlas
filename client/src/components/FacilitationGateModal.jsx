@@ -40,7 +40,9 @@ export default function FacilitationGateModal({ userTier, onClose }) {
           ✕
         </button>
 
-        <div style={styles.lockIcon} aria-hidden="true">🔒</div>
+        <div style={styles.lockIcon} aria-hidden="true">
+          <img src="/icons/lock.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+        </div>
 
         <h2 id="fgate-title" style={styles.title}>
           {isNonCustomer

@@ -58,7 +58,7 @@ function QuizChallenge({ card, onComplete }) {
         </p>
       )}
       {answered && correct && (
-        <p className="kg-challenge-success">✅ That's right! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />That's right! Earning your badge now… 🎉</p>
       )}
     </div>
   );
@@ -112,11 +112,11 @@ function PickChallenge({ card, onComplete }) {
           disabled={picked.size < needed}
           style={{ background: picked.size >= needed ? card.border : undefined }}
         >
-          Done! ✅
+          Done! <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginLeft: 2 }} />
         </button>
       )}
       {done && (
-        <p className="kg-challenge-success">✅ Awesome! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Awesome! Earning your badge now… 🎉</p>
       )}
     </div>
   );
@@ -168,7 +168,7 @@ function BreatheChallenge({ card, onComplete }) {
         {count}/{needed} breaths completed
       </p>
       {done && (
-        <p className="kg-challenge-success">✅ Great breathing! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Great breathing! Earning your badge now… 🎉</p>
       )}
     </div>
   );
@@ -224,7 +224,7 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
             style={{ background: activeCard.color }}
             aria-hidden="true"
           >
-            {activeCard.emoji}
+            <img src={activeCard.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
           </div>
           <h2 className="kg-game-title">{activeCard.title}</h2>
           <p className="kg-game-subtitle">{activeCard.desc}</p>
@@ -245,11 +245,14 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
       <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
 
       <div className="kg-game-header">
-        <div className="kg-game-emoji" aria-hidden="true">🌟</div>
+        <div className="kg-game-emoji" aria-hidden="true">
+          <img src="/icons/star.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+        </div>
         <h2 className="kg-game-title">Builder Badges</h2>
-        <p className="kg-game-subtitle">Complete each activity to earn your badge! 🏅</p>
+        <p className="kg-game-subtitle">Complete each activity to earn your badge!</p>
         <div className="kg-score-badge" aria-live="polite">
-          🏅 {unlocked.size}/{BUILDER_BADGE_CARDS.length} earned
+          <img src="/icons/badge.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+          {unlocked.size}/{BUILDER_BADGE_CARDS.length} earned
         </div>
       </div>
 
@@ -261,7 +264,9 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
           aria-live="polite"
           style={{ borderColor: activeFeedback.border, background: activeFeedback.color }}
         >
-          <span className="kg-badge-toast-emoji" aria-hidden="true">{activeFeedback.emoji}</span>
+          <span className="kg-badge-toast-emoji" aria-hidden="true">
+            <img src={activeFeedback.icon} alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />
+          </span>
           <div>
             <strong>{activeFeedback.title} badge unlocked!</strong>
             <p style={{ margin: 0, fontSize: '.85rem' }}>{activeFeedback.unlockMessage}</p>
@@ -271,9 +276,11 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
 
       {allUnlocked && (
         <div className="kg-completion-panel" aria-live="polite">
-          <div className="kg-completion-emoji" aria-hidden="true">🏆</div>
+          <div className="kg-completion-emoji" aria-hidden="true">
+            <img src="/icons/kids-trophy.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          </div>
           <h3>All badges earned!</h3>
-          <p>You're a true Builder! Every challenge you completed shows how amazing you are! ✨</p>
+          <p>You're a true Builder! Every challenge you completed shows how amazing you are!</p>
         </div>
       )}
 
@@ -298,11 +305,15 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
               role="listitem"
             >
               <div className="kg-badge-card-emoji" aria-hidden="true">
-                {isUnlocked ? card.emoji : '🔒'}
+                {isUnlocked
+                  ? <img src={card.icon} alt="" width={36} height={36} style={{ verticalAlign: 'middle' }} />
+                  : <img src="/icons/lock.svg" alt="" width={36} height={36} style={{ verticalAlign: 'middle' }} />}
               </div>
               <div className="kg-badge-card-title">{card.title}</div>
               <p className="kg-badge-card-desc">
-                {isUnlocked ? '✓ Completed!' : card.desc}
+                {isUnlocked
+                  ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />Completed!</>
+                  : card.desc}
               </p>
               {!isUnlocked && (
                 <span className="kg-badge-card-cta" aria-hidden="true">
@@ -310,7 +321,10 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
                 </span>
               )}
               {isUnlocked && (
-                <span className="kg-badge-card-earned" aria-hidden="true">✓ Earned!</span>
+                <span className="kg-badge-card-earned" aria-hidden="true">
+                  <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                  Earned!
+                </span>
               )}
             </button>
           );

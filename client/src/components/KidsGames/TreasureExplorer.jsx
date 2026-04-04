@@ -122,7 +122,8 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
             style={{ background: activeIsland.accentColor }}
             onClick={() => setView('map')}
           >
-            🗺️ Back to Map
+            <img src="/icons/game-map.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+            Back to Map
           </button>
         </div>
       ) : (

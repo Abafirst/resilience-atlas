@@ -47,13 +47,15 @@ const s = {
 export default function StreakWidget({ progress }) {
   const days    = progress?.currentStreak?.days ?? 0;
   const longest = progress?.longestStreak ?? 0;
-  const flame   = days > 0 ? '🔥' : '💤';
+  const flameIcon = days > 0 ? '/icons/streaks.svg' : '/icons/goal.svg';
 
   return (
     <div style={s.widget} role="region" aria-label="Streak counter">
       <h3 style={s.widgetTitle}>Daily Streak</h3>
       <div style={s.streakRow}>
-        <span style={s.icon} aria-hidden="true">{flame}</span>
+        <span style={s.icon} aria-hidden="true">
+          <img src={flameIcon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} />
+        </span>
         <div>
           <div style={s.count}>{days}</div>
           <div style={s.label}>{days === 1 ? 'day' : 'days'} streak</div>
