@@ -15,6 +15,13 @@ export const UNLOCK_TIERS = [
     type:        'single-report',
     highlighted: false,
     description: 'Unlock this report only. Pay $9.99 each time you want to download a new report.',
+    features: [
+      'Full PDF report for this assessment',
+      'Values-aligned micro-commitments',
+      'Momentum tracking (flexible streaks)',
+      'Barrier-buster planning',
+      'Simple progress badges',
+    ],
   },
   {
     tier:        'atlas-navigator',
@@ -25,6 +32,14 @@ export const UNLOCK_TIERS = [
     type:        'unlimited',
     highlighted: true,
     description: 'Lifetime access to unlimited PDF reports and gamification — one payment forever.',
+    features: [
+      'Unlimited PDF reports — all future assessments included',
+      'Skill paths across all 6 resilience dimensions',
+      'Choice-based weekly quests',
+      'Personalized reinforcement menu',
+      'Return-to-practice plan',
+      'Advanced progress dashboard',
+    ],
   },
 ];
 
