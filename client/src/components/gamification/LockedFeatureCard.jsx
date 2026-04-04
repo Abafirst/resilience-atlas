@@ -13,8 +13,8 @@ const s = {
   overlay: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(248,250,252,0.88)',
-    backdropFilter: 'blur(1px)',
+    background: 'rgba(248,250,252,0.40)',
+    backdropFilter: 'blur(3px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
