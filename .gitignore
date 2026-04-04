@@ -29,3 +29,6 @@ assets/social/generated/*.png
 # Optional npm cache directory
 .npmsendgrid.env
 sendgrid.env
+
+# Test result artifacts
+test-results/

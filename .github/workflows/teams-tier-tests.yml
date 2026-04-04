@@ -1,0 +1,157 @@
+name: Teams Tier Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/config/tiers.js'
+      - 'backend/utils/tierUtils.js'
+      - 'backend/routes/teams-resources.js'
+      - 'backend/routes/tiers.js'
+      - 'tests/teams-tier-verification.test.js'
+      - 'tests/teams-tier-e2e.spec.js'
+      - 'tests/setup/teams-test-data.js'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'backend/config/tiers.js'
+      - 'backend/utils/tierUtils.js'
+      - 'backend/routes/teams-resources.js'
+      - 'backend/routes/tiers.js'
+      - 'tests/teams-tier-verification.test.js'
+      - 'tests/teams-tier-e2e.spec.js'
+      - 'tests/setup/teams-test-data.js'
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: 'Tier to test (basic, premium, enterprise, or all)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - basic
+          - premium
+          - enterprise
+
+jobs:
+  teams-tier-tests:
+    name: Teams Tier Verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Teams tier verification tests
+        run: |
+          node_modules/.bin/jest --forceExit \
+            --json --outputFile=test-results/teams-tier-results.json \
+            tests/teams-tier-verification.test.js
+
+      - name: Run existing tier-adjacent tests
+        run: |
+          node_modules/.bin/jest --forceExit \
+            tests/tierUtils.test.js \
+            tests/teams-resources.test.js
+
+      - name: Generate HTML report
+        if: always()
+        run: |
+          mkdir -p test-results
+          node - <<'EOF'
+          const fs   = require('fs');
+          const path = require('path');
+
+          const jsonPath = 'test-results/teams-tier-results.json';
+          if (!fs.existsSync(jsonPath)) { console.log('No JSON results found'); process.exit(0); }
+
+          const data   = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+          const suites = (data.testResults || []).flatMap(s =>
+              (s.testResults || []).map(t => ({
+                  suite:    (t.ancestorTitles || []).join(' › '),
+                  name:     t.title,
+                  status:   t.status,
+                  duration: t.duration || 0,
+              }))
+          );
+
+          const total  = suites.length;
+          const passed = suites.filter(t => t.status === 'passed').length;
+          const failed = suites.filter(t => t.status === 'failed').length;
+          const pct    = total > 0 ? Math.round((passed / total) * 100) : 0;
+
+          const rows = suites.map(t =>
+              `<tr class="${t.status}"><td>${t.suite}</td><td>${t.name}</td>` +
+              `<td>${t.status === 'passed' ? '✅' : '❌'} ${t.status}</td><td>${t.duration}ms</td></tr>`
+          ).join('');
+
+          const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+          <title>Teams Tier Test Report</title>
+          <style>
+          body{font-family:system-ui,sans-serif;margin:0;background:#f8f9fa}
+          header{background:#1a3a5c;color:#fff;padding:20px 32px}
+          header h1{margin:0 0 4px;font-size:22px}
+          .summary{display:flex;gap:20px;padding:20px 32px;background:#fff;border-bottom:1px solid #e0e0e0}
+          .card{flex:1;background:#f0f4ff;border-radius:8px;padding:12px 16px;text-align:center}
+          .card.fail{background:#fff0f0}.card h2{margin:0;font-size:32px}.card p{margin:4px 0 0;font-size:12px;opacity:.7}
+          table{width:calc(100% - 64px);margin:0 32px 32px;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden}
+          th{background:#1a3a5c;color:#fff;padding:8px 12px;text-align:left;font-size:12px}
+          td{padding:6px 12px;font-size:12px;border-bottom:1px solid #f0f0f0}
+          tr.failed td{background:#fff8f8}
+          </style></head><body>
+          <header><h1>🛡️ Teams Tier Feature Test Report</h1><p>Resilience Atlas — Automated Tier Verification</p></header>
+          <div class="summary">
+            <div class="card"><h2>${total}</h2><p>Total Tests</p></div>
+            <div class="card"><h2>${passed}</h2><p>Passed ✅</p></div>
+            <div class="card fail"><h2>${failed}</h2><p>Failed ❌</p></div>
+            <div class="card"><h2>${pct}%</h2><p>Pass Rate</p></div>
+          </div>
+          <table><thead><tr><th>Suite</th><th>Test</th><th>Status</th><th>Duration</th></tr></thead>
+          <tbody>${rows}</tbody></table>
+          </body></html>`;
+
+          fs.mkdirSync('test-results', { recursive: true });
+          fs.writeFileSync('test-results/teams-tier-report.html', html);
+          console.log('Report written to test-results/teams-tier-report.html');
+          console.log('Total:', total, '| Passed:', passed, '| Failed:', failed);
+          EOF
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teams-tier-test-results
+          path: test-results/
+          retention-days: 30
+
+      - name: Post test summary
+        if: always()
+        run: |
+          if [ -f test-results/teams-tier-results.json ]; then
+            TOTAL="$(node -e "const r=require('./test-results/teams-tier-results.json'); console.log(r.numTotalTests||0);")"
+            PASSED="$(node -e "const r=require('./test-results/teams-tier-results.json'); console.log(r.numPassedTests||0);")"
+            FAILED="$(node -e "const r=require('./test-results/teams-tier-results.json'); console.log(r.numFailedTests||0);")"
+            echo "## Teams Tier Test Results" >> "${GITHUB_STEP_SUMMARY}"
+            echo "" >> "${GITHUB_STEP_SUMMARY}"
+            echo "| Metric | Value |" >> "${GITHUB_STEP_SUMMARY}"
+            echo "|--------|-------|" >> "${GITHUB_STEP_SUMMARY}"
+            echo "| Total Tests | ${TOTAL} |" >> "${GITHUB_STEP_SUMMARY}"
+            echo "| Passed | ${PASSED} ✅ |" >> "${GITHUB_STEP_SUMMARY}"
+            echo "| Failed | ${FAILED} $([ "${FAILED}" -eq 0 ] && echo "✅" || echo "❌") |" >> "${GITHUB_STEP_SUMMARY}"
+          else
+            echo "No test results found." >> "${GITHUB_STEP_SUMMARY}"
+          fi
