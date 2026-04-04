@@ -85,14 +85,14 @@ function BrandIcon({ name, size = 18, color = 'currentColor', style: extraStyle 
 function EvolutionCompass({ scores, previousScores }) {
   const cx = 130, cy = 130, R = 100;
 
-  // Map dimensions to angles (0° = North = up)
+  // Map dimensions to evenly-spaced angles (0° = North/top, clockwise, 60° apart)
   const dimAngles = {
-    'Cognitive-Narrative':   0,    // N
-    'Agentic-Generative':    45,   // NE
-    'Relational-Connective': 90,   // E
-    'Somatic-Regulative':    180,  // S
-    'Emotional-Adaptive':    225,  // SW
-    'Spiritual-Reflective':  270,  // W
+    'Cognitive-Narrative':   0,    // N  (12 o'clock)
+    'Agentic-Generative':    60,   // NE (2 o'clock)
+    'Relational-Connective': 120,  // SE (4 o'clock)
+    'Somatic-Regulative':    180,  // S  (6 o'clock)
+    'Emotional-Adaptive':    240,  // SW (8 o'clock)
+    'Spiritual-Reflective':  300,  // NW (10 o'clock)
   };
 
   const toRad = (deg) => (deg - 90) * Math.PI / 180;
@@ -704,7 +704,17 @@ export default function AtlasJourneyPage() {
   const [selectedIdx, setSelectedIdx]           = useState(0);
   const [noteValue, setNoteValue]               = useState('');
   const [noteStatus, setNoteStatus]             = useState('');
+  const [isMobile, setIsMobile]                 = useState(() => typeof window !== 'undefined' && window.innerWidth < 800);
   const noteStatusTimer                          = useRef(null);
+
+  // ── Responsive layout ────────────────────────────────────────────────────
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 800);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ── Auth header ──────────────────────────────────────────────────────────
   const getHeaders = useCallback(async () => {
@@ -910,7 +920,7 @@ export default function AtlasJourneyPage() {
           <div
             style={{
               ...s.grid,
-              gridTemplateColumns: 'minmax(0,2fr) minmax(0,1fr)',
+              gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,2fr) minmax(0,1fr)',
             }}
             role="region"
             aria-label="Atlas journey content"
@@ -987,7 +997,12 @@ export default function AtlasJourneyPage() {
                         tabIndex={0}
                         aria-selected={isSelected}
                         aria-label={`Assessment ${idx + 1}: score ${overall}% on ${fmtDate(a.assessmentDate)}`}
-                        onKeyDown={(e) => e.key === 'Enter' || e.key === ' ' ? selectAssessment(idx) : null}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectAssessment(idx);
+                          }
+                        }}
                       >
                         <span style={s.tlDot(color)} aria-hidden="true" />
                         <div style={s.tlBody}>
@@ -1074,7 +1089,13 @@ export default function AtlasJourneyPage() {
                     placeholder="Jot down how you were feeling, what was going on in your life…"
                     value={noteValue}
                     onChange={e => setNoteValue(e.target.value)}
+                    aria-describedby="noteCharCount"
                   />
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 4 }}>
+                    <span id="noteCharCount" style={{ fontSize: 11, color: noteValue.length >= 1800 ? '#DC2626' : '#94a3b8' }}>
+                      {noteValue.length}/2000
+                    </span>
+                  </div>
                   <div>
                     <button style={s.saveNoteBtn} onClick={saveNote}>Save Note</button>
                     {noteStatus && (
