@@ -91,8 +91,6 @@ const comparisonSchema = new mongoose.Schema(
 
 // Indexes for common access patterns
 comparisonSchema.index({ createdBy: 1, createdAt: -1 });
-comparisonSchema.index({ shareToken: 1 });
-comparisonSchema.index({ expiresAt: 1 });
 
 // Auto-delete expired comparisons (TTL)
 comparisonSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
