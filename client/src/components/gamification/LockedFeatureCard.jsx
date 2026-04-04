@@ -5,14 +5,15 @@ const s = {
     position: 'relative',
     borderRadius: 12,
     overflow: 'hidden',
-    background: '#0f2942',
-    border: '1px solid rgba(255,255,255,0.12)',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+    background: '#fff',
+    border: '1px solid #e2e8f0',
+    borderTop: '3px solid #4f46e5',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   },
   overlay: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(15,41,66,0.88)',
+    background: 'rgba(248,250,252,0.97)',
     backdropFilter: 'blur(2px)',
     display: 'flex',
     flexDirection: 'column',
@@ -27,25 +28,25 @@ const s = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 6,
-    background: 'rgba(124,58,237,0.25)',
-    border: '1px solid rgba(167,139,250,0.5)',
+    background: '#ede9fe',
+    border: '1px solid #ddd6fe',
     borderRadius: 20,
     padding: '4px 14px',
     fontSize: 13,
     fontWeight: 700,
-    color: '#c4b5fd',
+    color: '#7c3aed',
     marginBottom: 10,
     letterSpacing: '0.02em',
   },
   lockMsg: {
-    color: '#94a3b8',
+    color: '#475569',
     fontSize: 13,
     marginBottom: 14,
     lineHeight: 1.5,
   },
   unlockBtn: {
     display: 'inline-block',
-    background: 'linear-gradient(135deg, #4f46e5, #4338ca)',
+    background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
     color: '#fff',
     fontWeight: 700,
     fontSize: 13,
@@ -59,7 +60,7 @@ const s = {
     letterSpacing: '0.02em',
   },
   preview: {
-    opacity: 0.65,
+    opacity: 0.12,
     pointerEvents: 'none',
     userSelect: 'none',
   },
@@ -90,7 +91,7 @@ export default function LockedFeatureCard({ locked, tierName, checkoutUrl, child
           🔒 Locked
         </div>
         <p style={s.lockMsg}>
-          Unlock with <strong style={{ color: '#e2e8f0' }}>{tierName}</strong> to access this feature
+          Unlock with <strong style={{ color: '#1e293b' }}>{tierName}</strong> to access this feature
           and start your resilience journey.
         </p>
         <a
