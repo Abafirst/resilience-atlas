@@ -164,7 +164,7 @@ export default function BadgeUnlockModal({ badge, nextHint, onClose, soundOn = t
           style={{ background: badge.color, borderColor: badge.border }}
           aria-hidden="true"
         >
-          <img src={badge.emoji} alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          <img src={badge.icon} alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
         </div>
 
         <p className="kg-modal-congrats">🎉 Congratulations!</p>

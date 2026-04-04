@@ -162,7 +162,9 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
           <div className="bq-results-badge-row">
             {earnedBadges.map((b, i) => (
               <div key={i} className="bq-result-badge bq-result-badge-spin" aria-label={b.name}>
-                <span className="bq-result-badge-emoji" aria-hidden="true">{b.emoji}</span>
+                <span className="bq-result-badge-emoji" aria-hidden="true">
+                  <img src={b.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
+                </span>
                 <span className="bq-result-badge-name">{b.name}</span>
               </div>
             ))}

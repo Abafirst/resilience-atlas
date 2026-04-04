@@ -224,7 +224,7 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
             style={{ background: activeCard.color }}
             aria-hidden="true"
           >
-            <img src={activeCard.emoji} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+            <img src={activeCard.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
           </div>
           <h2 className="kg-game-title">{activeCard.title}</h2>
           <p className="kg-game-subtitle">{activeCard.desc}</p>
@@ -265,7 +265,7 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
           style={{ borderColor: activeFeedback.border, background: activeFeedback.color }}
         >
           <span className="kg-badge-toast-emoji" aria-hidden="true">
-            <img src={activeFeedback.emoji} alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />
+            <img src={activeFeedback.icon} alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />
           </span>
           <div>
             <strong>{activeFeedback.title} badge unlocked!</strong>
@@ -306,7 +306,7 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
             >
               <div className="kg-badge-card-emoji" aria-hidden="true">
                 {isUnlocked
-                  ? <img src={card.emoji} alt="" width={36} height={36} style={{ verticalAlign: 'middle' }} />
+                  ? <img src={card.icon} alt="" width={36} height={36} style={{ verticalAlign: 'middle' }} />
                   : <img src="/icons/lock.svg" alt="" width={36} height={36} style={{ verticalAlign: 'middle' }} />}
               </div>
               <div className="kg-badge-card-title">{card.title}</div>

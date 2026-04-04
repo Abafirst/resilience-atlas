@@ -119,7 +119,7 @@ const UPSELL_VARIANT_COPY = {
       offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
     },
     'atlas-premium': {
-      headline: '⭐ Lifetime Access — No Subscriptions Ever',
+      headline: 'Lifetime Access — No Subscriptions Ever',
       subtext:  'One payment. Unlimited reassessments, evolution tracking, growth pathways, and priority support. No recurring charges.',
       ctaLabel: 'Unlock Atlas Premium — $49.99 Lifetime',
       offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },

@@ -277,7 +277,7 @@ export default function KidsGamesHub() {
               >
                 <span className="kg-shelf-badge-emoji" aria-hidden="true">
                   {isEarned
-                    ? <img src={badge.emoji} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
+                    ? <img src={badge.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
                     : <img src="/icons/lock.svg" alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />}
                 </span>
                 <span className="kg-shelf-badge-label">
@@ -304,7 +304,7 @@ function BadgeToast({ badge }) {
       style={{ background: badge.color, borderColor: badge.border }}
     >
       <span className="kg-badge-toast-emoji" aria-hidden="true">
-        <img src={badge.emoji} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
+        <img src={badge.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
       </span>
       <div>
         <strong><img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
