@@ -90,7 +90,7 @@ export default function Auth0LoginBar() {
       ) : (
         <button
           style={{ ...styles.button, ...styles.loginBtn }}
-          onClick={() => loginWithRedirect()}
+          onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
         >
           Log In with Auth0
         </button>
