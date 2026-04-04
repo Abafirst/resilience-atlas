@@ -614,50 +614,50 @@ const AFFIRMATIONS = {
 // ── Evidence-based practices (condensed — 2 per dimension, from evidence-based-practices.js) ──
 const EVIDENCE_PRACTICES = {
   'Cognitive-Narrative': [
-    { emoji: '📓', title: 'Reframing Journal', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/cognitive-narrative.svg', title: 'Reframing Journal', duration: '5 min', difficulty: 'beginner',
       instructions: ['Write down one recent challenge.', 'Describe your first interpretation.', 'Now write an alternative story: What strengths did you use? What did you learn?', 'End with one sentence about how this contributes to your growth.'],
       actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Differential Reinforcement of Adaptive Interpretations' },
-    { emoji: '🍃', title: 'Leaves on a Stream', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/cognitive-narrative.svg', title: 'Leaves on a Stream', duration: '5 min', difficulty: 'beginner',
       instructions: ['Sit comfortably and close your eyes.', 'Imagine a gently flowing stream with leaves drifting on the surface.', 'As thoughts arise, place each one on a leaf and watch it float away.', 'Notice that you are the observer of thoughts, not the thoughts themselves.'],
       actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Attention Control' },
   ],
   'Relational-Connective': [
-    { emoji: '🤲', title: 'Empathic Listening', duration: '10 min', difficulty: 'beginner',
+    { icon: '/icons/relational-connective.svg', title: 'Empathic Listening', duration: '10 min', difficulty: 'beginner',
       instructions: ['Choose a conversation today where you focus entirely on listening.', 'Resist the urge to offer advice or share your own experience.', 'Reflect back what you heard: "It sounds like you feel…"', 'Notice how the other person responds when they feel truly heard.'],
       actPrinciple: 'Values Alignment', abaPrinciple: 'Behavioral Shaping' },
-    { emoji: '📆', title: 'Connection Scheduling', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/relational-connective.svg', title: 'Connection Scheduling', duration: '5 min', difficulty: 'beginner',
       instructions: ['Identify two people you care about but haven\'t connected with recently.', 'Schedule a specific time to reach out — call, message, or meet.', 'Commit to the connection in your calendar.', 'After connecting, notice any shift in your mood or sense of belonging.'],
       actPrinciple: 'Committed Action', abaPrinciple: 'Behavior Shaping' },
   ],
   'Agentic-Generative': [
-    { emoji: '👟', title: 'One Small Step', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/agentic-generative.svg', title: 'One Small Step', duration: '5 min', difficulty: 'beginner',
       instructions: ['Think of a goal or aspiration you\'ve been putting off.', 'Identify the very smallest first step that would move you toward it.', 'Make it so small it feels almost too easy.', 'Do that one step right now or schedule it for today.'],
       actPrinciple: 'Committed Action', abaPrinciple: 'Goal Shaping' },
-    { emoji: '🧭', title: 'Values Compass Check', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/agentic-generative.svg', title: 'Values Compass Check', duration: '5 min', difficulty: 'beginner',
       instructions: ['Write down three things you care most deeply about.', 'Look at how you spent your time and energy in the past 48 hours.', 'Rate each value: How much did your actions align with it? (1–10)', 'Name one specific action you can take tomorrow to move toward that alignment.'],
       actPrinciple: 'Values Alignment', abaPrinciple: 'Goal Shaping' },
   ],
   'Emotional-Adaptive': [
-    { emoji: '🌊', title: 'Emotion Labeling', duration: '3 min', difficulty: 'beginner',
+    { icon: '/icons/emotional-adaptive.svg', title: 'Emotion Labeling', duration: '3 min', difficulty: 'beginner',
       instructions: ['When you notice a strong emotion, pause.', 'Name it specifically — not just "bad" but "frustrated" or "anxious".', 'Say to yourself: "I notice I am feeling ___."', 'Observe how naming it changes your relationship to the feeling.'],
       actPrinciple: 'Cognitive Defusion', abaPrinciple: 'Functional Behavior Analysis' },
-    { emoji: '🌱', title: 'RAIN Practice', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/emotional-adaptive.svg', title: 'RAIN Practice', duration: '5 min', difficulty: 'beginner',
       instructions: ['Recognize: Name the emotion you\'re experiencing.', 'Allow: Let the feeling be present without pushing it away.', 'Investigate: With curiosity, notice where you feel it in your body.', 'Nurture: Offer yourself a kind word or gesture.'],
       actPrinciple: 'Acceptance', abaPrinciple: 'Differential Reinforcement' },
   ],
   'Spiritual-Reflective': [
-    { emoji: '🙏', title: 'Values Reflection', duration: '5 min', difficulty: 'beginner',
+    { icon: '/icons/spiritual-reflective.svg', title: 'Values Reflection', duration: '5 min', difficulty: 'beginner',
       instructions: ['Spend 5 minutes writing about what gives your life meaning.', 'How does a recent challenge relate to your values?', 'What does this experience reveal about what matters most to you?', 'Write one sentence connecting your challenge to your purpose.'],
       actPrinciple: 'Values Clarification', abaPrinciple: 'Establishing Operations for Meaning-Seeking' },
-    { emoji: '📖', title: 'Gratitude Practice', duration: '3 min', difficulty: 'beginner',
+    { icon: '/icons/spiritual-reflective.svg', title: 'Gratitude Practice', duration: '3 min', difficulty: 'beginner',
       instructions: ['Each evening, note 3 things you\'re grateful for.', 'Include at least one thing from a difficult moment.', 'For each, briefly write why it matters to you.', 'Notice any shift in your perspective after this practice.'],
       actPrinciple: 'Values Alignment', abaPrinciple: 'Positive Reinforcement of Adaptive Cognition' },
   ],
   'Somatic-Regulative': [
-    { emoji: '🌬️', title: '4-7-8 Breathing', duration: '3 min', difficulty: 'beginner',
+    { icon: '/icons/somatic-regulative.svg', title: '4-7-8 Breathing', duration: '3 min', difficulty: 'beginner',
       instructions: ['Sit comfortably with your back straight.', 'Inhale through your nose for 4 counts.', 'Hold your breath for 7 counts.', 'Exhale completely through your mouth for 8 counts.', 'Repeat 3–4 cycles.'],
       actPrinciple: 'Present-Moment Awareness', abaPrinciple: 'Physiological Self-Regulation' },
-    { emoji: '🚶', title: 'Movement as Medicine', duration: '15 min', difficulty: 'beginner',
+    { icon: '/icons/somatic-regulative.svg', title: 'Movement as Medicine', duration: '15 min', difficulty: 'beginner',
       instructions: ['Schedule a 15-minute intentional walk today.', 'Leave your phone in your pocket and walk without a destination.', 'Notice physical sensations — your breath, the ground underfoot.', 'Observe how your mood shifts during and after the walk.'],
       actPrinciple: 'Present-Moment Awareness', abaPrinciple: 'Behavioral Activation' },
   ],
@@ -1864,11 +1864,11 @@ function isPaidTier(tierId) {
 const GAM_KEY = 'resilience_gamification';
 
 const GAM_BADGE_DEFS = [
-  { name: 'First Step',       icon: '🌱', desc: 'Completed your first practice',                 test: (c)        => Object.keys(c).length >= 1  },
-  { name: 'Week Warrior',     icon: '⚔️', desc: '5 practices completed',                         test: (c)        => Object.keys(c).length >= 5  },
-  { name: 'Dimension Master', icon: '🗺️', desc: '10 practices completed across dimensions',       test: (c)        => Object.keys(c).length >= 10 },
-  { name: 'Champion',         icon: '🏆', desc: 'All 12 practices completed!',                   test: (c)        => Object.keys(c).length >= 12 },
-  { name: 'Streak Master',    icon: '🔥', desc: '7 consecutive days of practice',                test: (_, streak) => streak >= 7                },
+  { name: 'First Step',       icon: '/icons/badge.svg',           desc: 'Completed your first practice',                 test: (c)        => Object.keys(c).length >= 1  },
+  { name: 'Week Warrior',     icon: '/icons/game-shield.svg',     desc: '5 practices completed',                         test: (c)        => Object.keys(c).length >= 5  },
+  { name: 'Dimension Master', icon: '/icons/game-map.svg',        desc: '10 practices completed across dimensions',       test: (c)        => Object.keys(c).length >= 10 },
+  { name: 'Champion',         icon: '/icons/kids-trophy.svg',     desc: 'All 12 practices completed!',                   test: (c)        => Object.keys(c).length >= 12 },
+  { name: 'Streak Master',    icon: '/icons/streaks.svg',         desc: '7 consecutive days of practice',                test: (_, streak) => streak >= 7                },
 ];
 
 function calcGamStreak(completions) {
@@ -3239,7 +3239,9 @@ export default function ResultsPage() {
                     <div style={s.gamBadgesRow} aria-label="Earned badges">
                       {gamData.badges.map(b => (
                         <div key={b.name} style={s.gamBadge} title={b.desc} role="img" aria-label={`Badge: ${b.name} — ${b.desc}`}>
-                          <span aria-hidden="true">{b.icon}</span>
+                          {b.icon && b.icon.startsWith('/icons/')
+                            ? <img src={b.icon} alt="" aria-hidden="true" width="20" height="20" />
+                            : <span aria-hidden="true">{b.icon}</span>}
                           <span>{b.name}</span>
                         </div>
                       ))}
@@ -3274,7 +3276,7 @@ export default function ResultsPage() {
                       >
                         <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span style={s.practiceEmoji} aria-hidden="true">{practice.emoji}</span>
+                            <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
                             <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
                           </div>
                           {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed">✅</span>}

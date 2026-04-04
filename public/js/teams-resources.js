@@ -77,8 +77,12 @@
       ? '<span class="tr-card__meta-item">🔷 ' + escHtml(item.dimensionLabel) + '</span>'
       : '';
 
+    var iconHtml = (item.icon && item.icon.startsWith('/icons/'))
+      ? '<img src="' + escHtml(item.icon) + '" alt="" style="width:28px;height:28px;" />'
+      : escHtml(item.icon || '📄');
+
     return '<div class="tr-card">' +
-      '<div class="tr-card__icon" aria-hidden="true">' + escHtml(item.icon || '📄') + '</div>' +
+      '<div class="tr-card__icon" aria-hidden="true">' + iconHtml + '</div>' +
       '<div class="tr-card__body">' +
         '<span class="tr-card__type-badge" style="background:' + color + '20;color:' + color + ';border-color:' + color + '">' +
           escHtml(typeLabel) +
@@ -101,9 +105,12 @@
   function renderVisualCard(item) {
     var color = TYPE_COLORS[item.type] || '#64748b';
     var typeLabel = item.typeLabel || TYPE_LABELS[item.type] || item.type;
+    var visualIconHtml = (item.icon && item.icon.startsWith('/icons/'))
+      ? '<img src="' + escHtml(item.icon) + '" alt="" style="width:28px;height:28px;" />'
+      : escHtml(item.icon || '🖼️');
 
     return '<div class="tr-card">' +
-      '<div class="tr-card__icon" aria-hidden="true">' + escHtml(item.icon || '🖼️') + '</div>' +
+      '<div class="tr-card__icon" aria-hidden="true">' + visualIconHtml + '</div>' +
       '<div class="tr-card__body">' +
         '<span class="tr-card__type-badge" style="background:' + color + '20;color:' + color + ';border-color:' + color + '">' +
           escHtml(typeLabel) +

@@ -257,7 +257,7 @@ const styles = `
     }
 
     .tac-header { display: flex; align-items: center; gap: .75rem; }
-    .tac-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .tac-icon { width: 2rem; height: 2rem; flex-shrink: 0; }
     .tac-title { font-size: 1rem; font-weight: 700; color: #0f172a; }
 
     .tac-meta { display: flex; gap: .5rem; flex-wrap: wrap; }
@@ -708,7 +708,7 @@ export default function TeamsLandingPage() {
       {/* Resilience Story Circle */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#128172;</span>
+          <img src="/icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Resilience Story Circle</div>
         </div>
         <div className="tac-meta">
@@ -734,7 +734,7 @@ export default function TeamsLandingPage() {
       {/* Strengths Mapping */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#128200;</span>
+          <img src="/icons/compass.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Team Strengths Mapping</div>
         </div>
         <div className="tac-meta">
@@ -759,7 +759,7 @@ export default function TeamsLandingPage() {
       {/* The Pressure Test */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#9729;</span>
+          <img src="/icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">The Pressure Test</div>
         </div>
         <div className="tac-meta">
@@ -785,7 +785,7 @@ export default function TeamsLandingPage() {
       {/* Values Alignment */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#129517;</span>
+          <img src="/icons/spiritual-reflective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Values Alignment Workshop</div>
         </div>
         <div className="tac-meta">
@@ -812,7 +812,7 @@ export default function TeamsLandingPage() {
       {/* Connection Map */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#128101;</span>
+          <img src="/icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Connection Map</div>
         </div>
         <div className="tac-meta">
