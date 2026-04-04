@@ -330,6 +330,7 @@ function buildJourneyMapPage(doc, report) {
     if (report.profileArchetype) {
         ensureSpace(doc, 60);
         sectionHeader(doc, 'YOUR ARCHETYPE: ' + report.profileArchetype.toUpperCase(), COLORS.secondary);
+        ensureSpace(doc, 80);
         infoBox(doc, report.profileDescription || '', COLORS.bgPurple, '#c4b5fd', PAGE_MARGIN, doc.y, CONTENT_WIDTH);
     }
 
@@ -359,6 +360,7 @@ function buildJourneyMapPage(doc, report) {
     );
     fillColor(doc, COLORS.text);
     doc.y += 10;
+    ensureSpace(doc, 40);
 
     const dims = Object.entries(report.dimensionAnalysis || {});
     for (const [dim, analysis] of dims) {
