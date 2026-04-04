@@ -83,7 +83,7 @@ export const MICRO_QUESTS = [
     title:        'Physiological Reset',
     duration:     '5 min',
     points:       5,
-    description:  'Use a evidence-based somatic practice to regulate your nervous system state.',
+    description:  'Use an evidence-based somatic practice to regulate your nervous system state.',
     prompt:       'Practice the physiological sigh: inhale fully through the nose, take a second short inhale on top of it, then exhale slowly through the mouth. Repeat 3 times. Afterward, notice your body: where is there tension? Where is there ease? Take 2 minutes to simply observe without trying to change anything.',
     reflectionCue:'What does your body tell you about your current stress level? What is one environmental or behavioral cue you could change to support better regulation?',
     abaPrinciple: 'Stimulus Control (somatic cues)',

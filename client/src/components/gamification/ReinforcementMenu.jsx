@@ -111,7 +111,7 @@ export default function ReinforcementMenu({ progress, showReentry = false }) {
             {reentryStep < REENTRY_PATHWAYS.length - 1 ? (
               <button
                 style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', cursor: 'pointer', fontSize: 12, fontWeight: 600 }}
-                onClick={() => setReentryStep(currentStep => currentStep + 1)}
+                onClick={() => setReentryStep(prevStep => prevStep + 1)}
               >
                 Continue ({reentryStep + 1}/{REENTRY_PATHWAYS.length})
               </button>

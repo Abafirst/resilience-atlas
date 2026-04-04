@@ -330,16 +330,17 @@ router.post('/progress/quest-complete', async (req, res) => {
       return res.status(400).json({ error: 'dimension is required.' });
     }
 
+    const cleanQuestId = questId.trim();
     const uid  = userId(req);
     const progress = await svc.getOrCreateProgress(uid);
 
     // Idempotent: don't double-record the same quest
-    const alreadyDone = progress.microQuests.some(q => q.questId === questId.trim());
+    const alreadyDone = progress.microQuests.some(q => q.questId === cleanQuestId);
     if (!alreadyDone) {
       const points = 5; // 5 pts per micro-quest
-      progress.microQuests.push({ questId: questId.trim(), dimension, pointsEarned: points });
+      progress.microQuests.push({ questId: cleanQuestId, dimension, pointsEarned: points });
       progress.totalPoints += points;
-      progress.pointHistory.push({ type: 'micro_quest', points, description: `Micro-quest: ${questId}` });
+      progress.pointHistory.push({ type: 'micro_quest', points, description: `Micro-quest: ${cleanQuestId}` });
 
       // Check for milestone badges
       const newBadges = [];
