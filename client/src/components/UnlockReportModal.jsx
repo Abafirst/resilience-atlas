@@ -51,7 +51,7 @@ const s = {
     background:    '#ffffff',
     borderRadius:  16,
     boxShadow:     '0 20px 60px rgba(0,0,0,0.3)',
-    maxWidth:      520,
+    maxWidth:      560,
     width:         '100%',
     overflow:      'hidden',
     position:      'relative',
@@ -189,8 +189,47 @@ const s = {
     fontSize:   13,
     color:      '#718096',
     lineHeight: 1.4,
-    marginBottom: 10,
+    marginBottom: 8,
   },
+  featuresLabel: {
+    fontSize:     11,
+    fontWeight:   700,
+    textTransform: 'uppercase',
+    letterSpacing: '0.06em',
+    color:        '#718096',
+    marginBottom: 4,
+  },
+  featuresList: {
+    listStyle:  'none',
+    margin:     '0 0 10px',
+    padding:    0,
+  },
+  featuresItem: (isHighlighted) => ({
+    display:     'flex',
+    alignItems:  'flex-start',
+    gap:         6,
+    fontSize:    12,
+    color:       '#4a5568',
+    lineHeight:  1.45,
+    marginBottom: 3,
+  }),
+  featuresBullet: (isHighlighted) => ({
+    flexShrink:  0,
+    width:       14,
+    height:      14,
+    borderRadius: '50%',
+    background:  isHighlighted ? '#667eea' : '#cbd5e0',
+    display:     'flex',
+    alignItems:  'center',
+    justifyContent: 'center',
+    marginTop:   1,
+  }),
+  featuresBulletInner: (isHighlighted) => ({
+    width:        5,
+    height:       5,
+    borderRadius: '50%',
+    background:   '#fff',
+  }),
   selectBtn: (isHighlighted) => ({
     width:        '100%',
     padding:      '9px 0',
@@ -465,7 +504,7 @@ export default function UnlockReportModal({
             )}
 
             <div style={s.optionsList}>
-              {UNLOCK_TIERS.map(({ tier, name, price, badge, description, highlighted }) => {
+              {UNLOCK_TIERS.map(({ tier, name, price, badge, description, highlighted, features }) => {
                 const isThisSelected = selectedTier === tier && clientSecret;
                 const anySelected    = Boolean(selectedTier && clientSecret);
 
@@ -477,6 +516,23 @@ export default function UnlockReportModal({
                     </div>
                     <div style={s.optionPrice}>{price}</div>
                     <div style={s.optionDesc}>{description}</div>
+
+                    {/* Gamification teaser bullets */}
+                    {features && features.length > 0 && (
+                      <>
+                        <div style={s.featuresLabel}>What you\u2019ll unlock</div>
+                        <ul style={s.featuresList}>
+                          {features.map((feat) => (
+                            <li key={feat} style={s.featuresItem(highlighted)}>
+                              <span style={s.featuresBullet(highlighted)} aria-hidden="true">
+                                <span style={s.featuresBulletInner(highlighted)} />
+                              </span>
+                              {feat}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
 
                     {/* Payment form (shown after this tier is selected) */}
                     {isThisSelected && stripePromise ? (
