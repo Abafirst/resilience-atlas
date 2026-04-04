@@ -40,7 +40,8 @@ export default function SiteHeader({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [showJourneyLink, setShowJourneyLink] = useState(false);
+  // Lazy initializer: read tier once on mount; missing/non-paid tier returns false.
+  const [showJourneyLink, setShowJourneyLink] = useState(() => readIsStarterOrAbove());
   const navRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -52,10 +53,6 @@ export default function SiteHeader({
       if (dark) document.documentElement.setAttribute('data-theme', 'dark');
       setIsDarkTheme(dark);
     } catch (_) {}
-  }, []);
-
-  useEffect(() => {
-    setShowJourneyLink(readIsStarterOrAbove());
   }, []);
 
   useEffect(() => {
