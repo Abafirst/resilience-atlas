@@ -2614,7 +2614,22 @@ export default function ResultsPage() {
 
   // ── Render: no results ─────────────────────────────────────────────────
   if (!results) {
+    // While Auth0 is still initialising we don't know the user's identity yet.
+    // Show a loading spinner rather than the empty state so we don't flash
+    // "No assessment results found" for authenticated users.
+    if (auth0Loading) {
+      return (
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f8fc' }}>
+          <span style={{ color: '#718096', fontSize: 16 }}>Loading your results…</span>
+        </div>
+      );
+    }
+
     const isReturnFromPayment = upgradeParam === 'success';
+    // Determine if we have an email (from Auth0 or localStorage) to show
+    // assessment history even without current localStorage results.
+    const historyEmail = (isAuthenticated && auth0User?.email) || getStoredEmail();
+
     return (
       <>
         {/* Site Header */}
@@ -2637,21 +2652,54 @@ export default function ResultsPage() {
         </header>
         <div style={s.page}>
           <div style={s.container}>
-            <div style={s.emptyCard}>
-              <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
-              <div style={s.emptyTitle}>
-                {isReturnFromPayment ? 'Payment confirmed!' : 'No assessment results found'}
+            {historyEmail ? (
+              // Authenticated user (or has stored email): show their history
+              // even when there are no current localStorage results.
+              <>
+                <div style={s.emptyCard}>
+                  <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
+                  <div style={s.emptyTitle}>
+                    {isReturnFromPayment ? 'Payment confirmed!' : 'Your Assessment History'}
+                  </div>
+                  <p style={s.emptyDesc}>
+                    {isReturnFromPayment
+                      ? 'Thank you! Your payment was successful. Re-take the assessment to generate your latest PDF report, or download a prior report below.'
+                      : 'Your assessment results and purchase history are shown below. Take a new assessment or download a prior report.'
+                    }
+                  </p>
+                  <a href="/quiz.html" style={s.primaryBtn}>
+                    {isReturnFromPayment ? 'Re-take Assessment' : 'Take New Assessment'}
+                  </a>
+                </div>
+                <ResultsHistory email={historyEmail} />
+                <AssessmentHistory
+                  email={historyEmail}
+                  onUnlock={(assessment) => {
+                    try {
+                      sessionStorage.setItem('pending_unlock_hash', assessment.hash || '');
+                    } catch (_) { /* ignore */ }
+                  }}
+                  checkoutLoading={checkoutLoading}
+                />
+              </>
+            ) : (
+              // No email available — show the original empty state.
+              <div style={s.emptyCard}>
+                <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
+                <div style={s.emptyTitle}>
+                  {isReturnFromPayment ? 'Payment confirmed!' : 'No assessment results found'}
+                </div>
+                <p style={s.emptyDesc}>
+                  {isReturnFromPayment
+                    ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
+                    : 'Complete the free assessment to see your personalised resilience profile.'
+                  }
+                </p>
+                <a href="/quiz.html" style={s.primaryBtn}>
+                  {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
+                </a>
               </div>
-              <p style={s.emptyDesc}>
-                {isReturnFromPayment
-                  ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
-                  : 'Complete the free assessment to see your personalised resilience profile.'
-                }
-              </p>
-              <a href="/quiz.html" style={s.primaryBtn}>
-                {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
-              </a>
-            </div>
+            )}
           </div>
         </div>
       </>

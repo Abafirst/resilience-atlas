@@ -17,6 +17,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -238,6 +239,9 @@ function QuestionCard({ question, displayIdx, answer, isFlagged, onAnswer, onTog
 export default function QuizPage() {
   const navigate = useNavigate();
 
+  // ── Auth0 identity ─────────────────────────────────────────────────────
+  const { user: auth0User, isAuthenticated, isLoading: auth0Loading } = useAuth0();
+
   // ── Auth-check spinner (replaces legacy quiz-auth.js spinner) ─────────
   const [authChecked, setAuthChecked] = useState(false);
   const [spinnerText, setSpinnerText] = useState('Checking authentication\u2026');
@@ -288,6 +292,28 @@ export default function QuizPage() {
 
   // ── Dark-mode hint (show when dark theme is active) ───────────────────
   // Derived from isDarkTheme — no separate effect needed
+
+  // ── Prefill name/email from Auth0 when authenticated ─────────────────
+  // Mirrors the logic in public/js/quiz-auth.js so the React quiz also
+  // benefits from Auth0 identity without requiring the user to re-enter
+  // their details.  Only fills empty fields so saved progress is preserved.
+  useEffect(() => {
+    if (auth0Loading || !isAuthenticated || !auth0User) return;
+
+    // Persist email/name to localStorage so the rest of the app finds them.
+    if (auth0User.email) {
+      try { localStorage.setItem('resilience_email', auth0User.email); } catch (_) {}
+    }
+    const givenName = auth0User.given_name ||
+      (auth0User.name ? auth0User.name.split(' ')[0] : '');
+    if (givenName) {
+      try { localStorage.setItem('resilience_name', givenName); } catch (_) {}
+    }
+
+    // Prefill the form fields only when they are still empty.
+    if (!firstName && givenName) setFirstName(givenName);
+    if (!email && auth0User.email) setEmail(auth0User.email);
+  }, [auth0Loading, isAuthenticated, auth0User]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Auth check + initial state setup ─────────────────────────────────
   useEffect(() => {
