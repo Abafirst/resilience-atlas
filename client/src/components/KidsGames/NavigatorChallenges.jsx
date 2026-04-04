@@ -159,7 +159,11 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
         <div className="kg-results-summary">
           <div className="kg-results-score">{finalScore}<span>/{ROUND_SIZE}</span></div>
           <p className="kg-results-label">
-            {finalScore === ROUND_SIZE ? '🏆 Perfect score!' : finalScore >= 4 ? '🌟 Outstanding!' : finalScore >= 3 ? '💪 Great effort!' : '🌱 Keep growing!'}
+            {finalScore === ROUND_SIZE
+              ? <><img src="/icons/kids-trophy.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 4 }} />Perfect score!</>
+              : finalScore >= 4 ? '🌟 Outstanding!'
+              : finalScore >= 3 ? '💪 Great effort!'
+              : '🌱 Keep growing!'}
           </p>
           {maxStreak >= 3 && <p className="kg-streak-note" aria-live="polite"><img src="/icons/streaks.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />Best streak: {maxStreak} in a row!</p>}
           {finalScore > personalBest && (
@@ -176,7 +180,10 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
                 {r.timedOut
                   ? <span className="kg-result-miss">Time ran out</span>
                   : r.correct
-                    ? <span className="kg-result-correct">✓ {r.q.options[r.selected]}</span>
+                    ? <span className="kg-result-correct">
+                        <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                        {r.q.options[r.selected]}
+                      </span>
                     : <span className="kg-result-miss">✗ {r.q.options[r.selected]}</span>
                 }
               </div>
@@ -256,7 +263,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
             role="status"
           >
             {selected === q.correct
-              ? `✓ Correct! ${q.explanation}`
+              ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />Correct! {q.explanation}</>
               : `${q.explanation}`
             }
           </div>
