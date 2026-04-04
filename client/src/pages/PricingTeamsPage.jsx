@@ -357,7 +357,17 @@ export default function PricingTeamsPage() {
     setCheckoutError('');
     setCheckoutLoading(tier);
     try {
-      const email = user?.email || localStorage.getItem('resilience_email') || '';
+      let email = user?.email || localStorage.getItem('resilience_email') || '';
+      if (!email) {
+        const input = window.prompt('Please enter your email address to continue with checkout:');
+        if (!input || !input.trim()) {
+          setCheckoutError('An email address is required to start checkout.');
+          setCheckoutLoading('');
+          return;
+        }
+        email = input.trim();
+        try { localStorage.setItem('resilience_email', email); } catch (_) { /* ignore */ }
+      }
       let token = null;
       try { token = await getAccessTokenSilently(); } catch (_) { /* proceed without token */ }
       const res = await fetch('/api/payments/checkout', {
