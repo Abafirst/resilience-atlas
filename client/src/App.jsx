@@ -14,7 +14,7 @@ import './styles/upsell.css';
 import './styles/icons.css';
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 // Existing pages
@@ -112,6 +112,29 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
 
 function HomeRoute() {
   const { isLoading, isAuthenticated, user, getAccessTokenSilently, logout } = useAuth0();
+  const navigate = useNavigate();
+  const [statusChecked, setStatusChecked] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated || !user?.email || statusChecked) return;
+
+    const email = user.email;
+    fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to fetch user status');
+        return r.json();
+      })
+      .then((data) => {
+        setStatusChecked(true);
+        if (data.hasCompletedQuiz) {
+          navigate('/results', { replace: true });
+        }
+      })
+      .catch(() => {
+        // On error, fall through to normal AssessmentHub
+        setStatusChecked(true);
+      });
+  }, [isAuthenticated, user, navigate, statusChecked]);
 
   if (isLoading) {
     return (
@@ -121,6 +144,16 @@ function HomeRoute() {
     );
   }
   if (!isAuthenticated) return <LandingPage />;
+
+  // Show a spinner while we check if the user has already completed the quiz.
+  if (isAuthenticated && !statusChecked) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
+        <span style={{ color: '#a0aec0', fontSize: 16 }}>Loading…</span>
+      </div>
+    );
+  }
+
   return <AuthenticatedApp user={user} getAccessTokenSilently={getAccessTokenSilently} logout={logout} />;
 }
 
