@@ -27,6 +27,17 @@ const BRAND = {
   textLight:'#64748b',
 };
 
+const ATLAS_URL = 'https://theresilienceatlas.com';
+
+const LINKEDIN_HASHTAGS = [
+  '#ResilienceAtlas', '#ScienceMeetsPractice', '#Wellness',
+  '#Leadership', '#Resilience', '#ResearchBased',
+];
+
+const INSTAGRAM_HASHTAGS = [
+  '#ResilienceAtlas', '#Wellness', '#Leadership', '#Resilience',
+];
+
 const BENEFITS = [
   { icon: '/icons/cognitive-narrative.svg', text: 'Your personalized resilience profile — all six dimensions' },
   { icon: '/icons/reflection.svg',          text: 'Narrative insights grounded in 20+ years of clinical practice' },
@@ -207,7 +218,7 @@ function LinkedInCard({ cardRef }) {
           </p>
         </div>
         <a
-          href="https://theresilienceatlas.com"
+          href={ATLAS_URL}
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -234,7 +245,7 @@ function LinkedInCard({ cardRef }) {
         gap: 8,
         flexWrap: 'wrap',
       }}>
-        {['#ResilienceAtlas','#ScienceMeetsPractice','#Wellness','#Leadership','#Resilience','#ResearchBased'].map(tag => (
+        {LINKEDIN_HASHTAGS.map(tag => (
           <span key={tag} style={{ fontSize: 11, color: 'rgba(165,180,252,0.8)', fontWeight: 500 }}>{tag}</span>
         ))}
       </div>
@@ -343,7 +354,7 @@ function InstagramCard({ cardRef }) {
 
       {/* CTA button */}
       <a
-        href="https://theresilienceatlas.com"
+        href={ATLAS_URL}
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -369,7 +380,7 @@ function InstagramCard({ cardRef }) {
 
       {/* Hashtags */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
-        {['#ResilienceAtlas','#Wellness','#Leadership','#Resilience'].map(tag => (
+        {INSTAGRAM_HASHTAGS.map(tag => (
           <span key={tag} style={{ fontSize: 11, color: 'rgba(165,180,252,0.7)', fontWeight: 500 }}>{tag}</span>
         ))}
       </div>

@@ -64,6 +64,14 @@ const DIMENSIONS = [
   },
 ];
 
+// ── Layout & style constants ──────────────────────────────────────────────────
+// Vertical offset multiplier for the center compass icon above center text
+const CENTER_ICON_Y_OFFSET = 0.85;
+// CSS filter values used to tint white SVG icons in non-hover state
+const ICON_FILTER_INVERT_PCT = 30;
+const ICON_FILTER_SEPIA_PCT  = 80;
+const ICON_FILTER_SATURATE_PCT = 600;
+
 // Convert polar angle + radius to {x, y} from a center point
 function polar(cx, cy, r, angleDeg) {
   const rad = (angleDeg - 90) * (Math.PI / 180); // start from top
@@ -87,12 +95,16 @@ export default function ResilienceDimensionViz({
   // Animate entrance via IntersectionObserver
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el) { setVisible(true); return; }
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { threshold: 0.2 }
     );
-    obs.observe(el);
+    if (el) {
+      obs.observe(el);
+    } else {
+      // ref not yet attached — show immediately so content isn't invisible
+      setVisible(true);
+    }
     return () => obs.disconnect();
   }, []);
 
@@ -228,7 +240,7 @@ export default function ResilienceDimensionViz({
         <image
           href="/icons/compass.svg"
           x={cx - centerIconSize * 0.6}
-          y={cy - centerIconSize * 0.85}
+          y={cy - centerIconSize * CENTER_ICON_Y_OFFSET}
           width={centerIconSize * 1.2}
           height={centerIconSize * 1.2}
           clipPath="url(#rdv-clip-center)"
@@ -317,7 +329,7 @@ export default function ResilienceDimensionViz({
                 style={{
                   filter: isHov
                     ? 'brightness(0) invert(1)'
-                    : `brightness(0) saturate(100%) invert(30%) sepia(80%) hue-rotate(${getHue(d.color)}deg) saturate(600%)`,
+                    : `brightness(0) saturate(100%) invert(${ICON_FILTER_INVERT_PCT}%) sepia(${ICON_FILTER_SEPIA_PCT}%) hue-rotate(${getHue(d.color)}deg) saturate(${ICON_FILTER_SATURATE_PCT}%)`,
                   transition: 'filter 0.25s',
                   opacity: 0.9,
                 }}
