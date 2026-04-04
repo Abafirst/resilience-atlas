@@ -682,7 +682,7 @@ export default function TeamsLandingPage() {
       {/* Dimension Deep-Dive */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <span className="tac-icon" aria-hidden="true">&#127919;</span>
+          <img src="/icons/facilitation-team.svg" alt="" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem' }} />
           <div className="tac-title">Dimension Deep-Dive</div>
         </div>
         <div className="tac-meta">
