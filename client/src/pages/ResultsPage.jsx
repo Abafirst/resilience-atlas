@@ -2614,7 +2614,7 @@ export default function ResultsPage() {
 
   // ── Render: no results ─────────────────────────────────────────────────
   if (!results) {
-    // While Auth0 is still initialising we don't know the user's identity yet.
+    // While Auth0 is still initializing we don't know the user's identity yet.
     // Show a loading spinner rather than the empty state so we don't flash
     // "No assessment results found" for authenticated users.
     if (auth0Loading) {
@@ -2676,7 +2676,9 @@ export default function ResultsPage() {
                   email={historyEmail}
                   onUnlock={(assessment) => {
                     try {
-                      sessionStorage.setItem('pending_unlock_hash', assessment.hash || '');
+                      if (assessment.hash) {
+                        sessionStorage.setItem('pending_unlock_hash', assessment.hash);
+                      }
                     } catch (_) { /* ignore */ }
                   }}
                   checkoutLoading={checkoutLoading}

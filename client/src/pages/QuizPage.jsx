@@ -311,8 +311,8 @@ export default function QuizPage() {
     }
 
     // Prefill the form fields only when they are still empty.
-    setFirstName(prev => (!prev && givenName) ? givenName : prev);
-    setEmail(prev => (!prev && auth0User.email) ? auth0User.email : prev);
+    setFirstName(prev => !prev ? givenName : prev);
+    setEmail(prev => !prev ? auth0User.email : prev);
   }, [auth0Loading, isAuthenticated, auth0User]);
 
   // ── Auth check + initial state setup ─────────────────────────────────
