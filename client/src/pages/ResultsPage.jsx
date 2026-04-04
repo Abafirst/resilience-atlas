@@ -987,6 +987,20 @@ const s = {
     textDecoration: 'none',
     boxShadow: '0 4px 20px rgba(74,144,217,0.35)',
   },
+  secondaryBtn: {
+    display: 'inline-block',
+    padding: '13px 36px',
+    background: 'transparent',
+    color: '#4a90d9',
+    border: '1px solid #4a90d9',
+    borderRadius: 10,
+    fontSize: 16,
+    fontWeight: 700,
+    cursor: 'pointer',
+    textDecoration: 'none',
+    marginTop: 12,
+    fontFamily: 'inherit',
+  },
   retakeRow: {
     textAlign: 'center',
     marginTop: 12,
@@ -1928,7 +1942,7 @@ export default function ResultsPage() {
   const sessionId     = params.get('session_id');
 
   // ── Auth0 ──────────────────────────────────────────────────────────────
-  const { user: auth0User, isAuthenticated, isLoading: auth0Loading } = useAuth0();
+  const { user: auth0User, isAuthenticated, isLoading: auth0Loading, loginWithRedirect } = useAuth0();
 
   // ── State ──────────────────────────────────────────────────────────────
   const [results, setResults]         = useState(null);
@@ -2701,7 +2715,7 @@ export default function ResultsPage() {
                 />
               </>
             ) : (
-              // No email available — show the original empty state.
+              // No email available — show the original empty state with a sign-in option.
               <div style={s.emptyCard}>
                 <div style={s.emptyIcon}>
                   {isReturnFromPayment
@@ -2714,12 +2728,21 @@ export default function ResultsPage() {
                 <p style={s.emptyDesc}>
                   {isReturnFromPayment
                     ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
-                    : 'Complete the free assessment to see your personalised resilience profile.'
+                    : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
                   }
                 </p>
                 <a href="/quiz.html" style={s.primaryBtn}>
                   {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
                 </a>
+                {!isReturnFromPayment && (
+                  <button
+                    type="button"
+                    style={s.secondaryBtn}
+                    onClick={() => loginWithRedirect({ appState: { returnTo: '/results' } })}
+                  >
+                    Sign In to View Previous Results
+                  </button>
+                )}
               </div>
             )}
           </div>
