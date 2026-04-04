@@ -144,9 +144,6 @@ const GamificationProgressSchema = new mongoose.Schema(
   }
 );
 
-// Efficient per-user lookups
-GamificationProgressSchema.index({ userId: 1 });
-
 // Leaderboard: top users by total points (only those who opted in)
 GamificationProgressSchema.index({ leaderboardOptIn: 1, totalPoints: -1 });
 
