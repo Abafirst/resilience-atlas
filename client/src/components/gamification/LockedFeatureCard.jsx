@@ -68,7 +68,7 @@ export default function LockedFeatureCard({
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, email, ...(returnPath ? { returnPath } : {}) }),
+        body: JSON.stringify({ tier, email, returnPath: returnPath || '/gamification' }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
