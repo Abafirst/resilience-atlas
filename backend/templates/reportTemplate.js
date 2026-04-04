@@ -594,11 +594,12 @@ body {
 /* ── Page layout ── */
 .page {
     width: 210mm;
-    min-height: 297mm;
-    /* Bottom padding increased from 16mm to 28mm so that page content never
-       runs under the absolutely-positioned .page-footer (bottom: 8mm, ~6mm
-       tall).  Without sufficient bottom padding the footer overlaps the last
-       line of body content and bleeds visually into the next page. */
+    height: 297mm;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    /* Bottom padding reserves space for the absolutely-positioned .page-footer
+       (bottom: 8mm, ~6mm tall) so content never overlaps the footer. */
     padding: 16mm 14mm 28mm 14mm;
     page-break-after: always;
     position: relative;
