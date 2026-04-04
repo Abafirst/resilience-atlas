@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Stack of books -->
+  <!-- Bottom book -->
+  <rect x="8" y="44" width="48" height="12" rx="3" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="8" y="44" width="8" height="12" rx="2" fill="#3B82F6"/>
+  <!-- Middle book -->
+  <rect x="12" y="30" width="40" height="12" rx="3" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="12" y="30" width="8" height="12" rx="2" fill="#93C5FD"/>
+  <!-- Top book -->
+  <rect x="16" y="16" width="32" height="12" rx="3" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>
+  <rect x="16" y="16" width="8" height="12" rx="2" fill="#3B82F6"/>
+  <!-- Page edge lines on right side of each book -->
+  <line x1="50" y1="46" x2="50" y2="54" stroke="#93C5FD" stroke-width="1" stroke-linecap="round"/>
+  <line x1="46" y1="32" x2="46" y2="40" stroke="#93C5FD" stroke-width="1" stroke-linecap="round"/>
+  <line x1="42" y1="18" x2="42" y2="26" stroke="#93C5FD" stroke-width="1" stroke-linecap="round"/>
+</svg>
