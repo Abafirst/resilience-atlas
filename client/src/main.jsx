@@ -54,19 +54,42 @@ async function init() {
     return;
   }
 
-  // After Auth0 redirects back to the app, navigate to the path stored in
-  // appState.returnTo (set by loginWithRedirect callers).  If no returnTo is
-  // present we always fall back to "/" so users land on the landing/assessment
-  // hub instead of wherever the browser was last pointed.
-  const onRedirectCallback = (appState) => {
-    const target = appState?.returnTo;
-    // Validate that returnTo is a safe same-origin path before using it.
-    const safePath =
-      target && typeof target === 'string' && target.startsWith('/')
-        ? target
-        : '/';
-    console.debug('[Auth0] onRedirectCallback appState:', appState, '→ navigating to', safePath);
-    window.history.replaceState({}, document.title, safePath);
+  // After Auth0 redirects back to the app, check whether the user has already
+  // completed the quiz and navigate to the appropriate page:
+  //   - appState.returnTo is honoured when explicitly set (e.g. deep-link logins)
+  //   - if the user has a completed quiz → /results
+  //   - otherwise → / (assessment hub for new users)
+  const onRedirectCallback = (appState, user) => {
+    // If a specific returnTo was encoded in appState, honour it (deep-link logins).
+    const explicitTarget = appState?.returnTo;
+    if (
+      explicitTarget &&
+      typeof explicitTarget === 'string' &&
+      explicitTarget.startsWith('/') &&
+      explicitTarget !== '/'
+    ) {
+      console.debug('[Auth0] onRedirectCallback explicit returnTo:', explicitTarget);
+      window.history.replaceState({}, document.title, explicitTarget);
+      return;
+    }
+
+    // No explicit destination — check quiz/subscription status and redirect smartly.
+    const email = user?.email;
+    if (email) {
+      fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          const target = data.hasCompletedQuiz ? '/results' : '/';
+          console.debug('[Auth0] onRedirectCallback status check → navigating to', target);
+          window.history.replaceState({}, document.title, target);
+        })
+        .catch(() => {
+          // On error fall back to home; HomeRoute will re-check on mount.
+          window.history.replaceState({}, document.title, '/');
+        });
+    } else {
+      window.history.replaceState({}, document.title, '/');
+    }
   };
 
   ReactDOM.createRoot(document.getElementById('root')).render(
