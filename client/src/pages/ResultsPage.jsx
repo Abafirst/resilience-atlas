@@ -546,34 +546,34 @@ const TYPE_DESCRIPTIONS = {
 // ── Personalized next steps per dimension (ported from legacy results.js) ──
 const DIMENSION_NEXT_STEPS = {
   'Agentic-Generative': [
-    { icon: '🎯', title: 'Set a Micro-Goal', desc: 'Identify one small, concrete action you can take this week toward a goal that matters to you.' },
-    { icon: '📋', title: 'Action Planning', desc: 'Write down 3 steps you can take in the next 30 days to move forward on a challenge.' },
-    { icon: '💪', title: 'Practice Agency', desc: 'Each morning, choose one thing you have control over and take action on it intentionally.' },
+    { icon: '/icons/goal.svg', title: 'Set a Micro-Goal', desc: 'Identify one small, concrete action you can take this week toward a goal that matters to you.' },
+    { icon: '/icons/planning.svg', title: 'Action Planning', desc: 'Write down 3 steps you can take in the next 30 days to move forward on a challenge.' },
+    { icon: '/icons/strength.svg', title: 'Practice Agency', desc: 'Each morning, choose one thing you have control over and take action on it intentionally.' },
   ],
   'Relational-Connective': [
-    { icon: '🤝', title: 'Reach Out', desc: "Connect with one trusted person this week — share something real about how you're doing." },
-    { icon: '🌐', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
-    { icon: '💬', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
+    { icon: '/icons/connection.svg', title: 'Reach Out', desc: "Connect with one trusted person this week — share something real about how you're doing." },
+    { icon: '/icons/network.svg', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
+    { icon: '/icons/dialogue.svg', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
   ],
   'Spiritual-Reflective': [
-    { icon: '🧘', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
-    { icon: '📖', title: 'Gratitude Practice', desc: "Each evening, note 3 things you're grateful for — include at least one thing from a difficult moment." },
-    { icon: '🌅', title: 'Purpose Meditation', desc: 'Try a 10-minute guided meditation focused on purpose and what you want to contribute to the world.' },
+    { icon: '/icons/mindfulness.svg', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
+    { icon: '/icons/reflection.svg', title: 'Gratitude Practice', desc: "Each evening, note 3 things you're grateful for — include at least one thing from a difficult moment." },
+    { icon: '/icons/meditation.svg', title: 'Purpose Meditation', desc: 'Try a 10-minute guided meditation focused on purpose and what you want to contribute to the world.' },
   ],
   'Emotional-Adaptive': [
-    { icon: '🌊', title: 'Emotion Naming', desc: 'When you notice a strong emotion, pause and name it specifically — this activates your prefrontal cortex and reduces intensity.' },
-    { icon: '🌱', title: 'RAIN Practice', desc: 'Use the RAIN technique: Recognize, Allow, Investigate, Nurture. Apply it to one difficult emotion today.' },
-    { icon: '📓', title: 'Emotional Journal', desc: 'Write for 5 minutes daily about your emotional experiences — what triggered them and what they may be communicating.' },
+    { icon: '/icons/emotion.svg', title: 'Emotion Naming', desc: 'When you notice a strong emotion, pause and name it specifically — this activates your prefrontal cortex and reduces intensity.' },
+    { icon: '/icons/growth.svg', title: 'RAIN Practice', desc: 'Use the RAIN technique: Recognize, Allow, Investigate, Nurture. Apply it to one difficult emotion today.' },
+    { icon: '/icons/journal.svg', title: 'Emotional Journal', desc: 'Write for 5 minutes daily about your emotional experiences — what triggered them and what they may be communicating.' },
   ],
   'Somatic-Regulative': [
-    { icon: '🌬️', title: 'Mindful Breathing', desc: 'Practice 4-7-8 breathing: inhale 4 counts, hold 7, exhale 8. Do this for 3 cycles when stressed.' },
-    { icon: '🚶', title: 'Movement as Medicine', desc: 'Add a 15-minute intentional walk to your daily routine — notice how your body and mood shift.' },
-    { icon: '😴', title: 'Sleep Hygiene', desc: 'Establish a consistent sleep-wake schedule this week. A regular rhythm boosts resilience significantly.' },
+    { icon: '/icons/breathing.svg', title: 'Mindful Breathing', desc: 'Practice 4-7-8 breathing: inhale 4 counts, hold 7, exhale 8. Do this for 3 cycles when stressed.' },
+    { icon: '/icons/movement.svg', title: 'Movement as Medicine', desc: 'Add a 15-minute intentional walk to your daily routine — notice how your body and mood shift.' },
+    { icon: '/icons/sleep.svg', title: 'Sleep Hygiene', desc: 'Establish a consistent sleep-wake schedule this week. A regular rhythm boosts resilience significantly.' },
   ],
   'Cognitive-Narrative': [
-    { icon: '✍️', title: 'Morning Pages', desc: 'Write 3 pages of stream-of-consciousness every morning to process your experiences and reframe challenges.' },
-    { icon: '🔄', title: 'Reframing Exercise', desc: 'When facing a setback, ask: "What is one alternative way to interpret this?" Write down 3 possibilities.' },
-    { icon: '📚', title: 'Story Integration', desc: 'Reflect on a past difficulty: What did you learn? How did it shape who you are? Write your "resilience story."' },
+    { icon: '/icons/writing.svg', title: 'Morning Pages', desc: 'Write 3 pages of stream-of-consciousness every morning to process your experiences and reframe challenges.' },
+    { icon: '/icons/reframe.svg', title: 'Reframing Exercise', desc: 'When facing a setback, ask: "What is one alternative way to interpret this?" Write down 3 possibilities.' },
+    { icon: '/icons/story.svg', title: 'Story Integration', desc: 'Reflect on a past difficulty: What did you learn? How did it shape who you are? Write your "resilience story."' },
   ],
 };
 
@@ -1067,6 +1067,7 @@ const s = {
     alignItems: 'flex-start',
   },
   nextStepIcon: { fontSize: 18, flexShrink: 0, lineHeight: 1.4 },
+  nextStepIconImg: { width: 22, height: 22, flexShrink: 0, marginTop: 1 },
   nextStepTitle: { fontSize: 13, fontWeight: 600, color: '#1a202c', display: 'block', marginBottom: 2 },
   nextStepDesc: { fontSize: 12, color: '#718096', lineHeight: 1.5, margin: 0 },
   // ── Reminder opt-in section ──
@@ -3371,7 +3372,11 @@ export default function ResultsPage() {
                   <ul style={s.nextStepsList} aria-label={`Next steps for ${dim}`}>
                     {steps.map(step => (
                       <li key={step.title} style={s.nextStepItem}>
-                        <span style={s.nextStepIcon} aria-hidden="true">{step.icon}</span>
+                        {step.icon && step.icon.startsWith('/icons/') ? (
+                          <img src={step.icon} alt="" aria-hidden="true" style={s.nextStepIconImg} />
+                        ) : (
+                          <span style={s.nextStepIcon} aria-hidden="true">{step.icon}</span>
+                        )}
                         <div>
                           <strong style={s.nextStepTitle}>{step.title}</strong>
                           <p style={s.nextStepDesc}>{step.desc}</p>

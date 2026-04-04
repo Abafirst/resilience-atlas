@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Clipboard background -->
+  <rect x="12" y="14" width="40" height="46" rx="4" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2.5"/>
+  <!-- Clipboard top tab -->
+  <rect x="24" y="9" width="16" height="10" rx="3" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>
+  <!-- Lines suggesting list items -->
+  <line x1="20" y1="28" x2="44" y2="28" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="36" x2="44" y2="36" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  <line x1="20" y1="44" x2="36" y2="44" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+  <!-- Check dot on first line -->
+  <circle cx="18" cy="28" r="2" fill="#3B82F6"/>
+  <circle cx="18" cy="36" r="2" fill="#3B82F6"/>
+  <circle cx="18" cy="44" r="2" fill="#93C5FD"/>
+</svg>
