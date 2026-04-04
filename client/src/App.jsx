@@ -120,12 +120,14 @@ function HomeRoute() {
 
     const email = user.email;
     fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error('Failed to fetch user status');
+        return r.json();
+      })
       .then((data) => {
+        setStatusChecked(true);
         if (data.hasCompletedQuiz) {
           navigate('/results', { replace: true });
-        } else {
-          setStatusChecked(true);
         }
       })
       .catch(() => {

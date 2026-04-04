@@ -77,7 +77,10 @@ async function init() {
     const email = user?.email;
     if (email) {
       fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
-        .then((r) => r.json())
+        .then((r) => {
+          if (!r.ok) throw new Error('Failed to fetch user status');
+          return r.json();
+        })
         .then((data) => {
           const target = data.hasCompletedQuiz ? '/results' : '/';
           console.debug('[Auth0] onRedirectCallback status check → navigating to', target);
