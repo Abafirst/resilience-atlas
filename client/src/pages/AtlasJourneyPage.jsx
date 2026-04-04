@@ -938,7 +938,7 @@ export default function AtlasJourneyPage() {
                   <div style={s.milestoneStrip}>
                     {milestones.map((m, i) => (
                       <span key={i} style={s.milestoneBadge}>
-                        <span aria-hidden="true">🏅</span>
+                        <img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
                         {m.title || m.type || String(m)}
                       </span>
                     ))}
@@ -1199,7 +1199,9 @@ export default function AtlasJourneyPage() {
 
       {/* Privacy note */}
       <div style={s.privacyNote} role="note" aria-label="Data privacy guarantee">
-        <span aria-hidden="true">🔒</span>
+        <span aria-hidden="true">
+          <img src="/icons/lock.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} />
+        </span>
         <span>
           <strong>You control your data.</strong>{' '}
           Delete your account and results anytime —{' '}

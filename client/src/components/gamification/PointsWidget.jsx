@@ -61,7 +61,9 @@ export default function PointsWidget({ progress }) {
     <div style={s.widget} role="region" aria-label="Points total">
       <h3 style={s.widgetTitle}>Points</h3>
       <div style={s.header}>
-        <span style={s.icon} aria-hidden="true">⭐</span>
+        <span style={s.icon} aria-hidden="true">
+          <img src="/icons/star.svg" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+        </span>
         <span style={s.total}>{points} pts</span>
       </div>
       <div

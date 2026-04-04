@@ -126,7 +126,7 @@ export default function ExplorerAchievements({ earnedIds = new Set() }) {
   return (
     <div style={s.widget} role="region" aria-label="Explorer Achievements">
       <div style={s.subtitle}>Atlas Navigator — Exclusive</div>
-      <h3 style={s.widgetTitle}>🌟 Explorer Achievements</h3>
+      <h3 style={s.widgetTitle}><img src="/icons/star.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 6 }} />Explorer Achievements</h3>
       <p style={s.tagline}>Rare &amp; legendary achievements for dedicated resilience navigators</p>
 
       <div style={s.grid}>
@@ -139,7 +139,9 @@ export default function ExplorerAchievements({ earnedIds = new Set() }) {
               aria-label={`${a.title}${earned ? ' (achieved)' : ' (locked)'}`}
             >
               <div style={s.cardHeader}>
-                <span style={s.iconBox(a.rarity, earned)} aria-hidden="true">{a.icon}</span>
+                <span style={s.iconBox(a.rarity, earned)} aria-hidden="true">
+                  <img src={a.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle', filter: earned ? 'none' : 'grayscale(1)' }} />
+                </span>
                 <div style={s.cardInfo}>
                   <span style={s.rarityTag(a.rarity)}>{a.rarity}</span>
                   <div style={s.cardTitle(earned)}>{a.title}</div>
@@ -150,7 +152,10 @@ export default function ExplorerAchievements({ earnedIds = new Set() }) {
                 Requires: {a.requirement}
               </div>
               {earned && (
-                <div style={s.earnedBadge}>✓ Achieved</div>
+                <div style={s.earnedBadge}>
+                  <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={10} height={10} style={{ verticalAlign: 'middle' }} />
+                  {' '}Achieved
+                </div>
               )}
             </div>
           );

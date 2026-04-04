@@ -192,7 +192,9 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
                 aria-label={`${p.title} pathway`}
               >
                 <div style={s.pathwayHeader}>
-                  <span style={s.pathwayIcon} aria-hidden="true">{p.icon}</span>
+                  <span style={s.pathwayIcon} aria-hidden="true">
+                    <img src={p.icon} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} />
+                  </span>
                   <span style={s.pathwayTitle}>{p.title}</span>
                 </div>
                 <p style={s.pathwayDesc}>{p.description}</p>

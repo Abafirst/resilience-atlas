@@ -337,7 +337,8 @@ function UpsellModal({ targetTier, trigger, onClose, onUpgrade }) {
         </div>
 
         <p className="upsell-trust-note">
-          🔒 Secure checkout · One-time payment · No recurring charges
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+          Secure checkout · One-time payment · No recurring charges
         </p>
       </div>
     </div>
@@ -431,7 +432,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
               : `Get Starter Report — ${getPrice('atlas-starter')}`}
           </button>
           <p className="upgrade-card__trust">
-            🔒 Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} />Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
           </p>
         </div>
 
@@ -464,7 +465,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
               : `Get My Deep Report — ${getPrice('atlas-navigator')}`}
           </button>
           <p className="upgrade-card__trust">
-            🔒 Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} />Secure checkout via Stripe &nbsp;|&nbsp; No subscription required
           </p>
         </div>
       </div>
@@ -2667,7 +2668,11 @@ export default function ResultsPage() {
               // even when there are no current localStorage results.
               <>
                 <div style={s.emptyCard}>
-                  <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
+                  <div style={s.emptyIcon}>
+                    {isReturnFromPayment
+                      ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={48} height={48} />
+                      : <img src="/icons/compass.svg" alt="" aria-hidden="true" width={48} height={48} />}
+                  </div>
                   <div style={s.emptyTitle}>
                     {isReturnFromPayment ? 'Payment confirmed!' : 'Your Assessment History'}
                   </div>
@@ -2697,7 +2702,11 @@ export default function ResultsPage() {
             ) : (
               // No email available — show the original empty state.
               <div style={s.emptyCard}>
-                <div style={s.emptyIcon}>{isReturnFromPayment ? '✅' : '🧭'}</div>
+                <div style={s.emptyIcon}>
+                  {isReturnFromPayment
+                    ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={48} height={48} />
+                    : <img src="/icons/compass.svg" alt="" aria-hidden="true" width={48} height={48} />}
+                </div>
                 <div style={s.emptyTitle}>
                   {isReturnFromPayment ? 'Payment confirmed!' : 'No assessment results found'}
                 </div>
@@ -3058,7 +3067,9 @@ export default function ResultsPage() {
             </div>
             <div className="premium-lock-message payment-overlay" role="region" aria-label="Premium content — locked">
               <div className="payment-overlay__inner">
-                <span className="payment-overlay__icon" aria-hidden="true">🔒</span>
+                <span className="payment-overlay__icon" aria-hidden="true">
+                  <img src="/icons/lock.svg" alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} />
+                </span>
                 <h3>Unlock Your Complete Resilience Map</h3>
                 <p>Go deeper to understand the full structure of your resilience system.</p>
                 <button
@@ -3144,7 +3155,8 @@ export default function ResultsPage() {
                 onClick={() => setShowUnlockModal(true)}
                 aria-label="Unlock PDF Download — requires Atlas Starter or Atlas Navigator"
               >
-                🔒 Unlock PDF Download
+                <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+                Unlock PDF Download
               </button>
             )}
           </div>
@@ -3280,7 +3292,7 @@ export default function ResultsPage() {
                             <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
                             <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
                           </div>
-                          {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed">✅</span>}
+                          {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
                         </div>
                         <div style={s.practiceTags}>
                           <span style={s.practiceTag}>⏱ {practice.duration}</span>
@@ -3332,7 +3344,9 @@ export default function ResultsPage() {
                               aria-pressed={isCompleted}
                               aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
                             >
-                              {isCompleted ? '✅ Completed!' : '☐ Mark Complete'}
+                              {isCompleted
+                                ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
+                                : '☐ Mark Complete'}
                             </button>
                           </div>
                         )}
@@ -3568,7 +3582,9 @@ export default function ResultsPage() {
 
         {/* ── Privacy Guarantee ─────────────────────────────────────── */}
         <div style={s.privacyGuarantee} role="note" aria-label="Data privacy guarantee">
-          <span style={s.privacyIcon}>🔒</span>
+          <span style={s.privacyIcon}>
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+          </span>
           <p style={s.privacyText}>
             <strong style={{ color: '#2d3748' }}>You control your data.</strong>{' '}
             Delete your account and results anytime —{' '}

@@ -3,13 +3,13 @@ import { ADULT_BADGES, DIMENSION_COLORS, SKILL_PATHWAYS } from '../../data/adult
 import ReinforcementMenu from './ReinforcementMenu.jsx';
 
 const DIMENSIONS = ['Agentic-Generative','Relational-Connective','Emotional-Adaptive','Spiritual-Reflective','Somatic-Regulative','Cognitive-Narrative'];
-const DIM_EMOJI = {
-  'Agentic-Generative': '⚡',
-  'Relational-Connective': '🤝',
-  'Emotional-Adaptive': '💛',
-  'Spiritual-Reflective': '🧭',
-  'Somatic-Regulative': '🌿',
-  'Cognitive-Narrative': '💡',
+const DIM_ICONS = {
+  'Agentic-Generative':   '/icons/agentic-generative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Emotional-Adaptive':   '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective': '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':   '/icons/somatic-regulative.svg',
+  'Cognitive-Narrative':  '/icons/cognitive-narrative.svg',
 };
 
 const s = {
@@ -141,7 +141,9 @@ export default function ProgressDashboard({ tier, progress }) {
             const earned = earnedBadgeNames.has(badge.label);
             return (
               <div key={badge.id} style={s.badgeCard(earned, badge.rarity)} title={earned ? badge.description : 'Not yet earned'}>
-                <div style={s.badgeIcon}>{badge.icon}</div>
+                <div style={s.badgeIcon}>
+                  <img src={badge.icon} alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+                </div>
                 <div style={s.badgeLabel}>{badge.label}</div>
                 <div style={s.badgeRarity(badge.rarity)}>{badge.rarity}</div>
                 {earned && <div style={{ fontSize: 9, color: '#34d399', marginTop: 2 }}>Earned</div>}
@@ -162,7 +164,8 @@ export default function ProgressDashboard({ tier, progress }) {
               return (
                 <div key={dim} style={s.pathwayItem}>
                   <div style={s.pathwayLabel}>
-                    {DIM_EMOJI[dim]} {dim.split('-')[0]}
+                    <img src={DIM_ICONS[dim]} alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+                    {dim.split('-')[0]}
                   </div>
                   <div style={s.progressBar} aria-label={`${dim} pathway: ${pct}% complete`}>
                     <div style={s.progressFill(pct, dim)} />

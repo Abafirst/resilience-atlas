@@ -128,7 +128,8 @@ export default function NavigationMilestones({ scores }) {
     <div style={s.widget} role="region" aria-label="Navigation Milestones">
       <div style={s.subtitle}>Atlas Starter</div>
       <h3 style={s.widgetTitle}>
-        🧭 Navigation Milestones
+        <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle' }} />
+        {' '}Navigation Milestones
       </h3>
 
       <ul style={s.list} aria-label="Resilience milestones">
@@ -136,7 +137,9 @@ export default function NavigationMilestones({ scores }) {
           const done = completedIds.has(m.id);
           return (
             <li key={m.id} style={s.milestone(done)}>
-              <span style={s.icon} aria-hidden="true">{m.icon}</span>
+              <span style={s.icon} aria-hidden="true">
+                <img src={m.icon} alt="" width={22} height={22} style={{ verticalAlign: 'middle' }} />
+              </span>
               <div style={s.info}>
                 <div style={s.name(done)}>{m.title}</div>
                 <div style={s.desc}>{m.description}</div>
@@ -145,7 +148,9 @@ export default function NavigationMilestones({ scores }) {
                 style={s.check(done)}
                 aria-label={done ? 'Completed' : 'Pending'}
               >
-                {done ? '✓' : '○'}
+                {done
+                  ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+                  : '○'}
               </span>
             </li>
           );

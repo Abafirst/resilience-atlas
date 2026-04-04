@@ -41,7 +41,7 @@ function saveJSON(key, value) {
  */
 function getNextHint(currentBadgeId, earnedIds) {
   const next = KIDS_BADGES.find(b => b.id !== currentBadgeId && !earnedIds.includes(b.id));
-  return next ? `${next.emoji} ${next.label} — ${next.desc}` : null;
+  return next ? `${next.label} — ${next.desc}` : null;
 }
 
 /**
@@ -270,13 +270,15 @@ export default function KidsGamesHub() {
                 style={isEarned
                   ? { background: badge.color, borderColor: badge.border }
                   : { background: '#f1f5f9', borderColor: '#cbd5e1' }}
-                title={isEarned ? `${badge.label}: ${badge.desc}` : `🔒 ${badge.label} — not yet earned`}
+                title={isEarned ? `${badge.label}: ${badge.desc}` : `${badge.label} — not yet earned`}
                 aria-label={isEarned
                   ? `${badge.label} badge earned${dateStr ? ` on ${dateStr}` : ''}: ${badge.desc}`
                   : `${badge.label} badge — locked`}
               >
                 <span className="kg-shelf-badge-emoji" aria-hidden="true">
-                  {isEarned ? badge.emoji : '🔒'}
+                  {isEarned
+                    ? <img src={badge.emoji} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
+                    : <img src="/icons/lock.svg" alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />}
                 </span>
                 <span className="kg-shelf-badge-label">
                   {badge.label}
@@ -301,7 +303,9 @@ function BadgeToast({ badge }) {
       aria-live="polite"
       style={{ background: badge.color, borderColor: badge.border }}
     >
-      <span className="kg-badge-toast-emoji" aria-hidden="true">{badge.emoji}</span>
+      <span className="kg-badge-toast-emoji" aria-hidden="true">
+        <img src={badge.emoji} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
+      </span>
       <div>
         <strong><img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
         <p style={{ margin: 0, fontSize: '.82rem' }}>{badge.desc}</p>

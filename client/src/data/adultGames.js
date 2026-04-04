@@ -837,7 +837,7 @@ export const ADULT_BADGES = [
     description: 'Completed your first micro-commitment practice.',
     rarity:      'common',
     tier:        'starter',
-    icon:        '🧭',
+    icon:        '/icons/compass.svg',
     color:       '#6b7280',
   },
   {
@@ -846,7 +846,7 @@ export const ADULT_BADGES = [
     description: 'Completed a practice in all 6 resilience dimensions.',
     rarity:      'rare',
     tier:        'starter',
-    icon:        '🔭',
+    icon:        '/icons/star.svg',
     color:       '#7c3aed',
   },
   {
@@ -855,7 +855,7 @@ export const ADULT_BADGES = [
     description: 'Completed 3 micro-commitment practices.',
     rarity:      'uncommon',
     tier:        'starter',
-    icon:        '🛡',
+    icon:        '/icons/game-shield.svg',
     color:       '#0369a1',
   },
   {
@@ -864,7 +864,7 @@ export const ADULT_BADGES = [
     description: 'Maintained a 7-day flexible engagement streak.',
     rarity:      'uncommon',
     tier:        'starter',
-    icon:        '📈',
+    icon:        '/icons/streaks.svg',
     color:       '#15803d',
   },
   // Navigator Tier Badges
@@ -874,7 +874,7 @@ export const ADULT_BADGES = [
     description: 'Completed your first Navigator skill pathway level.',
     rarity:      'common',
     tier:        'navigator',
-    icon:        '🗺',
+    icon:        '/icons/game-map.svg',
     color:       '#4f46e5',
   },
   {
@@ -883,7 +883,7 @@ export const ADULT_BADGES = [
     description: 'Completed 5 ACT-aligned choice scenarios.',
     rarity:      'uncommon',
     tier:        'navigator',
-    icon:        '⚖️',
+    icon:        '/icons/game-scroll.svg',
     color:       '#7c3aed',
   },
   {
@@ -892,7 +892,7 @@ export const ADULT_BADGES = [
     description: 'Completed a full skill pathway (all 3 levels) for one dimension.',
     rarity:      'rare',
     tier:        'navigator',
-    icon:        '🏔',
+    icon:        '/icons/game-mountain.svg',
     color:       '#0284c7',
   },
   {
@@ -901,7 +901,7 @@ export const ADULT_BADGES = [
     description: 'Completed all 6 dimension pathways — all 3 levels each.',
     rarity:      'legendary',
     tier:        'navigator',
-    icon:        '✦',
+    icon:        '/icons/kids-trophy.svg',
     color:       '#854d0e',
   },
 ];

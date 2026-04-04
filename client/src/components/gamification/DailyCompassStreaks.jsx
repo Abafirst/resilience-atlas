@@ -1,9 +1,9 @@
 import React from 'react';
 
 const STREAK_MILESTONES = [
-  { days: 7,   label: '7-Day Navigator',  icon: '⭐' },
-  { days: 30,  label: '30-Day Voyager',   icon: '🌟' },
-  { days: 100, label: '100-Day Pioneer',  icon: '💫' },
+  { days: 7,   label: '7-Day Navigator',  icon: '/icons/star.svg' },
+  { days: 30,  label: '30-Day Voyager',   icon: '/icons/streaks.svg' },
+  { days: 100, label: '100-Day Pioneer',  icon: '/icons/kids-spark.svg' },
 ];
 
 const s = {
@@ -160,7 +160,9 @@ export default function DailyCompassStreaks({ progress }) {
               style={s.milestone(reached)}
               aria-label={`${m.label}${reached ? ' (achieved)' : ' (locked)'}`}
             >
-              <span style={s.milestoneIcon(reached)} aria-hidden="true">{m.icon}</span>
+              <span style={s.milestoneIcon(reached)} aria-hidden="true">
+                <img src={m.icon} alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} />
+              </span>
               <span style={s.milestoneDays(reached)}>{m.days} days</span>
             </div>
           );

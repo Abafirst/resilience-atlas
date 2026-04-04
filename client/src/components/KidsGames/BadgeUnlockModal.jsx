@@ -164,7 +164,7 @@ export default function BadgeUnlockModal({ badge, nextHint, onClose, soundOn = t
           style={{ background: badge.color, borderColor: badge.border }}
           aria-hidden="true"
         >
-          {badge.emoji}
+          <img src={badge.emoji} alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
         </div>
 
         <p className="kg-modal-congrats">🎉 Congratulations!</p>
@@ -176,7 +176,7 @@ export default function BadgeUnlockModal({ badge, nextHint, onClose, soundOn = t
 
         {nextHint && (
           <div className="kg-modal-next-hint">
-            <span aria-hidden="true">🎯</span> Next badge: {nextHint}
+            <img src="/icons/game-target.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Next badge: {nextHint}
           </div>
         )}
 
@@ -186,7 +186,7 @@ export default function BadgeUnlockModal({ badge, nextHint, onClose, soundOn = t
           autoFocus
           style={{ background: badge.border }}
         >
-          Awesome! ✨
+          Awesome!
         </button>
       </div>
     </div>
