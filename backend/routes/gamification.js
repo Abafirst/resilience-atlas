@@ -399,8 +399,13 @@ router.post('/progress/pathway-complete', async (req, res) => {
       return res.status(400).json({ error: 'dimension is required.' });
     }
     const lvl = parseInt(level, 10);
-    if (!lvl || lvl < 1 || lvl > 3) {
+    if (isNaN(lvl) || lvl < 1 || lvl > 3) {
       return res.status(400).json({ error: 'level must be 1, 2, or 3.' });
+    }
+
+    const DIMENSIONS = ['Agentic-Generative','Relational-Connective','Emotional-Adaptive','Spiritual-Reflective','Somatic-Regulative','Cognitive-Narrative'];
+    if (!DIMENSIONS.includes(dimension)) {
+      return res.status(400).json({ error: `dimension must be one of: ${DIMENSIONS.join(', ')}.` });
     }
 
     const uid      = userId(req);
@@ -438,7 +443,6 @@ router.post('/progress/pathway-complete', async (req, res) => {
       }
 
       // Compass Sage: all 6 dimensions full pathways
-      const DIMENSIONS = ['Agentic-Generative','Relational-Connective','Emotional-Adaptive','Spiritual-Reflective','Somatic-Regulative','Cognitive-Narrative'];
       const allComplete = DIMENSIONS.every(dim =>
         [1,2,3].every(l => progress.skillPathways.some(p => p.dimension === dim && p.level === l))
       );
