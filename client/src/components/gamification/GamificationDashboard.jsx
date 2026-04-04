@@ -249,7 +249,7 @@ const s = {
  *   atlas-navigator+  → all features unlocked + interactive
  */
 export default function GamificationDashboard() {
-  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const { isAuthenticated, isLoading: auth0Loading, loginWithRedirect, user } = useAuth0();
   const {
     progress,
     loading: gamLoading,
@@ -276,6 +276,35 @@ export default function GamificationDashboard() {
       .then(tier => setUserTier(tier))
       .finally(() => setTierLoading(false));
   }, [isAuthenticated, user]);
+
+  // Auto-start checkout when the user returns from Auth0 login with a
+  // ?checkout=<tier> URL parameter (set by LockedFeatureCard.handleUnlock).
+  useEffect(() => {
+    if (auth0Loading || !isAuthenticated) return;
+    const params = new URLSearchParams(window.location.search);
+    const checkoutTier = params.get('checkout');
+    if (!checkoutTier) return;
+
+    // Clean the URL so a page refresh doesn't re-trigger checkout.
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    const email = user?.email || '';
+    fetch('/api/payments/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tier: checkoutTier, email }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      })
+      .catch((err) => {
+        // Log the error; the user can retry by clicking the unlock button.
+        console.warn('[GamificationDashboard] Auto-checkout after login failed:', err?.message || err);
+      });
+  }, [auth0Loading, isAuthenticated, user]);
 
   const hasStarter   = isStarterOrAbove(userTier);
   const hasNavigator = isNavigatorOrAbove(userTier);
