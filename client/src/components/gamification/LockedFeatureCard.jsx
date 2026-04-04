@@ -13,8 +13,8 @@ const s = {
   overlay: {
     position: 'absolute',
     inset: 0,
-    background: 'rgba(248,250,252,0.97)',
-    backdropFilter: 'blur(2px)',
+    background: 'rgba(248,250,252,0.88)',
+    backdropFilter: 'blur(1px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -60,7 +60,7 @@ const s = {
     letterSpacing: '0.02em',
   },
   preview: {
-    opacity: 0.12,
+    opacity: 0.30,
     pointerEvents: 'none',
     userSelect: 'none',
   },
