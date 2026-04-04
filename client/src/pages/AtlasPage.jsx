@@ -832,7 +832,7 @@ export default function AtlasPage() {
                       <p key={i} style={s.narrativeLine}>{line}</p>
                     ))}
                   </div>
-                  {assessments.length > 0 && (
+                  {assessments.length > 0 && assessments.length < 2 && (
                     <p style={{ ...s.promptCard, marginTop: 16 }}>
                       🔁 <strong>Return in 30 days</strong> to add your next data point and see how your resilience constellation continues to evolve.
                     </p>
@@ -862,7 +862,7 @@ export default function AtlasPage() {
                         <li
                           key={a._id || i}
                           style={s.timelineItem(isSelected)}
-                          onClick={() => { setSelectedIdx(i); setNote(''); setNoteSaved(false); }}
+                          onClick={() => { setSelectedIdx(i); setNote(a.notes || a.note || ''); setNoteSaved(false); }}
                           role="button"
                           tabIndex={0}
                           aria-pressed={isSelected}
@@ -993,7 +993,13 @@ export default function AtlasPage() {
                       onChange={e => setNote(e.target.value)}
                       maxLength={2000}
                       aria-label="Personal notes for this assessment"
+                      aria-describedby={`note-count-${selected._id}`}
                     />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <span id={`note-count-${selected._id}`} style={{ fontSize: 11, color: note.length > 1800 ? '#DC2626' : '#718096' }}>
+                        {note.length} / 2000 characters
+                      </span>
+                    </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <button
                         onClick={saveNote}
