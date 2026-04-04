@@ -1,5 +1,6 @@
 import React from 'react';
-import LegacyPage from '../components/LegacyPage.jsx';
+import AtlasJourneyPage from './AtlasJourneyPage.jsx';
+
 export default function AtlasPage() {
-  return <LegacyPage src="/atlas.html" title="Atlas — The Resilience Atlas™" />;
+  return <AtlasJourneyPage />;
 }
