@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 /**
  * LockedFeatureCard — shows a clean preview card for locked gamification features.
@@ -14,7 +15,7 @@ import React from 'react';
  * Props:
  *   locked      — boolean: whether to show the locked card
  *   tierName    — string: e.g. "Atlas Starter" or "Atlas Navigator"
- *   checkoutUrl — string: href to navigate to for unlock
+ *   checkoutUrl — string: checkout URL containing the tier, e.g. "/checkout?tier=atlas-starter"
  *   icon        — string: path to SVG icon, e.g. "/icons/compass.svg"
  *   title       — string: feature title
  *   description — string: feature description
@@ -31,7 +32,55 @@ export default function LockedFeatureCard({
   accentColor = '#4f46e5',
   children,
 }) {
+  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError]     = useState('');
+
   if (!locked) return <>{children}</>;
+
+  /** Extract the tier ID from a URL like '/checkout?tier=atlas-starter'. */
+  function getTierFromUrl(url) {
+    try {
+      return new URLSearchParams((url || '').split('?')[1] || '').get('tier') || '';
+    } catch {
+      return '';
+    }
+  }
+
+  async function handleUnlock() {
+    const tier = getTierFromUrl(checkoutUrl);
+
+    if (!isAuthenticated) {
+      // Not signed in — go to Auth0 login first, then return here with the
+      // checkout tier encoded in the URL so the dashboard can auto-start it.
+      const returnTo = `/gamification?checkout=${encodeURIComponent(tier)}`;
+      loginWithRedirect({ appState: { returnTo } });
+      return;
+    }
+
+    // Already authenticated — call the checkout API directly (same pattern as
+    // ResultsPage.handleUpgrade) to avoid redirect/callback-URL mismatch errors.
+    const email = user?.email || '';
+    setCheckoutLoading(true);
+    setCheckoutError('');
+    try {
+      const res = await fetch('/api/payments/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tier, email }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned from server');
+      }
+    } catch (err) {
+      setCheckoutError(err.message || 'Could not start checkout. Please try again.');
+      setCheckoutLoading(false);
+    }
+  }
 
   return (
     <div
@@ -100,8 +149,10 @@ export default function LockedFeatureCard({
       </div>
 
       {/* Unlock button */}
-      <a
-        href={checkoutUrl}
+      <button
+        type="button"
+        onClick={handleUnlock}
+        disabled={checkoutLoading}
         aria-label={`Unlock with ${tierName}`}
         style={{
           display: 'flex',
@@ -116,18 +167,25 @@ export default function LockedFeatureCard({
           padding: '.7rem 1.25rem',
           fontSize: '.9rem',
           fontWeight: 700,
-          cursor: 'pointer',
+          cursor: checkoutLoading ? 'wait' : 'pointer',
           fontFamily: 'inherit',
           width: '100%',
-          textDecoration: 'none',
           boxSizing: 'border-box',
           transition: 'opacity .15s',
+          opacity: checkoutLoading ? .7 : 1,
         }}
-        onMouseEnter={e => { e.currentTarget.style.opacity = '.88'; }}
-        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+        onMouseEnter={e => { if (!checkoutLoading) e.currentTarget.style.opacity = '.88'; }}
+        onMouseLeave={e => { if (!checkoutLoading) e.currentTarget.style.opacity = '1'; }}
       >
-        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Unlock with {tierName}
-      </a>
+        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} />
+        {checkoutLoading ? 'Redirecting…' : `Unlock with ${tierName}`}
+      </button>
+
+      {checkoutError && (
+        <p role="alert" style={{ margin: 0, fontSize: '.8rem', color: '#dc2626', textAlign: 'center' }}>
+          {checkoutError}
+        </p>
+      )}
     </div>
   );
 }
