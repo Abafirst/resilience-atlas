@@ -18,7 +18,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner">
-          <span className="hero-eyebrow">13 Years of Research &amp; Lived Experience</span>
+          <span className="hero-eyebrow">Over 20 years of professional experience and a lifetime of application</span>
           <h1>Map Your Resilience</h1>
           <p className="hero-subheadline">
             Your resilience isn&rsquo;t one thing&mdash;it&rsquo;s a constellation of six interconnected capacities.
@@ -76,7 +76,7 @@ export default function LandingPage() {
         <div className="why-grid">
           <div className="why-card">
             <h4>A Map, Not a Formula</h4>
-            <p>Built on 13 years of doctoral research and clinical practice. This isn&rsquo;t a generic quiz&mdash;it&rsquo;s a genuine portrait of how you navigate adversity.</p>
+            <p>Built on 20+ years of professional experience and doctoral research combined with direct clinical practice. This isn&rsquo;t a generic quiz&mdash;it&rsquo;s a genuine portrait of how you navigate adversity.</p>
           </div>
           <div className="why-card">
             <h4>Your Unique Profile</h4>
