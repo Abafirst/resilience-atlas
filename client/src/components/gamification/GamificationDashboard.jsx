@@ -263,6 +263,7 @@ export default function GamificationDashboard() {
 
   const [userTier, setUserTier]       = useState('free');
   const [tierLoading, setTierLoading] = useState(true);
+  const [paymentBanner, setPaymentBanner] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -276,6 +277,40 @@ export default function GamificationDashboard() {
       .then(tier => setUserTier(tier))
       .finally(() => setTierLoading(false));
   }, [isAuthenticated, user]);
+
+  // Handle return from Stripe after a successful purchase initiated on this page.
+  // Stripe redirects to /gamification?upgrade=success&session_id=... (set via
+  // returnPath='/gamification' in the checkout API call below).
+  useEffect(() => {
+    if (auth0Loading) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgrade') !== 'success') return;
+    const sessionId = params.get('session_id');
+    if (!sessionId) return;
+
+    // Clean the URL immediately so a page refresh doesn't re-trigger verification.
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    const TIER_NAMES = {
+      'atlas-starter':   'Atlas Starter',
+      'atlas-navigator': 'Atlas Navigator',
+      'atlas-premium':   'Atlas Premium',
+    };
+
+    // Verify the Stripe session and refresh the displayed tier.
+    fetch(`/api/payments/verify?session_id=${encodeURIComponent(sessionId)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.tier) {
+          setUserTier(data.tier);
+          try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
+          const tierName = TIER_NAMES[data.tier] || data.tier;
+          setPaymentBanner({ type: 'success', message: `✅ Purchase confirmed! Your ${tierName} features are now unlocked.` });
+        }
+      })
+      .catch(() => { /* non-fatal — tier will still be fetched via /api/report/access */ })
+      .finally(() => setTierLoading(false));
+  }, [auth0Loading]);
 
   // Auto-start checkout when the user returns from Auth0 login with a
   // ?checkout=<tier> URL parameter (set by LockedFeatureCard.handleUnlock).
@@ -292,7 +327,7 @@ export default function GamificationDashboard() {
     fetch('/api/payments/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tier: checkoutTier, email }),
+      body: JSON.stringify({ tier: checkoutTier, email, returnPath: '/gamification' }),
     })
       .then(res => res.json())
       .then(data => {
@@ -350,6 +385,33 @@ export default function GamificationDashboard() {
         {/* Main content */}
         <main style={s.main}>
 
+          {/* Payment success banner (shown after returning from Stripe checkout) */}
+          {paymentBanner && (
+            <div
+              role="alert"
+              style={{
+                margin: '0 0 16px',
+                padding: '12px 16px',
+                borderRadius: 8,
+                background: paymentBanner.type === 'success' ? '#f0fdf4' : '#fef2f2',
+                border: `1px solid ${paymentBanner.type === 'success' ? '#86efac' : '#fca5a5'}`,
+                color: paymentBanner.type === 'success' ? '#15803d' : '#dc2626',
+                fontSize: '.9rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 8,
+              }}
+            >
+              <span>{paymentBanner.message}</span>
+              <button
+                onClick={() => setPaymentBanner(null)}
+                aria-label="Dismiss"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: '1rem', padding: 0, lineHeight: 1 }}
+              >✕</button>
+            </div>
+          )}
+
           {/* Sign-in banner (non-blocking — features still show below) */}
           {!isAuthenticated && (
             <div style={s.signInBanner} role="region" aria-label="Sign in prompt">
@@ -400,6 +462,7 @@ export default function GamificationDashboard() {
                   title="Navigation Milestones"
                   description="Track your progress across the 6 resilience dimensions with milestone achievements and celebrate every step forward."
                   accentColor="#4f46e5"
+                  returnPath="/gamification"
                 >
                   <NavigationMilestones scores={null} />
                 </LockedFeatureCard>
@@ -412,6 +475,7 @@ export default function GamificationDashboard() {
                   title="Resilience Badges"
                   description="Earn badges as you build resilience skills across all six dimensions of the Atlas framework."
                   accentColor="#7c3aed"
+                  returnPath="/gamification"
                 >
                   <ResilienceBadgesWidget
                     earnedBadges={activeProgress ? (activeProgress.badges || []) : []}
@@ -448,6 +512,7 @@ export default function GamificationDashboard() {
                 title="Practice Hub"
                 description="Values-aligned micro-practices, skill pathways, and ACT-informed choice scenarios to build resilience daily."
                 accentColor="#0ea5e9"
+                returnPath="/gamification"
               >
                 <AdultGameHub />
               </LockedFeatureCard>
@@ -483,6 +548,7 @@ export default function GamificationDashboard() {
                   title="Daily Compass Streaks"
                   description="Track your daily resilience practice streaks and celebrate momentum as you build lasting habits."
                   accentColor="#f59e0b"
+                  returnPath="/gamification"
                 >
                   <DailyCompassStreaks progress={activeProgress} />
                 </LockedFeatureCard>
@@ -496,6 +562,7 @@ export default function GamificationDashboard() {
                   title="Navigation Pathways"
                   description="Follow structured pathways to develop resilience across all six dimensions with guided progression."
                   accentColor="#4f46e5"
+                  returnPath="/gamification"
                 >
                   <NavigationPathways
                     progress={activeProgress}
@@ -512,6 +579,7 @@ export default function GamificationDashboard() {
                   title="Enhanced Resilience Badges"
                   description="Unlock advanced badges and exclusive achievements only available at the Navigator tier."
                   accentColor="#7c3aed"
+                  returnPath="/gamification"
                 >
                   <ResilienceBadgesWidget
                     earnedBadges={activeProgress ? (activeProgress.badges || []) : []}
@@ -529,6 +597,7 @@ export default function GamificationDashboard() {
                     title="Resilience Map"
                     description="Visualize your resilience journey on an interactive map with community leaderboard features."
                     accentColor="#059669"
+                    returnPath="/gamification"
                   >
                     <ResilienceMap
                       progress={activeProgress}
@@ -548,6 +617,7 @@ export default function GamificationDashboard() {
                     title="Explorer Achievements"
                     description="Complete challenges and earn special achievements as you explore your resilience journey."
                     accentColor="#d97706"
+                    returnPath="/gamification"
                   >
                     <ExplorerAchievements earnedIds={new Set()} />
                   </LockedFeatureCard>
