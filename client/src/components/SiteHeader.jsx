@@ -144,7 +144,7 @@ export default function SiteHeader({
               className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
               aria-label="Resilience Journey — your practices and progress"
             >
-              🧭 Resilience Journey
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} /> Resilience Journey
             </a>
           )}
           <button
