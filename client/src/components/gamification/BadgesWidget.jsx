@@ -94,9 +94,13 @@ export default function BadgesWidget({ progress }) {
                 title={b.name}
               >
                 <span style={s.badgeIcon} aria-hidden="true">
-                  {b.icon && b.icon.startsWith('/icons/')
-                    ? <img src={b.icon} alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} />
-                    : (b.icon || <img src="/icons/badge.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} />)}
+                  <img
+                    src={b.icon && b.icon.startsWith('/icons/') ? b.icon : '/icons/badge.svg'}
+                    alt=""
+                    width={16}
+                    height={16}
+                    style={{ verticalAlign: 'middle' }}
+                  />
                 </span>
                 <span>{b.name}</span>
               </li>

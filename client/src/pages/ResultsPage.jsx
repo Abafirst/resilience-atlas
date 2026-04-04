@@ -3299,7 +3299,7 @@ export default function ResultsPage() {
                           {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
                         </div>
                         <div style={s.practiceTags}>
-                          <span style={s.practiceTag}>⏱ {practice.duration}</span>
+                          <span style={s.practiceTag}>{practice.duration}</span>
                           <span style={s.practiceTag}>{practice.difficulty}</span>
                         </div>
                         <div style={s.practicePrinciples}>

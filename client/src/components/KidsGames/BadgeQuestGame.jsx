@@ -64,7 +64,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
               </span>
               <span className="bq-option-text">{opt.text}</span>
               {answered && opt.correct  && <span className="bq-option-icon" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
-              {answered && selected === opt && !opt.correct && <span className="bq-option-icon" aria-hidden="true">❌</span>}
+              {answered && selected === opt && !opt.correct && <span className="bq-option-icon" aria-hidden="true" style={{ color: '#ef4444', fontWeight: 'bold' }}>✗</span>}
             </button>
           );
         })}

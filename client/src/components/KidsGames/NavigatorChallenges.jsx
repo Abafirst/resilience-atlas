@@ -174,7 +174,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
               <div className="kg-result-q">{r.q.scenario}</div>
               <div className="kg-result-answer">
                 {r.timedOut
-                  ? <span className="kg-result-miss">⏱ Time ran out</span>
+                  ? <span className="kg-result-miss">Time ran out</span>
                   : r.correct
                     ? <span className="kg-result-correct">✓ {r.q.options[r.selected]}</span>
                     : <span className="kg-result-miss">✗ {r.q.options[r.selected]}</span>
@@ -206,7 +206,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
         </div>
         <div className="kg-hud-progress">{questionIdx + 1}/{ROUND_SIZE}</div>
         <div className={`kg-hud-timer${timeLeft <= 5 ? ' urgent' : ''}`} aria-live="polite">
-          ⏱ {timeLeft}s
+          {timeLeft}s
         </div>
       </div>
 
