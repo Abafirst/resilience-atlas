@@ -26,24 +26,24 @@ const POINTS = {
 /** All badge definitions — ordered so early/easy ones are checked first. */
 const BADGE_DEFINITIONS = [
   // Completion
-  { name: 'First Practice',    rarity: 'common',   icon: '🌱', test: (p) => totalPractices(p) >= 1   },
-  { name: '10 Practices',      rarity: 'common',   icon: '🔟', test: (p) => totalPractices(p) >= 10  },
-  { name: '50 Practices',      rarity: 'uncommon', icon: '🏆', test: (p) => totalPractices(p) >= 50  },
+  { name: 'First Practice',    rarity: 'common',   icon: '/icons/badge.svg',          test: (p) => totalPractices(p) >= 1   },
+  { name: '10 Practices',      rarity: 'common',   icon: '/icons/badges.svg',         test: (p) => totalPractices(p) >= 10  },
+  { name: '50 Practices',      rarity: 'uncommon', icon: '/icons/kids-trophy.svg',    test: (p) => totalPractices(p) >= 50  },
   // Streaks
-  { name: '7-Day Streak',      rarity: 'common',   icon: '🔥', test: (p) => p.longestStreak >= 7    },
-  { name: '30-Day Streak',     rarity: 'uncommon', icon: '💪', test: (p) => p.longestStreak >= 30   },
-  { name: '100-Day Streak',    rarity: 'rare',     icon: '⚡', test: (p) => p.longestStreak >= 100  },
+  { name: '7-Day Streak',      rarity: 'common',   icon: '/icons/streaks.svg',        test: (p) => p.longestStreak >= 7    },
+  { name: '30-Day Streak',     rarity: 'uncommon', icon: '/icons/streaks.svg',        test: (p) => p.longestStreak >= 30   },
+  { name: '100-Day Streak',    rarity: 'rare',     icon: '/icons/streaks.svg',        test: (p) => p.longestStreak >= 100  },
   // Growth (points proxy)
-  { name: '10% Improvement',   rarity: 'common',   icon: '📈', test: (p) => p.totalPoints >= 25     },
-  { name: 'New Personal Best', rarity: 'uncommon', icon: '🥇', test: (p) => p.longestStreak > 0 && p.longestStreak === p.currentStreak.days },
+  { name: '10% Improvement',   rarity: 'common',   icon: '/icons/game-mountain.svg',  test: (p) => p.totalPoints >= 25     },
+  { name: 'New Personal Best', rarity: 'uncommon', icon: '/icons/star.svg',           test: (p) => p.longestStreak > 0 && p.longestStreak === p.currentStreak.days },
   // Speed
-  { name: 'Quick Study',       rarity: 'common',   icon: '⚡', test: (p) => totalPractices(p) >= 5 && p.totalPoints >= 10 },
-  { name: 'Lightning Learner', rarity: 'rare',     icon: '🌩️', test: (p) => p.currentStreak.days >= 7 && totalPractices(p) >= 20 },
+  { name: 'Quick Study',       rarity: 'common',   icon: '/icons/game-target.svg',    test: (p) => totalPractices(p) >= 5 && p.totalPoints >= 10 },
+  { name: 'Lightning Learner', rarity: 'rare',     icon: '/icons/challenges.svg',     test: (p) => p.currentStreak.days >= 7 && totalPractices(p) >= 20 },
   // Challenges
-  { name: 'First Challenge',   rarity: 'common',   icon: '🎯', test: (p) => p.completedChallenges >= 1  },
-  { name: 'Challenge Master',  rarity: 'rare',     icon: '🏅', test: (p) => p.completedChallenges >= 10 },
+  { name: 'First Challenge',   rarity: 'common',   icon: '/icons/challenges.svg',     test: (p) => p.completedChallenges >= 1  },
+  { name: 'Challenge Master',  rarity: 'rare',     icon: '/icons/badges.svg',         test: (p) => p.completedChallenges >= 10 },
   // Special
-  { name: "Founder's Friend",  rarity: 'legendary', icon: '🌟', test: (p) => p.totalPoints >= 100 },
+  { name: "Founder's Friend",  rarity: 'legendary', icon: '/icons/star.svg',          test: (p) => p.totalPoints >= 100 },
 ];
 
 /**
