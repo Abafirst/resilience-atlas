@@ -367,6 +367,10 @@ export default function GamificationDashboard() {
                   locked={!hasStarter}
                   tierName="Atlas Starter"
                   checkoutUrl={CHECKOUT_URLS['atlas-starter']}
+                  icon="/icons/compass.svg"
+                  title="Navigation Milestones"
+                  description="Track your progress across the 6 resilience dimensions with milestone achievements and celebrate every step forward."
+                  accentColor="#4f46e5"
                 >
                   <NavigationMilestones scores={null} />
                 </LockedFeatureCard>
@@ -375,6 +379,10 @@ export default function GamificationDashboard() {
                   locked={!hasStarter}
                   tierName="Atlas Starter"
                   checkoutUrl={CHECKOUT_URLS['atlas-starter']}
+                  icon="/icons/badges.svg"
+                  title="Resilience Badges"
+                  description="Earn badges as you build resilience skills across all six dimensions of the Atlas framework."
+                  accentColor="#7c3aed"
                 >
                   <ResilienceBadgesWidget
                     earnedBadges={activeProgress ? (activeProgress.badges || []) : []}
@@ -407,6 +415,10 @@ export default function GamificationDashboard() {
                 locked={!hasStarter}
                 tierName="Atlas Starter"
                 checkoutUrl={CHECKOUT_URLS['atlas-starter']}
+                icon="/icons/game-target.svg"
+                title="Practice Hub"
+                description="Values-aligned micro-practices, skill pathways, and ACT-informed choice scenarios to build resilience daily."
+                accentColor="#0ea5e9"
               >
                 <AdultGameHub />
               </LockedFeatureCard>
@@ -438,6 +450,10 @@ export default function GamificationDashboard() {
                   locked={!hasNavigator}
                   tierName="Atlas Navigator"
                   checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
+                  icon="/icons/streaks.svg"
+                  title="Daily Compass Streaks"
+                  description="Track your daily resilience practice streaks and celebrate momentum as you build lasting habits."
+                  accentColor="#f59e0b"
                 >
                   <DailyCompassStreaks progress={activeProgress} />
                 </LockedFeatureCard>
@@ -447,6 +463,10 @@ export default function GamificationDashboard() {
                   locked={!hasNavigator}
                   tierName="Atlas Navigator"
                   checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
+                  icon="/icons/game-map.svg"
+                  title="Navigation Pathways"
+                  description="Follow structured pathways to develop resilience across all six dimensions with guided progression."
+                  accentColor="#4f46e5"
                 >
                   <NavigationPathways
                     progress={activeProgress}
@@ -459,6 +479,10 @@ export default function GamificationDashboard() {
                   locked={!hasNavigator}
                   tierName="Atlas Navigator"
                   checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
+                  icon="/icons/custom-badges.svg"
+                  title="Enhanced Resilience Badges"
+                  description="Unlock advanced badges and exclusive achievements only available at the Navigator tier."
+                  accentColor="#7c3aed"
                 >
                   <ResilienceBadgesWidget
                     earnedBadges={activeProgress ? (activeProgress.badges || []) : []}
@@ -472,6 +496,10 @@ export default function GamificationDashboard() {
                     locked={!hasNavigator}
                     tierName="Atlas Navigator"
                     checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
+                    icon="/icons/game-mountain.svg"
+                    title="Resilience Map"
+                    description="Visualize your resilience journey on an interactive map with community leaderboard features."
+                    accentColor="#059669"
                   >
                     <ResilienceMap
                       progress={activeProgress}
@@ -487,6 +515,10 @@ export default function GamificationDashboard() {
                     locked={!hasNavigator}
                     tierName="Atlas Navigator"
                     checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
+                    icon="/icons/star.svg"
+                    title="Explorer Achievements"
+                    description="Complete challenges and earn special achievements as you explore your resilience journey."
+                    accentColor="#d97706"
                   >
                     <ExplorerAchievements earnedIds={new Set()} />
                   </LockedFeatureCard>
