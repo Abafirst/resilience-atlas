@@ -30,6 +30,7 @@ export default function LockedFeatureCard({
   title,
   description,
   accentColor = '#4f46e5',
+  returnPath,
   children,
 }) {
   const { isAuthenticated, loginWithRedirect, user } = useAuth0();
@@ -67,7 +68,7 @@ export default function LockedFeatureCard({
       const res = await fetch('/api/payments/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier, email }),
+        body: JSON.stringify({ tier, email, ...(returnPath ? { returnPath } : {}) }),
       });
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || 'Checkout failed');

@@ -139,10 +139,38 @@ router.get('/tiers', paymentsLimiter, (req, res) => {
     });
 });
 
+/**
+ * Determine the app-relative path to return to after Stripe checkout.
+ *
+ * The caller may supply an optional `returnPath` (e.g. '/gamification') so that
+ * users who start a purchase from a page other than /results are sent back to
+ * the correct page instead of always landing on /results.
+ *
+ * Security: only same-origin relative paths (starting with '/' but NOT '//') are
+ * accepted to prevent open-redirect attacks. Any other value is silently ignored
+ * and the default tier-based path is used instead.
+ *
+ * @param {string} tier        - Stripe tier ID
+ * @param {string} [returnPath] - Optional caller-supplied return path
+ * @returns {string} A validated relative path (always starts with '/')
+ */
+function resolveReturnPath(tier, returnPath) {
+    if (
+        typeof returnPath === 'string' &&
+        returnPath.startsWith('/') &&
+        !returnPath.startsWith('//')
+    ) {
+        return returnPath;
+    }
+    return `/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}`;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/payments/checkout
 // Create a Stripe Checkout session for the requested tier.
-// Body: { tier: 'atlas-starter' | 'atlas-navigator' | 'atlas-premium', email: string }
+// Body: { tier, email, returnPath? }
+//   returnPath — optional safe same-origin path to redirect to after purchase
+//                (e.g. '/gamification'). Defaults to '/results' or '/team'.
 // ─────────────────────────────────────────────────────────────────────────────
 router.post('/checkout', paymentsLimiter, async (req, res) => {
     // Declared outside try/catch so both blocks can safely reference them for
@@ -187,7 +215,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
     }
 
     try {
-        const { tier, email, overall, dominantType, scores } = req.body;
+        const { tier, email, overall, dominantType, scores, returnPath } = req.body;
 
         if (!TIERS[tier]) {
             return res
@@ -245,8 +273,8 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             // unnecessary friction to the checkout flow.
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
-            success_url: `${appUrl}/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}/${['starter', 'pro', 'enterprise', 'atlas-enterprise'].includes(tier) ? 'team' : 'results'}?upgrade=cancelled`,
+            success_url: `${appUrl}${resolveReturnPath(tier, returnPath)}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${appUrl}${resolveReturnPath(tier, returnPath)}?upgrade=cancelled`,
         });
 
         // Record pending purchase so the webhook can update it later.
