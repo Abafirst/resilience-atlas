@@ -78,7 +78,8 @@ export default function ReinforcementMenu({ progress, showReentry = false }) {
       try {
         const token = await getAccessTokenSilently();
         headers.Authorization = `Bearer ${token}`;
-      } catch {
+      } catch (authErr) {
+        console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
         const stored = localStorage.getItem('auth_token');
         if (stored) headers.Authorization = `Bearer ${stored}`;
       }
@@ -110,7 +111,7 @@ export default function ReinforcementMenu({ progress, showReentry = false }) {
             {reentryStep < REENTRY_PATHWAYS.length - 1 ? (
               <button
                 style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'rgba(251,191,36,0.15)', color: '#fbbf24', cursor: 'pointer', fontSize: 12, fontWeight: 600 }}
-                onClick={() => setReentryStep(s => s + 1)}
+                onClick={() => setReentryStep(currentStep => currentStep + 1)}
               >
                 Continue ({reentryStep + 1}/{REENTRY_PATHWAYS.length})
               </button>

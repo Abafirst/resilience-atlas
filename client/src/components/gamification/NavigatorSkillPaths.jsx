@@ -61,7 +61,8 @@ export default function NavigatorSkillPaths({ progress }) {
       try {
         const token = await getAccessTokenSilently();
         headers.Authorization = `Bearer ${token}`;
-      } catch {
+      } catch (authErr) {
+        console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
         const stored = localStorage.getItem('auth_token');
         if (stored) headers.Authorization = `Bearer ${stored}`;
       }
