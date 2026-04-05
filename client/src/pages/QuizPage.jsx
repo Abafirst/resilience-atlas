@@ -265,6 +265,11 @@ export default function QuizPage() {
   // ── Autosave restore banner ────────────────────────────────────────────
   const [savedProgress, setSavedProgress] = useState(null);
 
+  // ── Track whether Auth0 fully pre-filled name+email ───────────────────
+  // Used to auto-advance past the info step when the user is already
+  // identified via Auth0 and there is no saved progress to restore.
+  const [prefilledFromAuth0, setPrefilledFromAuth0] = useState(false);
+
   // ── Theme toggle state ─────────────────────────────────────────────────
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -313,7 +318,23 @@ export default function QuizPage() {
     // Prefill the form fields only when they are still empty.
     setFirstName(prev => !prev ? givenName : prev);
     setEmail(prev => !prev ? auth0User.email : prev);
+
+    // Mark that Auth0 has provided both name and email so we can
+    // auto-advance past the info step (avoiding the redundant form).
+    if (givenName && auth0User.email) {
+      setPrefilledFromAuth0(true);
+    }
   }, [auth0Loading, isAuthenticated, auth0User]);
+
+  // ── Auto-advance past info step when Auth0 pre-fills both fields ──────
+  // When the user is already identified via Auth0, skip the name/email
+  // confirmation form so they land directly on the first question.
+  // Only skips when there is no saved progress awaiting restore.
+  useEffect(() => {
+    if (!prefilledFromAuth0 || step !== 'info' || savedProgress) return;
+    setStep(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [prefilledFromAuth0, step, savedProgress]);
 
   // ── Auth check + initial state setup ─────────────────────────────────
   useEffect(() => {
@@ -643,7 +664,7 @@ export default function QuizPage() {
   return (
     <>
       {/* ── Spinner overlay ────────────────────────────── */}
-      {(!authChecked || submitting) && (
+      {(!authChecked || auth0Loading || submitting) && (
         <SpinnerOverlay
           active
           text={submitting ? spinnerText : 'Checking authentication\u2026'}
@@ -712,6 +733,30 @@ export default function QuizPage() {
                   answers. Enter your details below to get started.
                 </p>
 
+                {/* Auth0 session notice when authenticated */}
+                {isAuthenticated && auth0User?.email && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      background: 'rgba(16, 185, 129, 0.08)',
+                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      borderRadius: 8,
+                      padding: '10px 14px',
+                      marginBottom: 20,
+                      fontSize: 13,
+                      color: '#10b981',
+                    }}
+                    role="status"
+                  >
+                    <span style={{ fontSize: 16 }}>✓</span>
+                    <span>
+                      Signed in as <strong>{auth0User.email}</strong> — your details have been prefilled.
+                    </span>
+                  </div>
+                )}
+
                 <div className="form-group">
                   <label htmlFor="firstName">
                     First Name <span aria-hidden="true">*</span>
@@ -753,7 +798,13 @@ export default function QuizPage() {
                     aria-describedby="emailError"
                     className={emailError ? 'error' : ''}
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); if (emailError) setEmailError(''); }}
+                    readOnly={isAuthenticated && !!auth0User?.email}
+                    style={isAuthenticated && auth0User?.email ? { background: 'rgba(16,185,129,0.06)', cursor: 'default' } : undefined}
+                    onChange={(e) => {
+                      if (isAuthenticated && auth0User?.email) return;
+                      setEmail(e.target.value);
+                      if (emailError) setEmailError('');
+                    }}
                   />
                   <span
                     id="emailError"

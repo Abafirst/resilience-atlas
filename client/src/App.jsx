@@ -103,6 +103,7 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
 
   return (
     <AssessmentHub
+      user={user}
       userEmail={user?.email}
       onUpgrade={() => setPage('payment')}
       onLogout={handleLogout}
