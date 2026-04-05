@@ -390,7 +390,7 @@ router.get('/generate', reportLimiter, async (req, res) => {
  *
  * Query params: hash (required)
  */
-router.get('/status', authenticateJWT, async (req, res) => {
+router.get('/status', accessLimiter, authenticateJWT, async (req, res) => {
     const { hash } = req.query;
 
     if (!hash) {
@@ -406,7 +406,7 @@ router.get('/status', authenticateJWT, async (req, res) => {
 
     // Fall back to persisted ResilienceReport record (covers queue-based flow).
     try {
-        const report = await ResilienceReport.findOne({ resultsHash: hash });
+        const report = await ResilienceReport.findOne({ resultsHash: String(hash) });
         if (!report) {
             return res.status(404).json({ status: 'not_found' });
         }
@@ -422,7 +422,7 @@ router.get('/status', authenticateJWT, async (req, res) => {
  *
  * Query params: hash (required)
  */
-router.get('/download', authenticateJWT, async (req, res) => {
+router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
     const { hash } = req.query;
 
     if (!hash) {
@@ -663,11 +663,11 @@ router.get('/access', accessLimiter, async (req, res) => {
  *   200 { status: 'ready', reportText, pdfUrl } — complete
  *   200 { status: 'failed' }              — generation failed
  */
-router.get('/:hash', authenticateJWT, async (req, res) => {
+router.get('/:hash', accessLimiter, authenticateJWT, async (req, res) => {
     const { hash } = req.params;
 
     try {
-        const report = await ResilienceReport.findOne({ resultsHash: hash });
+        const report = await ResilienceReport.findOne({ resultsHash: String(hash) });
         if (!report) {
             return res.status(404).json({ status: 'not_found' });
         }
@@ -682,7 +682,8 @@ router.get('/:hash', authenticateJWT, async (req, res) => {
             pdfUrl: report.pdfUrl,
         });
     } catch (err) {
-        return res.status(404).json({ status: 'not_found' });
+        console.error('[report/:hash] DB lookup failed:', err.message);
+        return res.status(503).json({ error: 'Unable to retrieve report at this time. Please try again shortly.' });
     }
 });
 
