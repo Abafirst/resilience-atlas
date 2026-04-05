@@ -25,6 +25,9 @@ const styles = {
     top: 0,
     right: 0,
     padding: '16px 24px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
   },
   logoutBtn: {
     background: 'none',
@@ -34,6 +37,25 @@ const styles = {
     cursor: 'pointer',
     color: '#a0aec0',
     fontSize: 14,
+  },
+  loginStatus: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    background: 'rgba(16, 185, 129, 0.12)',
+    border: '1px solid rgba(16, 185, 129, 0.35)',
+    borderRadius: 20,
+    padding: '5px 12px',
+    fontSize: 13,
+    color: '#10b981',
+    fontWeight: 500,
+  },
+  loginStatusDot: {
+    width: 7,
+    height: 7,
+    borderRadius: '50%',
+    background: '#10b981',
+    flexShrink: 0,
   },
   hero: {
     textAlign: 'center',
@@ -161,17 +183,28 @@ const styles = {
   },
 };
 
-export default function AssessmentHub({ userEmail, onUpgrade, onLogout }) {
+export default function AssessmentHub({ user, userEmail, onUpgrade, onLogout }) {
+  const displayEmail = userEmail || user?.email;
+  const displayName = user?.given_name || (user?.name ? user.name.split(' ')[0] : null);
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
+        {displayEmail && (
+          <div style={styles.loginStatus}>
+            <div style={styles.loginStatusDot} />
+            {displayName ? `${displayName} · ` : ''}{displayEmail}
+          </div>
+        )}
         <button type="button" style={styles.logoutBtn} onClick={onLogout}>
           Sign out
         </button>
       </div>
 
       <div style={styles.hero}>
-        <span style={styles.eyebrow}>You&apos;re logged in</span>
+        <span style={styles.eyebrow}>
+          {displayEmail ? `Logged in as: ${displayEmail}` : 'You\u2019re logged in'}
+        </span>
         <h1 style={styles.title}>Your Resilience Journey Starts Here</h1>
         <p style={styles.subtitle}>
           Take the free assessment to discover your resilience profile across six
@@ -220,7 +253,7 @@ export default function AssessmentHub({ userEmail, onUpgrade, onLogout }) {
           </div>
         </div>
 
-        <ResultsHistory email={userEmail} />
+        <ResultsHistory email={displayEmail} />
       </div>
     </div>
   );
