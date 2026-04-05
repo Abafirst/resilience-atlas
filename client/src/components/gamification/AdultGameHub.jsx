@@ -85,33 +85,39 @@ const s = {
   },
 };
 
-export default function AdultGameHub() {
+export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
-  const [tier, setTier] = useState(() => {
+  const [tierState, setTierState] = useState(() => {
     // Pre-populate from localStorage so the hub renders immediately for returning users.
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
+
+  // Use parent-provided tier when available (e.g. from GamificationDashboard which already
+  // fetched the tier).  This avoids a stale-state "locked" flash when the component first
+  // mounts before its own async fetch completes.
+  const tier = tierProp || tierState;
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
+    if (tierProp) return; // Parent already knows the tier — skip redundant fetch
     if (auth0Loading) return;
     if (isAuthenticated && user?.email) {
       getAccessTokenSilently()
         .catch(() => null)
         .then(token => fetchUserTier(user.email, token))
         .then(t => {
-          setTier(t);
+          setTierState(t);
           try { localStorage.setItem('resilience_tier', t); } catch (_) { /* ignore */ }
         })
         .catch(() => {
           // Fall back to cached tier on network error; use functional update to avoid stale closure.
-          setTier(current => current || 'free');
+          setTierState(current => current || 'free');
         });
     } else if (!isAuthenticated) {
-      setTier('free');
+      setTierState('free');
     }
-  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
+  }, [tierProp, auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
 
   const tierLabel = tier === 'atlas-navigator' ? 'Atlas Navigator' : tier === 'atlas-starter' ? 'Atlas Starter' : 'Free';
 
