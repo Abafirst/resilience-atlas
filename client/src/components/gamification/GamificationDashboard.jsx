@@ -15,6 +15,20 @@ import AdultGameHub from './AdultGameHub.jsx';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
+/**
+ * Maps legacy and teams purchase tier names to canonical individual tier names.
+ * Used when the API call fails and we need to normalize the cached localStorage value.
+ */
+const LEGACY_TIER_MAP = {
+  'starter':        'atlas-starter',
+  'teams-starter':  'atlas-starter',
+  'pro':            'atlas-navigator',
+  'teams-pro':      'atlas-navigator',
+  'enterprise':     'atlas-navigator',
+  'teams-enterprise': 'atlas-navigator',
+  'business':       'atlas-navigator',
+};
+
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
   const headers = {};
@@ -311,12 +325,6 @@ export default function GamificationDashboard() {
         try {
           const cachedTier = localStorage.getItem('resilience_tier');
           if (cachedTier) {
-            const LEGACY_TIER_MAP = {
-              'starter': 'atlas-starter', 'teams-starter': 'atlas-starter',
-              'pro': 'atlas-navigator', 'teams-pro': 'atlas-navigator',
-              'enterprise': 'atlas-navigator', 'teams-enterprise': 'atlas-navigator',
-              'business': 'atlas-navigator',
-            };
             const resolved = LEGACY_TIER_MAP[cachedTier] || cachedTier;
             if (isStarterOrAbove(resolved)) {
               setUserTier(resolved);
