@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MICRO_QUESTS, DIMENSION_COLORS, ADULT_BADGES } from '../../data/adultGames.js';
+import { isStarterOrAbove } from '../../data/gamificationContent.js';
 
 const s = {
   section: { marginBottom: 32 },
@@ -33,12 +34,14 @@ const s = {
     marginBottom: 12,
   },
   framework: { fontSize: 11, color: '#6b7280', marginBottom: 16, lineHeight: 1.5 },
-  btn: (completed) => ({
+  btn: (completed, unlocked) => ({
     width: '100%', padding: '10px 16px', borderRadius: 8,
-    border: 'none', cursor: completed ? 'default' : 'pointer',
+    border: 'none',
+    cursor: completed ? 'default' : unlocked ? 'pointer' : 'default',
     fontWeight: 600, fontSize: 13, transition: 'all 0.15s',
     background: completed ? 'rgba(16,185,129,0.1)' : 'linear-gradient(135deg,#4f46e5,#7c3aed)',
     color: completed ? '#34d399' : '#fff',
+    opacity: (!completed && !unlocked) ? 0.5 : 1,
   }),
   completedBadge: {
     position: 'absolute', top: 12, right: 12,
@@ -96,6 +99,9 @@ export default function StarterMicroQuests({ tier, progress }) {
   const [completing, setCompleting]     = useState(false);
   const [localDone, setLocalDone]       = useState(new Set());
   const [newBadge, setNewBadge]         = useState(null);
+
+  // Respect the tier prop: only allow interaction when the user has a paid tier.
+  const unlocked = isStarterOrAbove(tier);
 
   const completedIds = new Set([
     ...(progress?.microQuests?.map(q => q.questId) || []),
@@ -180,9 +186,9 @@ export default function StarterMicroQuests({ tier, progress }) {
                   <span style={{ color: '#34d399' }}>ACT:</span> {quest.actPrinciple}
                 </div>
                 <button
-                  style={s.btn(done)}
-                  onClick={() => !done && setActiveQuest(quest)}
-                  disabled={done}
+                  style={s.btn(done, unlocked)}
+                  onClick={() => unlocked && !done && setActiveQuest(quest)}
+                  disabled={done || !unlocked}
                   aria-label={done ? `${quest.title} completed` : `Begin ${quest.title}`}
                 >
                   {done ? '✓ Practice Complete' : 'Begin Practice'}

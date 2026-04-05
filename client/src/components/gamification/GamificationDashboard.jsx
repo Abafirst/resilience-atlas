@@ -578,7 +578,7 @@ export default function GamificationDashboard() {
                 accentColor="#0ea5e9"
                 returnPath="/gamification"
               >
-                <AdultGameHub />
+                <AdultGameHub tier={userTier} />
               </LockedFeatureCard>
             </section>
           )}
