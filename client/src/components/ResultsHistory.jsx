@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const TIER_LABELS = {
   'atlas-starter': 'Atlas Starter',
@@ -104,7 +105,7 @@ const styles = {
   },
 };
 
-async function downloadPdfForPurchase(purchase, email) {
+async function downloadPdfForPurchase(purchase, email, getTokenFn) {
   const { assessmentData } = purchase;
   const scoresStr = JSON.stringify(assessmentData.scores);
   const params = new URLSearchParams({
@@ -114,7 +115,15 @@ async function downloadPdfForPurchase(purchase, email) {
   });
   if (email) params.set('email', email);
 
-  const genRes = await fetch(`/api/report/generate?${params.toString()}`);
+  let authHeaders = {};
+  if (typeof getTokenFn === 'function') {
+    try {
+      const token = await getTokenFn();
+      if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+    } catch (_) { /* proceed without token */ }
+  }
+
+  const genRes = await fetch(`/api/report/generate?${params.toString()}`, { headers: authHeaders });
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
     throw new Error(body.error || 'Failed to start report generation');
@@ -124,10 +133,25 @@ async function downloadPdfForPurchase(purchase, email) {
 
   for (let i = 0; i < 60; i++) {
     await new Promise(r => setTimeout(r, 2000));
-    const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+    const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
-      window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}`;
+      // Fetch the PDF as a blob to send the Authorization header.
+      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
+      if (!dlRes.ok) {
+        const body = await dlRes.json().catch(() => ({}));
+        throw new Error(body.error || 'Failed to download report');
+      }
+      const blob = await dlRes.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'resilience-atlas-report.pdf';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
       return;
     }
     if (statusData.status === 'failed') {
@@ -146,6 +170,7 @@ async function downloadPdfForPurchase(purchase, email) {
  * all purchases permanent — there is no expiry for previously paid reports.
  */
 export default function ResultsHistory({ email }) {
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [downloadingIdx, setDownloadingIdx] = useState(null);
@@ -182,7 +207,7 @@ export default function ResultsHistory({ email }) {
     setDownloadingIdx(idx);
     setDownloadError('');
     try {
-      await downloadPdfForPurchase(purchase, email);
+      await downloadPdfForPurchase(purchase, email, isAuthenticated ? getAccessTokenSilently : null);
     } catch (err) {
       setDownloadError(err.message || 'Download failed. Please try again.');
     } finally {

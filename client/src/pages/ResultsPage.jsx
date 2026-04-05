@@ -1815,7 +1815,7 @@ function SocialFollowLink({ label, icon, href, bg }) {
 const MAX_POLLING_ATTEMPTS = 60;   // 2 minutes at 2 s intervals
 const POLLING_INTERVAL_MS  = 2000; // 2 seconds between status checks
 
-async function triggerPdfDownload(results, email) {
+async function triggerPdfDownload(results, email, getTokenFn) {
   const scoresStr = JSON.stringify(results.scores);
   const params = new URLSearchParams({
     overall: String(results.overall),
@@ -1824,7 +1824,15 @@ async function triggerPdfDownload(results, email) {
   });
   if (email) params.set('email', email);
 
-  const genRes = await fetch(`/api/report/generate?${params.toString()}`);
+  let authHeaders = {};
+  if (typeof getTokenFn === 'function') {
+    try {
+      const token = await getTokenFn();
+      if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+    } catch (_) { /* proceed without token */ }
+  }
+
+  const genRes = await fetch(`/api/report/generate?${params.toString()}`, { headers: authHeaders });
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
     const err = new Error(body.error || 'Failed to start report generation');
@@ -1835,10 +1843,25 @@ async function triggerPdfDownload(results, email) {
 
   for (let i = 0; i < MAX_POLLING_ATTEMPTS; i++) {
     await new Promise(r => setTimeout(r, POLLING_INTERVAL_MS));
-    const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+    const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
-      window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}`;
+      // Fetch the PDF as a blob to send the Authorization header.
+      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
+      if (!dlRes.ok) {
+        const body = await dlRes.json().catch(() => ({}));
+        throw new Error(body.error || 'Failed to download report');
+      }
+      const blob = await dlRes.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'resilience-atlas-report.pdf';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
       return;
     }
     if (statusData.status === 'failed') {
@@ -2395,7 +2418,7 @@ export default function ResultsPage() {
     setPdfLoading(true);
     setPdfError('');
     try {
-      await triggerPdfDownload(results, email);
+      await triggerPdfDownload(results, email, isAuthenticated ? getAccessTokenSilently : null);
     } catch (err) {
       if (err && err.upgradeRequired) {
         // Backend denied access — reset to locked state and show unlock modal
@@ -2410,7 +2433,7 @@ export default function ResultsPage() {
     } finally {
       setPdfLoading(false);
     }
-  }, [results, isAuthenticated, auth0User, getEffectiveEmail]);
+  }, [results, isAuthenticated, auth0User, getEffectiveEmail, getAccessTokenSilently]);
 
   // ── Reminder opt-in handler (ported from legacy results.js) ───────────
   const handleReminderOptIn = useCallback(async () => {
