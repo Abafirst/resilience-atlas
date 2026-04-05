@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
@@ -1942,7 +1943,7 @@ export default function ResultsPage() {
   const sessionId     = params.get('session_id');
 
   // ── Auth0 ──────────────────────────────────────────────────────────────
-  const { user: auth0User, isAuthenticated, isLoading: auth0Loading, loginWithRedirect } = useAuth0();
+  const { user: auth0User, isAuthenticated, isLoading: auth0Loading, loginWithRedirect, getAccessTokenSilently } = useAuth0();
 
   // ── State ──────────────────────────────────────────────────────────────
   const [results, setResults]         = useState(null);
@@ -2257,7 +2258,7 @@ export default function ResultsPage() {
     // ── Verify tier with the backend (email available) ─────────────────────
     // Do NOT read localStorage here — only trust the backend response so that
     // a stale 'atlas-navigator' in localStorage does not grant false access.
-    fetch(`/api/payments/status?email=${encodeURIComponent(email)}`)
+    apiFetch(`/api/payments/status?email=${encodeURIComponent(email)}`, {}, getAccessTokenSilently)
       .then(r => r.json())
       .then(data => {
         if (data.tier && data.tier !== 'free') {
@@ -2325,7 +2326,7 @@ export default function ResultsPage() {
       }
     } catch (_) { /* ignore */ }
 
-    fetch(accessUrl)
+    apiFetch(accessUrl, {}, getAccessTokenSilently)
       .then(r => r.json())
       .then(data => {
         // isCurrentAssessmentUnlocked: this specific assessment's PDF is accessible.
@@ -2712,6 +2713,7 @@ export default function ResultsPage() {
                     } catch (_) { /* ignore */ }
                   }}
                   checkoutLoading={checkoutLoading}
+                  getTokenFn={getAccessTokenSilently}
                 />
               </>
             ) : (
@@ -3129,6 +3131,7 @@ export default function ResultsPage() {
             setShowUnlockModal(true);
           }}
           checkoutLoading={checkoutLoading}
+          getTokenFn={getAccessTokenSilently}
         />
 
         {/* ── PDF Download + Action Buttons ─────────────────────────── */}

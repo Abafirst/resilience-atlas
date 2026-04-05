@@ -27,6 +27,15 @@ function getAddReportJob() {
     return _addReportJob;
 }
 
+// Rate limit for quiz results endpoint: 60 requests per minute per IP
+const resultsLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 60,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests. Please try again in a moment.' },
+});
+
 const router = express.Router();
 
 // Rate limit for quiz submission: 10 submissions per 15 minutes per IP
@@ -241,7 +250,7 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
  * GET /api/quiz/results
  * Get quiz history for the authenticated user
  */
-router.get('/results', authenticateJWT, async (req, res) => {
+router.get('/results', resultsLimiter, authenticateJWT, async (req, res) => {
     try {
         const user = await User.findById(req.user.userId);
         if (!user) {

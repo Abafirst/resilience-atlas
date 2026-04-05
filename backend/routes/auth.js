@@ -30,7 +30,7 @@ const userStatusLimiter = rateLimit({
  * GET /api/auth/profile
  * Get the authenticated user's profile
  */
-router.get('/profile', authenticateJWT, async (req, res) => {
+router.get('/profile', authStatusLimiter, authenticateJWT, async (req, res) => {
     try {
         const user = await User.findById(req.user.userId);
         if (!user) {
@@ -47,7 +47,7 @@ router.get('/profile', authenticateJWT, async (req, res) => {
  * PUT /api/auth/profile
  * Update the authenticated user's profile
  */
-router.put('/profile', authenticateJWT, async (req, res) => {
+router.put('/profile', authStatusLimiter, authenticateJWT, async (req, res) => {
     try {
         const { username, email } = req.body;
         const updates = {};
