@@ -93,6 +93,7 @@ export default function AdultGameHub() {
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
   const [activeTab, setActiveTab] = useState('practices');
+  const [tierLoading, setTierLoading] = useState(true);
 
   useEffect(() => {
     if (auth0Loading) return;
@@ -107,9 +108,13 @@ export default function AdultGameHub() {
         .catch(() => {
           // Fall back to cached tier on network error; use functional update to avoid stale closure.
           setTier(current => current || 'free');
+        })
+        .finally(() => {
+          setTierLoading(false);
         });
     } else if (!isAuthenticated) {
       setTier('free');
+      setTierLoading(false);
     }
   }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
 
@@ -121,7 +126,8 @@ export default function AdultGameHub() {
     { id: 'progress',  label: 'Progress',         available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
   ];
 
-  if (!tier || loading) {
+  // Show loading only if tier is still being verified
+  if (tierLoading) {
     return (
       <div style={s.wrap}>
         <div style={{ padding: 40, textAlign: 'center', color: '#718096', fontSize: 14 }}>
