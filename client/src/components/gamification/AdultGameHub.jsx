@@ -92,6 +92,12 @@ export default function AdultGameHub() {
     // Pre-populate from localStorage so the hub renders immediately for returning users.
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
+  // tierLoading tracks whether the async tier verification is still in progress.
+  // Start as false (no loading) if we already have a cached tier; true otherwise so we
+  // wait for auth0 to settle before deciding the user is 'free'.
+  const [tierLoading, setTierLoading] = useState(() => {
+    try { return !localStorage.getItem('resilience_tier'); } catch (_) { return true; }
+  });
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
@@ -107,9 +113,13 @@ export default function AdultGameHub() {
         .catch(() => {
           // Fall back to cached tier on network error; use functional update to avoid stale closure.
           setTier(current => current || 'free');
+        })
+        .finally(() => {
+          setTierLoading(false);
         });
     } else if (!isAuthenticated) {
       setTier('free');
+      setTierLoading(false);
     }
   }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
 
@@ -121,7 +131,10 @@ export default function AdultGameHub() {
     { id: 'progress',  label: 'Progress',         available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
   ];
 
-  if (!tier || loading) {
+  // Only show a full-page spinner while we don't yet know the user's tier.
+  // Once the tier is confirmed (from localStorage or API), render content immediately —
+  // even if the gamification hook's data fetch is still in flight.
+  if (tierLoading) {
     return (
       <div style={s.wrap}>
         <div style={{ padding: 40, textAlign: 'center', color: '#718096', fontSize: 14 }}>
