@@ -412,6 +412,7 @@ router.get('/status', accessLimiter, authenticateJWT, async (req, res) => {
         }
         return res.json({ status: report.status });
     } catch (err) {
+        console.error('[report/status] DB lookup failed:', err.message);
         return res.status(404).json({ status: 'not_found' });
     }
 });
@@ -457,7 +458,7 @@ router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
  *
  * Body: { hash, email }
  */
-router.post('/email', authenticateJWT, async (req, res) => {
+router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
     const { hash, email } = req.body;
 
     if (!hash) {

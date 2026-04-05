@@ -20,8 +20,8 @@ function getAddReportJob() {
     if (_addReportJob !== null) return _addReportJob;
     try {
         _addReportJob = require('../../queue/reportQueue').addReportJob;
-    } catch (_) {
-        logger.warn('[quiz] reportQueue unavailable (bullmq not installed or Redis not configured) — report jobs will not be enqueued');
+    } catch (err) {
+        logger.warn('[quiz] reportQueue unavailable (bullmq not installed or Redis not configured) — report jobs will not be enqueued:', err.message);
         _addReportJob = () => Promise.resolve(null);
     }
     return _addReportJob;
