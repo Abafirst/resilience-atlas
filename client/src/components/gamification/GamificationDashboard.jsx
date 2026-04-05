@@ -268,12 +268,20 @@ export default function GamificationDashboard() {
     dismissToast,
   } = useGamification();
 
-  const [userTier, setUserTier]       = useState('free');
+  const [userTier, setUserTier]       = useState(() => {
+    // Pre-populate from localStorage so features appear immediately for returning users
+    // while the backend tier check is in progress. The API call will update the tier
+    // if the cached value is stale or incorrect.
+    try { return localStorage.getItem('resilience_tier') || 'free'; } catch (_) { return 'free'; }
+  });
   const [tierLoading, setTierLoading] = useState(true);
   const [tierError, setTierError]     = useState(null);
+  const [tierRetryKey, setTierRetryKey] = useState(0); // incremented to force-retry the tier check
   const [paymentBanner, setPaymentBanner] = useState(null);
 
   useEffect(() => {
+    if (auth0Loading) return; // Wait for Auth0 to finish initialising
+
     let email = user?.email || '';
     if (!email) {
       try { email = localStorage.getItem('resilience_email') || ''; } catch (_) { /* ignore */ }
@@ -291,12 +299,25 @@ export default function GamificationDashboard() {
       : Promise.resolve(null);
     tokenPromise
       .then(token => fetchUserTier(email, token))
-      .then(tier => setUserTier(tier))
+      .then(tier => {
+        setUserTier(tier);
+        // Keep localStorage in sync so future visits use the latest tier.
+        try { localStorage.setItem('resilience_tier', tier); } catch (_) { /* ignore */ }
+      })
       .catch(() => {
+        // Fall back to cached tier so users with valid purchases aren't
+        // incorrectly shown the locked state due to a transient network error.
+        try {
+          const cachedTier = localStorage.getItem('resilience_tier');
+          if (cachedTier && isStarterOrAbove(cachedTier)) {
+            setUserTier(cachedTier);
+            return;
+          }
+        } catch (_) { /* ignore */ }
         setTierError('Unable to verify your access level. Please refresh the page or try again.');
       })
       .finally(() => setTierLoading(false));
-  }, [isAuthenticated, user, getAccessTokenSilently]);
+  }, [auth0Loading, isAuthenticated, user, getAccessTokenSilently, tierRetryKey]);
 
   // Handle return from Stripe after a successful purchase initiated on this page.
   // Stripe redirects to /gamification?upgrade=success&session_id=... (set via
@@ -378,7 +399,12 @@ export default function GamificationDashboard() {
   // Gamification API progress is only available for Navigator+
   const activeProgress = (hasNavigator && !isGamError) ? progress : null;
 
-  const showContent = !isAuthenticated || !tierLoading;
+  // Show gamification content once:
+  //   - the user is not authenticated (features shown in locked/preview mode), OR
+  //   - Auth0 and the backend tier check have both completed.
+  // This prevents a flash of incorrect locked-state content for users whose
+  // tier is still being verified.
+  const showContent = !isAuthenticated || (!auth0Loading && !tierLoading);
 
   return (
     <>
@@ -450,7 +476,7 @@ export default function GamificationDashboard() {
           )}
 
           {/* Tier detection loading */}
-          {isAuthenticated && tierLoading && (
+          {isAuthenticated && (auth0Loading || tierLoading) && (
             <div style={s.loadingMsg} role="status" aria-live="polite">
               Checking your compass bearing…
             </div>
@@ -458,8 +484,14 @@ export default function GamificationDashboard() {
 
           {/* Tier verification error */}
           {isAuthenticated && !tierLoading && tierError && (
-            <div style={s.errorMsg} role="alert">
-              ⚠️ {tierError}
+            <div style={{ ...s.errorMsg, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }} role="alert">
+              <span>⚠️ {tierError}</span>
+              <button
+                onClick={() => { setTierError(null); setTierRetryKey(k => k + 1); }}
+                style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid currentColor', background: 'transparent', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: 'inherit' }}
+              >
+                Retry
+              </button>
             </div>
           )}
 

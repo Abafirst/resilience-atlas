@@ -29,6 +29,13 @@
   var _backoff   = POLL_INTERVAL_MS;
   var _cancelled = false;
 
+  // ── Auth helper ─────────────────────────────────────────────────────────────
+
+  function _getAuthHeaders() {
+    var token = (typeof localStorage !== 'undefined' && localStorage.getItem('auth_token')) || '';
+    return token ? { 'Authorization': 'Bearer ' + token } : {};
+  }
+
   // ── DOM helpers ─────────────────────────────────────────────────────────────
 
   function $(id) { return document.getElementById(id); }
@@ -193,7 +200,7 @@
       return;
     }
 
-    fetch('/api/report/status?hash=' + encodeURIComponent(hash))
+    fetch('/api/report/status?hash=' + encodeURIComponent(hash), { headers: _getAuthHeaders() })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (_cancelled) return;
@@ -244,13 +251,26 @@
   // ── PDF download trigger ─────────────────────────────────────────────────────
 
   function _downloadPdf(hash) {
-    var link = document.createElement('a');
-    link.href = '/api/report/download?hash=' + encodeURIComponent(hash);
-    link.download = 'resilience-report.pdf';
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    var headers = _getAuthHeaders();
+    fetch('/api/report/download?hash=' + encodeURIComponent(hash), { headers: headers })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Download failed (' + r.status + ')');
+        return r.blob();
+      })
+      .then(function (blob) {
+        var url  = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href     = url;
+        link.download = 'resilience-atlas-report.pdf';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      })
+      .catch(function (err) {
+        showError(err.message || 'Failed to download report.');
+      });
   }
 
   // ── Control ──────────────────────────────────────────────────────────────────
@@ -312,7 +332,7 @@
 
       setProgress(0, 'Starting report generation…', null);
 
-      fetch(url)
+      fetch(url, { headers: _getAuthHeaders() })
         .then(function (r) {
           if (r.status === 402) {
             return r.json().then(function (body) {

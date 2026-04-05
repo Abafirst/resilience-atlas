@@ -951,6 +951,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let hash;
+        // Attach the stored auth token (set by Auth0 login flow) when available.
+        const storedToken = localStorage.getItem('auth_token') || '';
+        const authHeaders = storedToken ? { 'Authorization': 'Bearer ' + storedToken } : {};
+
         if (window.PdfProgress) {
           // Use the progress modal: generates, polls, and downloads automatically.
           hash = await window.PdfProgress.start(params);
@@ -960,7 +964,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `/api/report/generate?overall=${encodeURIComponent(params.overall)}` +
             `&dominantType=${encodeURIComponent(params.dominantType)}` +
             `&scores=${encodeURIComponent(params.scores)}` +
-            `&email=${encodeURIComponent(params.email)}`
+            `&email=${encodeURIComponent(params.email)}`,
+            { headers: authHeaders }
           );
           if (!genRes.ok) {
             const body = await genRes.json().catch(() => ({}));
@@ -971,7 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           for (let i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
             await new Promise(r => setTimeout(r, REPORT_POLL_INTERVAL_MS));
-            const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+            const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
             const statusData = await statusRes.json();
             if (statusData.status === 'ready') break;
             if (statusData.status === 'failed') throw new Error(statusData.error || 'Report generation failed');
@@ -983,7 +988,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showAlert('emailAlert', 'Sending report to ' + inputEmail + '…', 'success', 'email');
         const emailRes = await fetch('/api/report/email', {
           method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
           body:    JSON.stringify({ hash, email: inputEmail }),
         });
         if (!emailRes.ok) {

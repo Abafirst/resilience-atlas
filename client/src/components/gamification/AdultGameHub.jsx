@@ -86,22 +86,32 @@ const s = {
 };
 
 export default function AdultGameHub() {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
-  const [tier, setTier]       = useState(null);
+  const [tier, setTier] = useState(() => {
+    // Pre-populate from localStorage so the hub renders immediately for returning users.
+    try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
+  });
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
+    if (auth0Loading) return;
     if (isAuthenticated && user?.email) {
       getAccessTokenSilently()
         .catch(() => null)
         .then(token => fetchUserTier(user.email, token))
-        .then(setTier)
-        .catch(() => setTier('free'));
+        .then(t => {
+          setTier(t);
+          try { localStorage.setItem('resilience_tier', t); } catch (_) { /* ignore */ }
+        })
+        .catch(() => {
+          // Fall back to cached tier on network error.
+          if (!tier) setTier('free');
+        });
     } else if (!isAuthenticated) {
       setTier('free');
     }
-  }, [isAuthenticated, user?.email, getAccessTokenSilently]);
+  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
 
   const tierLabel = tier === 'atlas-navigator' ? 'Atlas Navigator' : tier === 'atlas-starter' ? 'Atlas Starter' : 'Free';
 
