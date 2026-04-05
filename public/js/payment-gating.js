@@ -21,7 +21,8 @@
 
     /**
      * Tier hierarchy (lowest → highest access):
-     *   free → atlas-navigator → atlas-premium → business → starter → pro → enterprise
+     *   free → atlas-starter → atlas-navigator → atlas-premium
+     *                        → teams-starter → teams-pro → teams-enterprise
      *
      * Each tier inherits all features of the tiers below it.
      */
@@ -34,6 +35,15 @@
             maxTeams: 0,
             features: ['Basic assessment', 'Individual results', 'Radar chart'],
             dataRetention: '1 month',
+        },
+        'atlas-starter': {
+            name: 'Atlas Starter',
+            price: 999, // $9.99
+            billing: 'one-time',
+            maxUsers: 1,
+            maxTeams: 0,
+            features: ['Full PDF Report (1 report per purchase)', 'Gamification Access', 'Assessment History'],
+            dataRetention: 'Unlimited',
         },
         'atlas-navigator': {
             name: 'Atlas Navigator (Lifetime)',
@@ -53,17 +63,8 @@
             features: ['All Deep Report features', 'Lifetime access', 'Unlimited reassessments'],
             dataRetention: 'Unlimited',
         },
-        'business': {
-            name: 'Business',
-            price: null, // Custom pricing
-            billing: 'custom',
-            maxUsers: 25,
-            maxTeams: 1,
-            features: ['Team analytics', 'Member results', 'Admin dashboard'],
-            dataRetention: '1 year',
-        },
-        'starter': {
-            name: 'Atlas Team Starter',
+        'teams-starter': {
+            name: 'Atlas Teams Basic',
             price: 29900, // $299 one-time
             billing: 'one-time',
             maxUsers: 15,
@@ -71,8 +72,8 @@
             features: ['Team dashboard', 'Basic reports', 'CSV export', '1 team'],
             dataRetention: '1 year',
         },
-        'pro': {
-            name: 'Atlas Team Professional',
+        'teams-pro': {
+            name: 'Atlas Teams Premium',
             price: 69900, // $699 one-time
             billing: 'one-time',
             maxUsers: 30,
@@ -80,8 +81,8 @@
             features: ['Advanced analytics', 'Facilitation tools', 'Multiple teams', 'Auto-generated reports'],
             dataRetention: '3 years',
         },
-        'enterprise': {
-            name: 'Atlas Team Enterprise',
+        'teams-enterprise': {
+            name: 'Atlas Teams Enterprise',
             price: 249900, // Starting at $2,499 one-time
             billing: 'one-time',
             maxUsers: Infinity,
@@ -103,7 +104,9 @@
 
     function isDeepReport() {
         const t = getTier();
-        return t === 'atlas-navigator' || t === 'atlas-premium' || t === 'business' ||
+        return t === 'atlas-navigator' || t === 'atlas-premium' ||
+               t === 'teams-starter'  || t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility for existing purchases)
                t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
@@ -128,41 +131,52 @@
 
     function isAtlasPremium() {
         const t = getTier();
-        return t === 'atlas-premium' || t === 'business' ||
+        return t === 'atlas-premium' ||
+               t === 'teams-starter' || t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility)
                t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     function isBusiness() {
         const t = getTier();
-        return t === 'business' || t === 'starter' || t === 'pro' || t === 'enterprise';
+        return t === 'teams-starter' || t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility)
+               t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     // -- Teams tier helpers ----------------------------------------------------
 
-    /** Atlas Team Starter ($299 one-time): up to 15 users, 1 team, basic dashboard + CSV. */
+    /** Atlas Teams Basic ($299 one-time): up to 15 users, 1 team, basic dashboard + CSV. */
     function isTeamsStarter() {
         const t = getTier();
-        return t === 'starter' || t === 'pro' || t === 'enterprise';
+        return t === 'teams-starter' || t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility)
+               t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     /**
-     * Atlas Team Professional ($699 one-time): up to 30 users, unlimited teams.
+     * Atlas Teams Premium ($699 one-time): up to 30 users, unlimited teams.
      * Advanced analytics, auto-reports, facilitation tools, team management.
      */
     function isTeamsPro() {
         const t = getTier();
-        return t === 'pro' || t === 'enterprise';
+        return t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility)
+               t === 'pro' || t === 'enterprise';
     }
 
-    /** Enterprise (custom): unlimited users/teams, branding, webhooks, SSO. */
+    /** Atlas Teams Enterprise (custom): unlimited users/teams, branding, webhooks, SSO. */
     function isEnterprise() {
-        return getTier() === 'enterprise';
+        const t = getTier();
+        return t === 'teams-enterprise' || t === 'enterprise';
     }
 
-    /** True for any Teams tier (starter, pro, or enterprise). */
+    /** True for any Teams tier. */
     function hasTeamsAccess() {
         const t = getTier();
-        return t === 'starter' || t === 'pro' || t === 'enterprise';
+        return t === 'teams-starter' || t === 'teams-pro' || t === 'teams-enterprise' ||
+               // Legacy tier names (backward compatibility)
+               t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
     // -- Apply/remove locks ---------------------------------------------------
@@ -175,14 +189,13 @@
         document.querySelectorAll('[data-tier]').forEach(function (section) {
             const required = section.getAttribute('data-tier');
             const unlocked =
-                (required === 'atlas-navigator'                                        && isDeepReport())    ||
-                // atlas-premium sections are intentionally unlocked for all atlas-navigator+ users
-                // (atlas-navigator tier grants access to all individual report content)
-                (required === 'atlas-premium'                                         && isDeepReport())    ||
-                (required === 'business'                                              && isBusiness())      ||
-                ((required === 'starter' || required === 'teams-starter')             && isTeamsStarter())  ||
-                ((required === 'pro'     || required === 'teams-pro')                 && isTeamsPro())      ||
-                (required === 'enterprise'                                            && isEnterprise());
+                (required === 'atlas-starter'                                                          && isAnyPaidTier())   ||
+                (required === 'atlas-navigator'                                                        && isDeepReport())    ||
+                // atlas-premium sections unlocked for all atlas-navigator+ users
+                (required === 'atlas-premium'                                                          && isDeepReport())    ||
+                ((required === 'teams-starter' || required === 'starter')                              && isTeamsStarter())  ||
+                ((required === 'teams-pro'     || required === 'pro')                                  && isTeamsPro())      ||
+                ((required === 'teams-enterprise' || required === 'enterprise')                        && isEnterprise());
 
             const overlay = section.querySelector('.payment-overlay');
             if (unlocked) {
@@ -441,7 +454,7 @@
      *  2. Otherwise, prompt for email (if not already stored) and initiate a
      *     Stripe Checkout session.
      *
-     * @param {'atlas-navigator'|'atlas-premium'|'business'} tier
+     * @param {'atlas-starter'|'atlas-navigator'|'atlas-premium'|'teams-starter'|'teams-pro'|'teams-enterprise'} tier
      */
     async function startCheckout(tier) {
         // ── Step 1: Auth0 login gate ──────────────────────────────────────────

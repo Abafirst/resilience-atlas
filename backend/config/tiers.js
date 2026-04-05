@@ -10,7 +10,7 @@
  * All Stripe price/payment logic remains in payments.js and env.
  *
  * Keys used by the Organization model plan field:
- *   free | business | teams-starter | teams-pro | enterprise
+ *   free | business | teams-starter | teams-pro | teams-enterprise | enterprise
  *
  * Keys used by the Stripe checkout flow (payments.js TIERS):
  *   atlas-navigator | atlas-premium | starter | pro
@@ -130,12 +130,13 @@ const TIER_CONFIG = {
 
 /**
  * Aliases from Organization.plan enum values to TIER_CONFIG keys.
- * The Organization model uses prefixed keys ('teams-starter', 'teams-pro')
- * while the Stripe checkout flow uses short keys ('starter', 'pro').
+ * The Organization model uses prefixed keys ('teams-starter', 'teams-pro', 'teams-enterprise')
+ * while the Stripe checkout flow uses short keys ('starter', 'pro', 'enterprise').
  */
 const PLAN_ALIASES = {
-    'teams-starter': 'starter',
-    'teams-pro': 'pro',
+    'teams-starter':    'starter',
+    'teams-pro':        'pro',
+    'teams-enterprise': 'enterprise',
 };
 
 /**
@@ -152,6 +153,9 @@ const PREMIUM_TIERS = [
     'starter',
     'pro',
     'enterprise',
+    'teams-starter',
+    'teams-pro',
+    'teams-enterprise',
 ];
 
 module.exports = { TIER_CONFIG, PLAN_ALIASES, PREMIUM_TIERS };

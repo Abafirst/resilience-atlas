@@ -90,6 +90,10 @@ describe('PLAN_ALIASES', () => {
     it('maps teams-pro to pro', () => {
         expect(PLAN_ALIASES['teams-pro']).toBe('pro');
     });
+
+    it('maps teams-enterprise to enterprise', () => {
+        expect(PLAN_ALIASES['teams-enterprise']).toBe('enterprise');
+    });
 });
 
 // ── normalizePlan ─────────────────────────────────────────────────────────────
@@ -107,6 +111,10 @@ describe('normalizePlan()', () => {
 
     it('maps teams-pro → pro', () => {
         expect(normalizePlan('teams-pro')).toBe('pro');
+    });
+
+    it('maps teams-enterprise → enterprise', () => {
+        expect(normalizePlan('teams-enterprise')).toBe('enterprise');
     });
 
     it('returns unknown plan unchanged', () => {

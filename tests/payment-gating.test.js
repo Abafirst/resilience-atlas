@@ -8,9 +8,10 @@
  *
  * Verifies the tier-hierarchy logic in applyGating():
  *  - free             → no sections unlocked
+ *  - atlas-starter    → atlas-starter sections unlocked only
  *  - atlas-navigator  → atlas-navigator AND atlas-premium sections unlocked
  *  - atlas-premium    → atlas-navigator AND atlas-premium sections unlocked
- *  - business         → all sections (atlas-navigator, atlas-premium, business) unlocked
+ *  - teams-starter    → all sections (atlas-navigator, atlas-premium, teams-starter) unlocked
  */
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -43,7 +44,7 @@ function buildDOM() {
         <section id="s-atlas"   class="locked" data-tier="atlas-premium">
             <div class="payment-overlay"></div>
         </section>
-        <section id="s-biz"     class="locked" data-tier="business">
+        <section id="s-teams"   class="locked" data-tier="teams-starter">
             <div class="payment-overlay"></div>
         </section>
         <a class="business-dashboard-link" hidden>Team Dashboard</a>
@@ -52,7 +53,7 @@ function buildDOM() {
     return {
         deepSection:   document.getElementById('s-deep'),
         atlasSection:  document.getElementById('s-atlas'),
-        bizSection:    document.getElementById('s-biz'),
+        teamsSection:  document.getElementById('s-teams'),
         dashboardLink: document.querySelector('.business-dashboard-link'),
     };
 }
@@ -72,81 +73,81 @@ describe('applyGating() tier hierarchy', () => {
     test('free tier: all sections remain locked', () => {
         localStorage.setItem('resilience_tier', 'free');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         expect(deepSection.classList.contains('locked')).toBe(true);
         expect(atlasSection.classList.contains('locked')).toBe(true);
-        expect(bizSection.classList.contains('locked')).toBe(true);
+        expect(teamsSection.classList.contains('locked')).toBe(true);
     });
 
     test('atlas-starter tier: deep-report sections remain locked (starter is basic report only)', () => {
         localStorage.setItem('resilience_tier', 'atlas-starter');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         // Deep-report sections should still be locked for atlas-starter buyers
         expect(deepSection.classList.contains('locked')).toBe(true);
         expect(atlasSection.classList.contains('locked')).toBe(true);
-        expect(bizSection.classList.contains('locked')).toBe(true);
+        expect(teamsSection.classList.contains('locked')).toBe(true);
     });
 
-    test('atlas-navigator tier: atlas-navigator AND atlas-premium sections unlocked; business still locked', () => {
+    test('atlas-navigator tier: atlas-navigator AND atlas-premium sections unlocked; teams still locked', () => {
         localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         expect(deepSection.classList.contains('locked')).toBe(false);
         expect(atlasSection.classList.contains('locked')).toBe(false);
-        expect(bizSection.classList.contains('locked')).toBe(true);
+        expect(teamsSection.classList.contains('locked')).toBe(true);
     });
 
-    test('atlas-premium tier: atlas-navigator AND atlas-premium sections unlocked; business still locked', () => {
+    test('atlas-premium tier: atlas-navigator AND atlas-premium sections unlocked; teams still locked', () => {
         localStorage.setItem('resilience_tier', 'atlas-premium');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         expect(deepSection.classList.contains('locked')).toBe(false);
         expect(atlasSection.classList.contains('locked')).toBe(false);
-        expect(bizSection.classList.contains('locked')).toBe(true);
+        expect(teamsSection.classList.contains('locked')).toBe(true);
     });
 
-    test('business tier: all sections unlocked', () => {
-        localStorage.setItem('resilience_tier', 'business');
+    test('teams-starter tier: all sections unlocked', () => {
+        localStorage.setItem('resilience_tier', 'teams-starter');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         expect(deepSection.classList.contains('locked')).toBe(false);
         expect(atlasSection.classList.contains('locked')).toBe(false);
-        expect(bizSection.classList.contains('locked')).toBe(false);
+        expect(teamsSection.classList.contains('locked')).toBe(false);
     });
 
     test('atlas-navigator tier: payment overlays hidden for unlocked sections', () => {
         localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
-        const { deepSection, atlasSection, bizSection } = buildDOM();
+        const { deepSection, atlasSection, teamsSection } = buildDOM();
 
         window.PaymentGating.applyGating();
 
         const deepOverlay  = deepSection.querySelector('.payment-overlay');
         const atlasOverlay = atlasSection.querySelector('.payment-overlay');
-        const bizOverlay   = bizSection.querySelector('.payment-overlay');
+        const teamsOverlay = teamsSection.querySelector('.payment-overlay');
 
         expect(deepOverlay.hidden).toBe(true);
         expect(atlasOverlay.hidden).toBe(true);
-        expect(bizOverlay.hidden).toBe(false);
+        expect(teamsOverlay.hidden).toBe(false);
     });
 
-    test('business dashboard link shown only for business tier', () => {
+    test('business dashboard link shown only for teams users', () => {
         localStorage.setItem('resilience_tier', 'atlas-navigator');
         loadGatingScript();
         const { dashboardLink } = buildDOM();
@@ -154,17 +155,17 @@ describe('applyGating() tier hierarchy', () => {
         window.PaymentGating.applyGating();
         expect(dashboardLink.hidden).toBe(true);
 
-        localStorage.setItem('resilience_tier', 'business');
+        localStorage.setItem('resilience_tier', 'teams-starter');
         window.PaymentGating.applyGating();
         expect(dashboardLink.hidden).toBe(false);
     });
 });
 
 describe('tier helper functions', () => {
-    test('isDeepReport() returns true for atlas-navigator, atlas-premium, and business', () => {
+    test('isDeepReport() returns true for atlas-navigator, atlas-premium, and teams tiers', () => {
         loadGatingScript();
 
-        ['atlas-navigator', 'atlas-premium', 'business'].forEach(tier => {
+        ['atlas-navigator', 'atlas-premium', 'teams-starter', 'teams-pro', 'teams-enterprise'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isDeepReport()).toBe(true);
         });
@@ -186,16 +187,16 @@ describe('tier helper functions', () => {
         localStorage.setItem('resilience_tier', 'atlas-starter');
         expect(window.PaymentGating.isBasicReport()).toBe(true);
 
-        ['atlas-navigator', 'atlas-premium', 'business', 'free'].forEach(tier => {
+        ['atlas-navigator', 'atlas-premium', 'teams-starter', 'free'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isBasicReport()).toBe(false);
         });
     });
 
-    test('isAnyPaidTier() returns true for atlas-starter, atlas-navigator, atlas-premium, and business', () => {
+    test('isAnyPaidTier() returns true for all paid tiers', () => {
         loadGatingScript();
 
-        ['atlas-starter', 'atlas-navigator', 'atlas-premium', 'business', 'starter', 'pro', 'enterprise'].forEach(tier => {
+        ['atlas-starter', 'atlas-navigator', 'atlas-premium', 'teams-starter', 'teams-pro', 'teams-enterprise', 'starter', 'pro', 'enterprise'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
             expect(window.PaymentGating.isAnyPaidTier()).toBe(true);
         });
@@ -204,14 +205,16 @@ describe('tier helper functions', () => {
         expect(window.PaymentGating.isAnyPaidTier()).toBe(false);
     });
 
-    test('isAtlasPremium() returns true only for atlas-premium and business', () => {
+    test('isAtlasPremium() returns true for atlas-premium and all teams tiers', () => {
         loadGatingScript();
 
         localStorage.setItem('resilience_tier', 'atlas-premium');
         expect(window.PaymentGating.isAtlasPremium()).toBe(true);
 
-        localStorage.setItem('resilience_tier', 'business');
-        expect(window.PaymentGating.isAtlasPremium()).toBe(true);
+        ['teams-starter', 'teams-pro', 'teams-enterprise'].forEach(tier => {
+            localStorage.setItem('resilience_tier', tier);
+            expect(window.PaymentGating.isAtlasPremium()).toBe(true);
+        });
 
         localStorage.setItem('resilience_tier', 'atlas-navigator');
         expect(window.PaymentGating.isAtlasPremium()).toBe(false);
@@ -220,11 +223,13 @@ describe('tier helper functions', () => {
         expect(window.PaymentGating.isAtlasPremium()).toBe(false);
     });
 
-    test('isBusiness() returns true only for business tier', () => {
+    test('isBusiness() returns true for all teams tiers', () => {
         loadGatingScript();
 
-        localStorage.setItem('resilience_tier', 'business');
-        expect(window.PaymentGating.isBusiness()).toBe(true);
+        ['teams-starter', 'teams-pro', 'teams-enterprise'].forEach(tier => {
+            localStorage.setItem('resilience_tier', tier);
+            expect(window.PaymentGating.isBusiness()).toBe(true);
+        });
 
         ['atlas-starter', 'atlas-navigator', 'atlas-premium', 'free'].forEach(tier => {
             localStorage.setItem('resilience_tier', tier);
@@ -476,8 +481,8 @@ describe('retake gating', () => {
         expect(lockedMsg.hidden).toBe(true);
     });
 
-    test('business tier: retake button visible (unlimited retakes)', () => {
-        localStorage.setItem('resilience_tier', 'business');
+    test('teams-starter tier: retake button visible (teams have unlimited retakes)', () => {
+        localStorage.setItem('resilience_tier', 'teams-starter');
         loadGatingScript();
         const { retakeBtn, lockedMsg } = buildRetakeDOM();
 

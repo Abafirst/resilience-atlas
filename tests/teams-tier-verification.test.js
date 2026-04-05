@@ -38,6 +38,10 @@ describe('Teams Tier Verification', () => {
         it('maps teams-pro to pro', () => {
             expect(PLAN_ALIASES['teams-pro']).toBe('pro');
         });
+
+        it('maps teams-enterprise to enterprise', () => {
+            expect(PLAN_ALIASES['teams-enterprise']).toBe('enterprise');
+        });
     });
 
     describe('normalizePlan()', () => {
@@ -47,6 +51,10 @@ describe('Teams Tier Verification', () => {
 
         it('resolves teams-pro to pro', () => {
             expect(normalizePlan('teams-pro')).toBe('pro');
+        });
+
+        it('resolves teams-enterprise to enterprise', () => {
+            expect(normalizePlan('teams-enterprise')).toBe('enterprise');
         });
 
         it('leaves enterprise unchanged', () => {
@@ -106,10 +114,22 @@ describe('Teams Tier Verification', () => {
             }
         });
 
+        it('teams-enterprise alias behaves identically to enterprise', () => {
+            for (const gate of ['basic', 'advanced', 'multi-team', 'facilitation', 'branding', 'webhooks']) {
+                expect(canAccessFeature('teams-enterprise', gate)).toBe(true);
+            }
+        });
+
         it('getTierConfig returns config for enterprise', () => {
             const cfg = getTierConfig('enterprise');
             expect(cfg).not.toBeNull();
             expect(cfg.name).toBe('Atlas Enterprise');
+        });
+
+        it('getTierConfig returns config for teams-enterprise alias', () => {
+            const cfg = getTierConfig('teams-enterprise');
+            expect(cfg).not.toBeNull();
+            expect(cfg.name).toBeDefined();
         });
     });
 
