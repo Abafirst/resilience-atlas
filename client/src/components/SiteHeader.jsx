@@ -58,27 +58,27 @@ export default function SiteHeader({
   }, []);
 
   // Update journey link based on Auth0 authentication status.
-  // Auth0 users: query backend to check if they have completed the quiz.
+  // Auth0 users: query assessment history to check if they have any stored assessments.
   // Unauthenticated users: fall back to localStorage check.
   useEffect(() => {
     if (auth0Loading) return;
 
     if (isAuthenticated && auth0User?.email) {
-      fetch(`/api/auth/user-status?email=${encodeURIComponent(auth0User.email)}`)
+      fetch(`/api/assessment/history?email=${encodeURIComponent(auth0User.email)}`)
         .then(r => {
           if (!r.ok) {
-            console.warn('[SiteHeader] user-status check failed:', r.status);
+            console.warn('[SiteHeader] assessment history check failed:', r.status);
             return null;
           }
           return r.json();
         })
         .then(data => {
           if (data) {
-            setJourneyHref(data.hasCompletedQuiz ? '/results' : '/quiz');
+            setJourneyHref(data.assessments?.length > 0 ? '/results' : '/quiz');
           }
         })
         .catch(err => {
-          console.warn('[SiteHeader] user-status fetch error:', err.message);
+          console.warn('[SiteHeader] assessment history fetch error:', err.message);
           // On error, leave the current href in place (localStorage-based default).
         });
     } else {
