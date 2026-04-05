@@ -18,9 +18,15 @@ async function fetchUserTier(email, token) {
   if (!data.hasAccess) return 'free';
   const purchases = Array.isArray(data.purchases) ? data.purchases : [];
   const tiers = purchases.map(p => p.tier);
-  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
+  // Individual tiers
+  if (tiers.some(t => t === 'atlas-premium'))                                       return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess)          return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                                       return 'atlas-starter';
+  // Teams tiers — map to equivalent individual access levels
+  if (tiers.some(t => t === 'teams-enterprise' || t === 'enterprise'))              return 'atlas-navigator';
+  if (tiers.some(t => t === 'teams-pro'        || t === 'pro'))                     return 'atlas-navigator';
+  if (tiers.some(t => t === 'teams-starter'    || t === 'starter'))                 return 'atlas-starter';
+  // hasAccess is true but no specific tier found — grant minimum starter access.
   if (purchases.length === 0) return 'atlas-starter';
   return 'free';
 }
@@ -96,6 +102,7 @@ export default function AdultGameHub({ tier: tierProp }) {
     // When a tier is provided by the parent, trust it and skip the redundant API call.
     if (tierProp) {
       setTier(tierProp);
+      setTierLoading(false);
       return;
     }
     if (auth0Loading) return;

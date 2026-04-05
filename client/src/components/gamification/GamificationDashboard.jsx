@@ -15,6 +15,20 @@ import AdultGameHub from './AdultGameHub.jsx';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
+/**
+ * Maps legacy and teams purchase tier names to canonical individual tier names.
+ * Used when the API call fails and we need to normalize the cached localStorage value.
+ */
+const LEGACY_TIER_MAP = {
+  'starter':        'atlas-starter',
+  'teams-starter':  'atlas-starter',
+  'pro':            'atlas-navigator',
+  'teams-pro':      'atlas-navigator',
+  'enterprise':     'atlas-navigator',
+  'teams-enterprise': 'atlas-navigator',
+  'business':       'atlas-navigator',
+};
+
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
   const headers = {};
@@ -26,13 +40,13 @@ async function fetchUserTier(email, token) {
   const purchases = Array.isArray(data.purchases) ? data.purchases : [];
   const tiers = purchases.map(p => p.tier);
   // Individual tiers
-  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-premium';
-  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
+  if (tiers.some(t => t === 'atlas-premium'))                                       return 'atlas-premium';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess)          return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                                       return 'atlas-starter';
   // Teams tiers — map to equivalent individual access levels
-  if (tiers.some(t => t === 'enterprise'))                             return 'atlas-navigator';
-  if (tiers.some(t => t === 'pro'     || t === 'teams-pro'))          return 'atlas-navigator';
-  if (tiers.some(t => t === 'starter' || t === 'teams-starter'))      return 'atlas-starter';
+  if (tiers.some(t => t === 'teams-enterprise' || t === 'enterprise'))              return 'atlas-navigator';
+  if (tiers.some(t => t === 'teams-pro'        || t === 'pro'))                     return 'atlas-navigator';
+  if (tiers.some(t => t === 'teams-starter'    || t === 'starter'))                 return 'atlas-starter';
   // hasAccess is true but no specific tier detected in purchases —
   // grant minimum starter access (covers dev mode where purchases is empty,
   // and legacy user-flag grants that don't produce a Purchase record).
@@ -307,11 +321,15 @@ export default function GamificationDashboard() {
       .catch(() => {
         // Fall back to cached tier so users with valid purchases aren't
         // incorrectly shown the locked state due to a transient network error.
+        // Normalize legacy/teams tier names to canonical individual tiers.
         try {
           const cachedTier = localStorage.getItem('resilience_tier');
-          if (cachedTier && isStarterOrAbove(cachedTier)) {
-            setUserTier(cachedTier);
-            return;
+          if (cachedTier) {
+            const resolved = LEGACY_TIER_MAP[cachedTier] || cachedTier;
+            if (isStarterOrAbove(resolved)) {
+              setUserTier(resolved);
+              return;
+            }
           }
         } catch (_) { /* ignore */ }
         setTierError('Unable to verify your access level. Please refresh the page or try again.');

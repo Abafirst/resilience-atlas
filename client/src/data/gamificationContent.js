@@ -19,13 +19,16 @@ export const TIER_DISPLAY = {
   'atlas-navigator': 'Atlas Navigator',
 };
 
-/** Tiers that include Atlas Starter access (or above). Includes all paid Teams tiers. */
+/** Tiers that include Atlas Starter access (or above). Includes all paid Teams tiers.
+ *  Note: legacy short names ('starter', 'pro', 'enterprise') are mapped to canonical
+ *  individual tiers by fetchUserTier() before these arrays are consulted. */
 const STARTER_AND_ABOVE = [
   'atlas-starter', 'atlas-navigator', 'atlas-premium',
   'teams-starter', 'teams-pro', 'teams-enterprise',
 ];
 
-/** Tiers that include Atlas Navigator access (or above). Teams Pro and above. */
+/** Tiers that include Atlas Navigator access (or above). Teams Pro and above.
+ *  Note: legacy short names are normalized upstream before these arrays are consulted. */
 const NAVIGATOR_AND_ABOVE = [
   'atlas-navigator', 'atlas-premium',
   'teams-pro', 'teams-enterprise',
