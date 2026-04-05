@@ -1693,7 +1693,7 @@ function buildShareText(dominantDimension) {
 }
 
 function shareLinkedIn(dominantDimension) {
-  const url = encodeURIComponent(window.location.origin + '/quiz.html');
+  const url = encodeURIComponent(window.location.origin + '/quiz');
   const text = encodeURIComponent(buildShareText(dominantDimension));
   window.open(
     `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${text}`,
@@ -1702,7 +1702,7 @@ function shareLinkedIn(dominantDimension) {
 }
 
 function shareTwitter(dominantDimension) {
-  const url  = encodeURIComponent(window.location.origin + '/quiz.html');
+  const url  = encodeURIComponent(window.location.origin + '/quiz');
   const text = encodeURIComponent(buildShareText(dominantDimension));
   window.open(
     `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
@@ -2449,7 +2449,7 @@ export default function ResultsPage() {
 
   // ── Copy link handler ─────────────────────────────────────────────────
   const handleCopyLink = useCallback(() => {
-    const link = window.location.origin + '/quiz.html';
+    const link = window.location.origin + '/quiz';
     const dim  = (results && results.dominantType) || '';
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(link)
@@ -2673,7 +2673,7 @@ export default function ResultsPage() {
               {isPaidTier(tier) && (
                 <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
               )}
-              <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
+              <a href="/quiz" style={s.retakeBtn}>Retake Quiz</a>
             </nav>
           </div>
         </header>
@@ -2698,7 +2698,7 @@ export default function ResultsPage() {
                       : 'Your assessment results and purchase history are shown below. Take a new assessment or download a prior report.'
                     }
                   </p>
-                  <a href="/quiz.html" style={s.primaryBtn}>
+                  <a href="/quiz" style={s.primaryBtn}>
                     {isReturnFromPayment ? 'Re-take Assessment' : 'Take New Assessment'}
                   </a>
                 </div>
@@ -2735,7 +2735,7 @@ export default function ResultsPage() {
                       : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
                   }
                 </p>
-                <a href="/quiz.html" style={s.primaryBtn}>
+                <a href="/quiz" style={s.primaryBtn}>
                   {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
                 </a>
                 {!isReturnFromPayment && !isAuthenticated && (
@@ -2823,7 +2823,7 @@ export default function ResultsPage() {
             {isPaidTier(tier) && (
               <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
             )}
-            <a href="/quiz.html" style={s.retakeBtn}>Retake Quiz</a>
+            <a href="/quiz" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
         </div>
       </header>
@@ -3204,7 +3204,7 @@ export default function ResultsPage() {
                 localStorage.removeItem('resilience_results');
                 localStorage.removeItem('resilience_email');
               } catch (_) { /* ignore */ }
-              window.location.href = '/quiz.html';
+              window.location.href = '/quiz';
             }}
           >
             ↺ Re-take the assessment
@@ -3631,7 +3631,7 @@ export default function ResultsPage() {
               <div style={s.quicklinksGroupHeading}>Assessment</div>
               <ul style={s.quicklinksGroupLinks}>
                 <li><a href="/assessment.html" style={s.quicklinkAnchor}>About the Assessment</a></li>
-                <li><a href="/quiz.html" style={s.quicklinkAnchor}>Take the Quiz</a></li>
+                <li><a href="/quiz" style={s.quicklinkAnchor}>Take the Quiz</a></li>
                 <li><a href="/results" style={s.quicklinkAnchor}>My Results</a></li>
               </ul>
             </div>
