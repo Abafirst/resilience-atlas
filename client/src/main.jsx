@@ -76,7 +76,12 @@ async function init() {
       explicitTarget !== '/'
     ) {
       console.debug('[Auth0] onRedirectCallback explicit returnTo:', explicitTarget);
-      window.history.replaceState({}, document.title, explicitTarget);
+      // Use window.location.replace so that React Router initialises at the
+      // correct path.  window.history.replaceState only changes the address
+      // bar without firing a popstate event, so React Router v6 would never
+      // re-render the matching route.  A full navigation (replace, not push)
+      // keeps the back-button behaviour clean.
+      window.location.replace(explicitTarget);
       return;
     }
 
@@ -91,14 +96,14 @@ async function init() {
         .then((data) => {
           const target = data.hasCompletedQuiz ? '/results' : '/';
           console.debug('[Auth0] onRedirectCallback status check → navigating to', target);
-          window.history.replaceState({}, document.title, target);
+          window.location.replace(target);
         })
         .catch(() => {
           // On error fall back to home; HomeRoute will re-check on mount.
-          window.history.replaceState({}, document.title, '/');
+          window.location.replace('/');
         });
     } else {
-      window.history.replaceState({}, document.title, '/');
+      window.location.replace('/');
     }
   };
 
