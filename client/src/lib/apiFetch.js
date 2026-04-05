@@ -38,7 +38,7 @@ export async function apiFetch(url, options = {}, getTokenFn) {
       // getAccessTokenSilently failed (e.g. user not logged in, no audience).
       // Log in development so misconfiguration is easy to spot, then proceed
       // without the Authorization header — unprotected routes still work.
-      if (process.env.NODE_ENV !== 'production') {
+      if (import.meta.env?.DEV) {
         console.debug('[apiFetch] Could not get access token:', err?.message || err);
       }
     }
