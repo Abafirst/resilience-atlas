@@ -19,11 +19,17 @@ export const TIER_DISPLAY = {
   'atlas-navigator': 'Atlas Navigator',
 };
 
-/** Tiers that include Atlas Starter access (or above). */
-const STARTER_AND_ABOVE = ['atlas-starter', 'atlas-navigator', 'atlas-premium'];
+/** Tiers that include Atlas Starter access (or above). Includes all paid Teams tiers. */
+const STARTER_AND_ABOVE = [
+  'atlas-starter', 'atlas-navigator', 'atlas-premium',
+  'starter', 'teams-starter', 'pro', 'teams-pro', 'enterprise', 'teams-enterprise',
+];
 
-/** Tiers that include Atlas Navigator access (or above). */
-const NAVIGATOR_AND_ABOVE = ['atlas-navigator', 'atlas-premium'];
+/** Tiers that include Atlas Navigator access (or above). Teams Premium and above. */
+const NAVIGATOR_AND_ABOVE = [
+  'atlas-navigator', 'atlas-premium',
+  'pro', 'teams-pro', 'enterprise', 'teams-enterprise',
+];
 
 /** Returns true when the tier grants Atlas Starter (or above) access. */
 export function isStarterOrAbove(tier) {

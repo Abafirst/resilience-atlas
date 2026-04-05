@@ -5,17 +5,22 @@ const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const ResilienceResult = require('../models/ResilienceResult');
-const { TIER_CONFIG } = require('../config/tiers');
+const { TIER_CONFIG, PREMIUM_TIERS } = require('../config/tiers');
 const { canAccessFeature } = require('../utils/tierUtils');
 
 /**
- * Tiers that grant access to any report (basic PDF summary or full deep report).
- * Derived dynamically from TIER_CONFIG via canAccessFeature so that adding or
- * changing a tier in tiers.js automatically updates this set — no hardcoding.
+ * Tiers that grant access to any report or gamification feature.
+ * Uses PREMIUM_TIERS to include both individual tiers (atlas-starter, atlas-navigator,
+ * atlas-premium) and all Teams tiers (starter, pro, enterprise).
+ * Derived from TIER_CONFIG for tiers with report/gamification gates, plus all PREMIUM_TIERS,
+ * so that adding a new tier in tiers.js automatically updates this set.
  */
-const REPORT_ACCESS_TIERS = Object.keys(TIER_CONFIG).filter(
-    (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report') || canAccessFeature(tier, 'gamification')
-);
+const REPORT_ACCESS_TIERS = Array.from(new Set([
+    ...Object.keys(TIER_CONFIG).filter(
+        (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report') || canAccessFeature(tier, 'gamification')
+    ),
+    ...PREMIUM_TIERS,
+]));
 
 /**
  * Tiers that grant blanket (all-assessment) PDF access.

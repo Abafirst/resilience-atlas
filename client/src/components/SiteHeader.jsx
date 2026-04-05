@@ -9,16 +9,16 @@ const DEFAULT_NAV_ITEMS = [
   { href: '/about', label: 'About', key: 'about' },
 ];
 
-/** Tiers that include Atlas Starter access or above. */
-const STARTER_AND_ABOVE = ['atlas-starter', 'atlas-navigator', 'atlas-premium'];
-
-/** Returns true when the locally-stored tier grants Starter (or above) access. */
-function readIsStarterOrAbove() {
+/**
+ * Returns the href for the "Resilience Journey" nav link.
+ * Sends users with completed quiz results to /results; new users to /quiz.
+ */
+function getJourneyHref() {
   try {
-    const stored = localStorage.getItem('resilience_tier');
-    return STARTER_AND_ABOVE.includes(stored);
+    const results = localStorage.getItem('resilience_results');
+    return results ? '/results' : '/quiz';
   } catch (_) {
-    return false;
+    return '/quiz';
   }
 }
 
@@ -40,8 +40,8 @@ export default function SiteHeader({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  // Lazy initializer: read tier once on mount; missing/non-paid tier returns false.
-  const [showJourneyLink, setShowJourneyLink] = useState(() => readIsStarterOrAbove());
+  // Compute the journey link href once on mount (localStorage read is synchronous).
+  const [journeyHref] = useState(() => getJourneyHref());
   const navRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -138,15 +138,13 @@ export default function SiteHeader({
               {item.label}
             </a>
           ))}
-          {showJourneyLink && (
-            <a
-              href="/gamification"
-              className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
-              aria-label="Resilience Journey — your practices and progress"
-            >
-              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} /> Resilience Journey
-            </a>
-          )}
+          <a
+            href={journeyHref}
+            className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
+            aria-label="Resilience Journey — your practices and progress"
+          >
+            <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} /> Resilience Journey
+          </a>
           <button
             className="theme-toggle"
             aria-label={isDarkTheme ? 'Switch to light mode' : 'Switch to dark mode'}

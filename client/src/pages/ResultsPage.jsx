@@ -1875,7 +1875,10 @@ function tierLabel(tierId) {
 
 // ── Returns true for any tier that grants paid report access ──────────────
 function isPaidTier(tierId) {
-  return tierId === 'atlas-starter' || tierId === 'atlas-navigator' || tierId === 'atlas-premium';
+  return tierId === 'atlas-starter' || tierId === 'atlas-navigator' || tierId === 'atlas-premium' ||
+    tierId === 'starter' || tierId === 'teams-starter' ||
+    tierId === 'pro'     || tierId === 'teams-pro'     ||
+    tierId === 'enterprise' || tierId === 'teams-enterprise';
 }
 
 // ── Gamification helpers ───────────────────────────────────────────────────

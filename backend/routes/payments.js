@@ -462,6 +462,7 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /api/payments/status
 // Check the highest completed purchase tier for a given email.
+// Returns the best available tier (individual or teams) in priority order.
 // Query: ?email=<email>
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/status', paymentsLimiter, async (req, res) => {
@@ -471,32 +472,29 @@ router.get('/status', paymentsLimiter, async (req, res) => {
             return res.status(400).json({ error: 'Email is required.' });
         }
 
-        // Atlas Premium supersedes Atlas Navigator supersedes Atlas Starter — return the best available tier.
-        const premiumPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
-            status: 'completed',
-            tier: 'atlas-premium',
-        });
-        if (premiumPurchase) {
-            return res.json({ tier: 'atlas-premium', purchasedAt: premiumPurchase.purchasedAt });
-        }
+        const cleanEmail = email.toLowerCase().trim();
 
-        const deepPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
-            status: 'completed',
-            tier: 'atlas-navigator',
-        });
-        if (deepPurchase) {
-            return res.json({ tier: 'atlas-navigator', purchasedAt: deepPurchase.purchasedAt });
-        }
+        // Check tiers in priority order — most permissive first.
+        // Individual tiers: atlas-premium > atlas-navigator > atlas-starter
+        // Teams tiers: enterprise > pro > starter (all map to navigator-level or above)
+        const TIER_PRIORITY = [
+            'atlas-premium',
+            'atlas-navigator',
+            'enterprise',
+            'pro',
+            'atlas-starter',
+            'starter',
+        ];
 
-        const starterPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
-            status: 'completed',
-            tier: 'atlas-starter',
-        });
-        if (starterPurchase) {
-            return res.json({ tier: 'atlas-starter', purchasedAt: starterPurchase.purchasedAt });
+        for (const tier of TIER_PRIORITY) {
+            const purchase = await Purchase.findOne({
+                email: cleanEmail,
+                status: 'completed',
+                tier,
+            }).lean();
+            if (purchase) {
+                return res.json({ tier, purchasedAt: purchase.purchasedAt });
+            }
         }
 
         res.json({ tier: 'free' });
