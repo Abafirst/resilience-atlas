@@ -18,17 +18,9 @@ async function fetchUserTier(email, token) {
   if (!data.hasAccess) return 'free';
   const purchases = Array.isArray(data.purchases) ? data.purchases : [];
   const tiers = purchases.map(p => p.tier);
-  // Individual tiers
-  if (tiers.some(t => t === 'atlas-premium'))                               return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess)  return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-starter'))                               return 'atlas-starter';
-  // Teams tiers — map to equivalent individual access levels
-  if (tiers.some(t => t === 'enterprise'))                                  return 'atlas-navigator';
-  if (tiers.some(t => t === 'pro'     || t === 'teams-pro'))                return 'atlas-navigator';
-  if (tiers.some(t => t === 'starter' || t === 'teams-starter'))            return 'atlas-starter';
-  // hasAccess is true but no specific tier detected in purchases —
-  // grant minimum starter access (covers dev mode where purchases is empty,
-  // and legacy user-flag grants that don't produce a Purchase record).
+  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
   if (purchases.length === 0) return 'atlas-starter';
   return 'free';
 }
@@ -95,11 +87,9 @@ export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
   const [tier, setTier] = useState(() => {
-    // If a tier is provided by the parent (e.g. GamificationDashboard), use it directly.
-    if (tierProp) return tierProp;
-    // Pre-populate from localStorage so the hub renders immediately for returning users.
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
+  const [tierLoading, setTierLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
@@ -118,11 +108,12 @@ export default function AdultGameHub({ tier: tierProp }) {
           try { localStorage.setItem('resilience_tier', t); } catch (_) { /* ignore */ }
         })
         .catch(() => {
-          // Fall back to cached tier on network error; use functional update to avoid stale closure.
           setTier(current => current || 'free');
-        });
+        })
+        .finally(() => setTierLoading(false));
     } else if (!isAuthenticated) {
       setTier('free');
+      setTierLoading(false);
     }
   }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently, tierProp]);
 
@@ -134,12 +125,7 @@ export default function AdultGameHub({ tier: tierProp }) {
     { id: 'progress',  label: 'Progress',         available: isStarterOrAbove(tier) },
   ];
 
-  // When the tier is provided by the parent (embedded mode), don't block on gamification
-  // API loading since the gamification progress API requires Navigator access and may fail
-  // with a 402 for Starter users — the tier is already confirmed by the parent.
-  const isWaiting = tierProp ? !tier : (!tier || loading);
-
-  if (isWaiting) {
+  if (tierLoading) {
     return (
       <div style={s.wrap}>
         <div style={{ padding: 40, textAlign: 'center', color: '#718096', fontSize: 14 }}>
