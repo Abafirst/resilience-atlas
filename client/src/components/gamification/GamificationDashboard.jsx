@@ -17,22 +17,22 @@ import AdultGameHub from './AdultGameHub.jsx';
 
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
-  try {
-    const headers = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    const res = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
-    const data = await res.json().catch(() => ({}));
-    if (!data.hasAccess || !Array.isArray(data.purchases) || data.purchases.length === 0) {
-      return 'free';
-    }
-    const tiers = data.purchases.map(p => p.tier);
-    if (tiers.some(t => t === 'atlas-premium'))   return 'atlas-premium';
-    if (tiers.some(t => t === 'atlas-navigator')) return 'atlas-navigator';
-    if (tiers.some(t => t === 'atlas-starter'))   return 'atlas-starter';
-    return 'free';
-  } catch {
-    return 'free';
-  }
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
+  if (!res.ok) throw new Error(`Access check failed (${res.status})`);
+  const data = await res.json();
+  if (!data.hasAccess) return 'free';
+  const purchases = Array.isArray(data.purchases) ? data.purchases : [];
+  const tiers = purchases.map(p => p.tier);
+  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-premium';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
+  // hasAccess is true but no specific tier detected in purchases —
+  // grant minimum starter access (covers dev mode where purchases is empty,
+  // and legacy user-flag grants that don't produce a Purchase record).
+  if (purchases.length === 0) return 'atlas-starter';
+  return 'free';
 }
 
 // ── Styles ────────────────────────────────────────────────────────────────────
@@ -265,6 +265,7 @@ export default function GamificationDashboard() {
 
   const [userTier, setUserTier]       = useState('free');
   const [tierLoading, setTierLoading] = useState(true);
+  const [tierError, setTierError]     = useState(null);
   const [paymentBanner, setPaymentBanner] = useState(null);
 
   useEffect(() => {
@@ -274,11 +275,19 @@ export default function GamificationDashboard() {
       return;
     }
     const email = user?.email || '';
+    if (!email) {
+      setTierLoading(false);
+      return;
+    }
     setTierLoading(true);
+    setTierError(null);
     getAccessTokenSilently()
       .catch(() => null)
       .then(token => fetchUserTier(email, token))
       .then(tier => setUserTier(tier))
+      .catch(() => {
+        setTierError('Unable to verify your access level. Please refresh the page or try again.');
+      })
       .finally(() => setTierLoading(false));
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
@@ -437,6 +446,13 @@ export default function GamificationDashboard() {
           {isAuthenticated && tierLoading && (
             <div style={s.loadingMsg} role="status" aria-live="polite">
               Checking your compass bearing…
+            </div>
+          )}
+
+          {/* Tier verification error */}
+          {isAuthenticated && !tierLoading && tierError && (
+            <div style={s.errorMsg} role="alert">
+              ⚠️ {tierError}
             </div>
           )}
 
