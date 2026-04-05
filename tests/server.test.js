@@ -220,12 +220,12 @@ describe('GET /', () => {
 // ── Public assessment pages (free, no payment required) ──────────────────────
 
 describe('GET /quiz.html', () => {
-    test('serves the assessment page without requiring payment (HTTP 200)', async () => {
-        // The basic assessment is free. /quiz.html must be accessible without
-        // authentication or payment so that all users can take the quiz.
+    test('permanently redirects to /quiz (SPA route)', async () => {
+        // /quiz.html now redirects to the SPA /quiz route so that all users land
+        // on the React SPA which handles auth via Auth0Provider.
         const res = await request(app).get('/quiz.html');
-        expect(res.status).toBe(200);
-        expect(res.type).toMatch(/html/);
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/quiz');
     });
 });
 
@@ -240,18 +240,17 @@ describe('GET /results.html', () => {
 });
 
 describe('GET /team.html', () => {
-    test('permanently redirects to /team (SPA route)', async () => {
-        // /team.html must redirect to the canonical SPA route /team so that
-        // Stripe post-payment callbacks land on the React SPA.
+    test('permanently redirects to /teams (SPA route)', async () => {
+        // /team.html redirects to /teams (the canonical Teams landing SPA route).
         const res = await request(app).get('/team.html');
         expect(res.status).toBe(301);
-        expect(res.headers.location).toBe('/team');
+        expect(res.headers.location).toBe('/teams');
     });
 
     test('preserves query-string params when redirecting', async () => {
         const res = await request(app).get('/team.html?upgrade=success&session_id=cs_test_123');
         expect(res.status).toBe(301);
-        expect(res.headers.location).toBe('/team?upgrade=success&session_id=cs_test_123');
+        expect(res.headers.location).toBe('/teams?upgrade=success&session_id=cs_test_123');
     });
 });
 

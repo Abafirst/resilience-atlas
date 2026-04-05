@@ -295,8 +295,9 @@ app.get("/health", (req, res) => {
 app.get("/config", (req, res) => {
   res.json({
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
-    auth0Domain: process.env.AUTH0_DOMAIN || null,
-    auth0ClientId: process.env.AUTH0_CLIENT_ID || null,
+    auth0Domain:    process.env.AUTH0_DOMAIN    || null,
+    auth0ClientId:  process.env.AUTH0_CLIENT_ID || null,
+    auth0Audience:  process.env.AUTH0_AUDIENCE  || null,
   });
 });
 

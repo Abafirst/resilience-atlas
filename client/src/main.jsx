@@ -27,7 +27,13 @@ async function loadAuth0Config() {
     if (res.ok) {
       const data = await res.json();
       if (data.auth0Domain && data.auth0ClientId) {
-        return { domain: data.auth0Domain, clientId: data.auth0ClientId };
+        return {
+          domain:   data.auth0Domain,
+          clientId: data.auth0ClientId,
+          // Prefer server-side audience so the SPA and backend always agree,
+          // even when VITE_AUTH0_AUDIENCE was not set at build time.
+          audience: data.auth0Audience || import.meta.env.VITE_AUTH0_AUDIENCE || null,
+        };
       }
     }
   } catch (_) {
@@ -37,12 +43,13 @@ async function loadAuth0Config() {
   return {
     domain:   import.meta.env.VITE_AUTH0_DOMAIN,
     clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+    audience: import.meta.env.VITE_AUTH0_AUDIENCE || null,
   };
 }
 
 async function init() {
-  const { domain, clientId } = await loadAuth0Config();
-  const audience    = import.meta.env.VITE_AUTH0_AUDIENCE;
+  const { domain, clientId, audience: configAudience } = await loadAuth0Config();
+  const audience    = configAudience;
   const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI || window.location.origin;
 
   if (!domain || !clientId) {

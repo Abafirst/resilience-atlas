@@ -237,22 +237,16 @@ No manual build step is required when deploying via Railway with the Dockerfile 
 
 ## 🔐 Auth0 Authentication
 
-The application uses [Auth0](https://auth0.com/) for user authentication, enforced on both the quiz page and the React-powered results/hub pages.
+The application uses [Auth0](https://auth0.com/) for user authentication across the React SPA.
 
 ### How it works
 
-**Quiz page (`/quiz.html`)**
-1. `quiz-auth.js` fetches runtime Auth0 configuration from the server's `/config` endpoint.
-2. Initialises the Auth0 SPA JS SDK with the domain and client ID returned by `/config`.
-3. If the user is not authenticated, `loginWithRedirect()` redirects them to Auth0 Universal Login.  After login Auth0 redirects back to `/quiz.html`.
-4. If `AUTH0_DOMAIN` or `AUTH0_CLIENT_ID` are not set on the server, auth is silently bypassed so local development still works.
-
-**Results / hub page (React SPA at `/results.html`)**
-1. `client/src/main.jsx` fetches Auth0 domain and client ID at runtime from `/config`.
-2. This ensures the React SPA and the server-side Content-Security-Policy (CSP) always reference the **same Auth0 tenant** — preventing the browser from blocking the silent-auth iframe or token-exchange CORS request when the domain baked into the JS bundle differs from the server environment.
-3. `useRefreshTokens={true}` and `cacheLocation="localstorage"` are set on `Auth0Provider` so that:
-   - Tokens survive page navigations (quiz → results) without needing an extra login round-trip.
-   - Silent token renewal uses refresh tokens instead of the hidden-iframe / third-party-cookie approach that is blocked by Chrome, Safari ITP, and Firefox ETP.
+**React SPA (all routes: `/`, `/results`, `/quiz`, `/team`, `/gamification`, etc.)**
+1. `client/src/main.jsx` fetches Auth0 configuration at runtime from `GET /config` (domain, client ID, and API audience).
+2. Using `@auth0/auth0-react`, the SPA authenticates via PKCE and obtains an **access token** for the configured API audience.
+3. All protected API calls attach `Authorization: Bearer <access_token>` via the `apiFetch` helper in `client/src/lib/apiFetch.js`.
+4. The backend validates these tokens using Auth0's JWKS endpoint (`https://<AUTH0_DOMAIN>/.well-known/jwks.json`).
+5. `useRefreshTokens={true}` and `cacheLocation="localstorage"` keep users logged in across page navigations.
 
 ### Required environment variables (server)
 
@@ -260,12 +254,24 @@ The application uses [Auth0](https://auth0.com/) for user authentication, enforc
 |---|---|---|
 | `AUTH0_DOMAIN` | `your-tenant.us.auth0.com` | Auth0 tenant domain |
 | `AUTH0_CLIENT_ID` | `abc123…` | Client ID of your Auth0 Single-Page Application |
-| `AUTH0_SECRET` | _(32+ random bytes)_ | Long random secret used to encrypt the server-side OIDC session cookie.  Required to enable the `/oidc-status` endpoint used by legacy pages. |
-| `BASE_URL` | `https://theresilienceatlas.com` | Full public URL of the deployed app (used by `express-openid-connect`) |
+| `AUTH0_AUDIENCE` | `https://theresilienceatlas.com/api` | **API Identifier** — enables JWT access tokens for the backend |
+| `AUTH0_SECRET` | _(32+ random bytes)_ | Long random secret used for the server-side OIDC session (optional, only needed for `/oidc-status`) |
+| `BASE_URL` | `https://theresilienceatlas.com` | Full public URL (used by `express-openid-connect`, optional) |
 
-`AUTH0_DOMAIN` and `AUTH0_CLIENT_ID` are exposed safely via `GET /config` (no secrets).
+`AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_AUDIENCE` are exposed safely via `GET /config` (no secrets).
 
-> ℹ️ `AUTH0_SECRET` and `BASE_URL` are only needed for the server-side OIDC session (`/profile`, `/oidc-status`).  If they are absent the React SPA still works fully via its own client-side Auth0 flow.
+> ℹ️ `AUTH0_AUDIENCE` is the most important new variable. Without it, Auth0 issues opaque tokens that cannot be validated by the backend, causing all `/api/auth/profile` and protected-endpoint calls to fail with 401.
+
+### Setting up an Auth0 API (required for access tokens)
+
+1. In the [Auth0 Dashboard](https://manage.auth0.com/), go to **APIs → Create API**.
+2. Set:
+   - **Name**: `Resilience Atlas API` (or any name)
+   - **Identifier (Audience)**: `https://theresilienceatlas.com/api`
+   - **Signing Algorithm**: RS256
+3. Click **Create**.
+4. Set `AUTH0_AUDIENCE=https://theresilienceatlas.com/api` in your Railway environment variables.
+5. Redeploy.
 
 ### Auth0 Application settings
 
@@ -273,13 +279,25 @@ In the Auth0 dashboard (**Applications → Your App → Settings**), configure t
 
 | Field | Value(s) |
 |---|---|
-| **Allowed Callback URLs** | `https://yourdomain.com, https://yourdomain.com/quiz.html, http://localhost:3000, http://localhost:3000/quiz.html` |
-| **Allowed Logout URLs** | `https://yourdomain.com, http://localhost:3000` |
-| **Allowed Web Origins** | `https://yourdomain.com, http://localhost:3000` |
+| **Allowed Callback URLs** | `https://theresilienceatlas.com, https://theresilienceatlas.com/results, https://theresilienceatlas.com/quiz, https://theresilienceatlas.com/team, https://theresilienceatlas.com/gamification, https://theresilienceatlas.com/dashboard, http://localhost:5173, http://localhost:3000` |
+| **Allowed Logout URLs** | `https://theresilienceatlas.com, http://localhost:5173, http://localhost:3000` |
+| **Allowed Web Origins** | `https://theresilienceatlas.com, http://localhost:5173, http://localhost:3000` |
 
-> ⚠️ The React SPA (`results.html`) uses `window.location.origin` as the callback URL.  Make sure the bare origin (e.g. `https://theresilienceatlas.com`) is listed in **Allowed Callback URLs** in addition to `/quiz.html`.
+> ⚠️ The SPA uses `window.location.origin` as `redirect_uri` by default.  The bare origin **must** be in **Allowed Callback URLs**.  Do **not** list `/quiz.html` as a callback — use `/quiz` (the SPA route) instead.
 
 > ⚠️ To use `useRefreshTokens={true}` without silent-auth failures, enable **Refresh Token Rotation** in Auth0 → Applications → Your App → **Refresh Token Rotation** and set an appropriate idle/absolute expiry.
+
+### Railway deployment checklist
+
+When deploying to Railway, ensure all of the following are set under **Variables**:
+
+```
+AUTH0_DOMAIN=your-tenant.us.auth0.com
+AUTH0_CLIENT_ID=your-spa-client-id
+AUTH0_AUDIENCE=https://theresilienceatlas.com/api
+```
+
+If `AUTH0_AUDIENCE` is missing, protected API endpoints will return `401 Access denied. No token provided.` even when the user appears logged in.
 
 ---
 

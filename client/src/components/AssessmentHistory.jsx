@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { STARTER_PRICE_LABEL } from '../constants/unlockPricing.js';
+import { apiFetch } from '../lib/apiFetch.js';
 
 /**
  * AssessmentHistory — shows all past assessments with unlock status.
@@ -12,6 +13,7 @@ import { STARTER_PRICE_LABEL } from '../constants/unlockPricing.js';
  *   email          {string}    User email for fetching history.
  *   onUnlock       {function}  Called with (tier, assessmentHash) when unlock is requested.
  *   checkoutLoading {string}   Tier ID currently loading (or '').
+ *   getTokenFn     {function}  Auth0 getAccessTokenSilently (optional) for authenticated requests.
  */
 
 const s = {
@@ -163,7 +165,7 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email) {
   throw new Error('Report generation timed out. Please try again.');
 }
 
-export default function AssessmentHistory({ email, onUnlock, checkoutLoading }) {
+export default function AssessmentHistory({ email, onUnlock, checkoutLoading, getTokenFn }) {
   const [loading, setLoading]           = useState(true);
   const [hasNavigatorAccess, setHasNavigatorAccess] = useState(false);
   const [assessments, setAssessments]   = useState([]);
@@ -172,7 +174,7 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading }) 
 
   useEffect(() => {
     if (!email) { setLoading(false); return; }
-    fetch(`/api/assessment/history?email=${encodeURIComponent(email)}`)
+    apiFetch(`/api/assessment/history?email=${encodeURIComponent(email)}`, {}, getTokenFn)
       .then(r => r.json())
       .then(data => {
         setHasNavigatorAccess(!!data.hasNavigatorAccess);
