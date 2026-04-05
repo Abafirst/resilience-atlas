@@ -21,7 +21,8 @@ async function fetchUserTier(email, token) {
   if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
   if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
   // hasAccess is true but no specific tier detected in purchases —
-  // grant minimum starter access (covers dev mode where purchases is empty).
+  // grant minimum starter access (covers dev mode where purchases is empty,
+  // and legacy user-flag grants that don't produce a Purchase record).
   if (purchases.length === 0) return 'atlas-starter';
   return 'free';
 }
