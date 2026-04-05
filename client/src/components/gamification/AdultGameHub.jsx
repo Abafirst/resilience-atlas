@@ -6,6 +6,7 @@ import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import GamificationToast from './GamificationToast.jsx';
 import { ADULT_BADGES } from '../../data/adultGames.js';
+import { isStarterOrAbove, isNavigatorOrAbove } from '../../data/gamificationContent.js';
 
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
@@ -25,7 +26,7 @@ async function fetchUserTier(email, token) {
 }
 
 const s = {
-  wrap: { fontFamily: "'Inter','Segoe UI',sans-serif", color: '#e2e8f0' },
+  wrap: { fontFamily: "'Inter','Segoe UI',sans-serif", color: '#e2e8f0', background: '#0d1526', borderRadius: 12, overflow: 'hidden' },
   header: {
     textAlign: 'center',
     padding: '32px 24px 24px',
@@ -48,9 +49,9 @@ const s = {
     borderRadius: 20,
     fontSize: 12,
     fontWeight: 600,
-    background: tier === 'atlas-navigator' ? 'rgba(79,70,229,0.15)' : 'rgba(107,114,128,0.15)',
-    color: tier === 'atlas-navigator' ? '#818cf8' : '#9ca3af',
-    border: `1px solid ${tier === 'atlas-navigator' ? 'rgba(79,70,229,0.3)' : 'rgba(107,114,128,0.3)'}`,
+    background: isNavigatorOrAbove(tier) ? 'rgba(79,70,229,0.15)' : 'rgba(107,114,128,0.15)',
+    color: isNavigatorOrAbove(tier) ? '#818cf8' : '#9ca3af',
+    border: `1px solid ${isNavigatorOrAbove(tier) ? 'rgba(79,70,229,0.3)' : 'rgba(107,114,128,0.3)'}`,
   }),
   tabs: {
     display: 'flex', gap: 4, padding: '16px 24px',
@@ -82,7 +83,7 @@ const s = {
   },
 };
 
-export default function AdultGameHub() {
+export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
   const [tier, setTier] = useState(() => {
@@ -92,6 +93,11 @@ export default function AdultGameHub() {
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
+    // When a tier is provided by the parent, trust it and skip the redundant API call.
+    if (tierProp) {
+      setTier(tierProp);
+      return;
+    }
     if (auth0Loading) return;
     if (isAuthenticated && user?.email) {
       getAccessTokenSilently()
@@ -109,14 +115,14 @@ export default function AdultGameHub() {
       setTier('free');
       setTierLoading(false);
     }
-  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
+  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently, tierProp]);
 
-  const tierLabel = tier === 'atlas-navigator' ? 'Atlas Navigator' : tier === 'atlas-starter' ? 'Atlas Starter' : 'Free';
+  const tierLabel = isNavigatorOrAbove(tier) ? 'Atlas Navigator' : isStarterOrAbove(tier) ? 'Atlas Starter' : 'Free';
 
   const tabs = [
-    { id: 'practices', label: 'Micro-Practices', available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
-    { id: 'pathways',  label: 'Skill Pathways',  available: tier === 'atlas-navigator' },
-    { id: 'progress',  label: 'Progress',         available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
+    { id: 'practices', label: 'Micro-Practices', available: isStarterOrAbove(tier) },
+    { id: 'pathways',  label: 'Skill Pathways',  available: isNavigatorOrAbove(tier) },
+    { id: 'progress',  label: 'Progress',         available: isStarterOrAbove(tier) },
   ];
 
   if (tierLoading) {
@@ -129,7 +135,7 @@ export default function AdultGameHub() {
     );
   }
 
-  if (!isAuthenticated || tier === 'free') {
+  if (!isAuthenticated || !isStarterOrAbove(tier)) {
     return (
       <div style={s.wrap}>
         <div style={s.header}>
@@ -188,7 +194,7 @@ export default function AdultGameHub() {
 
       <div style={s.content}>
         {activeTab === 'practices' && <StarterMicroQuests tier={tier} progress={progress} />}
-        {activeTab === 'pathways'  && tier === 'atlas-navigator' && <NavigatorSkillPaths progress={progress} />}
+        {activeTab === 'pathways'  && isNavigatorOrAbove(tier) && <NavigatorSkillPaths progress={progress} />}
         {activeTab === 'progress'  && <ProgressDashboard tier={tier} progress={progress} />}
       </div>
     </div>
