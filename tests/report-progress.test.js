@@ -101,7 +101,16 @@ jest.mock('nodemailer', () => ({
     createTransport: jest.fn(() => ({ sendMail: jest.fn().mockResolvedValue({ messageId: 'mock-id' }) })),
 }));
 
+// Mock ResilienceReport so status route DB fallback doesn't throw.
+jest.mock('../backend/models/ResilienceReport', () => {
+    const MockReport = jest.fn().mockImplementation(() => ({}));
+    MockReport.findOne = jest.fn().mockResolvedValue(null);
+    MockReport.findOneAndUpdate = jest.fn().mockResolvedValue({});
+    return MockReport;
+});
+
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
 
 // Remove STRIPE_SECRET_KEY so tier-gating is bypassed in tests.
 delete process.env.STRIPE_SECRET_KEY;
@@ -110,6 +119,10 @@ process.env.MONGODB_URI = 'mongodb://localhost/test';
 
 const app = require('../backend/server');
 const { jobStore, buildJobHash } = require('../backend/routes/report');
+
+function authToken() {
+    return jwt.sign({ userId: 'user001', username: 'testuser' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
 
 const SAMPLE_SCORES = JSON.stringify({
     'Agentic-Generative': { raw: 24, max: 30, percentage: 80 },
@@ -240,13 +253,18 @@ describe('GET /api/report/status', () => {
     afterEach(() => jobStore.clear());
 
     test('returns 400 when hash is missing', async () => {
-        const res = await request(app).get('/api/report/status');
+        const res = await request(app)
+            .get('/api/report/status')
+            .set('Authorization', `Bearer ${authToken()}`);
         expect(res.status).toBe(400);
         expect(res.body).toHaveProperty('error');
     });
 
     test('returns 404 for an unknown hash', async () => {
-        const res = await request(app).get('/api/report/status').query({ hash: 'nonexistent' });
+        const res = await request(app)
+            .get('/api/report/status')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash: 'nonexistent' });
         expect(res.status).toBe(404);
     });
 
@@ -264,7 +282,10 @@ describe('GET /api/report/status', () => {
             pdfBuffer: null,
         });
 
-        const res = await request(app).get('/api/report/status').query({ hash });
+        const res = await request(app)
+            .get('/api/report/status')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
         expect(res.status).toBe(200);
         expect(res.body.status).toBe('processing');
         expect(res.body.progress).toBe(50);
@@ -286,7 +307,10 @@ describe('GET /api/report/status', () => {
             pdfBuffer: Buffer.from('%PDF-1.4 mock'),
         });
 
-        const res = await request(app).get('/api/report/status').query({ hash });
+        const res = await request(app)
+            .get('/api/report/status')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
         expect(res.status).toBe(200);
         expect(res.body.status).toBe('ready');
         expect(res.body.progress).toBe(100);
@@ -306,7 +330,10 @@ describe('GET /api/report/status', () => {
             pdfBuffer: null,
         });
 
-        const res = await request(app).get('/api/report/status').query({ hash });
+        const res = await request(app)
+            .get('/api/report/status')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
         expect(res.status).toBe(200);
         expect(res.body.status).toBe('failed');
         expect(res.body.error).toBe('Puppeteer crash');
@@ -319,11 +346,14 @@ describe('GET /api/report/download (hash mode)', () => {
     afterEach(() => jobStore.clear());
 
     test('returns 404 for unknown hash', async () => {
-        const res = await request(app).get('/api/report/download').query({ hash: 'unknown' });
+        const res = await request(app)
+            .get('/api/report/download')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash: 'unknown' });
         expect(res.status).toBe(404);
     });
 
-    test('returns 409 when job is still processing', async () => {
+    test('returns 202 when job is still processing', async () => {
         const hash = 'processinghash';
         jobStore.set(hash, {
             status: 'processing',
@@ -337,8 +367,11 @@ describe('GET /api/report/download (hash mode)', () => {
             pdfBuffer: null,
         });
 
-        const res = await request(app).get('/api/report/download').query({ hash });
-        expect(res.status).toBe(409);
+        const res = await request(app)
+            .get('/api/report/download')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
+        expect(res.status).toBe(202);
     });
 
     test('returns PDF when job is ready', async () => {
@@ -356,7 +389,10 @@ describe('GET /api/report/download (hash mode)', () => {
             pdfBuffer: mockPdf,
         });
 
-        const res = await request(app).get('/api/report/download').query({ hash });
+        const res = await request(app)
+            .get('/api/report/download')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
         expect(res.status).toBe(200);
         expect(res.headers['content-type']).toMatch(/application\/pdf/);
     });

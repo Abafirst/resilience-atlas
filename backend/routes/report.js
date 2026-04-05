@@ -32,6 +32,8 @@ const BLANKET_ACCESS_TIERS = new Set([
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
+const { authenticateJWT } = require('../middleware/auth');
+const ResilienceReport = require('../models/ResilienceReport');
 
 /** Rate limiter — PDF generation is expensive, so keep this conservative. */
 const reportLimiter = rateLimit({
@@ -388,21 +390,31 @@ router.get('/generate', reportLimiter, async (req, res) => {
  *
  * Query params: hash (required)
  */
-router.get('/status', async (req, res) => {
+router.get('/status', accessLimiter, authenticateJWT, async (req, res) => {
     const { hash } = req.query;
 
     if (!hash) {
         return res.status(400).json({ error: 'Missing hash parameter' });
     }
 
+    // Check in-flight in-memory store first (covers active /generate jobs).
     const job = jobStore.get(hash);
-    if (!job) {
-        return res.status(404).json({ error: 'Job not found' });
+    if (job) {
+        const { pdfBuffer, ...safe } = job;
+        return res.json(safe);
     }
 
-    // Strip the raw PDF buffer from the response — it is served via /download.
-    const { pdfBuffer, ...safe } = job;
-    return res.json(safe);
+    // Fall back to persisted ResilienceReport record (covers queue-based flow).
+    try {
+        const report = await ResilienceReport.findOne({ resultsHash: String(hash) });
+        if (!report) {
+            return res.status(404).json({ status: 'not_found' });
+        }
+        return res.json({ status: report.status });
+    } catch (err) {
+        console.error('[report/status] DB lookup failed:', err.message);
+        return res.status(404).json({ status: 'not_found' });
+    }
 });
 
 /**
@@ -411,7 +423,7 @@ router.get('/status', async (req, res) => {
  *
  * Query params: hash (required)
  */
-router.get('/download', async (req, res) => {
+router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
     const { hash } = req.query;
 
     if (!hash) {
@@ -424,7 +436,7 @@ router.get('/download', async (req, res) => {
     }
 
     if (job.status === 'processing' || job.status === 'pending') {
-        return res.status(409).json({ error: 'Report is still being generated. Please try again shortly.' });
+        return res.status(202).json({ status: 'pending' });
     }
 
     if (job.status === 'failed') {
@@ -446,7 +458,7 @@ router.get('/download', async (req, res) => {
  *
  * Body: { hash, email }
  */
-router.post('/email', async (req, res) => {
+router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
     const { hash, email } = req.body;
 
     if (!hash) {
@@ -638,6 +650,41 @@ router.get('/access', accessLimiter, async (req, res) => {
             error: 'Unable to verify access at this time. Please try again shortly.',
             hasAccess: false,
         });
+    }
+});
+
+/**
+ * GET /api/report/:hash
+ * Return the current status and content of a report identified by its results hash.
+ * This route MUST remain last so it does not shadow named routes above.
+ *
+ * Responses:
+ *   404 { status: 'not_found' }          — hash unknown
+ *   202 { status: 'pending'|'processing' } — still generating
+ *   200 { status: 'ready', reportText, pdfUrl } — complete
+ *   200 { status: 'failed' }              — generation failed
+ */
+router.get('/:hash', accessLimiter, authenticateJWT, async (req, res) => {
+    const { hash } = req.params;
+
+    try {
+        const report = await ResilienceReport.findOne({ resultsHash: String(hash) });
+        if (!report) {
+            return res.status(404).json({ status: 'not_found' });
+        }
+
+        if (report.status === 'pending' || report.status === 'processing') {
+            return res.status(202).json({ status: report.status });
+        }
+
+        return res.json({
+            status: report.status,
+            reportText: report.reportText,
+            pdfUrl: report.pdfUrl,
+        });
+    } catch (err) {
+        console.error('[report/:hash] DB lookup failed:', err.message);
+        return res.status(503).json({ error: 'Unable to retrieve report at this time. Please try again shortly.' });
     }
 });
 

@@ -39,8 +39,14 @@ class PDFDocument extends EventEmitter {
     addPage() { return this; }
     switchToPage() { return this; }
     bufferedPageRange() { return { start: 0, count: 1 }; }
-    // Finalise
-    end() { setImmediate(() => this.emit('end')); return this; }
+    // Finalise — emit a minimal non-empty chunk so Buffer.concat returns > 0 bytes.
+    end() {
+        setImmediate(() => {
+            this.emit('data', Buffer.from('%PDF-1.4 mock'));
+            this.emit('end');
+        });
+        return this;
+    }
 }
 
 module.exports = PDFDocument;

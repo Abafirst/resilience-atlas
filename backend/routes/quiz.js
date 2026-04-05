@@ -7,10 +7,25 @@ const emailService = require('../services/emailService');
 const logger = require('../utils/logger');
 const ResilienceResult = require('../models/ResilienceResult');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
+const ResilienceReport = require('../models/ResilienceReport');
 const { calculateEvolution } = require('../services/evolution');
 const { generateNarrativeReport } = require('../services/reportGenerator');
+const { buildResultsHash } = require('../services/reportService');
 const QuizFeedback = require('../models/QuizFeedback');
 const ReminderOptIn = require('../models/ReminderOptIn');
+
+// Lazy-load report queue — gracefully degrades when bullmq / Redis is unavailable.
+let _addReportJob = null;
+function getAddReportJob() {
+    if (_addReportJob !== null) return _addReportJob;
+    try {
+        _addReportJob = require('../../queue/reportQueue').addReportJob;
+    } catch (err) {
+        logger.warn('[quiz] reportQueue unavailable (bullmq not installed or Redis not configured) — report jobs will not be enqueued:', err.message);
+        _addReportJob = () => Promise.resolve(null);
+    }
+    return _addReportJob;
+}
 
 const router = express.Router();
 
@@ -183,11 +198,34 @@ router.post('/submit', submitLimiter, authenticateJWT, async (req, res) => {
 
         logger.info(`Quiz submitted by user: ${req.user.username}`);
 
+        // Build a deterministic hash for this set of scores.
+        const resultsHash = buildResultsHash(scores);
+
+        // Persist a pending report record so the SPA can poll /api/report/status.
+        try {
+            await ResilienceReport.findOneAndUpdate(
+                { userId, resultsHash },
+                { userId, resultsHash, status: 'pending' },
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
+        } catch (reportErr) {
+            logger.warn('ResilienceReport upsert failed (non-fatal):', reportErr.message);
+        }
+
+        // Enqueue async PDF generation (gracefully degrades when queue is unavailable).
+        try {
+            await getAddReportJob()({ userId, scores, resultsHash });
+        } catch (queueErr) {
+            logger.warn('Report job enqueue failed (non-fatal):', queueErr.message);
+        }
+
         res.status(200).json({
+            status: 'submitted',
             message: 'Quiz submitted successfully.',
             scores: scores.categories,
             overall: scores.overall,
             dominantType: scores.dominantType,
+            resultsHash,
             report: report.summary,
             evolution,
             narrativeReport,
