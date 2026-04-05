@@ -9,18 +9,22 @@ import { ADULT_BADGES } from '../../data/adultGames.js';
 
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
-  try {
-    const headers = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    const res  = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
-    const data = await res.json().catch(() => ({}));
-    if (!data.hasAccess || !Array.isArray(data.purchases) || data.purchases.length === 0) return 'free';
-    const tiers = data.purchases.map(p => p.tier);
-    if (tiers.some(t => t === 'atlas-premium'))   return 'atlas-navigator'; // premium gets navigator features
-    if (tiers.some(t => t === 'atlas-navigator')) return 'atlas-navigator';
-    if (tiers.some(t => t === 'atlas-starter'))   return 'atlas-starter';
-    return 'free';
-  } catch { return 'free'; }
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res  = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
+  if (!res.ok) throw new Error(`Access check failed (${res.status})`);
+  const data = await res.json();
+  if (!data.hasAccess) return 'free';
+  const purchases = Array.isArray(data.purchases) ? data.purchases : [];
+  const tiers = purchases.map(p => p.tier);
+  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
+  // hasAccess is true but no specific tier detected in purchases —
+  // grant minimum starter access (covers dev mode where purchases is empty,
+  // and legacy user-flag grants that don't produce a Purchase record).
+  if (purchases.length === 0) return 'atlas-starter';
+  return 'free';
 }
 
 const s = {
@@ -92,7 +96,8 @@ export default function AdultGameHub() {
       getAccessTokenSilently()
         .catch(() => null)
         .then(token => fetchUserTier(user.email, token))
-        .then(setTier);
+        .then(setTier)
+        .catch(() => setTier('free'));
     } else if (!isAuthenticated) {
       setTier('free');
     }
