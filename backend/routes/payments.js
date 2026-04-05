@@ -10,11 +10,28 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 const emailService = require('../services/emailService');
-const { TIER_CONFIG } = require('../config/tiers');
+const { TIER_CONFIG, PLAN_ALIASES } = require('../config/tiers');
 
 // One-time log at module load so Railway logs show the diagnostic state of the
 // running container.  Safe: no secrets — only reflects whether the flag is set.
 logger.info(`DEBUG_STRIPE enabled: ${process.env.DEBUG_STRIPE === 'true'}`);
+
+/**
+ * Ordered list of tiers from most to least permissive, used by /api/payments/status.
+ * Individual tiers: atlas-premium > atlas-navigator > atlas-starter
+ * Teams tiers: enterprise > pro/teams-pro > starter/teams-starter
+ * Includes PLAN_ALIASES keys for defensive coverage of both naming conventions.
+ */
+const STATUS_TIER_PRIORITY = [
+    'atlas-premium',
+    'atlas-navigator',
+    'enterprise',
+    'pro',
+    ...Object.keys(PLAN_ALIASES).filter(k => PLAN_ALIASES[k] === 'pro'),
+    'atlas-starter',
+    'starter',
+    ...Object.keys(PLAN_ALIASES).filter(k => PLAN_ALIASES[k] === 'starter'),
+];
 
 /**
  * Attempt a HEAD request to https://api.stripe.com and log the outcome.
@@ -462,6 +479,7 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /api/payments/status
 // Check the highest completed purchase tier for a given email.
+// Returns the best available tier (individual or teams) in priority order.
 // Query: ?email=<email>
 // ─────────────────────────────────────────────────────────────────────────────
 router.get('/status', paymentsLimiter, async (req, res) => {
@@ -471,32 +489,25 @@ router.get('/status', paymentsLimiter, async (req, res) => {
             return res.status(400).json({ error: 'Email is required.' });
         }
 
-        // Atlas Premium supersedes Atlas Navigator supersedes Atlas Starter — return the best available tier.
-        const premiumPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
+        const cleanEmail = email.toLowerCase().trim();
+
+        // Fetch all completed purchases for this email in one query, then find
+        // the highest-priority tier in memory to avoid N+1 database calls.
+        const purchases = await Purchase.find({
+            email: cleanEmail,
             status: 'completed',
-            tier: 'atlas-premium',
-        });
-        if (premiumPurchase) {
-            return res.json({ tier: 'atlas-premium', purchasedAt: premiumPurchase.purchasedAt });
+            tier: { $in: STATUS_TIER_PRIORITY },
+        }).select('tier purchasedAt').lean();
+
+        if (purchases.length === 0) {
+            return res.json({ tier: 'free' });
         }
 
-        const deepPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
-            status: 'completed',
-            tier: 'atlas-navigator',
-        });
-        if (deepPurchase) {
-            return res.json({ tier: 'atlas-navigator', purchasedAt: deepPurchase.purchasedAt });
-        }
-
-        const starterPurchase = await Purchase.findOne({
-            email: email.toLowerCase().trim(),
-            status: 'completed',
-            tier: 'atlas-starter',
-        });
-        if (starterPurchase) {
-            return res.json({ tier: 'atlas-starter', purchasedAt: starterPurchase.purchasedAt });
+        const purchaseTierSet = new Map(purchases.map(p => [p.tier, p.purchasedAt]));
+        for (const tier of STATUS_TIER_PRIORITY) {
+            if (purchaseTierSet.has(tier)) {
+                return res.json({ tier, purchasedAt: purchaseTierSet.get(tier) });
+            }
         }
 
         res.json({ tier: 'free' });

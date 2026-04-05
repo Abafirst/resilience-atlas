@@ -5,6 +5,7 @@ import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
+import { isStarterOrAbove } from '../data/gamificationContent.js';
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
 const BRAND_ICONS = {
@@ -1874,9 +1875,9 @@ function tierLabel(tierId) {
 }
 
 // ── Returns true for any tier that grants paid report access ──────────────
-function isPaidTier(tierId) {
-  return tierId === 'atlas-starter' || tierId === 'atlas-navigator' || tierId === 'atlas-premium';
-}
+// isPaidTier: alias of isStarterOrAbove — returns true for any paid tier
+// (individual: atlas-starter/navigator/premium; teams: starter/pro/enterprise)
+const isPaidTier = isStarterOrAbove;
 
 // ── Gamification helpers ───────────────────────────────────────────────────
 const GAM_KEY = 'resilience_gamification';

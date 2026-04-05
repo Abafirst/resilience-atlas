@@ -5,29 +5,34 @@ const crypto = require('crypto');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const ResilienceResult = require('../models/ResilienceResult');
-const { TIER_CONFIG } = require('../config/tiers');
+const { TIER_CONFIG, PLAN_ALIASES, PREMIUM_TIERS } = require('../config/tiers');
 const { canAccessFeature } = require('../utils/tierUtils');
 
 /**
- * Tiers that grant access to any report (basic PDF summary or full deep report).
- * Derived dynamically from TIER_CONFIG via canAccessFeature so that adding or
- * changing a tier in tiers.js automatically updates this set — no hardcoding.
+ * Tiers that grant access to any report or gamification feature.
+ * Includes individual tiers (from canAccessFeature checks), all PREMIUM_TIERS,
+ * and teams-plan alias keys from PLAN_ALIASES so that purchases stored with
+ * either the short or prefixed variant are found.
  */
-const REPORT_ACCESS_TIERS = Object.keys(TIER_CONFIG).filter(
-    (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report') || canAccessFeature(tier, 'gamification')
-);
+const REPORT_ACCESS_TIERS = Array.from(new Set([
+    ...Object.keys(TIER_CONFIG).filter(
+        (tier) => canAccessFeature(tier, 'basic-report') || canAccessFeature(tier, 'deep-report') || canAccessFeature(tier, 'gamification')
+    ),
+    ...PREMIUM_TIERS,
+    ...Object.keys(PLAN_ALIASES),
+]));
 
 /**
  * Tiers that grant blanket (all-assessment) PDF access.
  * Atlas Starter is intentionally excluded — it grants per-assessment access only.
  * All purchases are permanent (no expiry).
+ * Includes teams-plan alias keys whose canonical target also grants blanket access.
  */
+const BLANKET_ACCESS_BASE = new Set(['atlas-navigator', 'atlas-premium', 'starter', 'pro', 'enterprise']);
 const BLANKET_ACCESS_TIERS = new Set([
-    'atlas-navigator',
-    'atlas-premium',
-    'starter',
-    'pro',
-    'enterprise',
+    ...BLANKET_ACCESS_BASE,
+    // Add any PLAN_ALIASES whose canonical tier grants blanket access (e.g. teams-starter→starter, teams-pro→pro)
+    ...Object.keys(PLAN_ALIASES).filter(alias => BLANKET_ACCESS_BASE.has(PLAN_ALIASES[alias])),
 ]);
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');

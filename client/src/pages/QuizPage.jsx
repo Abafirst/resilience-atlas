@@ -664,10 +664,10 @@ export default function QuizPage() {
   return (
     <>
       {/* ── Spinner overlay ────────────────────────────── */}
-      {(!authChecked || auth0Loading || submitting) && (
+      {(!authChecked || submitting) && (
         <SpinnerOverlay
           active
-          text={submitting ? spinnerText : 'Checking authentication\u2026'}
+          text={submitting ? spinnerText : 'Loading assessment\u2026'}
         />
       )}
 
