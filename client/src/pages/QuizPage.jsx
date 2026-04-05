@@ -331,7 +331,7 @@ export default function QuizPage() {
   // confirmation form so they land directly on the first question.
   // Only skips when there is no saved progress awaiting restore.
   useEffect(() => {
-    if (!prefilledFromAuth0 || step !== 'info' || savedProgress !== null) return;
+    if (!prefilledFromAuth0 || step !== 'info' || savedProgress) return;
     setStep(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [prefilledFromAuth0, step, savedProgress]);
@@ -752,7 +752,7 @@ export default function QuizPage() {
                   >
                     <span style={{ fontSize: 16 }}>✓</span>
                     <span>
-                      Signed in as <strong>{auth0User.email}</strong> — your details have been pre-filled.
+                      Signed in as <strong>{auth0User.email}</strong> — your details have been prefilled.
                     </span>
                   </div>
                 )}
