@@ -20,9 +20,6 @@ async function fetchUserTier(email, token) {
   if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-navigator';
   if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
   if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
-  // hasAccess is true but no specific tier detected in purchases —
-  // grant minimum starter access (covers dev mode where purchases is empty,
-  // and legacy user-flag grants that don't produce a Purchase record).
   if (purchases.length === 0) return 'atlas-starter';
   return 'free';
 }
@@ -89,11 +86,10 @@ export default function AdultGameHub() {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
   const [tier, setTier] = useState(() => {
-    // Pre-populate from localStorage so the hub renders immediately for returning users.
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
-  const [activeTab, setActiveTab] = useState('practices');
   const [tierLoading, setTierLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
     if (auth0Loading) return;
@@ -106,12 +102,9 @@ export default function AdultGameHub() {
           try { localStorage.setItem('resilience_tier', t); } catch (_) { /* ignore */ }
         })
         .catch(() => {
-          // Fall back to cached tier on network error; use functional update to avoid stale closure.
           setTier(current => current || 'free');
         })
-        .finally(() => {
-          setTierLoading(false);
-        });
+        .finally(() => setTierLoading(false));
     } else if (!isAuthenticated) {
       setTier('free');
       setTierLoading(false);
@@ -126,7 +119,6 @@ export default function AdultGameHub() {
     { id: 'progress',  label: 'Progress',         available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
   ];
 
-  // Show loading only if tier is still being verified
   if (tierLoading) {
     return (
       <div style={s.wrap}>
