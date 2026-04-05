@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const DEFAULT_NAV_ITEMS = [
   { href: '/', label: 'Home', key: 'home' },
@@ -10,10 +11,10 @@ const DEFAULT_NAV_ITEMS = [
 ];
 
 /**
- * Returns the href for the "Resilience Journey" nav link.
- * Sends users with completed quiz results to /results; new users to /quiz.
+ * Returns the href for the "Resilience Journey" nav link for unauthenticated users.
+ * Sends users with completed quiz results in localStorage to /results; new users to /quiz.
  */
-function getJourneyHref() {
+function getLocalStorageJourneyHref() {
   try {
     const results = localStorage.getItem('resilience_results');
     return results ? '/results' : '/quiz';
@@ -38,10 +39,11 @@ export default function SiteHeader({
   ctaButton,
   onThemeChange,
 }) {
+  const { isAuthenticated, user: auth0User, isLoading: auth0Loading } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  // Compute the journey link href once on mount (localStorage read is synchronous).
-  const [journeyHref] = useState(() => getJourneyHref());
+  // journeyHref starts with the localStorage-based value and may update once Auth0 resolves.
+  const [journeyHref, setJourneyHref] = useState(() => getLocalStorageJourneyHref());
   const navRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -54,6 +56,35 @@ export default function SiteHeader({
       setIsDarkTheme(dark);
     } catch (_) {}
   }, []);
+
+  // Update journey link based on Auth0 authentication status.
+  // Auth0 users: query backend to check if they have completed the quiz.
+  // Unauthenticated users: fall back to localStorage check.
+  useEffect(() => {
+    if (auth0Loading) return;
+
+    if (isAuthenticated && auth0User?.email) {
+      fetch(`/api/auth/user-status?email=${encodeURIComponent(auth0User.email)}`)
+        .then(r => {
+          if (!r.ok) {
+            console.warn('[SiteHeader] user-status check failed:', r.status);
+            return null;
+          }
+          return r.json();
+        })
+        .then(data => {
+          if (data) {
+            setJourneyHref(data.hasCompletedQuiz ? '/results' : '/quiz');
+          }
+        })
+        .catch(err => {
+          console.warn('[SiteHeader] user-status fetch error:', err.message);
+          // On error, leave the current href in place (localStorage-based default).
+        });
+    } else {
+      setJourneyHref(getLocalStorageJourneyHref());
+    }
+  }, [isAuthenticated, auth0User, auth0Loading]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
