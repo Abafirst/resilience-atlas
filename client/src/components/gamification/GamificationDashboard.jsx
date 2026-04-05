@@ -399,12 +399,12 @@ export default function GamificationDashboard() {
   // Gamification API progress is only available for Navigator+
   const activeProgress = (hasNavigator && !isGamError) ? progress : null;
 
-  // Show gamification content once:
+  // Show gamification content once Auth0 has finished initializing AND:
   //   - the user is not authenticated (features shown in locked/preview mode), OR
-  //   - Auth0 and the backend tier check have both completed.
-  // This prevents a flash of incorrect locked-state content for users whose
-  // tier is still being verified.
-  const showContent = !isAuthenticated || (!auth0Loading && !tierLoading);
+  //   - the backend tier check has also completed.
+  // Gating on !auth0Loading prevents a flash of locked-state content during the
+  // brief window when Auth0 is still loading and isAuthenticated is temporarily false.
+  const showContent = !auth0Loading && (!isAuthenticated || !tierLoading);
 
   return (
     <>
@@ -476,7 +476,7 @@ export default function GamificationDashboard() {
           )}
 
           {/* Tier detection loading */}
-          {isAuthenticated && (auth0Loading || tierLoading) && (
+          {(auth0Loading || (isAuthenticated && tierLoading)) && (
             <div style={s.loadingMsg} role="status" aria-live="polite">
               Checking your compass bearing…
             </div>
