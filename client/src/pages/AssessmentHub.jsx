@@ -195,7 +195,7 @@ export default function AssessmentHub({ userEmail, onUpgrade, onLogout }) {
               <li><span style={styles.checkmark}>✓</span>Radar chart overview</li>
               <li><span style={styles.checkmark}>✓</span>Brief narrative snapshot</li>
             </ul>
-            <a href="/quiz.html" style={styles.btnFree}>
+            <a href="/quiz" style={styles.btnFree}>
               Start Free Assessment
             </a>
           </div>
