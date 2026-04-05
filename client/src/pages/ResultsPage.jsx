@@ -2674,7 +2674,7 @@ export default function ResultsPage() {
               {isPaidTier(tier) && (
                 <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
               )}
-              <a href="/quiz" style={s.retakeBtn}>Retake Quiz</a>
+              <a href="/quiz?retake=1" style={s.retakeBtn}>Retake Quiz</a>
             </nav>
           </div>
         </header>
@@ -2699,9 +2699,18 @@ export default function ResultsPage() {
                       : 'Your assessment results and purchase history are shown below. Take a new assessment or download a prior report.'
                     }
                   </p>
-                  <a href="/quiz" style={s.primaryBtn}>
+                  <a href="/quiz?retake=1" style={s.primaryBtn}>
                     {isReturnFromPayment ? 'Re-take Assessment' : 'Take New Assessment'}
                   </a>
+                  {!isReturnFromPayment && isAuthenticated && tierCheckComplete && isPaidTier(tier) && (
+                    <a
+                      href="/gamification"
+                      style={{ ...s.primaryBtn, background: '#7c3aed', marginLeft: 12, marginTop: 8 }}
+                      aria-label="Start your Resilience Journey — go to micro-practices"
+                    >
+                      🧭 Start Practice
+                    </a>
+                  )}
                 </div>
                 <ResultsHistory email={historyEmail} />
                 <AssessmentHistory
@@ -2824,7 +2833,7 @@ export default function ResultsPage() {
             {isPaidTier(tier) && (
               <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
             )}
-            <a href="/quiz" style={s.retakeBtn}>Retake Quiz</a>
+            <a href="/quiz?retake=1" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
         </div>
       </header>
@@ -3205,7 +3214,7 @@ export default function ResultsPage() {
                 localStorage.removeItem('resilience_results');
                 localStorage.removeItem('resilience_email');
               } catch (_) { /* ignore */ }
-              window.location.href = '/quiz';
+              window.location.href = '/quiz?retake=1';
             }}
           >
             ↺ Re-take the assessment
@@ -3632,7 +3641,7 @@ export default function ResultsPage() {
               <div style={s.quicklinksGroupHeading}>Assessment</div>
               <ul style={s.quicklinksGroupLinks}>
                 <li><a href="/assessment.html" style={s.quicklinkAnchor}>About the Assessment</a></li>
-                <li><a href="/quiz" style={s.quicklinkAnchor}>Take the Quiz</a></li>
+                <li><a href="/quiz?retake=1" style={s.quicklinkAnchor}>Take the Quiz</a></li>
                 <li><a href="/results" style={s.quicklinkAnchor}>My Results</a></li>
               </ul>
             </div>

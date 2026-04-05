@@ -15,7 +15,7 @@
  *  • On success: clears autosave and redirects to /results
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
@@ -395,6 +395,37 @@ export default function QuizPage() {
 
     checkAuthAndInit();
   }, [navigate]);
+
+  // ── Redirect Auth0 users with completed assessments to /results ────────
+  // When an authenticated Auth0 user arrives at /quiz without having
+  // localStorage results (e.g. new device or cleared storage), check the
+  // backend for completed assessments and redirect to /results if any exist.
+  // Skipped when the user explicitly wants to retake (via `?retake=1`).
+  const backendRedirectCheckedRef = useRef(false);
+  useEffect(() => {
+    if (auth0Loading || !isAuthenticated || !auth0User?.email) return;
+    if (!authChecked) return; // wait for localStorage check to complete
+    if (backendRedirectCheckedRef.current) return; // only run once per mount
+    backendRedirectCheckedRef.current = true;
+
+    // Honour explicit retake intent (?retake=1 query param set by ResultsPage)
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('retake') === '1') return;
+    } catch (_) { /* ignore */ }
+
+    // If user has partial quiz progress, let them decide to continue or start fresh
+    if (savedProgress !== null) return;
+
+    fetch(`/api/assessment/history?email=${encodeURIComponent(auth0User.email)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.assessments?.length > 0) {
+          navigate('/results', { replace: true });
+        }
+      })
+      .catch(() => { /* don't block quiz on network error */ });
+  }, [auth0Loading, isAuthenticated, auth0User, authChecked, savedProgress, navigate]);
 
   // ── Autosave effect — triggered whenever key state changes ────────────
   const saveProgress = useCallback(() => {
