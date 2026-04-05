@@ -481,12 +481,15 @@ async function downloadPdfForAssessment(assessmentData, email) {
     return window.PdfProgress.start(params);
   }
   // Inline fallback: generate → poll → download
+  var storedToken = localStorage.getItem('auth_token') || '';
+  var authHeaders = storedToken ? { 'Authorization': 'Bearer ' + storedToken } : {};
   var emailParam = email ? '&email=' + encodeURIComponent(email) : '';
   var genRes = await fetch(
     '/api/report/generate?overall=' + encodeURIComponent(params.overall) +
     '&dominantType=' + encodeURIComponent(params.dominantType) +
     '&scores=' + encodeURIComponent(scoresStr) +
-    emailParam
+    emailParam,
+    { headers: authHeaders }
   );
   if (!genRes.ok) {
     var body = await genRes.json().catch(function () { return {}; });
@@ -496,10 +499,21 @@ async function downloadPdfForAssessment(assessmentData, email) {
   var hash = genData.hash;
   for (var i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
     await new Promise(function (r) { setTimeout(r, REPORT_POLL_INTERVAL_MS); });
-    var statusRes = await fetch('/api/report/status?hash=' + encodeURIComponent(hash));
+    var statusRes = await fetch('/api/report/status?hash=' + encodeURIComponent(hash), { headers: authHeaders });
     var statusData = await statusRes.json();
     if (statusData.status === 'ready') {
-      window.location.href = '/api/report/download?hash=' + encodeURIComponent(hash);
+      var dlRes = await fetch('/api/report/download?hash=' + encodeURIComponent(hash), { headers: authHeaders });
+      if (!dlRes.ok) throw new Error('Failed to download report (' + dlRes.status + ')');
+      var blob = await dlRes.blob();
+      var dlUrl = URL.createObjectURL(blob);
+      var dlLink = document.createElement('a');
+      dlLink.href = dlUrl;
+      dlLink.download = 'resilience-atlas-report.pdf';
+      dlLink.style.display = 'none';
+      document.body.appendChild(dlLink);
+      dlLink.click();
+      document.body.removeChild(dlLink);
+      setTimeout(function () { URL.revokeObjectURL(dlUrl); }, 10000);
       return;
     }
     if (statusData.status === 'failed') throw new Error(statusData.error || 'Report generation failed');

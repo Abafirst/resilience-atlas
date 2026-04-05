@@ -138,7 +138,7 @@ const s = {
 const MAX_POLL = 60;
 const POLL_MS  = 2000;
 
-async function downloadPdfByHash(hash, overall, dominantType, scores, email) {
+async function downloadPdfByHash(hash, overall, dominantType, scores, email, getTokenFn) {
   const params = new URLSearchParams({
     overall:      String(overall),
     dominantType: dominantType || '',
@@ -146,7 +146,15 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email) {
   });
   if (email) params.set('email', email);
 
-  const genRes = await fetch(`/api/report/generate?${params.toString()}`);
+  let authHeaders = {};
+  if (typeof getTokenFn === 'function') {
+    try {
+      const token = await getTokenFn();
+      if (token) authHeaders['Authorization'] = `Bearer ${token}`;
+    } catch (_) { /* proceed without token */ }
+  }
+
+  const genRes = await fetch(`/api/report/generate?${params.toString()}`, { headers: authHeaders });
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
     throw new Error(body.error || 'Failed to start report generation');
@@ -155,9 +163,23 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email) {
 
   for (let i = 0; i < MAX_POLL; i++) {
     await new Promise(r => setTimeout(r, POLL_MS));
-    const st = await fetch(`/api/report/status?hash=${encodeURIComponent(jobHash)}`).then(r => r.json());
+    const st = await fetch(`/api/report/status?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders }).then(r => r.json());
     if (st.status === 'ready') {
-      window.location.href = `/api/report/download?hash=${encodeURIComponent(jobHash)}`;
+      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders });
+      if (!dlRes.ok) {
+        const body = await dlRes.json().catch(() => ({}));
+        throw new Error(body.error || 'Failed to download report');
+      }
+      const blob = await dlRes.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'resilience-atlas-report.pdf';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
       return;
     }
     if (st.status === 'failed') throw new Error(st.error || 'Report generation failed');
@@ -199,7 +221,8 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading, ge
         assessment.overall,
         assessment.dominantType,
         assessment.scores,
-        email
+        email,
+        getTokenFn
       );
     } catch (err) {
       setDownloadError(err.message || 'Download failed. Please try again.');
