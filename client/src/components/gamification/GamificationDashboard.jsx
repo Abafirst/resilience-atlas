@@ -30,9 +30,9 @@ async function fetchUserTier(email, token) {
   if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
   if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
   // Teams tiers — map to equivalent individual access levels
-  if (tiers.some(t => t === 'enterprise' || t === 'teams-enterprise')) return 'atlas-navigator';
-  if (tiers.some(t => t === 'pro'        || t === 'teams-pro'))        return 'atlas-navigator';
-  if (tiers.some(t => t === 'starter'    || t === 'teams-starter'))    return 'atlas-starter';
+  if (tiers.some(t => t === 'enterprise'))                             return 'atlas-navigator';
+  if (tiers.some(t => t === 'pro'     || t === 'teams-pro'))          return 'atlas-navigator';
+  if (tiers.some(t => t === 'starter' || t === 'teams-starter'))      return 'atlas-starter';
   // hasAccess is true but no specific tier detected in purchases —
   // grant minimum starter access (covers dev mode where purchases is empty,
   // and legacy user-flag grants that don't produce a Purchase record).
@@ -274,9 +274,10 @@ export default function GamificationDashboard() {
   const [paymentBanner, setPaymentBanner] = useState(null);
 
   useEffect(() => {
-    const email = user?.email || (() => {
-      try { return localStorage.getItem('resilience_email') || ''; } catch (_) { return ''; }
-    })();
+    let email = user?.email || '';
+    if (!email) {
+      try { email = localStorage.getItem('resilience_email') || ''; } catch (_) { /* ignore */ }
+    }
 
     if (!email) {
       setUserTier('free');

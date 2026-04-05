@@ -10,11 +10,28 @@ const Purchase = require('../models/Purchase');
 const User = require('../models/User');
 const logger = require('../utils/logger');
 const emailService = require('../services/emailService');
-const { TIER_CONFIG } = require('../config/tiers');
+const { TIER_CONFIG, PLAN_ALIASES } = require('../config/tiers');
 
 // One-time log at module load so Railway logs show the diagnostic state of the
 // running container.  Safe: no secrets — only reflects whether the flag is set.
 logger.info(`DEBUG_STRIPE enabled: ${process.env.DEBUG_STRIPE === 'true'}`);
+
+/**
+ * Ordered list of tiers from most to least permissive, used by /api/payments/status.
+ * Individual tiers: atlas-premium > atlas-navigator > atlas-starter
+ * Teams tiers: enterprise > pro/teams-pro > starter/teams-starter
+ * Includes PLAN_ALIASES keys for defensive coverage of both naming conventions.
+ */
+const STATUS_TIER_PRIORITY = [
+    'atlas-premium',
+    'atlas-navigator',
+    'enterprise',
+    'pro',
+    ...Object.keys(PLAN_ALIASES).filter(k => PLAN_ALIASES[k] === 'pro'),
+    'atlas-starter',
+    'starter',
+    ...Object.keys(PLAN_ALIASES).filter(k => PLAN_ALIASES[k] === 'starter'),
+];
 
 /**
  * Attempt a HEAD request to https://api.stripe.com and log the outcome.
@@ -474,26 +491,22 @@ router.get('/status', paymentsLimiter, async (req, res) => {
 
         const cleanEmail = email.toLowerCase().trim();
 
-        // Check tiers in priority order — most permissive first.
-        // Individual tiers: atlas-premium > atlas-navigator > atlas-starter
-        // Teams tiers: enterprise > pro > starter (all map to navigator-level or above)
-        const TIER_PRIORITY = [
-            'atlas-premium',
-            'atlas-navigator',
-            'enterprise',
-            'pro',
-            'atlas-starter',
-            'starter',
-        ];
+        // Fetch all completed purchases for this email in one query, then find
+        // the highest-priority tier in memory to avoid N+1 database calls.
+        const purchases = await Purchase.find({
+            email: cleanEmail,
+            status: 'completed',
+            tier: { $in: STATUS_TIER_PRIORITY },
+        }).select('tier purchasedAt').lean();
 
-        for (const tier of TIER_PRIORITY) {
-            const purchase = await Purchase.findOne({
-                email: cleanEmail,
-                status: 'completed',
-                tier,
-            }).lean();
-            if (purchase) {
-                return res.json({ tier, purchasedAt: purchase.purchasedAt });
+        if (purchases.length === 0) {
+            return res.json({ tier: 'free' });
+        }
+
+        const purchaseTierSet = new Map(purchases.map(p => [p.tier, p.purchasedAt]));
+        for (const tier of STATUS_TIER_PRIORITY) {
+            if (purchaseTierSet.has(tier)) {
+                return res.json({ tier, purchasedAt: purchaseTierSet.get(tier) });
             }
         }
 
