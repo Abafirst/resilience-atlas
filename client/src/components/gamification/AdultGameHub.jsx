@@ -6,6 +6,7 @@ import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import GamificationToast from './GamificationToast.jsx';
 import { ADULT_BADGES } from '../../data/adultGames.js';
+import { isStarterOrAbove, isNavigatorOrAbove } from '../../data/gamificationContent.js';
 
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
@@ -17,9 +18,14 @@ async function fetchUserTier(email, token) {
   if (!data.hasAccess) return 'free';
   const purchases = Array.isArray(data.purchases) ? data.purchases : [];
   const tiers = purchases.map(p => p.tier);
-  if (tiers.some(t => t === 'atlas-premium'))                          return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess) return 'atlas-navigator';
-  if (tiers.some(t => t === 'atlas-starter'))                          return 'atlas-starter';
+  // Individual tiers
+  if (tiers.some(t => t === 'atlas-premium'))                               return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-navigator') || data.hasNavigatorAccess)  return 'atlas-navigator';
+  if (tiers.some(t => t === 'atlas-starter'))                               return 'atlas-starter';
+  // Teams tiers — map to equivalent individual access levels
+  if (tiers.some(t => t === 'enterprise'))                                  return 'atlas-navigator';
+  if (tiers.some(t => t === 'pro'     || t === 'teams-pro'))                return 'atlas-navigator';
+  if (tiers.some(t => t === 'starter' || t === 'teams-starter'))            return 'atlas-starter';
   // hasAccess is true but no specific tier detected in purchases —
   // grant minimum starter access (covers dev mode where purchases is empty,
   // and legacy user-flag grants that don't produce a Purchase record).
@@ -28,7 +34,7 @@ async function fetchUserTier(email, token) {
 }
 
 const s = {
-  wrap: { fontFamily: "'Inter','Segoe UI',sans-serif", color: '#e2e8f0' },
+  wrap: { fontFamily: "'Inter','Segoe UI',sans-serif", color: '#e2e8f0', background: '#0d1526', borderRadius: 12, overflow: 'hidden' },
   header: {
     textAlign: 'center',
     padding: '32px 24px 24px',
@@ -51,9 +57,9 @@ const s = {
     borderRadius: 20,
     fontSize: 12,
     fontWeight: 600,
-    background: tier === 'atlas-navigator' ? 'rgba(79,70,229,0.15)' : 'rgba(107,114,128,0.15)',
-    color: tier === 'atlas-navigator' ? '#818cf8' : '#9ca3af',
-    border: `1px solid ${tier === 'atlas-navigator' ? 'rgba(79,70,229,0.3)' : 'rgba(107,114,128,0.3)'}`,
+    background: isNavigatorOrAbove(tier) ? 'rgba(79,70,229,0.15)' : 'rgba(107,114,128,0.15)',
+    color: isNavigatorOrAbove(tier) ? '#818cf8' : '#9ca3af',
+    border: `1px solid ${isNavigatorOrAbove(tier) ? 'rgba(79,70,229,0.3)' : 'rgba(107,114,128,0.3)'}`,
   }),
   tabs: {
     display: 'flex', gap: 4, padding: '16px 24px',
@@ -85,16 +91,23 @@ const s = {
   },
 };
 
-export default function AdultGameHub() {
+export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
   const [tier, setTier] = useState(() => {
+    // If a tier is provided by the parent (e.g. GamificationDashboard), use it directly.
+    if (tierProp) return tierProp;
     // Pre-populate from localStorage so the hub renders immediately for returning users.
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
+    // When a tier is provided by the parent, trust it and skip the redundant API call.
+    if (tierProp) {
+      setTier(tierProp);
+      return;
+    }
     if (auth0Loading) return;
     if (isAuthenticated && user?.email) {
       getAccessTokenSilently()
@@ -111,17 +124,22 @@ export default function AdultGameHub() {
     } else if (!isAuthenticated) {
       setTier('free');
     }
-  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently]);
+  }, [auth0Loading, isAuthenticated, user?.email, getAccessTokenSilently, tierProp]);
 
-  const tierLabel = tier === 'atlas-navigator' ? 'Atlas Navigator' : tier === 'atlas-starter' ? 'Atlas Starter' : 'Free';
+  const tierLabel = isNavigatorOrAbove(tier) ? 'Atlas Navigator' : isStarterOrAbove(tier) ? 'Atlas Starter' : 'Free';
 
   const tabs = [
-    { id: 'practices', label: 'Micro-Practices', available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
-    { id: 'pathways',  label: 'Skill Pathways',  available: tier === 'atlas-navigator' },
-    { id: 'progress',  label: 'Progress',         available: tier === 'atlas-starter' || tier === 'atlas-navigator' },
+    { id: 'practices', label: 'Micro-Practices', available: isStarterOrAbove(tier) },
+    { id: 'pathways',  label: 'Skill Pathways',  available: isNavigatorOrAbove(tier) },
+    { id: 'progress',  label: 'Progress',         available: isStarterOrAbove(tier) },
   ];
 
-  if (!tier || loading) {
+  // When the tier is provided by the parent (embedded mode), don't block on gamification
+  // API loading since the gamification progress API requires Navigator access and may fail
+  // with a 402 for Starter users — the tier is already confirmed by the parent.
+  const isWaiting = tierProp ? !tier : (!tier || loading);
+
+  if (isWaiting) {
     return (
       <div style={s.wrap}>
         <div style={{ padding: 40, textAlign: 'center', color: '#718096', fontSize: 14 }}>
@@ -131,7 +149,7 @@ export default function AdultGameHub() {
     );
   }
 
-  if (!isAuthenticated || tier === 'free') {
+  if (!isAuthenticated || !isStarterOrAbove(tier)) {
     return (
       <div style={s.wrap}>
         <div style={s.header}>
@@ -190,7 +208,7 @@ export default function AdultGameHub() {
 
       <div style={s.content}>
         {activeTab === 'practices' && <StarterMicroQuests tier={tier} progress={progress} />}
-        {activeTab === 'pathways'  && tier === 'atlas-navigator' && <NavigatorSkillPaths progress={progress} />}
+        {activeTab === 'pathways'  && isNavigatorOrAbove(tier) && <NavigatorSkillPaths progress={progress} />}
         {activeTab === 'progress'  && <ProgressDashboard tier={tier} progress={progress} />}
       </div>
     </div>
