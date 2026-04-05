@@ -105,8 +105,8 @@ export default function AdultGameHub() {
           try { localStorage.setItem('resilience_tier', t); } catch (_) { /* ignore */ }
         })
         .catch(() => {
-          // Fall back to cached tier on network error.
-          if (!tier) setTier('free');
+          // Fall back to cached tier on network error; use functional update to avoid stale closure.
+          setTier(current => current || 'free');
         });
     } else if (!isAuthenticated) {
       setTier('free');
