@@ -2804,6 +2804,9 @@ export default function ResultsPage() {
       {/* Confetti canvas — positioned fixed, above all content */}
       <canvas ref={confettiRef} style={s.confettiCanvas} aria-hidden="true" />
 
+      {/* ── Dark-mode readability hint ──────────────────── */}
+      <DarkModeHint />
+
       {/* ── Promotional banner (flash offer for free users) ──────────── */}
       {promoBanner && (
         <PromoBanner

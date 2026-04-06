@@ -146,6 +146,8 @@ export default function AssessmentPage() {
 
       <SiteHeader activePage="assessment" />
       <DarkModeHint />
+
+      {/* Hero */}
       <section className="assessment-hero" aria-labelledby="assessment-heading">
         <span className="hero-eyebrow">The Resilience Atlas Assessment</span>
         <h1 id="assessment-heading">72 Questions. One Map.</h1>

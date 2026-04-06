@@ -299,6 +299,8 @@ export default function FounderPage() {
 
       <SiteHeader activePage="about" />
       <DarkModeHint />
+
+      {/* Hero */}
       <section className="founder-hero" aria-labelledby="founder-heading">
         <span className="hero-eyebrow">Our Founder</span>
         <div className="founder-hero-avatar" aria-hidden="true">J</div>

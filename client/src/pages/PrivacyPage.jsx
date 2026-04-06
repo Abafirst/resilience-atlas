@@ -349,6 +349,8 @@ export default function PrivacyPage() {
         ]}
       />
       <DarkModeHint />
+
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="privacy-hero" aria-labelledby="privacy-hero-heading">
         <span className="hero-eyebrow">Privacy &amp; Data Control</span>
         <h1 id="privacy-hero-heading">You own your data.<br/>We keep it simple.</h1>

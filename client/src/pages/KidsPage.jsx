@@ -202,6 +202,8 @@ export default function KidsPage() {
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <SiteHeader activePage="kids" />
       <DarkModeHint />
+
+      {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">
         <h1 id="kids-heading">Build Resilience Together</h1>
         <p>

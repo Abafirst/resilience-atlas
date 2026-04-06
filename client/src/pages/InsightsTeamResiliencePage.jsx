@@ -35,6 +35,8 @@ export default function InsightsTeamResiliencePage() {
       />
       <DarkModeHint />
 
+      <DarkModeHint />
+
       <article className="article-body" aria-labelledby="articleHeading">
         <p className="article-meta">Resilience Atlas Insights &mdash; Team Development</p>
         <h1 id="articleHeading">Building Team Resilience Across All Six Dimensions</h1>

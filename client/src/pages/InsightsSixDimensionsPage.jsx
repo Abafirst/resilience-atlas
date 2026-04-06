@@ -36,6 +36,8 @@ export default function InsightsSixDimensionsPage() {
       />
       <DarkModeHint />
 
+      <DarkModeHint />
+
       <article className="article-body" aria-labelledby="articleHeading">
         <p className="article-meta">Resilience Atlas Insights &mdash; Framework</p>
         <h1 id="articleHeading">Understanding the Six Dimensions of Resilience</h1>
