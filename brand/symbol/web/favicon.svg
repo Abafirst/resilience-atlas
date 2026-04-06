@@ -15,6 +15,10 @@
       <stop offset="0%"   stop-color="#5C8FD6"/>
       <stop offset="100%" stop-color="#1565C0"/>
     </radialGradient>
+    <linearGradient id="fav-needle" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%"   stop-color="#1565C0"/>
+      <stop offset="100%" stop-color="#5C8FD6"/>
+    </linearGradient>
   </defs>
 
   <!-- Outer circle (heavier stroke for small sizes) -->
@@ -24,16 +28,21 @@
     stroke-width="8"
   />
 
-  <!-- Cardinal markers (thick, rounded — legible at 16 px) -->
-  <!-- North -->
-  <line x1="100" y1="12"  x2="100" y2="36"  stroke="#1565C0" stroke-width="8" stroke-linecap="round"/>
-  <!-- South -->
-  <line x1="100" y1="164" x2="100" y2="188" stroke="#1565C0" stroke-width="8" stroke-linecap="round"/>
-  <!-- East -->
-  <line x1="164" y1="100" x2="188" y2="100" stroke="#1565C0" stroke-width="8" stroke-linecap="round"/>
-  <!-- West -->
-  <line x1="12"  y1="100" x2="36"  y2="100" stroke="#1565C0" stroke-width="8" stroke-linecap="round"/>
+  <!-- Hexagon (simplified for small sizes — 6-dimension indicator) -->
+  <polygon
+    points="100,30 160.6,65 160.6,135 100,170 39.4,135 39.4,65"
+    fill="none"
+    stroke="#0097A7"
+    stroke-width="5"
+    opacity="0.6"
+  />
 
-  <!-- Central dot -->
-  <circle cx="100" cy="100" r="22" fill="url(#fav-center)"/>
+  <!-- Compass needle pointing north (thick for favicon legibility) -->
+  <!-- North needle — blue gradient, pointing up -->
+  <polygon points="100,44 107,96 100,88 93,96" fill="url(#fav-needle)"/>
+  <!-- South needle — grey, counter-direction -->
+  <polygon points="100,156 107,104 100,112 93,104" fill="#90A4AE" opacity="0.5"/>
+
+  <!-- Central dot (large for favicon) -->
+  <circle cx="100" cy="100" r="20" fill="url(#fav-center)"/>
 </svg>
