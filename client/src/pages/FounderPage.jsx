@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
     .founder-hero {
@@ -297,8 +298,7 @@ export default function FounderPage() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
 
       <SiteHeader activePage="about" />
-
-      {/* Hero */}
+      <DarkModeHint />
       <section className="founder-hero" aria-labelledby="founder-heading">
         <span className="hero-eyebrow">Our Founder</span>
         <div className="founder-hero-avatar" aria-hidden="true">J</div>

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
     .assessment-hero {
@@ -144,8 +145,7 @@ export default function AssessmentPage() {
       <style dangerouslySetInnerHTML={{ __html: styles }} />
 
       <SiteHeader activePage="assessment" />
-
-      {/* Hero */}
+      <DarkModeHint />
       <section className="assessment-hero" aria-labelledby="assessment-heading">
         <span className="hero-eyebrow">The Resilience Atlas Assessment</span>
         <h1 id="assessment-heading">72 Questions. One Map.</h1>
