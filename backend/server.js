@@ -151,19 +151,26 @@ app.use(
         // Frames: Stripe embeds its payment UI inside cross-origin iframes.
         // Auth0 Universal Login also uses a cross-origin popup/frame for
         // the login and registration flow.
+        // YouTube embeds are used on the Kids page for video stories.
         frameSrc: [
           "'self'",
           "https://js.stripe.com",
           auth0Domain,
+          "https://www.youtube.com",
+          "https://www.youtube-nocookie.com",
         ],
         // Images: allow self, inline data URIs (charts), Gravatar (user avatars),
-        // and Auth0 CDN (profile pictures / Lock widget assets).
+        // Auth0 CDN (profile pictures / Lock widget assets), and YouTube
+        // thumbnails used on the Kids page.
         imgSrc: [
           "'self'",
           "data:",
           "https://www.gravatar.com",
           "https://s.gravatar.com",
           "https://cdn.auth0.com",
+          "https://img.youtube.com",
+          "https://i.ytimg.com",
+          "https://yt-embed.herokuapp.com",
         ],
         // Fonts: allow self, inline data URIs (icon fonts embedded as data URLs),
         // and Google Fonts CDN for webfont delivery.
