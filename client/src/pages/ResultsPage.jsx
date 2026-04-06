@@ -1830,17 +1830,35 @@ async function triggerPdfDownload(results, email, getTokenFn) {
   });
   if (email) params.set('email', email);
 
-  let authHeaders = {};
-  if (typeof getTokenFn === 'function') {
+  /**
+   * Get an Auth0 Authorization header object, or throw a user-friendly error
+   * if the token is unavailable or the user is not authenticated.
+   */
+  async function getAuthHeaders() {
+    if (typeof getTokenFn !== 'function') {
+      throw new Error('Authentication required. Please log in and try again.');
+    }
     try {
       const token = await getTokenFn();
-      if (token) authHeaders['Authorization'] = `Bearer ${token}`;
-    } catch (_) { /* proceed without token */ }
+      if (!token) throw new Error('empty token');
+      return { 'Authorization': `Bearer ${token}` };
+    } catch (err) {
+      const msg = (err && err.message) || '';
+      if (msg && msg !== 'empty token') {
+        console.warn('[PDF download] Token error:', msg);
+      }
+      throw new Error('Authentication error. Please refresh the page and try again.');
+    }
   }
+
+  const authHeaders = await getAuthHeaders();
 
   const genRes = await fetch(`/api/report/generate?${params.toString()}`, { headers: authHeaders });
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
+    if (genRes.status === 401) {
+      throw new Error('Authentication failed. Please log in again and retry.');
+    }
     const err = new Error(body.error || 'Failed to start report generation');
     if (genRes.status === 402) err.upgradeRequired = true;
     throw err;
@@ -1850,11 +1868,20 @@ async function triggerPdfDownload(results, email, getTokenFn) {
   for (let i = 0; i < MAX_POLLING_ATTEMPTS; i++) {
     await new Promise(r => setTimeout(r, POLLING_INTERVAL_MS));
     const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
+    if (!statusRes.ok) {
+      if (statusRes.status === 401) {
+        throw new Error('Authentication expired during report generation. Please log in again and retry.');
+      }
+      throw new Error('Failed to check report status. Please try again.');
+    }
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
       // Fetch the PDF as a blob to send the Authorization header.
       const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
       if (!dlRes.ok) {
+        if (dlRes.status === 401) {
+          throw new Error('Authentication expired. Please log in again and retry.');
+        }
         const body = await dlRes.json().catch(() => ({}));
         throw new Error(body.error || 'Failed to download report');
       }
@@ -2517,6 +2544,12 @@ export default function ResultsPage() {
       setEmailAlert({ success: false, message: 'Please enter your email address.' });
       return;
     }
+    // Basic structural email validation without regex backtracking risk.
+    const atIdx = email.indexOf('@');
+    if (atIdx < 1 || atIdx !== email.lastIndexOf('@') || !email.slice(atIdx + 1).includes('.')) {
+      setEmailAlert({ success: false, message: 'Please enter a valid email address.' });
+      return;
+    }
     setEmailLoading(true);
     setEmailAlert(null);
     try {
@@ -2531,15 +2564,17 @@ export default function ResultsPage() {
           scores: results ? results.scores : {},
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setEmailAlert({ success: true, message: '✅ Report sent! Check your inbox.' });
         setEmailInput('');
+      } else if (res.status === 429) {
+        setEmailAlert({ success: false, message: 'Too many requests. Please wait a moment and try again.' });
       } else {
         setEmailAlert({ success: false, message: data.error || 'Could not send report. Please try again.' });
       }
     } catch (_) {
-      setEmailAlert({ success: false, message: 'Network error. Please try again.' });
+      setEmailAlert({ success: false, message: 'Network error. Please check your connection and try again.' });
     } finally {
       setEmailLoading(false);
     }

@@ -7,6 +7,9 @@
  *   GET /api/report/download?hash=... — serves the ready PDF by hash
  */
 
+// Mock express-rate-limit so tests never hit rate limits.
+jest.mock('express-rate-limit', () => () => (req, res, next) => next());
+
 jest.mock('winston', () => {
     const loggerInstance = {
         info: jest.fn(),
@@ -134,9 +137,18 @@ const SAMPLE_SCORES = JSON.stringify({
 describe('GET /api/report/generate', () => {
     afterEach(() => jobStore.clear());
 
+    test('returns 401 when no auth token is provided', async () => {
+        const res = await request(app)
+            .get('/api/report/generate')
+            .query({ overall: '75', scores: SAMPLE_SCORES });
+        expect(res.status).toBe(401);
+        expect(res.body).toHaveProperty('error');
+    });
+
     test('returns 400 when overall is missing', async () => {
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ scores: SAMPLE_SCORES });
         expect(res.status).toBe(400);
         expect(res.body).toHaveProperty('error');
@@ -145,6 +157,7 @@ describe('GET /api/report/generate', () => {
     test('returns 400 when scores is missing', async () => {
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75' });
         expect(res.status).toBe(400);
         expect(res.body).toHaveProperty('error');
@@ -153,6 +166,7 @@ describe('GET /api/report/generate', () => {
     test('returns 200 with a hash when params are valid', async () => {
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75', dominantType: 'Relational', scores: SAMPLE_SCORES });
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('hash');
@@ -162,8 +176,8 @@ describe('GET /api/report/generate', () => {
 
     test('returns same hash for identical params (idempotent)', async () => {
         const params = { overall: '75', dominantType: 'Relational', scores: SAMPLE_SCORES };
-        const res1 = await request(app).get('/api/report/generate').query(params);
-        const res2 = await request(app).get('/api/report/generate').query(params);
+        const res1 = await request(app).get('/api/report/generate').set('Authorization', `Bearer ${authToken()}`).query(params);
+        const res2 = await request(app).get('/api/report/generate').set('Authorization', `Bearer ${authToken()}`).query(params);
         expect(res1.status).toBe(200);
         expect(res2.status).toBe(200);
         expect(res1.body.hash).toBe(res2.body.hash);
@@ -171,7 +185,7 @@ describe('GET /api/report/generate', () => {
 
     test('creates a job in the store with pending or processing status', async () => {
         const params = { overall: '80', dominantType: 'Agentic-Generative', scores: SAMPLE_SCORES };
-        const res = await request(app).get('/api/report/generate').query(params);
+        const res = await request(app).get('/api/report/generate').set('Authorization', `Bearer ${authToken()}`).query(params);
         expect(res.status).toBe(200);
         const hash = res.body.hash;
         const job = jobStore.get(hash);
@@ -183,6 +197,7 @@ describe('GET /api/report/generate', () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75', scores: SAMPLE_SCORES });
         expect(res.status).toBe(402);
         expect(res.body).toHaveProperty('upgradeRequired', true);
@@ -201,6 +216,7 @@ describe('GET /api/report/generate', () => {
         User.findOne.mockResolvedValueOnce(null); // no User record
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'test@example.com' });
         expect(res.status).toBe(402);
         expect(res.body).toHaveProperty('upgradeRequired', true);
@@ -220,6 +236,7 @@ describe('GET /api/report/generate', () => {
         User.findOne.mockResolvedValueOnce(null);
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'newuser@example.com' });
         // In the new model every assessment requires a purchase — there is no free first assessment.
         expect(res.status).toBe(402);
@@ -240,6 +257,7 @@ describe('GET /api/report/generate', () => {
         });
         const res = await request(app)
             .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
             .query({ overall: '75', scores: SAMPLE_SCORES, email: 'paid@example.com' });
         expect(res.status).toBe(200);
         expect(res.body).toHaveProperty('hash');

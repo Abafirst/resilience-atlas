@@ -248,9 +248,10 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
  *
  * Query params: overall, dominantType, scores (JSON-encoded), email
  */
-router.get('/generate', reportLimiter, async (req, res) => {
+router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
     try {
         const { overall, dominantType, email } = req.query;
+        console.log(`[report/generate] Request from user=${req.user && req.user.userId} email=${email || '(none)'} overall=${overall}`);
         // Reverse any HTML entity encoding applied by the sanitiseInput middleware
         // so that the JSON string can be parsed correctly.
         const scores = unescapeHtmlEntities(req.query.scores);
@@ -384,8 +385,8 @@ router.get('/generate', reportLimiter, async (req, res) => {
 
         return res.json({ hash, estimatedSeconds: 15 });
     } catch (error) {
-        console.error('Report generation start failed:', error.message, error.stack);
-        return res.status(500).json({ error: 'Failed to start report generation' });
+        console.error('[report/generate] Failed to start report:', error.message, error.stack);
+        return res.status(500).json({ error: 'Failed to start report generation. Please try again.' });
     }
 });
 

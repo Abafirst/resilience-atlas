@@ -278,6 +278,61 @@ router.get('/questions', (req, res) => {
 });
 
 /**
+ * POST /api/quiz/email-report
+ * Send a resilience assessment summary email to a provided email address.
+ * Does not require authentication — any user (including anonymous quiz-takers)
+ * can request their summary report email.
+ *
+ * Body: { email, firstName, overall, dominantType, scores }
+ */
+const emailReportLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many email requests. Please try again later.' },
+});
+
+router.post('/email-report', emailReportLimiter, async (req, res) => {
+    try {
+        const { email, firstName, overall, dominantType, scores } = req.body;
+
+        if (!email || typeof email !== 'string' || !email.trim()) {
+            return res.status(400).json({ error: 'A valid email address is required.' });
+        }
+
+        const safeEmail = email.trim().toLowerCase();
+        // Basic structural email validation without regex backtracking risk.
+        const atIdx = safeEmail.indexOf('@');
+        if (atIdx < 1 || atIdx !== safeEmail.lastIndexOf('@') || !safeEmail.slice(atIdx + 1).includes('.')) {
+            return res.status(400).json({ error: 'Please provide a valid email address.' });
+        }
+
+        const safeName = (firstName || '').toString().trim().slice(0, 100);
+        const safeScore = typeof overall === 'number' && overall >= 0 && overall <= 100
+            ? overall
+            : 0;
+        const safeDominant = (dominantType || '').toString().trim().slice(0, 100);
+        const safeScores = scores && typeof scores === 'object' && !Array.isArray(scores)
+            ? scores
+            : {};
+
+        await emailService.sendQuizReport(safeEmail, safeName, {
+            overall:     safeScore,
+            dominantType: safeDominant,
+            categories:  safeScores,
+            summary:     '',
+        });
+
+        logger.info(`Quiz email-report sent to ${safeEmail}`);
+        res.status(200).json({ message: 'Report sent! Please check your inbox.' });
+    } catch (err) {
+        logger.error('Quiz email-report error:', err);
+        res.status(500).json({ error: 'Failed to send report email. Please try again.' });
+    }
+});
+
+/**
  * POST /api/quiz/feedback
  * Store question flags and post-quiz improvement feedback for admin review.
  * No authentication required — captures anonymous feedback.
