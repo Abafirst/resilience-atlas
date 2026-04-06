@@ -313,6 +313,7 @@ export default function GamificationDashboard() {
     progress,
     loading: gamLoading,
     error,
+    tierBlocked: gamTierBlocked,
     setChallenge,
     enableLeaderboard,
     fetchLeaderboard,
@@ -448,11 +449,11 @@ export default function GamificationDashboard() {
   const hasStarter   = isStarterOrAbove(userTier);
   const hasNavigator = isNavigatorOrAbove(userTier);
 
-  const isGamError = error && (
+  const isGamError = gamTierBlocked || (error && (
     error.toLowerCase().includes('paid tier') ||
     error.toLowerCase().includes('upgrade') ||
     error.toLowerCase().includes('402')
-  );
+  ));
 
   // Gamification API progress is only available for Navigator+
   const activeProgress = (hasNavigator && !isGamError) ? progress : null;
