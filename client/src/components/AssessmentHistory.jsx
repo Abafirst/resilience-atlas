@@ -146,27 +146,54 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email, get
   });
   if (email) params.set('email', email);
 
-  let authHeaders = {};
-  if (typeof getTokenFn === 'function') {
+  /**
+   * Get an Auth0 access token or throw a user-friendly error.
+   */
+  async function getAuthHeaders() {
+    if (typeof getTokenFn !== 'function') {
+      throw new Error('Authentication required. Please log in and try again.');
+    }
     try {
       const token = await getTokenFn();
-      if (token) authHeaders['Authorization'] = `Bearer ${token}`;
-    } catch (_) { /* proceed without token */ }
+      if (!token) throw new Error('empty token');
+      return { 'Authorization': `Bearer ${token}` };
+    } catch (err) {
+      const msg = (err && err.message) || '';
+      if (msg && msg !== 'empty token') {
+        console.warn('[AssessmentHistory] Token error:', msg);
+      }
+      throw new Error('Authentication error. Please refresh the page and try again.');
+    }
   }
+
+  const authHeaders = await getAuthHeaders();
 
   const genRes = await fetch(`/api/report/generate?${params.toString()}`, { headers: authHeaders });
   if (!genRes.ok) {
     const body = await genRes.json().catch(() => ({}));
+    if (genRes.status === 401) {
+      throw new Error('Authentication failed. Please log in again and retry.');
+    }
     throw new Error(body.error || 'Failed to start report generation');
   }
   const { hash: jobHash } = await genRes.json();
 
   for (let i = 0; i < MAX_POLL; i++) {
     await new Promise(r => setTimeout(r, POLL_MS));
-    const st = await fetch(`/api/report/status?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders }).then(r => r.json());
+    const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders });
+    if (!statusRes.ok) {
+      if (statusRes.status === 401) {
+        throw new Error('Authentication expired during report generation. Please log in again and retry.');
+      }
+      throw new Error('Failed to check report status. Please try again.');
+    }
+    const st = await statusRes.json();
     if (st.status === 'ready') {
       const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders });
       if (!dlRes.ok) {
+        if (dlRes.status === 401) {
+          throw new Error('Authentication expired. Please log in again and retry.');
+        }
         const body = await dlRes.json().catch(() => ({}));
         throw new Error(body.error || 'Failed to download report');
       }
