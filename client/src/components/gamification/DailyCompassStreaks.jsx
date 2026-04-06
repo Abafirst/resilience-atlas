@@ -7,6 +7,9 @@ const STREAK_MILESTONES = [
   { days: 100, label: '100-Day Pioneer',  icon: '/icons/kids-spark.svg' },
 ];
 
+/** Milestones ordered highest-first for efficient "just reached" detection */
+const STREAK_MILESTONES_DESC = [...STREAK_MILESTONES].reverse();
+
 const s = {
   widget: {
     background: 'rgba(255,255,255,0.05)',
@@ -139,7 +142,7 @@ export default function DailyCompassStreaks({ progress }) {
     const prev = prevDaysRef.current;
     prevDaysRef.current = days;
     if (days <= prev) return; // streak decreased or unchanged — no celebration
-    const newMilestone = STREAK_MILESTONES.slice().reverse().find(m => days >= m.days && prev < m.days);
+    const newMilestone = STREAK_MILESTONES_DESC.find(m => days >= m.days && prev < m.days);
     if (newMilestone) {
       playStreakMilestoneSound();
       setMilestoneMsg(`🔥 ${newMilestone.label} — ${newMilestone.days}-day streak reached!`);

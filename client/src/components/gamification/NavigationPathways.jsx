@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NAVIGATION_PATHWAYS } from '../../data/gamificationContent.js';
 import { playPathwayStartSound } from '../../utils/soundEffects.js';
 
@@ -173,12 +173,20 @@ const s = {
  *   onSetChallenge — function(dimension, difficulty) → Promise
  */
 export default function NavigationPathways({ progress, onSetChallenge }) {
-  const [selected, setSelected]   = useState(null);
-  const [starting, setStarting]   = useState(false);
+  const [selected, setSelected]     = useState(null);
+  const [starting, setStarting]     = useState(false);
   const [startError, setStartError] = useState(null);
-  const [startedId, setStartedId] = useState(null);
+  const [startedId, setStartedId]   = useState(null);
+  const startedTimerRef             = useRef(null);
 
   const active = progress?.currentChallenge;
+
+  // Clean up the success-banner timer on unmount
+  useEffect(() => {
+    return () => {
+      if (startedTimerRef.current) clearTimeout(startedTimerRef.current);
+    };
+  }, []);
 
   const handleStart = async (pathway) => {
     if (!onSetChallenge) return;
@@ -190,7 +198,8 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
       setStartedId(pathway.id);
       setSelected(null);
       // Clear the success indicator after 3 s
-      setTimeout(() => setStartedId(null), 3000);
+      if (startedTimerRef.current) clearTimeout(startedTimerRef.current);
+      startedTimerRef.current = setTimeout(() => setStartedId(null), 3000);
     } catch (err) {
       setStartError(err?.message || 'Could not start pathway. Please try again.');
     } finally {
