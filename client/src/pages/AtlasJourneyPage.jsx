@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 // ── Dimension colours & icons (mirrors ResultsPage) ────────────────────────
 const DIM_COLORS = {
@@ -821,6 +822,7 @@ export default function AtlasJourneyPage() {
     return (
       <div style={s.page}>
         <SiteHeader activePage="atlas" navItems={NAV_ITEMS} />
+        <DarkModeHint />
         <div style={s.loading}><p>Loading…</p></div>
       </div>
     );
@@ -831,6 +833,7 @@ export default function AtlasJourneyPage() {
     return (
       <div style={s.page}>
         <SiteHeader activePage="atlas" navItems={NAV_ITEMS} />
+        <DarkModeHint />
         <section style={s.hero}>
           <h1 style={s.heroTitle}>🗺 The Resilience Atlas™</h1>
           <p style={s.heroSub}>Navigate your resilience journey. Each assessment marks a new point on your personal atlas.</p>
@@ -851,6 +854,7 @@ export default function AtlasJourneyPage() {
   return (
     <div style={s.page}>
       <SiteHeader activePage="atlas" navItems={NAV_ITEMS} />
+      <DarkModeHint />
 
       {/* Hero */}
       <section style={s.hero} role="banner">

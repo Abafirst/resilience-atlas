@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
     .assessment-hero {
@@ -144,6 +145,7 @@ export default function AssessmentPage() {
       <style dangerouslySetInnerHTML={{ __html: styles }} />
 
       <SiteHeader activePage="assessment" />
+      <DarkModeHint />
 
       {/* Hero */}
       <section className="assessment-hero" aria-labelledby="assessment-heading">

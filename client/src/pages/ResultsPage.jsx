@@ -6,6 +6,7 @@ import BrandCompass from '../components/BrandCompass.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
 import { isStarterOrAbove } from '../data/gamificationContent.js';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
 const BRAND_ICONS = {
@@ -2706,6 +2707,7 @@ export default function ResultsPage() {
             </nav>
           </div>
         </header>
+        <DarkModeHint />
         <div style={s.page}>
           <div style={s.container}>
             {historyEmail ? (
@@ -2801,6 +2803,9 @@ export default function ResultsPage() {
     <>
       {/* Confetti canvas — positioned fixed, above all content */}
       <canvas ref={confettiRef} style={s.confettiCanvas} aria-hidden="true" />
+
+      {/* ── Dark-mode readability hint ──────────────────── */}
+      <DarkModeHint />
 
       {/* ── Promotional banner (flash offer for free users) ──────────── */}
       {promoBanner && (

@@ -5,7 +5,6 @@ import StarterMicroQuests from './StarterMicroQuests.jsx';
 import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import GamificationToast from './GamificationToast.jsx';
-import { ADULT_BADGES } from '../../data/adultGames.js';
 import { isStarterOrAbove, isNavigatorOrAbove } from '../../data/gamificationContent.js';
 
 async function fetchUserTier(email, token) {
@@ -72,34 +71,26 @@ const s = {
     outline: active ? '1px solid rgba(79,70,229,0.4)' : '1px solid transparent',
   }),
   content: { padding: '24px' },
-  lockedWrap: {
-    textAlign: 'center', padding: '48px 24px',
-    background: 'rgba(255,255,255,0.02)',
-    borderRadius: 12, margin: '24px',
-  },
-  lockedIcon: { fontSize: 40, marginBottom: 16 },
-  lockedTitle: { fontSize: 18, fontWeight: 700, color: '#e2e8f0', margin: '0 0 8px' },
-  lockedText: { fontSize: 14, color: '#718096', margin: '0 0 20px', lineHeight: 1.6, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' },
-  upgradeBtn: {
-    display: 'inline-block',
-    padding: '10px 24px', borderRadius: 8,
-    background: 'linear-gradient(135deg,#4f46e5,#7c3aed)',
-    color: '#fff', fontWeight: 600, fontSize: 14,
-    textDecoration: 'none', cursor: 'pointer', border: 'none',
-  },
 };
 
 export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, toasts, dismissToast } = useGamification();
+  // Initialise tier from the parent-provided prop immediately to avoid a
+  // "Loading…" flash on first render.  Falls back to localStorage for
+  // standalone (non-dashboard) use where no tierProp is supplied.
   const [tier, setTier] = useState(() => {
+    if (tierProp) return tierProp;
     try { return localStorage.getItem('resilience_tier') || null; } catch (_) { return null; }
   });
-  const [tierLoading, setTierLoading] = useState(true);
+  // Skip the loading state entirely when a parent-provided tier is available.
+  const [tierLoading, setTierLoading] = useState(!tierProp);
   const [activeTab, setActiveTab] = useState('practices');
 
   useEffect(() => {
-    // When a tier is provided by the parent, trust it and skip the redundant API call.
+    // When a tier is provided by the parent, trust it completely and skip the
+    // redundant API call.  LockedFeatureCard (the parent) already verified the
+    // user's access tier before rendering this component.
     if (tierProp) {
       setTier(tierProp);
       setTierLoading(false);
@@ -142,27 +133,18 @@ export default function AdultGameHub({ tier: tierProp }) {
     );
   }
 
-  if (!isAuthenticated || !isStarterOrAbove(tier)) {
-    return (
-      <div style={s.wrap}>
-        <div style={s.header}>
-          <p style={s.eyebrow}>Resilience Practice Hub</p>
-          <h2 style={s.title}>Values-Aligned Practice</h2>
-          <p style={s.subtitle}>ABA and ACT-informed practices for building durable resilience.</p>
-        </div>
-        <div style={s.lockedWrap}>
-          <div style={s.lockedIcon}>
-            <img src="/icons/lock.svg" alt="" aria-hidden="true" width={40} height={40} style={{ verticalAlign: 'middle' }} />
-          </div>
-          <h3 style={s.lockedTitle}>Unlock Your Practice Hub</h3>
-          <p style={s.lockedText}>
-            Access evidence-based, ABA and ACT-aligned micro-practices, skill pathways, and personalized reinforcement — available with Atlas Starter ($9.99) or Atlas Navigator ($49.99).
-          </p>
-          <a href="/pricing" style={s.upgradeBtn}>View Plans</a>
-        </div>
-      </div>
-    );
-  }
+  // LockedFeatureCard (in GamificationDashboard) is the primary gating mechanism and
+  // only renders this component when the user's tier has been verified as Starter or
+  // above.  The standalone lock screen that previously lived here created a double-lock
+  // race condition — users with Navigator access sometimes saw the "Unlock Your Practice
+  // Hub" screen because AdultGameHub's own tier detection ran independently and lagged
+  // behind the parent's verified tier.  We now trust the parent-supplied tierProp
+  // completely.
+  //
+  // Standalone use (no tierProp): the component fetches the tier itself via the API
+  // (see the useEffect above).  Unauthenticated or free-tier users will have all tabs
+  // disabled (isStarterOrAbove / isNavigatorOrAbove return false) and the content area
+  // will render nothing, which is the expected no-access fallback.
 
   return (
     <div style={s.wrap}>

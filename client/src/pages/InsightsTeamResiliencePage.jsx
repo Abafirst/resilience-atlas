@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
   .article-body { max-width:720px; margin:0 auto; padding:3rem 1.25rem 4rem; }
@@ -32,6 +33,9 @@ export default function InsightsTeamResiliencePage() {
           { href: '/teams', label: 'For Teams', key: 'teams' },
         ]}
       />
+      <DarkModeHint />
+
+      <DarkModeHint />
 
       <article className="article-body" aria-labelledby="articleHeading">
         <p className="article-meta">Resilience Atlas Insights &mdash; Team Development</p>
