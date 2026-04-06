@@ -37,9 +37,9 @@ function VideoModal({ video, onClose }) {
         <p className="video-modal-meta">{video.subtitle}</p>
         <div className="video-embed-wrapper">
           <iframe
-            src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1`}
+            src={`https://www.youtube.com/embed/${video.youtubeId}`}
             title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         </div>
@@ -121,13 +121,6 @@ export default function VideoStories() {
                       <span className="video-meta-tag">{video.ageLabel}</span>
                       <span className="video-meta-tag video-dimension-tag">{video.dimension}</span>
                     </div>
-                    <button
-                      className="btn-story"
-                      onClick={() => setActiveVideo(video)}
-                      aria-label={`Watch ${video.title}`}
-                    >
-                      Watch Story &#9654;
-                    </button>
                   </div>
                 </div>
               ))}
