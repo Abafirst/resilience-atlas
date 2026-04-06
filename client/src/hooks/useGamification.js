@@ -91,6 +91,8 @@ export default function useGamification() {
     } catch (err) {
       if (err.status === 402) {
         setTierBlocked(true);
+        // Preserve the server's error message so callers can surface it if needed.
+        setError(err.message || 'A paid tier is required to access gamification features.');
       } else {
         setError(err.message || 'Could not load gamification data.');
       }

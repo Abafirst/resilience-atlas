@@ -74,8 +74,8 @@ export default function ProgressDashboard({ tier, progress, loading, tierBlocked
     return (
       <div style={{ padding: '32px', textAlign: 'center', color: '#718096', fontSize: 14 }}>
         <div style={{ fontSize: 20, marginBottom: 12 }}>🔒</div>
-        <div style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: 8 }}>Atlas Starter or above required</div>
-        <div>Upgrade your plan to track your resilience progress, earn badges, and build practice streaks.</div>
+        <div style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: 8 }}>Upgrade required</div>
+        <div>A paid Atlas plan is required to access gamification features and track your resilience progress.</div>
       </div>
     );
   }
