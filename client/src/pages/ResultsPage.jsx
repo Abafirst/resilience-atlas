@@ -1683,6 +1683,7 @@ const SOCIAL_URLS = {
   twitter:   'https://x.com/atlasresilience',
   facebook:  'https://www.facebook.com/profile.php?id=100076220534241',
   instagram: 'https://www.instagram.com/atlas.resilience/',
+  youtube:   'https://www.youtube.com/@janeenstalnaker8395',
 };
 
 function buildShareText(dominantDimension) {
@@ -1713,6 +1714,10 @@ function shareTwitter(dominantDimension) {
 
 function shareFacebook() {
   window.open(SOCIAL_URLS.facebook, '_blank', 'noopener,noreferrer');
+}
+
+function shareYouTube() {
+  window.open(SOCIAL_URLS.youtube, '_blank', 'noopener,noreferrer');
 }
 
 function trackShareEvent(platform, dimension) {
@@ -3548,6 +3553,15 @@ export default function ResultsPage() {
                 }}
               />
               <ShareButton
+                label="YouTube"
+                icon="▶"
+                bg="#C41E3A"
+                onClick={() => {
+                  shareYouTube();
+                  trackShareEvent('youtube', dominantType);
+                }}
+              />
+              <ShareButton
                 label={copyLabel}
                 icon="🔗"
                 bg="#4a5568"
@@ -3666,6 +3680,7 @@ export default function ResultsPage() {
             <SocialFollowLink label="X / Twitter" icon="𝕏" href={SOCIAL_URLS.twitter} bg="#000000" />
             <SocialFollowLink label="Facebook" icon="f" href={SOCIAL_URLS.facebook} bg="#1877f2" />
             <SocialFollowLink label="Instagram" icon="📷" href={SOCIAL_URLS.instagram} bg="#e1306c" />
+            <SocialFollowLink label="YouTube" icon="▶" href={SOCIAL_URLS.youtube} bg="#C41E3A" />
           </div>
 
           <div style={s.footerBottom}>
