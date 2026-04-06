@@ -16,6 +16,29 @@
  */
 
 /**
+ * Read the Auth0 access token directly from localStorage cache.
+ * Auth0 SPA SDK stores tokens under the '@@auth0spajs@@' key as a nested
+ * object: { [cacheKey]: [{ body: { access_token } }] }
+ *
+ * This is used as a fallback when getAccessTokenSilently() is unavailable or
+ * throws (e.g. user not fully authenticated, no audience configured).
+ *
+ * @returns {string} The access token, or '' if not found.
+ */
+export function getAuth0CachedToken() {
+  try {
+    const raw = typeof localStorage !== 'undefined' && localStorage.getItem('@@auth0spajs@@');
+    if (!raw) return '';
+    const parsed = JSON.parse(raw);
+    const firstKey = Object.keys(parsed)[0];
+    if (!firstKey) return '';
+    return parsed[firstKey]?.[0]?.body?.access_token || '';
+  } catch (_) {
+    return '';
+  }
+}
+
+/**
  * Fetch a URL, optionally attaching an Auth0 bearer token.
  *
  * @param {string}   url

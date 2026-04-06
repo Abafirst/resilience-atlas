@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MICRO_QUESTS, DIMENSION_COLORS, ADULT_BADGES } from '../../data/adultGames.js';
 import { isStarterOrAbove } from '../../data/gamificationContent.js';
+import { getAuth0CachedToken } from '../../lib/apiFetch.js';
 
 const s = {
   section: { marginBottom: 32 },
@@ -118,7 +119,7 @@ export default function StarterMicroQuests({ tier, progress }) {
         headers.Authorization = `Bearer ${token}`;
       } catch (authErr) {
         console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
-        const stored = localStorage.getItem('auth_token');
+        const stored = getAuth0CachedToken();
         if (stored) headers.Authorization = `Bearer ${stored}`;
       }
       const res  = await fetch('/api/gamification/progress/quest-complete', {

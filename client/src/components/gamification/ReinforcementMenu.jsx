@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { REINFORCEMENT_MENU, DIMENSION_COLORS, REENTRY_PATHWAYS } from '../../data/adultGames.js';
+import { getAuth0CachedToken } from '../../lib/apiFetch.js';
 
 const s = {
   intro: { marginBottom: 24 },
@@ -80,7 +81,7 @@ export default function ReinforcementMenu({ progress, showReentry = false }) {
         headers.Authorization = `Bearer ${token}`;
       } catch (authErr) {
         console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
-        const stored = localStorage.getItem('auth_token');
+        const stored = getAuth0CachedToken();
         if (stored) headers.Authorization = `Bearer ${stored}`;
       }
       await fetch('/api/gamification/practice', {
