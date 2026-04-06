@@ -234,8 +234,9 @@ export default function ResultsHistory({ email }) {
     setDownloadingIdx(idx);
     setDownloadError('');
     try {
-      await downloadPdfForPurchase(purchase, email, isAuthenticated ? getAccessTokenSilently : null);
+      await downloadPdfForPurchase(purchase, email, getAccessTokenSilently);
     } catch (err) {
+      console.error('[ResultsHistory] Download failed:', err);
       setDownloadError(err.message || 'Download failed. Please try again.');
     } finally {
       setDownloadingIdx(null);
