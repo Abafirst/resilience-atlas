@@ -37,9 +37,9 @@ function VideoModal({ video, onClose }) {
         <p className="video-modal-meta">{video.subtitle}</p>
         <div className="video-embed-wrapper">
           <iframe
-            src={`https://www.youtube.com/embed/${video.youtubeId}`}
+            src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`}
             title={video.title}
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowFullScreen
           />
         </div>
