@@ -69,19 +69,27 @@ async function init() {
   const onRedirectCallback = (appState, user) => {
     // If a specific returnTo was encoded in appState, honour it (deep-link logins).
     const explicitTarget = appState?.returnTo;
+    // Also check sessionStorage as a belt-and-suspenders fallback (set by pages
+    // that call loginWithRedirect, e.g. GamificationDashboard).
+    let sessionTarget = '';
+    try {
+      sessionTarget = sessionStorage.getItem('returnAfterLogin') || '';
+      sessionStorage.removeItem('returnAfterLogin');
+    } catch (_) {}
+    const returnTarget = explicitTarget || sessionTarget;
     if (
-      explicitTarget &&
-      typeof explicitTarget === 'string' &&
-      explicitTarget.startsWith('/') &&
-      explicitTarget !== '/'
+      returnTarget &&
+      typeof returnTarget === 'string' &&
+      returnTarget.startsWith('/') &&
+      returnTarget !== '/'
     ) {
-      console.debug('[Auth0] onRedirectCallback explicit returnTo:', explicitTarget);
+      console.debug('[Auth0] onRedirectCallback returnTo:', returnTarget);
       // Use window.location.replace so that React Router initialises at the
       // correct path.  window.history.replaceState only changes the address
       // bar without firing a popstate event, so React Router v6 would never
       // re-render the matching route.  A full navigation (replace, not push)
       // keeps the back-button behaviour clean.
-      window.location.replace(explicitTarget);
+      window.location.replace(returnTarget);
       return;
     }
 

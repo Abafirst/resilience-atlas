@@ -3113,40 +3113,6 @@ export default function ResultsPage() {
           />
         )}
 
-        {/* ── Deep Analysis (locked for free users) ────────────────── */}
-        {!hasPremiumAccess && tierCheckComplete && (
-          <section
-            className="premium-preview card locked"
-            data-tier="atlas-navigator"
-            aria-labelledby="deepAnalysisHeading"
-          >
-            <h2 id="deepAnalysisHeading">Deep Resilience Analysis</h2>
-            <div className="blur-preview" aria-hidden="true">
-              <p>Comprehensive breakdown of all 6 resilience dimensions with personalized insights tailored to your unique profile.</p>
-              <p>Discover the deeper meaning behind your scores and learn exactly how to leverage each dimension for lasting resilience.</p>
-              <p>Includes recommended growth strategies, expanded micro-practices for each dimension, and a personalized development roadmap.</p>
-            </div>
-            <div className="premium-lock-message payment-overlay" role="region" aria-label="Premium content — locked">
-              <div className="payment-overlay__inner">
-                <span className="payment-overlay__icon" aria-hidden="true">
-                  <img src="/icons/lock.svg" alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} />
-                </span>
-                <h3>Unlock Your Complete Resilience Map</h3>
-                <p>Go deeper to understand the full structure of your resilience system.</p>
-                <button
-                  type="button"
-                  className="btn btn-upgrade btn-sm"
-                  onClick={() => setUpsellModal({ tier: 'atlas-navigator', trigger: 'manual' })}
-                  disabled={!!checkoutLoading}
-                  aria-label="Unlock Deep Report"
-                >
-                  {checkoutLoading === 'atlas-navigator' ? '⏳ Redirecting…' : 'Unlock Now'}
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* ── Prior Purchases / ResultsHistory ─────────────────────── */}
         <ResultsHistory
           email={getEffectiveEmail()}

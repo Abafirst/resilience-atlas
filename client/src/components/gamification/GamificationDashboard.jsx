@@ -487,7 +487,10 @@ export default function GamificationDashboard() {
               <p style={s.signInText}>
                 🔐 Sign in to track your resilience progress and see which features you have unlocked.
               </p>
-              <button style={s.signInBtn} onClick={() => loginWithRedirect({ appState: { returnTo: '/gamification' } })}>
+              <button style={s.signInBtn} onClick={() => {
+                try { sessionStorage.setItem('returnAfterLogin', '/gamification'); } catch (_) {}
+                loginWithRedirect({ appState: { returnTo: '/gamification' } });
+              }}>
                 Sign In to Atlas
               </button>
             </div>
