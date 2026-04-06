@@ -10,8 +10,10 @@ import NavigationPathways from './NavigationPathways.jsx';
 import ResilienceMap from './ResilienceMap.jsx';
 import DailyCompassStreaks from './DailyCompassStreaks.jsx';
 import ExplorerAchievements from './ExplorerAchievements.jsx';
+import AchievementNotification from './AchievementNotification.jsx';
 import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
 import AdultGameHub from './AdultGameHub.jsx';
+import '../../styles/gamification-animations.css';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
@@ -316,6 +318,8 @@ export default function GamificationDashboard() {
     fetchLeaderboard,
     toasts,
     dismissToast,
+    celebration,
+    clearCelebration,
   } = useGamification();
 
   const [userTier, setUserTier]       = useState(() => {
@@ -800,6 +804,11 @@ export default function GamificationDashboard() {
       </div>
 
       <GamificationToast toasts={toasts} onDismiss={dismissToast} />
+
+      {/* Badge unlock celebration modal */}
+      {celebration && (
+        <AchievementNotification badge={celebration} onClose={clearCelebration} />
+      )}
     </>
   );
 }

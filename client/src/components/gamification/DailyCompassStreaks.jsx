@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { playStreakMilestoneSound } from '../../utils/soundEffects.js';
 
 const STREAK_MILESTONES = [
   { days: 7,   label: '7-Day Navigator',  icon: '/icons/star.svg' },
   { days: 30,  label: '30-Day Voyager',   icon: '/icons/streaks.svg' },
   { days: 100, label: '100-Day Pioneer',  icon: '/icons/kids-spark.svg' },
 ];
+
+/** Milestones ordered highest-first for efficient "just reached" detection */
+const STREAK_MILESTONES_DESC = [...STREAK_MILESTONES].reverse();
 
 const s = {
   widget: {
@@ -130,6 +134,23 @@ export default function DailyCompassStreaks({ progress }) {
   const points     = progress?.totalPoints ?? 0;
   const compassIcon = days >= 30 ? '/icons/kids-spark.svg' : days > 0 ? '/icons/compass.svg' : '/icons/goal.svg';
 
+  // Track which milestone was just reached so we can celebrate it once
+  const prevDaysRef = useRef(days);
+  const [milestoneMsg, setMilestoneMsg] = useState(null);
+
+  useEffect(() => {
+    const prev = prevDaysRef.current;
+    prevDaysRef.current = days;
+    if (days <= prev) return; // streak decreased or unchanged — no celebration
+    const newMilestone = STREAK_MILESTONES_DESC.find(m => days >= m.days && prev < m.days);
+    if (newMilestone) {
+      playStreakMilestoneSound();
+      setMilestoneMsg(`🔥 ${newMilestone.label} — ${newMilestone.days}-day streak reached!`);
+      const t = setTimeout(() => setMilestoneMsg(null), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [days]);
+
   return (
     <div style={s.widget} role="region" aria-label="Daily Compass Streak">
       <div style={s.subtitle}>Atlas Navigator</div>
@@ -137,6 +158,27 @@ export default function DailyCompassStreaks({ progress }) {
         <img src="/icons/streaks.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 6 }} />
         Build Your Compass Streak
       </h3>
+
+      {/* Milestone celebration banner */}
+      {milestoneMsg && (
+        <div
+          role="status"
+          aria-live="polite"
+          style={{
+            marginBottom: 14,
+            padding: '10px 14px',
+            borderRadius: 10,
+            background: 'rgba(14,165,233,0.18)',
+            border: '1px solid rgba(14,165,233,0.45)',
+            color: '#38bdf8',
+            fontSize: 13,
+            fontWeight: 700,
+            animation: 'gam-toast-in 0.3s ease',
+          }}
+        >
+          {milestoneMsg}
+        </div>
+      )}
 
       <div style={s.streakRow}>
         <span style={s.compassIcon} aria-hidden="true">

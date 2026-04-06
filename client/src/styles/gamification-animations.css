@@ -1,0 +1,79 @@
+/* ── Gamification Animations ─────────────────────────────────────────────── */
+
+/* Spinner for loading states */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Badge card entrance */
+@keyframes gam-badge-enter {
+  from { opacity: 0; transform: scale(0.85) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Pulse ring for newly unlocked badges */
+@keyframes gam-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(124, 58, 237, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+}
+
+/* Floating glow on earned badges */
+@keyframes gam-badge-glow {
+  0%, 100% { box-shadow: 0 4px 16px rgba(124, 58, 237, 0.18); }
+  50%       { box-shadow: 0 6px 28px rgba(124, 58, 237, 0.38); }
+}
+
+/* Streak counter pop */
+@keyframes gam-streak-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Pathway "Active" badge shimmer */
+@keyframes gam-active-shimmer {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.65; }
+  100% { opacity: 1; }
+}
+
+/* Progress bar fill */
+@keyframes gam-bar-fill {
+  from { width: 0; }
+}
+
+/* Milestone reached bounce */
+@keyframes gam-milestone-bounce {
+  0%, 100% { transform: translateY(0); }
+  40%       { transform: translateY(-6px); }
+  60%       { transform: translateY(-3px); }
+}
+
+/* Toast slide-in (bottom-right) */
+@keyframes gam-toast-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────────── */
+
+.gam-badge-new {
+  animation: gam-pulse-ring 1.4s ease-out 3, gam-badge-glow 2.2s ease-in-out infinite;
+}
+
+.gam-streak-pop {
+  animation: gam-streak-pop 0.4s ease-out;
+}
+
+.gam-milestone-reached {
+  animation: gam-milestone-bounce 0.5s ease-out;
+}
+
+.gam-pathway-active {
+  animation: gam-active-shimmer 2s ease-in-out infinite;
+}
+
+.gam-bar-fill {
+  animation: gam-bar-fill 0.8s ease-out;
+}
