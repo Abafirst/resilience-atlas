@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
     .insights-hero {
@@ -93,6 +94,7 @@ export default function InsightsPage() {
           { href: '/teams', label: 'For Teams', key: 'teams' },
         ]}
       />
+      <DarkModeHint />
 
       <section className="insights-hero" aria-label="Insights hub hero">
         <span className="hero-eyebrow">Knowledge Hub</span>
