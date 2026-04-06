@@ -116,7 +116,8 @@ async function downloadPdfForPurchase(purchase, email, getTokenFn) {
   if (email) params.set('email', email);
 
   /**
-   * Get an Auth0 access token or throw a user-friendly error.
+   * Get an Auth0 Authorization header object, or throw a user-friendly error
+   * if the token is unavailable or the user is not authenticated.
    */
   async function getAuthHeaders() {
     if (typeof getTokenFn !== 'function') {

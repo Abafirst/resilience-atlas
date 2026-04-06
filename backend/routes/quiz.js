@@ -301,18 +301,19 @@ router.post('/email-report', emailReportLimiter, async (req, res) => {
             return res.status(400).json({ error: 'A valid email address is required.' });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const safeEmail = email.trim().toLowerCase();
-        if (!emailRegex.test(safeEmail)) {
+        // Basic structural email validation without regex backtracking risk.
+        const atIdx = safeEmail.indexOf('@');
+        if (atIdx < 1 || atIdx !== safeEmail.lastIndexOf('@') || !safeEmail.slice(atIdx + 1).includes('.')) {
             return res.status(400).json({ error: 'Please provide a valid email address.' });
         }
 
-        const safeName  = (firstName || '').toString().trim().slice(0, 100);
+        const safeName = (firstName || '').toString().trim().slice(0, 100);
         const safeScore = typeof overall === 'number' && overall >= 0 && overall <= 100
             ? overall
             : 0;
         const safeDominant = (dominantType || '').toString().trim().slice(0, 100);
-        const safeScores   = scores && typeof scores === 'object' && !Array.isArray(scores)
+        const safeScores = scores && typeof scores === 'object' && !Array.isArray(scores)
             ? scores
             : {};
 

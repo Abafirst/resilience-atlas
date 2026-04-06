@@ -1831,8 +1831,8 @@ async function triggerPdfDownload(results, email, getTokenFn) {
   if (email) params.set('email', email);
 
   /**
-   * Attempt to get an Auth0 access token.
-   * Returns the token string, or throws a user-friendly error if unavailable.
+   * Get an Auth0 Authorization header object, or throw a user-friendly error
+   * if the token is unavailable or the user is not authenticated.
    */
   async function getAuthHeaders() {
     if (typeof getTokenFn !== 'function') {
@@ -2544,8 +2544,9 @@ export default function ResultsPage() {
       setEmailAlert({ success: false, message: 'Please enter your email address.' });
       return;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Basic structural email validation without regex backtracking risk.
+    const atIdx = email.indexOf('@');
+    if (atIdx < 1 || atIdx !== email.lastIndexOf('@') || !email.slice(atIdx + 1).includes('.')) {
       setEmailAlert({ success: false, message: 'Please enter a valid email address.' });
       return;
     }
