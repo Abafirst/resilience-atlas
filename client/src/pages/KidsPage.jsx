@@ -9,6 +9,7 @@ import {  KIDS_DIMENSION_ICON_MAP,
   KIDS_SKILL_BUILDERS,
 } from '../data/kidsActivities';
 import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
+import VideoStories from '../components/VideoStories.jsx';
 
 const AGE_GROUPS = [
   { id: 'age-5-7',    label: 'Ages 5–7' },
@@ -320,6 +321,9 @@ export default function KidsPage() {
           </div>
         </div>
       </section>
+
+      {/* Video Stories */}
+      <VideoStories />
 
       {/* Skill Builders */}
       <section className="skill-builders-section" id="skill-builders" aria-labelledby="skill-builders-heading">
