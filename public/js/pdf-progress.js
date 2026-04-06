@@ -31,8 +31,21 @@
 
   // ── Auth helper ─────────────────────────────────────────────────────────────
 
+  function _getAuth0Token() {
+    try {
+      var raw = typeof localStorage !== 'undefined' && localStorage.getItem('@@auth0spajs@@');
+      if (!raw) return '';
+      var parsed = JSON.parse(raw);
+      var firstKey = Object.keys(parsed)[0];
+      if (!firstKey) return '';
+      return (parsed[firstKey][0] && parsed[firstKey][0].body && parsed[firstKey][0].body.access_token) || '';
+    } catch (e) {
+      return '';
+    }
+  }
+
   function _getAuthHeaders() {
-    var token = (typeof localStorage !== 'undefined' && localStorage.getItem('auth_token')) || '';
+    var token = _getAuth0Token();
     return token ? { 'Authorization': 'Bearer ' + token } : {};
   }
 

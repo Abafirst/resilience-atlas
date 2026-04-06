@@ -14,6 +14,20 @@ window.resilience_results = results;
 if (results && results.scores && results.scores["Somatic-Regulative"]) {
   results.scores["Somatic-Regulative"] = results.scores["Somatic-Regulative"];
 }
+// ── Auth0 token helper ────────────────────────────────
+function getAuth0Token() {
+  try {
+    var raw = localStorage.getItem('@@auth0spajs@@');
+    if (!raw) return '';
+    var parsed = JSON.parse(raw);
+    var firstKey = Object.keys(parsed)[0];
+    if (!firstKey) return '';
+    return (parsed[firstKey][0] && parsed[firstKey][0].body && parsed[firstKey][0].body.access_token) || '';
+  } catch (e) {
+    return '';
+  }
+}
+
 // ── HTML escaper (used for safe interpolation) ─────────
 function escapeHtml(str) {
   return String(str)
@@ -481,7 +495,7 @@ async function downloadPdfForAssessment(assessmentData, email) {
     return window.PdfProgress.start(params);
   }
   // Inline fallback: generate → poll → download
-  var storedToken = localStorage.getItem('auth_token') || '';
+  var storedToken = getAuth0Token();
   var authHeaders = storedToken ? { 'Authorization': 'Bearer ' + storedToken } : {};
   var emailParam = email ? '&email=' + encodeURIComponent(email) : '';
   var genRes = await fetch(
@@ -965,8 +979,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let hash;
-        // Attach the stored auth token (set by Auth0 login flow) when available.
-        const storedToken = localStorage.getItem('auth_token') || '';
+        // Attach the Auth0 bearer token when available.
+        const storedToken = getAuth0Token();
         const authHeaders = storedToken ? { 'Authorization': 'Bearer ' + storedToken } : {};
 
         if (window.PdfProgress) {
