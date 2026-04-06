@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { SKILL_PATHWAYS, DIMENSION_COLORS } from '../../data/adultGames.js';
 import QuestChallenge from './QuestChallenge.jsx';
 import ChoiceScenario from './ChoiceScenario.jsx';
+import { getAuth0CachedToken } from '../../lib/apiFetch.js';
 
 const s = {
   intro: { marginBottom: 24 },
@@ -63,7 +64,7 @@ export default function NavigatorSkillPaths({ progress }) {
         headers.Authorization = `Bearer ${token}`;
       } catch (authErr) {
         console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
-        const stored = localStorage.getItem('auth_token');
+        const stored = getAuth0CachedToken();
         if (stored) headers.Authorization = `Bearer ${stored}`;
       }
       const res  = await fetch('/api/gamification/progress/pathway-complete', {
