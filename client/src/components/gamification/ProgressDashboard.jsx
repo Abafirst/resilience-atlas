@@ -61,11 +61,29 @@ const s = {
   streakLabel: { fontSize: 11, color: '#718096' },
 };
 
-export default function ProgressDashboard({ tier, progress }) {
-  if (!progress) {
+export default function ProgressDashboard({ tier, progress, loading, tierBlocked }) {
+  if (loading) {
     return (
       <div style={{ padding: '32px', textAlign: 'center', color: '#718096', fontSize: 14 }}>
         Loading progress data…
+      </div>
+    );
+  }
+
+  if (tierBlocked) {
+    return (
+      <div style={{ padding: '32px', textAlign: 'center', color: '#718096', fontSize: 14 }}>
+        <div style={{ fontSize: 20, marginBottom: 12 }}>🔒</div>
+        <div style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: 8 }}>Upgrade required</div>
+        <div>A paid Atlas plan is required to access gamification features and track your resilience progress.</div>
+      </div>
+    );
+  }
+
+  if (!progress) {
+    return (
+      <div style={{ padding: '32px', textAlign: 'center', color: '#718096', fontSize: 14 }}>
+        No progress data yet. Start completing practices to begin tracking your resilience journey!
       </div>
     );
   }

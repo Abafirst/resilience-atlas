@@ -31,6 +31,7 @@ export default function useGamification() {
   const [progress, setProgress]       = useState(null);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState(null);
+  const [tierBlocked, setTierBlocked] = useState(false);
   const [toasts, setToasts]           = useState([]);
   const [celebration, setCelebration] = useState(null);
 
@@ -56,7 +57,11 @@ export default function useGamification() {
       headers: { ...headers, ...(options.headers || {}) },
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    if (!res.ok) {
+      const err = new Error(data.error || `HTTP ${res.status}`);
+      err.status = res.status;
+      throw err;
+    }
     return data;
   }, [getHeaders]);
 
@@ -79,11 +84,18 @@ export default function useGamification() {
   const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setTierBlocked(false);
     try {
       const data = await apiFetch('/progress');
       setProgress(data.progress);
     } catch (err) {
-      setError(err.message || 'Could not load gamification data.');
+      if (err.status === 402) {
+        setTierBlocked(true);
+        // Preserve the server's error message so callers can surface it if needed.
+        setError(err.message || 'A paid tier is required to access gamification features.');
+      } else {
+        setError(err.message || 'Could not load gamification data.');
+      }
     } finally {
       setLoading(false);
     }
@@ -147,6 +159,7 @@ export default function useGamification() {
     progress,
     loading,
     error,
+    tierBlocked,
     refresh,
     recordPractice,
     setChallenge,

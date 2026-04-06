@@ -13,8 +13,11 @@
  *
  * All endpoints require:
  *   1. JWT authentication (authenticateJWT)
- *   2. A paid individual tier (atlas-navigator or atlas-premium) or any teams
- *      tier (starter, pro, enterprise) — enforced by requirePaidTier.
+ *   2. GET /progress is open to all authenticated users and returns empty/default
+ *      progress for users without a paid tier.
+ *   3. All write endpoints and the leaderboard require a paid individual tier
+ *      (atlas-navigator or atlas-premium) or any teams tier (starter, pro,
+ *      enterprise) — enforced by requirePaidTier on each route individually.
  */
 
 const express    = require('express');
@@ -120,8 +123,6 @@ async function requirePaidTier(req, res, next) {
   }
 }
 
-router.use(requirePaidTier);
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const VALID_DIMENSIONS = new Set([
@@ -163,7 +164,7 @@ router.get('/progress', async (req, res) => {
  *   practiceId  {string}  required
  *   dimension   {string}  optional — resilience dimension for challenge tracking
  */
-router.post('/practice', async (req, res) => {
+router.post('/practice', requirePaidTier, async (req, res) => {
   try {
     const { practiceId, dimension } = req.body;
 
@@ -203,7 +204,7 @@ router.post('/practice', async (req, res) => {
  *   dimension   {string}  required
  *   difficulty  {string}  optional — easy | medium | hard (default: medium)
  */
-router.post('/challenge', async (req, res) => {
+router.post('/challenge', requirePaidTier, async (req, res) => {
   try {
     const { dimension, difficulty = 'medium' } = req.body;
 
@@ -232,7 +233,7 @@ router.post('/challenge', async (req, res) => {
 /**
  * Award the user +1 point for sharing a result.
  */
-router.post('/share', async (req, res) => {
+router.post('/share', requirePaidTier, async (req, res) => {
   try {
     const progress = await svc.recordShare(userId(req));
     res.status(200).json({
@@ -254,7 +255,7 @@ router.post('/share', async (req, res) => {
  *   leaderboardOptIn     {boolean}
  *   notificationsEnabled {boolean}
  */
-router.put('/preferences', async (req, res) => {
+router.put('/preferences', requirePaidTier, async (req, res) => {
   try {
     const { leaderboardOptIn, notificationsEnabled } = req.body;
 
@@ -291,7 +292,7 @@ router.put('/preferences', async (req, res) => {
  *   period  weekly | monthly | alltime  (default: weekly)
  *   limit   1-100                       (default: 10)
  */
-router.get('/leaderboard', async (req, res) => {
+router.get('/leaderboard', requirePaidTier, async (req, res) => {
   try {
     const period = ['weekly', 'monthly', 'alltime'].includes(req.query.period)
       ? req.query.period
@@ -319,7 +320,7 @@ router.get('/leaderboard', async (req, res) => {
  *   questId   {string}  required
  *   dimension {string}  required
  */
-router.post('/progress/quest-complete', async (req, res) => {
+router.post('/progress/quest-complete', requirePaidTier, async (req, res) => {
   try {
     const { questId, dimension } = req.body;
 
@@ -392,7 +393,7 @@ router.post('/progress/quest-complete', async (req, res) => {
  *   dimension {string}  required
  *   level     {number}  required — 1, 2, or 3
  */
-router.post('/progress/pathway-complete', async (req, res) => {
+router.post('/progress/pathway-complete', requirePaidTier, async (req, res) => {
   try {
     const { dimension, level } = req.body;
 
@@ -482,7 +483,7 @@ router.post('/progress/pathway-complete', async (req, res) => {
  *   choiceKey    {string}  required — 'A', 'B', or 'C'
  *   actPrinciple {string}  optional — ACT principle label
  */
-router.post('/choice-quest', async (req, res) => {
+router.post('/choice-quest', requirePaidTier, async (req, res) => {
   try {
     const { scenarioId, choiceKey, actPrinciple = '' } = req.body;
 
@@ -532,7 +533,7 @@ router.post('/choice-quest', async (req, res) => {
  * Query params:
  *   dimension  {string}  optional — filter to a single dimension
  */
-router.get('/reinforcement-menu', async (req, res) => {
+router.get('/reinforcement-menu', requirePaidTier, async (req, res) => {
   try {
     const uid      = userId(req);
     const progress = await svc.getOrCreateProgress(uid);
