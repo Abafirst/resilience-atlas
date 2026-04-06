@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NAVIGATION_PATHWAYS } from '../../data/gamificationContent.js';
+import { playPathwayStartSound } from '../../utils/soundEffects.js';
 
 // ── Dimension colour config (mirrors NavigationMilestones) ────────────────────
 const DIM_CONFIG = {
@@ -172,19 +173,26 @@ const s = {
  *   onSetChallenge — function(dimension, difficulty) → Promise
  */
 export default function NavigationPathways({ progress, onSetChallenge }) {
-  const [selected, setSelected] = useState(null);
-  const [starting, setStarting] = useState(false);
+  const [selected, setSelected]   = useState(null);
+  const [starting, setStarting]   = useState(false);
+  const [startError, setStartError] = useState(null);
+  const [startedId, setStartedId] = useState(null);
 
   const active = progress?.currentChallenge;
 
   const handleStart = async (pathway) => {
     if (!onSetChallenge) return;
     setStarting(true);
+    setStartError(null);
     try {
       await onSetChallenge(pathway.dimension, pathway.difficulty);
+      playPathwayStartSound();
+      setStartedId(pathway.id);
       setSelected(null);
-    } catch (_) {
-      // handled by parent
+      // Clear the success indicator after 3 s
+      setTimeout(() => setStartedId(null), 3000);
+    } catch (err) {
+      setStartError(err?.message || 'Could not start pathway. Please try again.');
     } finally {
       setStarting(false);
     }
@@ -312,19 +320,50 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
 
               {isSelected && (
                 <div style={{ marginTop: 6, textAlign: 'right' }}>
+                  {startError && (
+                    <div role="alert" style={{
+                      marginBottom: 8,
+                      padding: '8px 12px',
+                      borderRadius: 8,
+                      background: '#fef2f2',
+                      border: '1px solid #fca5a5',
+                      color: '#dc2626',
+                      fontSize: 12,
+                      textAlign: 'left',
+                    }}>
+                      ⚠️ {startError}
+                    </div>
+                  )}
                   <button
                     style={s.startBtn}
                     onClick={() => handleStart(p)}
                     disabled={starting}
                     aria-label={`Start ${p.title} pathway`}
                   >
-                    {starting ? 'Starting…' : (
-                      <>Start Pathway <img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginLeft: 3, filter: 'brightness(0) invert(1)' }} /></>
-                    )}
+                    {starting
+                      ? <><span style={{ display: 'inline-block', width: 12, height: 12, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite', marginRight: 6, verticalAlign: 'middle' }} aria-hidden="true" />Starting…</>
+                      : <>Start Pathway <img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginLeft: 3, filter: 'brightness(0) invert(1)' }} /></>
+                    }
                   </button>
-                  <button style={s.closeBtn} onClick={() => setSelected(null)} aria-label="Cancel">
+                  <button style={s.closeBtn} onClick={() => { setSelected(null); setStartError(null); }} aria-label="Cancel">
                     Cancel
                   </button>
+                </div>
+              )}
+
+              {/* Success banner after starting */}
+              {startedId === p.id && (
+                <div role="status" aria-live="polite" style={{
+                  marginTop: 6,
+                  padding: '8px 12px',
+                  borderRadius: 8,
+                  background: '#f0fdf4',
+                  border: '1px solid #86efac',
+                  color: '#15803d',
+                  fontSize: 12,
+                  fontWeight: 600,
+                }}>
+                  ✅ Pathway started! Check in daily to complete it.
                 </div>
               )}
             </div>

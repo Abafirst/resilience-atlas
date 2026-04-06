@@ -1,31 +1,38 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { ALL_BADGES } from '../data/gamificationContent.js';
 
 const GAMIFICATION_API = '/api/gamification';
+
+/** Index ALL_BADGES by name for O(1) lookup */
+const BADGE_BY_NAME = Object.fromEntries(ALL_BADGES.map(b => [b.name, b]));
 
 /**
  * Custom hook that manages all gamification state and API interactions.
  *
  * Returns:
- *   progress        — current GamificationProgress document (or null)
- *   loading         — true while the initial fetch is in flight
- *   error           — error message string, or null
- *   refresh         — function to re-fetch progress
- *   recordPractice  — (practiceId, dimension?) → Promise<result>
- *   setChallenge    — (dimension, difficulty) → Promise<progress>
+ *   progress          — current GamificationProgress document (or null)
+ *   loading           — true while the initial fetch is in flight
+ *   error             — error message string, or null
+ *   refresh           — function to re-fetch progress
+ *   recordPractice    — (practiceId, dimension?) → Promise<result>
+ *   setChallenge      — (dimension, difficulty) → Promise<progress>
  *   enableLeaderboard — () → Promise<void>
  *   fetchLeaderboard  — (period?) → Promise<entries>
- *   toasts          — array of { id, message, type }
- *   dismissToast    — (id) → void
- *   addToast        — (message, type) → void
+ *   toasts            — array of { id, message, type }
+ *   dismissToast      — (id) → void
+ *   addToast          — (message, type) → void
+ *   celebration       — badge object to celebrate (or null)
+ *   clearCelebration  — () → void
  */
 export default function useGamification() {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
 
-  const [progress, setProgress] = useState(null);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState(null);
-  const [toasts, setToasts]     = useState([]);
+  const [progress, setProgress]       = useState(null);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState(null);
+  const [toasts, setToasts]           = useState([]);
+  const [celebration, setCelebration] = useState(null);
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -92,13 +99,19 @@ export default function useGamification() {
 
   // ── Actions ───────────────────────────────────────────────────────────────
 
+  const clearCelebration = useCallback(() => setCelebration(null), []);
+
   const recordPractice = useCallback(async (practiceId, dimension) => {
     const data = await apiFetch('/practice', {
       method: 'POST',
       body: JSON.stringify({ practiceId, ...(dimension ? { dimension } : {}) }),
     });
     if (data.newBadges && data.newBadges.length > 0) {
+      // Show a toast for every unlocked badge
       data.newBadges.forEach(name => addToast(`🏅 Badge unlocked: ${name}`, 'success'));
+      // Trigger celebration modal for the first new badge
+      const firstBadge = BADGE_BY_NAME[data.newBadges[0]];
+      if (firstBadge) setCelebration(firstBadge);
     }
     if (data.streakUpdated) {
       addToast(`🔥 ${data.currentStreak}-day streak!`, 'info');
@@ -112,9 +125,10 @@ export default function useGamification() {
       method: 'POST',
       body: JSON.stringify({ dimension, difficulty }),
     });
+    addToast(`🧭 Pathway started! Check in daily to build your streak.`, 'success');
     await refresh();
     return data;
-  }, [apiFetch, refresh]);
+  }, [apiFetch, addToast, refresh]);
 
   const enableLeaderboard = useCallback(async () => {
     await apiFetch('/preferences', {
@@ -141,5 +155,7 @@ export default function useGamification() {
     toasts,
     dismissToast,
     addToast,
+    celebration,
+    clearCelebration,
   };
 }
