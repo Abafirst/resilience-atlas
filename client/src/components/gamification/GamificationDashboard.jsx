@@ -59,7 +59,7 @@ async function fetchUserTier(email, token) {
 const s = {
   page: {
     minHeight: '100vh',
-    background: '#f8fafc',
+    background: '#f0f4fa',
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
     color: '#1e293b',
   },
@@ -93,36 +93,36 @@ const s = {
     fontSize: 14,
   },
   navLinkActive: {
-    color: '#4f46e5',
+    color: '#1565C0',
     fontWeight: 600,
     textDecoration: 'none',
     fontSize: 14,
   },
   hero: {
-    background: 'linear-gradient(135deg, #0f2942 0%, #1a3a5c 60%, #163351 100%)',
-    borderBottom: '1px solid rgba(79,70,229,0.15)',
+    background: 'linear-gradient(135deg, #0d2137 0%, #1565C0 55%, #0097A7 100%)',
+    borderBottom: '1px solid rgba(0,151,167,0.2)',
     color: '#fff',
     textAlign: 'center',
-    padding: '56px 24px 40px',
+    padding: '56px 24px 0',
     position: 'relative',
     overflow: 'hidden',
   },
   heroGlow: {
     position: 'absolute',
-    top: '-40%',
+    top: '-30%',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: 500,
-    height: 500,
+    width: 600,
+    height: 600,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%)',
+    background: 'radial-gradient(circle, rgba(92,143,214,0.18) 0%, transparent 70%)',
     pointerEvents: 'none',
   },
   heroEyebrow: {
     display: 'inline-block',
-    background: 'rgba(79,70,229,0.25)',
-    border: '1px solid rgba(79,70,229,0.5)',
-    color: '#a5b4fc',
+    background: 'rgba(0,151,167,0.3)',
+    border: '1px solid rgba(0,151,167,0.55)',
+    color: '#67e8f9',
     fontSize: 11,
     fontWeight: 700,
     textTransform: 'uppercase',
@@ -132,7 +132,7 @@ const s = {
     marginBottom: 16,
   },
   heroTitle: {
-    fontSize: 32,
+    fontSize: 34,
     fontWeight: 800,
     margin: '0 0 12px',
     lineHeight: 1.15,
@@ -140,10 +140,42 @@ const s = {
   },
   heroSub: {
     fontSize: 15,
-    color: '#94a3b8',
-    margin: '0 auto',
+    color: '#bae6fd',
+    margin: '0 auto 32px',
     maxWidth: 520,
     lineHeight: 1.6,
+  },
+  heroStats: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 0,
+    maxWidth: 680,
+    margin: '0 auto',
+    background: 'rgba(0,0,0,0.22)',
+    borderRadius: '14px 14px 0 0',
+    overflow: 'hidden',
+    backdropFilter: 'blur(8px)',
+  },
+  heroStatItem: {
+    flex: 1,
+    padding: '18px 12px',
+    textAlign: 'center',
+    borderRight: '1px solid rgba(255,255,255,0.1)',
+    minWidth: 0,
+  },
+  heroStatVal: {
+    fontSize: 26,
+    fontWeight: 800,
+    color: '#fff',
+    lineHeight: 1,
+    marginBottom: 4,
+  },
+  heroStatLabel: {
+    fontSize: 10,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.06em',
+    color: 'rgba(255,255,255,0.55)',
   },
   main: {
     maxWidth: 1040,
@@ -172,7 +204,7 @@ const s = {
   },
   signInBtn: {
     display: 'inline-block',
-    background: 'linear-gradient(135deg, #4f46e5, #4338ca)',
+    background: 'linear-gradient(135deg, #1565C0, #0097A7)',
     color: '#fff',
     fontWeight: 700,
     fontSize: 13,
@@ -180,7 +212,7 @@ const s = {
     borderRadius: 8,
     border: 'none',
     cursor: 'pointer',
-    boxShadow: '0 2px 8px rgba(79,70,229,0.3)',
+    boxShadow: '0 2px 8px rgba(21,101,192,0.3)',
     flexShrink: 0,
     textDecoration: 'none',
   },
@@ -202,6 +234,11 @@ const s = {
     display: 'flex',
     flexDirection: 'column',
     gap: 14,
+    background: '#fff',
+    borderRadius: 16,
+    border: '1px solid #e2e8f0',
+    padding: '24px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
   },
   tierHeading: {
     display: 'flex',
@@ -242,8 +279,7 @@ const s = {
     gridColumn: '1 / -1',
   },
   divider: {
-    height: 1,
-    background: '#e2e8f0',
+    height: 0,
   },
   footer: {
     background: '#fff',
@@ -254,7 +290,7 @@ const s = {
     fontSize: 12,
   },
   footerLink: {
-    color: '#4f46e5',
+    color: '#1565C0',
     textDecoration: 'none',
   },
 };
@@ -424,6 +460,26 @@ export default function GamificationDashboard() {
   // tier is still being verified.
   const showContent = !isAuthenticated || (!auth0Loading && !tierLoading);
 
+  // Hero stats derived from progress data (when available)
+  const heroStats = [
+    {
+      val: activeProgress ? (activeProgress.badges || []).length : '—',
+      label: 'Badges Earned',
+    },
+    {
+      val: activeProgress?.currentStreak ?? '—',
+      label: 'Day Streak',
+    },
+    {
+      val: activeProgress?.points ?? '—',
+      label: 'Points',
+    },
+    {
+      val: hasNavigator ? 'Navigator' : hasStarter ? 'Starter' : 'Free',
+      label: 'Current Tier',
+    },
+  ];
+
   return (
     <>
       <div style={s.page}>
@@ -443,12 +499,31 @@ export default function GamificationDashboard() {
         {/* Hero */}
         <section style={s.hero} aria-labelledby="gamHeroTitle">
           <div style={s.heroGlow} aria-hidden="true" />
-          <div style={s.heroEyebrow}><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14, verticalAlign: 'middle', marginRight: 6, filter: 'brightness(0) invert(1)' }} />Atlas Gamification</div>
+          <div style={s.heroEyebrow}>
+            <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14, verticalAlign: 'middle', marginRight: 6, filter: 'brightness(0) invert(1)' }} />
+            Atlas Resilience Journey
+          </div>
           <h1 id="gamHeroTitle" style={s.heroTitle}>Your Resilience Journey</h1>
           <p style={s.heroSub}>
-            Explore Navigation Milestones, earn Resilience Badges, navigate Pathways,
-            and build your Daily Compass Streak. Each tier unlocks deeper features.
+            Track milestones, earn badges, navigate resilience pathways,
+            and build daily practice streaks. Each tier unlocks deeper features.
           </p>
+
+          {/* Stats bar */}
+          <div style={s.heroStats} role="region" aria-label="Journey statistics">
+            {heroStats.map((stat, i) => (
+              <div
+                key={i}
+                style={{
+                  ...s.heroStatItem,
+                  borderRight: i < heroStats.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                }}
+              >
+                <div style={s.heroStatVal}>{stat.val}</div>
+                <div style={s.heroStatLabel}>{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Main content */}
