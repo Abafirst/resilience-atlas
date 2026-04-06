@@ -33,6 +33,7 @@ export default function InsightsTeamResiliencePage() {
           { href: '/teams', label: 'For Teams', key: 'teams' },
         ]}
       />
+      <DarkModeHint />
 
       <DarkModeHint />
 

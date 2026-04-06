@@ -2707,6 +2707,7 @@ export default function ResultsPage() {
             </nav>
           </div>
         </header>
+        <DarkModeHint />
         <div style={s.page}>
           <div style={s.container}>
             {historyEmail ? (

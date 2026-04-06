@@ -34,6 +34,7 @@ export default function InsightsSixDimensionsPage() {
           { href: '/insights', label: 'Insights', key: 'insights' },
         ]}
       />
+      <DarkModeHint />
 
       <DarkModeHint />
 
