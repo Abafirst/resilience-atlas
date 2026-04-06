@@ -213,6 +213,16 @@ body,
   color: var(--slate-100);
 }
 
+.theme-toggle::before {
+  content: "☀️";
+  font-size: 18px;
+  display: inline-block;
+}
+
+[data-theme="dark"] .theme-toggle::before {
+  content: "🌙";
+}
+
 html { scroll-behavior: smooth; }
 
 body{

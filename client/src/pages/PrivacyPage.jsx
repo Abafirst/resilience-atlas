@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const styles = `
   .privacy-hero {
@@ -347,6 +348,7 @@ export default function PrivacyPage() {
           { href: '/about', label: 'About', key: 'about' },
         ]}
       />
+      <DarkModeHint />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="privacy-hero" aria-labelledby="privacy-hero-heading">

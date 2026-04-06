@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 import {  KIDS_DIMENSION_ICON_MAP,
   KIDS_ACTIVITIES,
   KIDS_CHARACTERS,
@@ -200,6 +201,7 @@ export default function KidsPage() {
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <SiteHeader activePage="kids" />
+      <DarkModeHint />
 
       {/* Hero */}
       <section className="kids-hero" aria-labelledby="kids-heading">

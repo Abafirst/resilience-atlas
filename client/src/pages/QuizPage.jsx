@@ -19,6 +19,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const AUTOSAVE_KEY  = 'ra_quiz_progress';
@@ -260,7 +261,6 @@ export default function QuizPage() {
   const [questionError, setQuestionError] = useState(false);
   const [submitError, setSubmitError]     = useState('');
   const [submitting, setSubmitting]       = useState(false);
-  const [dmHintDismissed, setDmHintDismissed] = useState(false);
 
   // ── Autosave restore banner ────────────────────────────────────────────
   const [savedProgress, setSavedProgress] = useState(null);
@@ -294,9 +294,6 @@ export default function QuizPage() {
       setIsDarkTheme(theme === 'dark');
     } catch (_) {}
   }, []);
-
-  // ── Dark-mode hint (show when dark theme is active) ───────────────────
-  // Derived from isDarkTheme — no separate effect needed
 
   // ── Prefill name/email from Auth0 when authenticated ─────────────────
   // Mirrors the logic in public/js/quiz-auth.js so the React quiz also
@@ -703,21 +700,7 @@ export default function QuizPage() {
       )}
 
       {/* ── Dark-mode readability hint ──────────────────── */}
-      {isDarkTheme && !dmHintDismissed && (
-        <div className="dm-quiz-hint" role="note" aria-label="Accessibility tip">
-          <span aria-hidden="true">💡</span>
-          {' '}Finding quiz content hard to read? Select the{' '}
-          <strong>&#9728;&#65039; sun icon</strong> (top right) to switch to <strong>Light Mode</strong>.
-          <button
-            type="button"
-            className="dm-quiz-hint-close"
-            aria-label="Dismiss accessibility tip"
-            onClick={() => setDmHintDismissed(true)}
-          >
-            &#x2715;
-          </button>
-        </div>
-      )}
+      <DarkModeHint />
 
       {/* ── Autosave restore banner ─────────────────────── */}
       {savedProgress && authChecked && (
