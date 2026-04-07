@@ -52,7 +52,7 @@ function buildAssessmentResultsEmail(vars) {
     scores          = {},
     topInsight      = '',
     reportLink      = `${APP_URL}/results`,
-    retakeLink      = `${APP_URL}/quiz.html`,
+    retakeLink      = `${APP_URL}/quiz`,
     assessmentDate  = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     unsubscribeUrl,
   } = vars;

@@ -17,7 +17,7 @@ const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
 function buildWelcomeEmail(vars) {
   const {
     firstName     = 'Friend',
-    startQuizLink = `${APP_URL}/quiz.html`,
+    startQuizLink = `${APP_URL}/quiz`,
     resourcesLink = `${APP_URL}/resources.html`,
     unsubscribeUrl,
   } = vars;

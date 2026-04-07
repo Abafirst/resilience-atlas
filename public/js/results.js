@@ -931,7 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear the stored tier so payment gating runs fresh on the next
         // results page visit, ensuring the new assessment is properly gated.
         localStorage.removeItem('resilience_tier');
-        window.location.href = 'quiz.html';
+        window.location.href = '/quiz';
       });
     } else {
       // Hide the plain retake button and show the upgrade prompt instead

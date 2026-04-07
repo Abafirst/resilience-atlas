@@ -1073,7 +1073,7 @@ function renderPracticesSection(emergingStrength) {
           Return to The Resilience Atlas in <strong>30 days</strong> to see how your resilience
           profile evolves as you practice.
         </p>
-        <a href="quiz.html" class="ep-btn-secondary ep-reassessment-link">Retake Assessment</a>
+        <a href="/quiz" class="ep-btn-secondary ep-reassessment-link">Retake Assessment</a>
       </div>
 
     </section>

@@ -264,7 +264,7 @@ router.post('/:id/teams/:teamId/invite', authenticateJWT, async (req, res) => {
             to: email,
             orgName: org.company_name || org.name,
             teamName: team.name,
-            assessmentUrl: `${process.env.APP_URL || ''}/quiz.html?org=${org.slug || org._id}`,
+            assessmentUrl: `${process.env.APP_URL || ''}/quiz?org=${org.slug || org._id}`,
           });
         } catch (emailErr) {
           console.warn('[org-advanced] invite email failed:', emailErr.message);
