@@ -11,19 +11,6 @@ const DEFAULT_NAV_ITEMS = [
 ];
 
 /**
- * Returns the href for the "Resilience Journey" nav link for unauthenticated users.
- * Sends users with completed quiz results in localStorage to /results; new users to /quiz.
- */
-function getLocalStorageJourneyHref() {
-  try {
-    const results = localStorage.getItem('resilience_results');
-    return results ? '/results' : '/quiz';
-  } catch (_) {
-    return '/quiz';
-  }
-}
-
-/**
  * SiteHeader — Shared responsive header/navigation component.
  *
  * Props:
@@ -39,11 +26,9 @@ export default function SiteHeader({
   ctaButton,
   onThemeChange,
 }) {
-  const { isAuthenticated, user: auth0User, isLoading: auth0Loading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading: auth0Loading, loginWithRedirect } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  // journeyHref starts with the localStorage-based value and may update once Auth0 resolves.
-  const [journeyHref, setJourneyHref] = useState(() => getLocalStorageJourneyHref());
   const navRef = useRef(null);
   const toggleRef = useRef(null);
 
@@ -57,18 +42,9 @@ export default function SiteHeader({
     } catch (_) {}
   }, []);
 
-  // Update journey link based on Auth0 authentication status.
-  // Authenticated users always go to /results-history (returning-user hub).
-  // Unauthenticated users: fall back to localStorage check (/results or /quiz).
-  useEffect(() => {
-    if (auth0Loading) return;
-
-    if (isAuthenticated) {
-      setJourneyHref('/results-history');
-    } else {
-      setJourneyHref(getLocalStorageJourneyHref());
-    }
-  }, [isAuthenticated, auth0Loading]);
+  // "Resilience Journey" always links to /results-history.
+  // Unauthenticated users are prompted to sign in (loginWithRedirect) and
+  // returned to /results-history after successful login.
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -154,14 +130,13 @@ export default function SiteHeader({
             </a>
           ))}
           <a
-            href={journeyHref}
+            href="/results-history"
             className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
             aria-label="Resilience Journey — your practices and progress"
             onClick={(e) => {
-              // For unauthenticated users with no local quiz results, clicking
-              // "Resilience Journey" should prompt them to sign in rather than
-              // navigating to /quiz.  Users with local results navigate normally.
-              if (!isAuthenticated && !auth0Loading && getLocalStorageJourneyHref() === '/quiz') {
+              // Unauthenticated users are always prompted to sign in and
+              // returned to /results-history after login.
+              if (!isAuthenticated && !auth0Loading) {
                 e.preventDefault();
                 loginWithRedirect({ appState: { returnTo: '/results-history' } });
               }
