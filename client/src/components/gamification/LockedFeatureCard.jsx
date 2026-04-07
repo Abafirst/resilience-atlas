@@ -2,6 +2,24 @@ import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 /**
+ * Converts a hex colour string to an `rgba(r, g, b, alpha)` value.
+ * Handles both 3-digit (#abc) and 6-digit (#aabbcc) formats.
+ * Returns a transparent fallback for unrecognised input.
+ */
+function hexToRgba(hex, alpha) {
+  const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || '').trim());
+  if (!m) return `rgba(0,0,0,${alpha})`;
+  let h = m[1];
+  if (h.length === 3) {
+    h = `${h[0]}${h[0]}${h[1]}${h[1]}${h[2]}${h[2]}`;
+  }
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/**
  * LockedFeatureCard — shows a clean preview card for locked gamification features.
  *
  * When locked, renders a card matching the Navigator pathway card visual language:
@@ -41,21 +59,6 @@ export default function LockedFeatureCard({
   const [checkoutError, setCheckoutError]     = useState('');
 
   if (!locked) return <>{children}</>;
-
-  /**
-   * Converts a 6-digit hex colour to `rgba(r, g, b, alpha)`.
-   * Falls back to a transparent value if the input isn't a recognised hex format.
-   */
-  function hexToRgba(hex, alpha) {
-    const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || '').trim());
-    if (!m) return `rgba(0,0,0,${alpha})`;
-    let h = m[1];
-    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
-    const r = parseInt(h.slice(0,2), 16);
-    const g = parseInt(h.slice(2,4), 16);
-    const b = parseInt(h.slice(4,6), 16);
-    return `rgba(${r},${g},${b},${alpha})`;
-  }
 
   /** Extract the tier ID from a URL like '/checkout?tier=atlas-starter'. */
   function getTierFromUrl(url) {
@@ -209,9 +212,9 @@ export default function LockedFeatureCard({
             gap: '.3rem',
           }}
         >
-          {features.map((feat) => (
+          {features.map((feat, idx) => (
             <li
-              key={feat}
+              key={`${feat}-${idx}`}
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
