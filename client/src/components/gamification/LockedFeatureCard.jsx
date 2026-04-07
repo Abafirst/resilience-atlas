@@ -42,6 +42,21 @@ export default function LockedFeatureCard({
 
   if (!locked) return <>{children}</>;
 
+  /**
+   * Converts a 6-digit hex colour to `rgba(r, g, b, alpha)`.
+   * Falls back to a transparent value if the input isn't a recognised hex format.
+   */
+  function hexToRgba(hex, alpha) {
+    const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || '').trim());
+    if (!m) return `rgba(0,0,0,${alpha})`;
+    let h = m[1];
+    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    const r = parseInt(h.slice(0,2), 16);
+    const g = parseInt(h.slice(2,4), 16);
+    const b = parseInt(h.slice(4,6), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
   /** Extract the tier ID from a URL like '/checkout?tier=atlas-starter'. */
   function getTierFromUrl(url) {
     try {
@@ -93,9 +108,17 @@ export default function LockedFeatureCard({
     }
   }
 
-  // Derive a subtle tinted background and border color from the accent
-  const bgTint    = `${accentColor}0d`;  // ~5 % opacity tint
-  const borderTint = `${accentColor}40`; // ~25 % opacity border
+  // Derive rgba colour values from the accent so the card is format-safe
+  const bgTint      = hexToRgba(accentColor, 0.05);   // very subtle tint
+  const borderTint  = hexToRgba(accentColor, 0.25);   // soft border
+  const iconBg      = hexToRgba(accentColor, 0.13);   // icon box bg
+  const iconShadow  = hexToRgba(accentColor, 0.18);   // icon glow
+  const chipBorder  = hexToRgba(accentColor, 0.25);   // lock chip border
+  const chipBg      = hexToRgba(accentColor, 0.09);   // lock chip bg
+  const cardShadow  = hexToRgba(accentColor, 0.09);   // resting shadow
+  const hoverShadow = hexToRgba(accentColor, 0.18);   // hover shadow
+  const btnShadow   = hexToRgba(accentColor, 0.31);   // button shadow
+  const btnHoverSh  = hexToRgba(accentColor, 0.44);   // button hover shadow
 
   return (
     <div
@@ -108,17 +131,17 @@ export default function LockedFeatureCard({
         display: 'flex',
         flexDirection: 'column',
         gap: '.75rem',
-        boxShadow: `0 4px 16px ${accentColor}18`,
+        boxShadow: `0 4px 16px ${cardShadow}`,
         transition: 'box-shadow .2s, transform .2s',
         position: 'relative',
       }}
       aria-label={`Locked — requires ${tierName}`}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = `0 8px 28px ${accentColor}30`;
+        e.currentTarget.style.boxShadow = `0 8px 28px ${hoverShadow}`;
         e.currentTarget.style.transform = 'translateY(-2px)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = `0 4px 16px ${accentColor}18`;
+        e.currentTarget.style.boxShadow = `0 4px 16px ${cardShadow}`;
         e.currentTarget.style.transform = 'translateY(0)';
       }}
     >
@@ -131,8 +154,8 @@ export default function LockedFeatureCard({
               width: 52,
               height: 52,
               borderRadius: 12,
-              background: `${accentColor}22`,
-              boxShadow: `0 2px 8px ${accentColor}30`,
+              background: iconBg,
+              boxShadow: `0 2px 8px ${iconShadow}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -149,8 +172,8 @@ export default function LockedFeatureCard({
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '.25rem',
             fontSize: '.65rem', fontWeight: 700, padding: '.2rem .5rem',
-            borderRadius: 999, border: `1px solid ${accentColor}40`,
-            background: `${accentColor}18`, color: accentColor,
+            borderRadius: 999, border: `1px solid ${chipBorder}`,
+            background: chipBg, color: accentColor,
             textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap',
           }}
         >
@@ -186,9 +209,9 @@ export default function LockedFeatureCard({
             gap: '.3rem',
           }}
         >
-          {features.map((feat, i) => (
+          {features.map((feat) => (
             <li
-              key={i}
+              key={feat}
               style={{
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -230,18 +253,18 @@ export default function LockedFeatureCard({
           boxSizing: 'border-box',
           transition: 'opacity .15s, box-shadow .15s',
           opacity: checkoutLoading ? .7 : 1,
-          boxShadow: `0 2px 8px ${accentColor}50`,
+          boxShadow: `0 2px 8px ${btnShadow}`,
         }}
         onMouseEnter={e => {
           if (!checkoutLoading) {
             e.currentTarget.style.opacity = '.9';
-            e.currentTarget.style.boxShadow = `0 4px 14px ${accentColor}70`;
+            e.currentTarget.style.boxShadow = `0 4px 14px ${btnHoverSh}`;
           }
         }}
         onMouseLeave={e => {
           if (!checkoutLoading) {
             e.currentTarget.style.opacity = '1';
-            e.currentTarget.style.boxShadow = `0 2px 8px ${accentColor}50`;
+            e.currentTarget.style.boxShadow = `0 2px 8px ${btnShadow}`;
           }
         }}
       >
