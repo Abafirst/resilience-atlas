@@ -302,6 +302,17 @@ An optional same-origin `?returnTo=` query parameter is preserved:
 
 Only same-origin paths are accepted to prevent open-redirect vulnerabilities.
 
+### "Resilience Journey" nav link and returning-user hub
+
+`/results-history` is the **returning-user hub** — it shows a user's saved assessment history and is the destination for all returning / authenticated users.
+
+The **"Resilience Journey"** link in the top navigation always points to `/results-history`:
+
+- **Authenticated users** are taken directly to `/results-history`.
+- **Unauthenticated users** are prompted to sign in via `loginWithRedirect({ appState: { returnTo: '/results-history' } })` — Auth0 returns them to `/results-history` after successful login.
+
+The free assessment remains accessible at `/quiz` without requiring login (the **"Take the Assessment"** CTA in the header links there directly).
+
 ### Railway deployment checklist
 
 When deploying to Railway, ensure all of the following are set under **Variables**:
