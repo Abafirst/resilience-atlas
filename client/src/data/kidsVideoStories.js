@@ -52,6 +52,18 @@ export const KIDS_VIDEO_STORIES = [
     ageGroup: ['age-5-7', 'age-8-10'],
     ageLabel: 'Ages 5–12',
   },
+  {
+    id: 'video-5',
+    youtubeId: '8Oa6WbhaUtw',
+    title: 'The Resilience Six and the Stormy Tides',
+    subtitle: 'All Dimensions · Ages 5–12',
+    description:
+      'Join Builder the Beaver, Feeler the Fawn, Thinker the Red Fox, Grounder the Turtle, Connector the Monkey, and Guide the Owl as they set sail on a daring ocean voyage aboard the Steady Star! As towering waves crash and the wind howls, each friend must rely on their own gifts and the strengths of the others—learning that true resilience isn\'t about facing challenges alone, it\'s about facing them together.',
+    duration: 'TBD',
+    dimension: 'All Dimensions',
+    ageGroup: ['age-5-7', 'age-8-10'],
+    ageLabel: 'Ages 5–12',
+  },
 ];
 
 export const VIDEO_AGE_FILTERS = [
