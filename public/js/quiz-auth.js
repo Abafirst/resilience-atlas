@@ -1,6 +1,11 @@
 /* =====================================================
    quiz-auth.js — Auth0 authentication guard for quiz.html
 
+   DEPRECATED: quiz.html now permanently redirects (301) to the React SPA
+   route /quiz which handles all authentication via the Auth0Provider in
+   main.jsx.  This file is kept only for backward compatibility in case any
+   browser has cached quiz.html before the redirect was deployed.
+
    On page load this module:
      1. Fetches Auth0 configuration from the server's /config endpoint.
         Required server environment variables:
@@ -9,8 +14,8 @@
      2. Initialises the Auth0 SPA JS SDK.
      3. Handles any redirect callback from Auth0 (when returning after login).
      4. If the user is not authenticated, redirects them to the Auth0
-        Universal Login page.  The redirect_uri is always set to the quiz
-        page so that Auth0 returns users here after successful login.
+        Universal Login page.  The redirect_uri is set to the SPA /quiz route
+        so that Auth0 returns users to the React SPA after successful login.
      5. If the user IS authenticated:
         a. Retrieves the Auth0 user profile (name, email).
         b. Exposes it as window.__auth0User for other scripts to reference.
@@ -20,10 +25,10 @@
         d. Hides the loading overlay and lets quiz.js proceed normally.
 
    Auth0 Dashboard – Application settings required:
-     Allowed Callback URLs : https://yourdomain.com/quiz.html,
-                             http://localhost:3000/quiz.html
-     Allowed Logout URLs   : https://yourdomain.com, http://localhost:3000
-     Allowed Web Origins   : https://yourdomain.com, http://localhost:3000
+     Allowed Callback URLs : https://yourdomain.com, https://yourdomain.com/quiz,
+                             http://localhost:5173, http://localhost:3000
+     Allowed Logout URLs   : https://yourdomain.com, http://localhost:5173, http://localhost:3000
+     Allowed Web Origins   : https://yourdomain.com, http://localhost:5173, http://localhost:3000
    ===================================================== */
 
 (function () {
@@ -71,7 +76,10 @@
     }
 
     // ── 2. Initialise Auth0 SPA JS client ───────────────────────────────
-    var redirectUri = window.location.origin + '/quiz.html';
+    // Use the SPA /quiz route as redirect_uri so Auth0 returns users to
+    // the React SPA after login.  /quiz.html permanently redirects to /quiz,
+    // so using /quiz here avoids a callback mismatch.
+    var redirectUri = window.location.origin + '/quiz';
     var client;
     try {
       client = await window.auth0.createAuth0Client({
@@ -93,7 +101,8 @@
       try {
         var callbackResult = await client.handleRedirectCallback();
         // If a returnTo destination was encoded in the appState, navigate
-        // there after login instead of staying on quiz.html.
+        // there after login instead of staying on quiz.html.  Fall back to
+        // the SPA /quiz route if no appState was provided.
         var callbackReturnTo = callbackResult && callbackResult.appState && callbackResult.appState.returnTo;
         if (callbackReturnTo && typeof callbackReturnTo === 'string' && callbackReturnTo.startsWith('/')) {
           window.location.replace(callbackReturnTo);

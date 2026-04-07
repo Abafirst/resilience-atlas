@@ -297,7 +297,7 @@
         if (res.ok && data.success) {
           showStatus('🎉 You have joined the organization! Redirecting to your assessment…', 'success');
           try { sessionStorage.removeItem(TOKEN_KEY); } catch (_) {}
-          setTimeout(function () { window.location.href = '/quiz.html'; }, 2000);
+          setTimeout(function () { window.location.href = '/quiz'; }, 2000);
         } else {
           showStatus(data.error || 'Failed to accept invitation. Please try again.', 'error');
           btn.disabled    = false;

@@ -61,7 +61,7 @@ async function runReassessmentReminderJob() {
             (now - new Date(optIn.lastAssessmentDate)) / (1000 * 60 * 60 * 24)
         );
 
-        const retakeLink = `${APP_URL}/quiz.html`;
+        const retakeLink = `${APP_URL}/quiz`;
         const unsubscribeUrl = `${APP_URL}/api/quiz/reminder-optout?email=${encodeURIComponent(optIn.email)}`;
 
         try {

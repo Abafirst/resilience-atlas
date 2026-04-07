@@ -127,7 +127,7 @@ function footer(unsubscribeUrl = `${APP_URL}/unsubscribe`) {
           <p style="margin: 0 0 8px; font-family: Helvetica, Arial, sans-serif; font-size: 13px; color: ${COLORS.textMuted};">
             <a href="${APP_URL}/resources.html" style="color: ${COLORS.primary}; text-decoration: none;">Resources</a>
             &nbsp;&middot;&nbsp;
-            <a href="${APP_URL}/quiz.html" style="color: ${COLORS.primary}; text-decoration: none;">Take Assessment</a>
+            <a href="${APP_URL}/quiz" style="color: ${COLORS.primary}; text-decoration: none;">Take Assessment</a>
             &nbsp;&middot;&nbsp;
             <a href="${APP_URL}/dashboard.html" style="color: ${COLORS.primary}; text-decoration: none;">Dashboard</a>
           </p>

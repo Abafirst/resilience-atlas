@@ -112,7 +112,6 @@ app.use(
         // Default: only allow resources from our own origin.
         defaultSrc: ["'self'"],
         // Scripts: allow Stripe JS SDK and Auth0 SPA JS SDK loaded from CDN.
-        // quiz.html loads auth0-spa-js directly from cdn.auth0.com.
         // 'unsafe-inline' is required by Stripe and Auth0 libraries as well as
         // any inline event handlers in the frontend; without it the browser
         // blocks their scripts and the payment/login flows never complete.
@@ -547,10 +546,11 @@ app.get("/team", pageLimiter, (req, res) => {
 // Public static files
 // ==============================
 
-// Serve the legacy public/ directory (quiz.html, assessment pages, etc.)
+// Serve the legacy public/ directory (assessment pages, static assets, etc.)
 // AFTER the React SPA static assets so that client/dist files always take
 // priority for the root route, while standalone HTML pages remain directly
-// accessible via their own URLs (e.g. /quiz.html).
+// accessible via their own URLs.  Note: /quiz.html is redirected to /quiz
+// before this middleware runs, so the legacy quiz.html is never served.
 // This must come BEFORE the SPA catch-all so these pages are served correctly
 // instead of falling through to the React app.
 app.use(express.static(path.join(__dirname, "../public")));

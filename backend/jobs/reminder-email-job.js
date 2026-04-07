@@ -39,7 +39,7 @@ async function runReminderJob() {
     if (!org) continue;
 
     const orgName  = org.company_name || org.name || 'Your Team';
-    const assessUrl = `${process.env.APP_URL || ''}/quiz.html?org=${org.slug || org._id}`;
+    const assessUrl = `${process.env.APP_URL || ''}/quiz?org=${org.slug || org._id}`;
 
     for (const invite of team.pendingInvites) {
       processed++;

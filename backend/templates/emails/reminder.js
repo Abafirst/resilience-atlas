@@ -25,7 +25,7 @@ function buildReminderEmail(vars) {
     previousScore = 0,
     previousDate  = '',
     growthAreas   = [],
-    retakeLink    = `${APP_URL}/quiz.html`,
+    retakeLink    = `${APP_URL}/quiz`,
     specialOffer  = '',
     offerLink     = `${APP_URL}/upgrade.html`,
     daysSince     = 90,

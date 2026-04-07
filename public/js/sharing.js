@@ -66,7 +66,7 @@
      */
     shareLinkedIn(dominantDimension) {
       const text = encodeURIComponent(buildShareText(dominantDimension));
-      const url  = encodeURIComponent(BASE_URL + '/quiz.html');
+      const url  = encodeURIComponent(BASE_URL + '/quiz');
       const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&summary=${text}`;
       window.open(shareUrl, '_blank', 'width=600,height=520,noopener,noreferrer');
       trackShareEvent('linkedin', dominantDimension);
@@ -78,7 +78,7 @@
      */
     shareTwitter(dominantDimension) {
       const text = encodeURIComponent(buildShareText(dominantDimension));
-      const url  = encodeURIComponent(BASE_URL + '/quiz.html');
+      const url  = encodeURIComponent(BASE_URL + '/quiz');
       const shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
       window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
       trackShareEvent('twitter', dominantDimension);
@@ -112,7 +112,7 @@
      * Copy the current results page share link to clipboard.
      */
     copyShareLink() {
-      const link = BASE_URL + '/quiz.html';
+      const link = BASE_URL + '/quiz';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(link).then(() => {
           const btn = document.getElementById('btnShareCopy');

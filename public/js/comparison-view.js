@@ -323,7 +323,7 @@
     if (history.length === 0) {
       container.innerHTML = '<div class="empty-state">' +
         '<p>No assessment history found. Complete the quiz to start tracking your growth!</p>' +
-        '<a href="/quiz.html" class="btn btn-primary" style="margin-top:1rem">Take the Assessment</a>' +
+        '<a href="/quiz" class="btn btn-primary" style="margin-top:1rem">Take the Assessment</a>' +
         '</div>';
       return;
     }
