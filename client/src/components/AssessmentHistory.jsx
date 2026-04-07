@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { STARTER_PRICE_LABEL } from '../constants/unlockPricing.js';
 import { apiFetch } from '../lib/apiFetch.js';
 
@@ -216,6 +217,7 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email, get
 }
 
 export default function AssessmentHistory({ email, onUnlock, checkoutLoading, getTokenFn }) {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   const [loading, setLoading]           = useState(true);
   const [hasNavigatorAccess, setHasNavigatorAccess] = useState(false);
   const [assessments, setAssessments]   = useState([]);
@@ -241,6 +243,13 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading, ge
   if (loading || assessments.length === 0) return null;
 
   const handleDownload = async (assessment, idx) => {
+    // If unauthenticated, prompt login and return to the current page.
+    if (!isAuthenticated) {
+      loginWithRedirect({
+        appState: { returnTo: window.location.pathname + window.location.search },
+      });
+      return;
+    }
     setDownloadingIdx(idx);
     setDownloadError('');
     try {

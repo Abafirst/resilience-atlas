@@ -395,75 +395,45 @@ app.get('/profile', pageLimiter, (req, res) => {
   res.status(501).json({ error: 'OIDC middleware not configured.' });
 });
 
-// ── Auth routes — redirect to Auth0 Universal Login ─────────
-// These routes ensure that navigating to /login or /register never
-// renders a legacy local form.  When AUTH0_DOMAIN and AUTH0_CLIENT_ID
-// are configured the user is sent directly to the Auth0 hosted login
-// page; otherwise they are redirected to the homepage as a safe fallback.
+// ── Auth routes — SPA-friendly redirects ────────────────────
+// /login and /register hand off to the React SPA rather than generating
+// server-side Auth0 authorize URLs.  The old approach produced a
+// redirect_uri of http://localhost:3000/callback in production (because
+// the server could not derive the correct origin from env vars), causing
+// Auth0 "Callback URL mismatch" errors.
 //
-// redirect_uri is sourced exclusively from environment variables to avoid
-// open-redirect vulnerabilities that can arise when request headers are
-// used to derive a callback URL.
+// By redirecting into the SPA the browser's window.location.origin is
+// used by Auth0's loginWithRedirect() as the callback URL — which is
+// always correct in every environment.
 //
-// An optional `returnTo` query param (URL-encoded, must start with "/") is
-// stored in the Auth0 `state` parameter so that the callback handler can
-// redirect the user back to the page they were on — including a `?checkout=<tier>`
-// param that auto-starts the Stripe purchase flow after login.
-function buildAuth0AuthorizeUrl(screenHint, returnTo) {
-  const domain = process.env.AUTH0_DOMAIN;
-  const clientId = process.env.AUTH0_CLIENT_ID;
-  // Prefer the explicit override; fall back to APP_URL; never derive from request headers.
-  const redirectUri = process.env.AUTH0_REDIRECT_URI || process.env.APP_URL || null;
-  if (!domain || !clientId) return null;
-  const params = new URLSearchParams({
-    response_type: "code",
-    client_id: clientId,
-    redirect_uri: redirectUri || "",
-    scope: "openid profile email",
-  });
-  if (screenHint) params.set("screen_hint", screenHint);
-  // Pass a safe returnTo as the Auth0 state so the callback can redirect there.
-  // Only allow same-origin paths (must start with "/") to prevent open redirects.
-  if (returnTo && typeof returnTo === "string" && returnTo.startsWith("/")) {
-    params.set("state", encodeURIComponent(returnTo));
-  }
-  return `https://${domain}/authorize?${params.toString()}`;
-}
+// An optional same-origin ?returnTo= param is honoured so deep-links
+// like /login?returnTo=/results can land on a specific SPA page.
+// Only same-origin paths are accepted (must start with "/" but not "//"
+// or "/\") to prevent open-redirect vulnerabilities.
 
 app.get("/login", pageLimiter, (req, res) => {
-  // Accept an optional ?returnTo=/path?checkout=tier redirect hint.
-  // Only allow same-origin paths to prevent open redirects:
-  //   - Must start with "/" (not "//", "/\", etc.)
-  //   - Must not contain protocol separators (":", "//")
-  //   - URL-decode first, then re-validate the decoded value
-  let returnTo = null;
+  let target = "/results-history";
   if (req.query.returnTo) {
     try {
       const rt = decodeURIComponent(String(req.query.returnTo));
-      // Strict same-origin path check: must start with '/' but not '//'
-      // and must not contain any protocol-relative patterns.
+      // Strict same-origin path check — no protocol-relative or absolute URLs.
       if (
         rt.startsWith("/") &&
         !rt.startsWith("//") &&
         !rt.startsWith("/\\") &&
-        !/[a-zA-Z][a-zA-Z0-9+\-.]*:/.test(rt)  // no scheme like http:, https:, data:
+        !/[a-zA-Z][a-zA-Z0-9+\-.]*:/.test(rt)
       ) {
-        returnTo = rt;
+        target = rt;
       }
     } catch (_e) {
       // Ignore malformed or un-decodable param.
     }
   }
-  const url = buildAuth0AuthorizeUrl(null, returnTo);
-  if (url) return res.redirect(302, url);
-  // Auth0 not configured — fall back to homepage.
-  res.redirect("/");
+  res.redirect(302, target);
 });
 
 app.get("/register", pageLimiter, (req, res) => {
-  const url = buildAuth0AuthorizeUrl("signup");
-  if (url) return res.redirect(302, url);
-  res.redirect("/");
+  res.redirect(302, "/results-history");
 });
 
 // ==============================

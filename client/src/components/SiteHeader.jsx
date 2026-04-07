@@ -39,7 +39,7 @@ export default function SiteHeader({
   ctaButton,
   onThemeChange,
 }) {
-  const { isAuthenticated, user: auth0User, isLoading: auth0Loading } = useAuth0();
+  const { isAuthenticated, user: auth0User, isLoading: auth0Loading, loginWithRedirect } = useAuth0();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   // journeyHref starts with the localStorage-based value and may update once Auth0 resolves.
@@ -58,33 +58,17 @@ export default function SiteHeader({
   }, []);
 
   // Update journey link based on Auth0 authentication status.
-  // Auth0 users: query assessment history to check if they have any stored assessments.
-  // Unauthenticated users: fall back to localStorage check.
+  // Authenticated users always go to /results-history (returning-user hub).
+  // Unauthenticated users: fall back to localStorage check (/results or /quiz).
   useEffect(() => {
     if (auth0Loading) return;
 
-    if (isAuthenticated && auth0User?.email) {
-      fetch(`/api/assessment/history?email=${encodeURIComponent(auth0User.email)}`)
-        .then(r => {
-          if (!r.ok) {
-            console.warn('[SiteHeader] assessment history check failed:', r.status);
-            return null;
-          }
-          return r.json();
-        })
-        .then(data => {
-          if (data) {
-            setJourneyHref(data.assessments?.length > 0 ? '/results' : '/quiz');
-          }
-        })
-        .catch(err => {
-          console.warn('[SiteHeader] assessment history fetch error:', err.message);
-          // On error, leave the current href in place (localStorage-based default).
-        });
+    if (isAuthenticated) {
+      setJourneyHref('/results-history');
     } else {
       setJourneyHref(getLocalStorageJourneyHref());
     }
-  }, [isAuthenticated, auth0User, auth0Loading]);
+  }, [isAuthenticated, auth0Loading]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -173,6 +157,20 @@ export default function SiteHeader({
             href={journeyHref}
             className={`nav-link nav-link--journey${activePage === 'gamification' ? ' active' : ''}`}
             aria-label="Resilience Journey — your practices and progress"
+            onClick={(e) => {
+              // For unauthenticated users with no local quiz results, clicking
+              // "Resilience Journey" should prompt them to sign in rather than
+              // sending them to /quiz.  Local results users navigate normally.
+              if (!isAuthenticated && !auth0Loading) {
+                const hasLocalResults = (() => {
+                  try { return !!localStorage.getItem('resilience_results'); } catch (_) { return false; }
+                })();
+                if (!hasLocalResults) {
+                  e.preventDefault();
+                  loginWithRedirect({ appState: { returnTo: '/results-history' } });
+                }
+              }
+            }}
           >
             <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} /> Resilience Journey
           </a>

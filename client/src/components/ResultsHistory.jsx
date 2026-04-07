@@ -197,7 +197,7 @@ async function downloadPdfForPurchase(purchase, email, getTokenFn) {
  * all purchases permanent — there is no expiry for previously paid reports.
  */
 export default function ResultsHistory({ email }) {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, loginWithRedirect } = useAuth0();
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [downloadingIdx, setDownloadingIdx] = useState(null);
@@ -231,6 +231,13 @@ export default function ResultsHistory({ email }) {
   if (loading || purchases.length === 0) return null;
 
   const handleDownload = async (purchase, idx) => {
+    // If unauthenticated, prompt login and return to the current page.
+    if (!isAuthenticated) {
+      loginWithRedirect({
+        appState: { returnTo: window.location.pathname + window.location.search },
+      });
+      return;
+    }
     setDownloadingIdx(idx);
     setDownloadError('');
     try {
