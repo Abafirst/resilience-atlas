@@ -58,7 +58,9 @@ export default function VideoStories() {
   const filteredVideos =
     activeFilter === 'all'
       ? KIDS_VIDEO_STORIES
-      : KIDS_VIDEO_STORIES.filter((v) => v.ageGroup === activeFilter);
+      : KIDS_VIDEO_STORIES.filter((v) =>
+        Array.isArray(v.ageGroup) ? v.ageGroup.includes(activeFilter) : v.ageGroup === activeFilter
+      );
 
   return (
     <>

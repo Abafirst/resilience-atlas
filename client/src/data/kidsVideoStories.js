@@ -40,6 +40,18 @@ export const KIDS_VIDEO_STORIES = [
     ageGroup: 'age-5-7',
     ageLabel: 'Ages 5–7',
   },
+  {
+    id: 'video-4',
+    youtubeId: 'SPTmJRr0IcI',
+    title: 'The Mystery of Nebula Station',
+    subtitle: 'All Dimensions · Ages 5–12',
+    description:
+      'Join Builder the Beaver, Feeler the Fawn, Thinker the Red Fox, Grounder the Turtle, Connector the Monkey, and Guide the Owl on an extraordinary space mission to Nebula Station! When six friends with unique strengths and perspectives embark on a deep-space voyage together, they quickly discover that solving the station\'s greatest mystery—and surviving its dangers—requires more than individual talent. It takes teamwork.',
+    duration: 'TBD',
+    dimension: 'All Dimensions',
+    ageGroup: ['age-5-7', 'age-8-10'],
+    ageLabel: 'Ages 5–12',
+  },
 ];
 
 export const VIDEO_AGE_FILTERS = [
