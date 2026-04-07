@@ -172,17 +172,19 @@ async function runHttpTests() {
         assert.strictEqual(res.status, 401, `expected 401, got ${res.status}`);
     });
 
-    // --- Auth redirect tests (Auth0 Universal Login) ---
-    console.log('\nAuth endpoints (Auth0 redirect):');
+    // --- Auth redirect tests (SPA-friendly redirects) ---
+    console.log('\nAuth endpoints (SPA redirect):');
 
-    await testAsync('GET /login redirects (no local login form rendered)', async () => {
+    await testAsync('GET /login redirects to /results-history SPA route (no Auth0 authorize URL)', async () => {
         const res = await request.get('/login');
         assert.strictEqual(res.status, 302, `expected 302 redirect, got ${res.status}`);
+        assert.strictEqual(res.headers.location, '/results-history', `expected /results-history, got ${res.headers.location}`);
     });
 
-    await testAsync('GET /register redirects (no local registration form rendered)', async () => {
+    await testAsync('GET /register redirects to /results-history SPA route (no local registration form)', async () => {
         const res = await request.get('/register');
         assert.strictEqual(res.status, 302, `expected 302 redirect, got ${res.status}`);
+        assert.strictEqual(res.headers.location, '/results-history', `expected /results-history, got ${res.headers.location}`);
     });
 
     await testAsync('POST /auth/signup returns 404 (local signup removed)', async () => {

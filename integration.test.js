@@ -2,18 +2,32 @@
 const app = require('./index');
 
 describe('Resilience Atlas API Tests', () => {
-  describe('Authentication — Auth0 Universal Login', () => {
+  describe('Authentication — SPA-friendly redirects', () => {
 
-    test('GET /login redirects to Auth0 (no local login form)', async () => {
+    test('GET /login redirects to /results-history SPA route (no Auth0 authorize URL generated)', async () => {
       const res = await request(app).get('/login');
-      // Must be a redirect — no local login form should be rendered
+      // Must be a redirect into the SPA — no server-side Auth0 authorize URL
       expect(res.status).toBe(302);
+      expect(res.headers.location).toBe('/results-history');
     });
 
-    test('GET /register redirects to Auth0 (no local registration form)', async () => {
-      const res = await request(app).get('/register');
-      // Must be a redirect — no local registration form should be rendered
+    test('GET /login with valid returnTo preserves the target path', async () => {
+      const res = await request(app).get('/login?returnTo=/results');
       expect(res.status).toBe(302);
+      expect(res.headers.location).toBe('/results');
+    });
+
+    test('GET /login with unsafe returnTo (protocol-relative) redirects to /results-history', async () => {
+      const res = await request(app).get('/login?returnTo=//evil.com');
+      expect(res.status).toBe(302);
+      expect(res.headers.location).toBe('/results-history');
+    });
+
+    test('GET /register redirects to /results-history SPA route (no local registration form)', async () => {
+      const res = await request(app).get('/register');
+      // Must be a redirect into the SPA — no local registration form rendered
+      expect(res.status).toBe(302);
+      expect(res.headers.location).toBe('/results-history');
     });
 
     test('POST /auth/signup returns 404 (local signup endpoint removed)', async () => {

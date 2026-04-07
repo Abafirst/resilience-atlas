@@ -59,6 +59,7 @@ import OrgDashboardPage from './pages/OrgDashboardPage.jsx';
 import AdminLeadsPage from './pages/AdminLeadsPage.jsx';
 import GamificationPage from './pages/GamificationPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
+import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
@@ -216,6 +217,9 @@ export default function App() {
 
         {/* Privacy & Data Control */}
         <Route path="/privacy" element={<PrivacyPage />} />
+
+        {/* Returning-user hub — /login and /register redirect here */}
+        <Route path="/results-history" element={<ResultsHistoryPage />} />
 
         {/* Default auth-gated home route */}
         <Route path="/*" element={<HomeRoute />} />

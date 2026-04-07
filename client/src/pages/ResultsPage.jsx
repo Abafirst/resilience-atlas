@@ -2447,11 +2447,19 @@ export default function ResultsPage() {
   // ── PDF download ───────────────────────────────────────────────────────
   const handleDownloadPdf = useCallback(async () => {
     if (!results) return;
+    // If the user is not authenticated, prompt them to sign in rather than
+    // showing a dead-end "Authentication required" error message.
+    if (!isAuthenticated) {
+      loginWithRedirect({
+        appState: { returnTo: window.location.pathname + window.location.search },
+      });
+      return;
+    }
     const email = getEffectiveEmail();
     setPdfLoading(true);
     setPdfError('');
     try {
-      await triggerPdfDownload(results, email, isAuthenticated ? getAccessTokenSilently : null);
+      await triggerPdfDownload(results, email, getAccessTokenSilently);
     } catch (err) {
       if (err && err.upgradeRequired) {
         // Backend denied access — reset to locked state and show unlock modal
@@ -2466,7 +2474,7 @@ export default function ResultsPage() {
     } finally {
       setPdfLoading(false);
     }
-  }, [results, isAuthenticated, auth0User, getEffectiveEmail, getAccessTokenSilently]);
+  }, [results, isAuthenticated, auth0User, getEffectiveEmail, getAccessTokenSilently, loginWithRedirect]);
 
   // ── Reminder opt-in handler (ported from legacy results.js) ───────────
   const handleReminderOptIn = useCallback(async () => {

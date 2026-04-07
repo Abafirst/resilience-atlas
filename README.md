@@ -283,9 +283,24 @@ In the Auth0 dashboard (**Applications → Your App → Settings**), configure t
 | **Allowed Logout URLs** | `https://theresilienceatlas.com, http://localhost:5173, http://localhost:3000` |
 | **Allowed Web Origins** | `https://theresilienceatlas.com, http://localhost:5173, http://localhost:3000` |
 
-> ⚠️ The SPA uses `window.location.origin` as `redirect_uri` by default.  The bare origin **must** be in **Allowed Callback URLs**.  Do **not** list `/quiz.html` as a callback — use `/quiz` (the SPA route) instead.
+> ⚠️ The SPA uses `window.location.origin` as `redirect_uri` by default.  The bare origin **must** be in **Allowed Callback URLs**.  Do **not** list `/quiz.html` as a callback — use `/quiz` (the SPA route) instead.  **Never include** `http://localhost:3000/callback` in production callback URLs — this caused the "Callback URL mismatch" error.
 
 > ⚠️ To use `useRefreshTokens={true}` without silent-auth failures, enable **Refresh Token Rotation** in Auth0 → Applications → Your App → **Refresh Token Rotation** and set an appropriate idle/absolute expiry.
+
+### SPA-friendly `/login` and `/register` routes
+
+`GET /login` and `GET /register` are **SPA-friendly redirects** that send users to the React SPA at `/results-history` rather than generating a server-side Auth0 authorize URL. The old behaviour caused an Auth0 "Callback URL mismatch" error in production because the server used `http://localhost:3000/callback` as `redirect_uri`.
+
+With the new approach the browser handles Auth0 login via `loginWithRedirect()` which always uses `window.location.origin` (e.g. `https://theresilienceatlas.com`) as the callback URL, ensuring it always matches.
+
+An optional same-origin `?returnTo=` query parameter is preserved:
+
+```
+/login?returnTo=/results  →  302 /results
+/register                 →  302 /results-history
+```
+
+Only same-origin paths are accepted to prevent open-redirect vulnerabilities.
 
 ### Railway deployment checklist
 
