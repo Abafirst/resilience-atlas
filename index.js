@@ -137,28 +137,7 @@ app.post('/api/quiz', (req, res) => {
 // window.location.origin as the callback URL, which is always correct.
 //
 // An optional same-origin ?returnTo= param is honoured.
-
-/**
- * Sanitise a user-supplied ?returnTo= value.
- * Returns the decoded same-origin path if safe, or null otherwise.
- * Uses the URL constructor to avoid regex-based ReDoS vulnerabilities.
- *
- * @param {unknown} raw
- * @returns {string|null}
- */
-function sanitiseReturnTo(raw) {
-    if (!raw) return null;
-    try {
-        const decoded = decodeURIComponent(String(raw));
-        const parsed = new URL(decoded, 'http://spa.internal');
-        if (parsed.hostname !== 'spa.internal') return null;
-        const safe = parsed.pathname + parsed.search + parsed.hash;
-        if (safe.startsWith('//')) return null;
-        return safe;
-    } catch {
-        return null;
-    }
-}
+const sanitiseReturnTo = require('./backend/utils/sanitiseReturnTo');
 
 app.get('/login', (req, res) => {
     const returnTo = sanitiseReturnTo(req.query.returnTo);

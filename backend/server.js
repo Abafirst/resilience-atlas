@@ -409,36 +409,7 @@ app.get('/profile', pageLimiter, (req, res) => {
 // An optional same-origin ?returnTo= param is honoured so deep-links
 // like /login?returnTo=/results can land on a specific SPA page.
 // Only same-origin paths are accepted to prevent open-redirect vulnerabilities.
-
-/**
- * Sanitise a user-supplied ?returnTo= value.
- * Returns the decoded same-origin path (pathname + search + hash) if it is
- * safe, or null if it contains an absolute URL, a protocol-relative URL, or
- * any other pattern that could redirect to a third-party host.
- *
- * Uses the URL constructor rather than regex to avoid catastrophic
- * backtracking (ReDoS) and to correctly handle percent-encoded edge cases.
- *
- * @param {unknown} raw - Raw value from req.query.returnTo
- * @returns {string|null}
- */
-function sanitiseReturnTo(raw) {
-  if (!raw) return null;
-  try {
-    const decoded = decodeURIComponent(String(raw));
-    // Parse against a fixed dummy origin.  If the caller supplied an absolute
-    // URL or a protocol-relative URL the parsed hostname will differ.
-    const parsed = new URL(decoded, "http://spa.internal");
-    if (parsed.hostname !== "spa.internal") return null;
-    // Reconstruct only the path portion — never include protocol or host.
-    const safe = parsed.pathname + parsed.search + parsed.hash;
-    // Guard against the edge-case where pathname itself starts with "//"
-    if (safe.startsWith("//")) return null;
-    return safe;
-  } catch {
-    return null;
-  }
-}
+const sanitiseReturnTo = require("./utils/sanitiseReturnTo");
 
 app.get("/login", pageLimiter, (req, res) => {
   const returnTo = sanitiseReturnTo(req.query.returnTo);
