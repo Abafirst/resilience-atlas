@@ -160,15 +160,10 @@ export default function SiteHeader({
             onClick={(e) => {
               // For unauthenticated users with no local quiz results, clicking
               // "Resilience Journey" should prompt them to sign in rather than
-              // sending them to /quiz.  Local results users navigate normally.
-              if (!isAuthenticated && !auth0Loading) {
-                const hasLocalResults = (() => {
-                  try { return !!localStorage.getItem('resilience_results'); } catch (_) { return false; }
-                })();
-                if (!hasLocalResults) {
-                  e.preventDefault();
-                  loginWithRedirect({ appState: { returnTo: '/results-history' } });
-                }
+              // navigating to /quiz.  Users with local results navigate normally.
+              if (!isAuthenticated && !auth0Loading && getLocalStorageJourneyHref() === '/quiz') {
+                e.preventDefault();
+                loginWithRedirect({ appState: { returnTo: '/results-history' } });
               }
             }}
           >

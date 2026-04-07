@@ -138,24 +138,31 @@ app.post('/api/quiz', (req, res) => {
 //
 // An optional same-origin ?returnTo= param is honoured.
 
-app.get('/login', (req, res) => {
-    let target = '/results-history';
-    if (req.query.returnTo) {
-        try {
-            const rt = decodeURIComponent(String(req.query.returnTo));
-            if (
-                rt.startsWith('/') &&
-                !rt.startsWith('//') &&
-                !rt.startsWith('/\\') &&
-                !/[a-zA-Z][a-zA-Z0-9+\-.]*:/.test(rt)
-            ) {
-                target = rt;
-            }
-        } catch (_e) {
-            // Ignore malformed or un-decodable param.
-        }
+/**
+ * Sanitise a user-supplied ?returnTo= value.
+ * Returns the decoded same-origin path if safe, or null otherwise.
+ * Uses the URL constructor to avoid regex-based ReDoS vulnerabilities.
+ *
+ * @param {unknown} raw
+ * @returns {string|null}
+ */
+function sanitiseReturnTo(raw) {
+    if (!raw) return null;
+    try {
+        const decoded = decodeURIComponent(String(raw));
+        const parsed = new URL(decoded, 'http://spa.internal');
+        if (parsed.hostname !== 'spa.internal') return null;
+        const safe = parsed.pathname + parsed.search + parsed.hash;
+        if (safe.startsWith('//')) return null;
+        return safe;
+    } catch {
+        return null;
     }
-    res.redirect(302, target);
+}
+
+app.get('/login', (req, res) => {
+    const returnTo = sanitiseReturnTo(req.query.returnTo);
+    res.redirect(302, returnTo || '/results-history');
 });
 
 app.get('/register', (req, res) => {
