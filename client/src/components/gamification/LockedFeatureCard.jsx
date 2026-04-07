@@ -4,10 +4,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 /**
  * LockedFeatureCard — shows a clean preview card for locked gamification features.
  *
- * When locked, renders a card matching the Teams Resources GamificationCard style:
- *   - Colored top border
- *   - Icon in rounded box + tier badge
- *   - Full title and description (no blur, no opacity tricks)
+ * When locked, renders a card matching the Navigator pathway card visual language:
+ *   - Accent-tinted background + colored top & side border
+ *   - Icon in rounded box with subtle glow
+ *   - Lock chip in top-right corner
+ *   - Full title, description, and optional feature-preview bullets
  *   - Full-width "Unlock with [Tier]" button at bottom
  *
  * When unlocked, renders children directly.
@@ -20,6 +21,7 @@ import { useAuth0 } from '@auth0/auth0-react';
  *   title       — string: feature title
  *   description — string: feature description
  *   accentColor — string: hex color for top border and icon background (default: '#4f46e5')
+ *   features    — string[]: optional short feature-preview bullet items (2–4 items)
  *   children    — the feature content (rendered when unlocked)
  */
 export default function LockedFeatureCard({
@@ -30,6 +32,7 @@ export default function LockedFeatureCard({
   title,
   description,
   accentColor = '#4f46e5',
+  features,
   returnPath,
   children,
 }) {
@@ -90,34 +93,46 @@ export default function LockedFeatureCard({
     }
   }
 
+  // Derive a subtle tinted background and border color from the accent
+  const bgTint    = `${accentColor}0d`;  // ~5 % opacity tint
+  const borderTint = `${accentColor}40`; // ~25 % opacity border
+
   return (
     <div
       style={{
-        background: '#fff',
-        border: '1px solid #e2e8f0',
+        background: bgTint,
+        border: `1px solid ${borderTint}`,
         borderTop: `3px solid ${accentColor}`,
         borderRadius: 12,
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '.75rem',
-        boxShadow: '0 2px 8px rgba(0,0,0,.06)',
+        boxShadow: `0 4px 16px ${accentColor}18`,
         transition: 'box-shadow .2s, transform .2s',
+        position: 'relative',
       }}
       aria-label={`Locked — requires ${tierName}`}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseEnter={e => {
+        e.currentTarget.style.boxShadow = `0 8px 28px ${accentColor}30`;
+        e.currentTarget.style.transform = 'translateY(-2px)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.boxShadow = `0 4px 16px ${accentColor}18`;
+        e.currentTarget.style.transform = 'translateY(0)';
+      }}
     >
-      {/* Icon + tier badge row */}
+      {/* Icon + lock chip row */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.5rem' }}>
         {icon && (
           <div
             aria-hidden="true"
             style={{
-              width: 56,
-              height: 56,
+              width: 52,
+              height: 52,
               borderRadius: 12,
-              background: `${accentColor}15`,
+              background: `${accentColor}22`,
+              boxShadow: `0 2px 8px ${accentColor}30`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -127,34 +142,68 @@ export default function LockedFeatureCard({
             <img src={icon} alt="" style={{ width: 28, height: 28 }} />
           </div>
         )}
+        {/* Lock chip — top-right corner */}
         <span
           title={`Requires ${tierName}`}
           aria-label={`Requires ${tierName}`}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '.25rem',
-            fontSize: '.7rem', fontWeight: 700, padding: '.2rem .55rem',
-            borderRadius: 999, border: '1px solid rgba(124,58,237,0.25)',
-            background: '#ede9fe', color: '#7c3aed',
-            textTransform: 'uppercase', letterSpacing: '.04em', whiteSpace: 'nowrap',
+            fontSize: '.65rem', fontWeight: 700, padding: '.2rem .5rem',
+            borderRadius: 999, border: `1px solid ${accentColor}40`,
+            background: `${accentColor}18`, color: accentColor,
+            textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap',
           }}
         >
-          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} /> {tierName}
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 9, height: 9, filter: 'none', opacity: 0.85 }} />
+          {tierName}
         </span>
       </div>
 
       {/* Title + description */}
       <div style={{ flex: 1 }}>
         {title && (
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .4rem', lineHeight: 1.35 }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .35rem', lineHeight: 1.35 }}>
             {title}
           </h3>
         )}
         {description && (
-          <p style={{ fontSize: '.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '.85rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
             {description}
           </p>
         )}
       </div>
+
+      {/* Feature preview bullets */}
+      {Array.isArray(features) && features.length > 0 && (
+        <ul
+          aria-label="What's included"
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '.3rem',
+          }}
+        >
+          {features.map((feat, i) => (
+            <li
+              key={i}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '.4rem',
+                fontSize: '.8rem',
+                color: '#334155',
+                lineHeight: 1.5,
+              }}
+            >
+              <span aria-hidden="true" style={{ color: accentColor, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✓</span>
+              {feat}
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/* Unlock button */}
       <button
@@ -167,25 +216,36 @@ export default function LockedFeatureCard({
           alignItems: 'center',
           justifyContent: 'center',
           gap: '.5rem',
-          marginTop: '.5rem',
-          background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+          marginTop: '.25rem',
+          background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
           color: '#fff',
           border: 'none',
           borderRadius: 8,
-          padding: '.7rem 1.25rem',
-          fontSize: '.9rem',
+          padding: '.65rem 1.25rem',
+          fontSize: '.875rem',
           fontWeight: 700,
           cursor: checkoutLoading ? 'wait' : 'pointer',
           fontFamily: 'inherit',
           width: '100%',
           boxSizing: 'border-box',
-          transition: 'opacity .15s',
+          transition: 'opacity .15s, box-shadow .15s',
           opacity: checkoutLoading ? .7 : 1,
+          boxShadow: `0 2px 8px ${accentColor}50`,
         }}
-        onMouseEnter={e => { if (!checkoutLoading) e.currentTarget.style.opacity = '.88'; }}
-        onMouseLeave={e => { if (!checkoutLoading) e.currentTarget.style.opacity = '1'; }}
+        onMouseEnter={e => {
+          if (!checkoutLoading) {
+            e.currentTarget.style.opacity = '.9';
+            e.currentTarget.style.boxShadow = `0 4px 14px ${accentColor}70`;
+          }
+        }}
+        onMouseLeave={e => {
+          if (!checkoutLoading) {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.boxShadow = `0 2px 8px ${accentColor}50`;
+          }
+        }}
       >
-        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} />
+        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 14, height: 14, filter: 'brightness(0) invert(1)' }} />
         {checkoutLoading ? 'Redirecting…' : `Unlock with ${tierName}`}
       </button>
 

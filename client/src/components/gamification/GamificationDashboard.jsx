@@ -627,6 +627,11 @@ export default function GamificationDashboard() {
                   title="Navigation Milestones"
                   description="Track your progress across the 6 resilience dimensions with milestone achievements and celebrate every step forward."
                   accentColor="#4f46e5"
+                  features={[
+                    'Progress tracking across all 6 resilience dimensions',
+                    'Milestone achievements for every step forward',
+                    'Visual journey map showing your growth',
+                  ]}
                   returnPath="/gamification"
                 >
                   <NavigationMilestones scores={null} />
@@ -640,6 +645,11 @@ export default function GamificationDashboard() {
                   title="Resilience Badges"
                   description="Earn badges as you build resilience skills across all six dimensions of the Atlas framework."
                   accentColor="#7c3aed"
+                  features={[
+                    '12+ unique resilience badges to collect',
+                    'Badges across all 6 Atlas dimensions',
+                    'Shareable proof of your resilience journey',
+                  ]}
                   returnPath="/gamification"
                 >
                   <ResilienceBadgesWidget
@@ -677,6 +687,11 @@ export default function GamificationDashboard() {
                 title="Practice Hub"
                 description="Values-aligned micro-practices, skill pathways, and ACT-informed choice scenarios to build resilience daily."
                 accentColor="#0ea5e9"
+                features={[
+                  'Daily micro-commitment practices for resilience',
+                  'Values-aligned ACT-informed habit building',
+                  'Personalized skill pathway recommendations',
+                ]}
                 returnPath="/gamification"
               >
                 <AdultGameHub tier={userTier} />
@@ -713,6 +728,11 @@ export default function GamificationDashboard() {
                   title="Daily Compass Streaks"
                   description="Track your daily resilience practice streaks and celebrate momentum as you build lasting habits."
                   accentColor="#f59e0b"
+                  features={[
+                    'Daily streak tracking with streak-saver bonuses',
+                    'Momentum milestones and streak celebrations',
+                    'Habit-building reminders and check-ins',
+                  ]}
                   returnPath="/gamification"
                 >
                   <DailyCompassStreaks progress={activeProgress} />
@@ -727,6 +747,11 @@ export default function GamificationDashboard() {
                   title="Navigation Pathways"
                   description="Follow structured pathways to develop resilience across all six dimensions with guided progression."
                   accentColor="#4f46e5"
+                  features={[
+                    '6 dimension-specific resilience pathways',
+                    'Structured multi-level skill progression',
+                    'Points and badges for completing pathways',
+                  ]}
                   returnPath="/gamification"
                 >
                   <NavigationPathways
@@ -744,6 +769,11 @@ export default function GamificationDashboard() {
                   title="Enhanced Resilience Badges"
                   description="Unlock advanced badges and exclusive achievements only available at the Navigator tier."
                   accentColor="#7c3aed"
+                  features={[
+                    'Rare and exclusive Navigator-only badges',
+                    'Advanced achievement challenges',
+                    'Full badge collection with display showcase',
+                  ]}
                   returnPath="/gamification"
                 >
                   <ResilienceBadgesWidget
@@ -762,6 +792,11 @@ export default function GamificationDashboard() {
                     title="Resilience Map"
                     description="Visualize your resilience journey on an interactive map with community leaderboard features."
                     accentColor="#059669"
+                    features={[
+                      'Interactive visual map of your resilience journey',
+                      'Community leaderboard with opt-in sharing',
+                      'Dimension-by-dimension growth visualization',
+                    ]}
                     returnPath="/gamification"
                   >
                     <ResilienceMap
@@ -782,6 +817,11 @@ export default function GamificationDashboard() {
                     title="Explorer Achievements"
                     description="Complete challenges and earn special achievements as you explore your resilience journey."
                     accentColor="#d97706"
+                    features={[
+                      'Special challenge-based achievement system',
+                      'Exclusive Explorer-tier recognition',
+                      'Unlockable rewards for completing journey milestones',
+                    ]}
                     returnPath="/gamification"
                   >
                     <ExplorerAchievements earnedIds={new Set()} />
