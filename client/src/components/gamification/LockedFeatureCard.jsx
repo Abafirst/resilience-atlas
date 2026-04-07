@@ -114,7 +114,7 @@ export default function LockedFeatureCard({
   // Derive rgba colour values from the accent so the card is format-safe
   const bgTint      = hexToRgba(accentColor, 0.05);   // very subtle tint
   const borderTint  = hexToRgba(accentColor, 0.25);   // soft border
-  const iconBg      = hexToRgba(accentColor, 0.13);   // icon box bg
+  const iconBg      = hexToRgba(accentColor, 0.14);   // icon box bg
   const iconShadow  = hexToRgba(accentColor, 0.18);   // icon glow
   const chipBorder  = hexToRgba(accentColor, 0.25);   // lock chip border
   const chipBg      = hexToRgba(accentColor, 0.09);   // lock chip bg
@@ -171,7 +171,7 @@ export default function LockedFeatureCard({
         {/* Lock chip — top-right corner */}
         <span
           title={`Requires ${tierName}`}
-          aria-label={`Requires ${tierName}`}
+          aria-label={`Locked — requires ${tierName}`}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '.25rem',
             fontSize: '.65rem', fontWeight: 700, padding: '.2rem .5rem',
@@ -180,8 +180,8 @@ export default function LockedFeatureCard({
             textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap',
           }}
         >
-          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 9, height: 9, filter: 'none', opacity: 0.85 }} />
-          {tierName}
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 9, height: 9 }} />
+          Locked
         </span>
       </div>
 
