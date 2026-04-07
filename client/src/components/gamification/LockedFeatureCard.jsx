@@ -25,12 +25,14 @@ import { useAuth0 } from '@auth0/auth0-react';
  *   children    — the feature content (rendered when unlocked)
  */
 
-/** Convert a hex color to an rgba string with the given alpha (0–1). */
+/** Convert a hex color to an rgba string with the given alpha (0–1). Falls back to the original hex on invalid input. */
 function hexToRgba(hex, alpha) {
+  if (typeof hex !== 'string') return `rgba(79,70,229,${alpha})`;
   const h = hex.replace('#', '');
   const full = h.length === 3
     ? h.split('').map(c => c + c).join('')
     : h;
+  if (!/^[0-9a-fA-F]{6}$/.test(full)) return `rgba(79,70,229,${alpha})`;
   const r = parseInt(full.slice(0, 2), 16);
   const g = parseInt(full.slice(2, 4), 16);
   const b = parseInt(full.slice(4, 6), 16);
@@ -106,7 +108,7 @@ export default function LockedFeatureCard({
   }
 
   // Derive light background tint from accentColor — mirrors Navigator active pathwayCard style
-  const bgColor    = hexToRgba(accentColor, 0.06);
+  const bgColor = hexToRgba(accentColor, 0.06);
   const borderColor = hexToRgba(accentColor, 0.22);
 
   return (
