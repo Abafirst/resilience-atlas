@@ -22,22 +22,12 @@ function hexToRgba(hex, alpha) {
 /**
  * LockedFeatureCard — shows a clean preview card for locked gamification features.
  *
-<<<<<<< copilot/update-locked-gamification-cards
- * When locked, renders a card styled to match the Navigator pathway cards:
- *   - Light accentColor-tinted background (same approach as Navigator active cards)
- *   - Translucent color border + colored top accent border
- *   - Icon in rounded box
- *   - "Locked" badge chip in the top-right corner (no whole-card opacity wash)
- *   - Full title (readable) + slightly muted description
- *   - Full-width "Unlock with [Tier]" CTA button at bottom (disabled state only on button)
-=======
  * When locked, renders a card matching the Navigator pathway card visual language:
  *   - Accent-tinted background + colored top & side border
  *   - Icon in rounded box with subtle glow
  *   - Lock chip in top-right corner
  *   - Full title, description, and optional feature-preview bullets
  *   - Full-width "Unlock with [Tier]" button at bottom
->>>>>>> main
  *
  * When unlocked, renders children directly.
  *
@@ -52,21 +42,6 @@ function hexToRgba(hex, alpha) {
  *   features    — string[]: optional short feature-preview bullet items (2–4 items)
  *   children    — the feature content (rendered when unlocked)
  */
-
-/** Convert a hex color to an rgba string with the given alpha (0–1). Falls back to the original hex on invalid input. */
-function hexToRgba(hex, alpha) {
-  if (typeof hex !== 'string') return `rgba(79,70,229,${alpha})`;
-  const h = hex.replace('#', '');
-  const full = h.length === 3
-    ? h.split('').map(c => c + c).join('')
-    : h;
-  if (!/^[0-9a-fA-F]{6}$/.test(full)) return `rgba(79,70,229,${alpha})`;
-  const r = parseInt(full.slice(0, 2), 16);
-  const g = parseInt(full.slice(2, 4), 16);
-  const b = parseInt(full.slice(4, 6), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
 export default function LockedFeatureCard({
   locked,
   tierName,
@@ -136,11 +111,6 @@ export default function LockedFeatureCard({
     }
   }
 
-<<<<<<< copilot/update-locked-gamification-cards
-  // Derive light background tint from accentColor — mirrors Navigator active pathwayCard style
-  const bgColor = hexToRgba(accentColor, 0.06);
-  const borderColor = hexToRgba(accentColor, 0.22);
-=======
   // Derive rgba colour values from the accent so the card is format-safe
   const bgTint      = hexToRgba(accentColor, 0.05);   // very subtle tint
   const borderTint  = hexToRgba(accentColor, 0.25);   // soft border
@@ -152,39 +122,23 @@ export default function LockedFeatureCard({
   const hoverShadow = hexToRgba(accentColor, 0.18);   // hover shadow
   const btnShadow   = hexToRgba(accentColor, 0.31);   // button shadow
   const btnHoverSh  = hexToRgba(accentColor, 0.44);   // button hover shadow
->>>>>>> main
 
   return (
     <div
       style={{
-<<<<<<< copilot/update-locked-gamification-cards
-        background: bgColor,
-        border: `1px solid ${borderColor}`,
-=======
         background: bgTint,
         border: `1px solid ${borderTint}`,
->>>>>>> main
         borderTop: `3px solid ${accentColor}`,
         borderRadius: 12,
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '.75rem',
-<<<<<<< copilot/update-locked-gamification-cards
-        boxShadow: '0 8px 24px rgba(15,23,42,0.08)',
-=======
         boxShadow: `0 4px 16px ${cardShadow}`,
->>>>>>> main
         transition: 'box-shadow .2s, transform .2s',
         position: 'relative',
       }}
       aria-label={`Locked — requires ${tierName}`}
-<<<<<<< copilot/update-locked-gamification-cards
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 32px rgba(15,23,42,0.13)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(15,23,42,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-    >
-      {/* Icon row + "Locked" badge chip in top-right */}
-=======
       onMouseEnter={e => {
         e.currentTarget.style.boxShadow = `0 8px 28px ${hoverShadow}`;
         e.currentTarget.style.transform = 'translateY(-2px)';
@@ -195,7 +149,6 @@ export default function LockedFeatureCard({
       }}
     >
       {/* Icon + lock chip row */}
->>>>>>> main
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.5rem' }}>
         {icon && (
           <div
@@ -204,12 +157,8 @@ export default function LockedFeatureCard({
               width: 52,
               height: 52,
               borderRadius: 12,
-<<<<<<< copilot/update-locked-gamification-cards
-              background: hexToRgba(accentColor, 0.12),
-=======
               background: iconBg,
               boxShadow: `0 2px 8px ${iconShadow}`,
->>>>>>> main
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -219,29 +168,11 @@ export default function LockedFeatureCard({
             <img src={icon} alt="" style={{ width: 28, height: 28 }} />
           </div>
         )}
-<<<<<<< copilot/update-locked-gamification-cards
-        {/* Lock badge — clearly indicates locked state without washing out the card */}
-=======
         {/* Lock chip — top-right corner */}
->>>>>>> main
         <span
           title={`Requires ${tierName}`}
-          aria-label={`Locked — requires ${tierName}`}
+          aria-label={`Requires ${tierName}`}
           style={{
-<<<<<<< copilot/update-locked-gamification-cards
-            display: 'inline-flex', alignItems: 'center', gap: '.3rem',
-            fontSize: '.68rem', fontWeight: 700, padding: '.25rem .6rem',
-            borderRadius: 999,
-            border: `1px solid ${hexToRgba(accentColor, 0.3)}`,
-            background: hexToRgba(accentColor, 0.1),
-            color: accentColor,
-            textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap',
-            flexShrink: 0,
-          }}
-        >
-          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} />
-          Locked
-=======
             display: 'inline-flex', alignItems: 'center', gap: '.25rem',
             fontSize: '.65rem', fontWeight: 700, padding: '.2rem .5rem',
             borderRadius: 999, border: `1px solid ${chipBorder}`,
@@ -251,7 +182,6 @@ export default function LockedFeatureCard({
         >
           <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 9, height: 9, filter: 'none', opacity: 0.85 }} />
           {tierName}
->>>>>>> main
         </span>
       </div>
 
@@ -263,24 +193,12 @@ export default function LockedFeatureCard({
           </h3>
         )}
         {description && (
-<<<<<<< copilot/update-locked-gamification-cards
-          <p style={{ fontSize: '.88rem', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-=======
           <p style={{ fontSize: '.85rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
->>>>>>> main
             {description}
           </p>
         )}
       </div>
 
-<<<<<<< copilot/update-locked-gamification-cards
-      {/* Tier label — small secondary hint below description */}
-      <p style={{ margin: 0, fontSize: '.78rem', color: '#94a3b8', fontStyle: 'italic' }}>
-        Requires {tierName}
-      </p>
-
-      {/* Unlock CTA button — only the button is styled as a locked/disabled-looking action */}
-=======
       {/* Feature preview bullets */}
       {Array.isArray(features) && features.length > 0 && (
         <ul
@@ -314,7 +232,6 @@ export default function LockedFeatureCard({
       )}
 
       {/* Unlock button */}
->>>>>>> main
       <button
         type="button"
         onClick={handleUnlock}
@@ -326,11 +243,7 @@ export default function LockedFeatureCard({
           justifyContent: 'center',
           gap: '.5rem',
           marginTop: '.25rem',
-<<<<<<< copilot/update-locked-gamification-cards
-          background: accentColor,
-=======
           background: `linear-gradient(135deg, ${accentColor}, ${accentColor}cc)`,
->>>>>>> main
           color: '#fff',
           border: 'none',
           borderRadius: 8,
