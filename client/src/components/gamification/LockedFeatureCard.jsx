@@ -4,11 +4,13 @@ import { useAuth0 } from '@auth0/auth0-react';
 /**
  * LockedFeatureCard — shows a clean preview card for locked gamification features.
  *
- * When locked, renders a card matching the Teams Resources GamificationCard style:
- *   - Colored top border
- *   - Icon in rounded box + tier badge
- *   - Full title and description (no blur, no opacity tricks)
- *   - Full-width "Unlock with [Tier]" button at bottom
+ * When locked, renders a card styled to match the Navigator pathway cards:
+ *   - Light accentColor-tinted background (same approach as Navigator active cards)
+ *   - Translucent color border + colored top accent border
+ *   - Icon in rounded box
+ *   - "Locked" badge chip in the top-right corner (no whole-card opacity wash)
+ *   - Full title (readable) + slightly muted description
+ *   - Full-width "Unlock with [Tier]" CTA button at bottom (disabled state only on button)
  *
  * When unlocked, renders children directly.
  *
@@ -22,6 +24,19 @@ import { useAuth0 } from '@auth0/auth0-react';
  *   accentColor — string: hex color for top border and icon background (default: '#4f46e5')
  *   children    — the feature content (rendered when unlocked)
  */
+
+/** Convert a hex color to an rgba string with the given alpha (0–1). */
+function hexToRgba(hex, alpha) {
+  const h = hex.replace('#', '');
+  const full = h.length === 3
+    ? h.split('').map(c => c + c).join('')
+    : h;
+  const r = parseInt(full.slice(0, 2), 16);
+  const g = parseInt(full.slice(2, 4), 16);
+  const b = parseInt(full.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function LockedFeatureCard({
   locked,
   tierName,
@@ -90,25 +105,30 @@ export default function LockedFeatureCard({
     }
   }
 
+  // Derive light background tint from accentColor — mirrors Navigator active pathwayCard style
+  const bgColor    = hexToRgba(accentColor, 0.06);
+  const borderColor = hexToRgba(accentColor, 0.22);
+
   return (
     <div
       style={{
-        background: '#fff',
-        border: '1px solid #e2e8f0',
+        background: bgColor,
+        border: `1px solid ${borderColor}`,
         borderTop: `3px solid ${accentColor}`,
         borderRadius: 12,
         padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '.75rem',
-        boxShadow: '0 2px 8px rgba(0,0,0,.06)',
+        boxShadow: '0 8px 24px rgba(15,23,42,0.08)',
         transition: 'box-shadow .2s, transform .2s',
+        position: 'relative',
       }}
       aria-label={`Locked — requires ${tierName}`}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,.12)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 12px 32px rgba(15,23,42,0.13)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(15,23,42,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
-      {/* Icon + tier badge row */}
+      {/* Icon row + "Locked" badge chip in top-right */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '.5rem' }}>
         {icon && (
           <div
@@ -117,7 +137,7 @@ export default function LockedFeatureCard({
               width: 56,
               height: 56,
               borderRadius: 12,
-              background: `${accentColor}15`,
+              background: hexToRgba(accentColor, 0.12),
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -127,18 +147,23 @@ export default function LockedFeatureCard({
             <img src={icon} alt="" style={{ width: 28, height: 28 }} />
           </div>
         )}
+        {/* Lock badge — clearly indicates locked state without washing out the card */}
         <span
           title={`Requires ${tierName}`}
-          aria-label={`Requires ${tierName}`}
+          aria-label={`Locked — requires ${tierName}`}
           style={{
-            display: 'inline-flex', alignItems: 'center', gap: '.25rem',
-            fontSize: '.7rem', fontWeight: 700, padding: '.2rem .55rem',
-            borderRadius: 999, border: '1px solid rgba(124,58,237,0.25)',
-            background: '#ede9fe', color: '#7c3aed',
-            textTransform: 'uppercase', letterSpacing: '.04em', whiteSpace: 'nowrap',
+            display: 'inline-flex', alignItems: 'center', gap: '.3rem',
+            fontSize: '.68rem', fontWeight: 700, padding: '.25rem .6rem',
+            borderRadius: 999,
+            border: `1px solid ${hexToRgba(accentColor, 0.3)}`,
+            background: hexToRgba(accentColor, 0.1),
+            color: accentColor,
+            textTransform: 'uppercase', letterSpacing: '.05em', whiteSpace: 'nowrap',
+            flexShrink: 0,
           }}
         >
-          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} /> {tierName}
+          <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 10, height: 10 }} />
+          Locked
         </span>
       </div>
 
@@ -150,13 +175,18 @@ export default function LockedFeatureCard({
           </h3>
         )}
         {description && (
-          <p style={{ fontSize: '.88rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '.88rem', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
             {description}
           </p>
         )}
       </div>
 
-      {/* Unlock button */}
+      {/* Tier label — small secondary hint below description */}
+      <p style={{ margin: 0, fontSize: '.78rem', color: '#94a3b8', fontStyle: 'italic' }}>
+        Requires {tierName}
+      </p>
+
+      {/* Unlock CTA button — only the button is styled as a locked/disabled-looking action */}
       <button
         type="button"
         onClick={handleUnlock}
@@ -167,8 +197,8 @@ export default function LockedFeatureCard({
           alignItems: 'center',
           justifyContent: 'center',
           gap: '.5rem',
-          marginTop: '.5rem',
-          background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+          marginTop: '.25rem',
+          background: accentColor,
           color: '#fff',
           border: 'none',
           borderRadius: 8,
