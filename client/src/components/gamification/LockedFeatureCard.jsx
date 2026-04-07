@@ -112,40 +112,36 @@ export default function LockedFeatureCard({
   }
 
   // Derive rgba colour values from the accent so the card is format-safe
-  const bgTint      = hexToRgba(accentColor, 0.05);   // very subtle tint
-  const borderTint  = hexToRgba(accentColor, 0.25);   // soft border
-  const iconBg      = hexToRgba(accentColor, 0.14);   // icon box bg
-  const iconShadow  = hexToRgba(accentColor, 0.18);   // icon glow
+  const borderTint  = hexToRgba(accentColor, 0.25);   // soft border / hover shadow
+  const iconBg      = hexToRgba(accentColor, 0.13);   // icon box bg  (`${cfg.color}22`)
   const chipBorder  = hexToRgba(accentColor, 0.25);   // lock chip border
   const chipBg      = hexToRgba(accentColor, 0.09);   // lock chip bg
-  const cardShadow  = hexToRgba(accentColor, 0.09);   // resting shadow
-  const hoverShadow = hexToRgba(accentColor, 0.18);   // hover shadow
   const btnShadow   = hexToRgba(accentColor, 0.31);   // button shadow
   const btnHoverSh  = hexToRgba(accentColor, 0.44);   // button hover shadow
 
   return (
     <div
       style={{
-        background: bgTint,
+        background: '#f8fafc',
         border: `1px solid ${borderTint}`,
         borderTop: `3px solid ${accentColor}`,
         borderRadius: 12,
-        padding: '1.5rem',
+        padding: '16px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '.75rem',
-        boxShadow: `0 4px 16px ${cardShadow}`,
-        transition: 'box-shadow .2s, transform .2s',
+        gap: '10px',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+        transition: 'all 0.2s',
         position: 'relative',
       }}
       aria-label={`Locked — requires ${tierName}`}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = `0 8px 28px ${hoverShadow}`;
         e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = `0 6px 20px ${borderTint}`;
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = `0 4px 16px ${cardShadow}`;
         e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.05)';
       }}
     >
       {/* Icon + lock chip row */}
@@ -154,18 +150,17 @@ export default function LockedFeatureCard({
           <div
             aria-hidden="true"
             style={{
-              width: 52,
-              height: 52,
-              borderRadius: 12,
+              width: 44,
+              height: 44,
+              borderRadius: 10,
               background: iconBg,
-              boxShadow: `0 2px 8px ${iconShadow}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
             }}
           >
-            <img src={icon} alt="" style={{ width: 28, height: 28 }} />
+            <img src={icon} alt="" style={{ width: 24, height: 24 }} />
           </div>
         )}
         {/* Lock chip — top-right corner */}
@@ -188,12 +183,12 @@ export default function LockedFeatureCard({
       {/* Title + description */}
       <div style={{ flex: 1 }}>
         {title && (
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .35rem', lineHeight: 1.35 }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', margin: '0 0 .35rem', lineHeight: 1.3 }}>
             {title}
           </h3>
         )}
         {description && (
-          <p style={{ fontSize: '.85rem', color: '#475569', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '11px', color: '#64748b', lineHeight: 1.5, margin: 0 }}>
             {description}
           </p>
         )}
