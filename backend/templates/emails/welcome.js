@@ -18,7 +18,7 @@ function buildWelcomeEmail(vars) {
   const {
     firstName     = 'Friend',
     startQuizLink = `${APP_URL}/quiz`,
-    resourcesLink = `${APP_URL}/resources.html`,
+    resourcesLink = `${APP_URL}/resources`,
     unsubscribeUrl,
   } = vars;
 
