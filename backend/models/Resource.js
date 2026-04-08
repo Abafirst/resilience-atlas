@@ -132,6 +132,14 @@ const ResourceSchema = new mongoose.Schema(
       default: null,
     },
 
+    // ── Evidence labeling ─────────────────────────────────────────────────────
+    sourceType: {
+      type:    String,
+      enum:    ['Peer-reviewed', 'Gov/Academic', 'Expert-informed'],
+      default: null,
+      index:   true,
+    },
+
     // ── SEO ───────────────────────────────────────────────────────────────────
     metaTitle:       { type: String, trim: true, maxlength: 100 },
     metaDescription: { type: String, trim: true, maxlength: 200 },
