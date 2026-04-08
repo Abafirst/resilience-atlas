@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { MICRO_QUESTS, DIMENSION_COLORS, ADULT_BADGES } from '../../data/adultGames.js';
 import { isStarterOrAbove } from '../../data/gamificationContent.js';
-import { getAuth0CachedToken } from '../../lib/apiFetch.js';
 
 const s = {
   section: { marginBottom: 32 },
@@ -95,11 +94,12 @@ const DIM_ICONS = {
 };
 
 export default function StarterMicroQuests({ tier, progress }) {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, loginWithRedirect } = useAuth0();
   const [activeQuest, setActiveQuest]   = useState(null);
   const [completing, setCompleting]     = useState(false);
   const [localDone, setLocalDone]       = useState(new Set());
   const [newBadge, setNewBadge]         = useState(null);
+  const [errorMsg, setErrorMsg]         = useState(null);
 
   // Respect the tier prop: only allow interaction when the user has a paid tier.
   const unlocked = isStarterOrAbove(tier);
@@ -112,28 +112,50 @@ export default function StarterMicroQuests({ tier, progress }) {
   async function handleComplete(quest) {
     if (completedIds.has(quest.id) || completing) return;
     setCompleting(true);
+    setErrorMsg(null);
     try {
-      let headers = { 'Content-Type': 'application/json' };
+      let token;
       try {
-        const token = await getAccessTokenSilently();
-        headers.Authorization = `Bearer ${token}`;
+        token = await getAccessTokenSilently();
       } catch (authErr) {
-        console.warn('Auth0 token unavailable, falling back to stored token:', authErr?.message);
-        const stored = getAuth0CachedToken();
-        if (stored) headers.Authorization = `Bearer ${stored}`;
+        // Cannot obtain a valid token — do NOT send the request with an empty
+        // or stale credential. Prompt re-authentication instead.
+        console.warn('[StarterMicroQuests] Could not get access token:', authErr?.message);
+        setErrorMsg('Your session has expired. Redirecting to sign in…');
+        loginWithRedirect({ appState: { returnTo: '/gamification' } });
+        return;
       }
-      const res  = await fetch('/api/gamification/progress/quest-complete', {
+
+      const res = await fetch('/api/gamification/progress/quest-complete', {
         method: 'POST',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ questId: quest.id, dimension: quest.dimension }),
       });
-      const data = await res.json().catch(() => ({}));
-      setLocalDone(prev => new Set([...prev, quest.id]));
-      if (data.newBadges?.length) setNewBadge(data.newBadges[0]);
-      setActiveQuest(null);
+
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setLocalDone(prev => new Set([...prev, quest.id]));
+        if (data.newBadges?.length) setNewBadge(data.newBadges[0]);
+        setActiveQuest(null);
+      } else if (res.status === 401) {
+        setErrorMsg('Your session has expired. Redirecting to sign in…');
+        loginWithRedirect({ appState: { returnTo: '/gamification' } });
+      } else if (res.status === 403) {
+        const data = await res.json().catch(() => ({}));
+        setErrorMsg(
+          data.error ||
+          'A paid tier (Atlas Starter or above) is required to complete practices. Please upgrade your plan.'
+        );
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setErrorMsg(data.error || 'Failed to record your practice. Please try again.');
+      }
     } catch (err) {
-      setLocalDone(prev => new Set([...prev, quest.id]));
-      setActiveQuest(null);
+      console.error('[StarterMicroQuests] handleComplete error:', err);
+      setErrorMsg('An unexpected error occurred. Please try again.');
     } finally {
       setCompleting(false);
     }
@@ -212,8 +234,13 @@ export default function StarterMicroQuests({ tier, progress }) {
               <div style={s.frameworkRow}><strong>ABA Principle:</strong> {activeQuest.abaPrinciple}</div>
               <div style={s.frameworkRow}><strong>ACT Principle:</strong> {activeQuest.actPrinciple}</div>
             </div>
+            {errorMsg && (
+              <div style={{ marginBottom: 12, padding: '10px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#f87171', fontSize: 13, lineHeight: 1.5 }}>
+                {errorMsg}
+              </div>
+            )}
             <div style={s.modalBtns}>
-              <button style={s.cancelBtn} onClick={() => setActiveQuest(null)}>Back</button>
+              <button style={s.cancelBtn} onClick={() => { setActiveQuest(null); setErrorMsg(null); }}>Back</button>
               <button style={s.completeBtn} onClick={() => handleComplete(activeQuest)} disabled={completing}>
                 {completing ? 'Recording…' : 'Mark as Complete'}
               </button>
