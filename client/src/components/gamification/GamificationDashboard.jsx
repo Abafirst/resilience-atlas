@@ -601,8 +601,7 @@ export default function GamificationDashboard() {
           {isAuthenticated && !gamLoading && error && !isGamError && (
             (() => {
               const isSessionErr = error.toLowerCase().includes('session') ||
-                error.toLowerCase().includes('sign in') ||
-                error.toLowerCase().includes('401');
+                error.toLowerCase().includes('sign in');
               return (
                 <div
                   style={{ ...s.errorMsg, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}
