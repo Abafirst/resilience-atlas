@@ -381,7 +381,7 @@ node backend/scripts/validateResources.js
 
 Expected output: all 50 resources `OK`, with a coverage report showing 7 resources per category and multiple types.
 
-### Seed the database
+### Seed the database (local / CI)
 
 ```bash
 # From the backend/ directory
@@ -392,6 +392,41 @@ MONGODB_URI=<uri> node backend/scripts/seedResources.js
 ```
 
 The script is **idempotent** — running it multiple times will update existing resources rather than create duplicates. Each resource is matched by its auto-generated slug.
+
+### Seed the database in production (admin HTTP endpoint)
+
+The app exposes a protected `POST /admin/seed-resources` endpoint that runs the same idempotent upsert without requiring direct database access.
+
+#### 1. Set the secret in Railway
+
+Add the environment variable `ADMIN_SEED_SECRET` to your Railway service with a strong random value, e.g.:
+
+```
+ADMIN_SEED_SECRET=change-me-use-a-long-random-string
+```
+
+#### 2. Trigger the seed
+
+```bash
+curl -X POST https://theresilienceatlas.com/admin/seed-resources \
+  -H "x-admin-seed-secret: <your-ADMIN_SEED_SECRET>"
+```
+
+Expected response:
+
+```json
+{ "inserted": 50, "updated": 0, "skipped": 0, "total": 50 }
+```
+
+Running the command again is safe — it will return `updated` counts instead of `inserted`.
+
+#### 3. Verify
+
+```bash
+curl https://theresilienceatlas.com/api/resources | jq '.total'
+```
+
+Should return a non-zero count.  The `/resources` page will now show populated cards.
 
 ### Source label conventions
 
