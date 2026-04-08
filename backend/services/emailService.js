@@ -145,7 +145,7 @@ async function sendQuizReport(to, name, report) {
   // sign in before being redirected to their specific results.
   let reportLink;
   if (report.assessmentHash) {
-    const returnTo = `/results?hash=${report.assessmentHash}`;
+    const returnTo = `/results?hash=${encodeURIComponent(report.assessmentHash)}`;
     reportLink = `${appUrl}/login?returnTo=${encodeURIComponent(returnTo)}`;
   } else {
     reportLink = `${appUrl}/results`;

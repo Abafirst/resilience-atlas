@@ -2132,7 +2132,7 @@ export default function ResultsPage() {
         }
       }
     } catch (_) { /* ignore parse errors */ }
-  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+  }, [hashParam]);
 
   // ── Load results from API when URL contains ?hash= (email deep link) ──
   // Flow:
