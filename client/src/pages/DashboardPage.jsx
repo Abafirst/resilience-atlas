@@ -11,13 +11,60 @@ const DIMENSIONS = [
   { key: 'Cognitive',  label: 'Cognitive',   icon: '🧠', description: 'Thought & narrative' },
 ];
 
+// Map from localStorage score keys (long form) to dashboard dimension keys (short form)
+const SCORE_KEY_MAP = {
+  'Agentic-Generative':    'Agentic',
+  'Relational-Connective': 'Relational',
+  'Spiritual-Reflective':  'Spiritual',
+  'Emotional-Adaptive':    'Emotional',
+  'Somatic-Regulative':    'Somatic',
+  'Cognitive-Narrative':   'Cognitive',
+};
+
+/**
+ * Parse resilience_results from localStorage and return a normalized score map:
+ * { Agentic, Relational, Spiritual, Emotional, Somatic, Cognitive } (numbers 0–100).
+ * Handles both score shapes:
+ *   1) Plain numeric map  – { "Agentic-Generative": 78, ... }
+ *   2) Object map         – { "Agentic-Generative": { percentage: 78, ... }, ... }
+ * Returns null when no valid data is present.
+ */
+function loadScoresFromStorage() {
+  try {
+    const raw = localStorage.getItem('resilience_results');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    const rawScores = parsed.scores;
+    if (!rawScores || typeof rawScores !== 'object') return null;
+
+    const normalized = {};
+    for (const [longKey, shortKey] of Object.entries(SCORE_KEY_MAP)) {
+      const val = rawScores[longKey];
+      let score = null;
+      if (typeof val === 'number' && isFinite(val)) {
+        score = val;
+      } else if (val !== null && typeof val === 'object' && isFinite(val.percentage)) {
+        score = val.percentage;
+      }
+      normalized[shortKey] = score;
+    }
+
+    // Return null only when every score is null (storage has no usable data)
+    if (Object.values(normalized).every((v) => v === null)) return null;
+    return normalized;
+  } catch {
+    return null;
+  }
+}
+
 export default function DashboardPage() {
   useEffect(() => {
     document.title = 'My Dashboard — The Resilience Atlas™';
   }, []);
 
-  /* TODO: load real scores from API */
-  const scores = null;
+  // Load scores from localStorage (computed once per mount)
+  const scores = useMemo(() => loadScoresFromStorage(), []);
 
   const hasScores = scores !== null;
 

@@ -254,6 +254,30 @@ describe('GET /team.html', () => {
     });
 });
 
+describe('GET /dashboard.html', () => {
+    test('permanently redirects to /dashboard (SPA route)', async () => {
+        // /dashboard.html redirects to /dashboard so users always land on the
+        // React SPA DashboardPage instead of the legacy static HTML file.
+        const res = await request(app).get('/dashboard.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/dashboard');
+    });
+});
+
+describe('GET /dashboard', () => {
+    test('serves React SPA index.html', async () => {
+        // /dashboard must be handled before the public/ static middleware so
+        // public/dashboard.html is never accidentally returned.
+        const res = await request(app).get('/dashboard');
+        // The SPA index.html may not exist in CI (no client build), so accept
+        // either 200 (built) or 503 (build absent) — never a static HTML page.
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.headers['content-type']).toMatch(/html/);
+        }
+    });
+});
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
 describe('GET /api/auth/profile', () => {
