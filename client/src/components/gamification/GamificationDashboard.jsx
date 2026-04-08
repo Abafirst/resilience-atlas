@@ -452,7 +452,8 @@ export default function GamificationDashboard() {
   const isGamError = gamTierBlocked || (error && (
     error.toLowerCase().includes('paid tier') ||
     error.toLowerCase().includes('upgrade') ||
-    error.toLowerCase().includes('402')
+    error.toLowerCase().includes('402') ||
+    error.toLowerCase().includes('403')
   ));
 
   // Gamification API progress is only available for Navigator+
@@ -598,7 +599,37 @@ export default function GamificationDashboard() {
 
           {/* Non-upgrade API error */}
           {isAuthenticated && !gamLoading && error && !isGamError && (
-            <div style={s.errorMsg} role="alert">{error}</div>
+            (() => {
+              const isSessionErr = error.toLowerCase().includes('session') ||
+                error.toLowerCase().includes('sign in');
+              return (
+                <div
+                  style={{ ...s.errorMsg, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}
+                  role="alert"
+                >
+                  <span>{isSessionErr ? '🔐' : '⚠️'} {error}</span>
+                  {isSessionErr && (
+                    <button
+                      onClick={() => loginWithRedirect({ appState: { returnTo: '/gamification' } })}
+                      style={{
+                        padding: '4px 14px',
+                        borderRadius: 6,
+                        border: '1px solid #4f46e5',
+                        background: '#4f46e5',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        fontFamily: 'inherit',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      Sign In Again
+                    </button>
+                  )}
+                </div>
+              );
+            })()
           )}
 
           {/* ── Atlas Starter Features ──────────────────────────────────── */}

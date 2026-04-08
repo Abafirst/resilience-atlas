@@ -79,7 +79,7 @@ async function requirePaidTier(req, res, next) {
   const email = req.user && (req.user.email || req.user.sub || '');
   if (!email) {
     return res.status(403).json({
-      error: 'A paid tier (Atlas Navigator or above) is required to access gamification features.',
+      error: 'A paid tier (Atlas Starter or above) is required to access gamification features.',
       upgradeRequired: true,
     });
   }
@@ -109,8 +109,8 @@ async function requirePaidTier(req, res, next) {
 
     if (userHasAccess) return next();
 
-    return res.status(402).json({
-      error: 'A paid tier (Atlas Navigator or above) is required to access gamification features.',
+    return res.status(403).json({
+      error: 'A paid tier (Atlas Starter or above) is required to access gamification features.',
       upgradeRequired: true,
     });
   } catch (dbErr) {

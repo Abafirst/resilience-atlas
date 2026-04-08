@@ -118,6 +118,13 @@ jest.mock('../backend/models/ResilienceResult', () => ({
   create: jest.fn().mockResolvedValue({}),
 }));
 
+jest.mock('../backend/models/Purchase', () => {
+  const MockPurchase = jest.fn();
+  // Default: no purchase found (entitlement check fails without STRIPE_SECRET_KEY skip)
+  MockPurchase.findOne = jest.fn().mockResolvedValue(null);
+  return MockPurchase;
+});
+
 jest.mock('stripe', () => function Stripe() {
   return {
     paymentIntents:   { create: jest.fn(), retrieve: jest.fn() },
@@ -151,6 +158,11 @@ const jwt     = require('jsonwebtoken');
 
 function authToken(id = 'user001') {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
+
+/** Token that includes an email claim (required by requirePaidTier email lookup). */
+function authTokenWithEmail(email = 'user@example.com', id = 'user001') {
+  return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
 // ── Route tests ───────────────────────────────────────────────────────────────
@@ -389,5 +401,54 @@ describe('gamificationService — unit tests', () => {
         expect(typeof def.test).toBe('function');
       });
     });
+  });
+});
+
+// ── Entitlement gate (requirePaidTier) ────────────────────────────────────────
+
+describe('requirePaidTier — entitlement gate', () => {
+  const originalStripeKey = process.env.STRIPE_SECRET_KEY;
+
+  beforeEach(() => {
+    // Enable the Stripe-gated tier check for this suite
+    process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+  });
+
+  afterEach(() => {
+    // Restore original value (undefined in the test baseline)
+    if (originalStripeKey === undefined) {
+      delete process.env.STRIPE_SECRET_KEY;
+    } else {
+      process.env.STRIPE_SECRET_KEY = originalStripeKey;
+    }
+  });
+
+  test('returns 403 with upgradeRequired when authenticated user has no paid purchase', async () => {
+    const Purchase = require('../backend/models/Purchase');
+    const User     = require('../backend/models/User');
+    // No purchase and no legacy-flag access
+    Purchase.findOne.mockResolvedValueOnce(null);
+    User.findOne.mockResolvedValueOnce({ purchasedDeepReport: false, atlasPremium: false });
+
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authTokenWithEmail('locked@example.com')}`)
+      .send({ dimension: 'Cognitive-Narrative' });
+
+    expect(res.status).toBe(403);
+    expect(res.body).toHaveProperty('upgradeRequired', true);
+    expect(res.body.error).toMatch(/paid tier/i);
+  });
+
+  test('returns 200 when authenticated user has a completed atlas-starter purchase', async () => {
+    const Purchase = require('../backend/models/Purchase');
+    Purchase.findOne.mockResolvedValueOnce({ tier: 'atlas-starter', status: 'completed' });
+
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authTokenWithEmail('starter@example.com')}`)
+      .send({ dimension: 'Cognitive-Narrative', difficulty: 'easy' });
+
+    expect(res.status).toBe(200);
   });
 });
