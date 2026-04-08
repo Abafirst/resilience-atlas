@@ -239,6 +239,16 @@ describe('GET /results.html', () => {
     });
 });
 
+describe('GET /resources.html', () => {
+    test('permanently redirects to /resources (SPA route)', async () => {
+        // /resources.html must redirect to the SPA /resources route so that
+        // old links continue to work without serving the legacy static file.
+        const res = await request(app).get('/resources.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/resources');
+    });
+});
+
 describe('GET /team.html', () => {
     test('permanently redirects to /teams (SPA route)', async () => {
         // /team.html redirects to /teams (the canonical Teams landing SPA route).

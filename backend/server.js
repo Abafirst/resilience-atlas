@@ -476,6 +476,16 @@ app.get("/results", pageLimiter, (req, res) => {
   });
 });
 
+// /resources must always load the React SPA so the resource library is served
+// by the React component and legacy public/resources.html is never returned.
+app.get("/resources", pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
+  });
+});
+
 // ==============================
 // Team route — serve React SPA
 // ==============================
