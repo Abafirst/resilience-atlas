@@ -7,7 +7,7 @@
  *   firstName        {string}
  *   overallScore     {number}   0-100
  *   dominantDimension {string}
- *   scores           {Object}   { emotional, mental, physical, social, spiritual, financial }
+ *   scores           {Object}   { dim: number } or { dim: { percentage: number } } — both shapes are accepted
  *   topInsight       {string}   One key insight about the user's profile
  *   reportLink       {string}   URL to full online report
  *   retakeLink       {string}   URL to retake the assessment
@@ -18,6 +18,21 @@
 const { COLORS, DIMENSION_COLORS, progressBar, ctaButton, wrapEmail } = require('./base');
 
 const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
+
+/**
+ * Normalize a score value to a plain number.
+ * Accepts either a plain number (legacy format) or an object with a
+ * `.percentage` property (SPA format).  Returns 0 for anything else so
+ * that templates never render NaN%.
+ *
+ * @param {number|{percentage: number}|*} val
+ * @returns {number}
+ */
+function normalizeScore(val) {
+  if (typeof val === 'number' && Number.isFinite(val)) return val;
+  if (val && typeof val === 'object' && Number.isFinite(val.percentage)) return val.percentage;
+  return 0;
+}
 
 /**
  * Score badge colour helper.
@@ -36,6 +51,7 @@ function scoreBadgeColor(score) {
  */
 function topDimensions(scores) {
   return Object.entries(scores)
+    .map(([dim, val]) => [dim, normalizeScore(val)])
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3);
 }
@@ -61,7 +77,8 @@ function buildAssessmentResultsEmail(vars) {
   const top3 = topDimensions(scores);
 
   const dimensionRows = Object.entries(scores)
-    .map(([dim, score]) => {
+    .map(([dim, val]) => {
+      const score = normalizeScore(val);
       const color = DIMENSION_COLORS[dim] || COLORS.primary;
       const label = dim.charAt(0).toUpperCase() + dim.slice(1);
       return progressBar(label, score, color);
@@ -174,8 +191,8 @@ function buildPlainText(vars) {
     '',
     'Dimension Breakdown:',
   ];
-  Object.entries(scores || {}).forEach(([dim, score]) => {
-    lines.push(`  ${dim.charAt(0).toUpperCase() + dim.slice(1)}: ${Math.round(score)}%`);
+  Object.entries(scores || {}).forEach(([dim, val]) => {
+    lines.push(`  ${dim.charAt(0).toUpperCase() + dim.slice(1)}: ${Math.round(normalizeScore(val))}%`);
   });
   if (topInsight) { lines.push('', `Key Insight: ${topInsight}`); }
   lines.push(
