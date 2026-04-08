@@ -41,8 +41,8 @@ function buildStreakMilestoneEmail(vars) {
     practicesCompleted = 0,
     impactStatement    = '',
     nextPractice       = '',
-    nextPracticeLink   = `${APP_URL}/resources.html`,
-    dashboardLink      = `${APP_URL}/dashboard.html`,
+    nextPracticeLink   = `${APP_URL}/resources`,
+    dashboardLink      = `${APP_URL}/dashboard`,
     unsubscribeUrl,
   } = vars;
 

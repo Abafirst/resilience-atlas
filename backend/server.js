@@ -481,7 +481,22 @@ app.get("/results", pageLimiter, (req, res) => {
 app.get("/resources", pageLimiter, (req, res) => {
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
     if (err) {
-      res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+      res.status(503).send(
+        "Service unavailable: production build not found. Run `npm run build` in the client directory."
+      );
+    }
+  });
+});
+
+// /dashboard must always load the React SPA so users see the personal
+// DashboardPage component. The legacy public/dashboard.html is never returned
+// because this route is registered before the public/ static middleware.
+app.get("/dashboard", pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send(
+        "Service unavailable: production build not found. Run `npm run build` in the client directory."
+      );
     }
   });
 });

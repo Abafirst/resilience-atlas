@@ -114,6 +114,35 @@ describe('Email templates — buildAssessmentResultsEmail', () => {
     const { html } = buildAssessmentResultsEmail(vars);
     expect(html).toContain('Unsubscribe');
   });
+
+  it('handles SPA object scores ({ percentage: number }) without NaN', () => {
+    const spaVars = {
+      ...vars,
+      scores: {
+        'Agentic-Generative':    { percentage: 78 },
+        'Emotional-Adaptive':    { percentage: 77 },
+        'Relational-Connective': { percentage: 73 },
+        'Spiritual-Reflective':  { percentage: 73 },
+        'Cognitive-Narrative':   { percentage: 68 },
+        'Somatic-Regulative':    { percentage: 67 },
+      },
+    };
+    const { html, text } = buildAssessmentResultsEmail(spaVars);
+    expect(html).not.toContain('NaN');
+    expect(text).not.toContain('NaN');
+    expect(html).toContain('78%');
+    expect(text).toContain('78%');
+  });
+
+  it('defaults to 0% for invalid/missing score values', () => {
+    const badVars = {
+      ...vars,
+      scores: { emotional: null, mental: undefined, physical: 'bad' },
+    };
+    const { html, text } = buildAssessmentResultsEmail(badVars);
+    expect(html).not.toContain('NaN');
+    expect(text).not.toContain('NaN');
+  });
 });
 
 describe('Email templates — buildReportReadyEmail', () => {

@@ -313,9 +313,19 @@ router.post('/email-report', emailReportLimiter, async (req, res) => {
             ? overall
             : 0;
         const safeDominant = (dominantType || '').toString().trim().slice(0, 100);
-        const safeScores = scores && typeof scores === 'object' && !Array.isArray(scores)
+        const rawScores = scores && typeof scores === 'object' && !Array.isArray(scores)
             ? scores
             : {};
+        // Normalize scores to plain numbers.  The React SPA stores each dimension
+        // value as { percentage: number } while legacy callers send plain numbers.
+        // Accept both shapes; default to 0 for anything else (prevents NaN% in emails).
+        const safeScores = Object.fromEntries(
+            Object.entries(rawScores).map(([dim, val]) => {
+                if (typeof val === 'number' && Number.isFinite(val)) return [dim, val];
+                if (val && typeof val === 'object' && Number.isFinite(val.percentage)) return [dim, val.percentage];
+                return [dim, 0];
+            })
+        );
 
         await emailService.sendQuizReport(safeEmail, safeName, {
             overall:     safeScore,
