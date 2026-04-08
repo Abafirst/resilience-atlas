@@ -173,6 +173,12 @@ app.get('/kids', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
 });
 
+// /dashboard SPA route — must be before the public/ static middleware so the
+// legacy public/dashboard.html is never accidentally returned.
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'));
+});
+
 // Serve browser test UI at /index.html (and any other static assets in public/)
 app.use(express.static(path.join(__dirname, 'public')));
 
