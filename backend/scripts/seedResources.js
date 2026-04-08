@@ -22,17 +22,8 @@
 const path     = require('path');
 const mongoose = require('mongoose');
 
-const Resource = require(path.join(__dirname, '../models/Resource'));
-const resources = require('./resourceSeedData');
-
-// ── Helper: build the same URL-safe slug used by the model pre-save hook ──────
-function slugify(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 100);
-}
+const { seedResources } = require(path.join(__dirname, '../lib/seedResources'));
+const resources         = require('./resourceSeedData');
 
 // ── Main seed function ────────────────────────────────────────────────────────
 
@@ -48,40 +39,7 @@ async function seed() {
   await mongoose.connect(uri);
   console.log('Connected.\n');
 
-  let inserted = 0;
-  let updated  = 0;
-  let skipped  = 0;
-
-  for (const data of resources) {
-    const slug = slugify(data.title);
-    const doc  = { ...data, slug };
-
-    try {
-      // Use updateOne with upsert — the result.upsertedCount field tells us
-      // whether a new document was inserted (1) or an existing one updated (0),
-      // removing the need for a separate findOne lookup.
-      const result = await Resource.updateOne(
-        { slug },
-        { $set: doc },
-        { upsert: true, setDefaultsOnInsert: true }
-      );
-
-      if (result.upsertedCount > 0) {
-        inserted++;
-        console.log(`  [INSERTED] ${data.title}`);
-      } else {
-        updated++;
-        console.log(`  [UPDATED]  ${data.title}`);
-      }
-    } catch (err) {
-      if (err.code === 11000) {
-        skipped++;
-        console.warn(`  [SKIPPED]  ${data.title} (duplicate key — slug collision)`);
-      } else {
-        console.error(`  [ERROR]    ${data.title}: ${err.message}`);
-      }
-    }
-  }
+  const { inserted, updated, skipped } = await seedResources();
 
   console.log(`\nSeed complete.`);
   console.log(`  Inserted: ${inserted}`);

@@ -6,6 +6,7 @@ const Lead = require('../models/Lead');
 const AnalyticsEvent = require('../models/Analytics');
 const User = require('../models/User');
 const { authenticateJWT } = require('../middleware/auth');
+const { seedResources } = require('../lib/seedResources');
 
 // Rate limit: 60 requests per minute for admin routes
 const adminLimiter = rateLimit({
@@ -135,6 +136,31 @@ router.patch('/users/:id/role', authenticateJWT, requireAdmin, async (req, res) 
   } catch (err) {
     console.error('admin/users/role PATCH error:', err);
     return res.status(500).json({ error: 'Failed to update user role.' });
+  }
+});
+
+// ── POST /admin/seed-resources ──────────────────────────────
+// Idempotent upsert of the curated Resource Library into MongoDB.
+// Protected by a secret header — no JWT required.
+router.post('/seed-resources', async (req, res) => {
+  const secret = process.env.ADMIN_SEED_SECRET;
+
+  // Reject if the env var is not configured or the header is missing/wrong.
+  if (!secret || req.headers['x-admin-seed-secret'] !== secret) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  // Guard against a missing or unready database connection.
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(500).json({ error: 'Database not available.' });
+  }
+
+  try {
+    const { inserted, updated, skipped, total } = await seedResources();
+    return res.json({ inserted, updated, skipped, total });
+  } catch (err) {
+    console.error('admin/seed-resources POST error:', err);
+    return res.status(500).json({ error: 'Seed failed.', details: err.message });
   }
 });
 
