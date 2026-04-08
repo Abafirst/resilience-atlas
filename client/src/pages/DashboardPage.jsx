@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { AFFIRMATIONS_BY_DIMENSION, getDailyAffirmationAny } from '../data/affirmations';
 
 const DIMENSIONS = [
-  { key: 'Agentic',    label: 'Agentic',    icon: '⚡', description: 'Self-direction & initiative' },
-  { key: 'Relational', label: 'Relational',  icon: '🤝', description: 'Connection & support' },
-  { key: 'Spiritual',  label: 'Spiritual',   icon: '✨', description: 'Meaning & purpose' },
-  { key: 'Emotional',  label: 'Emotional',   icon: '💛', description: 'Feeling & adapting' },
-  { key: 'Somatic',    label: 'Somatic',     icon: '🌿', description: 'Body awareness & regulation' },
-  { key: 'Cognitive',  label: 'Cognitive',   icon: '🧠', description: 'Thought & narrative' },
+  { key: 'Agentic',    label: 'Agentic',    iconSrc: '/icons/agentic-generative.svg',    description: 'Self-direction & initiative' },
+  { key: 'Relational', label: 'Relational',  iconSrc: '/icons/relational-connective.svg', description: 'Connection & support' },
+  { key: 'Spiritual',  label: 'Spiritual',   iconSrc: '/icons/spiritual-reflective.svg',  description: 'Meaning & purpose' },
+  { key: 'Emotional',  label: 'Emotional',   iconSrc: '/icons/emotional-adaptive.svg',    description: 'Feeling & adapting' },
+  { key: 'Somatic',    label: 'Somatic',     iconSrc: '/icons/somatic-regulative.svg',    description: 'Body awareness & regulation' },
+  { key: 'Cognitive',  label: 'Cognitive',   iconSrc: '/icons/cognitive-narrative.svg',   description: 'Thought & narrative' },
 ];
 
 // Map from localStorage score keys (long form) to dashboard dimension keys (short form)
@@ -99,7 +99,7 @@ export default function DashboardPage() {
               color: 'var(--text-muted, #555)',
             }}
           >
-            📋 Connect your assessment results to see your scores.
+            Connect your assessment results to see your scores.
           </p>
         )}
       </div>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
           Dimension Scores
         </h2>
         <div className="dim-cards">
-          {DIMENSIONS.map(({ key, label, icon, description }) => {
+          {DIMENSIONS.map(({ key, label, iconSrc, description }) => {
             const score = hasScores ? scores[key] : null;
             const affirmations = AFFIRMATIONS_BY_DIMENSION[key] || [];
             const sampleAffirmation = affirmations.find(a => a.difficulty === 'foundational');
@@ -118,7 +118,7 @@ export default function DashboardPage() {
             return (
               <div key={key} className="dim-card" aria-label={`${label} resilience dimension`}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                  <span aria-hidden="true" style={{ fontSize: '1.3rem' }}>{icon}</span>
+                  <img src={iconSrc} alt="" aria-hidden="true" width="24" height="24" style={{ flexShrink: 0 }} />
                   <span className="dim-card__name">{label}</span>
                 </div>
                 <div
