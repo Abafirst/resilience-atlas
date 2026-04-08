@@ -2813,6 +2813,7 @@ export default function ResultsPage() {
               <a href="/" style={s.navLink}>Home</a>
               <a href="/assessment.html" style={s.navLink}>Assessment</a>
               <a href="/research.html" style={s.navLink}>Research</a>
+              <a href="/resources" style={s.navLink}>Resources</a>
               <a href="/teams" style={s.navLink}>Teams</a>
               <a href="/kids.html" style={s.navLink}>Kids</a>
               <a href="/about.html" style={s.navLink}>About</a>
@@ -2976,6 +2977,7 @@ export default function ResultsPage() {
             <a href="/" style={s.navLink}>Home</a>
             <a href="/assessment.html" style={s.navLink}>Assessment</a>
             <a href="/research.html" style={s.navLink}>Research</a>
+            <a href="/resources" style={s.navLink}>Resources</a>
             <a href="/teams" style={s.navLink}>Teams</a>
             <a href="/kids.html" style={s.navLink}>Kids</a>
             <a href="/about.html" style={s.navLink}>About</a>
