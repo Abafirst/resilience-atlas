@@ -20,7 +20,7 @@ const { COLORS, DIMENSION_COLORS, progressBar, ctaButton, wrapEmail } = require(
 const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
 
 /**
- * Normalise a score value to a plain number.
+ * Normalize a score value to a plain number.
  * Accepts either a plain number (legacy format) or an object with a
  * `.percentage` property (SPA format).  Returns 0 for anything else so
  * that templates never render NaN%.

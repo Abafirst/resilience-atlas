@@ -316,7 +316,7 @@ router.post('/email-report', emailReportLimiter, async (req, res) => {
         const rawScores = scores && typeof scores === 'object' && !Array.isArray(scores)
             ? scores
             : {};
-        // Normalise scores to plain numbers.  The React SPA stores each dimension
+        // Normalize scores to plain numbers.  The React SPA stores each dimension
         // value as { percentage: number } while legacy callers send plain numbers.
         // Accept both shapes; default to 0 for anything else (prevents NaN% in emails).
         const safeScores = Object.fromEntries(
