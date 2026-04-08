@@ -5,6 +5,7 @@ const DEFAULT_NAV_ITEMS = [
   { href: '/', label: 'Home', key: 'home' },
   { href: '/assessment', label: 'Assessment', key: 'assessment' },
   { href: '/research', label: 'Research', key: 'research' },
+  { href: '/resources', label: 'Resources', key: 'resources' },
   { href: '/teams', label: 'Teams', key: 'teams' },
   { href: '/kids', label: 'Kids', key: 'kids' },
   { href: '/about', label: 'About', key: 'about' },
