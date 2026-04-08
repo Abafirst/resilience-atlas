@@ -64,6 +64,18 @@ export const KIDS_VIDEO_STORIES = [
     ageGroup: ['age-5-7', 'age-8-10'],
     ageLabel: 'Ages 5–12',
   },
+  {
+    id: 'video-6',
+    youtubeId: '3kR4O5lINKM',
+    title: 'The Resilient Six and the Mystery of Maple Junctions',
+    subtitle: 'All Dimensions · Ages 5–12',
+    description:
+      'All aboard for another heartwarming adventure with the Resilience Friends! Join Builder the Beaver, Feeler the Fawn, Connector the Monkey, Grounder the Turtle, Guide the Owl, and Thinker the Fox as they explore the busy Maple Junction Train Station. When a worried chipmunk named Pip loses his special treasure box, the Resilience Friends jump into action—and discover that mistakes can lead to new friendships.',
+    duration: 'TBD',
+    dimension: 'All Dimensions',
+    ageGroup: ['age-5-7', 'age-8-10'],
+    ageLabel: 'Ages 5–12',
+  },
 ];
 
 export const VIDEO_AGE_FILTERS = [
