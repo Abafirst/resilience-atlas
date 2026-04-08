@@ -4,6 +4,7 @@ import DarkModeHint from '../components/DarkModeHint.jsx';
 // ── Branded icon maps (no generic emojis) ─────────────────────────────────────
 const DIMENSION_ICONS = {
   'Cognitive-Narrative':  '/icons/cognitive-narrative.svg',
+  // Uses emotional-adaptive.svg — the closest branded asset for this dimension
   'Emotional-Somatic':    '/icons/emotional-adaptive.svg',
   'Relational-Social':    '/icons/relational-connective.svg',
   'Agentic-Generative':   '/icons/agentic-generative.svg',
@@ -604,6 +605,7 @@ export default function ResourcesPage() {
   const [pages,     setPages]     = useState(1);
   const [loading,   setLoading]   = useState(true);
   const [error,     setError]     = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // ── Modal state ─────────────────────────────────────────────────────────────
   const [selected,        setSelected]        = useState(null);
@@ -659,7 +661,7 @@ export default function ResourcesPage() {
       });
 
     return () => { cancelled = true; };
-  }, [query, type, category, difficulty, dimension, sort, page]);
+  }, [query, type, category, difficulty, dimension, sort, page, retryCount]);
 
   // ── Filter helpers ──────────────────────────────────────────────────────────
   const handleSearch = () => {
@@ -799,7 +801,7 @@ export default function ResourcesPage() {
 
     {/* Utility links */}
     <div style={{ textAlign: 'center', marginTop: '.5rem' }}>
-      <a href="/api/resources/rss" target="_blank" rel="noopener noreferrer" style={{ fontSize: '.8rem', color: '#64748b', textDecoration: 'none' }}>
+      <a href="/api/resources/rss" target="_blank" rel="noopener noreferrer" aria-label="RSS Feed (opens in new tab)" style={{ fontSize: '.8rem', color: '#64748b', textDecoration: 'none' }}>
         <BrandIcon src="/icons/network.svg" size={12} /> RSS Feed
       </a>
       &nbsp;·&nbsp;
@@ -865,7 +867,7 @@ export default function ResourcesPage() {
           <button
             className="rl-btn rl-btn-outline"
             style={{ marginTop: '1rem' }}
-            onClick={() => setPage(p => p)}
+            onClick={() => setRetryCount(c => c + 1)}
           >
             Try again
           </button>
