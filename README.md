@@ -352,3 +352,60 @@ Once active, Railway logs will show:
 Remove the `DEBUG_STRIPE` variable (or set it to any value other than `true`) in Railway and redeploy. No debug logs will appear; the service returns to the default minimal logging.
 
 > ⚠️ **Never log `STRIPE_SECRET_KEY` or full request/session payloads.** The debug logs are designed to expose only error metadata and safe key prefixes (first 7 characters only, e.g. `sk_live_` or `sk_test_`), not actual key material.
+
+---
+
+## 📚 Resource Library Seed
+
+The Resource Library at `/resources` is populated by a database seed script that inserts evidence-based content curated from peer-reviewed journals, government health agencies (NIH, CDC, APA, WHO), and recognised researchers in ABA, ACT, Resilience Studies, Cross-Cultural Psychology, and Positive Psychology.
+
+### Resource seed scripts (located in `backend/scripts/`)
+
+| Script | Purpose |
+|--------|---------|
+| `resourceSeedData.js` | Data-only module — exports the array of 50 curated resources |
+| `seedResources.js` | Connects to MongoDB and upserts resources (idempotent) |
+| `validateResources.js` | Validates seed data against the schema without touching the DB |
+
+### Validate seed data (no DB required)
+
+Run the validation script to check all resources conform to the schema before seeding:
+
+```bash
+# From the backend/ directory
+npm run validate:resources
+
+# Or from the repo root
+node backend/scripts/validateResources.js
+```
+
+Expected output: all 50 resources `OK`, with a coverage report showing 7 resources per category and multiple types.
+
+### Seed the database
+
+```bash
+# From the backend/ directory
+MONGODB_URI=mongodb+srv://<user>:<pass>@<cluster>/dbname npm run seed:resources
+
+# Or from the repo root
+MONGODB_URI=<uri> node backend/scripts/seedResources.js
+```
+
+The script is **idempotent** — running it multiple times will update existing resources rather than create duplicates. Each resource is matched by its auto-generated slug.
+
+### Source label conventions
+
+Each resource `description` field includes a source label:
+
+| Label | Meaning |
+|-------|---------|
+| `[Peer-reviewed]` | Published in an academic journal or reviewed conference proceedings |
+| `[Gov/Academic]` | Government health agency (NIH, CDC, APA, HHS) or accredited university |
+| `[Expert-informed]` | Recognised researcher, clinician, or practitioner with published credentials |
+
+### Coverage
+
+- **7 resources per category**: nutrition, exercise, meditation, sleep, relationships, career, general
+- **Multiple types per category**: article, video, pdf (workbook), quiz, podcast, expert
+- **Focus areas**: ABA, ACT, Resilience Science, Cross-Cultural Research, Positive Psychology, Behavioral Science
+
