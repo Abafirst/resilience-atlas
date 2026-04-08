@@ -41,11 +41,24 @@ const ResilienceResultSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+
+  /**
+   * Deterministic MD5 hash of (overall|dominantType|JSON.stringify(scores)).
+   * Stored at submission time so /api/assessment/by-hash can look up an
+   * assessment directly without scanning and recomputing hashes.
+   * Sparse index — null/missing for records created before this field existed.
+   */
+  assessmentHash: {
+    type: String,
+    default: null,
+  },
 });
 
 // Index for efficient org-level aggregation queries
 ResilienceResultSchema.index({ userId: 1 });
 ResilienceResultSchema.index({ organizationId: 1, createdAt: -1 });
+// Fast by-hash lookup (used by GET /api/assessment/by-hash)
+ResilienceResultSchema.index({ email: 1, assessmentHash: 1 }, { sparse: true });
 
 module.exports = mongoose.model('ResilienceResult', ResilienceResultSchema);

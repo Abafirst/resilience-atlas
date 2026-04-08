@@ -11,6 +11,7 @@ const ResilienceReport = require('../models/ResilienceReport');
 const { calculateEvolution } = require('../services/evolution');
 const { generateNarrativeReport } = require('../services/reportGenerator');
 const { buildResultsHash } = require('../services/reportService');
+const { buildAssessmentHash } = require('../services/assessmentAccessControl');
 const QuizFeedback = require('../models/QuizFeedback');
 const ReminderOptIn = require('../models/ReminderOptIn');
 
@@ -125,6 +126,14 @@ router.post('/', async (req, res) => {
 
         const result = scoreResilienceAnswers(answers);
 
+        // Compute a deterministic hash to identify this specific assessment attempt.
+        // Stored in ResilienceResult so it can be looked up directly by hash later.
+        const assessmentHash = buildAssessmentHash(
+            String(result.overall),
+            result.dominantType,
+            JSON.stringify(result.scores)
+        );
+
         // Save to MongoDB (non-blocking — does not affect response)
         ResilienceResult.create({
             email,
@@ -132,6 +141,7 @@ router.post('/', async (req, res) => {
             overall: result.overall,
             dominantType: result.dominantType,
             scores: result.scores,
+            assessmentHash,
         }).catch(err => logger.error('Failed to save resilience result:', err));
 
         res.status(200).json(result);
@@ -327,11 +337,21 @@ router.post('/email-report', emailReportLimiter, async (req, res) => {
             })
         );
 
+        // Compute the assessment hash from the original (non-normalised) scores so
+        // the link matches the hash stored when the quiz was submitted.  This lets
+        // the email CTA deep-link directly to the correct assessment.
+        const assessmentHash = buildAssessmentHash(
+            String(safeScore),
+            safeDominant,
+            JSON.stringify(rawScores)
+        );
+
         await emailService.sendQuizReport(safeEmail, safeName, {
-            overall:     safeScore,
+            overall:      safeScore,
             dominantType: safeDominant,
-            categories:  safeScores,
-            summary:     '',
+            categories:   safeScores,
+            summary:      '',
+            assessmentHash,
         });
 
         logger.info(`Quiz email-report sent to ${safeEmail}`);

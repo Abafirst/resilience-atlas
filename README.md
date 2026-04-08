@@ -444,3 +444,44 @@ Each resource `description` field includes a source label:
 - **Multiple types per category**: article, video, pdf (workbook), quiz, podcast, expert
 - **Focus areas**: ABA, ACT, Resilience Science, Cross-Cultural Research, Positive Psychology, Behavioral Science
 
+---
+
+## 📧 Email Link Behaviour (View Full Report)
+
+When a user receives a "View Full Report" email after completing the Resilience Atlas™ assessment, the CTA button links to:
+
+```
+/login?returnTo=/results?hash=<assessmentHash>
+```
+
+### How it works
+
+1. **Email CTA** — the backend computes a deterministic MD5 hash from the assessment's `overall` score, `dominantType`, and `JSON.stringify(scores)` and embeds it in the return-to URL.
+2. **Login gate** — the link routes through `/login` first, so unauthenticated users are prompted to sign in before viewing their data.
+3. **Deep link** — after successful login, Auth0 redirects the browser to `/results?hash=<hash>`.
+4. **Server-side fetch** — `ResultsPage` detects the `?hash=` parameter, calls `GET /api/assessment/by-hash?hash=<hash>` with the user's Auth0 Bearer token, and populates the results page with the returned data.
+5. **PDF download** — PDF access is still gated: only users with a completed **Atlas Starter** purchase (for that specific assessment) or **Atlas Navigator / higher** can download. The hash alone does not bypass payment gating.
+
+### Endpoint: `GET /api/assessment/by-hash`
+
+| Property | Value |
+|----------|-------|
+| Auth      | Required — Bearer JWT (Auth0) |
+| Query     | `hash` — 32-char hex MD5 string |
+| Response  | `{ overall, dominantType, scores, email, createdAt }` |
+| Access    | Restricted to the authenticated user's own email |
+
+The endpoint looks up the assessment in `ResilienceResult` (indexed by `email + assessmentHash`), falling back to a scan of recent records and then `Purchase.assessmentData` for older entries.
+
+### Hash algorithm
+
+```js
+const assessmentHash = crypto
+  .createHash('md5')
+  .update(`${overall}|${dominantType}|${JSON.stringify(scores)}`)
+  .digest('hex');
+```
+
+This matches the algorithm used by `/api/report/generate` (`buildJobHash` in `backend/routes/report.js`) and `buildAssessmentHash` in `backend/services/assessmentAccessControl.js`.
+
+

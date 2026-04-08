@@ -1998,6 +1998,7 @@ export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
   const upgradeParam  = params.get('upgrade');   // 'success' | 'cancelled'
   const sessionId     = params.get('session_id');
+  const hashParam     = params.get('hash');      // assessment hash from email CTA deep link
 
   // ── Auth0 ──────────────────────────────────────────────────────────────
   const { user: auth0User, isAuthenticated, isLoading: auth0Loading, loginWithRedirect, getAccessTokenSilently } = useAuth0();
@@ -2021,6 +2022,8 @@ export default function ResultsPage() {
   const [isCurrentAssessmentUnlocked, setIsCurrentAssessmentUnlocked] = useState(null);
   // Whether user has unlock modal open (shown automatically for users without PDF access).
   const [showUnlockModal, setShowUnlockModal] = useState(false);
+  // True while loading results from the API via a ?hash= deep link.
+  const [hashLoading, setHashLoading] = useState(!!hashParam);
 
   // ── Upsell modal & promo-banner state ─────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
@@ -2107,6 +2110,9 @@ export default function ResultsPage() {
 
   // ── Load results from localStorage ────────────────────────────────────
   useEffect(() => {
+    // When arriving from an email deep link (?hash=...) do not load from
+    // localStorage — results will be fetched from the API by the hash effect.
+    if (hashParam) return;
     try {
       const raw = localStorage.getItem('resilience_results');
       if (raw) {
@@ -2126,7 +2132,67 @@ export default function ResultsPage() {
         }
       }
     } catch (_) { /* ignore parse errors */ }
-  }, []);
+  }, [hashParam]);
+
+  // ── Load results from API when URL contains ?hash= (email deep link) ──
+  // Flow:
+  //  1. User clicks "View Full Report" in email → /login?returnTo=/results?hash=...
+  //  2. After Auth0 login, user lands on /results?hash=<hash>
+  //  3. This effect fetches the assessment data from the backend.
+  //  4. If the user is not authenticated, they are redirected to login with
+  //     returnTo preserved so the flow completes after sign-in.
+  useEffect(() => {
+    if (!hashParam) return;
+
+    // Wait for Auth0 to finish initialising before deciding on auth state.
+    if (auth0Loading) return;
+
+    if (!isAuthenticated) {
+      // Redirect to Auth0 login.  The returnTo includes the hash so the user
+      // lands on the correct deep link after logging in.
+      loginWithRedirect({
+        appState: { returnTo: window.location.pathname + window.location.search },
+      });
+      return;
+    }
+
+    // Authenticated — fetch assessment data from the server.
+    let cancelled = false;
+    setHashLoading(true);
+
+    (async () => {
+      try {
+        const data = await apiFetch(
+          `/api/assessment/by-hash?hash=${encodeURIComponent(hashParam)}`,
+          {},
+          getAccessTokenSilently
+        ).then(r => r.json());
+
+        if (cancelled) return;
+
+        if (data && data.overall !== undefined) {
+          setResults(data);
+          window.resilience_results = data;
+        } else {
+          setBanner({
+            type: 'error',
+            message: data.error || 'Assessment not found. It may have been deleted or is not linked to your account.',
+          });
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setBanner({
+            type: 'error',
+            message: 'Unable to load assessment. Please try again or re-take the quiz.',
+          });
+        }
+      } finally {
+        if (!cancelled) setHashLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [hashParam, auth0Loading, isAuthenticated]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Confetti celebration — fire 600 ms after results load ─────────────
   useEffect(() => {
@@ -2355,11 +2421,17 @@ export default function ResultsPage() {
   // so the backend can check per-assessment access for Atlas Starter users.
   // Sets tierCheckComplete so the download UI only renders after backend responds.
   // Waits for Auth0 to finish loading so the user's email is available.
+  // Also waits when loading from a hash deep link (hashLoading) so the results
+  // state is populated before the access check runs.
   useEffect(() => {
     if (auth0Loading) {
       // Auth0 is still initialising — hold off until we know the user's identity.
       return;
     }
+
+    // If we are still loading assessment data via a hash deep link, wait until
+    // that completes so `results` is populated before we run the access check.
+    if (hashLoading) return;
 
     const email = getEffectiveEmail();
     if (!email) {
@@ -2370,16 +2442,17 @@ export default function ResultsPage() {
     }
 
     // Build URL with current assessment data so the backend can check per-assessment unlock.
+    // Prefer the already-resolved `results` state over a fresh localStorage read so that
+    // hash-loaded assessments (from the email deep link) are also checked correctly.
     let accessUrl = `/api/report/access?email=${encodeURIComponent(email)}`;
     try {
-      const raw = localStorage.getItem('resilience_results');
-      if (raw) {
-        const r = JSON.parse(raw);
-        if (r.overall !== undefined && r.scores) {
-          accessUrl += `&overall=${encodeURIComponent(String(r.overall))}`;
-          accessUrl += `&dominantType=${encodeURIComponent(r.dominantType || '')}`;
-          accessUrl += `&scores=${encodeURIComponent(JSON.stringify(r.scores))}`;
-        }
+      const r = results || (() => {
+        try { return JSON.parse(localStorage.getItem('resilience_results') || 'null'); } catch { return null; }
+      })();
+      if (r && r.overall !== undefined && r.scores) {
+        accessUrl += `&overall=${encodeURIComponent(String(r.overall))}`;
+        accessUrl += `&dominantType=${encodeURIComponent(r.dominantType || '')}`;
+        accessUrl += `&scores=${encodeURIComponent(JSON.stringify(r.scores))}`;
       }
     } catch (_) { /* ignore */ }
 
@@ -2404,7 +2477,7 @@ export default function ResultsPage() {
       .finally(() => {
         setTierCheckComplete(true);
       });
-  }, [auth0Loading, isAuthenticated, auth0User, results]);
+  }, [auth0Loading, isAuthenticated, auth0User, results, hashLoading]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
@@ -2714,7 +2787,7 @@ export default function ResultsPage() {
     // While Auth0 is still initializing we don't know the user's identity yet.
     // Show a loading spinner rather than the empty state so we don't flash
     // "No assessment results found" for authenticated users.
-    if (auth0Loading) {
+    if (auth0Loading || hashLoading) {
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f8fc' }}>
           <span style={{ color: '#718096', fontSize: 16 }}>Loading your results…</span>
