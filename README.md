@@ -287,6 +287,18 @@ In the Auth0 dashboard (**Applications → Your App → Settings**), configure t
 
 > ⚠️ To use `useRefreshTokens={true}` without silent-auth failures, enable **Refresh Token Rotation** in Auth0 → Applications → Your App → **Refresh Token Rotation** and set an appropriate idle/absolute expiry.
 
+### Troubleshooting: "Auth0 token unavailable… Missing Refresh Token"
+
+If the browser console shows `Auth0 token unavailable... Missing Refresh Token` and the `/api/gamification/progress/quest-complete` endpoint returns **401 Unauthorized**, the Auth0 SPA SDK could not silently renew the access token.  Common causes and fixes:
+
+| Cause | Fix |
+|---|---|
+| **Refresh Token Rotation not enabled** | Auth0 Dashboard → Applications → Your App → Settings → **Refresh Token Rotation** → enable it.  Set a reasonable idle expiry (e.g. 30 days) and absolute expiry (e.g. 365 days). |
+| **`offline_access` scope not requested** | Ensure `authorizationParams.scope` includes `offline_access` in `client/src/main.jsx` (already set as of this fix).  Without this scope, Auth0 will not issue a refresh token. |
+| **Third-party cookies blocked** | `useRefreshTokens={true}` and `cacheLocation="localstorage"` (both already set) make the SPA independent of third-party cookies.  Ensure no browser extension or proxy is stripping the `Set-Cookie` header during the Auth0 redirect. |
+| **User session expired / logged out** | The SPA will automatically call `loginWithRedirect({ appState: { returnTo: '/gamification' } })` and restore the user's position after login. |
+| **`AUTH0_AUDIENCE` missing on server** | Without the audience, Auth0 issues opaque tokens that the backend cannot validate (→ 401).  Set `AUTH0_AUDIENCE=https://theresilienceatlas.com/api` in Railway variables. |
+
 ### SPA-friendly `/login` and `/register` routes
 
 `GET /login` and `GET /register` are **SPA-friendly redirects** that send users to the React SPA at `/results-history` rather than generating a server-side Auth0 authorize URL. The old behaviour caused an Auth0 "Callback URL mismatch" error in production because the server used `http://localhost:3000/callback` as `redirect_uri`.

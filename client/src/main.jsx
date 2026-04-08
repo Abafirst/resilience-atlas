@@ -123,6 +123,13 @@ async function init() {
         authorizationParams={{
           redirect_uri: redirectUri,
           ...(audience ? { audience } : {}),
+          // Request offline_access so Auth0 issues a refresh token alongside
+          // the access token.  This is required for useRefreshTokens={true}
+          // (below) to succeed — without it, getAccessTokenSilently() falls
+          // back to the hidden-iframe approach, which fails in browsers that
+          // block third-party cookies and produces the
+          // "Auth0 token unavailable… Missing Refresh Token" warning.
+          scope: 'openid profile email offline_access',
         }}
         // After a successful login Auth0 calls this with the appState that was
         // passed to loginWithRedirect.  We use it to navigate deterministically
