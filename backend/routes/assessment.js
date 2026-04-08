@@ -20,6 +20,7 @@ const express    = require('express');
 const rateLimit  = require('express-rate-limit');
 const Purchase   = require('../models/Purchase');
 const ResilienceResult = require('../models/ResilienceResult');
+const User       = require('../models/User');
 const stripe     = require('../config/stripe');
 const {
     canDownloadReport,
@@ -29,6 +30,7 @@ const {
     buildAssessmentHash,
     BLANKET_ACCESS_TIERS,
 } = require('../services/assessmentAccessControl');
+const { authenticateJWT } = require('../middleware/auth');
 const logger = require('../utils/logger');
 
 /** Per-tier amounts in cents used for inline payment intent creation. */
@@ -518,6 +520,136 @@ router.post('/unlock-payment/confirm', async (req, res) => {
     } catch (err) {
         logger.error('[assessment/unlock-payment/confirm] error:', err.message);
         return res.status(500).json({ error: 'Failed to confirm payment. Please contact support.' });
+    }
+});
+
+// ── GET /api/assessment/by-hash ──────────────────────────────────────────────
+
+/**
+ * Return the assessment data (overall/dominantType/scores) for a specific
+ * assessment identified by its MD5 hash.
+ *
+ * This endpoint is called by the /results page when the URL contains ?hash=...
+ * (e.g. after the user clicks "View Full Report" in a results email).
+ *
+ * Authentication: required (Bearer JWT via Auth0).
+ * Access control: only returns data owned by the authenticated user's email.
+ *
+ * Query params:
+ *   hash (required) — 32-char hex MD5 hash
+ *
+ * Response:
+ *   { overall, dominantType, scores, email, createdAt }
+ */
+router.get('/by-hash', authenticateJWT, async (req, res) => {
+    const { hash } = req.query;
+
+    if (!hash || typeof hash !== 'string' || !/^[0-9a-f]{32}$/i.test(hash)) {
+        return res.status(400).json({ error: 'A valid 32-character hash is required.' });
+    }
+
+    // Resolve the authenticated user's email.  Auth0 access tokens may or may
+    // not carry the email claim depending on the API configuration, so fall back
+    // to a User model lookup by subject (sub) when needed.
+    let userEmail = req.user && (req.user.email || null);
+
+    if (!userEmail && req.user && req.user.userId) {
+        try {
+            const userDoc = await User.findById(req.user.userId).select('email').lean();
+            if (userDoc && userDoc.email) {
+                userEmail = userDoc.email;
+            }
+        } catch (_) { /* non-fatal — return 403 below if still null */ }
+    }
+
+    if (!userEmail) {
+        return res.status(403).json({ error: 'Email not available in access token. Please re-authenticate.' });
+    }
+
+    const cleanEmail = String(userEmail).toLowerCase().trim();
+    const safeHash   = String(hash).toLowerCase();
+
+    try {
+        // ── Primary: direct indexed lookup ───────────────────────────────────
+        // Records created after the assessmentHash field was added include the
+        // hash directly, enabling an efficient indexed query.
+        let record = await ResilienceResult.findOne({
+            email:          cleanEmail,
+            assessmentHash: safeHash,
+        }).lean();
+
+        // ── Fallback: scan recent records and compute hash on-the-fly ─────────
+        // Handles records created before the assessmentHash field existed.
+        if (!record) {
+            const recentResults = await ResilienceResult.find({ email: cleanEmail })
+                .sort({ createdAt: -1 })
+                .limit(100)
+                .lean();
+
+            for (const r of recentResults) {
+                let scoresObj = r.scores;
+                // Mongoose Map → plain object (lean() should already do this, but
+                // keep the guard for safety).
+                if (scoresObj && typeof scoresObj.toObject === 'function') {
+                    scoresObj = scoresObj.toObject();
+                }
+                const computed = buildAssessmentHash(
+                    String(r.overall || 0),
+                    r.dominantType || '',
+                    JSON.stringify(scoresObj || {})
+                );
+                if (computed === safeHash) {
+                    record = { ...r, scores: scoresObj };
+                    break;
+                }
+            }
+        }
+
+        if (record) {
+            let scoresObj = record.scores;
+            if (scoresObj && typeof scoresObj.toObject === 'function') {
+                scoresObj = scoresObj.toObject();
+            }
+            return res.json({
+                overall:      record.overall,
+                dominantType: record.dominantType,
+                scores:       scoresObj,
+                email:        cleanEmail,
+                createdAt:    record.createdAt,
+            });
+        }
+
+        // ── Last-resort fallback: check Purchase.assessmentData ───────────────
+        // Atlas-Starter purchases store assessment data at the time of purchase;
+        // this covers the case where a ResilienceResult record was not saved.
+        const purchases = await Purchase.find({
+            email:  cleanEmail,
+            status: 'completed',
+        }).lean();
+
+        for (const p of purchases) {
+            if (!p.assessmentData || !p.assessmentData.scores) continue;
+            const scoresObj = p.assessmentData.scores;
+            const computed  = buildAssessmentHash(
+                String(p.assessmentData.overall),
+                p.assessmentData.dominantType || '',
+                JSON.stringify(scoresObj)
+            );
+            if (computed === safeHash) {
+                return res.json({
+                    overall:      p.assessmentData.overall,
+                    dominantType: p.assessmentData.dominantType,
+                    scores:       scoresObj,
+                    email:        cleanEmail,
+                    createdAt:    p.purchasedAt || p.createdAt,
+                });
+            }
+        }
+
+        return res.status(404).json({ error: 'Assessment not found.' });
+    } catch (err) {
+        logger.error('[assessment/by-hash] error:', err.message);
+        return res.status(503).json({ error: 'Unable to retrieve assessment. Please try again shortly.' });
     }
 });
 

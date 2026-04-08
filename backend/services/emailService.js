@@ -134,18 +134,31 @@ async function sendAssessmentResults(to, vars) {
  *
  * @param {string} to
  * @param {string} name
- * @param {Object} report  { overall, dominantType, categories, summary }
+ * @param {Object} report  { overall, dominantType, categories, summary, assessmentHash? }
  */
 async function sendQuizReport(to, name, report) {
-  const scores = report.categories || {};
+  const scores  = report.categories || {};
+  const appUrl  = process.env.APP_URL || 'https://resilience-atlas.app';
+
+  // Build a hash-based deep link when the caller supplies an assessment hash.
+  // The link routes through /login so unauthenticated users are prompted to
+  // sign in before being redirected to their specific results.
+  let reportLink;
+  if (report.assessmentHash) {
+    const returnTo = `/results?hash=${report.assessmentHash}`;
+    reportLink = `${appUrl}/login?returnTo=${encodeURIComponent(returnTo)}`;
+  } else {
+    reportLink = `${appUrl}/results`;
+  }
+
   const vars = {
     firstName:         name,
     overallScore:      report.overall,
     dominantDimension: report.dominantType,
     scores,
     topInsight:        report.summary,
-    reportLink:        `${process.env.APP_URL || 'https://resilience-atlas.app'}/results`,
-    retakeLink:        `${process.env.APP_URL || 'https://resilience-atlas.app'}/quiz`,
+    reportLink,
+    retakeLink:        `${appUrl}/quiz`,
   };
   return sendAssessmentResults(to, vars);
 }
