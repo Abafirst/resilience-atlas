@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import { NAVIGATION_PATHWAYS } from '../../data/gamificationContent.js';
 import { playPathwayStartSound } from '../../utils/soundEffects.js';
 
@@ -173,6 +174,7 @@ const s = {
  *   onSetChallenge — function(dimension, difficulty) → Promise
  */
 export default function NavigationPathways({ progress, onSetChallenge }) {
+  const { loginWithRedirect } = useAuth0();
   const [selected, setSelected]     = useState(null);
   const [starting, setStarting]     = useState(false);
   const [startError, setStartError] = useState(null);
@@ -189,7 +191,10 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
   }, []);
 
   const handleStart = async (pathway) => {
-    if (!onSetChallenge) return;
+    if (!onSetChallenge) {
+      setStartError('Atlas Navigator is required to start pathways. Please upgrade your plan to continue.');
+      return;
+    }
     setStarting(true);
     setStartError(null);
     try {
@@ -341,6 +346,26 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
                       textAlign: 'left',
                     }}>
                       ⚠️ {startError}
+                      {(startError.toLowerCase().includes('session') || startError.toLowerCase().includes('sign in')) && (
+                        <button
+                          onClick={() => loginWithRedirect({ appState: { returnTo: '/gamification' } })}
+                          style={{
+                            display: 'block',
+                            marginTop: 6,
+                            padding: '4px 12px',
+                            borderRadius: 6,
+                            border: '1px solid #dc2626',
+                            background: '#dc2626',
+                            color: '#fff',
+                            cursor: 'pointer',
+                            fontSize: 12,
+                            fontWeight: 600,
+                            fontFamily: 'inherit',
+                          }}
+                        >
+                          Sign In Again
+                        </button>
+                      )}
                     </div>
                   )}
                   <button

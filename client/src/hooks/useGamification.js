@@ -43,12 +43,24 @@ export default function useGamification() {
       const token = await getAccessTokenSilently();
       if (token) headers.Authorization = `Bearer ${token}`;
     } catch (_) {
-      // No token available — fall back to localStorage (legacy path)
+      // No token available from Auth0 — fall back to localStorage (legacy path)
       const stored = localStorage.getItem('token') || sessionStorage.getItem('token');
-      if (stored) headers.Authorization = `Bearer ${stored}`;
+      if (stored) {
+        headers.Authorization = `Bearer ${stored}`;
+      } else if (isAuthenticated) {
+        // The user appears authenticated but we cannot obtain a token. The Auth0
+        // session may have expired or silent token renewal failed. Throw a
+        // user-friendly error so callers surface a "sign in again" prompt rather
+        // than letting the request go out without credentials and receiving a raw
+        // 401 "Access denied. No token provided." message from the API.
+        const authErr = new Error('Your session has expired. Please sign in again to continue.');
+        authErr.status = 401;
+        authErr.isAuthError = true;
+        throw authErr;
+      }
     }
     return headers;
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated]);
 
   const apiFetch = useCallback(async (path, options = {}) => {
     const headers = await getHeaders();
@@ -89,10 +101,13 @@ export default function useGamification() {
       const data = await apiFetch('/progress');
       setProgress(data.progress);
     } catch (err) {
-      if (err.status === 402) {
+      if (err.status === 402 || err.status === 403) {
         setTierBlocked(true);
         // Preserve the server's error message so callers can surface it if needed.
-        setError(err.message || 'A paid tier is required to access gamification features.');
+        setError(err.message || 'A paid tier (Atlas Starter or above) is required to access gamification features.');
+      } else if (err.isAuthError || err.status === 401) {
+        // Session expired or token missing — surface a sign-in prompt.
+        setError(err.message || 'Your session has expired. Please sign in again to continue.');
       } else {
         setError(err.message || 'Could not load gamification data.');
       }
