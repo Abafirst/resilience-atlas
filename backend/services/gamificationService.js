@@ -321,12 +321,11 @@ async function getLeaderboard(period, limit = 10) {
     .find({ leaderboardOptIn: true, ...dateFilter })
     .sort({ totalPoints: -1 })
     .limit(limit)
-    .populate('userId', 'username')
     .lean();
 
   return entries.map((e, idx) => ({
     rank:          idx + 1,
-    username:      e.userId?.username || 'Anonymous',
+    username:      'Anonymous',
     totalPoints:   e.totalPoints,
     currentStreak: e.currentStreak.days,
     badgeCount:    e.badges.length,

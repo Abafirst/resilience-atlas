@@ -86,9 +86,7 @@ jest.mock('../backend/models/GamificationProgress', () => {
   MockModel.find       = jest.fn().mockReturnValue({
     sort: jest.fn().mockReturnValue({
       limit: jest.fn().mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          lean: jest.fn().mockResolvedValue([]),
-        }),
+        lean: jest.fn().mockResolvedValue([]),
       }),
     }),
   });
@@ -165,6 +163,11 @@ function authTokenWithEmail(email = 'user@example.com', id = 'user001') {
   return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
+/** Token simulating an Auth0-normalised payload (userId + sub, no id field). */
+function authTokenAuth0(sub = 'auth0|user001') {
+  return jwt.sign({ userId: sub, sub }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
+
 // ── Route tests ───────────────────────────────────────────────────────────────
 
 describe('GET /api/gamification/progress', () => {
@@ -177,6 +180,14 @@ describe('GET /api/gamification/progress', () => {
     const res = await request(app)
       .get('/api/gamification/progress')
       .set('Authorization', `Bearer ${authToken()}`);
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('progress');
+  });
+
+  test('returns 200 with progress for Auth0-authenticated user (sub-based userId)', async () => {
+    const res = await request(app)
+      .get('/api/gamification/progress')
+      .set('Authorization', `Bearer ${authTokenAuth0('auth0|abc123')}`);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('progress');
   });
