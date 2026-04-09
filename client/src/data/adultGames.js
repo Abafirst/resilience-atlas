@@ -16,12 +16,12 @@
 // ── Dimension color map ──────────────────────────────────────────────────────
 
 export const DIMENSION_COLORS = {
-  'Agentic-Generative':   { bg: '#fef9c3', accent: '#854d0e', border: '#fde68a', icon: '/icons/agentic-generative.svg' },
-  'Relational-Connective':{ bg: '#ede9fe', accent: '#7c3aed', border: '#ddd6fe', icon: '/icons/relational-connective.svg' },
-  'Emotional-Adaptive':   { bg: '#ffe4e6', accent: '#be123c', border: '#fecdd3', icon: '/icons/emotional-adaptive.svg' },
-  'Spiritual-Reflective': { bg: '#f0fdf4', accent: '#065f46', border: '#bbf7d0', icon: '/icons/spiritual-reflective.svg' },
-  'Somatic-Regulative':   { bg: '#dcfce7', accent: '#15803d', border: '#bbf7d0', icon: '/icons/somatic-regulative.svg' },
-  'Cognitive-Narrative':  { bg: '#e0f2fe', accent: '#0284c7', border: '#bae6fd', icon: '/icons/cognitive-narrative.svg' },
+  'Agentic-Generative':   { bg: '#f5f3ff', accent: '#8b5cf6', border: 'rgba(139,92,246,0.28)',  glow: 'rgba(139,92,246,0.35)', gradient: 'linear-gradient(135deg,#8b5cf6,#6366f1)', icon: '/icons/agentic-generative.svg' },
+  'Relational-Connective':{ bg: '#f0fdfa', accent: '#14b8a6', border: 'rgba(20,184,166,0.28)',  glow: 'rgba(20,184,166,0.35)', gradient: 'linear-gradient(135deg,#14b8a6,#22c55e)', icon: '/icons/relational-connective.svg' },
+  'Emotional-Adaptive':   { bg: '#fdf2f8', accent: '#ec4899', border: 'rgba(236,72,153,0.28)',  glow: 'rgba(236,72,153,0.35)', gradient: 'linear-gradient(135deg,#ec4899,#f43f5e)', icon: '/icons/emotional-adaptive.svg' },
+  'Spiritual-Reflective': { bg: '#fffbeb', accent: '#f59e0b', border: 'rgba(245,158,11,0.28)',  glow: 'rgba(245,158,11,0.35)', gradient: 'linear-gradient(135deg,#f59e0b,#f97316)', icon: '/icons/spiritual-reflective.svg' },
+  'Somatic-Regulative':   { bg: '#ecfeff', accent: '#06b6d4', border: 'rgba(6,182,212,0.28)',   glow: 'rgba(6,182,212,0.35)',  gradient: 'linear-gradient(135deg,#06b6d4,#14b8a6)', icon: '/icons/somatic-regulative.svg' },
+  'Cognitive-Narrative':  { bg: '#eef2ff', accent: '#4f46e5', border: 'rgba(79,70,229,0.28)',   glow: 'rgba(79,70,229,0.35)',  gradient: 'linear-gradient(135deg,#4f46e5,#3b82f6)', icon: '/icons/cognitive-narrative.svg' },
 };
 
 // ── Starter Micro-Quests ─────────────────────────────────────────────────────

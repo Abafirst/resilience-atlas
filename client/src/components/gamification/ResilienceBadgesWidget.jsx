@@ -3,10 +3,10 @@ import { STARTER_BADGES, NAVIGATOR_BADGES } from '../../data/gamificationContent
 
 // ── Rarity tier config ────────────────────────────────────────────────────────
 const RARITY_CONFIG = {
-  common:    { label: 'Bronze',   bg: '#fef3c7', color: '#92400e', border: 'rgba(146,64,14,0.22)',  glow: 'rgba(180,120,0,0.22)',  icon: '🥉' },
-  uncommon:  { label: 'Silver',   bg: '#f1f5f9', color: '#475569', border: 'rgba(71,85,105,0.25)',  glow: 'rgba(100,116,139,0.3)', icon: '🥈' },
-  rare:      { label: 'Gold',     bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(29,78,216,0.25)',  glow: 'rgba(59,130,246,0.3)',  icon: '🥇' },
-  legendary: { label: 'Platinum', bg: '#fdf4ff', color: '#7e22ce', border: 'rgba(126,34,206,0.28)', glow: 'rgba(168,85,247,0.4)',  icon: '💎' },
+  common:    { label: 'Bronze',   bg: '#fef3c7', color: '#92400e', border: 'rgba(146,64,14,0.22)',  glow: 'rgba(180,120,0,0.32)',   gradient: 'linear-gradient(135deg,#d97706,#f59e0b)', icon: '🥉' },
+  uncommon:  { label: 'Silver',   bg: '#f0f9ff', color: '#0369a1', border: 'rgba(3,105,161,0.25)',  glow: 'rgba(14,165,233,0.35)',  gradient: 'linear-gradient(135deg,#0369a1,#0ea5e9)', icon: '🥈' },
+  rare:      { label: 'Gold',     bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(29,78,216,0.25)',  glow: 'rgba(59,130,246,0.35)',  gradient: 'linear-gradient(135deg,#1d4ed8,#6366f1)', icon: '🥇' },
+  legendary: { label: 'Platinum', bg: '#fdf4ff', color: '#7e22ce', border: 'rgba(126,34,206,0.28)', glow: 'rgba(168,85,247,0.45)',  gradient: 'linear-gradient(135deg,#7e22ce,#a855f7)', icon: '💎' },
 };
 
 /**
@@ -21,6 +21,8 @@ function BadgeCard({ badge }) {
     <div
       role="article"
       aria-label={`${badge.name}${badge.earned ? ' — earned' : ' — locked'}`}
+      className="gam-badge-card"
+      tabIndex={0}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -35,10 +37,11 @@ function BadgeCard({ badge }) {
         gap: 8,
         textAlign: 'center',
         cursor: 'default',
-        transition: 'all 0.2s ease',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         opacity: badge.earned ? 1 : 0.55,
-        boxShadow: hovered && badge.earned ? `0 8px 24px ${cfg.glow}` : 'none',
-        transform: hovered ? 'translateY(-4px)' : 'none',
+        boxShadow: hovered && badge.earned ? `0 8px 28px ${cfg.glow}` : (badge.earned ? '0 2px 8px rgba(0,0,0,0.06)' : 'none'),
+        transform: hovered && badge.earned ? 'translateY(-4px)' : 'none',
+        filter: badge.earned ? 'none' : 'grayscale(0.4)',
       }}
     >
       {/* Rarity tier pill */}
@@ -55,13 +58,22 @@ function BadgeCard({ badge }) {
       {/* Icon container */}
       <div style={{
         width: 54, height: 54, borderRadius: 14,
-        background: badge.earned ? `${cfg.color}1a` : 'rgba(0,0,0,0.06)',
+        position: 'relative',
+        background: badge.earned ? cfg.gradient : 'rgba(0,0,0,0.06)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: badge.earned && hovered ? `0 0 18px ${cfg.glow}` : 'none',
-        transition: 'box-shadow 0.2s',
+        boxShadow: badge.earned ? (hovered ? `0 0 20px ${cfg.glow}` : `0 4px 12px ${cfg.glow}`) : 'none',
+        transition: 'box-shadow 0.2s ease',
       }}>
+        {badge.earned && (
+          <span style={{
+            position: 'absolute', inset: -3, borderRadius: 17,
+            border: '2px solid #34d399',
+            boxShadow: '0 0 8px rgba(52,211,153,0.5)',
+          }} aria-hidden="true" />
+        )}
         {badge.earned
-          ? <img src={badge.icon} alt="" aria-hidden="true" width={32} height={32} />
+          ? <img src={badge.icon} alt="" aria-hidden="true" width={30} height={30}
+              style={{ filter: 'brightness(0) invert(1)' }} />
           : <img src="/icons/lock.svg" alt="" aria-hidden="true" width={22} height={22} style={{ opacity: 0.35 }} />
         }
       </div>

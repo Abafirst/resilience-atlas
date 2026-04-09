@@ -3,14 +3,14 @@ import { NAVIGATION_MILESTONES } from '../../data/gamificationContent.js';
 
 // ── Dimension colour config ───────────────────────────────────────────────────
 const DIM_CONFIG = {
-  'Agentic-Generative':    { color: '#f97316', light: '#fff7ed', border: 'rgba(249,115,22,0.25)',  label: 'Agentic' },
-  'Relational-Connective': { color: '#ec4899', light: '#fdf2f8', border: 'rgba(236,72,153,0.25)',  label: 'Relational' },
-  'Spiritual-Reflective':  { color: '#8b5cf6', light: '#faf5ff', border: 'rgba(139,92,246,0.25)',  label: 'Spiritual' },
-  'Emotional-Adaptive':    { color: '#a855f7', light: '#f5f3ff', border: 'rgba(168,85,247,0.25)',  label: 'Emotional' },
-  'Somatic-Regulative':    { color: '#10b981', light: '#f0fdf4', border: 'rgba(16,185,129,0.25)',  label: 'Somatic' },
-  'Cognitive-Narrative':   { color: '#3b82f6', light: '#eff6ff', border: 'rgba(59,130,246,0.25)',  label: 'Cognitive' },
+  'Agentic-Generative':    { color: '#8b5cf6', light: '#f5f3ff', border: 'rgba(139,92,246,0.28)',  glow: 'rgba(139,92,246,0.35)', gradient: 'linear-gradient(135deg,#8b5cf6,#6366f1)',  label: 'Agentic' },
+  'Relational-Connective': { color: '#14b8a6', light: '#f0fdfa', border: 'rgba(20,184,166,0.28)',  glow: 'rgba(20,184,166,0.35)', gradient: 'linear-gradient(135deg,#14b8a6,#22c55e)',  label: 'Relational' },
+  'Spiritual-Reflective':  { color: '#f59e0b', light: '#fffbeb', border: 'rgba(245,158,11,0.28)',  glow: 'rgba(245,158,11,0.35)', gradient: 'linear-gradient(135deg,#f59e0b,#f97316)',  label: 'Spiritual' },
+  'Emotional-Adaptive':    { color: '#ec4899', light: '#fdf2f8', border: 'rgba(236,72,153,0.28)',  glow: 'rgba(236,72,153,0.35)', gradient: 'linear-gradient(135deg,#ec4899,#f43f5e)',  label: 'Emotional' },
+  'Somatic-Regulative':    { color: '#06b6d4', light: '#ecfeff', border: 'rgba(6,182,212,0.28)',   glow: 'rgba(6,182,212,0.35)',  gradient: 'linear-gradient(135deg,#06b6d4,#14b8a6)',  label: 'Somatic' },
+  'Cognitive-Narrative':   { color: '#4f46e5', light: '#eef2ff', border: 'rgba(79,70,229,0.28)',   glow: 'rgba(79,70,229,0.35)',  gradient: 'linear-gradient(135deg,#4f46e5,#3b82f6)',  label: 'Cognitive' },
 };
-const DEFAULT_CONFIG = { color: '#1565C0', light: '#f0f4ff', border: 'rgba(21,101,192,0.25)', label: 'Journey' };
+const DEFAULT_CONFIG = { color: '#1565C0', light: '#eff6ff', border: 'rgba(21,101,192,0.25)', glow: 'rgba(21,101,192,0.35)', gradient: 'linear-gradient(135deg,#1565C0,#0097A7)', label: 'Journey' };
 
 // ── SVG circular progress ring ────────────────────────────────────────────────
 function CircleProgress({ pct = 0, size = 64, strokeWidth = 5, color = '#1565C0', trackColor = 'rgba(0,0,0,0.07)' }) {
@@ -127,6 +127,7 @@ export default function NavigationMilestones({ scores }) {
             <div
               key={m.id}
               aria-label={`${m.title}${done ? ' — completed' : ' — incomplete'}`}
+              className="gam-milestone-card"
               style={{
                 background: done ? cfg.light : '#f8fafc',
                 border: `1px solid ${done ? cfg.border : '#e2e8f0'}`,
@@ -136,12 +137,12 @@ export default function NavigationMilestones({ scores }) {
                 flexDirection: 'column',
                 gap: 10,
                 opacity: done ? 1 : 0.65,
-                transition: 'all 0.2s ease',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease',
                 cursor: 'default',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = `0 8px 24px ${cfg.border}`;
+                e.currentTarget.style.boxShadow = `0 8px 24px ${cfg.glow}`;
                 e.currentTarget.style.opacity = '1';
               }}
               onMouseLeave={e => {
@@ -153,13 +154,25 @@ export default function NavigationMilestones({ scores }) {
               {/* Icon + progress ring row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{
-                  width: 40, height: 40, borderRadius: 10,
-                  background: done ? `${cfg.color}1a` : 'rgba(0,0,0,0.05)',
+                  width: 44, height: 44, borderRadius: 11,
+                  background: done ? cfg.gradient : 'rgba(0,0,0,0.05)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  position: 'relative',
+                  boxShadow: done ? `0 4px 14px ${cfg.glow}` : 'none',
+                  transition: 'box-shadow 0.2s ease',
                 }}>
+                  {done && (
+                    <span style={{
+                      position: 'absolute', inset: -3, borderRadius: 14,
+                      border: '2px solid #34d399',
+                      boxShadow: '0 0 8px rgba(52,211,153,0.5)',
+                    }} aria-hidden="true" />
+                  )}
                   <img
                     src={m.icon} alt="" width={22} height={22} aria-hidden="true"
-                    style={{ filter: done ? 'none' : 'grayscale(1) opacity(0.4)' }}
+                    style={{
+                      filter: done ? 'brightness(0) invert(1)' : 'grayscale(1) opacity(0.4)',
+                    }}
                   />
                 </div>
 
