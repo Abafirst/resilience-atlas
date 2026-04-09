@@ -3301,6 +3301,50 @@ justify-content:center;
   }
 }
 
+/* ── Gamification page — color system & micro-interactions ─────────────────
+   All rules are scoped under .gam-* to avoid affecting other pages.
+   Requires no changes to base CSS tokens.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Quest cards (StarterMicroQuests) ─────────────────────────────────────── */
+.gam-quest-card {
+  outline: none;
+}
+.gam-quest-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.gam-quest-card:focus-visible {
+  outline: 3px solid rgba(129, 140, 248, 0.7);
+  outline-offset: 2px;
+}
+
+/* Milestone cards (NavigationMilestones) ───────────────────────────────── */
+.gam-milestone-card {
+  outline: none;
+}
+.gam-milestone-card:focus-visible {
+  outline: 3px solid rgba(129, 140, 248, 0.7);
+  outline-offset: 2px;
+}
+
+/* Badge cards (ResilienceBadgesWidget) ─────────────────────────────────── */
+.gam-badge-card {
+  outline: none;
+}
+.gam-badge-card:focus-visible {
+  outline: 3px solid rgba(129, 140, 248, 0.7);
+  outline-offset: 2px;
+}
+
+/* Responsive grid tightening on small screens ──────────────────────────── */
+@media (max-width: 600px) {
+  .gam-quest-card,
+  .gam-milestone-card,
+  .gam-badge-card {
+    border-radius: 10px;
+  }
+}
 /* =============================================================
    Resources Page  (.rl-* / .rc-*)
    All Resources-page-specific styles live here.

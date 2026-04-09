@@ -13,16 +13,18 @@ const s = {
     border: `1px solid ${DIMENSION_COLORS[dim]?.border || 'rgba(255,255,255,0.08)'}`,
     borderRadius: 12,
     padding: '20px',
-    transition: 'all 0.2s',
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
     position: 'relative',
-    opacity: completed ? 0.75 : 1,
+    opacity: completed ? 0.8 : 1,
   }),
   cardHeader: { display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12 },
-  dimIcon: (dim) => ({
-    width: 36, height: 36, borderRadius: 8,
-    background: DIMENSION_COLORS[dim]?.bg || '#1e293b',
+  dimIcon: (dim, completed) => ({
+    width: 44, height: 44, borderRadius: 10,
+    background: DIMENSION_COLORS[dim]?.gradient || '#1e293b',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: 18, flexShrink: 0,
+    boxShadow: completed ? 'none' : `0 4px 14px ${DIMENSION_COLORS[dim]?.glow || 'rgba(0,0,0,0.25)'}`,
+    transition: 'box-shadow 0.2s ease',
   }),
   cardTitle: { fontSize: 15, fontWeight: 700, color: '#e2e8f0', margin: '0 0 2px' },
   cardDim: { fontSize: 12, color: '#718096' },
@@ -188,14 +190,35 @@ export default function StarterMicroQuests({ tier, progress }) {
             const done   = completedIds.has(quest.id);
             const colors = DIMENSION_COLORS[quest.dimension] || {};
             return (
-              <div key={quest.id} style={s.card(quest.dimension, done)}>
+              <div
+                key={quest.id}
+                style={s.card(quest.dimension, done)}
+                className="gam-quest-card"
+              >
                 {done && <span style={s.completedBadge}>
                   <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={10} height={10} style={{ verticalAlign: 'middle', marginRight: 3 }} />
                   Complete
                 </span>}
                 <div style={s.cardHeader}>
-                  <div style={{ ...s.dimIcon(quest.dimension), color: colors.accent }}>
-                    <img src={DIM_ICONS[quest.dimension] || '/icons/badge.svg'} alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+                  <div style={{ ...s.dimIcon(quest.dimension, done), position: 'relative' }}>
+                    {done && (
+                      <span style={{
+                        position: 'absolute', inset: -3, borderRadius: 13,
+                        border: '2px solid #34d399',
+                        boxShadow: '0 0 8px rgba(52,211,153,0.5)',
+                      }} aria-hidden="true" />
+                    )}
+                    <img
+                      src={DIM_ICONS[quest.dimension] || '/icons/badge.svg'}
+                      alt=""
+                      aria-hidden="true"
+                      width={22} height={22}
+                      style={{
+                        verticalAlign: 'middle',
+                        filter: 'brightness(0) invert(1)',
+                        opacity: unlocked ? 1 : 0.7,
+                      }}
+                    />
                   </div>
                   <div>
                     <div style={s.cardTitle}>{quest.title}</div>
