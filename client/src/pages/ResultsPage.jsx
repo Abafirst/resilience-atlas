@@ -3281,9 +3281,16 @@ export default function ResultsPage() {
               <div style={{ color: '#fc8181', fontSize: 13, marginBottom: 12 }}>{pdfError}</div>
             )}
             <button
+              id="downloadPdfReportBtn"
               type="button"
+              data-ignore-gating="true"
               style={s.downloadBtn(pdfLoading || tierLoading)}
-              onClick={handleDownloadPdf}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (window.__DEBUG_PDF) console.log('[PDF] Download click');
+                handleDownloadPdf();
+              }}
               disabled={pdfLoading || tierLoading}
               aria-busy={pdfLoading}
             >
