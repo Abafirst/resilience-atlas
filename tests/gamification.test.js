@@ -163,7 +163,7 @@ function authTokenWithEmail(email = 'user@example.com', id = 'user001') {
   return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
-/** Token simulating an Auth0-normalised payload (userId + sub, no id field). */
+/** Token simulating an Auth0-normalized payload (userId + sub, no id field). */
 function authTokenAuth0(sub = 'auth0|user001') {
   return jwt.sign({ userId: sub, sub }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
