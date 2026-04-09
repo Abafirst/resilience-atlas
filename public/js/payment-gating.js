@@ -184,9 +184,17 @@
     /**
      * Walk every element with a data-tier attribute and show or hide its
      * payment-overlay depending on the user's current tier.
+     *
+     * Elements with `data-ignore-gating` or `id="downloadPdfBtn"` are skipped
+     * so that the PDF download button is never accidentally locked by this handler.
      */
     function applyGating() {
         document.querySelectorAll('[data-tier]').forEach(function (section) {
+            // Never lock the PDF download button or any explicitly opted-out element.
+            if (section.id === 'downloadPdfBtn' || section.hasAttribute('data-ignore-gating')) {
+                return;
+            }
+
             const required = section.getAttribute('data-tier');
             const unlocked =
                 (required === 'atlas-starter'                                                          && isAnyPaidTier())   ||

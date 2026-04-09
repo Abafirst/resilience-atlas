@@ -2519,6 +2519,9 @@ export default function ResultsPage() {
 
   // ── PDF download ───────────────────────────────────────────────────────
   const handleDownloadPdf = useCallback(async () => {
+    if (window.__DEBUG_PDF) {
+      console.log('[PDF] handleDownloadPdf called — results:', !!results, 'isAuthenticated:', isAuthenticated);
+    }
     if (!results) return;
     // If the user is not authenticated, prompt them to sign in rather than
     // showing a dead-end "Authentication required" error message.
@@ -2531,6 +2534,9 @@ export default function ResultsPage() {
     const email = getEffectiveEmail();
     setPdfLoading(true);
     setPdfError('');
+    if (window.__DEBUG_PDF) {
+      console.log('[PDF] Starting generate — email:', email);
+    }
     try {
       await triggerPdfDownload(results, email, getAccessTokenSilently);
     } catch (err) {
@@ -3281,9 +3287,10 @@ export default function ResultsPage() {
               <div style={{ color: '#fc8181', fontSize: 13, marginBottom: 12 }}>{pdfError}</div>
             )}
             <button
+              id="downloadPdfBtn"
               type="button"
               style={s.downloadBtn(pdfLoading || tierLoading)}
-              onClick={handleDownloadPdf}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDownloadPdf(); }}
               disabled={pdfLoading || tierLoading}
               aria-busy={pdfLoading}
             >
