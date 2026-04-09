@@ -179,6 +179,25 @@
                t === 'starter' || t === 'pro' || t === 'enterprise';
     }
 
+    // -- Click-interception guard ---------------------------------------------
+
+    /**
+     * Returns true when the click target (or any of its ancestors) belongs to
+     * the PDF download button.  Any global or delegated click handler should
+     * call this guard first and return immediately when it is true, so that the
+     * React PDF-download pipeline is never hijacked by payment-gating logic.
+     *
+     * @param {Event} e  A DOM click (or similar) event.
+     * @returns {boolean}
+     */
+    function _isPdfDownloadClick(e) {
+        if (!e || !e.target) return false;
+        var el = e.target.closest
+            ? e.target.closest('[data-ignore-gating="true"], #downloadPdfReportBtn')
+            : null;
+        return Boolean(el);
+    }
+
     // -- Apply/remove locks ---------------------------------------------------
 
     /**
@@ -609,6 +628,7 @@
         applyGating:          applyGating,
         startCheckout:        startCheckout,
         handleUpgradeSuccess: handleUpgradeSuccess,
+        isPdfDownloadClick:   _isPdfDownloadClick,
     };
 
 })(window);
