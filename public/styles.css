@@ -3394,7 +3394,7 @@ justify-content:center;
 
 .rl-search-wrap button {
   background: linear-gradient(135deg, var(--blue) 0%, #7C3AED 55%, var(--teal) 130%);
-  color: #fff;
+  color: var(--white);
   border: none;
   padding: .85rem 1.5rem;
   cursor: pointer;
@@ -3645,7 +3645,7 @@ justify-content:center;
 .rl-tab.active {
   background: var(--blue);
   border-color: var(--blue);
-  color: #fff;
+  color: var(--white);
   box-shadow: 0 4px 12px rgba(79,70,229,.28);
 }
 
@@ -3707,7 +3707,7 @@ justify-content:center;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--white);
   font-size: 2.5rem;
   background: linear-gradient(135deg, var(--blue), var(--teal));
 }
@@ -3734,7 +3734,7 @@ justify-content:center;
   top: .6rem;
   left: .6rem;
   background: rgba(0,0,0,.55);
-  color: #fff;
+  color: var(--white);
   font-size: .7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -3891,7 +3891,7 @@ justify-content:center;
 }
 
 .rl-page-btn:hover    { border-color: rgba(79,70,229,.4); color: var(--blue); }
-.rl-page-btn.current  { background: var(--blue); color: #fff; border-color: var(--blue); }
+.rl-page-btn.current  { background: var(--blue); color: var(--white); border-color: var(--blue); }
 .rl-page-btn:disabled { opacity: .45; cursor: not-allowed; }
 
 /* ── Resource detail modal ─────────────────────────────────── */
@@ -3953,7 +3953,7 @@ justify-content:center;
   align-items: center;
   justify-content: center;
   font-size: 4rem;
-  color: #fff;
+  color: var(--white);
   position: relative;
   overflow: hidden;
 }
@@ -3992,7 +3992,7 @@ justify-content:center;
 .rl-btn:hover  { opacity: .85; }
 .rl-btn:active { transform: scale(.98); }
 
-.rl-btn-primary { background: var(--blue); color: #fff; }
+.rl-btn-primary { background: var(--blue); color: var(--white); }
 .rl-btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
 .rl-btn-ghost   { background: var(--slate-100); color: var(--text-secondary); }
 
@@ -4059,7 +4059,7 @@ justify-content:center;
   bottom: 1.5rem;
   right: 1.5rem;
   background: var(--slate-800);
-  color: #fff;
+  color: var(--white);
   padding: .75rem 1.25rem;
   border-radius: var(--radius-md);
   font-size: .9rem;
