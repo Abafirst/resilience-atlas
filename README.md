@@ -502,9 +502,9 @@ This matches the algorithm used by `/api/report/generate` (`buildJobHash` in `ba
 
 The PDF report is generated as a 16-page HTML document rendered via Puppeteer (Chromium) and uses a single CSS block defined in `backend/templates/reportTemplate.js`.
 
-### Dimension colour palette
+### Dimension color palette
 
-Each of the six resilience dimensions has a dedicated accent colour used consistently across all report sections (progress bars, section headers, hero banners, pill badges):
+Each of the six resilience dimensions has a dedicated accent color used consistently across all report sections (progress bars, section headers, hero banners, pill badges):
 
 | Dimension | CSS variable | Hex |
 |---|---|---|
@@ -515,7 +515,7 @@ Each of the six resilience dimensions has a dedicated accent colour used consist
 | Somatic-Regulative | `--dim-somatic` | `#0EA5E9` (sky blue) |
 | Cognitive-Narrative | `--dim-cognitive` | `#F59E0B` (amber) |
 
-The palette is defined once in `DIMENSION_PALETTE` (top of `reportTemplate.js`) and flows into `DIMENSION_META` automatically. To change a colour, edit only `DIMENSION_PALETTE`.
+The palette is defined once in `DIMENSION_PALETTE` (top of `reportTemplate.js`) and flows into `DIMENSION_META` automatically. To change a color, edit only `DIMENSION_PALETTE`.
 
 ### Generating and verifying a PDF locally
 
