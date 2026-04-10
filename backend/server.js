@@ -478,9 +478,9 @@ const htmlRedirects = {
   '/dashboard.html': '/dashboard',
   '/dashboard-advanced.html': '/dashboard-advanced',
   '/team-analytics.html': '/team-analytics',
-  '/teams-resources.html': '/teams-resources',
-  '/teams-facilitation.html': '/teams-facilitation',
-  '/teams-activities.html': '/teams-activities',
+  '/teams-resources.html': '/teams/resources',
+  '/teams-facilitation.html': '/teams/facilitation',
+  '/teams-activities.html': '/teams/activities',
   '/legacy-results.html': '/results',
   '/results-legacy.html': '/results',
   '/results.html': '/results',
@@ -567,6 +567,30 @@ app.get("/team", pageLimiter, (req, res) => {
   res.sendFile(path.join(clientDist, "index.html"), (err) => {
     if (err) {
       res.status(503).send("Service unavailable: production build not found. Run `npm run build` in the client directory.");
+    }
+  });
+});
+
+// ==============================
+// Teams routes — serve React SPA
+// ==============================
+
+// Flat legacy Teams paths redirect permanently to the canonical nested paths.
+// These redirects are registered before public/ static files so the legacy
+// HTML files can never be served at those paths.
+app.get("/teams-activities", pageLimiter, (req, res) => res.redirect(301, "/teams/activities"));
+app.get("/teams-resources",  pageLimiter, (req, res) => res.redirect(301, "/teams/resources"));
+app.get("/teams-facilitation", pageLimiter, (req, res) => res.redirect(301, "/teams/facilitation"));
+
+// /teams and /teams/* must always load the React SPA so access gating and
+// React Router handle rendering.  Registered before express.static(public)
+// so public/teams-*.html files can never shadow these routes.
+app.get(["/teams", "/teams/*"], pageLimiter, (req, res) => {
+  res.sendFile(path.join(clientDist, "index.html"), (err) => {
+    if (err) {
+      res.status(503).send(
+        "Service unavailable: production build not found. Run `npm run build` in the client directory."
+      );
     }
   });
 });
