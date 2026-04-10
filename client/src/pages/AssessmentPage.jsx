@@ -274,36 +274,6 @@ export default function AssessmentPage() {
         <p>Takes 10–15 minutes. No account required. Your resilience map, immediately.</p>
         <a className="btn-cta" href="/quiz">Begin My Assessment &rarr;</a>
       </section>
-
-      <footer className="site-footer" role="contentinfo">
-        <nav className="footer-nav" aria-label="Footer navigation">
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Assessment</strong>
-            <a href="/assessment">About the Assessment</a>
-            <a href="/quiz">Take the Quiz</a>
-            <a href="/results">My Results</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Research</strong>
-            <a href="/research">Foundations</a>
-            <a href="/research#dimensions">Six Dimensions</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Programs</strong>
-            <a href="/teams">For Teams</a>
-            <a href="/kids">For Kids</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Company</strong>
-            <a href="/about">About</a>
-          </div>
-        </nav>
-        <div className="footer-bottom">
-          <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-          <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
-          <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
-        </div>
-      </footer>
     </>
   );
 }

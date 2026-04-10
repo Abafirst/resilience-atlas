@@ -717,35 +717,6 @@ export default function PricingTeamsPage() {
     </p>
   </section>
 
-  {/* ── Footer ─────────────────────────────────────────────────────────────── */}
-  <footer className="site-footer" role="contentinfo">
-    <nav className="footer-nav" aria-label="Footer navigation">
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Assessment</strong>
-        <a href="/assessment">About the Assessment</a>
-        <a href="/quiz">Take the Quiz</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Teams</strong>
-        <a href="/teams">Teams Overview</a>
-        <a href="/pricing-teams" aria-current="page">Pricing</a>
-        <a href="/teams/resources">Resources</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Company</strong>
-        <a href="/about">About</a>
-        <a href="/founder">Founder</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Legal</strong>
-        <a href="/privacy">Privacy &amp; Data Control</a>
-      </div>
-    </nav>
-    <div className="footer-bottom">
-      <p>&copy; {new Date().getFullYear()} The Resilience Atlas&#8482;</p>
-    </div>
-  </footer>
-
     </>
   );
 }

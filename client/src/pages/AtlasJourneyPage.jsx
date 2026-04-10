@@ -1212,21 +1212,6 @@ export default function AtlasJourneyPage() {
           <a href="/about" style={{ color: '#059669', fontWeight: 500 }}>learn more</a>.
         </span>
       </div>
-
-      {/* Footer */}
-      <footer style={s.footer} role="contentinfo">
-        <p style={{ margin: 0 }}>
-          &copy; {new Date().getFullYear()} The Resilience Atlas&#8482;
-          {' '}·{' '}
-          <a href="/about" style={s.footerLink}>About</a>
-          {' '}·{' '}
-          <a href="/results" style={s.footerLink}>My Results</a>
-        </p>
-        <p style={{ margin: '4px 0 0' }}>
-          The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.
-          For educational and self-reflection purposes only. Not a clinical assessment.
-        </p>
-      </footer>
     </div>
   );
 }

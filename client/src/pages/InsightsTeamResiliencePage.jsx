@@ -68,11 +68,6 @@ export default function InsightsTeamResiliencePage() {
           <a href="/quiz" className="btn btn-secondary">Individual Assessment</a>
         </div>
       </article>
-
-      <footer className="site-footer">
-        <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-        <p className="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
-      </footer>
     </>
   );
 }

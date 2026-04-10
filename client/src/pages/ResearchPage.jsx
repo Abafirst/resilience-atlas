@@ -658,40 +658,6 @@ export default function ResearchPage() {
           <a href="/founder" className="btn btn-light">Meet the Founder</a>
         </div>
       </section>
-
-      {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="site-footer" role="contentinfo">
-        <nav className="footer-nav" aria-label="Footer navigation">
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Assessment</strong>
-            <a href="/assessment">About the Assessment</a>
-            <a href="/quiz">Take the Quiz</a>
-            <a href="/results">My Results</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Research</strong>
-            <a href="/research">Foundations</a>
-            <a href="/research#dimensions">Six Dimensions</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Programs</strong>
-            <a href="/teams">For Teams</a>
-            <a href="/kids">For Kids</a>
-          </div>
-          <div className="footer-nav-group">
-            <strong className="footer-nav-heading">Company</strong>
-            <a href="/about">About</a>
-            <a href="/founder">Our Founder</a>
-            <a href="/research">Research</a>
-          </div>
-        </nav>
-        <div className="footer-bottom">
-          <p><strong>The Resilience Atlas&#8482; — Understand. Strengthen. Transform.</strong></p>
-          <p>A research-based resilience assessment platform founded on published 2013 doctoral research.</p>
-          <p>&copy; 2026 The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
-          <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
-        </div>
-      </footer>
     </>
   );
 }
