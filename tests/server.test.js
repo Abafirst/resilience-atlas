@@ -453,6 +453,27 @@ describe('CORS middleware', () => {
     const res = await request(freshApp).get('/health');
     expect([200, 503]).toContain(res.status);
   });
+
+  test('allows staging origin by default (no CORS_ORIGIN env var)', async () => {
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/health')
+      .set('Origin', ORIGIN_B);
+    expect(res.headers['access-control-allow-origin']).toBe(ORIGIN_B);
+  });
+
+  test('/assets/* from staging origin returns 404 not 500 (no CORS block)', async () => {
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .get('/assets/nonexistent.js')
+      .set('Origin', ORIGIN_B);
+    // Must not be blocked by CORS (which would produce a 500 with JSON body).
+    expect(res.status).not.toBe(500);
+    expect(res.headers['content-type']).not.toMatch(/json/);
+    // Static file not found → 404, and CORS header must be present.
+    expect(res.status).toBe(404);
+    expect(res.headers['access-control-allow-origin']).toBe(ORIGIN_B);
+  });
 });
 
 // ── Asset serving (Vite build) ────────────────────────────────────────────────
