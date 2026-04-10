@@ -288,6 +288,100 @@ describe('GET /dashboard', () => {
     });
 });
 
+// ── Teams routes ─────────────────────────────────────────────────────────────
+
+describe('GET /teams-activities.html', () => {
+    test('permanently redirects to /teams/activities (canonical SPA route)', async () => {
+        const res = await request(app).get('/teams-activities.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/activities');
+    });
+});
+
+describe('GET /teams-resources.html', () => {
+    test('permanently redirects to /teams/resources (canonical SPA route)', async () => {
+        const res = await request(app).get('/teams-resources.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/resources');
+    });
+});
+
+describe('GET /teams-facilitation.html', () => {
+    test('permanently redirects to /teams/facilitation (canonical SPA route)', async () => {
+        const res = await request(app).get('/teams-facilitation.html');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/facilitation');
+    });
+});
+
+describe('GET /teams-activities', () => {
+    test('permanently redirects to /teams/activities (canonical path)', async () => {
+        const res = await request(app).get('/teams-activities');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/activities');
+    });
+});
+
+describe('GET /teams-resources', () => {
+    test('permanently redirects to /teams/resources (canonical path)', async () => {
+        const res = await request(app).get('/teams-resources');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/resources');
+    });
+});
+
+describe('GET /teams-facilitation', () => {
+    test('permanently redirects to /teams/facilitation (canonical path)', async () => {
+        const res = await request(app).get('/teams-facilitation');
+        expect(res.status).toBe(301);
+        expect(res.headers.location).toBe('/teams/facilitation');
+    });
+});
+
+describe('GET /teams', () => {
+    test('serves React SPA index.html', async () => {
+        const res = await request(app).get('/teams');
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.headers['content-type']).toMatch(/html/);
+        }
+    });
+});
+
+describe('GET /teams/activities', () => {
+    test('serves React SPA index.html (never legacy teams-activities.html)', async () => {
+        const res = await request(app).get('/teams/activities');
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.headers['content-type']).toMatch(/html/);
+            // Must not contain legacy HTML markers
+            expect(res.text).not.toMatch(/teams-activities\.js/);
+        }
+    });
+});
+
+describe('GET /teams/resources', () => {
+    test('serves React SPA index.html (never legacy teams-resources.html)', async () => {
+        const res = await request(app).get('/teams/resources');
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.headers['content-type']).toMatch(/html/);
+            expect(res.text).not.toMatch(/teams-resources\.js/);
+        }
+    });
+});
+
+describe('GET /teams/facilitation', () => {
+    test('serves React SPA index.html (never legacy teams-facilitation.html)', async () => {
+        const res = await request(app).get('/teams/facilitation');
+        expect([200, 503]).toContain(res.status);
+        if (res.status === 200) {
+            expect(res.headers['content-type']).toMatch(/html/);
+            expect(res.text).not.toMatch(/teams-facilitation\.js/);
+        }
+    });
+});
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
 
 describe('GET /api/auth/profile', () => {
