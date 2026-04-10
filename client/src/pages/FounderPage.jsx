@@ -427,7 +427,7 @@ export default function FounderPage() {
               <p className="pub-year">Published Research — 2013</p>
               <h4>THE VARIETIES OF RESILIENT EXPERIENCE: AN INTEGRAL INQUIRY INTO THE TYPOLOGY OF RESILIENCE</h4>
               <p>
-                Doctoral dissertation by Janeen Molchany, Ph.D., BCBA. This research identified and validated
+                Doctoral dissertation by Janeen Molchany (published as Janeen Stalnaker), Ph.D., BCBA. This research identified and validated
                 a six-dimension model of resilience through mixed-methods inquiry, including in-depth interviews
                 with resilience exemplars and administration of validated psychometric instruments.
               </p>
