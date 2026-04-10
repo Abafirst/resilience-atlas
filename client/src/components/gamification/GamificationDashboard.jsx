@@ -473,7 +473,7 @@ export default function GamificationDashboard() {
       label: 'Badges Earned',
     },
     {
-      val: activeProgress?.currentStreak ?? '—',
+      val: activeProgress?.currentStreak?.days ?? '—',
       label: 'Day Streak',
     },
     {
