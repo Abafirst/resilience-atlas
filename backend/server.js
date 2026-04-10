@@ -258,12 +258,12 @@ app.use(
   express.static(path.join(clientDist, "assets"), { fallthrough: false })
 );
 
-// Convert the 404 error emitted by express.static (fallthrough:false) into a
-// plain-text response so the browser never receives JSON or HTML for a missing
-// Vite asset.
 // eslint-disable-next-line no-unused-vars
-app.use("/assets", (err, req, res, _next) => {
-  res.type("text").status(err.status || 404).send("Not found");
+app.use("/assets", (err, req, res, next) => {
+  if (err && err.status === 404) {
+    return res.type("text").status(404).send("Not found");
+  }
+  next(err);
 });
 
 app.use(express.static(clientDist));
@@ -312,23 +312,6 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-
-// ==============================
-// Debug / Diagnostics (non-production only)
-// ==============================
-
-// Lightweight diagnostic endpoint to confirm that the client build is present
-// in the running container.  Intentionally omits env-var values to avoid
-// accidental secret leakage.  Disabled in production.
-if (process.env.NODE_ENV !== "production") {
-  app.get("/__debug/dist", (req, res) => {
-    res.json({
-      clientDistExists: fs.existsSync(clientDist),
-      clientDistAssetsExists: fs.existsSync(path.join(clientDist, "assets")),
-      clientDistPath: clientDist,
-    });
-  });
-}
 
 // ==============================
 // Public Config (safe frontend values)
@@ -418,6 +401,24 @@ const pageLimiter = rateLimit({
   legacyHeaders: false,
   message: "Too many requests. Please try again later.",
 });
+
+// ==============================
+// Debug / Diagnostics (non-production only)
+// ==============================
+
+// Lightweight diagnostic endpoint to confirm that the client build is present
+// in the running container.  Intentionally omits env-var values to avoid
+// accidental secret leakage.  Disabled in production.  Rate-limited to
+// prevent filesystem-enumeration abuse.
+if (process.env.NODE_ENV !== "production") {
+  app.get("/__debug/dist", pageLimiter, (req, res) => {
+    res.json({
+      clientDistExists: fs.existsSync(clientDist),
+      clientDistAssetsExists: fs.existsSync(path.join(clientDist, "assets")),
+      clientDistPath: clientDist,
+    });
+  });
+}
 
 // Debug /profile route — only useful when the OIDC middleware is active.
 // Rate-limited to prevent credential-enumeration / DoS abuse.
