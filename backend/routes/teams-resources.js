@@ -41,6 +41,69 @@ const downloadLimiter = rateLimit({
 // Tiers that grant teams resource access
 const TEAMS_TIERS = new Set(['starter', 'pro', 'enterprise']);
 
+// Tier order for comparisons (higher index = more access)
+const TIER_ORDER = { starter: 1, pro: 2, enterprise: 3 };
+
+/**
+ * Returns true if userTier meets or exceeds the requiredTier.
+ * Enterprise implies Premium implies Basic.
+ */
+function tierMeetsRequirement(userTier, requiredTier) {
+    return (TIER_ORDER[userTier] || 0) >= (TIER_ORDER[requiredTier] || 0);
+}
+
+/**
+ * Per-resource minimum tier requirements.
+ * Mirrors the minTier values in client/src/data/teamsContent.js.
+ *
+ * Tier hierarchy: starter (Basic) < pro (Premium) < enterprise (Enterprise)
+ *
+ * Workshop Guides: Premium-only (pro)
+ * Templates, Activity Cards, Facilitation: Basic (starter)
+ * Most Visuals: Premium (pro); vis-001, vis-002, vis-014: Basic; vis-013: Enterprise
+ */
+const RESOURCE_MIN_TIERS = {
+    // Workshop Guides — Premium-only
+    'hand-001': 'pro',
+    'hand-002': 'pro',
+    'hand-003': 'pro',
+    'hand-004': 'pro',
+    'hand-005': 'pro',
+    'hand-006': 'pro',
+    // Templates — Basic
+    'hand-007': 'starter',
+    'hand-008': 'starter',
+    'hand-009': 'starter',
+    'hand-011': 'starter',
+    'hand-016': 'starter',
+    // Discussion Prompt Sheets — Basic
+    'hand-010': 'starter',
+    // Activity Cards — Basic
+    'hand-014': 'starter',
+    'hand-015': 'starter',
+    // Facilitation / Bonus downloads — Basic
+    'hand-012': 'starter',
+    'hand-013': 'starter',
+    'hand-017': 'starter',
+    // Visuals — Basic: vis-001, vis-002, vis-014
+    'vis-001': 'starter',
+    'vis-002': 'starter',
+    'vis-014': 'starter',
+    // Visuals — Premium: vis-003..vis-012
+    'vis-003': 'pro',
+    'vis-004': 'pro',
+    'vis-005': 'pro',
+    'vis-006': 'pro',
+    'vis-007': 'pro',
+    'vis-008': 'pro',
+    'vis-009': 'pro',
+    'vis-010': 'pro',
+    'vis-011': 'pro',
+    'vis-012': 'pro',
+    // Visuals — Enterprise: vis-013
+    'vis-013': 'enterprise',
+};
+
 /**
  * Extract the userId from a Bearer JWT in the Authorization header.
  * Returns null if no token is present, the token is invalid, or JWT_SECRET is not configured.
@@ -183,6 +246,16 @@ router.get('/download/:resourceId', downloadLimiter, async (req, res) => {
         if (!valid) {
             return res.status(403).json({
                 error: 'Access denied. A valid Teams purchase is required to download this resource.',
+            });
+        }
+
+        // Per-resource tier check — enforce minTier for each item
+        const requiredTier = RESOURCE_MIN_TIERS[resourceId];
+        if (requiredTier && !tierMeetsRequirement(tier, requiredTier)) {
+            const TIER_LABELS = { starter: 'Atlas Team Basic', pro: 'Atlas Team Premium', enterprise: 'Atlas Team Enterprise' };
+            const tierLabel = TIER_LABELS[requiredTier] || 'Atlas Team Premium';
+            return res.status(403).json({
+                error: `This resource requires ${tierLabel} access.`,
             });
         }
 

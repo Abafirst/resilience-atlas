@@ -81,6 +81,27 @@ Backend Teams API routes are mounted at `/api/teams` and remain unchanged:
 - `GET /api/teams/access` – verify purchase/tier access
 - `GET /api/teams/download/:resourceId` – stream PDF download for authorised users
 
+## Tier Gating Rules
+
+Tiers (internal strings): `starter` (Basic), `pro` (Premium), `enterprise` (Enterprise).
+Access hierarchy: Enterprise ≥ Premium ≥ Basic.
+
+| Resource category | IDs | Min tier |
+|---|---|---|
+| Workshop Guides | hand-001 – hand-006 | `pro` (Premium) |
+| Templates | hand-007 – hand-009, hand-011, hand-016 | `starter` (Basic) |
+| Discussion Prompt Sheets | hand-010 | `starter` (Basic) |
+| Activity Cards | hand-014, hand-015 | `starter` (Basic) |
+| Facilitation / Bonus | hand-012, hand-013, hand-017 | `starter` (Basic) |
+| Visuals (basic) | vis-001, vis-002, vis-014 | `starter` (Basic) |
+| Visuals (premium) | vis-003 – vis-012 | `pro` (Premium) |
+| Visuals (enterprise) | vis-013 | `enterprise` (Enterprise) |
+
+Per-resource enforcement is implemented in `backend/routes/teams-resources.js`
+via the `RESOURCE_MIN_TIERS` map and `tierMeetsRequirement()` helper.
+The frontend catalog at `client/src/data/teamsContent.js` mirrors these `minTier`
+values for UI badge display.
+
 ## Regression Tests
 
 Tests in `tests/server.test.js` verify:

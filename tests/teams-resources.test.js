@@ -68,7 +68,11 @@ jest.mock('../backend/services/teamsResourcePdfService', () => {
     }
     return {
         generateResourcePdf: jest.fn(() => new FakeDoc()),
-        ALL_RESOURCE_IDS: ['workshop-guide-01', 'activity-cards-01'],
+        ALL_RESOURCE_IDS: [
+            'workshop-guide-01', 'activity-cards-01',
+            // Actual IDs used in per-resource tier tests
+            'hand-001', 'hand-007', 'vis-002', 'vis-013',
+        ],
     };
 });
 
@@ -243,5 +247,74 @@ describe('GET /api/teams/download/:resourceId', () => {
             .get('/api/teams/download/workshop-guide-01')
             .set('Authorization', 'Bearer bad.token');
         expect(res.status).toBe(401);
+    });
+});
+
+// ── Per-resource tier enforcement ─────────────────────────────────────────────
+
+describe('GET /api/teams/download/:resourceId — per-resource tier gating', () => {
+    beforeEach(() => resetPurchaseMock());
+
+    it('allows a Basic (starter) user to download a template (hand-007)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('starter'));
+
+        const res = await request(app)
+            .get('/api/teams/download/hand-007?session_id=cs_basic');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/pdf/i);
+    });
+
+    it('allows a Basic (starter) user to download a Basic visual (vis-002)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('starter'));
+
+        const res = await request(app)
+            .get('/api/teams/download/vis-002?session_id=cs_basic');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/pdf/i);
+    });
+
+    it('denies a Basic (starter) user from downloading a workshop guide (hand-001)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('starter'));
+
+        const res = await request(app)
+            .get('/api/teams/download/hand-001?session_id=cs_basic');
+        expect(res.status).toBe(403);
+        expect(res.body.error).toMatch(/Premium/i);
+    });
+
+    it('allows a Premium (pro) user to download a workshop guide (hand-001)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('pro'));
+
+        const res = await request(app)
+            .get('/api/teams/download/hand-001?session_id=cs_pro');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/pdf/i);
+    });
+
+    it('allows an Enterprise user to download a workshop guide (hand-001)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('enterprise'));
+
+        const res = await request(app)
+            .get('/api/teams/download/hand-001?session_id=cs_enterprise');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/pdf/i);
+    });
+
+    it('denies a Premium (pro) user from downloading an Enterprise-only visual (vis-013)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('pro'));
+
+        const res = await request(app)
+            .get('/api/teams/download/vis-013?session_id=cs_pro');
+        expect(res.status).toBe(403);
+        expect(res.body.error).toMatch(/Enterprise/i);
+    });
+
+    it('allows an Enterprise user to download an Enterprise-only visual (vis-013)', async () => {
+        mockPurchaseFindOne.mockReturnValue(purchase('enterprise'));
+
+        const res = await request(app)
+            .get('/api/teams/download/vis-013?session_id=cs_enterprise');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/pdf/i);
     });
 });
