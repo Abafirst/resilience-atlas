@@ -174,7 +174,7 @@ const s = {
  *   onSetChallenge — function(dimension, difficulty) → Promise
  */
 export default function NavigationPathways({ progress, onSetChallenge }) {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [selected, setSelected]     = useState(null);
   const [starting, setStarting]     = useState(false);
   const [startError, setStartError] = useState(null);
@@ -191,7 +191,7 @@ export default function NavigationPathways({ progress, onSetChallenge }) {
   }, []);
 
   const handleStart = async (pathway) => {
-    if (!onSetChallenge) {
+    if (!onSetChallenge || !isAuthenticated) {
       setStartError('Atlas Navigator is required to start pathways. Please upgrade your plan to continue.');
       return;
     }

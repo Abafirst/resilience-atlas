@@ -771,7 +771,7 @@ export default function GamificationDashboard() {
 
                 {/* Navigation Pathways */}
                 <LockedFeatureCard
-                  locked={!hasNavigator}
+                  locked={!hasNavigator || !isAuthenticated || isGamError}
                   tierName="Atlas Navigator"
                   checkoutUrl={CHECKOUT_URLS['atlas-navigator']}
                   icon="/icons/game-map.svg"
@@ -787,7 +787,7 @@ export default function GamificationDashboard() {
                 >
                   <NavigationPathways
                     progress={activeProgress}
-                    onSetChallenge={hasNavigator ? setChallenge : undefined}
+                    onSetChallenge={(hasNavigator && isAuthenticated && !isGamError) ? setChallenge : undefined}
                   />
                 </LockedFeatureCard>
 
