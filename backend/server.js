@@ -4,6 +4,7 @@
 const express = require("express");
 const http = require("http");
 const https = require("https");
+const fs = require("fs");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -247,6 +248,24 @@ app.use(sanitiseInput);
 // Must come before API routes so asset requests are handled directly
 // without falling through to the SPA catch-all.
 const clientDist = path.join(__dirname, "../client/dist");
+
+// Explicitly mount the Vite assets directory with fallthrough:false so that
+// any /assets/* request that doesn't match a real file returns 404 immediately
+// instead of falling through to API handlers (which return JSON) or the SPA
+// catch-all (which returns index.html — both triggering browser MIME errors).
+app.use(
+  "/assets",
+  express.static(path.join(clientDist, "assets"), { fallthrough: false })
+);
+
+// eslint-disable-next-line no-unused-vars
+app.use("/assets", (err, req, res, next) => {
+  if (err && err.status === 404) {
+    return res.type("text").status(404).send("Not found");
+  }
+  next(err);
+});
+
 app.use(express.static(clientDist));
 
 // Serve brand assets (SVG icons, favicon, etc.) at /brand/*.
@@ -382,6 +401,23 @@ const pageLimiter = rateLimit({
   legacyHeaders: false,
   message: "Too many requests. Please try again later.",
 });
+
+// ==============================
+// Debug / Diagnostics (non-production only)
+// ==============================
+
+// Lightweight diagnostic endpoint to confirm that the client build is present
+// in the running container.  Intentionally omits env-var values to avoid
+// accidental secret leakage.  Disabled in production.  Rate-limited to
+// prevent filesystem-enumeration abuse.
+if (process.env.NODE_ENV !== "production") {
+  app.get("/__debug/dist", pageLimiter, (req, res) => {
+    res.json({
+      clientDistExists: fs.existsSync(clientDist),
+      clientDistAssetsExists: fs.existsSync(path.join(clientDist, "assets")),
+    });
+  });
+}
 
 // Debug /profile route — only useful when the OIDC middleware is active.
 // Rate-limited to prevent credential-enumeration / DoS abuse.

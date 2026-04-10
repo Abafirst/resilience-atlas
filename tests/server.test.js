@@ -455,6 +455,38 @@ describe('CORS middleware', () => {
   });
 });
 
+// ── Asset serving (Vite build) ────────────────────────────────────────────────
+
+describe('GET /assets/nonexistent.css', () => {
+    test('returns 404 (not JSON, not index.html) for missing Vite assets', async () => {
+        const res = await request(app).get('/assets/nonexistent.css');
+        expect(res.status).toBe(404);
+        // Must not be served as JSON (would cause browser MIME rejection).
+        expect(res.headers['content-type']).not.toMatch(/json/);
+        // Must not be served as HTML (would cause browser MIME rejection).
+        expect(res.headers['content-type']).not.toMatch(/html/);
+    });
+});
+
+describe('GET /assets/nonexistent.js', () => {
+    test('returns 404 (not JSON, not index.html) for missing Vite JS assets', async () => {
+        const res = await request(app).get('/assets/nonexistent.js');
+        expect(res.status).toBe(404);
+        expect(res.headers['content-type']).not.toMatch(/json/);
+        expect(res.headers['content-type']).not.toMatch(/html/);
+    });
+});
+
+describe('GET /config', () => {
+    test('returns JSON with expected keys (no regression from asset-serving changes)', async () => {
+        const res = await request(app).get('/config');
+        expect(res.status).toBe(200);
+        expect(res.headers['content-type']).toMatch(/json/);
+        expect(res.body).toHaveProperty('auth0Domain');
+        expect(res.body).toHaveProperty('auth0ClientId');
+    });
+});
+
 // ── Affiliate routes ──────────────────────────────────────────────────────────
 
 describe('GET /api/affiliates/dashboard', () => {
