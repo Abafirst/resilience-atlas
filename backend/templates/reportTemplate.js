@@ -31,13 +31,38 @@ const DIMENSIONS = [
     'Cognitive-Narrative',
 ];
 
+// ── Dimension palette ─────────────────────────────────────────────────────────
+// Single source of truth for dimension → accent color mapping.
+// Used for CSS variables, bar fills, section accents, and badges.
+const DIMENSION_PALETTE = {
+    'Agentic-Generative':    { color: '#14B8A6', lightColor: '#f0fdfa', borderColor: '#5eead4' },
+    'Relational-Connective': { color: '#FB7185', lightColor: '#fff1f2', borderColor: '#fda4af' },
+    'Spiritual-Reflective':  { color: '#8B5CF6', lightColor: '#f5f3ff', borderColor: '#c4b5fd' },
+    'Emotional-Adaptive':    { color: '#22C55E', lightColor: '#f0fdf4', borderColor: '#86efac' },
+    'Somatic-Regulative':    { color: '#0EA5E9', lightColor: '#f0f9ff', borderColor: '#7dd3fc' },
+    'Cognitive-Narrative':   { color: '#F59E0B', lightColor: '#fffbeb', borderColor: '#fcd34d' },
+};
+
+/** Convert a dimension key to a CSS utility class name, e.g. "dim-agentic" */
+function dimClass(dimensionKey) {
+    const map = {
+        'Agentic-Generative':    'dim-agentic',
+        'Relational-Connective': 'dim-relational',
+        'Spiritual-Reflective':  'dim-spiritual',
+        'Emotional-Adaptive':    'dim-emotional',
+        'Somatic-Regulative':    'dim-somatic',
+        'Cognitive-Narrative':   'dim-cognitive',
+    };
+    return map[dimensionKey] || 'dim-agentic';
+}
+
 const DIMENSION_META = {
     'Agentic-Generative': {
         label: 'Agentic-Generative',
         shortLabel: 'Agentic',
-        color: '#6366f1',
-        lightColor: '#eef2ff',
-        borderColor: '#818cf8',
+        color: DIMENSION_PALETTE['Agentic-Generative'].color,
+        lightColor: DIMENSION_PALETTE['Agentic-Generative'].lightColor,
+        borderColor: DIMENSION_PALETTE['Agentic-Generative'].borderColor,
         icon: '⚡',
         tagline: 'Agency, Self-Direction & Creative Problem-Solving',
         description:
@@ -97,9 +122,9 @@ const DIMENSION_META = {
     'Relational-Connective': {
         label: 'Relational-Connective',
         shortLabel: 'Relational',
-        color: '#10b981',
-        lightColor: '#ecfdf5',
-        borderColor: '#34d399',
+        color: DIMENSION_PALETTE['Relational-Connective'].color,
+        lightColor: DIMENSION_PALETTE['Relational-Connective'].lightColor,
+        borderColor: DIMENSION_PALETTE['Relational-Connective'].borderColor,
         icon: '🤝',
         tagline: 'Connection, Community & Relational Support',
         description:
@@ -157,9 +182,9 @@ const DIMENSION_META = {
     'Spiritual-Reflective': {
         label: 'Spiritual-Reflective',
         shortLabel: 'Spiritual',
-        color: '#8b5cf6',
-        lightColor: '#f5f3ff',
-        borderColor: '#a78bfa',
+        color: DIMENSION_PALETTE['Spiritual-Reflective'].color,
+        lightColor: DIMENSION_PALETTE['Spiritual-Reflective'].lightColor,
+        borderColor: DIMENSION_PALETTE['Spiritual-Reflective'].borderColor,
         icon: '✨',
         tagline: 'Meaning, Purpose & Values-Based Living',
         description:
@@ -217,9 +242,9 @@ const DIMENSION_META = {
     'Emotional-Adaptive': {
         label: 'Emotional-Adaptive',
         shortLabel: 'Emotional',
-        color: '#f59e0b',
-        lightColor: '#fffbeb',
-        borderColor: '#fbbf24',
+        color: DIMENSION_PALETTE['Emotional-Adaptive'].color,
+        lightColor: DIMENSION_PALETTE['Emotional-Adaptive'].lightColor,
+        borderColor: DIMENSION_PALETTE['Emotional-Adaptive'].borderColor,
         icon: '💛',
         tagline: 'Emotional Intelligence & Adaptive Flexibility',
         description:
@@ -277,9 +302,9 @@ const DIMENSION_META = {
     'Somatic-Regulative': {
         label: 'Somatic-Regulative',
         shortLabel: 'Somatic',
-        color: '#ef4444',
-        lightColor: '#fef2f2',
-        borderColor: '#f87171',
+        color: DIMENSION_PALETTE['Somatic-Regulative'].color,
+        lightColor: DIMENSION_PALETTE['Somatic-Regulative'].lightColor,
+        borderColor: DIMENSION_PALETTE['Somatic-Regulative'].borderColor,
         icon: '🌿',
         tagline: 'Body Awareness, Nervous System & Physical Vitality',
         description:
@@ -339,9 +364,9 @@ const DIMENSION_META = {
     'Cognitive-Narrative': {
         label: 'Cognitive-Narrative',
         shortLabel: 'Cognitive',
-        color: '#3b82f6',
-        lightColor: '#eff6ff',
-        borderColor: '#60a5fa',
+        color: DIMENSION_PALETTE['Cognitive-Narrative'].color,
+        lightColor: DIMENSION_PALETTE['Cognitive-Narrative'].lightColor,
+        borderColor: DIMENSION_PALETTE['Cognitive-Narrative'].borderColor,
         icon: '🧠',
         tagline: 'Mindset, Cognitive Flexibility & Story-Making',
         description:
@@ -580,27 +605,53 @@ function buildRadarChart(scores) {
 // ── CSS ───────────────────────────────────────────────────────────────────────
 
 function buildCSS() {
+    // Build dimension CSS variables from central palette
+    const dimVars = Object.entries(DIMENSION_PALETTE).map(([dim, p]) => {
+        const cls = dimClass(dim);
+        return `
+.${cls} { --dim-color: ${p.color}; --dim-light: ${p.lightColor}; --dim-border: ${p.borderColor}; }`;
+    }).join('');
+
     return `
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Dimension CSS variables ── */
+:root {
+    --dim-agentic:   ${DIMENSION_PALETTE['Agentic-Generative'].color};
+    --dim-relational:${DIMENSION_PALETTE['Relational-Connective'].color};
+    --dim-spiritual: ${DIMENSION_PALETTE['Spiritual-Reflective'].color};
+    --dim-emotional: ${DIMENSION_PALETTE['Emotional-Adaptive'].color};
+    --dim-somatic:   ${DIMENSION_PALETTE['Somatic-Regulative'].color};
+    --dim-cognitive: ${DIMENSION_PALETTE['Cognitive-Narrative'].color};
+    --brand:         #6366f1;
+    --brand-light:   #eef2ff;
+    --text-primary:  #0f172a;
+    --text-secondary:#475569;
+    --text-muted:    #94a3b8;
+    --border:        #e2e8f0;
+    --surface:       #f8fafc;
+}
+${dimVars}
+
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
-    color: #1e293b;
+    color: var(--text-primary);
     background: white;
     font-size: 10pt;
-    line-height: 1.55;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ── Page layout ── */
 .page {
     width: 210mm;
-    height: 297mm;
+    min-height: 297mm;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     /* Bottom padding reserves space for the absolutely-positioned .page-footer
        (bottom: 8mm, ~6mm tall) so content never overlaps the footer. */
-    padding: 16mm 14mm 28mm 14mm;
+    padding: 14mm 14mm 26mm 14mm;
     page-break-after: always;
     position: relative;
     overflow: hidden;
@@ -613,16 +664,17 @@ body {
     bottom: 8mm;
     left: 14mm;
     right: 14mm;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border);
     padding-top: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 7.5pt;
-    color: #94a3b8;
+    font-size: 7pt;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
 }
 
-/* ── Cover page ── */
+/* ── Cover page (unchanged layout) ── */
 .cover {
     background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 45%, #312e81 100%);
     color: white;
@@ -719,49 +771,111 @@ body {
 
 /* ── Section headers ── */
 .section-header {
-    margin-bottom: 8mm;
+    margin-bottom: 7mm;
+    border-left: 4px solid var(--brand);
+    padding-left: 10px;
 }
+.section-header.dim-agentic   { border-color: var(--dim-agentic); }
+.section-header.dim-relational { border-color: var(--dim-relational); }
+.section-header.dim-spiritual  { border-color: var(--dim-spiritual); }
+.section-header.dim-emotional  { border-color: var(--dim-emotional); }
+.section-header.dim-somatic    { border-color: var(--dim-somatic); }
+.section-header.dim-cognitive  { border-color: var(--dim-cognitive); }
+
 .section-eyebrow {
     font-size: 7pt;
-    letter-spacing: 2.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    color: #6366f1;
+    color: var(--text-muted);
     font-weight: 600;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
 }
 .section-title {
-    font-size: 17pt;
-    font-weight: 700;
-    color: #0f172a;
-    line-height: 1.2;
+    font-size: 18pt;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.15;
+    letter-spacing: -0.3px;
 }
 .section-subtitle {
     font-size: 9.5pt;
-    color: #64748b;
-    margin-top: 3px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    font-weight: 400;
 }
-h3 { font-size: 11pt; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
-h4 { font-size: 10pt; font-weight: 600; color: #374151; margin-bottom: 3px; }
-p { margin-bottom: 6px; font-size: 9.5pt; line-height: 1.6; }
+h3 { font-size: 11pt; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.1px; }
+h4 { font-size: 10pt; font-weight: 600; color: var(--text-secondary); margin-bottom: 3px; }
+p  { margin-bottom: 6px; font-size: 9.5pt; line-height: 1.65; color: var(--text-primary); }
 ul { padding-left: 16px; margin-bottom: 6px; }
-li { font-size: 9.5pt; margin-bottom: 3px; line-height: 1.55; }
+li { font-size: 9.5pt; margin-bottom: 3px; line-height: 1.6; }
 
 /* ── Highlight / callout boxes ── */
 .callout {
-    border-left: 4px solid #6366f1;
-    background: #eef2ff;
-    padding: 8px 12px;
-    border-radius: 0 8px 8px 0;
+    border-left: 3px solid var(--brand);
+    background: var(--brand-light);
+    padding: 9px 13px;
+    border-radius: 0 10px 10px 0;
     margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.callout.green  { border-color: #10b981; background: #ecfdf5; }
-.callout.amber  { border-color: #f59e0b; background: #fffbeb; }
-.callout.violet { border-color: #8b5cf6; background: #f5f3ff; }
-.callout.blue   { border-color: #3b82f6; background: #eff6ff; }
+.callout.green  { border-color: #22C55E; background: #f0fdf4; }
+.callout.amber  { border-color: #F59E0B; background: #fffbeb; }
+.callout.violet { border-color: #8B5CF6; background: #f5f3ff; }
+.callout.blue   { border-color: #0EA5E9; background: #f0f9ff; }
 .callout.red    { border-color: #ef4444; background: #fef2f2; }
 .callout p { margin-bottom: 0; }
 
-/* ── Highlight stat box ── */
+/* ── Executive Summary metric cards (2×2 grid) ── */
+.metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--brand);
+    border-radius: 12px 12px 0 0;
+}
+.metric-card.accent-teal::before   { background: var(--dim-agentic); }
+.metric-card.accent-coral::before  { background: var(--dim-relational); }
+.metric-card.accent-violet::before { background: var(--dim-spiritual); }
+.metric-card.accent-lime::before   { background: var(--dim-emotional); }
+.metric-card.accent-sky::before    { background: var(--dim-somatic); }
+.metric-card.accent-amber::before  { background: var(--dim-cognitive); }
+.metric-card-label {
+    font-size: 7pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+.metric-card-value {
+    font-size: 22pt;
+    font-weight: 800;
+    color: var(--brand);
+    line-height: 1;
+}
+.metric-card-sub {
+    font-size: 8pt;
+    color: var(--text-secondary);
+    margin-top: 3px;
+}
+
+/* ── Legacy stat boxes (kept for other pages) ── */
 .stat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -769,79 +883,96 @@ li { font-size: 9.5pt; margin-bottom: 3px; line-height: 1.55; }
     margin-bottom: 10px;
 }
 .stat-box {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     padding: 10px 8px;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 .stat-number {
     font-size: 20pt;
     font-weight: 800;
-    color: #6366f1;
+    color: var(--brand);
     line-height: 1;
 }
 .stat-label {
     font-size: 7.5pt;
-    color: #64748b;
+    color: var(--text-secondary);
     margin-top: 2px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 
-/* ── Dimension cards ── */
+/* ── Dimension cards (page 4 overview) ── */
 .dim-card {
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
+    border-radius: 12px;
+    padding: 11px 13px;
+    margin-bottom: 9px;
     border: 1px solid;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .dim-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 .dim-card-title {
     font-size: 10pt;
     font-weight: 700;
 }
 .dim-card-pct {
-    font-size: 14pt;
+    font-size: 15pt;
     font-weight: 800;
 }
 .dim-card-level {
-    font-size: 8pt;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.7);
+    font-size: 7.5pt;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.75);
     display: inline-block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 .progress-bar {
-    height: 8px;
-    background: rgba(255,255,255,0.5);
-    border-radius: 4px;
+    height: 7px;
+    background: rgba(255,255,255,0.55);
+    border-radius: 6px;
     overflow: hidden;
     margin: 5px 0;
 }
 .progress-fill {
-    height: 8px;
-    border-radius: 4px;
+    height: 7px;
+    border-radius: 6px;
 }
 .dim-card-desc {
     font-size: 8.5pt;
     line-height: 1.5;
     margin-top: 4px;
+    opacity: 0.85;
 }
 
-/* ── Dimension deep-dive page ── */
+/* ── Dimension pill badge ── */
+.dim-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.4px;
+}
+
+/* ── Dimension deep-dive hero ── */
 .dim-hero {
-    border-radius: 12px;
-    padding: 14px 16px;
+    border-radius: 14px;
+    padding: 15px 17px;
     margin-bottom: 10px;
     color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 .dim-hero-top {
     display: flex;
@@ -849,73 +980,64 @@ li { font-size: 9.5pt; margin-bottom: 3px; line-height: 1.55; }
     justify-content: space-between;
     margin-bottom: 6px;
 }
-.dim-hero-icon {
-    font-size: 22pt;
-}
+.dim-hero-icon { font-size: 22pt; }
 .dim-hero-name {
     font-size: 15pt;
-    font-weight: 700;
+    font-weight: 800;
     flex: 1;
     padding: 0 10px;
+    letter-spacing: -0.2px;
 }
 .dim-hero-score {
-    font-size: 28pt;
+    font-size: 30pt;
     font-weight: 800;
+    line-height: 1;
 }
 .dim-hero-tagline {
     font-size: 9pt;
-    opacity: 0.85;
+    opacity: 0.88;
     font-style: italic;
 }
 
-.content-block {
-    margin-bottom: 9px;
-}
+.content-block { margin-bottom: 9px; }
 .content-label {
-    font-size: 7.5pt;
+    font-size: 7pt;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: #6366f1;
+    letter-spacing: 1.8px;
+    color: var(--brand);
     margin-bottom: 4px;
-    padding-bottom: 2px;
-    border-bottom: 1.5px solid #e0e7ff;
+    padding-bottom: 3px;
+    border-bottom: 1.5px solid var(--brand-light);
 }
 
 /* ── Two-column layout ── */
-.two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-.two-col-wide {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 12px;
-}
+.two-col      { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.two-col-wide { display: grid; grid-template-columns: 3fr 2fr; gap: 12px; }
 
 /* ── Affirmation box ── */
 .affirmation {
-    background: linear-gradient(135deg, #eef2ff, #f5f3ff);
-    border: 1px solid #c7d2fe;
-    border-radius: 10px;
-    padding: 10px 14px;
+    background: linear-gradient(135deg, #f0f9ff, #f5f3ff);
+    border: 1px solid #c4b5fd;
+    border-radius: 12px;
+    padding: 11px 15px;
     text-align: center;
     margin: 10px 0;
 }
 .affirmation-text {
     font-size: 10.5pt;
     font-style: italic;
-    font-weight: 500;
+    font-weight: 600;
     color: #4338ca;
-    line-height: 1.5;
+    line-height: 1.55;
 }
 .affirmation-label {
-    font-size: 7.5pt;
-    color: #6366f1;
+    font-size: 7pt;
+    color: var(--brand);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 5px;
+    letter-spacing: 1.8px;
+    margin-bottom: 6px;
+    font-weight: 700;
 }
 
 /* ── 30-day plan ── */
@@ -924,45 +1046,47 @@ li { font-size: 9.5pt; margin-bottom: 3px; line-height: 1.55; }
     align-items: flex-start;
     gap: 10px;
     margin-bottom: 8px;
-    padding: 8px 10px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
+    padding: 9px 11px;
+    background: var(--surface);
+    border-radius: 10px;
+    border: 1px solid var(--border);
 }
 .week-number {
-    background: #6366f1;
+    background: var(--brand);
     color: white;
-    font-size: 9pt;
+    font-size: 8.5pt;
     font-weight: 700;
     padding: 4px 8px;
-    border-radius: 6px;
+    border-radius: 8px;
     white-space: nowrap;
     min-width: 52px;
     text-align: center;
+    letter-spacing: 0.3px;
 }
-.week-content { font-size: 9pt; line-height: 1.5; }
+.week-content { font-size: 9pt; line-height: 1.55; }
 
 /* ── Strength integration ── */
 .synergy-card {
-    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+    background: linear-gradient(135deg, var(--surface), var(--brand-light));
     border: 1px solid #c7d2fe;
-    border-radius: 10px;
-    padding: 10px 12px;
+    border-radius: 12px;
+    padding: 10px 13px;
     margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 /* ── Table styles ── */
 table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
 th {
-    background: #f1f5f9;
+    background: var(--surface);
     text-align: left;
-    padding: 6px 10px;
-    font-size: 8pt;
-    font-weight: 600;
+    padding: 7px 10px;
+    font-size: 7.5pt;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: #475569;
-    border-bottom: 2px solid #e2e8f0;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border);
 }
 td {
     padding: 6px 10px;
@@ -971,29 +1095,30 @@ td {
     vertical-align: top;
 }
 tr:last-child td { border-bottom: none; }
-tr:nth-child(even) td { background: #f8fafc; }
+tr:nth-child(even) td { background: var(--surface); }
 
 /* ── Stress response ── */
 .stress-card {
     background: #fef2f2;
     border: 1px solid #fecaca;
-    border-radius: 8px;
-    padding: 8px 12px;
+    border-radius: 10px;
+    padding: 9px 13px;
     margin-bottom: 7px;
 }
 
 /* ── Resources page ── */
 .resource-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 13px;
     margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .resource-card-title {
     font-size: 10pt;
-    font-weight: 600;
-    color: #1e293b;
+    font-weight: 700;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 
@@ -1002,16 +1127,17 @@ tr:nth-child(even) td { background: #f8fafc; }
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 6px 8px;
+    padding: 7px 9px;
     margin-bottom: 4px;
-    border-radius: 6px;
-    background: #f8fafc;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
 }
 .check-box {
     width: 14px;
     height: 14px;
-    border: 2px solid #6366f1;
-    border-radius: 3px;
+    border: 2px solid var(--brand);
+    border-radius: 4px;
     flex-shrink: 0;
     margin-top: 1px;
 }
@@ -1089,18 +1215,27 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
         <div class="section-subtitle">Your resilience profile at a glance</div>
     </div>
 
-    <div class="stat-grid">
-        <div class="stat-box">
-            <div class="stat-number" style="color:#6366f1;">${overall}%</div>
-            <div class="stat-label">Overall Score</div>
+    <!-- 2×2 metric card grid -->
+    <div class="metric-grid">
+        <div class="metric-card">
+            <div class="metric-card-label">Overall Score</div>
+            <div class="metric-card-value" style="color:#6366f1;">${overall}%</div>
+            <div class="metric-card-sub">${esc(levelLabel)}</div>
         </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color:${topMeta.color};font-size:14pt;">${esc(topMeta.shortLabel)}</div>
-            <div class="stat-label">Top Strength</div>
+        <div class="metric-card">
+            <div class="metric-card-label">Resilience Level</div>
+            <div class="metric-card-value" style="font-size:14pt;color:#0f172a;">${esc(levelLabel)}</div>
+            <div class="metric-card-sub">Based on ${overall}% overall score</div>
         </div>
-        <div class="stat-box">
-            <div class="stat-number" style="color:#64748b;">${pct}th</div>
-            <div class="stat-label">Percentile</div>
+        <div class="metric-card" style="border-top-color:${topMeta.color};">
+            <div class="metric-card-label">Top Strength</div>
+            <div class="metric-card-value" style="font-size:14pt;color:${topMeta.color};">${esc(topMeta.shortLabel)}</div>
+            <div class="metric-card-sub">${top.score.toFixed(0)}% — ${esc(getScoreLevelLabel(top.score))}</div>
+        </div>
+        <div class="metric-card" style="border-top-color:${bottomMeta.color};">
+            <div class="metric-card-label">Growth Area</div>
+            <div class="metric-card-value" style="font-size:14pt;color:${bottomMeta.color};">${esc(bottomMeta.shortLabel)}</div>
+            <div class="metric-card-sub">${bottom.score.toFixed(0)}% — opportunity to grow</div>
         </div>
     </div>
 
@@ -1123,7 +1258,7 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
             <div class="content-label">Key Strengths Identified</div>
             <ul>
                 ${ranked.slice(0, 3).map(r =>
-                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
+                    `<li><span class="dim-pill" style="background:${DIMENSION_META[r.dimension].color};">${esc(DIMENSION_META[r.dimension].shortLabel)}</span> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
                 ).join('')}
             </ul>
         </div>
@@ -1131,7 +1266,7 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
             <div class="content-label">Primary Growth Areas</div>
             <ul>
                 ${ranked.slice(-3).reverse().map(r =>
-                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
+                    `<li><span class="dim-pill" style="background:${DIMENSION_META[r.dimension].color};">${esc(DIMENSION_META[r.dimension].shortLabel)}</span> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
                 ).join('')}
             </ul>
         </div>
@@ -1222,13 +1357,18 @@ function pageDimensionDeepDive(dimension, scores, pageNum) {
     const level = getScoreLevel(score);
     const levelLabel = getScoreLevelLabel(score);
     const isStrong = score >= 70;
+    const cls = dimClass(dimension);
 
     const whatItMeans = meta.whatItMeans[isStrong ? 'strong' : 'developing'];
     const strengths = meta.strengths[isStrong ? 'strong' : 'developing'];
 
     return `
 <div class="page">
-    <div class="section-eyebrow" style="color:${meta.color};">Page ${pageNum} of 16 — Dimension Deep Dive</div>
+    <div class="section-header ${cls}" style="border-color:${meta.color};margin-bottom:10px;">
+        <div class="section-eyebrow">Page ${pageNum} of 16 — Dimension Deep Dive</div>
+        <div class="section-title" style="color:${meta.color};">${esc(meta.label)}</div>
+        <div class="section-subtitle">${esc(meta.tagline)}</div>
+    </div>
 
     <div class="dim-hero" style="background:linear-gradient(135deg,${meta.color},${meta.borderColor});">
         <div class="dim-hero-top">
@@ -1238,7 +1378,7 @@ function pageDimensionDeepDive(dimension, scores, pageNum) {
         </div>
         <div class="dim-hero-tagline">${esc(meta.tagline)}</div>
         <div style="margin-top:6px;">
-            <span style="background:rgba(255,255,255,0.2);border-radius:12px;padding:2px 10px;font-size:8pt;font-weight:600;">${esc(levelLabel)}</span>
+            <span style="background:rgba(255,255,255,0.22);border-radius:20px;padding:3px 12px;font-size:7.5pt;font-weight:700;letter-spacing:0.5px;">${esc(levelLabel)}</span>
         </div>
     </div>
 

@@ -497,3 +497,54 @@ const assessmentHash = crypto
 This matches the algorithm used by `/api/report/generate` (`buildJobHash` in `backend/routes/report.js`) and `buildAssessmentHash` in `backend/services/assessmentAccessControl.js`.
 
 
+
+## 🎨 PDF Report Styling
+
+The PDF report is generated as a 16-page HTML document rendered via Puppeteer (Chromium) and uses a single CSS block defined in `backend/templates/reportTemplate.js`.
+
+### Dimension colour palette
+
+Each of the six resilience dimensions has a dedicated accent colour used consistently across all report sections (progress bars, section headers, hero banners, pill badges):
+
+| Dimension | CSS variable | Hex |
+|---|---|---|
+| Agentic-Generative | `--dim-agentic` | `#14B8A6` (teal) |
+| Relational-Connective | `--dim-relational` | `#FB7185` (coral) |
+| Spiritual-Reflective | `--dim-spiritual` | `#8B5CF6` (violet) |
+| Emotional-Adaptive | `--dim-emotional` | `#22C55E` (lime) |
+| Somatic-Regulative | `--dim-somatic` | `#0EA5E9` (sky blue) |
+| Cognitive-Narrative | `--dim-cognitive` | `#F59E0B` (amber) |
+
+The palette is defined once in `DIMENSION_PALETTE` (top of `reportTemplate.js`) and flows into `DIMENSION_META` automatically. To change a colour, edit only `DIMENSION_PALETTE`.
+
+### Generating and verifying a PDF locally
+
+1. Start the server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+2. Complete an assessment in the browser (or use an existing account).
+3. Trigger PDF generation via the API:
+   ```bash
+   curl -X POST http://localhost:3000/api/report/generate \
+     -H 'Content-Type: application/json' \
+     -H 'Authorization: Bearer <YOUR_JWT>' \
+     -d '{"overall":72,"dominantType":"Agentic-Generative","scores":{...}}'
+   ```
+   The response returns `{ "hash": "<job-hash>" }`.
+4. Poll for completion:
+   ```bash
+   curl "http://localhost:3000/api/report/status?hash=<job-hash>" \
+     -H 'Authorization: Bearer <YOUR_JWT>'
+   ```
+   Wait until `status` is `"done"`.
+5. Download the PDF:
+   ```bash
+   curl -o report.pdf \
+     "http://localhost:3000/api/report/download?hash=<job-hash>" \
+     -H 'Authorization: Bearer <YOUR_JWT>'
+   ```
+6. Open `report.pdf` in a PDF viewer to verify styling.
+
+Alternatively, you can trigger a download directly from the Results page in the browser — click **Download Full Report** after completing an assessment.
