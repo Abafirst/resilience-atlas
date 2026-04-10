@@ -415,7 +415,6 @@ if (process.env.NODE_ENV !== "production") {
     res.json({
       clientDistExists: fs.existsSync(clientDist),
       clientDistAssetsExists: fs.existsSync(path.join(clientDist, "assets")),
-      clientDistPath: clientDist,
     });
   });
 }
