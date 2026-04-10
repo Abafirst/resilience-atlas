@@ -14,7 +14,8 @@ import './styles/upsell.css';
 import './styles/icons.css';
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import SiteFooter from './components/SiteFooter.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
 
 // Existing pages
@@ -159,9 +160,12 @@ function HomeRoute() {
   return <AuthenticatedApp user={user} getAccessTokenSilently={getAccessTokenSilently} logout={logout} />;
 }
 
-export default function App() {
+function AppShell() {
+  const location = useLocation();
+  const showFooter = !location.pathname.startsWith('/kids');
+
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         {/* Public informational pages */}
         <Route path="/about" element={<AboutPage />} />
@@ -224,6 +228,15 @@ export default function App() {
         {/* Default auth-gated home route */}
         <Route path="/*" element={<HomeRoute />} />
       </Routes>
+      {showFooter && <SiteFooter />}
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   );
 }

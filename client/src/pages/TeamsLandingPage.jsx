@@ -1077,45 +1077,6 @@ export default function TeamsLandingPage() {
     </div>
   </section>
 
-  <footer className="site-footer" role="contentinfo">
-    <nav className="footer-nav" aria-label="Footer navigation">
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Assessment</strong>
-        <a href="/assessment">About the Assessment</a>
-        <a href="/quiz">Take the Quiz</a>
-        <a href="/results">My Results</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Research</strong>
-        <a href="/research">Foundations</a>
-        <a href="/research#dimensions">Six Dimensions</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Programs</strong>
-        <a href="/teams">For Teams</a>
-        <a href="/teams-activities">Team Activities</a>
-        <a href="/teams-resources">Team Resources</a>
-        <a href="/teams-facilitation">Facilitation Guide</a>
-        <a href="/kids">For Kids</a>
-      </div>
-      <div className="footer-nav-group">
-        <strong className="footer-nav-heading">Company</strong>
-        <a href="/about">About</a>
-        <a href="/privacy">Privacy &amp; Data Control</a>
-      </div>
-    </nav>
-    <div className="footer-bottom">
-      <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-      <p>The Resilience Atlas&#8482; is a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
-      <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
-    </div>
-  </footer>
-
-  
-  
-
-  
-
     </>
   );
 }

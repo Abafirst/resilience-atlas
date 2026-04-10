@@ -525,17 +525,6 @@ export default function TeamPage() {
           </div>
         </main>
 
-        {/* Footer */}
-        <footer style={s.footer} role="contentinfo">
-          <p style={{ margin: 0 }}>
-            &copy; {new Date().getFullYear()} The Resilience Atlas™ &nbsp;·&nbsp;{' '}
-            <a href="/about" style={s.footerLink}>About</a>{' '}
-            &nbsp;·&nbsp;{' '}
-            <a href="/privacy" style={s.footerLink}>Privacy &amp; Data</a>{' '}
-            &nbsp;·&nbsp;{' '}
-            <a href="/results" style={s.footerLink}>My Results</a>
-          </p>
-        </footer>
       </div>
     </>
   );

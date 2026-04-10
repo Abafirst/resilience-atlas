@@ -203,17 +203,6 @@ export default function InsightsPage() {
           </a>
         </div>
       </section>
-
-      <footer className="site-footer">
-        <p>&copy; 2026 The Resilience Atlas&#8482;</p>
-        <p className="mt-2">The Resilience Atlas&#8482; is a trademark of Janeen Molchany Ph.D., BCBA.</p>
-        <p className="mt-2">For educational and self-reflection purposes only. Not a clinical diagnosis.</p>
-        <nav aria-label="Footer navigation" style={{marginTop:'1rem',display:'flex',gap:'1.25rem',justifyContent:'center',flexWrap:'wrap'}}>
-          <a href="/" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>Home</a>
-          <a href="/teams" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>For Teams</a>
-          <a href="/quiz" style={{color:'var(--slate-400)',fontSize:'.88rem'}}>Take Assessment</a>
-        </nav>
-      </footer>
     </>
   );
 }
