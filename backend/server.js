@@ -187,6 +187,9 @@ app.use(
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://theresilienceatlas.com",
   "https://resilience-atlas-production-e037.up.railway.app",
+  // Staging Railway deployment — included by default so staging works
+  // out-of-the-box without requiring a manual CORS_ORIGIN env var override.
+  "https://resilience-atlas-staging.up.railway.app",
   // http is intentional here — localhost is never reached over the public
   // internet, so there is no credential-leakage risk for local development.
   "http://localhost:3000",
