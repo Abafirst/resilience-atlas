@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import YouTube from 'react-youtube';
 import { KIDS_VIDEO_STORIES, VIDEO_AGE_FILTERS } from '../data/kidsVideoStories';
 
 /* ── Video Modal ── */
 function VideoModal({ video, onClose }) {
+  const [showFallback, setShowFallback] = useState(false);
+  const youtubeUrl = `https://www.youtube.com/watch?v=${video.youtubeId}`;
+
+  useEffect(() => {
+    setShowFallback(false);
+  }, [video.youtubeId]);
+
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -36,12 +44,36 @@ function VideoModal({ video, onClose }) {
         <p className="video-modal-title">{video.title}</p>
         <p className="video-modal-meta">{video.subtitle}</p>
         <div className="video-embed-wrapper">
-          <iframe
-            src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowFullScreen
+          <YouTube
+            videoId={video.youtubeId}
+            className="youtube-player"
+            opts={{
+              width: '100%',
+              height: '100%',
+              playerVars: { modestbranding: 1, rel: 0 },
+            }}
+            onError={() => setShowFallback(true)}
           />
+
+          {showFallback && (
+            <div className="kids-video-overlay" role="note" aria-label="Open the video">
+              <div className="kids-video-overlay-card">
+                <div className="kids-video-overlay-icon" aria-hidden="true">🎬</div>
+                <div className="kids-video-overlay-title">Oops! This video won't play here.</div>
+                <div className="kids-video-overlay-text">Let's open it in YouTube instead!</div>
+                <div className="kids-video-overlay-actions">
+                  <a
+                    className="kids-video-open-btn"
+                    href={youtubeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open video
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <p className="video-modal-desc">{video.description}</p>
       </div>
