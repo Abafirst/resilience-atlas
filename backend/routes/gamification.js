@@ -61,15 +61,23 @@ const GAMIFICATION_TIERS = new Set(PREMIUM_TIERS);
 
 // ── Email resolution helpers ──────────────────────────────────────────────────
 
-/** Returns true only if the string contains an @ with non-empty local part and a domain
- *  that includes a dot.  Uses indexOf (no regex) to avoid ReDoS on adversarial input. */
+/** Returns true only if the string contains a single @ with non-empty local part
+ *  and a domain that has at least one character on each side of a dot.
+ *  Uses indexOf (no regex) to avoid ReDoS on adversarial input. */
 function looksLikeEmail(s) {
   if (typeof s !== 'string') return false;
   const t = s.trim();
   const at = t.indexOf('@');
-  if (at < 1) return false;               // no @ or @ at start
+  if (at < 1) return false;                      // no @ or @ at start
+  if (t.indexOf('@', at + 1) !== -1) return false; // more than one @
   const domain = t.slice(at + 1);
-  return domain.length > 2 && domain.indexOf('.') >= 0; // domain has a dot
+  const dot = domain.lastIndexOf('.');
+  return dot > 0 && dot < domain.length - 1;     // dot with chars on both sides
+}
+
+/** Normalise an email address for consistent storage/lookup comparisons. */
+function normalizeEmail(email) {
+  return email.toLowerCase().trim();
 }
 
 /**
@@ -112,7 +120,7 @@ function fetchEmailFromUserinfo(token, issuer) {
         }
         try {
           const parsed = JSON.parse(body);
-          resolve(looksLikeEmail(parsed.email) ? parsed.email.toLowerCase().trim() : null);
+          resolve(looksLikeEmail(parsed.email) ? normalizeEmail(parsed.email) : null);
         } catch {
           logger.warn('[gamification] userinfo response parse error');
           resolve(null);
@@ -150,7 +158,7 @@ function fetchEmailFromUserinfo(token, issuer) {
 async function resolveUserEmail(req) {
   // 1. JWT email claim — only use if it looks like a real email (never treat sub as email)
   if (looksLikeEmail(req.user && req.user.email)) {
-    return { email: req.user.email.toLowerCase().trim(), source: 'jwt_email' };
+    return { email: normalizeEmail(req.user.email), source: 'jwt_email' };
   }
 
   // 2. Auth0 userinfo endpoint
@@ -176,7 +184,7 @@ async function resolveUserEmail(req) {
         $or: [{ authId: sub }, { sub }],
       }).select('email').lean();
       if (user && looksLikeEmail(user.email)) {
-        return { email: user.email.toLowerCase().trim(), source: 'user_model' };
+        return { email: normalizeEmail(user.email), source: 'user_model' };
       }
     } catch (err) {
       logger.warn('[gamification] user_model email lookup failed:', err.message);
