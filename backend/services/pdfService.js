@@ -446,23 +446,27 @@ function buildDashboardPage(doc, report) {
     const legColW = (CONTENT_WIDTH - 12) / 2;
     const legStartY = doc.y;
     const legRowH = 34;
+    const legSwatchW = 10;        // width of the coloured swatch square
+    const legTextOffset = 14;     // horizontal gap between swatch left-edge and text
+    const legTextW = legColW - legTextOffset - 2; // available width for text within one column
+    const legDescOffsetY = 13;    // vertical gap from label top to description line
     for (let i = 0; i < levels.length; i++) {
         const col = i % 2;
         const row = Math.floor(i / 2);
         const x = PAGE_MARGIN + col * (legColW + 12);
         const y = legStartY + row * legRowH;
         fillColor(doc, LEVEL_COLORS[levels[i].key]);
-        doc.roundedRect(x, y + 2, 10, 10, 2).fill();
+        doc.roundedRect(x, y + 2, legSwatchW, legSwatchW, 2).fill();
         // Label on its own line — explicit width prevents overflow into adjacent column
         fillColor(doc, COLORS.text);
-        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].label, x + 14, y, {
-            width: legColW - 16,
+        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].label, x + legTextOffset, y, {
+            width: legTextW,
             lineBreak: false,
         });
         // Description on second line — independent text call with clamped width
         fillColor(doc, COLORS.textLight);
-        doc.fontSize(7.5).font('Helvetica').text(levels[i].desc, x + 14, y + 13, {
-            width: legColW - 16,
+        doc.fontSize(7.5).font('Helvetica').text(levels[i].desc, x + legTextOffset, y + legDescOffsetY, {
+            width: legTextW,
             lineBreak: false,
         });
         fillColor(doc, COLORS.text);
