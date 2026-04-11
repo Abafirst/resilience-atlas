@@ -29,6 +29,10 @@ const s = {
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
   },
   heroSub: {
     fontSize: '1rem',
@@ -102,7 +106,10 @@ export default function ResultsHistoryPage() {
         <SiteHeader activePage="results-history" />
         <main style={s.main} id="main-content">
           <section style={s.hero}>
-            <h1 style={s.heroTitle}>🗺 Your Resilience Journey</h1>
+            <h1 style={s.heroTitle}>
+              <img src="/brand/logo-256x256.png" alt="" aria-hidden="true" width={28} height={28} />
+              Your Resilience Journey
+            </h1>
             <p style={s.heroSub}>
               Track how your resilience evolves over time. Sign in to view your assessment
               history, download reports, and access your personal resilience dashboard.
@@ -134,7 +141,10 @@ export default function ResultsHistoryPage() {
       <SiteHeader activePage="results-history" />
       <main style={s.main} id="main-content">
         <section style={s.hero}>
-          <h1 style={s.heroTitle}>🗺 Your Resilience Journey</h1>
+          <h1 style={s.heroTitle}>
+            <img src="/brand/logo-256x256.png" alt="" aria-hidden="true" width={28} height={28} />
+            Your Resilience Journey
+          </h1>
           <p style={s.heroSub}>
             Your assessment history and PDF reports are below. Each assessment marks a new
             point on your personal resilience atlas.
