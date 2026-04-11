@@ -706,7 +706,7 @@ export default function TeamsLandingPage() {
         <ul className="ttc-features" aria-label="Atlas Team Basic features">
           <li><span aria-hidden="true">&#10003;</span> Up to 15 users | 1 team</li>
           <li><span aria-hidden="true">&#10003;</span> <strong>Gamifications:</strong> Personal &amp; team badges, streaks, milestones</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Team Tracking:</strong> Leaderboards, progress dashboards, parental views</li>
+          <li><span aria-hidden="true">&#10003;</span> <strong>Team Tracking:</strong> Leaderboards, progress dashboards, member dashboards</li>
           <li><span aria-hidden="true">&#10003;</span> Team dashboard &amp; aggregated radar chart</li>
           <li><span aria-hidden="true">&#10003;</span> Self-service CSV &amp; PDF export</li>
           <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
@@ -735,7 +735,7 @@ export default function TeamsLandingPage() {
           <li><span aria-hidden="true">&#10003;</span> Up to 30 users | Multiple teams</li>
           <li><span aria-hidden="true">&#10003;</span> <strong>Enhanced Gamifications:</strong> Advanced team challenges, achievement tracking</li>
           <li><span aria-hidden="true">&#10003;</span> <strong>Advanced Leaderboards:</strong> Multi-team comparisons, dimension breakdowns</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Parental Controls:</strong> Detailed team member progress tracking</li>
+          <li><span aria-hidden="true">&#10003;</span> <strong>Manager Dashboards:</strong> Detailed team member progress tracking</li>
           <li><span aria-hidden="true">&#10003;</span> Advanced analytics (downloadable)</li>
           <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports (PDF)</li>
           <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library (30+ guides)</li>
@@ -762,11 +762,11 @@ export default function TeamsLandingPage() {
         <ul className="ttc-features" aria-label="Atlas Enterprise features">
           <li><span aria-hidden="true">&#10003;</span> Unlimited users &amp; teams</li>
           <li><span aria-hidden="true">&#10003;</span> <strong>Full Gamification Suite:</strong> Custom badges, unlimited challenges, org-wide leaderboards</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Enterprise Tracking:</strong> Advanced parental/manager dashboards, real-time analytics</li>
-          <li><span aria-hidden="true">&#10003;</span> Org-managed branding (logos, colors, domain)</li>
-          <li><span aria-hidden="true">&#10003;</span> SSO / SAML integration — configure yourself</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-service data export — download your org's data anytime</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-custody: you own and control all purchased materials</li>
+          <li><span aria-hidden="true">&#10003;</span> <strong>Enterprise Tracking:</strong> Advanced manager/admin dashboards, up-to-date analytics dashboard</li>
+          <li><span aria-hidden="true">&#10003;</span> Org-managed branding (logos, colors)</li>
+          <li><span aria-hidden="true">&#10003;</span> SSO/SAML available — enabled on request</li>
+          <li><span aria-hidden="true">&#10003;</span> Self-service data export — download your org&rsquo;s data anytime</li>
+          <li><span aria-hidden="true">&#10003;</span> Self-custody: export and own all your org&rsquo;s assessment data and reports</li>
         </ul>
         <a href="#teamLeadForm" className="ttc-btn ttc-btn--primary" onClick={(e) => { e.preventDefault(); document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'}) }}>
           Contact Sales
