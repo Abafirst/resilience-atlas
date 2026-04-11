@@ -340,6 +340,45 @@ const styles = `
       color: #15803d;
     }
 
+    .handout-cta { margin-top: .65rem; }
+
+    .handout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .32rem .75rem;
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      text-decoration: none;
+      background: none;
+      font-family: inherit;
+      transition: background 150ms, opacity 150ms;
+      line-height: 1.4;
+    }
+    .handout-btn--download {
+      background: #4F46E5;
+      color: #fff;
+      border-color: #4F46E5;
+    }
+    .handout-btn--download:hover:not(:disabled) { background: #4338CA; border-color: #4338CA; }
+    .handout-btn--login {
+      background: #f8fafc;
+      color: #4F46E5;
+      border-color: #c7d2fe;
+    }
+    .handout-btn--login:hover { background: #e0e7ff; }
+    .handout-btn--upgrade {
+      background: #fff7ed;
+      color: #c2410c;
+      border-color: #fed7aa;
+    }
+    .handout-btn--upgrade:hover { background: #ffedd5; }
+    .handout-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .handout-error { font-size: .75rem; color: #dc2626; margin-top: .5rem; }
+
     /* ── Dimension Visual Guide ── */
     .dimension-guide-grid {
       display: grid;
@@ -385,12 +424,107 @@ const styles = `
     }
 `;
 
+/**
+ * Featured handout cards shown on the Teams landing page.
+ * resource `id` must match a key known to /api/teams/download/:resourceId.
+ * `minTier` uses backend tier names: 'starter' | 'pro' | 'enterprise'.
+ */
+const FEATURED_HANDOUTS = [
+  {
+    id: 'hand-007',
+    icon: '/icons/compass.svg',
+    emoji: null,
+    title: 'Six Dimensions Quick Reference',
+    desc: 'A one-page overview of all six resilience dimensions with definitions, archetypes, and key signals. Perfect for workshop prep or team onboarding.',
+    tag: 'PDF Handout',
+    minTier: 'starter',
+  },
+  {
+    id: 'hand-001',
+    icon: '/icons/game-map.svg',
+    emoji: null,
+    title: 'Team Resilience Workshop Agenda',
+    desc: 'A 90-minute structured workshop agenda with timing, talking points, and debrief questions. Designed for HR facilitators and team leads.',
+    tag: 'Facilitator Guide',
+    minTier: 'pro',
+  },
+  {
+    id: 'hand-012',
+    icon: null,
+    emoji: '📡',
+    title: 'Team Dashboard Interpretation Guide',
+    desc: "How to read and discuss your team's aggregated radar chart. Includes facilitation questions and action-planning prompts for each dimension.",
+    tag: 'Facilitator Guide',
+    minTier: 'starter',
+  },
+  {
+    id: 'hand-011',
+    icon: null,
+    emoji: '🪞',
+    title: 'Individual Reflection Worksheet',
+    desc: 'A fillable worksheet for participants to use before or after taking the assessment. Includes personal scoring, dimension reflections, and goal-setting prompts.',
+    tag: 'Participant Worksheet',
+    minTier: 'starter',
+  },
+  {
+    id: 'hand-010',
+    icon: null,
+    emoji: '🛡️',
+    title: 'Resilience Under Pressure Card',
+    desc: 'A pocket-sized reference card with grounding techniques, reframing prompts, and regulation strategies for each dimension — for use in real-time high-stress moments.',
+    tag: 'Reference Card',
+    minTier: 'starter',
+  },
+  {
+    id: 'hand-009',
+    icon: null,
+    emoji: '⚓',
+    title: 'Team Values Charter Template',
+    desc: 'A structured template for teams to document their shared values, working principles, and resilience commitments — for display, onboarding, and quarterly review.',
+    tag: 'Template',
+    minTier: 'starter',
+  },
+  {
+    id: 'hand-002',
+    icon: null,
+    emoji: '🔭',
+    title: 'Dimension Signals Observer Sheet',
+    desc: "A tool for managers and coaches to observe and recognize resilience dimension signals in team members' behavior — useful for coaching conversations and performance support.",
+    tag: 'Manager Tool',
+    minTier: 'pro',
+  },
+  {
+    id: 'hand-016',
+    icon: null,
+    emoji: '🏔️',
+    title: '90-Day Resilience Action Plan',
+    desc: 'A structured plan template for individuals and teams to set resilience development goals, identify support, and track progress across a quarter.',
+    tag: 'Planning Template',
+    minTier: 'starter',
+  },
+];
+
+/** Tier display labels keyed by backend tier name. */
+const TIER_LABELS = { starter: 'Atlas Team Basic', pro: 'Atlas Team Premium', enterprise: 'Atlas Team Enterprise' };
+
+/** Maps backend tier names to frontend tier order values. */
+const BACKEND_TIER_ORDER = { starter: 1, pro: 2, enterprise: 3 };
+/** Maps frontend tier names (from getCurrentTeamsTier) to order values. */
+const FRONTEND_TIER_ORDER = { none: 0, basic: 1, premium: 2, enterprise: 3 };
+/** Converts a backend min-tier name to its backend tier order value. */
+function getBackendTierOrder(backendTier) {
+  // starter→1, pro→2, enterprise→3
+  return BACKEND_TIER_ORDER[backendTier] || 1;
+}
+
 export default function TeamsLandingPage() {
-  const { getAccessTokenSilently, user } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect, user } = useAuth0();
   const [showGateModal, setShowGateModal] = useState(false);
   const [userTier, setUserTier] = useState('none');
   const [checkoutLoading, setCheckoutLoading] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
+  const [downloadingId, setDownloadingId] = useState(null);
+  const [downloadError, setDownloadError] = useState('');
 
   useEffect(() => {
     try {
@@ -459,6 +593,62 @@ export default function TeamsLandingPage() {
       // No access — show upgrade modal
       setShowGateModal(true);
     }
+  };
+
+  /**
+   * Download a Teams resource PDF using an Auth0 Bearer token.
+   * Falls back gracefully if token retrieval fails.
+   */
+  const handleDownload = async (resourceId, filename) => {
+    setDownloadError('');
+    setDownloadingId(resourceId);
+    try {
+      let token = null;
+      try { token = await getAccessTokenSilently(); } catch (err) {
+        if (import.meta.env?.DEV) console.debug('[HandoutDownload] Token unavailable:', err?.message || err);
+      }
+      const res = await fetch(`/api/teams/download/${resourceId}`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Download failed (${res.status})`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const disp = res.headers.get('Content-Disposition') || '';
+      const match = disp.match(/filename="?([^";]+)"?/);
+      a.download = match ? match[1] : (filename || `${resourceId}.pdf`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setDownloadError(err.message || 'Download failed. Please try again.');
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  /** Redirect unauthenticated users to Auth0 login with return path. */
+  const handleLoginToDownload = () => {
+    loginWithRedirect({ appState: { returnTo: '/teams#facilitation-resources' } });
+  };
+
+  /**
+   * Returns the CTA state for a handout card given the current auth/tier state.
+   * 'download' | 'login' | 'upgrade'
+   */
+  const getHandoutCtaState = (minTier) => {
+    if (!isAuthenticated) return 'login';
+    // Compare frontend tier order against the backend min tier requirement.
+    // backend: starter→1, pro→2, enterprise→3
+    // frontend: none→0, basic→1, premium→2, enterprise→3
+    const required = getBackendTierOrder(minTier);
+    const current = FRONTEND_TIER_ORDER[userTier] || 0;
+    return current >= required ? 'download' : 'upgrade';
   };
 
   return (
@@ -853,91 +1043,70 @@ export default function TeamsLandingPage() {
       </p>
     </div>
     <div className="handouts-grid">
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">
-          <img src="/icons/compass.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
-        </div>
-        <div className="handout-body">
-          <div className="handout-title">Six Dimensions Quick Reference</div>
-          <p className="handout-desc">A one-page overview of all six resilience dimensions with definitions, archetypes, and key signals. Perfect for workshop prep or team onboarding.</p>
-          <span className="handout-tag">PDF Handout</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">
-          <img src="/icons/game-map.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
-        </div>
-        <div className="handout-body">
-          <div className="handout-title">Team Resilience Workshop Agenda</div>
-          <p className="handout-desc">A 90-minute structured workshop agenda with timing, talking points, and debrief questions. Designed for HR facilitators and team leads.</p>
-          <span className="handout-tag">Facilitator Guide</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">📡</div>
-        <div className="handout-body">
-          <div className="handout-title">Team Dashboard Interpretation Guide</div>
-          <p className="handout-desc">How to read and discuss your team's aggregated radar chart. Includes facilitation questions and action-planning prompts for each dimension.</p>
-          <span className="handout-tag">Facilitator Guide</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🪞</div>
-        <div className="handout-body">
-          <div className="handout-title">Individual Reflection Worksheet</div>
-          <p className="handout-desc">A fillable worksheet for participants to use before or after taking the assessment. Includes personal scoring, dimension reflections, and goal-setting prompts.</p>
-          <span className="handout-tag">Participant Worksheet</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🛡️</div>
-        <div className="handout-body">
-          <div className="handout-title">Resilience Under Pressure Card</div>
-          <p className="handout-desc">A pocket-sized reference card with grounding techniques, reframing prompts, and regulation strategies for each dimension — for use in real-time high-stress moments.</p>
-          <span className="handout-tag">Reference Card</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">⚓</div>
-        <div className="handout-body">
-          <div className="handout-title">Team Values Charter Template</div>
-          <p className="handout-desc">A structured template for teams to document their shared values, working principles, and resilience commitments — for display, onboarding, and quarterly review.</p>
-          <span className="handout-tag">Template</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🔭</div>
-        <div className="handout-body">
-          <div className="handout-title">Dimension Signals Observer Sheet</div>
-          <p className="handout-desc">A tool for managers and coaches to observe and recognize resilience dimension signals in team members' behavior — useful for coaching conversations and performance support.</p>
-          <span className="handout-tag">Manager Tool</span>
-        </div>
-      </div>
-
-      <div className="handout-card">
-        <div className="handout-icon" aria-hidden="true">🏔️</div>
-        <div className="handout-body">
-          <div className="handout-title">90-Day Resilience Action Plan</div>
-          <p className="handout-desc">A structured plan template for individuals and teams to set resilience development goals, identify support, and track progress across a quarter.</p>
-          <span className="handout-tag">Planning Template</span>
-        </div>
-      </div>
-
+      {FEATURED_HANDOUTS.map((handout) => {
+        const ctaState = getHandoutCtaState(handout.minTier);
+        const isDownloading = downloadingId === handout.id;
+        return (
+          <div className="handout-card" key={handout.id}>
+            <div className="handout-icon" aria-hidden="true">
+              {handout.icon
+                ? <img src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+                : handout.emoji}
+            </div>
+            <div className="handout-body">
+              <div className="handout-title">{handout.title}</div>
+              <p className="handout-desc">{handout.desc}</p>
+              <span className="handout-tag">{handout.tag}</span>
+              <div className="handout-cta">
+                {ctaState === 'download' && (
+                  <button
+                    type="button"
+                    className="handout-btn handout-btn--download"
+                    onClick={() => handleDownload(handout.id, `${handout.id}.pdf`)}
+                    disabled={isDownloading}
+                    aria-label={`Download ${handout.title}`}
+                  >
+                    {isDownloading ? 'Downloading…' : '⬇ Download PDF'}
+                  </button>
+                )}
+                {ctaState === 'login' && (
+                  <button
+                    type="button"
+                    className="handout-btn handout-btn--login"
+                    onClick={handleLoginToDownload}
+                    aria-label={`Sign in to download ${handout.title}`}
+                  >
+                    Sign in to download
+                  </button>
+                )}
+                {ctaState === 'upgrade' && (
+                  <a
+                    href="#pricing"
+                    className="handout-btn handout-btn--upgrade"
+                    aria-label={`Upgrade to download ${handout.title} — requires ${TIER_LABELS[handout.minTier]}`}
+                  >
+                    <img src="/icons/lock.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle' }} />
+                    {' '}Upgrade to download
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
+    {downloadError && (
+      <p className="handout-error" role="alert" style={{ textAlign: 'center', marginTop: '.75rem' }}>
+        {downloadError}
+      </p>
+    )}
     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
       <p style={{ fontSize: '.93rem', color: '#64748b', marginBottom: '1rem' }}>
         All facilitation materials are included with every Teams plan.{' '}
         <a href="#pricing" style={{ color: '#4F46E5', fontWeight: 600 }}>View packages →</a>
       </p>
       <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <a href="/teams-resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>Browse All Resources →</a>
+        <a href="/teams/resources" style={{ background: '#4F46E5', color: '#fff', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 700, textDecoration: 'none', fontSize: '.9rem' }}>View full library →</a>
         <a href="/teams-facilitation" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Full Facilitation Guide</a>
         <a href="/teams-activities" style={{ background: '#fff', color: '#1e293b', border: '1px solid #cbd5e1', borderRadius: '8px', padding: '.6rem 1.25rem', fontWeight: 600, textDecoration: 'none', fontSize: '.9rem' }}>Activity Library</a>
       </div>
