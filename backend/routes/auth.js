@@ -1,6 +1,7 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
+const Auth0Profile = require('../models/Auth0Profile');
 const Purchase = require('../models/Purchase');
 const ResilienceResult = require('../models/ResilienceResult');
 const { authenticateJWT } = require('../middleware/auth');
@@ -120,6 +121,114 @@ router.get('/user-status', userStatusLimiter, async (req, res) => {
         });
     } catch (err) {
         logger.error('User status fetch error:', err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+/**
+ * GET /api/auth/profile-status
+ * Returns whether the authenticated user has a full name stored in the DB.
+ *
+ * Auth required (Bearer JWT).
+ * Only allows querying status for the email that matches the JWT "email" claim.
+ *
+ * Query params:
+ *   email (required) — must match the authenticated user's email
+ *
+ * Response:
+ *   { hasName: boolean, fullName?: string }
+ */
+router.get('/profile-status', authStatusLimiter, authenticateJWT, async (req, res) => {
+    const jwtEmail = req.user && req.user.email;
+    if (!jwtEmail) {
+        return res.status(400).json({ error: 'Email not found in token.' });
+    }
+
+    const { email } = req.query;
+    if (!email) {
+        return res.status(400).json({ error: 'email query parameter is required.' });
+    }
+
+    if (email.toLowerCase().trim() !== jwtEmail.toLowerCase().trim()) {
+        return res.status(403).json({ error: 'Forbidden.' });
+    }
+
+    try {
+        const cleanEmail = jwtEmail.toLowerCase().trim();
+        const profile = await Auth0Profile.findOne({ email: cleanEmail }).lean();
+        const hasName = !!(profile && profile.fullName && profile.fullName.trim().length > 0);
+        return res.json({
+            hasName,
+            ...(hasName ? { fullName: profile.fullName } : {}),
+        });
+    } catch (err) {
+        logger.error('Profile status fetch error:', err);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+/**
+ * POST /api/auth/complete-profile
+ * Stores the authenticated user's full name in the app database.
+ *
+ * Auth required (Bearer JWT).
+ * Only allows updating the profile for the email that matches the JWT.
+ *
+ * Body (JSON):
+ *   { email: string, fullName: string }
+ *
+ * Validation:
+ *   - fullName trimmed length must be 2..80
+ *   - spaces are allowed; control characters are rejected
+ *
+ * Response:
+ *   { message: string, fullName: string }
+ */
+router.post('/complete-profile', authStatusLimiter, authenticateJWT, async (req, res) => {
+    const jwtEmail = req.user && req.user.email;
+    if (!jwtEmail) {
+        return res.status(400).json({ error: 'Email not found in token.' });
+    }
+
+    const { email, fullName } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'email is required.' });
+    }
+    if (email.toLowerCase().trim() !== jwtEmail.toLowerCase().trim()) {
+        return res.status(403).json({ error: 'Forbidden.' });
+    }
+
+    if (!fullName || typeof fullName !== 'string') {
+        return res.status(400).json({ error: 'fullName is required.' });
+    }
+
+    const trimmed = fullName.trim();
+
+    if (trimmed.length < 2 || trimmed.length > 80) {
+        return res.status(400).json({ error: 'Full name must be between 2 and 80 characters.' });
+    }
+
+    // Reject control characters (ASCII 0–31 and DEL 127)
+    // eslint-disable-next-line no-control-regex
+    if (/[\x00-\x1F\x7F]/.test(trimmed)) {
+        return res.status(400).json({ error: 'Full name contains invalid characters.' });
+    }
+
+    try {
+        const cleanEmail = jwtEmail.toLowerCase().trim();
+        const profile = await Auth0Profile.findOneAndUpdate(
+            { email: cleanEmail },
+            {
+                email: cleanEmail,
+                sub: (req.user.sub || req.user.userId) || null,
+                fullName: trimmed,
+            },
+            { upsert: true, new: true, runValidators: true }
+        );
+        return res.json({ message: 'Profile updated.', fullName: profile.fullName });
+    } catch (err) {
+        logger.error('Complete profile error:', err);
         return res.status(500).json({ error: 'Internal server error.' });
     }
 });
