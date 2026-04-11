@@ -92,6 +92,20 @@ export default function Auth0LoginBar() {
   }
 
   /**
+   * Lightweight email-format check (no regex to avoid ReDoS).
+   * Mirrors the looksLikeEmail helper in backend/routes/sso.js.
+   */
+  function looksLikeEmail(s) {
+    if (!s || typeof s !== 'string') return false;
+    const atIdx = s.indexOf('@');
+    if (atIdx < 1) return false;
+    if (s.indexOf('@', atIdx + 1) !== -1) return false;
+    const domain = s.slice(atIdx + 1);
+    const dotIdx = domain.lastIndexOf('.');
+    return dotIdx > 0 && dotIdx < domain.length - 2; // TLD must be at least 2 chars
+  }
+
+  /**
    * Handle the "Continue" button click.
    *
    * 1. Validates the email format locally.
@@ -105,7 +119,7 @@ export default function Auth0LoginBar() {
     setError(null);
 
     const trimmed = email.trim();
-    if (!trimmed || !trimmed.includes('@')) {
+    if (!looksLikeEmail(trimmed)) {
       setError('Please enter a valid email address.');
       return;
     }
@@ -136,8 +150,9 @@ export default function Auth0LoginBar() {
           appState: { returnTo: '/' },
         });
       }
-    } catch (_err) {
-      // Network failure — fall back to a plain login to keep the path unblocked.
+    } catch (err) {
+      // Network or parse failure — log and fall back to a plain login.
+      console.warn('[Auth0LoginBar] SSO lookup failed, falling back to standard login:', err);
       loginWithRedirect({ login_hint: trimmed, appState: { returnTo: '/' } });
     } finally {
       setIsLookingUp(false);

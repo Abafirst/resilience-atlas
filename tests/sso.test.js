@@ -135,6 +135,12 @@ describe('GET /api/sso/lookup', () => {
       const res = await request(app).get('/api/sso/lookup?email=user@localhost');
       expect(res.status).toBe(400);
     });
+
+    it('returns 400 for a single-character TLD', async () => {
+      const app = buildApp();
+      const res = await request(app).get('/api/sso/lookup?email=user@domain.c');
+      expect(res.status).toBe(400);
+    });
   });
 
   describe('when SSO_DOMAIN_MAP is malformed JSON', () => {

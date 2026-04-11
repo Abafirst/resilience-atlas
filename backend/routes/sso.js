@@ -82,7 +82,7 @@ function looksLikeEmail(s) {
   if (s.indexOf('@', atIdx + 1) !== -1) return false; // only one @
   const domain = s.slice(atIdx + 1);
   const dotIdx = domain.lastIndexOf('.');
-  return dotIdx > 0 && dotIdx < domain.length - 1;   // non-empty TLD
+  return dotIdx > 0 && dotIdx < domain.length - 2;   // TLD must be at least 2 chars
 }
 
 /**
