@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ALL_BADGES } from '../data/gamificationContent.js';
+import { apiUrl } from '../api/baseUrl.js';
 
 const GAMIFICATION_API = '/api/gamification';
 
@@ -64,7 +65,7 @@ export default function useGamification() {
 
   const apiFetch = useCallback(async (path, options = {}) => {
     const headers = await getHeaders();
-    const res = await fetch(`${GAMIFICATION_API}${path}`, {
+    const res = await fetch(apiUrl(`${GAMIFICATION_API}${path}`), {
       ...options,
       headers: { ...headers, ...(options.headers || {}) },
     });

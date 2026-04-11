@@ -61,6 +61,7 @@ import AdminLeadsPage from './pages/AdminLeadsPage.jsx';
 import GamificationPage from './pages/GamificationPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
+import { apiUrl } from './api/baseUrl.js';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
@@ -122,7 +123,7 @@ function HomeRoute() {
     if (!isAuthenticated || !user?.email || statusChecked) return;
 
     const email = user.email;
-    fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
+    fetch(apiUrl(`/api/auth/user-status?email=${encodeURIComponent(email)}`))
       .then((r) => {
         if (!r.ok) throw new Error('Failed to fetch user status');
         return r.json();

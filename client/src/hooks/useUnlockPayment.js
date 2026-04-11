@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement } from '@stripe/react-stripe-js';
+import { apiUrl } from '../api/baseUrl.js';
 
 /** Placeholder key used in development environments without real Stripe credentials. */
 const STRIPE_PLACEHOLDER_KEY = 'pk_test_placeholder';
@@ -36,7 +37,7 @@ export function useUnlockPayment({ results, onUnlockSuccess }) {
 
     // ── Load Stripe publishable key once ─────────────────────────────────────
     useEffect(() => {
-        fetch('/config')
+        fetch(apiUrl('/config'))
             .then((r) => r.json())
             .then(({ stripePublishableKey }) => {
                 if (!stripePublishableKey || stripePublishableKey === STRIPE_PLACEHOLDER_KEY) {

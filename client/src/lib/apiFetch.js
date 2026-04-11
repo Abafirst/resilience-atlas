@@ -13,7 +13,12 @@
  * Falls back to an unauthenticated request when getAccessTokenSilently is not
  * provided or when the token cannot be retrieved (e.g. offline, no audience
  * configured).  This ensures non-protected calls still work without changes.
+ *
+ * On native Capacitor platforms (Android/iOS) the url is automatically
+ * prefixed with the production origin via apiUrl() so same-origin paths work
+ * in bundled builds where the Vite dev-proxy is unavailable.
  */
+import { apiUrl } from '../api/baseUrl.js';
 
 /**
  * Read the Auth0 access token directly from localStorage cache.
@@ -67,7 +72,7 @@ export async function apiFetch(url, options = {}, getTokenFn) {
     }
   }
 
-  return fetch(url, { ...options, headers });
+  return fetch(apiUrl(url), { ...options, headers });
 }
 
 export default apiFetch;

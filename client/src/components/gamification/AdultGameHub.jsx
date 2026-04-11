@@ -6,12 +6,13 @@ import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import GamificationToast from './GamificationToast.jsx';
 import { isStarterOrAbove, isNavigatorOrAbove } from '../../data/gamificationContent.js';
+import { apiUrl } from '../../api/baseUrl.js';
 
 async function fetchUserTier(email, token) {
   if (!email) return 'free';
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res  = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
+  const res  = await fetch(apiUrl(`/api/report/access?email=${encodeURIComponent(email)}`), { headers });
   if (!res.ok) throw new Error(`Access check failed (${res.status})`);
   const data = await res.json();
   if (!data.hasAccess) return 'free';

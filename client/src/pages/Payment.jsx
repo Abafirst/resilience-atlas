@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { createPayment } from '../api.js';
+import { apiUrl } from '../api/baseUrl.js';
 
 const styles = {
   container: { minHeight: '100vh', background: '#f5f7fa', padding: '40px 20px' },
@@ -99,7 +100,7 @@ export default function Payment({ token, onSuccess, onLogout }) {
   const [stripeError, setStripeError] = useState('');
 
   useEffect(() => {
-    fetch('/config')
+    fetch(apiUrl('/config'))
       .then(r => r.json())
       .then(({ stripePublishableKey }) => {
         if (!stripePublishableKey || stripePublishableKey === 'pk_test_placeholder') {
