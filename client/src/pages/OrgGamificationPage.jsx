@@ -655,7 +655,7 @@ export default function OrgGamificationPage() {
                     </div>
                     <div className="og-form-row" style={{ maxWidth: 100 }}>
                       <label>Points</label>
-                      <input className="og-input" type="number" min="0" max="10000" value={newChallenge.points} onChange={(e) => setNewChallenge({ ...newChallenge, points: e.target.value })} />
+                      <input className="og-input" type="number" min="0" max="10000" value={newChallenge.points} onChange={(e) => setNewChallenge({ ...newChallenge, points: Number(e.target.value) || 0 })} />
                     </div>
                     <div className="og-form-row">
                       <label>Start Date</label>

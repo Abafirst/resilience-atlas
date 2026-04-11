@@ -53,5 +53,7 @@ const OrgBadgeAwardSchema = new mongoose.Schema(
 
 OrgBadgeAwardSchema.index({ orgId: 1, awardedToUserId: 1 });
 OrgBadgeAwardSchema.index({ orgId: 1, badgeId: 1 });
+// Prevent awarding the same badge to the same user more than once within an org
+OrgBadgeAwardSchema.index({ orgId: 1, badgeId: 1, awardedToUserId: 1 }, { unique: true });
 
 module.exports = mongoose.model('OrgBadgeAward', OrgBadgeAwardSchema);

@@ -490,7 +490,7 @@ router.get('/:orgId/leaderboard', async (req, res) => {
 
     // Aggregate total points per user from challenge completions
     const leaderboard = await OrgChallengeCompletion.aggregate([
-      { $match: { orgId: mongoose.Types.ObjectId.createFromHexString(org._id.toString()) } },
+      { $match: { orgId: org._id } },
       {
         $group: {
           _id: '$userId',
@@ -515,7 +515,7 @@ router.get('/:orgId/leaderboard', async (req, res) => {
     // Add badge count per user for richer display
     const userIds = leaderboard.map((e) => e.userId);
     const badgeCounts = await OrgBadgeAward.aggregate([
-      { $match: { orgId: mongoose.Types.ObjectId.createFromHexString(org._id.toString()), awardedToUserId: { $in: userIds } } },
+      { $match: { orgId: org._id, awardedToUserId: { $in: userIds } } },
       { $group: { _id: '$awardedToUserId', badgeCount: { $sum: 1 } } },
     ]);
     const badgeMap = {};
