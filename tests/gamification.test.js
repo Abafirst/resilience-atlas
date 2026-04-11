@@ -304,6 +304,43 @@ describe('POST /api/gamification/challenge', () => {
     expect(res.body).toHaveProperty('message', 'Weekly challenge set.');
     expect(res.body).toHaveProperty('currentChallenge');
   });
+
+  test('accepts canonical dimension Relational-Connective', async () => {
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authToken()}`)
+      .send({ dimension: 'Relational-Connective', difficulty: 'easy' });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('message', 'Weekly challenge set.');
+    expect(res.body.currentChallenge).toHaveProperty('dimension', 'Relational-Connective');
+  });
+
+  test('accepts canonical dimension Emotional-Adaptive', async () => {
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authToken()}`)
+      .send({ dimension: 'Emotional-Adaptive', difficulty: 'medium' });
+    expect(res.status).toBe(200);
+    expect(res.body.currentChallenge).toHaveProperty('dimension', 'Emotional-Adaptive');
+  });
+
+  test('accepts legacy alias Relational-Social and normalizes to Relational-Connective', async () => {
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authToken()}`)
+      .send({ dimension: 'Relational-Social', difficulty: 'easy' });
+    expect(res.status).toBe(200);
+    expect(res.body.currentChallenge).toHaveProperty('dimension', 'Relational-Connective');
+  });
+
+  test('accepts legacy alias Emotional-Somatic and normalizes to Emotional-Adaptive', async () => {
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authToken()}`)
+      .send({ dimension: 'Emotional-Somatic', difficulty: 'hard' });
+    expect(res.status).toBe(200);
+    expect(res.body.currentChallenge).toHaveProperty('dimension', 'Emotional-Adaptive');
+  });
 });
 
 describe('POST /api/gamification/share', () => {
