@@ -891,8 +891,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-008',
@@ -906,8 +906,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-009',
@@ -921,8 +921,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-010',
@@ -951,8 +951,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/cognitive-narrative.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-012',
@@ -966,8 +966,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/emotional-adaptive.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-013',
@@ -981,8 +981,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/relational-connective.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-014',
@@ -996,8 +996,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/spiritual-reflective.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-015',
@@ -1011,8 +1011,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-016',
@@ -1026,8 +1026,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/agentic-generative.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'hand-017',
@@ -1041,8 +1041,8 @@ export const TEAMS_CONTENT = {
       icon: '/icons/compass.svg',
       downloadUrl: '#',
       format: 'PDF',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     }
   ],
 
@@ -1073,8 +1073,8 @@ export const TEAMS_CONTENT = {
       format: 'PDF',
       downloadUrl: '#',
       printSize: '8.5"×11"',
-      minTier: 'pro',
-      minTierLabel: 'Atlas Team Premium'
+      minTier: 'starter',
+      minTierLabel: 'Atlas Team Basic'
     },
     {
       id: 'vis-003',
