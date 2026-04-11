@@ -457,7 +457,6 @@ export default function PricingTeamsPage() {
         <div className="plan-capacity">
           <span><strong>Up to 15 people</strong></span>
           <span>1 team</span>
-          <span>Data retention: 1 year</span>
         </div>
 
         <button className="plan-cta plan-cta--outline" type="button"
@@ -498,7 +497,6 @@ export default function PricingTeamsPage() {
         <div className="plan-capacity">
           <span><strong>Up to 30 people</strong></span>
           <span>Unlimited teams / departments</span>
-          <span>Data retention: 3 years</span>
         </div>
 
         <button className="plan-cta plan-cta--primary" type="button"
@@ -545,7 +543,7 @@ export default function PricingTeamsPage() {
         <div className="plan-capacity">
           <span><strong>Unlimited people</strong></span>
           <span>Unlimited teams</span>
-          <span>Self-managed data</span>
+          <span>Custom retention + export controls</span>
         </div>
 
         <a className="plan-cta plan-cta--dark" href="/teams#teamLeadForm">
@@ -597,7 +595,7 @@ export default function PricingTeamsPage() {
         <tr className="category-row"><td colSpan="4">Capacity &amp; Access</td></tr>
         <tr><td>Team members</td><td>Up to 15</td><td>Up to 30</td><td>Unlimited</td></tr>
         <tr><td>Teams / departments</td><td>1</td><td>Unlimited</td><td>Unlimited</td></tr>
-        <tr><td>Data retention</td><td>1 year</td><td>3 years</td><td>Self-managed (export anytime)</td></tr>
+        <tr><td>Data retention / export</td><td><span className="dash">—</span></td><td><span className="dash">—</span></td><td>Custom retention + export controls</td></tr>
         <tr><td>Admin access</td><td><span className="check">✓</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
         <tr><td>Role-based permissions</td><td><span className="dash">—</span></td><td><span className="check">✓</span></td><td><span className="check">✓</span></td></tr>
 
