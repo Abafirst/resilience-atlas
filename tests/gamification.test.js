@@ -324,7 +324,7 @@ describe('POST /api/gamification/challenge', () => {
     expect(res.body.currentChallenge).toHaveProperty('dimension', 'Emotional-Adaptive');
   });
 
-  test('accepts legacy alias Relational-Social and normalises to Relational-Connective', async () => {
+  test('accepts legacy alias Relational-Social and normalizes to Relational-Connective', async () => {
     const res = await request(app)
       .post('/api/gamification/challenge')
       .set('Authorization', `Bearer ${authToken()}`)
@@ -333,7 +333,7 @@ describe('POST /api/gamification/challenge', () => {
     expect(res.body.currentChallenge).toHaveProperty('dimension', 'Relational-Connective');
   });
 
-  test('accepts legacy alias Emotional-Somatic and normalises to Emotional-Adaptive', async () => {
+  test('accepts legacy alias Emotional-Somatic and normalizes to Emotional-Adaptive', async () => {
     const res = await request(app)
       .post('/api/gamification/challenge')
       .set('Authorization', `Bearer ${authToken()}`)

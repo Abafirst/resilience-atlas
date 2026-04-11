@@ -282,7 +282,7 @@ const DIMENSION_ALIASES = {
 };
 
 /**
- * Normalise an incoming dimension string to its canonical form.
+ * Normalize an incoming dimension string to its canonical form.
  * Returns the canonical name when a legacy alias is supplied, or the
  * original string when it already matches the canonical set.
  *
