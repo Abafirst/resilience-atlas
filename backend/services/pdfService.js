@@ -445,20 +445,26 @@ function buildDashboardPage(doc, report) {
 
     const legColW = (CONTENT_WIDTH - 12) / 2;
     const legStartY = doc.y;
-    const legRowH = 30;
+    const legRowH = 34;
     for (let i = 0; i < levels.length; i++) {
         const col = i % 2;
         const row = Math.floor(i / 2);
         const x = PAGE_MARGIN + col * (legColW + 12);
         const y = legStartY + row * legRowH;
         fillColor(doc, LEVEL_COLORS[levels[i].key]);
-        doc.roundedRect(x, y + 1, 10, 10, 2).fill();
+        doc.roundedRect(x, y + 2, 10, 10, 2).fill();
+        // Label on its own line — explicit width prevents overflow into adjacent column
         fillColor(doc, COLORS.text);
         doc.fontSize(8).font('Helvetica-Bold').text(levels[i].label, x + 14, y, {
-            continued: true, lineBreak: false,
+            width: legColW - 16,
+            lineBreak: false,
         });
+        // Description on second line — independent text call with clamped width
         fillColor(doc, COLORS.textLight);
-        doc.fontSize(8).font('Helvetica').text('  \u2014 ' + levels[i].desc, { width: legColW - 32, lineBreak: false });
+        doc.fontSize(7.5).font('Helvetica').text(levels[i].desc, x + 14, y + 13, {
+            width: legColW - 16,
+            lineBreak: false,
+        });
         fillColor(doc, COLORS.text);
     }
     doc.y = legStartY + Math.ceil(levels.length / 2) * legRowH + 10;
