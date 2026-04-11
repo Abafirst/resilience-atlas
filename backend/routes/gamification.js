@@ -61,9 +61,15 @@ const GAMIFICATION_TIERS = new Set(PREMIUM_TIERS);
 
 // ── Email resolution helpers ──────────────────────────────────────────────────
 
-/** Returns true only if the string contains an @ with content on both sides. */
+/** Returns true only if the string contains an @ with non-empty local part and a domain
+ *  that includes a dot.  Uses indexOf (no regex) to avoid ReDoS on adversarial input. */
 function looksLikeEmail(s) {
-  return typeof s === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
+  if (typeof s !== 'string') return false;
+  const t = s.trim();
+  const at = t.indexOf('@');
+  if (at < 1) return false;               // no @ or @ at start
+  const domain = t.slice(at + 1);
+  return domain.length > 2 && domain.indexOf('.') >= 0; // domain has a dot
 }
 
 /**
@@ -157,7 +163,7 @@ async function resolveUserEmail(req) {
     if (email) {
       return { email, source: 'userinfo' };
     }
-    logger.warn('[gamification] email_resolution: userinfo_failed', { sub: req.user && req.user.sub });
+    logger.warn('[gamification]', { event: 'userinfo_failed', sub: req.user && req.user.sub });
   }
 
   // 3. User model lookup by sub / userId

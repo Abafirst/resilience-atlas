@@ -56,10 +56,10 @@ jest.mock('mongoose', () => {
 jest.mock('express-rate-limit', () => () => (req, res, next) => next());
 
 // Mock https so userinfo calls can be controlled per-test without network.
-// Also provides Agent constructor used by the Stripe config.
+// Agent is mocked as a jest.fn() constructor to satisfy Stripe's httpAgent usage.
 jest.mock('https', () => ({
   request: jest.fn(),
-  Agent:   function Agent() {},
+  Agent:   jest.fn().mockImplementation(function Agent() {}),
 }));
 
 // ── Stub GamificationProgress model ──────────────────────────────────────────
