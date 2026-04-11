@@ -59,6 +59,8 @@ import LeadershipReportPage from './pages/LeadershipReportPage.jsx';
 import OrgDashboardPage from './pages/OrgDashboardPage.jsx';
 import AdminLeadsPage from './pages/AdminLeadsPage.jsx';
 import GamificationPage from './pages/GamificationPage.jsx';
+import OrgGamificationPage from './pages/OrgGamificationPage.jsx';
+import TeamManagementPage from './pages/TeamManagementPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
@@ -219,6 +221,10 @@ function AppShell() {
 
         {/* Gamification */}
         <Route path="/gamification" element={<GamificationPage />} />
+        <Route path="/org-gamification/:orgId" element={<OrgGamificationPage />} />
+
+        {/* Team Management */}
+        <Route path="/team-management/:orgId" element={<TeamManagementPage />} />
 
         {/* Privacy & Data Control */}
         <Route path="/privacy" element={<PrivacyPage />} />

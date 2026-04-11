@@ -121,8 +121,8 @@ const TIER_CONFIG = {
         billing: 'one-time',
         maxUsers: Infinity,
         maxTeams: Infinity,
-        features: ['Unlimited users & teams', 'Org-managed custom branding', 'SSO/SAML self-service setup', 'Self-service data export', 'Everything in Premium', 'Self-custody: own your org data'],
-        gates: ['basic', 'advanced', 'multi-team', 'facilitation', 'branding', 'webhooks', 'sso', 'data-export'],
+        features: ['Unlimited users & teams', 'Org-managed custom branding', 'SSO/SAML available on request', 'Self-service data export', 'Everything in Premium', 'Self-custody: own your org data', 'Full Gamification Suite'],
+        gates: ['basic', 'advanced', 'multi-team', 'facilitation', 'branding', 'webhooks', 'sso', 'data-export', 'org-gamification'],
         // 'webhooks' gate retained for backward-compatibility with existing feature checks
         dataRetention: 'Self-managed (export anytime)',
     },
