@@ -71,6 +71,11 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 COPY package*.json ./
 RUN npm ci
+
+# Install backend deps (includes archiver and other backend-only packages)
+COPY backend/package*.json ./backend/
+RUN cd backend && npm ci
+
 COPY . .
 COPY --from=builder /app/client/dist ./client/dist
 
