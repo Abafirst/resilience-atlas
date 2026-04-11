@@ -99,7 +99,6 @@ function fetchEmailFromUserinfo(token, issuer) {
       path:     url.pathname,
       method:   'GET',
       headers:  { Authorization: `Bearer ${token}` },
-      timeout:  3000, // ms
     };
 
     const req = https.request(options, (res) => {
@@ -121,7 +120,8 @@ function fetchEmailFromUserinfo(token, issuer) {
       });
     });
 
-    req.on('timeout', () => {
+    // Set timeout on the request object (the correct Node.js https API).
+    req.setTimeout(3000, () => {
       req.destroy();
       logger.warn('[gamification] userinfo request timed out');
       resolve(null);
@@ -170,6 +170,8 @@ async function resolveUserEmail(req) {
   const sub = req.user && (req.user.sub || req.user.userId);
   if (sub) {
     try {
+      // Query by either `authId` (legacy field used in some Social login flows)
+      // or `sub` if the User schema stores the Auth0 subject directly.
       const user = await User.findOne({
         $or: [{ authId: sub }, { sub }],
       }).select('email').lean();

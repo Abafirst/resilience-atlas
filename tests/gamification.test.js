@@ -521,6 +521,7 @@ describe('requirePaidTier — entitlement gate', () => {
       res.setEncoding = jest.fn();
 
       const fakeReq = new EventEmitter();
+      fakeReq.setTimeout = jest.fn();
       fakeReq.end = jest.fn(() => {
         setImmediate(() => {
           callback(res);
@@ -559,6 +560,7 @@ describe('requirePaidTier — entitlement gate', () => {
     // Mock https.request to simulate userinfo network error.
     https.request.mockImplementation(() => {
       const fakeReq = new EventEmitter();
+      fakeReq.setTimeout = jest.fn();
       fakeReq.end = jest.fn(() => {
         setImmediate(() => fakeReq.emit('error', new Error('Connection refused')));
       });
