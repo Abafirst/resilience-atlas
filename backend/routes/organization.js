@@ -18,6 +18,7 @@ const ResilienceResult = require('../models/ResilienceResult');
 const User = require('../models/User');
 const emailService = require('../services/emailService');
 const { authenticateJWT } = require('../middleware/auth');
+const { getTierConfig, normalizePlan } = require('../utils/tierUtils');
 const { maybeAutoGenerate } = require('../services/leadership-report-generator');
 
 const router = express.Router();
@@ -127,6 +128,34 @@ router.post('/:organizationId/invite', authenticateJWT, async (req, res) => {
     if (sanitised.length === 0) {
       return res.status(400).json({ error: 'No valid email addresses provided.' });
     }
+
+    // ── Seat limit enforcement ────────────────────────────────────────────────
+    // Count current seats: active members + pending invites (excluding re-invites
+    // for emails already in invitedEmails, which are upserted and don't add seats).
+    const plan = org.plan || org.tier || 'free';
+    const tierCfg = getTierConfig(plan);
+    const maxUsers = (tierCfg && tierCfg.maxUsers != null) ? tierCfg.maxUsers : 15;
+
+    if (isFinite(maxUsers)) {
+      // Count current members (users with this org) + invited emails already tracked
+      const [memberCount, pendingCount] = await Promise.all([
+        User.countDocuments({ organization_id: organizationId }),
+        Invite.countDocuments({ organizationId, status: 'pending' }),
+      ]);
+      const currentSeats = Math.max(memberCount, pendingCount, org.invitedEmails ? org.invitedEmails.length : 0);
+      // Count truly new emails (not already in invitedEmails list)
+      const existingEmails = new Set((org.invitedEmails || []).map((e) => e.toLowerCase().trim()));
+      const newEmails = sanitised.filter((e) => !existingEmails.has(e));
+      if (currentSeats + newEmails.length > maxUsers) {
+        return res.status(422).json({
+          error: `Seat limit reached. Your ${tierCfg ? tierCfg.name : 'plan'} allows up to ${maxUsers} users. You currently have ${currentSeats} seat(s) used and are trying to add ${newEmails.length} new invite(s). Upgrade your plan to invite more users.`,
+          seats_used: currentSeats,
+          seats_max: maxUsers,
+          new_invites_requested: newEmails.length,
+        });
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     // INVITE_EXPIRY_DAYS defaults to 7; validate it's a positive integer
     const parsedExpiry = parseInt(process.env.INVITE_EXPIRY_DAYS || '7', 10);

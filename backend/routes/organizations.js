@@ -30,6 +30,7 @@ const TeamResult    = require('../models/TeamResult');
 const { authenticateJWT } = require('../middleware/auth');
 const { buildCsv, buildPdf } = require('../utils/export');
 const { computeTeamAverages } = require('./analytics');
+const { canAccessFeature } = require('../utils/tierUtils');
 
 const router = express.Router();
 
@@ -310,6 +311,13 @@ router.post('/:id/export/csv', authenticateJWT, exportLimiter, async (req, res) 
     if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
 
+    // Tier gate: CSV export requires at least the 'basic' feature gate
+    // (Teams Basic / teams-starter and above).
+    const orgPlan = org.plan || org.tier || 'free';
+    if (!canAccessFeature(orgPlan, 'basic')) {
+      return res.status(403).json({ error: 'CSV export requires Atlas Team Basic or higher plan.' });
+    }
+
     const results = await ResilienceResult.find({
       _id: { $in: org.completedResultIds },
     }).lean();
@@ -339,6 +347,12 @@ router.post('/:id/export/pdf', authenticateJWT, exportLimiter, async (req, res) 
     const org = await Organization.findById(req.params.id);
     if (!org) return res.status(404).json({ error: 'Organization not found.' });
     if (!isOrgAdmin(org, req.user.userId)) return res.status(403).json({ error: 'Access denied.' });
+
+    // Tier gate: auto-generated PDF team report requires Teams Premium (advanced) or Enterprise.
+    const orgPlan = org.plan || org.tier || 'free';
+    if (!canAccessFeature(orgPlan, 'advanced')) {
+      return res.status(403).json({ error: 'Auto-generated PDF team reports require Atlas Team Premium or Enterprise plan.' });
+    }
 
     const [results, teamResult] = await Promise.all([
       ResilienceResult.find({ _id: { $in: org.completedResultIds } }).lean(),

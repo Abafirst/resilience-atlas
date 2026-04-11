@@ -373,6 +373,8 @@ app.use("/api/orgs-advanced", require("./routes/org-advanced"));
 console.log("✅ Mounted route: /api/orgs-advanced");
 app.use("/api/orgs-advanced/:orgId/api-keys", require("./routes/api-keys"));
 console.log("✅ Mounted route: /api/orgs-advanced/:orgId/api-keys");
+app.use("/api/org-gamification", require("./routes/org-gamification"));
+console.log("✅ Mounted route: /api/org-gamification");
 app.use("/api/team-analytics", require("./routes/team-analytics"));
 console.log("✅ Mounted route: /api/team-analytics");
 app.use("/api/growth", require("./routes/growth"));
