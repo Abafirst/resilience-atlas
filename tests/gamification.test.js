@@ -55,6 +55,13 @@ jest.mock('mongoose', () => {
 
 jest.mock('express-rate-limit', () => () => (req, res, next) => next());
 
+// Mock https so userinfo calls can be controlled per-test without network.
+// Also provides Agent constructor used by the Stripe config.
+jest.mock('https', () => ({
+  request: jest.fn(),
+  Agent:   function Agent() {},
+}));
+
 // ── Stub GamificationProgress model ──────────────────────────────────────────
 
 jest.mock('../backend/models/GamificationProgress', () => {
@@ -166,6 +173,15 @@ function authTokenWithEmail(email = 'user@example.com', id = 'user001') {
 /** Token simulating an Auth0-normalized payload (userId + sub, no id field). */
 function authTokenAuth0(sub = 'auth0|user001') {
   return jwt.sign({ userId: sub, sub }, process.env.JWT_SECRET, { expiresIn: '1h' });
+}
+
+/**
+ * Token simulating an Auth0 access-token payload with iss claim but no email.
+ * This is the real-world case for Google OAuth users where the email claim is
+ * absent from the access token (it may only be available via userinfo).
+ */
+function authTokenAuth0WithIss(sub, iss) {
+  return jwt.sign({ userId: sub, sub, iss }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
 // ── Route tests ───────────────────────────────────────────────────────────────
@@ -461,5 +477,110 @@ describe('requirePaidTier — entitlement gate', () => {
       .send({ dimension: 'Cognitive-Narrative', difficulty: 'easy' });
 
     expect(res.status).toBe(200);
+  });
+
+  // ── sub-as-email regression tests ──────────────────────────────────────────
+
+  test('sub-only token: does NOT attempt purchase lookup using sub as email', async () => {
+    const Purchase = require('../backend/models/Purchase');
+    const User     = require('../backend/models/User');
+
+    // No iss in token → userinfo path is skipped; User lookup by sub returns nothing.
+    User.findOne.mockResolvedValueOnce(null); // user model fallback also finds nothing
+
+    const sub = 'google-oauth2|116737161976967572606';
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authTokenAuth0(sub)}`)
+      .send({ dimension: 'Cognitive-Narrative' });
+
+    // Should be denied (403) — NOT because sub was used as email and failed purchase
+    // lookup, but because no email was resolved at all.
+    expect(res.status).toBe(403);
+    expect(res.body).toHaveProperty('upgradeRequired', true);
+
+    // Purchase.findOne must NOT have been called with the sub string as email.
+    const purchaseCalls = Purchase.findOne.mock.calls;
+    const calledWithSubAsEmail = purchaseCalls.some(
+      ([query]) => query && query.email === sub
+    );
+    expect(calledWithSubAsEmail).toBe(false);
+  });
+
+  test('sub-only token + userinfo returns email + purchase exists → 200', async () => {
+    const https    = require('https');
+    const Purchase = require('../backend/models/Purchase');
+    const { EventEmitter } = require('events');
+
+    const navigatorEmail = 'navigator@example.com';
+
+    // Mock https.request to simulate Auth0 userinfo returning an email.
+    https.request.mockImplementation((options, callback) => {
+      const res = new EventEmitter();
+      res.statusCode = 200;
+      res.setEncoding = jest.fn();
+
+      const fakeReq = new EventEmitter();
+      fakeReq.end = jest.fn(() => {
+        setImmediate(() => {
+          callback(res);
+          setImmediate(() => {
+            res.emit('data', JSON.stringify({ email: navigatorEmail }));
+            res.emit('end');
+          });
+        });
+      });
+      fakeReq.destroy = jest.fn();
+      return fakeReq;
+    });
+
+    // Purchase found for the email returned by userinfo.
+    Purchase.findOne.mockResolvedValueOnce({ tier: 'atlas-navigator', status: 'completed' });
+
+    const sub = 'google-oauth2|116737161976967572606';
+    const iss = 'https://dev-ammhzit80o0cjhx5.us.auth0.com/';
+
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authTokenAuth0WithIss(sub, iss)}`)
+      .send({ dimension: 'Cognitive-Narrative', difficulty: 'easy' });
+
+    expect(res.status).toBe(200);
+
+    // Restore https mock for subsequent tests.
+    https.request.mockReset();
+  });
+
+  test('sub-only token + userinfo fails + no user fallback → 403', async () => {
+    const https = require('https');
+    const User  = require('../backend/models/User');
+    const { EventEmitter } = require('events');
+
+    // Mock https.request to simulate userinfo network error.
+    https.request.mockImplementation(() => {
+      const fakeReq = new EventEmitter();
+      fakeReq.end = jest.fn(() => {
+        setImmediate(() => fakeReq.emit('error', new Error('Connection refused')));
+      });
+      fakeReq.destroy = jest.fn();
+      return fakeReq;
+    });
+
+    // User model fallback finds nothing.
+    User.findOne.mockResolvedValueOnce(null);
+
+    const sub = 'google-oauth2|116737161976967572606';
+    const iss = 'https://dev-ammhzit80o0cjhx5.us.auth0.com/';
+
+    const res = await request(app)
+      .post('/api/gamification/challenge')
+      .set('Authorization', `Bearer ${authTokenAuth0WithIss(sub, iss)}`)
+      .send({ dimension: 'Cognitive-Narrative' });
+
+    expect(res.status).toBe(403);
+    expect(res.body).toHaveProperty('upgradeRequired', true);
+
+    // Restore https mock.
+    https.request.mockReset();
   });
 });
