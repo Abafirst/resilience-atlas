@@ -13,7 +13,7 @@ import './styles/teams-enhanced.css';
 import './styles/upsell.css';
 import './styles/icons.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import SiteFooter from './components/SiteFooter.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -63,6 +63,7 @@ import OrgGamificationPage from './pages/OrgGamificationPage.jsx';
 import TeamManagementPage from './pages/TeamManagementPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
+import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
@@ -114,6 +115,80 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
       onLogout={handleLogout}
     />
   );
+}
+
+/**
+ * RequireProfileCompletion — global guard that runs after authentication.
+ *
+ * After a user logs in via Auth0, this wrapper checks whether they have a full
+ * name stored in the app database.  If not, they are redirected to
+ * /complete-profile so the name can be captured before they continue.
+ *
+ * Guard rules:
+ *  - Skip when the user is not authenticated (Auth0 still loading, or not
+ *    logged in).
+ *  - Skip when already on /complete-profile (avoid redirect loop).
+ *  - Call GET /api/auth/profile-status?email=... with a Bearer token.
+ *  - If hasName === false, redirect to /complete-profile.
+ *  - Fail open: if the API call fails, allow the user through.
+ *  - Show a brief loading spinner while checking.
+ */
+function RequireProfileCompletion({ children }) {
+  const { isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
+  const navigate   = useNavigate();
+  const location   = useLocation();
+  const [checking, setChecking] = useState(false);
+  const checked    = useRef(false);
+
+  useEffect(() => {
+    // Skip when not authenticated, still loading, already on the target page,
+    // or when we have already run the check this session.
+    if (
+      isLoading ||
+      !isAuthenticated ||
+      !user?.email ||
+      location.pathname === '/complete-profile' ||
+      checked.current
+    ) {
+      return;
+    }
+
+    checked.current = true;
+    setChecking(true);
+
+    getAccessTokenSilently()
+      .then((token) =>
+        fetch(
+          apiUrl(`/api/auth/profile-status?email=${encodeURIComponent(user.email)}`),
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
+      )
+      .then((r) => {
+        if (!r.ok) throw new Error('profile-status check failed');
+        return r.json();
+      })
+      .then((data) => {
+        if (data.hasName === false) {
+          navigate('/complete-profile', { replace: true });
+        }
+      })
+      .catch(() => {
+        // Fail open — do not block the user if the check fails.
+      })
+      .finally(() => {
+        setChecking(false);
+      });
+  }, [isLoading, isAuthenticated, user, location.pathname, getAccessTokenSilently, navigate]);
+
+  if (checking) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1a1a2e' }}>
+        <span style={{ color: '#a0aec0', fontSize: 16 }}>Loading…</span>
+      </div>
+    );
+  }
+
+  return children;
 }
 
 function HomeRoute() {
@@ -169,72 +244,77 @@ function AppShell() {
 
   return (
     <>
-      <Routes>
-        {/* Public informational pages */}
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/research" element={<ResearchPage />} />
-        <Route path="/founder" element={<FounderPage />} />
-        <Route path="/assessment" element={<AssessmentPage />} />
-        <Route path="/insights" element={<InsightsPage />} />
-        <Route path="/join" element={<JoinPage />} />
-        <Route path="/teams" element={<TeamsLandingPage />} />
-        <Route path="/pricing-teams" element={<PricingTeamsPage />} />
-        <Route path="/resources" element={<ResourcesPage />} />
+      <RequireProfileCompletion>
+        <Routes>
+          {/* Public informational pages */}
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/research" element={<ResearchPage />} />
+          <Route path="/founder" element={<FounderPage />} />
+          <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/insights" element={<InsightsPage />} />
+          <Route path="/join" element={<JoinPage />} />
+          <Route path="/teams" element={<TeamsLandingPage />} />
+          <Route path="/pricing-teams" element={<PricingTeamsPage />} />
+          <Route path="/resources" element={<ResourcesPage />} />
 
-        {/* Insight sub-pages */}
-        <Route path="/insights/team-resilience" element={<InsightsTeamResiliencePage />} />
-        <Route path="/insights/six-resilience-dimensions" element={<InsightsSixDimensionsPage />} />
-        <Route path="/insights/resilience-under-pressure" element={<InsightsResilienceUnderPressurePage />} />
+          {/* Insight sub-pages */}
+          <Route path="/insights/team-resilience" element={<InsightsTeamResiliencePage />} />
+          <Route path="/insights/six-resilience-dimensions" element={<InsightsSixDimensionsPage />} />
+          <Route path="/insights/resilience-under-pressure" element={<InsightsResilienceUnderPressurePage />} />
 
-        {/* Workshop guides */}
-        <Route path="/resources/workshop-guides/somatic" element={<WorkshopSomaticPage />} />
-        <Route path="/resources/workshop-guides/emotional" element={<WorkshopEmotionalPage />} />
-        <Route path="/resources/workshop-guides/spiritual" element={<WorkshopSpiritualPage />} />
-        <Route path="/resources/workshop-guides/cognitive" element={<WorkshopCognitivePage />} />
-        <Route path="/resources/workshop-guides/agentic" element={<WorkshopAgenticPage />} />
-        <Route path="/resources/workshop-guides/relational" element={<WorkshopRelationalPage />} />
+          {/* Workshop guides */}
+          <Route path="/resources/workshop-guides/somatic" element={<WorkshopSomaticPage />} />
+          <Route path="/resources/workshop-guides/emotional" element={<WorkshopEmotionalPage />} />
+          <Route path="/resources/workshop-guides/spiritual" element={<WorkshopSpiritualPage />} />
+          <Route path="/resources/workshop-guides/cognitive" element={<WorkshopCognitivePage />} />
+          <Route path="/resources/workshop-guides/agentic" element={<WorkshopAgenticPage />} />
+          <Route path="/resources/workshop-guides/relational" element={<WorkshopRelationalPage />} />
 
-        {/* Assessment routes */}
-        <Route path="/quiz" element={<QuizPage />} />
-        <Route path="/results" element={<ResultsPage />} />
-        <Route path="/legacy-results" element={<Navigate to="/results" replace />} />
+          {/* Assessment routes */}
+          <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/results" element={<ResultsPage />} />
+          <Route path="/legacy-results" element={<Navigate to="/results" replace />} />
 
-        {/* App routes */}
-        <Route path="/team" element={<Navigate to="/teams" replace />} />
-        <Route path="/kids" element={<KidsPage />} />
-        <Route path="/atlas" element={<AtlasPage />} />
-        <Route path="/comparison" element={<ComparisonPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/dashboard-advanced" element={<DashboardAdvancedPage />} />
-        <Route path="/team-analytics" element={<TeamAnalyticsPage />} />
-        <Route path="/teams-resources" element={<TeamsResourcesPage />} />
-        <Route path="/teams/resources" element={<TeamsResourcesPage />} />
-        <Route path="/teams-facilitation" element={<TeamsFacilitationPage />} />
-        <Route path="/teams/facilitation" element={<TeamsFacilitationPage />} />
-        <Route path="/teams-activities" element={<TeamsActivitiesPage />} />
-        <Route path="/teams/activities" element={<TeamsActivitiesPage />} />
+          {/* App routes */}
+          <Route path="/team" element={<Navigate to="/teams" replace />} />
+          <Route path="/kids" element={<KidsPage />} />
+          <Route path="/atlas" element={<AtlasPage />} />
+          <Route path="/comparison" element={<ComparisonPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard-advanced" element={<DashboardAdvancedPage />} />
+          <Route path="/team-analytics" element={<TeamAnalyticsPage />} />
+          <Route path="/teams-resources" element={<TeamsResourcesPage />} />
+          <Route path="/teams/resources" element={<TeamsResourcesPage />} />
+          <Route path="/teams-facilitation" element={<TeamsFacilitationPage />} />
+          <Route path="/teams/facilitation" element={<TeamsFacilitationPage />} />
+          <Route path="/teams-activities" element={<TeamsActivitiesPage />} />
+          <Route path="/teams/activities" element={<TeamsActivitiesPage />} />
 
-        {/* Admin & org pages */}
-        <Route path="/admin/leads" element={<AdminLeadsPage />} />
-        <Route path="/leadership-report" element={<LeadershipReportPage />} />
-        <Route path="/org-dashboard" element={<OrgDashboardPage />} />
+          {/* Admin & org pages */}
+          <Route path="/admin/leads" element={<AdminLeadsPage />} />
+          <Route path="/leadership-report" element={<LeadershipReportPage />} />
+          <Route path="/org-dashboard" element={<OrgDashboardPage />} />
 
-        {/* Gamification */}
-        <Route path="/gamification" element={<GamificationPage />} />
-        <Route path="/org-gamification/:orgId" element={<OrgGamificationPage />} />
+          {/* Gamification */}
+          <Route path="/gamification" element={<GamificationPage />} />
+          <Route path="/org-gamification/:orgId" element={<OrgGamificationPage />} />
 
-        {/* Team Management */}
-        <Route path="/team-management/:orgId" element={<TeamManagementPage />} />
+          {/* Team Management */}
+          <Route path="/team-management/:orgId" element={<TeamManagementPage />} />
 
-        {/* Privacy & Data Control */}
-        <Route path="/privacy" element={<PrivacyPage />} />
+          {/* Privacy & Data Control */}
+          <Route path="/privacy" element={<PrivacyPage />} />
 
-        {/* Returning-user hub — /login and /register redirect here */}
-        <Route path="/results-history" element={<ResultsHistoryPage />} />
+          {/* Returning-user hub — /login and /register redirect here */}
+          <Route path="/results-history" element={<ResultsHistoryPage />} />
 
-        {/* Default auth-gated home route */}
-        <Route path="/*" element={<HomeRoute />} />
-      </Routes>
+          {/* Post-login profile completion (skipped by RequireProfileCompletion guard) */}
+          <Route path="/complete-profile" element={<CompleteProfilePage />} />
+
+          {/* Default auth-gated home route */}
+          <Route path="/*" element={<HomeRoute />} />
+        </Routes>
+      </RequireProfileCompletion>
       {showFooter && <SiteFooter />}
     </>
   );

@@ -54,6 +54,8 @@ See [docs/SETUP.md](docs/SETUP.md) for full installation instructions.
 | POST | /api/auth/login | — | Authenticate and receive JWT |
 | GET | /api/auth/profile | ✅ | Get current user profile |
 | PUT | /api/auth/profile | ✅ | Update profile |
+| GET | /api/auth/profile-status | ✅ | Check whether the user's full name is stored |
+| POST | /api/auth/complete-profile | ✅ | Save the user's full name (post-login flow) |
 | GET | /api/quiz/questions | — | List all 36 questions |
 | POST | /api/quiz/submit | ✅ | Submit answers, receive scores |
 | GET | /api/quiz/results | ✅ | View quiz history |
@@ -70,6 +72,33 @@ See [docs/SETUP.md](docs/SETUP.md) for full installation instructions.
 - [CONTRIBUTING.md](docs/CONTRIBUTING.md) — How to contribute
 - [CHANGELOG.md](docs/CHANGELOG.md) — Version history
 - [OPENCLAW.md](docs/OPENCLAW.md) — GitHub → Telegram integration
+
+---
+
+## Complete-profile flow
+
+### Why it exists
+
+Auth0 Universal Login previously showed a **"username"** field that disallows
+spaces, causing sign-up friction.  The fix is to **disable "Requires Username"**
+in the Auth0 Dashboard (`Authentication → Database → <connection> → Settings`)
+so Auth0 uses **email + password** only.
+
+Because reports and exports still need a display name, a
+**post-login "Complete your profile"** step captures it inside the app:
+
+1. After authentication, the `RequireProfileCompletion` wrapper in
+   `client/src/App.jsx` calls `GET /api/auth/profile-status`.
+2. If the user has no name stored (`hasName === false`), they are redirected
+   to `/complete-profile`.
+3. `CompleteProfilePage` (`client/src/pages/CompleteProfilePage.jsx`) shows a
+   single "Full name" field (spaces allowed, 2–80 chars).
+4. On submit it calls `POST /api/auth/complete-profile`, which upserts the name
+   into the `Auth0Profile` MongoDB collection.
+5. On success the user is sent to `/`.
+
+Both endpoints require a valid Auth0 Bearer JWT and enforce that a user can
+only read/write their own record (JWT email claim check).
 
 ---
 
