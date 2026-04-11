@@ -337,6 +337,8 @@ app.use("/auth", require("./routes/auth"));
 console.log("✅ Mounted route: /auth");
 app.use("/api/auth", require("./routes/auth"));
 console.log("✅ Mounted route: /api/auth");
+app.use("/api/sso", require("./routes/sso"));
+console.log("✅ Mounted route: /api/sso");
 app.use("/api/quiz", require("./routes/quiz"));
 console.log("✅ Mounted route: /api/quiz");
 app.use("/api/affiliates", require("./routes/affiliates"));
