@@ -265,13 +265,38 @@ async function requirePaidTier(req, res, next) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-const VALID_DIMENSIONS = new Set([
+// Canonical dimension names used across the client/product taxonomy.
+const CANONICAL_DIMENSIONS = new Set([
   'Cognitive-Narrative',
-  'Emotional-Somatic',
-  'Relational-Social',
+  'Emotional-Adaptive',
+  'Relational-Connective',
   'Agentic-Generative',
   'Somatic-Regulative',
   'Spiritual-Reflective',
+]);
+
+// Legacy aliases kept for backward compatibility; values map to canonical names.
+const DIMENSION_ALIASES = {
+  'Emotional-Somatic':  'Emotional-Adaptive',
+  'Relational-Social':  'Relational-Connective',
+};
+
+/**
+ * Normalise an incoming dimension string to its canonical form.
+ * Returns the canonical name when a legacy alias is supplied, or the
+ * original string when it already matches the canonical set.
+ *
+ * @param {string} dim
+ * @returns {string}
+ */
+function normalizeDimension(dim) {
+  return DIMENSION_ALIASES[dim] || dim;
+}
+
+// Combined set of all accepted values (canonical + legacy aliases).
+const VALID_DIMENSIONS = new Set([
+  ...CANONICAL_DIMENSIONS,
+  ...Object.keys(DIMENSION_ALIASES),
 ]);
 
 const VALID_DIFFICULTIES = new Set(['easy', 'medium', 'hard']);
@@ -313,13 +338,13 @@ router.post('/practice', requirePaidTier, async (req, res) => {
     }
 
     if (dimension !== undefined && !VALID_DIMENSIONS.has(dimension)) {
-      return res.status(400).json({ error: `dimension must be one of: ${[...VALID_DIMENSIONS].join(', ')}.` });
+      return res.status(400).json({ error: `dimension must be one of: ${[...CANONICAL_DIMENSIONS].join(', ')}.` });
     }
 
     const { progress, newBadges, streakUpdated } = await svc.recordPracticeCompletion(
       userId(req),
       practiceId.trim(),
-      dimension || null
+      dimension ? normalizeDimension(dimension) : null
     );
 
     res.status(200).json({
@@ -349,14 +374,14 @@ router.post('/challenge', requirePaidTier, async (req, res) => {
     const { dimension, difficulty = 'medium' } = req.body;
 
     if (!dimension || !VALID_DIMENSIONS.has(dimension)) {
-      return res.status(400).json({ error: `dimension must be one of: ${[...VALID_DIMENSIONS].join(', ')}.` });
+      return res.status(400).json({ error: `dimension must be one of: ${[...CANONICAL_DIMENSIONS].join(', ')}.` });
     }
 
     if (!VALID_DIFFICULTIES.has(difficulty)) {
       return res.status(400).json({ error: 'difficulty must be easy, medium, or hard.' });
     }
 
-    const progress = await svc.setWeeklyChallenge(userId(req), dimension, difficulty);
+    const progress = await svc.setWeeklyChallenge(userId(req), normalizeDimension(dimension), difficulty);
 
     res.status(200).json({
       message:          'Weekly challenge set.',

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const VALID_DIMENSIONS = [
   'Cognitive-Narrative',
-  'Emotional-Somatic',
-  'Relational-Social',
+  'Emotional-Adaptive',
+  'Relational-Connective',
   'Agentic-Generative',
   'Somatic-Regulative',
   'Spiritual-Reflective',

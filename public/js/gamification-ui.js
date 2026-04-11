@@ -225,8 +225,8 @@ function renderLeaderboardWidget(container, entries, period) {
 
 const VALID_DIMENSIONS = [
   'Cognitive-Narrative',
-  'Emotional-Somatic',
-  'Relational-Social',
+  'Emotional-Adaptive',
+  'Relational-Connective',
   'Agentic-Generative',
   'Somatic-Regulative',
   'Spiritual-Reflective',
