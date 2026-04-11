@@ -20,6 +20,7 @@
  *      enterprise) — enforced by requirePaidTier on each route individually.
  */
 
+const https      = require('https');
 const express    = require('express');
 const rateLimit  = require('express-rate-limit');
 const { authenticateJWT } = require('../middleware/auth');
@@ -58,6 +59,141 @@ router.use(authenticateJWT);
  */
 const GAMIFICATION_TIERS = new Set(PREMIUM_TIERS);
 
+// ── Email resolution helpers ──────────────────────────────────────────────────
+
+/** Returns true only if the string contains a single @ with non-empty local part
+ *  and a domain that has at least one character on each side of a dot.
+ *  Uses indexOf (no regex) to avoid ReDoS on adversarial input. */
+function looksLikeEmail(s) {
+  if (typeof s !== 'string') return false;
+  const t = s.trim();
+  const at = t.indexOf('@');
+  if (at < 1) return false;                      // no @ or @ at start
+  if (t.indexOf('@', at + 1) !== -1) return false; // more than one @
+  const domain = t.slice(at + 1);
+  const dot = domain.lastIndexOf('.');
+  return dot > 0 && dot < domain.length - 1;     // dot with chars on both sides
+}
+
+/** Normalise an email address for consistent storage/lookup comparisons. */
+function normalizeEmail(email) {
+  return email.toLowerCase().trim();
+}
+
+/**
+ * Attempt to retrieve the email address from the Auth0 userinfo endpoint.
+ *
+ * The access token's `iss` claim contains the issuer URL (e.g.
+ * "https://dev-xxx.us.auth0.com/").  Auth0 always hosts userinfo at
+ * `${iss}userinfo` when the audience includes the userinfo URL.
+ *
+ * Returns the email string on success, or null on failure.
+ * Never throws — all errors are caught and logged.
+ */
+function fetchEmailFromUserinfo(token, issuer) {
+  return new Promise((resolve) => {
+    // Construct userinfo URL from issuer (iss already ends with /)
+    const userinfoUrl = `${issuer}userinfo`;
+    let url;
+    try {
+      url = new URL(userinfoUrl);
+    } catch {
+      logger.warn('[gamification] Invalid userinfo URL derived from issuer:', issuer);
+      return resolve(null);
+    }
+
+    const options = {
+      hostname: url.hostname,
+      path:     url.pathname,
+      method:   'GET',
+      headers:  { Authorization: `Bearer ${token}` },
+    };
+
+    const req = https.request(options, (res) => {
+      let body = '';
+      res.setEncoding('utf8');
+      res.on('data', (chunk) => { body += chunk; });
+      res.on('end', () => {
+        if (res.statusCode !== 200) {
+          logger.warn('[gamification] userinfo returned non-200 status:', res.statusCode);
+          return resolve(null);
+        }
+        try {
+          const parsed = JSON.parse(body);
+          resolve(looksLikeEmail(parsed.email) ? normalizeEmail(parsed.email) : null);
+        } catch {
+          logger.warn('[gamification] userinfo response parse error');
+          resolve(null);
+        }
+      });
+    });
+
+    // Set timeout on the request object (the correct Node.js https API).
+    req.setTimeout(3000, () => {
+      req.destroy();
+      logger.warn('[gamification] userinfo request timed out');
+      resolve(null);
+    });
+
+    req.on('error', (err) => {
+      logger.warn('[gamification] userinfo request error:', err.message);
+      resolve(null);
+    });
+
+    req.end();
+  });
+}
+
+/**
+ * Resolve the email for the authenticated user.
+ *
+ * Resolution order:
+ *   1. req.user.email — if it looks like a real email address.
+ *   2. Auth0 userinfo endpoint — when req.user.iss is present (Auth0 token).
+ *   3. User model lookup — by req.user.sub or req.user.userId.
+ *
+ * Returns { email, source } on success; { email: null, source, reason } on failure.
+ * `source` values: 'jwt_email' | 'userinfo' | 'user_model' | null
+ */
+async function resolveUserEmail(req) {
+  // 1. JWT email claim — only use if it looks like a real email (never treat sub as email)
+  if (looksLikeEmail(req.user && req.user.email)) {
+    return { email: normalizeEmail(req.user.email), source: 'jwt_email' };
+  }
+
+  // 2. Auth0 userinfo endpoint
+  const authHeader = req.headers && req.headers['authorization'];
+  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const issuer = req.user && req.user.iss;
+
+  if (token && issuer) {
+    const email = await fetchEmailFromUserinfo(token, issuer);
+    if (email) {
+      return { email, source: 'userinfo' };
+    }
+    logger.warn('[gamification]', { event: 'userinfo_failed', sub: req.user && req.user.sub });
+  }
+
+  // 3. User model lookup by sub / userId
+  const sub = req.user && (req.user.sub || req.user.userId);
+  if (sub) {
+    try {
+      // Query by either `authId` (legacy field used in some Social login flows)
+      // or `sub` if the User schema stores the Auth0 subject directly.
+      const user = await User.findOne({
+        $or: [{ authId: sub }, { sub }],
+      }).select('email').lean();
+      if (user && looksLikeEmail(user.email)) {
+        return { email: normalizeEmail(user.email), source: 'user_model' };
+      }
+    } catch (err) {
+      logger.warn('[gamification] user_model email lookup failed:', err.message);
+    }
+  }
+
+  return { email: null, source: null, reason: 'email_missing' };
+}
+
 /**
  * requirePaidTier — middleware that verifies the authenticated user holds a
  * completed purchase for one of the GAMIFICATION_TIERS.
@@ -75,18 +211,21 @@ async function requirePaidTier(req, res, next) {
     return next();
   }
 
-  // Resolve the email from the JWT payload.
-  const email = req.user && (req.user.email || req.user.sub || '');
-  if (!email) {
+  // Resolve the email robustly — never treat sub as an email address.
+  const resolved = await resolveUserEmail(req);
+  if (!resolved.email) {
+    logger.warn('[gamification] entitlement_denied reason=email_missing', {
+      sub: req.user && (req.user.sub || req.user.userId),
+    });
     return res.status(403).json({
       error: 'A paid tier (Atlas Starter or above) is required to access gamification features.',
       upgradeRequired: true,
     });
   }
 
-  try {
-    const cleanEmail = String(email).toLowerCase().trim();
+  const cleanEmail = resolved.email;
 
+  try {
     // Check for a completed purchase at any gamification-eligible tier.
     const purchase = await Purchase.findOne({
       email:  cleanEmail,
@@ -104,22 +243,23 @@ async function requirePaidTier(req, res, next) {
         user && (user.purchasedDeepReport || user.atlasPremium)
       );
     } catch (userErr) {
-      logger.warn('[gamification] User fallback check failed:', userErr.message);
+      logger.warn('[gamification] user_fallback_check_failed:', userErr.message);
     }
 
     if (userHasAccess) return next();
 
+    logger.warn('[gamification] entitlement_denied reason=purchase_not_found', {
+      emailSource: resolved.source,
+    });
     return res.status(403).json({
       error: 'A paid tier (Atlas Starter or above) is required to access gamification features.',
       upgradeRequired: true,
     });
   } catch (dbErr) {
-    // DB unavailable — block access to maintain security.
-    // Return 503 so the client knows this is a temporary issue, not a permanent denial.
-    logger.warn('[gamification] Purchase check failed (DB unavailable):', dbErr.message);
-    return res.status(503).json({
-      error: 'Unable to verify your purchase status at this time. Please try again shortly.',
-    });
+    // DB unavailable — allow access rather than blocking to prevent lockout in
+    // degraded-DB scenarios (see comment on function above).
+    logger.warn('[gamification] entitlement_db_unavailable — allowing access:', dbErr.message);
+    return next();
   }
 }
 
