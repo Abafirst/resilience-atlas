@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { apiUrl } from '../api/baseUrl.js';
 
 const TIER_LABELS = {
   'atlas-starter': 'Atlas Starter',
@@ -208,7 +209,7 @@ export default function ResultsHistory({ email }) {
       setLoading(false);
       return;
     }
-    fetch(`/api/report/access?email=${encodeURIComponent(email)}`)
+    fetch(apiUrl(`/api/report/access?email=${encodeURIComponent(email)}`))
       .then(r => r.json())
       .then(data => {
         if (data.hasAccess && Array.isArray(data.purchases)) {

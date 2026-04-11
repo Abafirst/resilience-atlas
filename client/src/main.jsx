@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 import App from './App.jsx';
+import { apiUrl } from './api/baseUrl.js';
 
 // ===== SPA MARKER FOR DEBUGGING =====
 window._spaVersion = import.meta.env.VITE_APP_VERSION || 'dev';
@@ -23,7 +24,7 @@ console.log('[DEBUG][SPA] Resilience Atlas SPA loaded, version:', window._spaVer
  */
 async function loadAuth0Config() {
   try {
-    const res = await fetch('/config');
+    const res = await fetch(apiUrl('/config'));
     if (res.ok) {
       const data = await res.json();
       if (data.auth0Domain && data.auth0ClientId) {
@@ -96,7 +97,7 @@ async function init() {
     // No explicit destination — check quiz/subscription status and redirect smartly.
     const email = user?.email;
     if (email) {
-      fetch(`/api/auth/user-status?email=${encodeURIComponent(email)}`)
+      fetch(apiUrl(`/api/auth/user-status?email=${encodeURIComponent(email)}`))
         .then((r) => {
           if (!r.ok) throw new Error('Failed to fetch user status');
           return r.json();

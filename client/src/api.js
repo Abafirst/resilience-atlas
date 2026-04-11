@@ -1,7 +1,9 @@
+import { apiUrl } from './api/baseUrl.js';
+
 const BASE = '/api';
 
 export async function createPayment(token, amount, currency = 'usd', description = '') {
-  const res = await fetch(`${BASE}/create-payment`, {
+  const res = await fetch(apiUrl(`${BASE}/create-payment`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
+import { apiUrl } from '../api/baseUrl.js';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const AUTOSAVE_KEY  = 'ra_quiz_progress';
@@ -340,7 +341,7 @@ export default function QuizPage() {
       // Attempt to fetch /config to check if Auth0 is configured.
       // If server is unreachable or Auth0 is not configured, allow access.
       try {
-        const res = await fetch('/config');
+        const res = await fetch(apiUrl('/config'));
         if (res.ok) {
           const config = await res.json();
           if (config.auth0Domain && config.auth0ClientId) {

@@ -14,6 +14,7 @@ import AchievementNotification from './AchievementNotification.jsx';
 import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
 import AdultGameHub from './AdultGameHub.jsx';
 import '../../styles/gamification-animations.css';
+import { apiUrl } from '../../api/baseUrl.js';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
@@ -35,7 +36,7 @@ async function fetchUserTier(email, token) {
   if (!email) return 'free';
   const headers = {};
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(`/api/report/access?email=${encodeURIComponent(email)}`, { headers });
+  const res = await fetch(apiUrl(`/api/report/access?email=${encodeURIComponent(email)}`), { headers });
   if (!res.ok) throw new Error(`Access check failed (${res.status})`);
   const data = await res.json();
   if (!data.hasAccess) return 'free';
