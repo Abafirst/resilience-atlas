@@ -459,6 +459,10 @@ export default function GamificationDashboard() {
   // Gamification API progress is only available for Navigator+
   const activeProgress = (hasNavigator && !isGamError) ? progress : null;
 
+  // Progress for Starter-tier features (Navigation Milestones): available to all
+  // paid tiers (atlas-starter and above) that pass the gamification tier check.
+  const starterProgress = (!isGamError && progress) ? progress : null;
+
   // Show gamification content once:
   //   - the user is not authenticated (features shown in locked/preview mode), OR
   //   - Auth0 and the backend tier check have both completed.
@@ -665,7 +669,7 @@ export default function GamificationDashboard() {
                   ]}
                   returnPath="/gamification"
                 >
-                  <NavigationMilestones scores={null} />
+                  <NavigationMilestones progress={starterProgress} />
                 </LockedFeatureCard>
 
                 <LockedFeatureCard

@@ -45,53 +45,55 @@ export function isNavigatorOrAbove(tier) {
 }
 
 // ── Navigation Milestones (Atlas Starter) ─────────────────────────────────────
+// Milestones are earned by completing practices (micro-quests, pathways, or
+// reinforcement practices) — not by completing assessments.
 export const NAVIGATION_MILESTONES = [
   {
-    id: 'first-assessment',
+    id: 'first-practice',
     title: 'First Step Navigator',
-    description: 'Complete your first resilience assessment',
+    description: 'Complete your first micro-quest or practice',
     icon: '/icons/compass.svg',
     dimension: null,
   },
   {
     id: 'agentic',
     title: 'Agentic Explorer',
-    description: 'Understand your Agentic-Generative dimension',
+    description: 'Complete a practice in the Agentic-Generative dimension',
     icon: '/icons/agentic-generative.svg',
     dimension: 'Agentic-Generative',
   },
   {
     id: 'relational',
     title: 'Relational Connector',
-    description: 'Explore your Relational-Connective strengths',
+    description: 'Complete a practice in the Relational-Connective dimension',
     icon: '/icons/relational-connective.svg',
     dimension: 'Relational-Connective',
   },
   {
     id: 'spiritual',
     title: 'Reflective Wayfinder',
-    description: 'Journey through your Spiritual-Reflective landscape',
+    description: 'Complete a practice in the Spiritual-Reflective dimension',
     icon: '/icons/spiritual-reflective.svg',
     dimension: 'Spiritual-Reflective',
   },
   {
     id: 'emotional',
     title: 'Emotional Adapter',
-    description: 'Navigate your Emotional-Adaptive capacity',
+    description: 'Complete a practice in the Emotional-Adaptive dimension',
     icon: '/icons/emotional-adaptive.svg',
     dimension: 'Emotional-Adaptive',
   },
   {
     id: 'somatic',
     title: 'Somatic Regulator',
-    description: 'Map your Somatic-Regulative foundation',
+    description: 'Complete a practice in the Somatic-Regulative dimension',
     icon: '/icons/somatic-regulative.svg',
     dimension: 'Somatic-Regulative',
   },
   {
     id: 'cognitive',
     title: 'Narrative Cartographer',
-    description: 'Chart your Cognitive-Narrative landscape',
+    description: 'Complete a practice in the Cognitive-Narrative dimension',
     icon: '/icons/cognitive-narrative.svg',
     dimension: 'Cognitive-Narrative',
   },
