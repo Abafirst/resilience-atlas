@@ -6,12 +6,14 @@
  * All routes under /api/teams
  *
  * Endpoints:
- *   GET /api/teams/access          — verify teams purchase (session_id, email, or Bearer JWT)
- *   GET /api/teams/download/:id    — download a resource PDF (requires session_id, email, or Bearer JWT)
+ *   GET /api/teams/access              — verify teams purchase (session_id, email, or Bearer JWT)
+ *   GET /api/teams/download/:id        — download a resource PDF (requires session_id, email, or Bearer JWT)
+ *   GET /api/teams/resources/export    — download a ZIP bundle of all tier-allowed PDFs
  */
 
 const express = require('express');
 const rateLimit = require('express-rate-limit');
+const archiver = require('archiver');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
@@ -36,6 +38,15 @@ const downloadLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'Too many download requests. Please try again shortly.' },
+});
+
+// Rate limiter for ZIP export — 5 per 10 minutes per IP (conservative; ZIP is expensive)
+const exportLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many export requests. Please try again shortly.' },
 });
 
 // Tiers that grant teams resource access
@@ -282,6 +293,83 @@ router.get('/download/:resourceId', downloadLimiter, async (req, res) => {
         if (!res.headersSent) {
             return res.status(500).json({ error: 'Failed to process download request.' });
         }
+    }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /api/teams/resources/export
+// Stream a ZIP archive containing PDFs for all resources the requester's tier
+// is allowed to access.  Requires proof of teams purchase.
+// Query: ?session_id=<cs_xxx>  or  ?email=<email>
+// OR: Authorization: Bearer <jwt>  (for authenticated users)
+// ─────────────────────────────────────────────────────────────────────────────
+router.get('/resources/export', exportLimiter, async (req, res) => {
+    const sessionId = (req.query.session_id || '').trim();
+    const email     = (req.query.email     || '').trim();
+    const userId    = extractUserIdFromToken(req);
+
+    // Require at least one form of identification
+    if (!sessionId && !email && !userId) {
+        return res.status(401).json({
+            error: 'Purchase verification required. Please include session_id, email, or log in.',
+        });
+    }
+
+    let tier;
+    try {
+        const result = await verifyTeamsAccess(sessionId || null, email || null, userId);
+        if (!result.valid) {
+            return res.status(403).json({
+                error: 'Access denied. A valid Teams purchase is required to export resources.',
+            });
+        }
+        tier = result.tier;
+    } catch (err) {
+        logger.error('[teams/resources/export] Access verification error:', err);
+        return res.status(500).json({ error: 'Unable to verify access.' });
+    }
+
+    // Determine which resources this tier may access
+    const allowedResources = ALL_RESOURCE_IDS.filter((id) => {
+        const required = RESOURCE_MIN_TIERS[id];
+        // If no tier requirement defined, default to starter (most permissive)
+        return !required || tierMeetsRequirement(tier, required);
+    });
+
+    // Set response headers before streaming starts
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename="facilitation-resources.zip"');
+    res.setHeader('Cache-Control', 'private, max-age=3600');
+    res.setHeader('X-Teams-Tier', tier);
+
+    // Create archiver and pipe directly to response
+    const archive = archiver('zip', { zlib: { level: 6 } });
+
+    archive.on('error', (archiveErr) => {
+        logger.error('[teams/resources/export] Archiver error:', archiveErr);
+        // Headers are already sent at this point; we can only abort the stream
+        res.destroy(archiveErr);
+    });
+
+    archive.pipe(res);
+
+    // Append each allowed PDF to the archive
+    for (const resourceId of allowedResources) {
+        try {
+            const doc = generateResourcePdf(resourceId);
+            archive.append(doc, { name: `resilience-atlas-${resourceId}.pdf` });
+        } catch (pdfErr) {
+            logger.error(`[teams/resources/export] PDF generation failed for ${resourceId}:`, pdfErr);
+            // Skip this resource and continue with the rest rather than aborting the whole ZIP
+        }
+    }
+
+    // Finalize the archive — triggers the end of the response stream.
+    // Headers have already been sent at this point, so errors can only be logged.
+    try {
+        await archive.finalize();
+    } catch (finalizeErr) {
+        logger.error('[teams/resources/export] Archive finalize error:', finalizeErr);
     }
 });
 
