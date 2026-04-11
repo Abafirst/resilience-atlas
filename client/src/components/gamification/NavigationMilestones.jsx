@@ -40,19 +40,48 @@ function getMotivation(pct) {
 }
 
 /**
+ * Returns the set of dimensions in which the user has completed at least one
+ * practice (micro-quest, reinforcement practice, or skill pathway level).
+ */
+function getPracticeDimensions(progress) {
+  if (!progress || typeof progress !== 'object') return new Set();
+  const dims = new Set();
+  (Array.isArray(progress.microQuests) ? progress.microQuests : [])
+    .forEach(q => { if (q && q.dimension) dims.add(q.dimension); });
+  (Array.isArray(progress.reinforcementHistory) ? progress.reinforcementHistory : [])
+    .forEach(r => { if (r && r.dimension) dims.add(r.dimension); });
+  (Array.isArray(progress.skillPathways) ? progress.skillPathways : [])
+    .forEach(p => { if (p && p.dimension) dims.add(p.dimension); });
+  return dims;
+}
+
+/**
+ * Returns true when the user has completed at least one practice of any kind.
+ */
+function hasAnyCompletedPractice(progress) {
+  if (!progress || typeof progress !== 'object') return false;
+  return (
+    (Array.isArray(progress.microQuests) && progress.microQuests.length > 0) ||
+    (Array.isArray(progress.reinforcementHistory) && progress.reinforcementHistory.length > 0) ||
+    (Array.isArray(progress.skillPathways) && progress.skillPathways.length > 0)
+  );
+}
+
+/**
  * NavigationMilestones — Atlas Starter feature.
  * Displays a card-based grid of achievement milestones with circular progress
  * rings, dimension-specific colours, and motivational copy.
  *
  * Props:
- *   scores — object mapping dimension name → score (0–100), optional
+ *   progress — GamificationProgress object (from useGamification hook), optional
  */
-export default function NavigationMilestones({ scores }) {
-  const scoreMap = (scores && typeof scores === 'object') ? scores : {};
+export default function NavigationMilestones({ progress }) {
+  const practiceDims = getPracticeDimensions(progress);
 
-  const completedIds = new Set(['first-assessment']);
+  const completedIds = new Set();
+  if (hasAnyCompletedPractice(progress)) completedIds.add('first-practice');
   NAVIGATION_MILESTONES.forEach(m => {
-    if (m.dimension && scoreMap[m.dimension] !== undefined) {
+    if (m.dimension && practiceDims.has(m.dimension)) {
       completedIds.add(m.id);
     }
   });
@@ -61,7 +90,7 @@ export default function NavigationMilestones({ scores }) {
   const total = NAVIGATION_MILESTONES.length;
   const pct = Math.round((completed / total) * 100);
 
-  const firstStep = NAVIGATION_MILESTONES.find(m => m.id === 'first-assessment');
+  const firstStep = NAVIGATION_MILESTONES.find(m => m.id === 'first-practice');
   const dimensionMilestones = NAVIGATION_MILESTONES.filter(m => m.dimension);
 
   return (
@@ -84,9 +113,12 @@ export default function NavigationMilestones({ scores }) {
           <h3 style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 800, color: '#0f172a' }}>
             Navigation Milestones
           </h3>
-          <p style={{ margin: 0, fontSize: 13, color: '#64748b', lineHeight: 1.4 }}>
+          <p style={{ margin: '0 0 2px', fontSize: 13, color: '#64748b', lineHeight: 1.4 }}>
             <strong style={{ color: '#1565C0' }}>{completed}/{total}</strong> complete
             {' · '}{getMotivation(pct)}
+          </p>
+          <p style={{ margin: 0, fontSize: 11, color: '#94a3b8', lineHeight: 1.4, fontStyle: 'italic' }}>
+            Milestones are earned by completing practices (micro-quests, pathways, or reinforcement practices).
           </p>
         </div>
       </div>
@@ -96,18 +128,31 @@ export default function NavigationMilestones({ scores }) {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12,
           padding: '12px 16px', borderRadius: 10, marginBottom: 16,
-          background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
-          border: '1px solid rgba(21,101,192,0.2)',
+          background: completedIds.has('first-practice')
+            ? 'linear-gradient(135deg, #eff6ff, #dbeafe)'
+            : '#f8fafc',
+          border: `1px solid ${completedIds.has('first-practice') ? 'rgba(21,101,192,0.2)' : '#e2e8f0'}`,
+          opacity: completedIds.has('first-practice') ? 1 : 0.65,
         }}>
           <img src={firstStep.icon} alt="" width={28} height={28} aria-hidden="true" />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#1565C0' }}>{firstStep.title}</div>
             <div style={{ fontSize: 11, color: '#475569' }}>{firstStep.description}</div>
           </div>
-          <span style={{
-            fontSize: 11, fontWeight: 700, padding: '3px 10px',
-            borderRadius: 999, background: '#dcfce7', color: '#15803d', whiteSpace: 'nowrap',
-          }}>✓ Complete</span>
+          {completedIds.has('first-practice') ? (
+            <span style={{
+              fontSize: 11, fontWeight: 700, padding: '3px 10px',
+              borderRadius: 999, background: '#dcfce7', color: '#15803d', whiteSpace: 'nowrap',
+            }}>✓ Complete</span>
+          ) : (
+            <span style={{
+              fontSize: 11, color: '#94a3b8',
+              display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap',
+            }}>
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={10} height={10} style={{ opacity: 0.35 }} />
+              Complete a micro-quest
+            </span>
+          )}
         </div>
       )}
 
@@ -120,8 +165,7 @@ export default function NavigationMilestones({ scores }) {
         {dimensionMilestones.map(m => {
           const cfg = DIM_CONFIG[m.dimension] || DEFAULT_CONFIG;
           const done = completedIds.has(m.id);
-          const score = scoreMap[m.dimension];
-          const ringPct = done ? (score !== undefined ? Math.round(score) : 100) : 0;
+          const ringPct = done ? 100 : 0;
 
           return (
             <div
@@ -188,7 +232,7 @@ export default function NavigationMilestones({ scores }) {
                     transform: 'translate(-50%,-50%)',
                     fontSize: 9, fontWeight: 800, color: done ? cfg.color : '#94a3b8',
                   }}>
-                    {done ? (score !== undefined ? `${Math.round(score)}` : '✓') : '—'}
+                    {done ? '✓' : '—'}
                   </div>
                 </div>
               </div>
@@ -230,7 +274,7 @@ export default function NavigationMilestones({ scores }) {
                   display: 'flex', alignItems: 'center', gap: 4,
                 }}>
                   <img src="/icons/lock.svg" alt="" aria-hidden="true" width={10} height={10} style={{ opacity: 0.35 }} />
-                  Complete assessment
+                  Complete a micro-quest
                 </div>
               )}
             </div>
