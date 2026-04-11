@@ -785,6 +785,16 @@ main { flex: 1; }
   margin-bottom: .4rem;
 }
 
+.question-frequency-prompt {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+  margin-top: 0;
+}
+
 .question-text {
   font-size: 1.15rem;
   font-weight: 600;

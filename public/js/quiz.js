@@ -337,6 +337,7 @@ function buildQuestionCards() {
     `).join('');
 
     card.innerHTML = `
+      <p class="question-frequency-prompt">In general, how often…</p>
       <p class="question-text">${q.text}</p>
       <div class="likert-scale" role="group" aria-label="Rate your agreement">
         ${likertHtml}

@@ -203,6 +203,7 @@ function RestoreBanner({ saved, onRestore, onFresh }) {
 function QuestionCard({ question, displayIdx, answer, isFlagged, onAnswer, onToggleFlag }) {
   return (
     <div className="question-step card active">
+      <p className="question-frequency-prompt">In general, how often…</p>
       <p className="question-text">{question.text}</p>
       <div className="likert-scale" role="group" aria-label="Rate your agreement">
         {LIKERT_OPTIONS.map(opt => (
