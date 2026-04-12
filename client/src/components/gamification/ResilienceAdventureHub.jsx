@@ -7,6 +7,7 @@ import GamificationToast from './GamificationToast.jsx';
 import StarterMicroQuests from './StarterMicroQuests.jsx';
 import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
+import QuestsHub from './QuestsHub.jsx';
 import { apiUrl } from '../../api/baseUrl.js';
 
 async function fetchUserTier(email, token) {
@@ -342,8 +343,8 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   const recommendedQuests = MICRO_QUESTS.filter(q => RECOMMENDED_IDS.includes(q.id));
 
   const sections = [
-    { id: 'games', label: 'Games', available: isStarter },
-    { id: 'quests', label: 'Quests', available: isNavigator },
+    { id: 'games',  label: 'Games',  available: isStarter },
+    { id: 'quests', label: 'Quests', available: isStarter },
     { id: 'badges', label: 'Badges', available: isStarter },
   ];
 
@@ -468,7 +469,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
             <button
               key={sec.id}
               style={{ ...s.tab(false), opacity: 0.45, cursor: 'not-allowed' }}
-              title={sec.id === 'quests' ? 'Available with Atlas Navigator' : 'Available with Atlas Starter'}
+              title="Available with Atlas Starter"
               disabled
             >
               <img src="/icons/lock.svg" alt="" width={11} height={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />
@@ -572,20 +573,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
 
         {/* ── Quests Section ── */}
         {activeSection === 'quests' && (
-          <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-            <img src="/icons/game-mountain.svg" alt="" width={56} height={56} style={{ marginBottom: 16, opacity: 0.7 }} />
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 8px' }}>Quests — Coming Soon</h3>
-            <p style={{ fontSize: 14, color: '#64748b', maxWidth: 380, margin: '0 auto 20px', lineHeight: 1.65 }}>
-              Quests are structured multi-day resilience missions. Complete a series of practices across dimensions to earn special quest badges and unlock deeper insights.
-            </p>
-            <div style={{ display: 'inline-flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {['Dimension Mastery Quest', 'Values Discovery Quest', 'Regulation Sprint'].map(title => (
-                <div key={title} style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 8, padding: '8px 14px', fontSize: 12, color: '#64748b' }}>
-                  {title}
-                </div>
-              ))}
-            </div>
-          </div>
+          <QuestsHub tier={tier} />
         )}
 
         {/* ── Badges Section ── */}

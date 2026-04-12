@@ -1,4 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-  <circle cx="32" cy="32" r="32" fill="#EFF6FF" />
-  <path d="M..." stroke="#3B82F6" stroke-width="..." fill="#3B82F6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Soft blue background -->
+  <circle cx="32" cy="32" r="30" fill="#EFF6FF"/>
+  <!-- Screen rectangle -->
+  <rect x="10" y="18" width="44" height="28" rx="5" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>
+  <!-- Play triangle -->
+  <path d="M26 24 L26 40 L42 32 Z" fill="#3B82F6"/>
 </svg>
