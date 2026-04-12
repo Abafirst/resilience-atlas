@@ -4,6 +4,8 @@ import FacilitationGateModal from '../components/FacilitationGateModal';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getCurrentTeamsTier, canAccessFacilitationGuides } from '../utils/tierGating';
+import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import { isCapacitorAndroid } from '../utils/platform.js';
 import { TEAM_PLANS } from '../data/teamPlans';
 
 const styles = `
@@ -524,6 +526,7 @@ export default function TeamsLandingPage() {
   const [userTier, setUserTier] = useState('none');
   const [checkoutLoading, setCheckoutLoading] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
+  const [showAndroidModal, setShowAndroidModal] = useState(false);
   const [downloadingId, setDownloadingId] = useState(null);
   const [downloadError, setDownloadError] = useState('');
 
@@ -539,6 +542,12 @@ export default function TeamsLandingPage() {
   }, []);
 
   const startTeamCheckout = async (tier) => {
+    // On Capacitor Android, do not start Stripe checkout — show a modal
+    // directing users to the website instead.
+    if (isCapacitorAndroid()) {
+      setShowAndroidModal(true);
+      return;
+    }
     setCheckoutError('');
     setCheckoutLoading(tier);
     // Prefer email from Auth0 user profile, fall back to localStorage or prompt
@@ -1210,6 +1219,9 @@ export default function TeamsLandingPage() {
     </div>
   </section>
 
+      {showAndroidModal && (
+        <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
+      )}
     </>
   );
 }

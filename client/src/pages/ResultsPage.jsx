@@ -7,6 +7,8 @@ import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
 import { isStarterOrAbove } from '../data/gamificationContent.js';
 import DarkModeHint from '../components/DarkModeHint.jsx';
+import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import { isCapacitorAndroid } from '../utils/platform.js';
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
 const BRAND_ICONS = {
@@ -2022,6 +2024,8 @@ export default function ResultsPage() {
   const [isCurrentAssessmentUnlocked, setIsCurrentAssessmentUnlocked] = useState(null);
   // Whether user has unlock modal open (shown automatically for users without PDF access).
   const [showUnlockModal, setShowUnlockModal] = useState(false);
+  // Whether to show the "Available on the web" modal on Capacitor Android.
+  const [showAndroidModal, setShowAndroidModal] = useState(false);
   // True while loading results from the API via a ?hash= deep link.
   const [hashLoading, setHashLoading] = useState(!!hashParam);
 
@@ -2481,6 +2485,12 @@ export default function ResultsPage() {
 
   // ── Stripe checkout ────────────────────────────────────────────────────
   const handleUpgrade = useCallback(async (tierId) => {
+    // On Capacitor Android, do not start Stripe checkout — show a modal
+    // directing users to the website instead.
+    if (isCapacitorAndroid()) {
+      setShowAndroidModal(true);
+      return;
+    }
     // Call the checkout API directly to avoid Auth0 intermediate redirects
     // that can cause callback URL mismatch errors.
     const email = getEffectiveEmail();
@@ -2964,6 +2974,11 @@ export default function ResultsPage() {
           }}
           checkoutLoading={checkoutLoading}
         />
+      )}
+
+      {/* ── Android "Available on the web" Modal ────────────────────── */}
+      {showAndroidModal && (
+        <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
       )}
 
       {/* ── Site Header ──────────────────────────────────────────────── */}

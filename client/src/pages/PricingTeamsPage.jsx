@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
+import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import { isCapacitorAndroid } from '../utils/platform.js';
 import { TEAM_PLANS } from '../data/teamPlans';
 
 const styles = `
@@ -431,8 +433,15 @@ export default function PricingTeamsPage() {
   const { getAccessTokenSilently, user } = useAuth0();
   const [checkoutLoading, setCheckoutLoading] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
+  const [showAndroidModal, setShowAndroidModal] = useState(false);
 
   const startCheckout = useCallback(async (tier) => {
+    // On Capacitor Android, do not start Stripe checkout — show a modal
+    // directing users to the website instead.
+    if (isCapacitorAndroid()) {
+      setShowAndroidModal(true);
+      return;
+    }
     setCheckoutError('');
     setCheckoutLoading(tier);
     try {
@@ -716,6 +725,9 @@ export default function PricingTeamsPage() {
     </p>
   </section>
 
+      {showAndroidModal && (
+        <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
+      )}
     </>
   );
 }
