@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Soft amber background -->
+  <circle cx="32" cy="32" r="30" fill="#FFFBEB"/>
+  <!-- Target/bullseye -->
+  <circle cx="32" cy="32" r="20" stroke="#D97706" stroke-width="2"/>
+  <circle cx="32" cy="32" r="13" stroke="#D97706" stroke-width="1.5" opacity="0.7"/>
+  <circle cx="32" cy="32" r="6" fill="#F59E0B" stroke="#D97706" stroke-width="1.5"/>
+  <!-- Arrow hitting target -->
+  <line x1="52" y1="12" x2="34" y2="30" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Arrowhead -->
+  <polygon points="34,30 30,32 36,36" fill="#D97706"/>
+  <!-- Arrow tail feathers -->
+  <line x1="52" y1="12" x2="56" y2="8" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="52" y1="12" x2="57" y2="14" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
