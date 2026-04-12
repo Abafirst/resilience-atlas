@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Scroll background -->
+  <rect x="14" y="10" width="36" height="44" rx="4" fill="#EFF6FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <!-- Scroll roll at top -->
+  <path d="M14 18 C14 13 22 13 22 18" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <!-- Scroll roll at bottom -->
+  <path d="M50 46 C50 51 42 51 42 46" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <!-- Text lines -->
+  <line x1="22" y1="26" x2="42" y2="26" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="33" x2="42" y2="33" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="40" x2="36" y2="40" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+</svg>
