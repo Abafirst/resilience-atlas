@@ -6,6 +6,7 @@ import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/
 import GamificationToast from './GamificationToast.jsx';
 import StarterMicroQuests from './StarterMicroQuests.jsx';
 import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
+import NavigatorQuests from './NavigatorQuests.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import { apiUrl } from '../../api/baseUrl.js';
 
@@ -342,8 +343,8 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   const recommendedQuests = MICRO_QUESTS.filter(q => RECOMMENDED_IDS.includes(q.id));
 
   const sections = [
-    { id: 'games', label: 'Games', available: isStarter },
-    { id: 'quests', label: 'Quests', available: isNavigator },
+    { id: 'games',  label: 'Games',  available: isStarter },
+    { id: 'quests', label: 'Quests', available: isStarter },
     { id: 'badges', label: 'Badges', available: isStarter },
   ];
 
@@ -369,7 +370,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
           {isNavigator
             ? 'Full access: micro-practices, skill pathways, quests, and all badge tiers.'
             : isStarter
-              ? 'Starter access: micro-practices and starter badges. Upgrade for skill pathways and quests.'
+              ? 'Starter access: micro-practices, starter quests, and starter badges. Upgrade to Navigator for full skill pathways and all quests.'
               : 'Sign in and get Atlas Starter to begin your resilience adventure.'}
         </p>
         <div style={s.tierPill(tier)}>
@@ -572,20 +573,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
 
         {/* ── Quests Section ── */}
         {activeSection === 'quests' && (
-          <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-            <img src="/icons/game-mountain.svg" alt="" width={56} height={56} style={{ marginBottom: 16, opacity: 0.7 }} />
-            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 8px' }}>Quests — Coming Soon</h3>
-            <p style={{ fontSize: 14, color: '#64748b', maxWidth: 380, margin: '0 auto 20px', lineHeight: 1.65 }}>
-              Quests are structured multi-day resilience missions. Complete a series of practices across dimensions to earn special quest badges and unlock deeper insights.
-            </p>
-            <div style={{ display: 'inline-flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {['Dimension Mastery Quest', 'Values Discovery Quest', 'Regulation Sprint'].map(title => (
-                <div key={title} style={{ background: '#f1f5f9', border: '1px solid #e2e8f0', borderRadius: 8, padding: '8px 14px', fontSize: 12, color: '#64748b' }}>
-                  {title}
-                </div>
-              ))}
-            </div>
-          </div>
+          <NavigatorQuests tier={tier} progress={progress} />
         )}
 
         {/* ── Badges Section ── */}
