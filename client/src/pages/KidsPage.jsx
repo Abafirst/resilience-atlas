@@ -37,7 +37,150 @@ const SKILLS = [
   { name: 'Cognitive-Narrative',   tag: 'Ages 6+',   desc: 'Reframing stories, building growth mindset, and shaping personal identity.' },
 ];
 
-/* ── SkillBuilder: reflection panel (textarea fields) ── */
+/* ── Kid-friendly subtitles for each resilience type ── */
+const SKILL_SUBTITLES = {
+  'Relational-Connective': 'Connector',
+  'Agentic-Generative':    'Builder',
+  'Spiritual-Reflective':  'Guide',
+  'Emotional-Adaptive':    'Feeler',
+  'Cognitive-Narrative':   'Thinker',
+  'Somatic-Regulative':    'Grounder',
+};
+
+/* ── Richer modal content for each skill ── */
+const SKILL_DETAILS = {
+  'Agentic-Generative': {
+    fullDesc: "Builders are the doers — they take action, set goals, and make things happen even when it feels hard. A Builder doesn't wait for permission; they find a way forward one small step at a time. You show this skill when you start a project, help solve a problem, or keep going after a mistake. Every great journey begins with one brave step.",
+    tryThis: [
+      { label: 'Set a Tiny Goal', href: '/kids?category=activities' },
+      { label: 'Builder Stories', href: '/kids?category=stories' },
+      { label: 'Action Activity', href: '/kids?category=activities' },
+    ],
+  },
+  'Relational-Connective': {
+    fullDesc: "Connectors are warm, caring, and always notice when someone feels left out. This skill is about building real friendships, asking for help when you need it, and letting people know they matter. You use this skill when you include a new kid, check in on a friend, or tell someone how you're feeling. Connection is a superpower — it makes hard things easier.",
+    tryThis: [
+      { label: 'Connection Stories', href: '/kids?category=stories' },
+      { label: 'Friendship Activities', href: '/kids?category=activities' },
+    ],
+  },
+  'Spiritual-Reflective': {
+    fullDesc: "Guides are the deep thinkers who ask big questions: Why am I here? What really matters? What do I believe? This skill helps you find meaning in tough times and stay true to your values. You use it when you reflect on a hard day, help others figure out what's important, or feel connected to something bigger than yourself. Guides light the way for others.",
+    tryThis: [
+      { label: 'Reflection Activities', href: '/kids?category=activities' },
+      { label: 'Values Builder', href: '/kids?category=skills' },
+    ],
+  },
+  'Emotional-Adaptive': {
+    fullDesc: "Feelers are in tune with their emotions — and the emotions of the people around them. This skill is about naming feelings, riding the waves of big emotions, and bouncing back after hard moments. You use it when you notice you're scared or sad, take a breath before reacting, or support a friend who's upset. Feeling your feelings (all of them) is a real strength.",
+    tryThis: [
+      { label: 'Emotion Activities', href: '/kids?category=activities' },
+      { label: 'Feeler Stories', href: '/kids?category=stories' },
+    ],
+  },
+  'Somatic-Regulative': {
+    fullDesc: "Grounders know that your body holds wisdom. This skill is about listening to your body — noticing tension, using breath and movement to calm down, and building steady habits that help you feel safe. You use it when you take slow breaths before a test, go for a walk when you're upset, or get enough sleep so you can face the day. Your body is your first home.",
+    tryThis: [
+      { label: 'Body Activities', href: '/kids?category=activities' },
+      { label: 'Grounder Stories', href: '/kids?category=stories' },
+    ],
+  },
+  'Cognitive-Narrative': {
+    fullDesc: "Thinkers are story-changers — they notice the stories they tell about themselves and choose to rewrite the unhelpful ones. This skill is about seeing challenges as chances to grow, catching negative self-talk, and building a growth mindset. You use it when you say 'I can't do this yet' instead of 'I can't do this', or when you see a hard situation from a new angle. Your mind is a powerful tool.",
+    tryThis: [
+      { label: 'Mindset Activities', href: '/kids?category=activities' },
+      { label: 'Thinker Stories', href: '/kids?category=stories' },
+    ],
+  },
+};
+
+/* ── Skill Modal ── */
+function SkillModal({ skill, onClose }) {
+  const modalRef = useRef(null);
+  const subtitle = SKILL_SUBTITLES[skill.name] || skill.name;
+  const details  = SKILL_DETAILS[skill.name] || {};
+
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    // Move focus into the modal
+    if (modalRef.current) modalRef.current.focus();
+    return () => {
+      document.removeEventListener('keydown', handler);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  return (
+    <div
+      className="story-modal skill-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="skill-modal-title"
+      onClick={handleBackdropClick}
+    >
+      <div
+        className="story-modal-inner skill-modal-inner"
+        ref={modalRef}
+        tabIndex={-1}
+        style={{ outline: 'none' }}
+      >
+        <button className="story-modal-close" onClick={onClose} aria-label="Close">&#x2715;</button>
+
+        {/* Icon + title + subtitle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 4, paddingRight: '2.5rem' }}>
+          <img
+            src={KIDS_DIMENSION_ICON_MAP[skill.name]}
+            alt=""
+            aria-hidden="true"
+            className="icon"
+            style={{ width: 40, height: 40, flexShrink: 0 }}
+          />
+          <div>
+            <p className="story-modal-title" id="skill-modal-title" style={{ margin: 0 }}>{subtitle}</p>
+            <p style={{ margin: 0, fontSize: '.82rem', fontWeight: 600, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+              {skill.name}
+            </p>
+          </div>
+        </div>
+
+        <span className="skill-card-tag" style={{ marginBottom: '1.25rem', display: 'inline-block' }}>{skill.tag}</span>
+
+        {/* Full description */}
+        <div className="story-modal-body" style={{ marginBottom: details.tryThis ? '1.25rem' : 0 }}>
+          <p>{details.fullDesc || skill.desc}</p>
+        </div>
+
+        {/* Try this suggestions */}
+        {details.tryThis && details.tryThis.length > 0 && (
+          <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '1rem' }}>
+            <p style={{ margin: '0 0 .6rem', fontSize: '.8rem', fontWeight: 700, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '.04em' }}>
+              Try this
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
+              {details.tryThis.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="skill-modal-try-btn"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+
 function ReflectionBuilder({ builder }) {
   const [open, setOpen] = useState(false);
   const [vals, setVals] = useState({});
@@ -246,7 +389,9 @@ export default function KidsPage() {
   const [selectedAge, setSelectedAge] = useState('age-5-7');
   const [activeStory, setActiveStory] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeSkill, setActiveSkill] = useState(null);
   const closeStory = useCallback(() => setActiveStory(null), []);
+  const closeSkill = useCallback(() => setActiveSkill(null), []);
 
   const handleCategoryChange = useCallback((id) => {
     setActiveCategory(id);
@@ -267,6 +412,7 @@ export default function KidsPage() {
   return (
     <>
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
+      {activeSkill && <SkillModal skill={activeSkill} onClose={closeSkill} />}
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <SiteHeader activePage="kids" />
@@ -294,18 +440,25 @@ export default function KidsPage() {
             <div className="section-header">
               <span className="section-label">The Six Resilience Dimensions</span>
               <h2 id="skills-heading">Your Resilience Looks Different from Everyone Else&rsquo;s</h2>
-              <p>That&rsquo;s not a problem&mdash;it&rsquo;s the point. Each dimension shows up in everyday situations young people actually face.</p>
+              <p>That&rsquo;s not a problem&mdash;it&rsquo;s the point. Each dimension shows up in everyday situations young people actually face. Tap a card to learn more.</p>
             </div>
             <div className="skills-grid">
               {SKILLS.map(skill => (
-                <article key={skill.name} className="skill-card">
+                <button
+                  key={skill.name}
+                  className="skill-card skill-card-btn"
+                  onClick={() => setActiveSkill(skill)}
+                  aria-label={`Learn more about ${SKILL_SUBTITLES[skill.name] || skill.name} — ${skill.name}`}
+                >
                   <div className="skill-icon">
                     <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" className="icon icon-md" />
                   </div>
                   <div className="skill-card-name">{skill.name}</div>
+                  <div className="skill-card-subtitle">{SKILL_SUBTITLES[skill.name]}</div>
                   <span className="skill-card-tag">{skill.tag}</span>
                   <p>{skill.desc}</p>
-                </article>
+                  <span className="skill-card-cta" aria-hidden="true">Learn more</span>
+                </button>
               ))}
             </div>
           </section>

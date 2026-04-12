@@ -3310,17 +3310,126 @@ export default function ResultsPage() {
         </div>
 
         {/* ── Primary Resilience Mode ───────────────────────────────── */}
-        {dominantType && (
-          <section style={s.primaryTypeCard} aria-labelledby="primaryTypeHeading">
-            <div style={s.primaryTypeHeading} id="primaryTypeHeading">Your Primary Resilience Mode</div>
-            <div style={s.primaryTypeName(DIM_COLORS[dominantType])}>
-              {dominantType}
-            </div>
-            <p style={s.primaryTypeDesc}>
-              {TYPE_DESCRIPTIONS[dominantType] || ''}
-            </p>
-          </section>
-        )}
+        {dominantType && (() => {
+          const topScore    = rankedDims[0] ? Math.round(rankedDims[0][1].percentage) : 0;
+          const secondDim   = rankedDims[1] ? rankedDims[1][0] : null;
+          const secondScore = rankedDims[1] ? Math.round(rankedDims[1][1].percentage) : 0;
+          const lowestDim   = rankedDims.length > 0 ? rankedDims[rankedDims.length - 1][0] : null;
+          const gap         = topScore - secondScore;
+          const isBlend     = secondDim && gap <= 8;
+          const modeColor   = DIM_COLORS[dominantType] || '#667eea';
+          return (
+            <section
+              style={{
+                ...s.primaryTypeCard,
+                borderTop: `4px solid ${modeColor}`,
+                background: 'linear-gradient(135deg, #fafbff 0%, #ffffff 100%)',
+              }}
+              aria-labelledby="primaryTypeHeading"
+            >
+              {/* Header row: label + match pill */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+                <div style={s.primaryTypeHeading} id="primaryTypeHeading">Your Primary Resilience Mode</div>
+                <span style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: '3px 10px',
+                  borderRadius: 999,
+                  background: isBlend ? '#fef9c3' : `${modeColor}18`,
+                  color: isBlend ? '#854d0e' : modeColor,
+                  letterSpacing: 0.4,
+                  textTransform: 'uppercase',
+                }}>
+                  {isBlend ? 'Blend' : 'Strong Match'}
+                </span>
+              </div>
+
+              {/* Mode name + icon */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                <img src={DIM_ICONS[dominantType]} alt="" aria-hidden="true" style={{ width: 28, height: 28, flexShrink: 0 }} />
+                <div style={s.primaryTypeName(modeColor)}>
+                  {dominantType}
+                </div>
+              </div>
+
+              {/* Static description */}
+              <p style={{ ...s.primaryTypeDesc, marginBottom: 16 }}>
+                {TYPE_DESCRIPTIONS[dominantType] || ''}
+              </p>
+
+              {/* Why this is your mode */}
+              <div style={{
+                background: `${modeColor}0d`,
+                border: `1px solid ${modeColor}30`,
+                borderRadius: 10,
+                padding: '12px 14px',
+                marginBottom: 14,
+              }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: modeColor, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>
+                  Why this is your mode
+                </div>
+                <div style={{ fontSize: 13, color: '#374151', lineHeight: 1.6 }}>
+                  <span style={{ display: 'block', marginBottom: 4 }}>
+                    Your <strong style={{ color: modeColor }}>{dominantType}</strong> dimension leads at{' '}
+                    <strong>{topScore}%</strong>{gap > 0 ? ` — ${gap} points ahead of your next dimension` : ''}.
+                  </span>
+                  {isBlend && secondDim && (
+                    <span style={{ display: 'block' }}>
+                      Your <strong style={{ color: DIM_COLORS[secondDim] || '#667eea' }}>{secondDim}</strong> dimension
+                      is close behind at <strong>{secondScore}%</strong>, giving you a blended resilience profile that draws on both modes.
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Dynamic CTA */}
+              {lowestDim && (
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <a
+                    href="/resources"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: '#fff',
+                      background: modeColor,
+                      border: 'none',
+                      borderRadius: 8,
+                      padding: '8px 14px',
+                      textDecoration: 'none',
+                      transition: 'opacity .15s',
+                    }}
+                  >
+                    <img src={DIM_ICONS[dominantType]} alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} />
+                    Explore {dominantType.split('-')[0]} resources
+                  </a>
+                  <a
+                    href="/resources"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 6,
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: DIM_COLORS[lowestDim] || '#667eea',
+                      background: `${DIM_COLORS[lowestDim] || '#667eea'}12`,
+                      border: `1px solid ${DIM_COLORS[lowestDim] || '#667eea'}30`,
+                      borderRadius: 8,
+                      padding: '8px 14px',
+                      textDecoration: 'none',
+                      transition: 'opacity .15s',
+                    }}
+                  >
+                    <img src={DIM_ICONS[lowestDim]} alt="" aria-hidden="true" style={{ width: 15, height: 15 }} />
+                    Grow your {lowestDim.split('-')[0]} capacity
+                  </a>
+                </div>
+              )}
+            </section>
+          );
+        })()}
 
         {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
         <section style={{
