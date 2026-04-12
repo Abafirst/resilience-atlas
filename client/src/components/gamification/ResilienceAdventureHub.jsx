@@ -333,7 +333,8 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   const [recommendedSeed, setRecommendedSeed] = useState(() => {
     try {
       const stored = localStorage.getItem(REFRESH_SEED_KEY);
-      return stored ? parseInt(stored, 10) : 42;
+      const parsed = stored ? parseInt(stored, 10) : NaN;
+      return !isNaN(parsed) ? parsed : 42;
     } catch (_) { return 42; }
   });
   const [lastRefreshDate, setLastRefreshDate] = useState(() => {
