@@ -161,7 +161,7 @@ function unescapeHtmlEntities(str) {
  * @param {string} scores  Cleaned JSON string (HTML entities already reversed)
  * @param {string} [email]  User email for personalisation (optional)
  */
-async function runGeneration(hash, overall, dominantType, scores, email, navigatorQuotaEmail = null) {
+async function runGeneration(hash, overall, dominantType, scores, email, quotaTrackedEmail = null) {
     const startTime = Date.now();
     console.log(`[PDF Generation] Starting report generation for hash: ${hash}`);
 
@@ -233,15 +233,22 @@ async function runGeneration(hash, overall, dominantType, scores, email, navigat
 
         // Persist the quota timestamp for Atlas Navigator users so that the
         // rolling 30-day window is enforced on the next generation attempt.
-        if (navigatorQuotaEmail) {
+        if (quotaTrackedEmail) {
             try {
                 await User.findOneAndUpdate(
-                    { email: navigatorQuotaEmail },
+                    { email: quotaTrackedEmail },
                     { lastPdfGeneratedAt: new Date() }
                 );
             } catch (quotaErr) {
                 // Non-fatal: log but don't fail the response.
-                console.error('[PDF Generation] Failed to update Navigator quota timestamp:', quotaErr.message);
+                // WARNING: If this persists, the user may be able to generate
+                // additional PDFs before the 30-day quota is re-applied.
+                // Investigate DB connectivity if this error recurs.
+                console.error(
+                    '[PDF Generation] Failed to persist Atlas Navigator quota timestamp' +
+                    ' — quota may not be enforced on next request:',
+                    quotaErr.message
+                );
             }
         }
 
@@ -405,7 +412,7 @@ router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
                     }
                     // Mark this generation as subject to quota tracking so that
                     // runGeneration updates lastPdfGeneratedAt on success.
-                    req._navigatorQuotaEmail = cleanEmail;
+                    req._quotaTrackedEmail = cleanEmail;
                 }
             } catch (dbErr) {
                 // DB unavailable — block rather than silently allow, to prevent
@@ -439,7 +446,7 @@ router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
 
         // Kick off generation asynchronously — do NOT await so the response
         // is returned immediately.
-        runGeneration(hash, overall, dominantType || '', cleanScores, email || '', req._navigatorQuotaEmail || null)
+        runGeneration(hash, overall, dominantType || '', cleanScores, email || '', req._quotaTrackedEmail || null)
             .catch((err) => console.error('Background report generation failed:', err.message, err.stack));
 
         return res.json({ hash, estimatedSeconds: 15 });
