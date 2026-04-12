@@ -773,24 +773,72 @@ export default function TeamsResourcesPage() {
 
         {/* Gamifications section — always visible, independent of search/category filters */}
         <section style={{ marginBottom: '3rem' }} aria-labelledby="gamifications-heading">
-          <h2
-            id="gamifications-heading"
-            style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '.5rem', paddingBottom: '.6rem', borderBottom: '2px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '.6rem' }}
-          >
-            <img src="/icons/kids-trophy.svg" alt="" aria-hidden="true" style={{ width: '1.25rem', height: '1.25rem', verticalAlign: 'middle' }} />
-            Gamifications &amp; Achievements
-            <span style={{ fontSize: '.85rem', fontWeight: 400, color: '#64748b', marginLeft: 'auto' }}>Badges, leaderboards, challenges &amp; milestones</span>
-          </h2>
-          <p style={{ fontSize: '.92rem', color: '#64748b', marginBottom: '1.25rem', lineHeight: 1.6 }}>
-            Boost team engagement and celebrate resilience progress with tier-based gamification features. Unlock more powerful tools as your team grows.
-          </p>
-          <div
-            className="tr-grid"
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}
-          >
-            {GAMIFICATION_FEATURES.map(feature => (
-              <GamificationCard key={feature.id} feature={feature} onGate={setGateItem} />
-            ))}
+          {/* Hero header */}
+          <div style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e40af 60%, #0369a1 100%)', borderRadius: 12, padding: '28px 28px 24px', marginBottom: '1.5rem', color: '#fff' }}>
+            <h2
+              id="gamifications-heading"
+              style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: '0.6rem' }}
+            >
+              <img src="/icons/kids-trophy.svg" alt="" aria-hidden="true" style={{ width: '1.4rem', height: '1.4rem', verticalAlign: 'middle' }} />
+              Team Resilience Gamification
+            </h2>
+            <p style={{ fontSize: '.92rem', color: '#bae6fd', margin: '0 0 16px', lineHeight: 1.6, maxWidth: 540 }}>
+              Boost team engagement and celebrate growth through structured challenges and rewards.
+            </p>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {[
+                { label: 'Atlas Team Basic', sub: 'from $299/mo', color: '#22c55e' },
+                { label: 'Atlas Team Premium', sub: 'from $699/mo', color: '#a855f7' },
+                { label: 'Atlas Team Enterprise', sub: 'from $2,499/mo', color: '#f43f5e' },
+              ].map(t => (
+                <div key={t.label} style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: 'rgba(255,255,255,0.1)', color: '#fff', border: `1px solid ${t.color}44`, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.3 }}>
+                  <span>{t.label}</span>
+                  <span style={{ fontSize: 10, fontWeight: 400, color: 'rgba(255,255,255,0.65)' }}>{t.sub}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier: Basic */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #dcfce7' }}>
+              <img src="/icons/badges.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
+              <span style={{ fontWeight: 700, color: '#166534', fontSize: '1rem' }}>Atlas Team Basic</span>
+              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $299/mo</span>
+            </div>
+            <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              {GAMIFICATION_FEATURES.filter(f => f.minTier === 'starter').map(feature => (
+                <GamificationCard key={feature.id} feature={feature} onGate={setGateItem} />
+              ))}
+            </div>
+          </div>
+
+          {/* Tier: Premium */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #ede9fe' }}>
+              <img src="/icons/advanced-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
+              <span style={{ fontWeight: 700, color: '#5b21b6', fontSize: '1rem' }}>Atlas Team Premium</span>
+              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $699/mo</span>
+            </div>
+            <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              {GAMIFICATION_FEATURES.filter(f => f.minTier === 'pro').map(feature => (
+                <GamificationCard key={feature.id} feature={feature} onGate={setGateItem} />
+              ))}
+            </div>
+          </div>
+
+          {/* Tier: Enterprise */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #ffe4e6' }}>
+              <img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
+              <span style={{ fontWeight: 700, color: '#be185d', fontSize: '1rem' }}>Atlas Team Enterprise</span>
+              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $2,499/mo</span>
+            </div>
+            <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+              {GAMIFICATION_FEATURES.filter(f => f.minTier === 'enterprise').map(feature => (
+                <GamificationCard key={feature.id} feature={feature} onGate={setGateItem} />
+              ))}
+            </div>
           </div>
         </section>
       </main>

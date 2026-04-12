@@ -140,7 +140,7 @@ export default function AchievementNotification({ badge, onClose }) {
 
           {/* Text */}
           <p style={{ margin: '0 0 6px', fontSize: 13, fontWeight: 700, color: cfg.accent }}>
-            🎉 Badge Unlocked!
+            <img src="/icons/trophy.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked!
           </p>
           <h2 style={{ margin: '0 0 10px', fontSize: 20, fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
             {badge.name}
@@ -166,7 +166,7 @@ export default function AchievementNotification({ badge, onClose }) {
               width: '100%',
             }}
           >
-            Awesome! 🏆
+            Awesome! <img src="/icons/trophy.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle', marginLeft: 4 }} />
           </button>
         </div>
       </div>
