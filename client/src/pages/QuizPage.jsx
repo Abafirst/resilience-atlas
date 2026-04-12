@@ -68,7 +68,7 @@ const QUESTIONS = [
   { id: 19, category: 'Relational-Connective', text: 'In general, I have people I can trust with my struggles.' },
   { id: 20, category: 'Relational-Connective', text: 'In general, I ask for help without shame or hesitation.' },
   { id: 21, category: 'Relational-Connective', text: 'In general, I repair and reconcile relationships after conflict or misunderstanding.' },
-  { id: 22, category: 'Relational-Connective', text: 'In general, I set healthy boundaries in relationships to protect my well-being.' },
+  { id: 22, category: 'Relational-Connective', text: 'In general, I set healthy boundaries in relationships to protect my own well-being.' },
   { id: 23, category: 'Relational-Connective', text: 'In general, I feel seen and understood by people close to me.' },
   { id: 24, category: 'Relational-Connective', text: 'In general, I invest time in nurturing important relationships.' },
 
