@@ -7,6 +7,8 @@
  * - Primary mode section logic (blend detection threshold)
  */
 
+const EMOJI_REGEX = /\p{Emoji_Presentation}/u;
+
 const DIMENSIONS = [
   'Agentic-Generative',
   'Relational-Connective',
@@ -75,9 +77,8 @@ describe('SKILL_SUBTITLES mapping', () => {
   });
 
   test('no emoji characters in subtitle values', () => {
-    const emojiRegex = /\p{Emoji_Presentation}/u;
     Object.values(SKILL_SUBTITLES).forEach(subtitle => {
-      expect(emojiRegex.test(subtitle)).toBe(false);
+      expect(EMOJI_REGEX.test(subtitle)).toBe(false);
     });
   });
 });
@@ -111,9 +112,8 @@ describe('SKILL_DETAILS data integrity', () => {
   });
 
   test('no emoji characters in fullDesc', () => {
-    const emojiRegex = /\p{Emoji_Presentation}/u;
     DIMENSIONS.forEach(dim => {
-      expect(emojiRegex.test(SKILL_DETAILS[dim].fullDesc)).toBe(false);
+      expect(EMOJI_REGEX.test(SKILL_DETAILS[dim].fullDesc)).toBe(false);
     });
   });
 });
