@@ -221,7 +221,13 @@ function CategoryNav({ active, onChange }) {
             onClick={() => onChange(cat.id)}
           >
             <span className="kids-cat-icon" aria-hidden="true">
-              <img src={cat.icon} alt="" width={22} height={22} />
+              <img
+                src={cat.icon}
+                alt=""
+                width={22}
+                height={22}
+                onError={e => { e.currentTarget.src = '/icons/compass.svg'; e.currentTarget.onerror = null; }}
+              />
             </span>
             <span className="kids-cat-label">{cat.label}</span>
           </button>

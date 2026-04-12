@@ -549,6 +549,52 @@ router.post('/progress/quest-complete', requirePaidTier, async (req, res) => {
   }
 });
 
+// ── POST /api/gamification/progress/award-badge ──────────────────────────────
+
+/**
+ * Award a named badge on quest completion (idempotent).
+ *
+ * Body:
+ *   badgeName   {string}  required
+ *   badgeIcon   {string}  optional  — path e.g. '/icons/compass.svg'
+ *   badgeRarity {string}  optional  — common | uncommon | rare | legendary
+ *   bonusStars  {number}  optional  — extra stars to award
+ */
+router.post('/progress/award-badge', requirePaidTier, async (req, res) => {
+  try {
+    const { badgeName, badgeIcon, badgeRarity, bonusStars } = req.body;
+
+    if (!badgeName || typeof badgeName !== 'string' || !badgeName.trim()) {
+      return res.status(400).json({ error: 'badgeName is required.' });
+    }
+
+    const VALID_RARITIES = ['common', 'uncommon', 'rare', 'legendary'];
+    const rarity  = VALID_RARITIES.includes(badgeRarity) ? badgeRarity : 'uncommon';
+    const icon    = typeof badgeIcon === 'string' && badgeIcon.trim() ? badgeIcon.trim() : '';
+    const bonus   = Number.isFinite(Number(bonusStars)) ? Math.max(0, Math.min(500, Number(bonusStars))) : 0;
+    const name    = badgeName.trim();
+
+    const uid      = userId(req);
+    const progress = await svc.getOrCreateProgress(uid);
+
+    const hasBadge = progress.badges.some(b => b.name === name);
+    if (!hasBadge) {
+      progress.badges.push({ name, rarity, icon });
+      if (bonus > 0) {
+        progress.totalPoints += bonus;
+        progress.pointHistory.push({ type: 'quest_badge', points: bonus, date: new Date(), description: `Quest badge: ${name}` });
+      }
+      await progress.save();
+      return res.status(200).json({ awarded: true, badgeName: name, bonusStars: bonus, totalPoints: progress.totalPoints });
+    }
+
+    return res.status(200).json({ awarded: false, badgeName: name, message: 'Badge already earned.' });
+  } catch (err) {
+    logger.error('gamification/award-badge error:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // ── POST /api/gamification/progress/pathway-complete ─────────────────────────
 
 /**
