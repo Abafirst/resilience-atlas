@@ -4,6 +4,7 @@ import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
+import { TEAM_PLANS } from '../data/teamPlans';
 
 const styles = `
 
@@ -348,6 +349,84 @@ const styles = `
     }
     .migration-banner h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
     .migration-banner p { font-size: 0.9rem; color: rgba(255,255,255,0.8); max-width: 480px; margin: 0 auto 1.5rem; line-height: 1.6; }
+
+    /* ── Shared team-tier-card styles (matches TeamsLandingPage) ─────────── */
+    .team-pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1020px;
+      margin: 0 auto;
+    }
+    @media (max-width: 860px) {
+      .team-pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+    }
+    .team-tier-card {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .team-tier-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.10); }
+    .team-tier-card--featured {
+      border-color: #4F46E5;
+      box-shadow: 0 4px 20px rgba(79,70,229,.14);
+      position: relative;
+    }
+    .ttc-header { margin-bottom: 1.25rem; }
+    .ttc-tier-icon { margin-bottom: 0.75rem; }
+    .ttc-tier-icon img { display: block; }
+    .ttc-badge {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.65rem;
+    }
+    .ttc-badge--blue  { background: #dbeafe; color: #1e40af; }
+    .ttc-badge--gold  { background: #fef3c7; color: #92400e; }
+    .ttc-badge--slate { background: #f1f5f9; color: #334155; }
+    .ttc-name { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+    .ttc-price { display: flex; align-items: baseline; gap: 0.2rem; margin-bottom: 0.5rem; }
+    .ttc-amount { font-size: 2rem; font-weight: 800; color: #4F46E5; }
+    .ttc-period { font-size: 0.9rem; color: #64748b; font-weight: 500; }
+    .ttc-desc { font-size: 0.88rem; color: #475569; line-height: 1.5; margin: 0; }
+    .ttc-features { list-style: none; padding: 0; margin: 0 0 1.5rem 0; flex: 1; }
+    .ttc-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.87rem;
+      color: #374151;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .ttc-features li:last-child { border-bottom: none; }
+    .ttc-features li span[aria-hidden] { color: #22c55e; font-weight: 700; flex-shrink: 0; margin-top: 0.05rem; }
+    .ttc-btn {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.97rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      border: none;
+    }
+    .ttc-btn--primary { background: #4F46E5; color: #fff; }
+    .ttc-btn--featured { background: linear-gradient(135deg, #4F46E5, #7c3aed); color: #fff; }
+    .ttc-btn:hover { opacity: 0.9; }
+    .ttc-btn:active { transform: scale(0.98); }
 `;
 
 export default function PricingTeamsPage() {
@@ -449,128 +528,50 @@ export default function PricingTeamsPage() {
 
   {/* ── Plans ──────────────────────────────────────────────────────────────── */}
   <section className="plans-section" id="plans">
-    <div className="plans-grid">
-
-      {/* Atlas Team Basic */}
-      <div className="plan-card">
-        <div className="plan-name">Atlas Team Basic</div>
-        <div className="plan-tagline">For small teams getting started with resilience</div>
-
-        <div className="plan-price">
-          <div>
-            <span className="plan-price__amount">$299</span>
-            <span className="plan-price__period">one-time</span>
+    <div className="team-pricing-grid">
+      {TEAM_PLANS.map((plan) => (
+        <div
+          key={plan.key}
+          className={`team-tier-card${plan.featured ? ' team-tier-card--featured' : ''}`}
+        >
+          <div className="ttc-header">
+            {plan.badge && (
+              <span className={`ttc-badge ttc-badge--${plan.badge.variant}`}>{plan.badge.text}</span>
+            )}
+            <div className="ttc-tier-icon" aria-hidden="true">
+              <img src={plan.icon} alt="" width="48" height="48" className="icon icon-lg" />
+            </div>
+            <h3 className="ttc-name">{plan.name}</h3>
+            <div className="ttc-price">
+              <span className="ttc-amount">{plan.price}</span>
+              {plan.priceLabel && <span className="ttc-period">{plan.priceLabel}</span>}
+            </div>
+            <p className="ttc-desc">{plan.description}</p>
           </div>
+          <ul className="ttc-features" aria-label={`${plan.name} features`}>
+            {plan.features.map((feat, i) => (
+              <li key={i}>
+                <span aria-hidden="true">&#10003;</span>{' '}
+                <span dangerouslySetInnerHTML={{ __html: feat }} />
+              </li>
+            ))}
+          </ul>
+          {plan.cta === 'checkout' ? (
+            <button
+              className={`ttc-btn ${plan.featured ? 'ttc-btn--featured' : 'ttc-btn--primary'}`}
+              type="button"
+              disabled={!!checkoutLoading}
+              onClick={() => startCheckout(plan.key)}
+            >
+              {checkoutLoading === plan.key ? '⏳ Redirecting…' : plan.ctaLabel}
+            </button>
+          ) : (
+            <a className="ttc-btn ttc-btn--primary" href="/teams#teamLeadForm">
+              {plan.ctaLabel}
+            </a>
+          )}
         </div>
-
-        <div className="plan-capacity">
-          <span><strong>Up to 15 people</strong></span>
-          <span>1 team</span>
-        </div>
-
-        <button className="plan-cta plan-cta--outline" type="button"
-          disabled={!!checkoutLoading}
-          onClick={() => startCheckout('starter')}>
-          {checkoutLoading === 'starter' ? '⏳ Redirecting…' : 'Get Started — $299'}
-        </button>
-
-        <p className="plan-features-label">What's included</p>
-        <ul className="plan-features">
-          <li>Up to 15 users | 1 team</li>
-          <li className="plus-feature"><strong>Gamifications:</strong> Personal &amp; team badges, streaks, milestones</li>
-          <li className="plus-feature"><strong>Team Tracking:</strong> Leaderboards, progress dashboards, member dashboards</li>
-          <li>Team assessment dashboard &amp; aggregated radar chart</li>
-          <li>Member results table</li>
-          <li>CSV &amp; PDF export</li>
-          <li>Basic KPI cards (members, avg score)</li>
-          <li>Discussion prompts (basic)</li>
-          <li>Bulk email invitations</li>
-          <li>Admin access</li>
-          <li>Email support</li>
-        </ul>
-      </div>
-
-      {/* Atlas Team Premium (Featured) */}
-      <div className="plan-card plan-card--featured">
-        <div className="plan-badge">Most Popular</div>
-        <div className="plan-name">Atlas Team Premium</div>
-        <div className="plan-tagline">For growing organizations serious about outcomes</div>
-
-        <div className="plan-price">
-          <div>
-            <span className="plan-price__amount">$699</span>
-            <span className="plan-price__period">one-time</span>
-          </div>
-        </div>
-
-        <div className="plan-capacity">
-          <span><strong>Up to 30 people</strong></span>
-          <span>Unlimited teams / departments</span>
-        </div>
-
-        <button className="plan-cta plan-cta--primary" type="button"
-          disabled={!!checkoutLoading}
-          onClick={() => startCheckout('pro')}>
-          {checkoutLoading === 'pro' ? '⏳ Redirecting…' : 'Get Started — $699'}
-        </button>
-
-        <p className="plan-features-label">Everything in Basic, plus</p>
-        <ul className="plan-features">
-          <li>Up to 30 users | Multiple teams</li>
-          <li className="plus-feature"><strong>Enhanced Gamifications:</strong> Advanced team challenges, achievement tracking</li>
-          <li className="plus-feature"><strong>Advanced Leaderboards:</strong> Multi-team comparisons, dimension breakdowns</li>
-          <li className="plus-feature"><strong>Manager Dashboards:</strong> Detailed team member progress tracking</li>
-          <li className="plus-feature">Advanced analytics (distribution, heatmap)</li>
-          <li className="plus-feature">Trend analysis (cycle-over-cycle)</li>
-          <li className="plus-feature">Industry benchmark comparisons</li>
-          <li className="plus-feature">Risk flagging &amp; wellbeing alerts</li>
-          <li className="plus-feature">Auto-generated narrative team reports (PDF)</li>
-          <li className="plus-feature">6 pre-built workshop guides</li>
-          <li className="plus-feature">Facilitation tools &amp; resource library</li>
-          <li className="plus-feature">Dynamic discussion prompts</li>
-          <li className="plus-feature">Team action plan builder</li>
-          <li className="plus-feature">Role-based permissions (Viewer / Contributor / Admin)</li>
-          <li className="plus-feature">Bulk CSV member invitations</li>
-          <li className="plus-feature">Automated invitation reminders</li>
-          <li className="plus-feature">PDF &amp; CSV exports</li>
-          <li className="plus-feature">Scheduled auto-exports (weekly/monthly)</li>
-        </ul>
-      </div>
-
-      {/* Enterprise */}
-      <div className="plan-card plan-card--enterprise">
-        <div className="plan-name">Enterprise</div>
-        <div className="plan-tagline">Self-service control for large organizations</div>
-
-        <div className="plan-price plan-price--custom">
-          <div>
-            <span className="plan-price__amount">Starting at $2,499</span>
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>One-time · self-service setup</div>
-        </div>
-
-        <div className="plan-capacity">
-          <span><strong>Unlimited people</strong></span>
-          <span>Unlimited teams</span>
-          <span>Custom retention + export controls</span>
-        </div>
-
-        <a className="plan-cta plan-cta--dark" href="/teams#teamLeadForm">
-          Contact Sales
-        </a>
-
-        <p className="plan-features-label">Everything in Premium, plus</p>
-        <ul className="plan-features">
-          <li>Unlimited users &amp; teams</li>
-          <li className="plus-feature"><strong>Full Gamification Suite:</strong> Custom badges, unlimited challenges, org-wide leaderboards</li>
-          <li className="plus-feature"><strong>Enterprise Tracking:</strong> Advanced manager/admin dashboards, up-to-date analytics dashboard</li>
-          <li className="plus-feature">Org-managed branding (logo, colors)</li>
-          <li className="plus-feature">Branded PDF reports with org logo</li>
-          <li className="plus-feature">SSO/SAML available — enabled on request</li>
-          <li className="plus-feature">Self-service data export — export and own your org&rsquo;s data</li>
-        </ul>
-      </div>
-
+      ))}
     </div>
   </section>
 

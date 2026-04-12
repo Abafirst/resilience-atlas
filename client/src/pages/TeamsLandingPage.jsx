@@ -6,6 +6,7 @@ import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getCurrentTeamsTier, canAccessFacilitationGuides } from '../utils/tierGating';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
+import { TEAM_PLANS } from '../data/teamPlans';
 
 const styles = `
 
@@ -698,90 +699,53 @@ export default function TeamsLandingPage() {
       </div>
     )}
     <div className="team-pricing-grid">
-
-      {/* Starter */}
-      <div className="team-tier-card">
-        <div className="ttc-header">
-          <div className="ttc-tier-icon" aria-hidden="true">
-            <img src="/icons/games/tier-starter.svg" alt="" width="48" height="48" className="icon icon-lg" />
+      {TEAM_PLANS.map((plan) => (
+        <div
+          key={plan.key}
+          className={`team-tier-card${plan.featured ? ' team-tier-card--featured' : ''}`}
+        >
+          <div className="ttc-header">
+            {plan.badge && (
+              <span className={`ttc-badge ttc-badge--${plan.badge.variant}`}>{plan.badge.text}</span>
+            )}
+            <div className="ttc-tier-icon" aria-hidden="true">
+              <img src={plan.icon} alt="" width="48" height="48" className="icon icon-lg" />
+            </div>
+            <h3 className="ttc-name">{plan.name}</h3>
+            <div className="ttc-price">
+              <span className="ttc-amount">{plan.price}</span>
+              {plan.priceLabel && <span className="ttc-period">{plan.priceLabel}</span>}
+            </div>
+            <p className="ttc-desc">{plan.description}</p>
           </div>
-          <h3 className="ttc-name">Atlas Team Basic</h3>
-          <div className="ttc-price">
-            <span className="ttc-amount">$299</span>
-            <span className="ttc-period">one-time</span>
-          </div>
-          <p className="ttc-desc">Perfect for small teams starting their resilience journey.</p>
+          <ul className="ttc-features" aria-label={`${plan.name} features`}>
+            {plan.features.map((feat, i) => (
+              <li key={i}>
+                <span aria-hidden="true">&#10003;</span>{' '}
+                <span dangerouslySetInnerHTML={{ __html: feat }} />
+              </li>
+            ))}
+          </ul>
+          {plan.cta === 'checkout' ? (
+            <button
+              className={`ttc-btn ${plan.featured ? 'ttc-btn--featured' : 'ttc-btn--primary'}`}
+              type="button"
+              disabled={!!checkoutLoading}
+              onClick={() => startTeamCheckout(plan.key)}
+            >
+              {checkoutLoading === plan.key ? '⏳ Redirecting…' : plan.ctaLabel}
+            </button>
+          ) : (
+            <a
+              href="#teamLeadForm"
+              className="ttc-btn ttc-btn--primary"
+              onClick={(e) => { e.preventDefault(); document.getElementById('teamLeadForm').scrollIntoView({ behavior: 'smooth' }); }}
+            >
+              {plan.ctaLabel}
+            </a>
+          )}
         </div>
-        <ul className="ttc-features" aria-label="Atlas Team Basic features">
-          <li><span aria-hidden="true">&#10003;</span> Up to 15 users | 1 team</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Gamifications:</strong> Personal &amp; team badges, streaks, milestones</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Team Tracking:</strong> Leaderboards, progress dashboards, member dashboards</li>
-          <li><span aria-hidden="true">&#10003;</span> Team dashboard &amp; aggregated radar chart</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-service CSV &amp; PDF export</li>
-          <li><span aria-hidden="true">&#10003;</span> Bulk email invitations</li>
-          <li><span aria-hidden="true">&#10003;</span> Download all your data anytime</li>
-        </ul>
-        <button className="ttc-btn ttc-btn--primary" type="button" disabled={!!checkoutLoading} onClick={() => startTeamCheckout('starter')}>
-          {checkoutLoading === 'starter' ? '⏳ Redirecting…' : 'Get Started — $299 one-time'}
-        </button>
-      </div>
-
-      {/* Pro */}
-      <div className="team-tier-card team-tier-card--featured">
-        <div className="ttc-header">
-          <span className="ttc-badge ttc-badge--blue">Most Popular</span>
-          <div className="ttc-tier-icon" aria-hidden="true">
-            <img src="/icons/games/tier-team.svg" alt="" width="48" height="48" className="icon icon-lg" />
-          </div>
-          <h3 className="ttc-name">Atlas Team Premium</h3>
-          <div className="ttc-price">
-            <span className="ttc-amount">$699</span>
-            <span className="ttc-period">one-time</span>
-          </div>
-          <p className="ttc-desc">For growing organizations with multiple teams and deeper analytics needs.</p>
-        </div>
-        <ul className="ttc-features" aria-label="Atlas Team Premium features">
-          <li><span aria-hidden="true">&#10003;</span> Up to 30 users | Multiple teams</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Enhanced Gamifications:</strong> Advanced team challenges, achievement tracking</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Advanced Leaderboards:</strong> Multi-team comparisons, dimension breakdowns</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Manager Dashboards:</strong> Detailed team member progress tracking</li>
-          <li><span aria-hidden="true">&#10003;</span> Advanced analytics (downloadable)</li>
-          <li><span aria-hidden="true">&#10003;</span> Auto-generated team reports (PDF)</li>
-          <li><span aria-hidden="true">&#10003;</span> Facilitation tools &amp; resource library (30+ guides)</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-service team management</li>
-        </ul>
-        <button className="ttc-btn ttc-btn--featured" type="button" disabled={!!checkoutLoading} onClick={() => startTeamCheckout('pro')}>
-          {checkoutLoading === 'pro' ? '⏳ Redirecting…' : 'Get Started — $699 one-time'}
-        </button>
-      </div>
-
-      {/* Enterprise */}
-      <div className="team-tier-card">
-        <div className="ttc-header">
-          <span className="ttc-badge ttc-badge--slate">Enterprise</span>
-          <div className="ttc-tier-icon" aria-hidden="true">
-            <img src="/icons/games/tier-enterprise.svg" alt="" width="48" height="48" className="icon icon-lg" />
-          </div>
-          <h3 className="ttc-name">Atlas Enterprise</h3>
-          <div className="ttc-price">
-            <span className="ttc-amount">Starting at $2,499</span>
-          </div>
-          <p className="ttc-desc">Built for large organizations who want full control. Self-manage your team, branding, authentication, and data — no white-glove setup or support required.</p>
-        </div>
-        <ul className="ttc-features" aria-label="Atlas Enterprise features">
-          <li><span aria-hidden="true">&#10003;</span> Unlimited users &amp; teams</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Full Gamification Suite:</strong> Custom badges, unlimited challenges, org-wide leaderboards</li>
-          <li><span aria-hidden="true">&#10003;</span> <strong>Enterprise Tracking:</strong> Advanced manager/admin dashboards, up-to-date analytics dashboard</li>
-          <li><span aria-hidden="true">&#10003;</span> Org-managed branding (logos, colors)</li>
-          <li><span aria-hidden="true">&#10003;</span> SSO/SAML available — enabled on request</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-service data export — download your org&rsquo;s data anytime</li>
-          <li><span aria-hidden="true">&#10003;</span> Self-custody: export and own all your org&rsquo;s assessment data and reports</li>
-        </ul>
-        <a href="#teamLeadForm" className="ttc-btn ttc-btn--primary" onClick={(e) => { e.preventDefault(); document.getElementById('teamLeadForm').scrollIntoView({behavior:'smooth'}) }}>
-          Contact Sales
-        </a>
-      </div>
-
+      ))}
     </div>
   </section>
 
