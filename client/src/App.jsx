@@ -65,11 +65,14 @@ import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
 import { apiUrl } from './api/baseUrl.js';
+import AndroidWebModal from './components/AndroidWebModal.jsx';
+import { isCapacitorAndroid } from './utils/platform.js';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
   const [paymentResult, setPaymentResult] = useState(null);
   const [accessToken, setAccessToken] = useState('');
+  const [showAndroidModal, setShowAndroidModal] = useState(false);
 
   useEffect(() => {
     getAccessTokenSilently()
@@ -108,12 +111,23 @@ function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   }
 
   return (
-    <AssessmentHub
-      user={user}
-      userEmail={user?.email}
-      onUpgrade={() => setPage('payment')}
-      onLogout={handleLogout}
-    />
+    <>
+      <AssessmentHub
+        user={user}
+        userEmail={user?.email}
+        onUpgrade={() => {
+          if (isCapacitorAndroid()) {
+            setShowAndroidModal(true);
+          } else {
+            setPage('payment');
+          }
+        }}
+        onLogout={handleLogout}
+      />
+      {showAndroidModal && (
+        <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
+      )}
+    </>
   );
 }
 

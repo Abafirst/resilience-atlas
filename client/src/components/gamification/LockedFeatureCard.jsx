@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import AndroidWebModal from './AndroidWebModal.jsx';
+import { isCapacitorAndroid } from '../utils/platform.js';
 
 /**
  * Converts a hex colour string to an `rgba(r, g, b, alpha)` value.
@@ -57,6 +59,7 @@ export default function LockedFeatureCard({
   const { isAuthenticated, loginWithRedirect, user, getAccessTokenSilently } = useAuth0();
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError]     = useState('');
+  const [showAndroidModal, setShowAndroidModal] = useState(false);
 
   if (!locked) return <>{children}</>;
 
@@ -70,6 +73,13 @@ export default function LockedFeatureCard({
   }
 
   async function handleUnlock() {
+    // On Capacitor Android, do not start Stripe checkout — show a modal
+    // directing users to the website instead.
+    if (isCapacitorAndroid()) {
+      setShowAndroidModal(true);
+      return;
+    }
+
     const tier = getTierFromUrl(checkoutUrl);
 
     if (!isAuthenticated) {
@@ -279,6 +289,10 @@ export default function LockedFeatureCard({
         <p role="alert" style={{ margin: 0, fontSize: '.8rem', color: '#dc2626', textAlign: 'center' }}>
           {checkoutError}
         </p>
+      )}
+
+      {showAndroidModal && (
+        <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
       )}
     </div>
   );
