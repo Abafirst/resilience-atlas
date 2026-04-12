@@ -346,7 +346,7 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
                 title={`Step ${i + 1}`}
               >
                 {completedSteps.has(s.id) ? (
-                  <img src="/icons/checkmark.svg" alt="Done" width={12} height={12} style={{ filter: `brightness(0) saturate(100%) invert(20%) sepia(100%) saturate(300%) hue-rotate(200deg)` }} />
+                  <img src="/icons/checkmark.svg" alt="Done" width={12} height={12} style={{ filter: "brightness(0) invert(0.25)" }} />
                 ) : (i + 1)}
               </div>
             ))}
