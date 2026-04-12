@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Soft amber/orange background -->
+  <circle cx="32" cy="32" r="30" fill="#FFFBEB"/>
+  <!-- Scroll body -->
+  <rect x="16" y="14" width="32" height="38" rx="5" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+  <!-- Scroll roll top -->
+  <rect x="14" y="12" width="36" height="8" rx="4" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
+  <!-- Scroll roll bottom -->
+  <rect x="14" y="46" width="36" height="8" rx="4" fill="#FDE68A" stroke="#F59E0B" stroke-width="2"/>
+  <!-- Lines of text -->
+  <line x1="22" y1="26" x2="42" y2="26" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="32" x2="42" y2="32" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="38" x2="34" y2="38" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <!-- Star accent -->
+  <circle cx="45" cy="19" r="5" fill="#F59E0B"/>
+  <path d="M45 16 L45.9 18.1 L48 18.35 L46.5 19.8 L46.9 22 L45 20.9 L43.1 22 L43.5 19.8 L42 18.35 L44.1 18.1 Z" fill="#FFF" stroke="none"/>
+</svg>

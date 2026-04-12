@@ -8,6 +8,7 @@ import StarterMicroQuests from './StarterMicroQuests.jsx';
 import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
 import NavigatorQuests from './NavigatorQuests.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
+import QuestsHub from './QuestsHub.jsx';
 import { apiUrl } from '../../api/baseUrl.js';
 
 async function fetchUserTier(email, token) {
@@ -469,7 +470,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
             <button
               key={sec.id}
               style={{ ...s.tab(false), opacity: 0.45, cursor: 'not-allowed' }}
-              title={sec.id === 'quests' ? 'Available with Atlas Navigator' : 'Available with Atlas Starter'}
+              title="Available with Atlas Starter"
               disabled
             >
               <img src="/icons/lock.svg" alt="" width={11} height={11} style={{ verticalAlign: 'middle', marginRight: 3 }} />
@@ -573,7 +574,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
 
         {/* ── Quests Section ── */}
         {activeSection === 'quests' && (
-          <NavigatorQuests tier={tier} progress={progress} />
+          <QuestsHub tier={tier} />
         )}
 
         {/* ── Badges Section ── */}
