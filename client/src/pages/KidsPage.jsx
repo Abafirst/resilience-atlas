@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import {  KIDS_DIMENSION_ICON_MAP,
@@ -10,6 +10,15 @@ import {  KIDS_DIMENSION_ICON_MAP,
 } from '../data/kidsActivities';
 import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 import VideoStories from '../components/VideoStories.jsx';
+
+const KIDS_CATEGORIES = [
+  { id: 'all',        label: 'All',        emoji: '✨', desc: 'Browse everything' },
+  { id: 'stories',    label: 'Stories',    emoji: '📚', desc: 'Read resilience stories' },
+  { id: 'videos',     label: 'Videos',     emoji: '🎬', desc: 'Watch video stories' },
+  { id: 'games',      label: 'Games',      emoji: '🎮', desc: 'Play interactive games' },
+  { id: 'activities', label: 'Activities', emoji: '🎯', desc: 'Activities by age' },
+  { id: 'skills',     label: 'Skills',     emoji: '⚡', desc: 'Explore resilience skills' },
+];
 
 const AGE_GROUPS = [
   { id: 'age-5-7',    label: 'Ages 5–7' },
@@ -187,10 +196,60 @@ function StoryModal({ story, onClose }) {
   );
 }
 
+/* ── Category Nav (tabs/segmented control) ── */
+function CategoryNav({ active, onChange }) {
+  const navRef = useRef(null);
+
+  // Scroll active tab into view on mobile
+  useEffect(() => {
+    if (!navRef.current) return;
+    const activeBtn = navRef.current.querySelector('[aria-selected="true"]');
+    if (activeBtn) {
+      activeBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    }
+  }, [active]);
+
+  return (
+    <nav className="kids-category-nav" aria-label="Browse content by category">
+      <div className="kids-category-nav-inner" ref={navRef} role="tablist">
+        {KIDS_CATEGORIES.map(cat => (
+          <button
+            key={cat.id}
+            className={`kids-cat-tab${active === cat.id ? ' active' : ''}`}
+            role="tab"
+            aria-selected={active === cat.id}
+            onClick={() => onChange(cat.id)}
+          >
+            <span className="kids-cat-emoji" aria-hidden="true">{cat.emoji}</span>
+            <span className="kids-cat-label">{cat.label}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* Helper: should section be visible? */
+function show(activeCategory, ...ids) {
+  return activeCategory === 'all' || ids.includes(activeCategory);
+}
+
 export default function KidsPage() {
   const [selectedAge, setSelectedAge] = useState('age-5-7');
   const [activeStory, setActiveStory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('all');
   const closeStory = useCallback(() => setActiveStory(null), []);
+
+  const handleCategoryChange = useCallback((id) => {
+    setActiveCategory(id);
+    // Scroll to content area on mobile after selecting a category
+    if (id !== 'all') {
+      setTimeout(() => {
+        const el = document.getElementById('kids-content-area');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 50);
+    }
+  }, []);
 
   useEffect(() => {
     document.title = 'Kids & Teen Resilience Program — The Resilience Atlas™';
@@ -214,213 +273,235 @@ export default function KidsPage() {
         <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
       </section>
 
-      {/* Six Skills */}
-      <section className="skills-section" id="skills" aria-labelledby="skills-heading">
-        <div className="section-header">
-          <span className="section-label">The Six Resilience Dimensions</span>
-          <h2 id="skills-heading">Your Resilience Looks Different from Everyone Else&rsquo;s</h2>
-          <p>That&rsquo;s not a problem&mdash;it&rsquo;s the point. Each dimension shows up in everyday situations young people actually face.</p>
-        </div>
-        <div className="skills-grid">
-          {SKILLS.map(skill => (
-            <article key={skill.name} className="skill-card">
-              <div className="skill-icon">
-                <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" className="icon icon-md" />
-              </div>
-              <div className="skill-card-name">{skill.name}</div>
-              <span className="skill-card-tag">{skill.tag}</span>
-              <p>{skill.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      {/* ── Category Navigation ─────────────────────────────────────────── */}
+      <CategoryNav active={activeCategory} onChange={handleCategoryChange} />
 
-      {/* Characters */}
-      <section className="characters-section" aria-labelledby="characters-heading">
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <span className="section-label">Meet the Guides</span>
-          <h2 id="characters-heading">Your Six Resilience Guides</h2>
-          <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-            Each character represents one resilience dimension. They&rsquo;re here to help young people discover their own strengths&mdash;and to show that resilience looks different for everyone.
-          </p>
-        </div>
-        <div className="character-grid">
-          {KIDS_CHARACTERS.map(char => (
-            <article key={char.name} className="character-card" aria-label={`${char.name} character`}>
-              <div className="character-avatar" style={{ background: char.avatarBg }} aria-hidden="true">
-                <img src={char.icon} alt="" className="icon icon-md" />
-              </div>
-              <div>
-                <h3 className="character-name">{char.name}</h3>
-                <p className="character-title">{char.title}</p>
-              </div>
-              <span className="character-skill-tag" style={{ background: char.tagBg, color: char.tagColor }}>{char.dimension}</span>
-              <p className="character-desc">{char.desc}</p>
-              <p className="character-skill"><strong>Resilience Skill:</strong> {char.skill}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      {/* ── Content sections (filtered by active category) ─────────────── */}
+      <div id="kids-content-area">
 
-      {/* Stories */}
-      <section className="stories-section" id="stories" aria-labelledby="stories-heading">
-        <div className="section-inner">
-          <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <span className="section-label">Resilience Stories</span>
-            <h2 id="stories-heading">Read a Story</h2>
-            <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-              Each character faces a real challenge and uses their resilience skill to find a way through. Ages 5–14.
-            </p>
-          </div>
-          <div className="story-grid">
-            {KIDS_STORIES.map(story => (
-              <div key={story.title} className="story-card">
-                <div className="story-icon" aria-hidden="true"><img src={story.icon} alt="" className="icon icon-sm" /></div>
-                <p className="story-subtitle">{story.subtitle}</p>
-                <h3 className="story-title">{story.title}</h3>
-                <p className="story-preview">{story.preview}</p>
-                <button
-                  className="btn-story"
-                  onClick={() => setActiveStory(story)}
-                  aria-label={`Read ${story.title}`}
-                >
-                  Read Story &#8594;
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* More Stories */}
-      <section className="stories-section" id="more-stories" aria-labelledby="more-stories-heading" style={{ background: '#fff' }}>
-        <div className="section-inner">
-          <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <span className="section-label">More Stories</span>
-            <h2 id="more-stories-heading">More Resilience Stories</h2>
-            <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-              Every character is different. Every challenge is real. Every lesson builds resilience.
-            </p>
-          </div>
-          <div className="story-grid">
-            {KIDS_MORE_STORIES.map(story => (
-              <div key={story.title} className="story-card">
-                <div className="story-icon" aria-hidden="true"><img src={story.icon} alt="" className="icon icon-sm" /></div>
-                <p className="story-subtitle">{story.subtitle}</p>
-                <h3 className="story-title">{story.title}</h3>
-                <p className="story-preview">{story.preview}</p>
-                <button
-                  className="btn-story"
-                  onClick={() => setActiveStory(story)}
-                  aria-label={`Read ${story.title}`}
-                >
-                  Read Story &#8594;
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Video Stories */}
-      <VideoStories />
-
-      {/* Skill Builders */}
-      <section className="skill-builders-section" id="skill-builders" aria-labelledby="skill-builders-heading">
-        <div className="section-header">
-          <span className="section-label">Skills Library</span>
-          <h2 id="skill-builders-heading">Try a Skill Builder</h2>
-          <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-            Each activity is a simple exercise you can do right now to practice one resilience skill. Click to get started.
-          </p>
-        </div>
-        <div className="skill-builder-grid">
-          {KIDS_SKILL_BUILDERS.map(builder => (
-            <SkillBuilderCard key={builder.name} builder={builder} />
-          ))}
-        </div>
-      </section>
-
-      {/* Interactive Games Hub */}
-      <section className="games-section" id="games" aria-labelledby="games-heading">
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <span className="section-label">Play &amp; Discover</span>
-          <h2 id="games-heading">Interactive Discovery Games</h2>
-          <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
-            Not lessons. Discovery. Games that help young people explore their resilience map, earn badges for what they learn, and find out their version is valid.
-          </p>
-        </div>
-        <KidsGamesHub />
-      </section>
-
-      {/* Age-group activities */}
-      <section className="activity-guides-section" id="activity-guides" aria-labelledby="activity-guides-heading">
-        <div className="section-inner">
-          <div className="section-header">
-            <span className="section-label">Activity Guides</span>
-            <h2 id="activity-guides-heading">Activities by Age</h2>
-            <p>Developmentally matched activities for every stage.</p>
-          </div>
-
-          <div className="age-tabs" role="tablist" aria-label="Age group activities">
-            {AGE_GROUPS.map(({ id, label }) => (
-              <button
-                key={id}
-                className="age-tab"
-                role="tab"
-                data-group={id}
-                aria-selected={selectedAge === id}
-                onClick={() => setSelectedAge(id)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {AGE_GROUPS.filter(g => g.id !== 'age-18plus').map(({ id }) => (
-            <div
-              key={id}
-              id={id}
-              className={selectedAge === id ? 'age-content active' : 'age-content'}
-              hidden={selectedAge !== id}
-            >
-              <ul className="activity-list">
-                {(KIDS_ACTIVITIES[id] || []).map(activity => (
-                  <li key={activity.title} className="activity-item">
-                    <div className="activity-item-title">
-                      {activity.icon && (
-                        <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
-                      )}
-                      {activity.title}
-                    </div>
-                    {activity.subtype && (
-                      <div className="activity-item-subtype">{activity.subtype}</div>
-                    )}
-                    <div className="activity-item-desc">{activity.desc}</div>
-                    <div className="activity-item-meta">
-                      <span className="activity-meta-tag">{activity.time}</span>
-                      <span className={`activity-meta-tag ${activity.level}`}>{activity.level.charAt(0).toUpperCase() + activity.level.slice(1)}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+        {/* Six Skills */}
+        {show(activeCategory, 'skills') && (
+          <section className="skills-section" id="skills" aria-labelledby="skills-heading">
+            <div className="section-header">
+              <span className="section-label">The Six Resilience Dimensions</span>
+              <h2 id="skills-heading">Your Resilience Looks Different from Everyone Else&rsquo;s</h2>
+              <p>That&rsquo;s not a problem&mdash;it&rsquo;s the point. Each dimension shows up in everyday situations young people actually face.</p>
             </div>
-          ))}
+            <div className="skills-grid">
+              {SKILLS.map(skill => (
+                <article key={skill.name} className="skill-card">
+                  <div className="skill-icon">
+                    <img src={KIDS_DIMENSION_ICON_MAP[skill.name]} alt="" aria-hidden="true" className="icon icon-md" />
+                  </div>
+                  <div className="skill-card-name">{skill.name}</div>
+                  <span className="skill-card-tag">{skill.tag}</span>
+                  <p>{skill.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
-          {selectedAge === 'age-18plus' && (
-            <div className="age-18plus-panel">
-              <div className="dimension-pills">
-                {['Agentic', 'Relational', 'Spiritual', 'Emotional', 'Somatic', 'Cognitive'].map(d => (
-                  <span key={d} className="dim-pill">{d}</span>
+        {/* Characters */}
+        {show(activeCategory, 'skills') && (
+          <section className="characters-section" aria-labelledby="characters-heading">
+            <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+              <span className="section-label">Meet the Guides</span>
+              <h2 id="characters-heading">Your Six Resilience Guides</h2>
+              <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+                Each character represents one resilience dimension. They&rsquo;re here to help young people discover their own strengths&mdash;and to show that resilience looks different for everyone.
+              </p>
+            </div>
+            <div className="character-grid">
+              {KIDS_CHARACTERS.map(char => (
+                <article key={char.name} className="character-card" aria-label={`${char.name} character`}>
+                  <div className="character-avatar" style={{ background: char.avatarBg }} aria-hidden="true">
+                    <img src={char.icon} alt="" className="icon icon-md" />
+                  </div>
+                  <div>
+                    <h3 className="character-name">{char.name}</h3>
+                    <p className="character-title">{char.title}</p>
+                  </div>
+                  <span className="character-skill-tag" style={{ background: char.tagBg, color: char.tagColor }}>{char.dimension}</span>
+                  <p className="character-desc">{char.desc}</p>
+                  <p className="character-skill"><strong>Resilience Skill:</strong> {char.skill}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Stories */}
+        {show(activeCategory, 'stories') && (
+          <section className="stories-section" id="stories" aria-labelledby="stories-heading">
+            <div className="section-inner">
+              <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+                <span className="section-label">Resilience Stories</span>
+                <h2 id="stories-heading">Read a Story</h2>
+                <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+                  Each character faces a real challenge and uses their resilience skill to find a way through. Ages 5–14.
+                </p>
+              </div>
+              <div className="story-grid">
+                {KIDS_STORIES.map(story => (
+                  <div key={story.title} className="story-card">
+                    <div className="story-icon" aria-hidden="true"><img src={story.icon} alt="" className="icon icon-sm" /></div>
+                    <p className="story-subtitle">{story.subtitle}</p>
+                    <h3 className="story-title">{story.title}</h3>
+                    <p className="story-preview">{story.preview}</p>
+                    <button
+                      className="btn-story"
+                      onClick={() => setActiveStory(story)}
+                      aria-label={`Read ${story.title}`}
+                    >
+                      Read Story &#8594;
+                    </button>
+                  </div>
                 ))}
               </div>
-              <h3>Ready for the Full Assessment?</h3>
-              <p>Take the complete Resilience Atlas assessment and get your personalised report across all six dimensions.</p>
-              <a href="/quiz" className="btn-cta">Take the Assessment</a>
             </div>
-          )}
-        </div>
-      </section>
+          </section>
+        )}
+
+        {/* More Stories */}
+        {show(activeCategory, 'stories') && (
+          <section className="stories-section" id="more-stories" aria-labelledby="more-stories-heading" style={{ background: '#fff' }}>
+            <div className="section-inner">
+              <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+                <span className="section-label">More Stories</span>
+                <h2 id="more-stories-heading">More Resilience Stories</h2>
+                <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+                  Every character is different. Every challenge is real. Every lesson builds resilience.
+                </p>
+              </div>
+              <div className="story-grid">
+                {KIDS_MORE_STORIES.map(story => (
+                  <div key={story.title} className="story-card">
+                    <div className="story-icon" aria-hidden="true"><img src={story.icon} alt="" className="icon icon-sm" /></div>
+                    <p className="story-subtitle">{story.subtitle}</p>
+                    <h3 className="story-title">{story.title}</h3>
+                    <p className="story-preview">{story.preview}</p>
+                    <button
+                      className="btn-story"
+                      onClick={() => setActiveStory(story)}
+                      aria-label={`Read ${story.title}`}
+                    >
+                      Read Story &#8594;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Video Stories */}
+        {show(activeCategory, 'videos') && <VideoStories />}
+
+        {/* Skill Builders */}
+        {show(activeCategory, 'skills') && (
+          <section className="skill-builders-section" id="skill-builders" aria-labelledby="skill-builders-heading">
+            <div className="section-header">
+              <span className="section-label">Skills Library</span>
+              <h2 id="skill-builders-heading">Try a Skill Builder</h2>
+              <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+                Each activity is a simple exercise you can do right now to practice one resilience skill. Click to get started.
+              </p>
+            </div>
+            <div className="skill-builder-grid">
+              {KIDS_SKILL_BUILDERS.map(builder => (
+                <SkillBuilderCard key={builder.name} builder={builder} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Interactive Games Hub */}
+        {show(activeCategory, 'games') && (
+          <section className="games-section" id="games" aria-labelledby="games-heading">
+            <div className="section-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <span className="section-label">Play &amp; Discover</span>
+              <h2 id="games-heading">Interactive Discovery Games</h2>
+              <p style={{ color: 'var(--slate-600)', maxWidth: '560px', margin: '.75rem auto 0' }}>
+                Not lessons. Discovery. Games that help young people explore their resilience map, earn badges for what they learn, and find out their version is valid.
+              </p>
+            </div>
+            <KidsGamesHub />
+          </section>
+        )}
+
+        {/* Age-group activities */}
+        {show(activeCategory, 'activities') && (
+          <section className="activity-guides-section" id="activity-guides" aria-labelledby="activity-guides-heading">
+            <div className="section-inner">
+              <div className="section-header">
+                <span className="section-label">Activity Guides</span>
+                <h2 id="activity-guides-heading">Activities by Age</h2>
+                <p>Developmentally matched activities for every stage.</p>
+              </div>
+
+              <div className="age-tabs" role="tablist" aria-label="Age group activities">
+                {AGE_GROUPS.map(({ id, label }) => (
+                  <button
+                    key={id}
+                    className="age-tab"
+                    role="tab"
+                    data-group={id}
+                    aria-selected={selectedAge === id}
+                    onClick={() => setSelectedAge(id)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {AGE_GROUPS.filter(g => g.id !== 'age-18plus').map(({ id }) => (
+                <div
+                  key={id}
+                  id={id}
+                  className={selectedAge === id ? 'age-content active' : 'age-content'}
+                  hidden={selectedAge !== id}
+                >
+                  <ul className="activity-list">
+                    {(KIDS_ACTIVITIES[id] || []).map(activity => (
+                      <li key={activity.title} className="activity-item">
+                        <div className="activity-item-title">
+                          {activity.icon && (
+                            <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
+                          )}
+                          {activity.title}
+                        </div>
+                        {activity.subtype && (
+                          <div className="activity-item-subtype">{activity.subtype}</div>
+                        )}
+                        <div className="activity-item-desc">{activity.desc}</div>
+                        <div className="activity-item-meta">
+                          <span className="activity-meta-tag">{activity.time}</span>
+                          <span className={`activity-meta-tag ${activity.level}`}>{activity.level.charAt(0).toUpperCase() + activity.level.slice(1)}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              {selectedAge === 'age-18plus' && (
+                <div className="age-18plus-panel">
+                  <div className="dimension-pills">
+                    {['Agentic', 'Relational', 'Spiritual', 'Emotional', 'Somatic', 'Cognitive'].map(d => (
+                      <span key={d} className="dim-pill">{d}</span>
+                    ))}
+                  </div>
+                  <h3>Ready for the Full Assessment?</h3>
+                  <p>Take the complete Resilience Atlas assessment and get your personalised report across all six dimensions.</p>
+                  <a href="/quiz" className="btn-cta">Take the Assessment</a>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+      </div>
     </>
   );
 }
