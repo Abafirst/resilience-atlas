@@ -68,7 +68,84 @@
   margin: 0;
 }
 
-/* ── Read Story button ── */
+/* ── Skill card: button reset + interactive state ── */
+.skill-card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid var(--slate-100, #f1f5f9);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,.05);
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  font-family: inherit;
+}
+
+.skill-card-btn:hover,
+.skill-card-btn:focus-visible {
+  box-shadow: 0 8px 28px rgba(124,58,237,.12);
+  transform: translateY(-3px);
+  border-color: #c4b5fd;
+  outline: none;
+}
+
+.skill-card-btn:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
+
+.skill-card-subtitle {
+  font-size: .78rem;
+  font-weight: 700;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .5rem;
+}
+
+.skill-card-cta {
+  margin-top: .85rem;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.skill-card-cta::after {
+  content: '\203A';
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ── Skill Modal (reuses story-modal base, extends it) ── */
+.skill-modal-inner {
+  max-width: 540px;
+}
+
+.skill-modal-try-btn {
+  display: inline-block;
+  background: #ede9fe;
+  color: #5b21b6;
+  font-size: .8rem;
+  font-weight: 600;
+  padding: .35rem .9rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+
+.skill-modal-try-btn:hover {
+  background: #ddd6fe;
+  color: #4c1d95;
+}
+
+
 .btn-story {
   display: inline-block;
   background: #4F46E5;
