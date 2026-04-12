@@ -582,7 +582,7 @@ router.post('/progress/award-badge', requirePaidTier, async (req, res) => {
       progress.badges.push({ name, rarity, icon });
       if (bonus > 0) {
         progress.totalPoints += bonus;
-        progress.pointHistory.push({ type: 'quest_badge', points: bonus, description: `Quest badge: ${name}` });
+        progress.pointHistory.push({ type: 'quest_badge', points: bonus, date: new Date(), description: `Quest badge: ${name}` });
       }
       await progress.save();
       return res.status(200).json({ awarded: true, badgeName: name, bonusStars: bonus, totalPoints: progress.totalPoints });

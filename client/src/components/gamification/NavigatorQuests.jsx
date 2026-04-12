@@ -558,7 +558,7 @@ export default function NavigatorQuests({ tier, progress }) {
       const nowDone = new Set([...allDone, step.id]);
       if (activeQuest && questFullyDone(activeQuest, nowDone)) {
         /* Award badge for quest completion */
-        const badgeRes = await fetch(apiUrl('/api/gamification/progress/award-badge'), {
+        await fetch(apiUrl('/api/gamification/progress/award-badge'), {
           method:  'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body:    JSON.stringify({
@@ -568,8 +568,6 @@ export default function NavigatorQuests({ tier, progress }) {
             bonusStars:  activeQuest.reward.stars,
           }),
         }).catch(() => null);
-        // If badge endpoint fails we still show celebration — bonus stars may differ
-        void badgeRes;
         setCelebration(activeQuest);
         setView('list');
         setActiveQuest(null);
