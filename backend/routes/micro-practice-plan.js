@@ -105,10 +105,11 @@ function buildPlan(scores, assessmentHash, startDate) {
 
   // Build a weighted pool of (dimension, practiceIndex) pairs for 30 days.
   // Ensure every dimension appears at least once.
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
   const pool = [];
   DIMENSIONS.forEach((dim, i) => {
     // Each dimension appears at least once, plus proportional extra slots.
-    const extra = Math.round((weights[i] / weights.reduce((a, b) => a + b, 0)) * 24);
+    const extra = Math.round((weights[i] / totalWeight) * 24);
     pool.push({ dim, idx: 0 }); // guaranteed slot
     for (let e = 0; e < extra; e++) {
       pool.push({ dim, idx: rand() > 0.5 ? 1 : 0 });

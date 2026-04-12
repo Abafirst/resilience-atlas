@@ -176,7 +176,7 @@ export const DIMENSION_DETAILS = {
       'capable of navigating difficulty.',
     whyItMatters:
       'Neuroscience has firmly established the bidirectional relationship between body and ' +
-      'mind: chronic physiological stress (high cortisol, poor sleep, sedentary behaviour) ' +
+      'mind: chronic physiological stress (high cortisol, poor sleep, sedentary behavior) ' +
       'directly impairs emotional regulation, cognitive flexibility, and decision-making. ' +
       'Conversely, practices like diaphragmatic breathing, regular movement, and consistent ' +
       'sleep schedules activate the parasympathetic nervous system, building a physiological ' +
@@ -189,7 +189,7 @@ export const DIMENSION_DETAILS = {
     ],
     examples: [
       'Using diaphragmatic breathing to downregulate before a high-stakes conversation.',
-      'Recognising physical tension as an early warning sign of overwhelm before it escalates.',
+      'Recognizing physical tension as an early warning sign of overwhelm before it escalates.',
       'Using morning movement as a daily nervous-system reset that improves afternoon resilience.',
     ],
   },

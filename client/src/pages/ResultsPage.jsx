@@ -2956,9 +2956,10 @@ export default function ResultsPage() {
       return (seed >>> 0) / 0x100000000;
     }
     // Build weighted pool
+    const totalWeight = weights.reduce((a, b) => a + b, 0);
     const pool = [];
     dims.forEach((dim, i) => {
-      const extra = Math.max(1, Math.round((weights[i] / weights.reduce((a, b) => a + b, 0)) * 30));
+      const extra = Math.max(1, Math.round((weights[i] / totalWeight) * 30));
       for (let e = 0; e < extra; e++) pool.push(dim);
     });
     // Deterministic pick for this day
