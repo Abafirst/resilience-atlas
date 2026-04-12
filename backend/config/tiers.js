@@ -58,14 +58,14 @@ const TIER_CONFIG = {
         description: 'Unlock one full PDF report and gamification access. Pay $9.99 for each new report you want to download.',
     },
     'atlas-navigator': {
-        name: 'Atlas Navigator (Lifetime)',
+        name: 'Atlas Navigator',
         price: 4999, // $49.99
         billing: 'one-time',
         maxUsers: 1,
         maxTeams: 0,
         features: [
-            'Unlimited Full PDF Reports',
-            'Unlimited Gamification Access',
+            'PDF Report: 1 every 30 days (per user)',
+            'Full Gamification Access',
             'Unlimited Free Assessment Taking',
             'Full Assessment History',
             'Brief Results Always Free',
@@ -73,7 +73,7 @@ const TIER_CONFIG = {
         gates: ['deep-report', 'gamification'],
         dataRetention: 'Unlimited',
         // Human-readable description for pricing pages and unlock modals.
-        description: 'One-time $49.99 payment gives lifetime access to unlimited PDF reports, assessments, and gamification.',
+        description: 'One-time $49.99 payment. Generate 1 full PDF report every 30 days, plus full gamification access.',
     },
     'atlas-premium': {
         name: 'Atlas Premium',
