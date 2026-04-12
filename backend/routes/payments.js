@@ -459,6 +459,7 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
         // The purchase variable is non-null only when we are the first to mark
         // confirmationEmailSent = true, preventing duplicate sends with webhook.
         const isTeamTier = tier === 'starter' || tier === 'pro' || tier === 'enterprise';
+        const isIndividualTier = tier === 'atlas-starter' || tier === 'atlas-navigator' || tier === 'atlas-premium';
         if (isTeamTier && email && purchase) {
             const tierConfig = TIERS[tier] || {};
             const priceInDollars = tierConfig.amount ? `$${(tierConfig.amount / 100).toFixed(0)}` : '';
@@ -467,6 +468,19 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
                 planPrice: priceInDollars,
                 email,
             }).catch((err) => logger.warn('[payments/verify] Confirmation email failed:', err.message));
+        }
+
+        // Send purchase welcome email for individual Atlas tier purchases.
+        // Only fires once (purchase non-null = first confirmationEmailSent claim).
+        if (isIndividualTier && email && purchase) {
+            const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
+            const firstName = (email.split('@')[0] || '').replace(/[._-]/g, ' ').split(' ')[0] || 'Friend';
+            emailService.sendPurchaseWelcome(email, {
+                firstName,
+                tier,
+                resultsLink:      `${APP_URL}/results`,
+                gamificationLink: `${APP_URL}/gamification`,
+            }).catch((err) => logger.warn('[payments/verify] Purchase welcome email failed:', err.message));
         }
 
         res.json({ success: true, tier, email });

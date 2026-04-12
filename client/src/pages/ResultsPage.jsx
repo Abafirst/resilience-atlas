@@ -5,6 +5,7 @@ import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
+import DimensionModal from '../components/DimensionModal.jsx';
 import { isStarterOrAbove } from '../data/gamificationContent.js';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
@@ -2174,6 +2175,30 @@ export default function ResultsPage() {
   const [timerData, setTimerData] = useState(null);
   const timerIntervalRef = useRef(null);
 
+  // ── Dimension modal state ─────────────────────────────────────────────
+  // null | string (dimension name)
+  const [activeDimModal, setActiveDimModal] = useState(null);
+  const dimModalTriggerRef = useRef(null);
+
+  // ── 30-day micro-practice plan state ─────────────────────────────────
+  // Persisted in localStorage so the plan is stable across visits.
+  // Key: 'micro_plan_start' — ISO date string YYYY-MM-DD
+  const [practicePlanDay, setPracticePlanDay] = useState(() => {
+    try {
+      const start = localStorage.getItem('micro_plan_start');
+      if (start) {
+        const startDate = new Date(start + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+        return Math.min(Math.max(diff + 1, 1), 30); // clamp to 1-30
+      }
+    } catch (_) { /* ignore */ }
+    return 1; // default to day 1
+  });
+  // Whether to show all practices (expanded view) or just today's
+  const [showAllPractices, setShowAllPractices] = useState(false);
+
   // ── Confetti canvas ref ────────────────────────────────────────────────
   const confettiRef = useRef(null);
 
@@ -2324,6 +2349,18 @@ export default function ResultsPage() {
       clearTimeout(timer);
       if (confettiCleanup) confettiCleanup();
     };
+  }, [results]);
+
+  // ── 30-day practice plan: initialise start date on first view ──────────
+  useEffect(() => {
+    if (!results) return;
+    try {
+      if (!localStorage.getItem('micro_plan_start')) {
+        const today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem('micro_plan_start', today);
+        setPracticePlanDay(1);
+      }
+    } catch (_) { /* ignore */ }
   }, [results]);
 
   // ── Smart unlock modal trigger (replaces old upsell modal for new assessments) ─
@@ -2900,6 +2937,38 @@ export default function ResultsPage() {
 
   const dominantType = rankedDims.length > 0 ? rankedDims[0][0] : '';
 
+  // ── Derive "today's practice" from the 30-day plan ────────────────────
+  // Build a deterministic 30-day sequence from assessment scores (same algorithm
+  // as the backend buildPlan function in micro-practice-plan.js).
+  const todaysPractice = (() => {
+    if (!results || !results.scores) return null;
+    const dims = Object.keys(EVIDENCE_PRACTICES);
+    // Weight: lower score → more weight (needs more work)
+    const weights = dims.map((dim) => {
+      const pct = (results.scores[dim] && results.scores[dim].percentage != null)
+        ? results.scores[dim].percentage : 50;
+      return Math.max(1, 100 - Math.round(pct));
+    });
+    // Simple seeded LCG from overall score to keep it stable
+    let seed = Math.round((results.overall || 50) * 137) + (practicePlanDay * 7);
+    function nextRand() {
+      seed = (seed * 1664525 + 1013904223) & 0xffffffff;
+      return (seed >>> 0) / 0x100000000;
+    }
+    // Build weighted pool
+    const pool = [];
+    dims.forEach((dim, i) => {
+      const extra = Math.max(1, Math.round((weights[i] / weights.reduce((a, b) => a + b, 0)) * 30));
+      for (let e = 0; e < extra; e++) pool.push(dim);
+    });
+    // Deterministic pick for this day
+    const dayIndex = (practicePlanDay - 1) % pool.length;
+    const dim = pool[dayIndex] || dims[0];
+    const practices = EVIDENCE_PRACTICES[dim] || [];
+    const practice = practices[practicePlanDay % 2 === 0 ? 0 : (practices.length - 1)] || practices[0];
+    return practice ? { dim, practice } : null;
+  })();
+
   const getPrice = (tierId) => {
     const t = tiers.find(t => t.id === tierId);
     if (!t) {
@@ -3075,6 +3144,15 @@ export default function ResultsPage() {
         />
       )}
 
+      {/* ── Dimension detail modal ────────────────────────────────────── */}
+      {activeDimModal && (
+        <DimensionModal
+          dimension={activeDimModal}
+          onClose={() => setActiveDimModal(null)}
+          triggerRef={dimModalTriggerRef}
+        />
+      )}
+
       {/* ── Unlock Report Modal ───────────────────────────────────────── */}
       {showUnlockModal && (
         <UnlockReportModal
@@ -3177,7 +3255,36 @@ export default function ResultsPage() {
             const color = DIM_COLORS[dim] || '#667eea';
             return (
               <div key={dim} style={s.dimRow}>
-                <span style={s.dimLabel}>{dim}</span>
+                <button
+                  type="button"
+                  style={{
+                    ...s.dimLabel,
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    textDecoration: 'underline dotted',
+                    textDecorationColor: color,
+                    textUnderlineOffset: 2,
+                    color: 'inherit',
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit',
+                    fontWeight: 'inherit',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                  }}
+                  onClick={(e) => {
+                    dimModalTriggerRef.current = e.currentTarget;
+                    setActiveDimModal(dim);
+                  }}
+                  aria-label={`Learn more about ${dim} resilience dimension`}
+                  title={`Click to learn more about ${dim}`}
+                >
+                  {dim}
+                  <span style={{ fontSize: 10, color, opacity: 0.7, flexShrink: 0 }} aria-hidden="true">ⓘ</span>
+                </button>
                 <div style={s.dimBarWrap}
                   role="progressbar"
                   aria-valuenow={pct}
@@ -3196,6 +3303,9 @@ export default function ResultsPage() {
               Unlock your full map for personalised insights &amp; growth compass points.
             </p>
           )}
+          <p style={{ margin: '8px 0 0', fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>
+            <span aria-hidden="true">ⓘ</span> Click any dimension name to learn what it means and how to strengthen it.
+          </p>
         </div>
 
         {/* ── Primary Resilience Mode ───────────────────────────────── */}
@@ -3376,11 +3486,59 @@ export default function ResultsPage() {
 
         {/* ── Upgrade Cards (free users) — shown only after backend confirms free tier ─── */}
         {!hasPremiumAccess && tierCheckComplete && (
-          <UpgradeCardsSection
-            getPrice={getPrice}
-            onUpgrade={handleUpgrade}
-            checkoutLoading={checkoutLoading}
-          />
+          <>
+            {/* ── Why Resilience Matters (selling the bigger picture) ─── */}
+            <section
+              style={{
+                background: 'linear-gradient(135deg, #faf5ff 0%, #f0f9ff 100%)',
+                border: '1px solid #e2e8f0',
+                borderRadius: 16,
+                padding: '28px 24px',
+                marginBottom: 24,
+              }}
+              aria-labelledby="whyResilienceHeading"
+            >
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#7c3aed', marginBottom: 8 }}>
+                Why This Matters
+              </div>
+              <h2 id="whyResilienceHeading" style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: '0 0 12px', lineHeight: 1.25 }}>
+                Resilience isn't a personality trait. It's a learnable skill.
+              </h2>
+              <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.75, margin: '0 0 20px' }}>
+                Most people think of resilience as something you either have or you don't.
+                The research tells a different story. Resilience is a dynamic, multi-dimensional
+                capacity that can be measured, understood, and deliberately grown. You just took
+                the first step: measuring it.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 20 }}>
+                {[
+                  { icon: '🧠', title: 'Science-backed', desc: 'Built on ACT, positive psychology, and ABA research spanning 40+ years of resilience science.' },
+                  { icon: '📊', title: 'Six dimensions', desc: 'Unlike one-dimensional stress tests, we measure the full landscape of how you navigate adversity.' },
+                  { icon: '🌱', title: 'Growable', desc: 'Every dimension you see here can be strengthened with targeted practices — your score is a starting point, not a ceiling.' },
+                  { icon: '🎯', title: 'Actionable', desc: 'Your results translate directly into evidence-based micro-practices tailored to your specific profile.' },
+                ].map(({ icon, title, desc }) => (
+                  <div key={title} style={{ background: '#fff', borderRadius: 12, padding: '16px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: 24, marginBottom: 8 }} aria-hidden="true">{icon}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{title}</div>
+                    <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>{desc}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: '#fff', border: '1px solid #ddd6fe', borderRadius: 12, padding: '16px 20px' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>What upgrading gives you:</div>
+                <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: '#334155', lineHeight: 1.9 }}>
+                  <li><strong>Atlas Starter ($9.99)</strong> — Full PDF report, dimension explanations, and starter micro-practices</li>
+                  <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, unlimited PDF access, and the full resilience journey platform</li>
+                </ul>
+              </div>
+            </section>
+
+            <UpgradeCardsSection
+              getPrice={getPrice}
+              onUpgrade={handleUpgrade}
+              checkoutLoading={checkoutLoading}
+            />
+          </>
         )}
 
         {/* ── Prior Purchases / ResultsHistory ─────────────────────── */}
@@ -3523,8 +3681,9 @@ export default function ResultsPage() {
           <section style={s.practicesSection} aria-labelledby="practicesHeading">
             <div style={s.practicesHeading} id="practicesHeading"><BrandIcon name="flask" size={17} color="#10b981" /> Evidence-Based Micro-Practices</div>
             <p style={s.practicesSubheading}>
-              Practices across all 6 resilience dimensions —
-              grounded in Acceptance and Commitment Therapy (ACT) and Applied Behavior Analysis (ABA).
+              {showAllPractices
+                ? 'All practices across all 6 resilience dimensions — grounded in ACT and ABA.'
+                : `Your 30-day resilience journey — one practice per day, tailored to your results. Day ${practicePlanDay} of 30.`}
             </p>
 
             {/* ── Gamification header (Atlas Starter+) ────────────────── */}
@@ -3572,98 +3731,244 @@ export default function ResultsPage() {
               );
             })()}
 
-            {Object.entries(EVIDENCE_PRACTICES).map(([dim, practices]) => {
+            {/* ── Today's practice (paced 30-day delivery) ──────────────── */}
+            {!showAllPractices && todaysPractice && (() => {
+              const { dim, practice } = todaysPractice;
               const color = DIM_COLORS[dim] || '#667eea';
               const dimIcon = DIM_ICONS[dim];
+              const practiceKey = practice.title;
+              const isCompleted = !!(gamData.completions[practiceKey]);
+              const isTimerActive = timerData && timerData.practiceKey === practiceKey;
+              const timerFinished = isTimerActive && timerData.secondsLeft === 0;
+              const durSecs = parseDurationSecs(practice.duration);
               return (
-                <div key={dim}>
-                  <div style={s.practiceDimHeader(color)} aria-label={`${dim} practices`}>
-                    {dimIcon && (
-                      <img src={dimIcon} alt="" aria-hidden="true" width="20" height="20"
-                        style={{ verticalAlign: 'middle', marginRight: 6, flexShrink: 0 }} />
-                    )}
-                    <span>{dim}</span>
+                <div>
+                  {/* Day badge */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    marginBottom: 12,
+                  }}>
+                    <span style={{
+                      background: color + '18', color, border: `1px solid ${color}30`,
+                      borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 700,
+                    }}>
+                      📅 Day {practicePlanDay} of 30
+                    </span>
+                    <span style={{ fontSize: 12, color: '#94a3b8' }}>
+                      {dim}
+                    </span>
                   </div>
-                  {practices.map((practice) => {
-                    const practiceKey = practice.title;
-                    const isCompleted = !!(gamData.completions[practiceKey]);
-                    const isTimerActive = timerData && timerData.practiceKey === practiceKey;
-                    const timerFinished = isTimerActive && timerData.secondsLeft === 0;
-                    const durSecs = parseDurationSecs(practice.duration);
-                    return (
-                      <div
-                        key={practice.title}
-                        style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
-                      >
-                        <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
-                            <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
-                          </div>
-                          {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
-                        </div>
-                        <div style={s.practiceTags}>
-                          <span style={s.practiceTag}>{practice.duration}</span>
-                          <span style={s.practiceTag}>{practice.difficulty}</span>
-                        </div>
-                        <div style={s.practicePrinciples}>
-                          <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
-                          <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
-                        </div>
-                        <ol style={s.practiceSteps}>
-                          {practice.instructions.map((step, i) => (
-                            <li key={i}>{step}</li>
-                          ))}
-                        </ol>
-                        <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
-                          Educational note: These practices support self-reflection. Not therapeutic treatment.
-                        </p>
 
-                        {/* ── Gamification controls (Atlas Starter+) ────────── */}
-                        {hasPremiumAccess && (
-                          <div style={s.gamActions}>
-                            {/* Timer */}
-                            {durSecs > 0 && !isCompleted && !isTimerActive && (
-                              <button
-                                type="button"
-                                style={s.gamTimerBtn}
-                                onClick={() => startTimer(practiceKey, durSecs)}
-                                aria-label={`Start ${practice.duration} timer for ${practice.title}`}
-                              >
-                                ⏱ Start Timer
+                  {/* Practice card */}
+                  <div
+                    style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
+                  >
+                    <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
+                        <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
+                      </div>
+                      {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                    </div>
+                    <div style={s.practiceTags}>
+                      <span style={s.practiceTag}>{practice.duration}</span>
+                      <span style={s.practiceTag}>{practice.difficulty}</span>
+                    </div>
+                    <div style={s.practicePrinciples}>
+                      <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
+                      <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
+                    </div>
+                    <ol style={s.practiceSteps}>
+                      {practice.instructions.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
+                    <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
+                      Educational note: These practices support self-reflection. Not therapeutic treatment.
+                    </p>
+
+                    {/* ── Gamification controls (Atlas Starter+) ────────── */}
+                    {hasPremiumAccess && (
+                      <div style={s.gamActions}>
+                        {durSecs > 0 && !isCompleted && !isTimerActive && (
+                          <button
+                            type="button"
+                            style={s.gamTimerBtn}
+                            onClick={() => startTimer(practiceKey, durSecs)}
+                            aria-label={`Start ${practice.duration} timer for ${practice.title}`}
+                          >
+                            ⏱ Start Timer
+                          </button>
+                        )}
+                        {isTimerActive && (
+                          <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
+                            <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
+                            {!timerFinished && (
+                              <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
+                                {timerData.running ? '⏸' : '▶'}
                               </button>
                             )}
-                            {isTimerActive && (
-                              <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
-                                <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
-                                {!timerFinished && (
-                                  <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
-                                    {timerData.running ? '⏸' : '▶'}
-                                  </button>
-                                )}
-                                <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
-                              </div>
-                            )}
-                            {/* Mark complete */}
-                            <button
-                              type="button"
-                              style={s.gamCompleteBtn(isCompleted)}
-                              onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
-                              aria-pressed={isCompleted}
-                              aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
-                            >
-                              {isCompleted
-                                ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
-                                : '☐ Mark Complete'}
-                            </button>
+                            <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
                           </div>
                         )}
+                        <button
+                          type="button"
+                          style={s.gamCompleteBtn(isCompleted)}
+                          onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
+                          aria-pressed={isCompleted}
+                          aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                        >
+                          {isCompleted
+                            ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
+                            : '☐ Mark Complete'}
+                        </button>
                       </div>
-                    );
-                  })}
+                    )}
+                  </div>
+
+                  {/* Upcoming preview */}
+                  <div style={{
+                    background: '#f8fafc', border: '1px solid #e2e8f0',
+                    borderRadius: 10, padding: '14px 16px', marginTop: 12,
+                  }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
+                      📆 Coming up in your 30-day plan:
+                    </div>
+                    {[1, 2, 3].map((offset) => {
+                      const nextDay = practicePlanDay + offset;
+                      if (nextDay > 30) return null;
+                      const dims2 = Object.keys(EVIDENCE_PRACTICES);
+                      const preview = dims2[(nextDay - 1) % dims2.length];
+                      return (
+                        <div key={offset} style={{ fontSize: 12, color: '#94a3b8', marginBottom: 4, display: 'flex', gap: 8 }}>
+                          <span style={{ fontWeight: 600, color: '#64748b', minWidth: 52 }}>Day {nextDay}:</span>
+                          <span>{preview}</span>
+                        </div>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      style={{
+                        marginTop: 10, fontSize: 12, color: '#4f46e5', background: 'none',
+                        border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit',
+                        textDecoration: 'underline',
+                      }}
+                      onClick={() => setShowAllPractices(true)}
+                    >
+                      View all practices →
+                    </button>
+                  </div>
                 </div>
               );
-            })}
+            })()}
+
+            {/* ── Full practices list (expanded view) ───────────────────── */}
+            {showAllPractices && (
+              <>
+                <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <button
+                    type="button"
+                    style={{
+                      fontSize: 12, color: '#4f46e5', background: 'none', border: 'none',
+                      cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline',
+                    }}
+                    onClick={() => setShowAllPractices(false)}
+                  >
+                    ← Back to today's practice
+                  </button>
+                </div>
+                {Object.entries(EVIDENCE_PRACTICES).map(([dim, practices]) => {
+                  const color = DIM_COLORS[dim] || '#667eea';
+                  const dimIcon = DIM_ICONS[dim];
+                  return (
+                    <div key={dim}>
+                      <div style={s.practiceDimHeader(color)} aria-label={`${dim} practices`}>
+                        {dimIcon && (
+                          <img src={dimIcon} alt="" aria-hidden="true" width="20" height="20"
+                            style={{ verticalAlign: 'middle', marginRight: 6, flexShrink: 0 }} />
+                        )}
+                        <span>{dim}</span>
+                      </div>
+                      {practices.map((practice) => {
+                        const practiceKey = practice.title;
+                        const isCompleted = !!(gamData.completions[practiceKey]);
+                        const isTimerActive = timerData && timerData.practiceKey === practiceKey;
+                        const timerFinished = isTimerActive && timerData.secondsLeft === 0;
+                        const durSecs = parseDurationSecs(practice.duration);
+                        return (
+                          <div
+                            key={practice.title}
+                            style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
+                          >
+                            <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
+                                <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
+                              </div>
+                              {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                            </div>
+                            <div style={s.practiceTags}>
+                              <span style={s.practiceTag}>{practice.duration}</span>
+                              <span style={s.practiceTag}>{practice.difficulty}</span>
+                            </div>
+                            <div style={s.practicePrinciples}>
+                              <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
+                              <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
+                            </div>
+                            <ol style={s.practiceSteps}>
+                              {practice.instructions.map((step, i) => (
+                                <li key={i}>{step}</li>
+                              ))}
+                            </ol>
+                            <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
+                              Educational note: These practices support self-reflection. Not therapeutic treatment.
+                            </p>
+
+                            {/* ── Gamification controls (Atlas Starter+) ────────── */}
+                            {hasPremiumAccess && (
+                              <div style={s.gamActions}>
+                                {durSecs > 0 && !isCompleted && !isTimerActive && (
+                                  <button
+                                    type="button"
+                                    style={s.gamTimerBtn}
+                                    onClick={() => startTimer(practiceKey, durSecs)}
+                                    aria-label={`Start ${practice.duration} timer for ${practice.title}`}
+                                  >
+                                    ⏱ Start Timer
+                                  </button>
+                                )}
+                                {isTimerActive && (
+                                  <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
+                                    <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
+                                    {!timerFinished && (
+                                      <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
+                                        {timerData.running ? '⏸' : '▶'}
+                                      </button>
+                                    )}
+                                    <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
+                                  </div>
+                                )}
+                                <button
+                                  type="button"
+                                  style={s.gamCompleteBtn(isCompleted)}
+                                  onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
+                                  aria-pressed={isCompleted}
+                                  aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                                >
+                                  {isCompleted
+                                    ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
+                                    : '☐ Mark Complete'}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </>
+            )}
           </section>
         )}
 

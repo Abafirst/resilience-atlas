@@ -517,7 +517,9 @@ export default function GamificationDashboard() {
           <h1 id="gamHeroTitle" style={s.heroTitle}>Your Resilience Journey</h1>
           <p style={s.heroSub}>
             Track milestones, earn badges, navigate resilience pathways,
-            and build daily practice streaks. Each tier unlocks deeper features.
+            and build daily practice streaks.{' '}
+            <strong style={{ color: '#93c5fd' }}>Atlas Starter</strong> unlocks badges and your practice hub.{' '}
+            <strong style={{ color: '#c4b5fd' }}>Atlas Navigator</strong> unlocks the full journey experience.
           </p>
 
           {/* Stats bar */}
@@ -586,6 +588,71 @@ export default function GamificationDashboard() {
           {isAuthenticated && (auth0Loading || tierLoading) && (
             <div style={s.loadingMsg} role="status" aria-live="polite">
               Checking your compass bearing…
+            </div>
+          )}
+
+          {/* ── Tier access overview (explains what's available) ─────────── */}
+          {showContent && !auth0Loading && !tierLoading && (
+            <div
+              role="region"
+              aria-label="Your tier access overview"
+              style={{
+                background: hasNavigator
+                  ? 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)'
+                  : hasStarter
+                    ? 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)'
+                    : '#f8fafc',
+                border: `1px solid ${hasNavigator ? '#ddd6fe' : hasStarter ? '#bae6fd' : '#e2e8f0'}`,
+                borderRadius: 12,
+                padding: '16px 20px',
+                marginBottom: 20,
+                display: 'flex',
+                gap: 20,
+                flexWrap: 'wrap',
+                alignItems: 'flex-start',
+              }}
+            >
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{
+                  fontSize: 13, fontWeight: 700,
+                  color: hasNavigator ? '#5b21b6' : hasStarter ? '#0369a1' : '#475569',
+                  marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6,
+                }}>
+                  {hasNavigator ? '🗺️ Atlas Navigator — Full Access' :
+                   hasStarter   ? '🧭 Atlas Starter — Starter Access' :
+                                  '🔒 Free — Preview Mode'}
+                </div>
+                <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>
+                  {hasNavigator
+                    ? 'You have access to all features: Practice Hub (all pathways), Daily Compass Streaks, Navigation Pathways, enhanced badges, and the Resilience Map.'
+                    : hasStarter
+                      ? 'You have access to: Navigation Milestones, Starter Badges, and the Practice Hub (micro-practice and progress tabs). Upgrade to Navigator for all features.'
+                      : 'You\'re in preview mode. Sign in and purchase Atlas Starter ($9.99) to unlock your practice hub and badges, or Atlas Navigator ($49.99) for full access.'}
+                </div>
+              </div>
+              {/* Tier access table */}
+              <div style={{ fontSize: 11, lineHeight: 1.7, color: '#64748b', minWidth: 180 }}>
+                {[
+                  { feature: 'Navigation Milestones',  starter: true,  navigator: true  },
+                  { feature: 'Starter Badges',          starter: true,  navigator: true  },
+                  { feature: 'Practice Hub',            starter: true,  navigator: true  },
+                  { feature: 'Skill Pathways',          starter: false, navigator: true  },
+                  { feature: 'Daily Compass Streaks',   starter: false, navigator: true  },
+                  { feature: 'Navigation Pathways',     starter: false, navigator: true  },
+                  { feature: 'Enhanced Badges',         starter: false, navigator: true  },
+                  { feature: 'Resilience Map',          starter: false, navigator: true  },
+                ].map(({ feature, starter, navigator }) => {
+                  const hasAccess = hasNavigator ? navigator : (hasStarter ? starter : false);
+                  return (
+                    <div key={feature} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ color: hasAccess ? '#15803d' : '#94a3b8', fontWeight: 700, fontSize: 12 }}>
+                        {hasAccess ? '✓' : '○'}
+                      </span>
+                      <span style={{ color: hasAccess ? '#334155' : '#94a3b8' }}>{feature}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
 
@@ -679,11 +746,12 @@ export default function GamificationDashboard() {
                   checkoutUrl={CHECKOUT_URLS['atlas-starter']}
                   icon="/icons/badges.svg"
                   title="Resilience Badges"
-                  description="Earn badges as you build resilience skills across all six dimensions of the Atlas framework."
+                  description="Badges are milestones you earn as you complete practices and build resilience skills across all six dimensions. Each badge represents real progress on your resilience journey."
                   accentColor="#7c3aed"
                   features={[
                     '12+ unique resilience badges to collect',
                     'Badges across all 6 Atlas dimensions',
+                    'Earn by completing practices and hitting milestones',
                     'Shareable proof of your resilience journey',
                   ]}
                   returnPath="/gamification"

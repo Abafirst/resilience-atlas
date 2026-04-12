@@ -52,6 +52,7 @@ const { buildReminderEmail }        = require('../backend/templates/emails/remin
 const { buildStreakMilestoneEmail } = require('../backend/templates/emails/streakMilestone');
 const { buildTeamInvitationEmail }  = require('../backend/templates/emails/teamInvitation');
 const { buildGrowthMilestoneEmail } = require('../backend/templates/emails/growthMilestone');
+const { buildPurchaseWelcomeEmail } = require('../backend/templates/emails/purchaseWelcome');
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /* Template builder tests                                                      */
@@ -558,6 +559,74 @@ describe('emailService — send functions', () => {
   });
 });
 
+describe('Email templates — buildPurchaseWelcomeEmail', () => {
+  it('generates a subject and html/text for atlas-starter', () => {
+    const result = buildPurchaseWelcomeEmail({ firstName: 'Jordan', tier: 'atlas-starter' });
+    expect(result.subject).toMatch(/Atlas Starter/);
+    expect(result.subject).toMatch(/Jordan/);
+    expect(result.html).toContain('Atlas Starter');
+    expect(typeof result.text).toBe('string');
+    expect(result.text.length).toBeGreaterThan(50);
+  });
+
+  it('generates a subject and html/text for atlas-navigator', () => {
+    const result = buildPurchaseWelcomeEmail({ firstName: 'Sam', tier: 'atlas-navigator' });
+    expect(result.subject).toMatch(/Atlas Navigator/);
+    expect(result.subject).toMatch(/Sam/);
+    expect(result.html).toContain('Atlas Navigator');
+  });
+
+  it('falls back to atlas-starter for unknown tier', () => {
+    const result = buildPurchaseWelcomeEmail({ tier: 'unknown-tier' });
+    expect(result.subject).toMatch(/Atlas Starter/);
+  });
+
+  it('uses "Friend" when firstName is not provided', () => {
+    const result = buildPurchaseWelcomeEmail({});
+    expect(result.subject).toMatch(/Friend/i);
+  });
+
+  it('includes resultsLink in the html', () => {
+    const result = buildPurchaseWelcomeEmail({
+      tier: 'atlas-starter',
+      resultsLink: 'https://example.com/results',
+    });
+    expect(result.html).toContain('https://example.com/results');
+  });
+});
+
+describe('emailService — sendPurchaseWelcome', () => {
+  beforeEach(() => mockSendMail.mockClear());
+
+  it('calls sendMail with the correct subject for atlas-starter', async () => {
+    await emailService.sendPurchaseWelcome('buyer@example.com', {
+      firstName: 'Alex',
+      tier: 'atlas-starter',
+    });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+    const opts = mockSendMail.mock.calls[0][0];
+    expect(opts.to).toBe('buyer@example.com');
+    expect(opts.subject).toMatch(/Atlas Starter/);
+  });
+
+  it('calls sendMail with the correct subject for atlas-navigator', async () => {
+    await emailService.sendPurchaseWelcome('nav@example.com', {
+      firstName: 'Taylor',
+      tier: 'atlas-navigator',
+    });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+    const opts = mockSendMail.mock.calls[0][0];
+    expect(opts.subject).toMatch(/Atlas Navigator/);
+  });
+
+  it('includes plain text fallback', async () => {
+    await emailService.sendPurchaseWelcome('user@example.com', { tier: 'atlas-starter' });
+    const opts = mockSendMail.mock.calls[0][0];
+    expect(typeof opts.text).toBe('string');
+    expect(opts.text.length).toBeGreaterThan(20);
+  });
+});
+
 describe('emailService — capitalize utility', () => {
   it('capitalizes a lowercase word', () => {
     expect(emailService.capitalize('hello')).toBe('Hello');
@@ -571,8 +640,6 @@ describe('emailService — capitalize utility', () => {
     expect(emailService.capitalize(undefined)).toBe('');
   });
 });
-
-/* ── validatePdfBuffer ────────────────────────────────────────────────────── */
 
 describe('emailService — validatePdfBuffer', () => {
   const { validatePdfBuffer } = emailService;
