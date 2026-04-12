@@ -6,6 +6,7 @@ import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/
 import GamificationToast from './GamificationToast.jsx';
 import StarterMicroQuests from './StarterMicroQuests.jsx';
 import NavigatorSkillPaths from './NavigatorSkillPaths.jsx';
+import NavigatorQuests from './NavigatorQuests.jsx';
 import ProgressDashboard from './ProgressDashboard.jsx';
 import QuestsHub from './QuestsHub.jsx';
 import { apiUrl } from '../../api/baseUrl.js';
@@ -370,7 +371,7 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
           {isNavigator
             ? 'Full access: micro-practices, skill pathways, quests, and all badge tiers.'
             : isStarter
-              ? 'Starter access: micro-practices and starter badges. Upgrade for skill pathways and quests.'
+              ? 'Starter access: micro-practices, starter quests, and starter badges. Upgrade to Navigator for full skill pathways and all quests.'
               : 'Sign in and get Atlas Starter to begin your resilience adventure.'}
         </p>
         <div style={s.tierPill(tier)}>

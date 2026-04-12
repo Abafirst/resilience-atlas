@@ -226,7 +226,7 @@ function CategoryNav({ active, onChange }) {
                 alt=""
                 width={22}
                 height={22}
-                onError={e => { e.currentTarget.src = '/icons/compass.svg'; }}
+                onError={e => { e.currentTarget.src = '/icons/compass.svg'; e.currentTarget.onerror = null; }}
               />
             </span>
             <span className="kids-cat-label">{cat.label}</span>
