@@ -46,12 +46,12 @@
             dataRetention: 'Unlimited',
         },
         'atlas-navigator': {
-            name: 'Atlas Navigator (Lifetime)',
+            name: 'Atlas Navigator',
             price: 4999, // $49.99
             billing: 'one-time',
             maxUsers: 1,
             maxTeams: 0,
-            features: ['Deep Report', 'Full dimension analysis', 'Personalized strategies', 'Lifetime access'],
+            features: ['PDF Report: 1 every 30 days (per user)', 'Full Gamification Access', 'Full dimension analysis', 'Personalized strategies'],
             dataRetention: '1 year',
         },
         'atlas-premium': {

@@ -34,6 +34,21 @@ const BLANKET_ACCESS_TIERS = new Set([
     // Add any PLAN_ALIASES whose canonical tier grants blanket access (e.g. teams-starter→starter, teams-pro→pro)
     ...Object.keys(PLAN_ALIASES).filter(alias => BLANKET_ACCESS_BASE.has(PLAN_ALIASES[alias])),
 ]);
+
+/**
+ * Tiers that are exempt from the Atlas Navigator 30-day PDF quota.
+ * A user who holds ANY of these tiers alongside (or instead of) atlas-navigator
+ * is not subject to the quota.
+ */
+const NAVIGATOR_QUOTA_EXEMPT_TIERS = new Set([
+    'atlas-premium',
+    'starter', 'teams-starter',
+    'pro', 'teams-pro',
+    'enterprise', 'teams-enterprise',
+]);
+
+/** Rolling window (ms) for the Atlas Navigator per-user PDF quota. */
+const NAVIGATOR_PDF_QUOTA_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const { buildComprehensiveReport } = require('../services/reportService');
 const { buildPdfWithPDFKit } = require('../services/pdfService');
 const { sendPdfReport, validatePdfBuffer } = require('../services/emailService');
@@ -146,7 +161,7 @@ function unescapeHtmlEntities(str) {
  * @param {string} scores  Cleaned JSON string (HTML entities already reversed)
  * @param {string} [email]  User email for personalisation (optional)
  */
-async function runGeneration(hash, overall, dominantType, scores, email) {
+async function runGeneration(hash, overall, dominantType, scores, email, quotaTrackedEmail = null) {
     const startTime = Date.now();
     console.log(`[PDF Generation] Starting report generation for hash: ${hash}`);
 
@@ -215,6 +230,27 @@ async function runGeneration(hash, overall, dominantType, scores, email) {
             completedAt: new Date(),
             pdfBuffer,
         });
+
+        // Persist the quota timestamp for Atlas Navigator users so that the
+        // rolling 30-day window is enforced on the next generation attempt.
+        if (quotaTrackedEmail) {
+            try {
+                await User.findOneAndUpdate(
+                    { email: quotaTrackedEmail },
+                    { lastPdfGeneratedAt: new Date() }
+                );
+            } catch (quotaErr) {
+                // Non-fatal: log but don't fail the response.
+                // WARNING: If this persists, the user may be able to generate
+                // additional PDFs before the 30-day quota is re-applied.
+                // Investigate DB connectivity if this error recurs.
+                console.error(
+                    '[PDF Generation] Failed to persist Atlas Navigator quota timestamp' +
+                    ' — quota may not be enforced on next request:',
+                    quotaErr.message
+                );
+            }
+        }
 
         const duration = Date.now() - startTime;
         console.log(`[PDF Generation] Complete in ${duration}ms for hash: ${hash}`);
@@ -348,6 +384,36 @@ router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
                         }
                     }
                 }
+
+                // ── Atlas Navigator per-user 30-day quota ─────────────────────
+                // Apply only when the user's blanket access comes solely from
+                // atlas-navigator (not from atlas-premium or any Teams tier,
+                // which remain quota-free).
+                const hasNavigatorPurchase = allPurchases.some((p) => p.tier === 'atlas-navigator');
+                const hasQuotaExemptTier   = allPurchases.some((p) => NAVIGATOR_QUOTA_EXEMPT_TIERS.has(p.tier));
+
+                if (hasNavigatorPurchase && !hasQuotaExemptTier) {
+                    let user = null;
+                    try {
+                        user = await User.findOne({ email: cleanEmail });
+                    } catch (userErr) {
+                        console.warn('[report/generate] Could not load user for quota check:', userErr.message);
+                    }
+                    if (user && user.lastPdfGeneratedAt) {
+                        const elapsed = Date.now() - user.lastPdfGeneratedAt.getTime();
+                        if (elapsed < NAVIGATOR_PDF_QUOTA_MS) {
+                            const nextAvailableAt = new Date(user.lastPdfGeneratedAt.getTime() + NAVIGATOR_PDF_QUOTA_MS);
+                            return res.status(429).json({
+                                error: 'You have already generated a PDF report within the last 30 days.',
+                                quotaExceeded: true,
+                                next_available_at: nextAvailableAt.toISOString(),
+                            });
+                        }
+                    }
+                    // Mark this generation as subject to quota tracking so that
+                    // runGeneration updates lastPdfGeneratedAt on success.
+                    req._quotaTrackedEmail = cleanEmail;
+                }
             } catch (dbErr) {
                 // DB unavailable — block rather than silently allow, to prevent
                 // free access during temporary DB outages in production.
@@ -380,7 +446,7 @@ router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
 
         // Kick off generation asynchronously — do NOT await so the response
         // is returned immediately.
-        runGeneration(hash, overall, dominantType || '', cleanScores, email || '')
+        runGeneration(hash, overall, dominantType || '', cleanScores, email || '', req._quotaTrackedEmail || null)
             .catch((err) => console.error('Background report generation failed:', err.message, err.stack));
 
         return res.json({ hash, estimatedSeconds: 15 });

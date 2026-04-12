@@ -70,6 +70,13 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 
+  // Timestamp of the last successfully generated PDF report.
+  // Used to enforce the Atlas Navigator 1-per-30-days quota.
+  lastPdfGeneratedAt: {
+    type: Date,
+    default: null,
+  },
+
   // B2B organization fields (optional, null for free-tier users)
   organization_id: {
     type: mongoose.Schema.Types.ObjectId,

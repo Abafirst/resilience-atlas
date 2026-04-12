@@ -25,14 +25,14 @@
         'Personalized narrative analysis',
         'Recommended growth strategies',
         'Expanded micro-practices for each dimension',
-        'Downloadable PDF report',
-        'Lifetime access — one-time purchase, yours to keep forever',
+        'Downloadable PDF report: 1 every 30 days (per user)',
+        'One-time purchase — use anytime',
     ];
 
     /** Human-readable tier titles keyed by tier id. */
     var TIER_TITLES = {
         'atlas-starter':   'Atlas Starter',
-        'atlas-navigator': 'Atlas Navigator (Lifetime)',
+        'atlas-navigator': 'Atlas Navigator',
     };
 
     /** Fallback prices used when the backend is unreachable or fetch is unavailable. */

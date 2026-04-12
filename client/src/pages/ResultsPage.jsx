@@ -397,9 +397,117 @@ const NAVIGATOR_FEATURES = [
   'Personalized narrative analysis',
   'Recommended growth strategies',
   'Expanded micro-practices for each dimension',
-  'Downloadable PDF report',
-  'Lifetime access — one-time purchase, yours to keep forever',
+  'Downloadable PDF report: 1 every 30 days (per user)',
+  'One-time purchase — use anytime',
 ];
+
+/**
+ * Generate and trigger download of an .ics calendar event file.
+ * @param {string} dateStr  ISO date string for the event start time.
+ */
+function downloadIcsReminder(dateStr) {
+  const eventDate = dateStr ? new Date(dateStr) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const pad = (n) => String(n).padStart(2, '0');
+  const fmt = (d) =>
+    `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T` +
+    `${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+  const dtStart = fmt(eventDate);
+  const dtEnd   = fmt(new Date(eventDate.getTime() + 60 * 60 * 1000)); // +1 hour
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Resilience Atlas//EN',
+    'BEGIN:VEVENT',
+    `DTSTART:${dtStart}`,
+    `DTEND:${dtEnd}`,
+    'SUMMARY:Resilience Atlas: PDF report available',
+    'DESCRIPTION:Your Atlas Navigator PDF report is now available. Visit https://app.resilienceatlas.com to download it.',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'resilience-atlas-reminder.ics';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+/**
+ * Modal shown when the Atlas Navigator 30-day PDF quota is exceeded.
+ */
+function PdfQuotaModal({ nextAvailableAt, onClose }) {
+  const dateLabel = React.useMemo(() => {
+    if (!nextAvailableAt) return 'in 30 days';
+    try {
+      return new Date(nextAvailableAt).toLocaleDateString(undefined, {
+        year: 'numeric', month: 'long', day: 'numeric',
+      });
+    } catch (_) { return 'in 30 days'; }
+  }, [nextAvailableAt]);
+
+  const handleRemind = React.useCallback(() => {
+    downloadIcsReminder(nextAvailableAt);
+    onClose();
+  }, [nextAvailableAt, onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="pdf-quota-title"
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9000,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'rgba(0,0,0,0.55)',
+      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        background: '#fff', borderRadius: 12, padding: '2rem 2rem 1.5rem',
+        maxWidth: 420, width: '90%', boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+        textAlign: 'center',
+      }}>
+        <div style={{ fontSize: 36, marginBottom: 8 }} aria-hidden="true">📅</div>
+        <h2 id="pdf-quota-title" style={{ margin: '0 0 0.75rem', fontSize: '1.2rem', color: '#1e293b' }}>
+          Report Limit Reached
+        </h2>
+        <p style={{ color: '#475569', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+          Your next report will be available on <strong>{dateLabel}</strong>.
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              padding: '0.6rem 1.4rem', borderRadius: 8, border: '1px solid #cbd5e1',
+              background: '#f8fafc', color: '#475569', fontWeight: 600, cursor: 'pointer',
+              fontSize: '0.95rem',
+            }}
+          >
+            OK
+          </button>
+          <button
+            type="button"
+            onClick={handleRemind}
+            style={{
+              padding: '0.6rem 1.4rem', borderRadius: 8, border: 'none',
+              background: '#2563eb', color: '#fff', fontWeight: 600, cursor: 'pointer',
+              fontSize: '0.95rem',
+            }}
+          >
+            Remind me in 30 days
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
   return (
@@ -446,10 +554,10 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
         <div className="upgrade-card upgrade-card--atlas-navigator" role="article" aria-labelledby="upgrade-title-atlas-navigator">
           <div className="upgrade-card__header">
             <span className="upgrade-badge badge-blue">POPULAR</span>
-            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator (Lifetime)</h3>
+            <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
             <p className="upgrade-card__description">
-              Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.
+              Download your complete Deep Resilience Report as a beautiful PDF. 1 report every 30 days — one-time purchase.
             </p>
           </div>
           <ul className="upgrade-card__features" aria-label="Features included in Atlas Navigator">
@@ -1863,6 +1971,10 @@ async function triggerPdfDownload(results, email, getTokenFn) {
     }
     const err = new Error(body.error || 'Failed to start report generation');
     if (genRes.status === 402) err.upgradeRequired = true;
+    if (genRes.status === 429 && body.quotaExceeded) {
+      err.quotaExceeded = true;
+      err.nextAvailableAt = body.next_available_at || null;
+    }
     throw err;
   }
   const { hash } = await genRes.json();
@@ -1927,7 +2039,7 @@ function tierLabel(tierId) {
   switch (tierId) {
     case 'atlas-premium':   return 'Atlas Premium (Lifetime)';
     case 'atlas-starter':   return 'Atlas Starter';
-    case 'atlas-navigator': return 'Atlas Navigator (Lifetime)';
+    case 'atlas-navigator': return 'Atlas Navigator';
     default:                return tierId || 'premium';
   }
 }
@@ -2024,6 +2136,9 @@ export default function ResultsPage() {
   const [isCurrentAssessmentUnlocked, setIsCurrentAssessmentUnlocked] = useState(null);
   // Whether user has unlock modal open (shown automatically for users without PDF access).
   const [showUnlockModal, setShowUnlockModal] = useState(false);
+  // Whether to show the Atlas Navigator PDF quota exceeded modal.
+  const [showPdfQuotaModal, setShowPdfQuotaModal] = useState(false);
+  const [pdfQuotaNextDate, setPdfQuotaNextDate]   = useState(null); // ISO string | null
   // Whether to show the "Available on the web" modal on Capacitor Android.
   const [showAndroidModal, setShowAndroidModal] = useState(false);
   // True while loading results from the API via a ?hash= deep link.
@@ -2544,7 +2659,11 @@ export default function ResultsPage() {
     try {
       await triggerPdfDownload(results, email, getAccessTokenSilently);
     } catch (err) {
-      if (err && err.upgradeRequired) {
+      if (err && err.quotaExceeded) {
+        // Atlas Navigator 30-day quota exceeded — show quota modal
+        setPdfQuotaNextDate(err.nextAvailableAt || null);
+        setShowPdfQuotaModal(true);
+      } else if (err && err.upgradeRequired) {
         // Backend denied access — reset to locked state and show unlock modal
         setTier('free');
         setPriorAccess(false);
@@ -2979,6 +3098,14 @@ export default function ResultsPage() {
       {/* ── Android "Available on the web" Modal ────────────────────── */}
       {showAndroidModal && (
         <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
+      )}
+
+      {/* ── PDF Quota Modal (Atlas Navigator 30-day limit) ───────────── */}
+      {showPdfQuotaModal && (
+        <PdfQuotaModal
+          nextAvailableAt={pdfQuotaNextDate}
+          onClose={() => setShowPdfQuotaModal(false)}
+        />
       )}
 
       {/* ── Site Header ──────────────────────────────────────────────── */}

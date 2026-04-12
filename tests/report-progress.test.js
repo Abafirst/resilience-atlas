@@ -79,6 +79,7 @@ jest.mock('../backend/models/User', () => {
     MockUser.findOne = jest.fn().mockResolvedValue(null);
     MockUser.findById = jest.fn().mockResolvedValue(null);
     MockUser.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
+    MockUser.findOneAndUpdate = jest.fn().mockResolvedValue(null);
     MockUser.countDocuments = jest.fn().mockResolvedValue(0);
     MockUser.find = jest.fn().mockResolvedValue([]);
     return MockUser;
@@ -263,9 +264,83 @@ describe('GET /api/report/generate', () => {
         expect(res.body).toHaveProperty('hash');
         delete process.env.STRIPE_SECRET_KEY;
     });
-});
 
-// ── /api/report/status ───────────────────────────────────────────────────────
+    test('returns 429 with quotaExceeded=true when atlas-navigator user generated PDF within 30 days', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const Purchase = require('../backend/models/Purchase');
+        const User     = require('../backend/models/User');
+        const purchaseDate = new Date(Date.now() - 40 * 24 * 60 * 60 * 1000); // 40 days ago
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([
+                { tier: 'atlas-navigator', status: 'completed', purchasedAt: purchaseDate, createdAt: purchaseDate },
+            ]),
+        });
+        // User generated a PDF only 5 days ago — within the 30-day window.
+        const recentDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        User.findOne.mockResolvedValueOnce({ lastPdfGeneratedAt: recentDate });
+
+        const res = await request(app)
+            .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'navigator@example.com' });
+        expect(res.status).toBe(429);
+        expect(res.body.quotaExceeded).toBe(true);
+        expect(res.body).toHaveProperty('next_available_at');
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+
+    test('returns 200 when atlas-navigator user last generated PDF more than 30 days ago', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const Purchase = require('../backend/models/Purchase');
+        const User     = require('../backend/models/User');
+        const purchaseDate = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000); // 60 days ago
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([
+                { tier: 'atlas-navigator', status: 'completed', purchasedAt: purchaseDate, createdAt: purchaseDate },
+            ]),
+        });
+        // User generated a PDF 35 days ago — outside the 30-day window.
+        const oldDate = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000);
+        User.findOne.mockResolvedValueOnce({ lastPdfGeneratedAt: oldDate });
+
+        const res = await request(app)
+            .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'navigator@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('hash');
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+
+    test('atlas-premium purchase is not subject to 30-day PDF quota', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const Purchase = require('../backend/models/Purchase');
+        const User     = require('../backend/models/User');
+        const purchaseDate = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+        Purchase.find.mockReturnValueOnce({
+            select: jest.fn().mockReturnThis(),
+            sort:   jest.fn().mockReturnThis(),
+            lean:   jest.fn().mockResolvedValue([
+                { tier: 'atlas-premium', status: 'completed', purchasedAt: purchaseDate, createdAt: purchaseDate },
+            ]),
+        });
+        // Even if lastPdfGeneratedAt is recent, atlas-premium bypasses the quota.
+        const recentDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+        User.findOne.mockResolvedValueOnce({ lastPdfGeneratedAt: recentDate });
+
+        const res = await request(app)
+            .get('/api/report/generate')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ overall: '75', scores: SAMPLE_SCORES, email: 'premium@example.com' });
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('hash');
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+});
 
 describe('GET /api/report/status', () => {
     afterEach(() => jobStore.clear());
