@@ -29,6 +29,7 @@ const { buildGrowthMilestoneEmail }    = require('../templates/emails/growthMile
 const { referralWelcome }              = require('../templates/emails/referralWelcome');
 const { referralThankYou }             = require('../templates/emails/referralThankYou');
 const { buildTeamPurchaseConfirmationEmail } = require('../templates/emails/teamPurchaseConfirmation');
+const { buildPurchaseWelcomeEmail }          = require('../templates/emails/purchaseWelcome');
 const { wrapEmail } = require('../templates/emails/base');
 
 /* ── Transport ─────────────────────────────────────────────────────────────── */
@@ -362,6 +363,20 @@ async function sendPdfReport(to, pdfBuffer) {
 }
 
 /**
+ * Send a reward-style welcome email immediately after a user purchases or
+ * unlocks Atlas Starter or Atlas Navigator.
+ * Called once per purchase from the payment-confirm endpoint.
+ *
+ * @param {string} to
+ * @param {Object} vars  See purchaseWelcome.js for full variable list
+ *   { firstName, tier, resultsLink, gamificationLink, unsubscribeUrl }
+ */
+async function sendPurchaseWelcome(to, vars) {
+  const emailObj = buildPurchaseWelcomeEmail(vars);
+  return _send(to, emailObj);
+}
+
+/**
  * Send a purchase confirmation email to a Teams package buyer.
  * Called after successful payment for Atlas Team Basic or Atlas Team Premium.
  * No admin notification is sent — these are fully self-serve.
@@ -453,6 +468,7 @@ module.exports = {
   sendTeamInvitation,
   sendGrowthMilestone,
   sendInvitationReminder,
+  sendPurchaseWelcome,
 
   /* Teams package emails */
   sendTeamPurchaseConfirmation,

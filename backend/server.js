@@ -381,6 +381,8 @@ app.use("/api/growth", require("./routes/growth"));
 console.log("✅ Mounted route: /api/growth");
 app.use("/api/gamification", require("./routes/gamification"));
 console.log("✅ Mounted route: /api/gamification");
+app.use("/api/micro-practice-plan", require("./routes/micro-practice-plan"));
+console.log("✅ Mounted route: /api/micro-practice-plan");
 app.use("/api/atlas", require("./routes/atlas"));
 console.log("✅ Mounted route: /api/atlas");
 app.use("/api/history", require("./routes/history"));

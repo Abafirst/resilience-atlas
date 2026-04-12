@@ -32,6 +32,7 @@ const {
 } = require('../services/assessmentAccessControl');
 const { authenticateJWT } = require('../middleware/auth');
 const logger = require('../utils/logger');
+const emailService = require('../services/emailService');
 
 /** Per-tier amounts in cents used for inline payment intent creation. */
 const UNLOCK_TIER_AMOUNTS = {
@@ -488,15 +489,19 @@ router.post('/unlock-payment/confirm', async (req, res) => {
             };
         }
 
+        const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
+
         // Use the already-validated paymentIntentId (regex-checked above) as a
         // plain string to prevent operator injection in the MongoDB query.
         const safeIntentId = String(paymentIntentId);
 
         // Mark the pending purchase created in unlock-payment as completed.
+        // Use { new: false } so we get the pre-update document to check whether
+        // the confirmation email has already been sent (idempotency guard).
         const purchase = await Purchase.findOneAndUpdate(
             { stripeSessionId: safeIntentId, email: cleanEmail },
-            update,
-            { new: true }
+            { ...update, confirmationEmailSent: true },
+            { new: false }
         );
 
         if (!purchase) {
@@ -509,11 +514,33 @@ router.post('/unlock-payment/confirm', async (req, res) => {
                 status:         'completed',
                 purchasedAt:    now,
                 stripeSessionId: safeIntentId,
+                confirmationEmailSent: true,
                 ...(overall !== undefined && dominantType !== undefined && parsedScores
                     ? { assessmentData: { overall: Number(overall), dominantType: String(dominantType), scores: parsedScores } }
                     : {}),
             });
+
+            // Send purchase welcome email for newly-created records.
+            const firstName = (cleanEmail.split('@')[0] || '').replace(/[._-]/g, ' ').split(' ')[0] || 'Friend';
+            emailService.sendPurchaseWelcome(cleanEmail, {
+                firstName,
+                tier,
+                resultsLink:       `${APP_URL}/results`,
+                gamificationLink:  `${APP_URL}/gamification`,
+            }).catch((err) => logger.warn('[assessment/unlock-payment/confirm] Welcome email failed:', err.message));
+
             return res.json({ success: true, tier, purchasedAt: newPurchase.purchasedAt });
+        }
+
+        // Send purchase welcome email only on the first confirmation (not retries).
+        if (!purchase.confirmationEmailSent) {
+            const firstName = (cleanEmail.split('@')[0] || '').replace(/[._-]/g, ' ').split(' ')[0] || 'Friend';
+            emailService.sendPurchaseWelcome(cleanEmail, {
+                firstName,
+                tier,
+                resultsLink:       `${APP_URL}/results`,
+                gamificationLink:  `${APP_URL}/gamification`,
+            }).catch((err) => logger.warn('[assessment/unlock-payment/confirm] Welcome email failed:', err.message));
         }
 
         return res.json({ success: true, tier, purchasedAt: purchase.purchasedAt });
