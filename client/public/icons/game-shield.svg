@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Shield body -->
+  <path d="M32 8 L52 16 L52 34 C52 44 43 52 32 56 C21 52 12 44 12 34 L12 16 Z" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Inner shield accent -->
+  <path d="M32 16 L44 22 L44 34 C44 40 38 45 32 48 C26 45 20 40 20 34 L20 22 Z" fill="none" stroke="#3B82F6" stroke-width="1.5" stroke-linejoin="round" opacity="0.5"/>
+  <!-- Star check -->
+  <polygon points="32,24 34,29 39,29 35,32 37,37 32,34 27,37 29,32 25,29 30,29" fill="#3B82F6"/>
+</svg>

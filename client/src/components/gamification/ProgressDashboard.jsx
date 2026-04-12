@@ -73,7 +73,7 @@ export default function ProgressDashboard({ tier, progress, loading, tierBlocked
   if (tierBlocked) {
     return (
       <div style={{ padding: '32px', textAlign: 'center', color: '#718096', fontSize: 14 }}>
-        <div style={{ fontSize: 20, marginBottom: 12 }}>🔒</div>
+        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 24, height: 24, marginBottom: 12 }} />
         <div style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: 8 }}>Upgrade required</div>
         <div>A paid Atlas plan is required to access gamification features and track your resilience progress.</div>
       </div>

@@ -234,7 +234,7 @@ export default function OrgGamificationPage() {
   // Badges state
   const [badges, setBadges] = useState([]);
   const [myAwards, setMyAwards] = useState([]);
-  const [newBadge, setNewBadge] = useState({ name: '', description: '', icon: '🏅' });
+  const [newBadge, setNewBadge] = useState({ name: '', description: '', icon: '/icons/badges.svg' });
   const [awardModal, setAwardModal] = useState(null); // { badgeId, badgeName }
   const [awardForm, setAwardForm] = useState({ userId: '', email: '', note: '' });
 
@@ -308,7 +308,7 @@ export default function OrgGamificationPage() {
         getAccessTokenSilently
       );
       setSuccessMsg('Badge created.');
-      setNewBadge({ name: '', description: '', icon: '🏅' });
+      setNewBadge({ name: '', description: '', icon: '/icons/badges.svg' });
       loadAll();
     } catch (err) {
       setError('Failed to create badge: ' + (err?.message || ''));
@@ -459,7 +459,7 @@ export default function OrgGamificationPage() {
       <SiteHeader />
       <div className="og-page">
         <div className="og-hero">
-          <h1>🏆 Full Gamification Suite</h1>
+          <h1><img src="/icons/trophy.svg" alt="" aria-hidden="true" width={28} height={28} style={{ verticalAlign: 'middle', marginRight: 8 }} />Full Gamification Suite</h1>
           <p>{orgName} · Enterprise</p>
         </div>
 
@@ -507,10 +507,10 @@ export default function OrgGamificationPage() {
                 onClick={() => { setActiveTab(tab); clearMessages(); }}
                 type="button"
               >
-                {tab === 'leaderboard' && '📊 Leaderboard'}
-                {tab === 'badges' && '🎖 Badges'}
-                {tab === 'challenges' && '⚡ Challenges'}
-                {tab === 'my-badges' && '🏅 My Badges'}
+                {tab === 'leaderboard' && <><img src="/icons/leaderboards.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Leaderboard</>}
+                {tab === 'badges' && <><img src="/icons/badges.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Badges</>}
+                {tab === 'challenges' && <><img src="/icons/challenges.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Challenges</>}
+                {tab === 'my-badges' && <><img src="/icons/badges.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />My Badges</>}
               </button>
             ))}
           </div>
@@ -545,7 +545,7 @@ export default function OrgGamificationPage() {
                         <td>{entry.email || entry.userId}</td>
                         <td><strong>{entry.totalPoints.toLocaleString()}</strong></td>
                         <td>{entry.completions}</td>
-                        <td>{entry.badgeCount > 0 ? `${entry.badgeCount} 🎖` : '—'}</td>
+                        <td>{entry.badgeCount > 0 ? entry.badgeCount : '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -565,7 +565,7 @@ export default function OrgGamificationPage() {
                   <div className="og-form-inline">
                     <div className="og-form-row" style={{ flex: '0 0 70px' }}>
                       <label>Icon</label>
-                      <input className="og-input" value={newBadge.icon} onChange={(e) => setNewBadge({ ...newBadge, icon: e.target.value })} placeholder="🏅" maxLength={4} />
+                      <input className="og-input" value={newBadge.icon} onChange={(e) => setNewBadge({ ...newBadge, icon: e.target.value })} placeholder="/icons/badges.svg" maxLength={64} />
                     </div>
                     <div className="og-form-row" style={{ flex: '1', minWidth: '160px' }}>
                       <label>Badge Name *</label>
@@ -593,7 +593,11 @@ export default function OrgGamificationPage() {
                   <div className="og-card-grid">
                     {badges.map((badge) => (
                       <div key={badge._id} className="og-card">
-                        <div className="og-card-icon">{badge.icon || '🏅'}</div>
+                        <div className="og-card-icon">
+                          {(badge.icon && badge.icon.startsWith('/')) ? (
+                            <img src={badge.icon} alt="" width={32} height={32} />
+                          ) : (badge.icon || null)}
+                        </div>
                         <h3>{badge.name}</h3>
                         <p>{badge.description || 'No description.'}</p>
                         {isAdmin && (
@@ -744,7 +748,11 @@ export default function OrgGamificationPage() {
                     const badge = award.badgeId || {};
                     return (
                       <div key={award._id} className="og-card">
-                        <div className="og-card-icon">{badge.icon || '🏅'}</div>
+                        <div className="og-card-icon">
+                          {(badge.icon && badge.icon.startsWith('/')) ? (
+                            <img src={badge.icon} alt="" width={32} height={32} />
+                          ) : (badge.icon || null)}
+                        </div>
                         <h3>{badge.name || 'Badge'}</h3>
                         <p>{badge.description || ''}</p>
                         {award.note && (

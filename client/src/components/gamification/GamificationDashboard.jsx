@@ -13,6 +13,7 @@ import ExplorerAchievements from './ExplorerAchievements.jsx';
 import AchievementNotification from './AchievementNotification.jsx';
 import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
 import AdultGameHub from './AdultGameHub.jsx';
+import ResilienceAdventureHub from './ResilienceAdventureHub.jsx';
 import '../../styles/gamification-animations.css';
 import { apiUrl } from '../../api/baseUrl.js';
 
@@ -406,7 +407,7 @@ export default function GamificationDashboard() {
           setUserTier(data.tier);
           try { localStorage.setItem('resilience_tier', data.tier); } catch (_) { /* ignore */ }
           const tierName = TIER_NAMES[data.tier] || data.tier;
-          setPaymentBanner({ type: 'success', message: `✅ Purchase confirmed! Your ${tierName} features are now unlocked.` });
+          setPaymentBanner({ type: 'success', message: `Purchase confirmed! Your ${tierName} features are now unlocked.` });
         }
       })
       .catch(() => { /* non-fatal — tier will still be fetched via /api/report/access */ })
@@ -573,7 +574,7 @@ export default function GamificationDashboard() {
           {!isAuthenticated && (
             <div style={s.signInBanner} role="region" aria-label="Sign in prompt">
               <p style={s.signInText}>
-                🔐 Sign in to track your resilience progress and see which features you have unlocked.
+                <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 16, height: 16, verticalAlign: 'middle', marginRight: 6 }} />Sign in to track your resilience progress and see which features you have unlocked.
               </p>
               <button style={s.signInBtn} onClick={() => {
                 try { sessionStorage.setItem('returnAfterLogin', '/gamification'); } catch (_) {}
@@ -618,9 +619,13 @@ export default function GamificationDashboard() {
                   color: hasNavigator ? '#5b21b6' : hasStarter ? '#0369a1' : '#475569',
                   marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6,
                 }}>
-                  {hasNavigator ? '🗺️ Atlas Navigator — Full Access' :
-                   hasStarter   ? '🧭 Atlas Starter — Starter Access' :
-                                  '🔒 Free — Preview Mode'}
+                  {hasNavigator ? (
+                    <><img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Atlas Navigator — Full Access</>
+                  ) : hasStarter ? (
+                    <><img src="/icons/star.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Atlas Starter — Starter Access</>
+                  ) : (
+                    <><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Free — Preview Mode</>
+                  )}
                 </div>
                 <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>
                   {hasNavigator
@@ -659,7 +664,7 @@ export default function GamificationDashboard() {
           {/* Tier verification error */}
           {isAuthenticated && !tierLoading && tierError && (
             <div style={{ ...s.errorMsg, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }} role="alert">
-              <span>⚠️ {tierError}</span>
+              <span><img src="/icons/warning.svg" alt="Warning" width={16} height={16} style={{ verticalAlign: 'middle', marginRight: 4 }} />{tierError}</span>
               <button
                 onClick={() => { setTierError(null); setTierRetryKey(k => k + 1); }}
                 style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid currentColor', background: 'transparent', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: 'inherit' }}
@@ -679,7 +684,7 @@ export default function GamificationDashboard() {
                   style={{ ...s.errorMsg, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}
                   role="alert"
                 >
-                  <span>{isSessionErr ? '🔐' : '⚠️'} {error}</span>
+                  <span><img src={isSessionErr ? '/icons/lock.svg' : '/icons/warning.svg'} alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle', marginRight: 4 }} />{error}</span>
                   {isSessionErr && (
                     <button
                       onClick={() => loginWithRedirect({ appState: { returnTo: '/gamification' } })}
@@ -798,7 +803,7 @@ export default function GamificationDashboard() {
                 ]}
                 returnPath="/gamification"
               >
-                <AdultGameHub tier={userTier} />
+                <ResilienceAdventureHub tier={userTier} />
               </LockedFeatureCard>
             </section>
           )}
