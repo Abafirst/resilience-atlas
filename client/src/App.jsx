@@ -8,6 +8,7 @@ import './styles/leadership-report.css';
 import './styles/org-dashboard.css';
 import './styles/payment-ui.css';
 import './styles/research.css';
+import './styles/resources.css';
 import './styles/sharing.css';
 import './styles/teams-enhanced.css';
 import './styles/upsell.css';

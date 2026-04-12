@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 
 // ── Branded icon maps (no generic emojis) ─────────────────────────────────────
@@ -102,6 +103,7 @@ const PAGE_LIMIT = 12;
 export default function ResourcesPage() {
   // ── Theme ───────────────────────────────────────────────────────────────────
   useEffect(() => {
+    document.title = 'Resource Library — The Resilience Atlas™';
     try {
       const t = localStorage.getItem('ra-theme');
       if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
@@ -228,6 +230,7 @@ export default function ResourcesPage() {
 
   return (
     <div className="rl-page">
+      <SiteHeader activePage="resources" />
       <DarkModeHint />
 
 {/* ── Hero / Search ──────────────────────────────────────────────────────── */}

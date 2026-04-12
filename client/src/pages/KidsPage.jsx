@@ -12,12 +12,12 @@ import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 import VideoStories from '../components/VideoStories.jsx';
 
 const KIDS_CATEGORIES = [
-  { id: 'all',        label: 'All',        emoji: '✨', desc: 'Browse everything' },
-  { id: 'stories',    label: 'Stories',    emoji: '📚', desc: 'Read resilience stories' },
-  { id: 'videos',     label: 'Videos',     emoji: '🎬', desc: 'Watch video stories' },
-  { id: 'games',      label: 'Games',      emoji: '🎮', desc: 'Play interactive games' },
-  { id: 'activities', label: 'Activities', emoji: '🎯', desc: 'Activities by age' },
-  { id: 'skills',     label: 'Skills',     emoji: '⚡', desc: 'Explore resilience skills' },
+  { id: 'all',        label: 'All',        icon: '/icons/compass.svg',             desc: 'Browse everything' },
+  { id: 'stories',    label: 'Stories',    icon: '/icons/story.svg',               desc: 'Read resilience stories' },
+  { id: 'videos',     label: 'Videos',     icon: '/icons/video.svg',               desc: 'Watch video stories' },
+  { id: 'games',      label: 'Games',      icon: '/icons/game.svg',                desc: 'Play interactive games' },
+  { id: 'activities', label: 'Activities', icon: '/icons/movement.svg',            desc: 'Activities by age' },
+  { id: 'skills',     label: 'Skills',     icon: '/icons/agentic-generative.svg',  desc: 'Explore resilience skills' },
 ];
 
 const AGE_GROUPS = [
@@ -220,7 +220,9 @@ function CategoryNav({ active, onChange }) {
             aria-selected={active === cat.id}
             onClick={() => onChange(cat.id)}
           >
-            <span className="kids-cat-emoji" aria-hidden="true">{cat.emoji}</span>
+            <span className="kids-cat-icon" aria-hidden="true">
+              <img src={cat.icon} alt="" width={22} height={22} />
+            </span>
             <span className="kids-cat-label">{cat.label}</span>
           </button>
         ))}
