@@ -183,7 +183,8 @@ export default function StarterMicroQuests({ tier, progress }) {
       <div style={s.section}>
         <h3 style={s.sectionTitle}>Micro-Commitment Practices</h3>
         <p style={s.sectionSub}>
-          Five-minute values-aligned practices — one for each resilience dimension. Each practice is designed around behavioral activation and ACT committed action principles. Progress: {completedCount}/6 completed.
+          Five-minute values-aligned practices — one for each resilience dimension. Each practice is designed around behavioral activation and ACT committed action principles.{' '}
+          Completed {completedCount} {completedCount === 1 ? 'practice' : 'practices'}.
         </p>
         <div style={s.grid}>
           {MICRO_QUESTS.map(quest => {

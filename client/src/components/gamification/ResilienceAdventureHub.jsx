@@ -31,7 +31,30 @@ async function fetchUserTier(email, token) {
   return 'free';
 }
 
-const RECOMMENDED_IDS = ['mq-agentic', 'mq-emotional', 'mq-somatic'];
+const REFRESH_SEED_KEY  = 'recommendedSeed';
+const REFRESH_DATE_KEY  = 'lastRefreshDate';
+const RECOMMENDED_COUNT = 3;
+
+/** Seeded LCG shuffle — returns `count` quest IDs deterministically from `seed`. */
+function getRecommendedIds(seed, count) {
+  const ids = MICRO_QUESTS.map(q => q.id);
+  let s = (typeof seed === 'number' && !isNaN(seed)) ? seed : 42;
+  function nextRand() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0x100000000;
+  }
+  const shuffled = [...ids];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(nextRand() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, count);
+}
+
+/** Today as YYYY-MM-DD (local time). */
+function todayDateStr() {
+  return new Date().toLocaleDateString('en-CA');
+}
 
 const s = {
   wrap: {
@@ -306,6 +329,17 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   const [infoModal, setInfoModal] = useState(null);
   const [selectedBadge, setSelectedBadge] = useState(null);
   const [celebrationModal, setCelebrationModal] = useState(null);
+  const [showRefreshModal, setShowRefreshModal] = useState(false);
+  const [recommendedSeed, setRecommendedSeed] = useState(() => {
+    try {
+      const stored = localStorage.getItem(REFRESH_SEED_KEY);
+      const parsed = stored ? parseInt(stored, 10) : NaN;
+      return !isNaN(parsed) ? parsed : 42;
+    } catch (_) { return 42; }
+  });
+  const [lastRefreshDate, setLastRefreshDate] = useState(() => {
+    try { return localStorage.getItem(REFRESH_DATE_KEY) || ''; } catch (_) { return ''; }
+  });
 
   useEffect(() => {
     if (tierProp) {
@@ -341,7 +375,23 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   const currentStreak = progress?.currentStreak?.days || 0;
   const totalStars = progress?.totalPoints || 0;
 
-  const recommendedQuests = MICRO_QUESTS.filter(q => RECOMMENDED_IDS.includes(q.id));
+  const recommendedQuests = MICRO_QUESTS.filter(q =>
+    getRecommendedIds(recommendedSeed, RECOMMENDED_COUNT).includes(q.id)
+  );
+
+  const canRefresh = lastRefreshDate !== todayDateStr();
+
+  function handleRefreshConfirm() {
+    const newSeed = Date.now();
+    const today   = todayDateStr();
+    try {
+      localStorage.setItem(REFRESH_SEED_KEY, String(newSeed));
+      localStorage.setItem(REFRESH_DATE_KEY, today);
+    } catch (_) {}
+    setRecommendedSeed(newSeed);
+    setLastRefreshDate(today);
+    setShowRefreshModal(false);
+  }
 
   const sections = [
     { id: 'games',  label: 'Games',  available: isStarter },
@@ -362,6 +412,39 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
   return (
     <div style={s.wrap}>
       {toasts.map(t => <GamificationToast key={t.id} toast={t} onDismiss={dismissToast} />)}
+
+      {/* Refresh confirmation modal */}
+      {showRefreshModal && (
+        <div style={s.modal} onClick={() => setShowRefreshModal(false)} role="dialog" aria-modal="true" aria-label="Refresh today's practices?">
+          <div style={s.modalBox} onClick={e => e.stopPropagation()}>
+            <button style={s.closeBtn} onClick={() => setShowRefreshModal(false)} aria-label="Close">✕</button>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <img src="/icons/game-target.svg" alt="" width={44} height={44} />
+            </div>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', margin: '0 0 10px', textAlign: 'center' }}>
+              Refresh today&apos;s practices?
+            </h2>
+            <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.6, margin: '0 0 20px', textAlign: 'center' }}>
+              This will replace your current recommended set with a new selection.{' '}
+              Your lifetime completion total won&apos;t change.
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowRefreshModal(false)}
+                style={{ padding: '9px 20px', borderRadius: 8, border: '1px solid #e2e8f0', background: '#fff', color: '#64748b', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+              >
+                Keep current set
+              </button>
+              <button
+                onClick={handleRefreshConfirm}
+                style={{ padding: '9px 20px', borderRadius: 8, border: 'none', background: '#4f46e5', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero */}
       <div style={s.hero}>
@@ -489,9 +572,33 @@ export default function ResilienceAdventureHub({ tier: tierProp }) {
             {/* Recommended for you today */}
             {isStarter && (
               <div style={{ marginBottom: 28 }}>
-                <div style={s.sectionTitle}>
-                  <img src="/icons/game-target.svg" alt="" width={18} height={18} />
-                  Recommended for you today
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
+                  <div style={{ ...s.sectionTitle, margin: 0 }}>
+                    <img src="/icons/game-target.svg" alt="" width={18} height={18} />
+                    Recommended for you today
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <button
+                      style={{
+                        padding: '5px 12px', borderRadius: 7, fontSize: 12, fontWeight: 600,
+                        border: '1px solid rgba(79,70,229,0.35)',
+                        background: canRefresh ? 'rgba(79,70,229,0.06)' : 'rgba(100,116,139,0.06)',
+                        color: canRefresh ? '#4f46e5' : '#94a3b8',
+                        cursor: canRefresh ? 'pointer' : 'default',
+                        transition: 'all 0.15s',
+                      }}
+                      onClick={() => canRefresh && setShowRefreshModal(true)}
+                      disabled={!canRefresh}
+                      aria-disabled={!canRefresh}
+                    >
+                      Refresh practices
+                    </button>
+                    {!canRefresh && (
+                      <span style={{ fontSize: 11, color: '#94a3b8' }}>
+                        You can refresh once per day.
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div style={s.recommendedGrid}>
                   {recommendedQuests.map(q => (
