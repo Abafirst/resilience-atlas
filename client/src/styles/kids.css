@@ -577,6 +577,81 @@
 
 .value-result { background: #d1fae5; border-radius: 8px; padding: .65rem .9rem; }
 
+/* ── Kids Category Navigation ─────────────────────────────────────────────── */
+.kids-category-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--slate-200, #e2e8f0);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.kids-category-nav-inner {
+  display: flex;
+  gap: .25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: .75rem 1rem;
+}
+
+.kids-category-nav-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.kids-cat-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+  padding: .6rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: var(--slate-50, #f8fafc);
+  color: var(--slate-600, #475569);
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s, transform .1s;
+  flex-shrink: 0;
+}
+
+.kids-cat-tab:hover {
+  background: #ede9fe;
+  color: #5b21b6;
+  border-color: #c4b5fd;
+}
+
+.kids-cat-tab.active {
+  background: #4F46E5;
+  color: #fff;
+  border-color: #4F46E5;
+  box-shadow: 0 2px 8px rgba(79,70,229,.25);
+}
+
+.kids-cat-emoji {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.kids-cat-label {
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .kids-cat-tab {
+    padding: .5rem .85rem;
+  }
+  .kids-cat-emoji {
+    font-size: 1.15rem;
+  }
+}
+
 /* ── Kids Hero ────────────────────────────────────────────────────────────── */
 .kids-hero {
   background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 70%, #1e4a6e 100%);
