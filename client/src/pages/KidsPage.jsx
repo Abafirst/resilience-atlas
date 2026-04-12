@@ -242,12 +242,13 @@ export default function KidsPage() {
 
   const handleCategoryChange = useCallback((id) => {
     setActiveCategory(id);
-    // Scroll to content area on mobile after selecting a category
+    // After React re-renders the newly visible section, scroll it into view.
+    // A single rAF is enough for the layout to settle before scrolling.
     if (id !== 'all') {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         const el = document.getElementById('kids-content-area');
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 50);
+      });
     }
   }, []);
 
