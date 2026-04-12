@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import AndroidWebModal from './AndroidWebModal.jsx';
-import { isCapacitorAndroid } from '../utils/platform.js';
+import AndroidWebModal from '../AndroidWebModal.jsx';
+import { isCapacitorAndroid } from '../../utils/platform.js';
 
 /**
  * Converts a hex colour string to an `rgba(r, g, b, alpha)` value.
