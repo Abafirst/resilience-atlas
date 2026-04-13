@@ -3005,7 +3005,7 @@ export default function ResultsPage() {
         <header style={s.siteHeader} role="banner">
           <div style={s.headerInner}>
             <a href="/" style={s.headerLogo}>
-              <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="32" height="32" />
+              <img src="/assets/logo-256x256.png?v=2026-04-13" alt="The Resilience Atlas™" width="32" height="32" />
               The Resilience Atlas&#8482;
             </a>
             <nav style={s.headerNav} aria-label="Main navigation">
@@ -3191,7 +3191,7 @@ export default function ResultsPage() {
       <header style={s.siteHeader} role="banner">
         <div style={s.headerInner}>
           <a href="/" style={s.headerLogo}>
-            <img src="/assets/compass-icon.svg" alt="The Resilience Atlas™" width="32" height="32" />
+            <img src="/assets/logo-256x256.png?v=2026-04-13" alt="The Resilience Atlas™" width="32" height="32" />
             The Resilience Atlas&#8482;
           </a>
           <nav style={s.headerNav} aria-label="Main navigation">
