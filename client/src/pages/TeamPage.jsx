@@ -403,7 +403,7 @@ export default function TeamPage() {
         {/* Header */}
         <header style={s.header} role="banner">
           <a href="/" style={s.logo}>
-            <img src="/assets/compass-icon.svg" alt="" width="28" height="28" />
+            <img src="/assets/logo-256x256.png?v=2026-04-13" alt="" width="28" height="28" />
             The Resilience Atlas™
           </a>
           <nav style={s.nav} aria-label="Main navigation">
