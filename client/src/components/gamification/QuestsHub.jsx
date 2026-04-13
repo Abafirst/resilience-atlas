@@ -269,11 +269,11 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
   const [notes, setNotes] = useState({});
   const [completing, setCompleting] = useState(false);
   const allDone = quest.steps.every(s => completedSteps.has(s.id));
-  const celebSoundRef = useRef(false);
+  const hasPlayedCelebSoundRef = useRef(false);
 
   useEffect(() => {
-    if (allDone && !celebSoundRef.current && isSfxEnabled()) {
-      celebSoundRef.current = true;
+    if (allDone && !hasPlayedCelebSoundRef.current && isSfxEnabled()) {
+      hasPlayedCelebSoundRef.current = true;
       playQuestCompleteSound();
     }
   }, [allDone]);

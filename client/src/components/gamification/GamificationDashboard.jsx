@@ -533,15 +533,10 @@ export default function GamificationDashboard() {
                 transition: 'background 0.15s, border-color 0.15s, color 0.15s',
               }}
             >
-              <img
-                src={sfxEnabled ? '/icons/streaks.svg' : '/icons/lock.svg'}
-                alt=""
-                aria-hidden="true"
-                width={14}
-                height={14}
-                style={{ opacity: sfxEnabled ? 1 : 0.5 }}
-              />
-              Sounds
+              <span aria-hidden="true" style={{ fontSize: 14, lineHeight: 1 }}>
+                {sfxEnabled ? '\u266A' : '\u266B'}
+              </span>
+              {sfxEnabled ? 'Sounds: On' : 'Sounds: Off'}
             </button>
           </nav>
         </header>
