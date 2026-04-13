@@ -69,16 +69,35 @@ const FROM = process.env.EMAIL_FROM || process.env.YAHOO_EMAIL || 'noreply@resil
 /* ── Internal helpers ──────────────────────────────────────────────────────── */
 
 /**
+ * Returns true when DISABLE_USER_EMAILS=true is set in the environment.
+ * Used to suppress user-facing transactional emails in staging/testing.
+ *
+ * @returns {boolean}
+ */
+function isUserEmailsDisabled() {
+  return process.env.DISABLE_USER_EMAILS === 'true';
+}
+
+/**
  * Send an email using the pre-built { subject, html, text } object returned
  * by a template builder function.
  *
  * Uses SendGrid when SENDGRID_API_KEY is set; falls back to Nodemailer.
  *
+ * When DISABLE_USER_EMAILS=true, user-facing emails are suppressed.
+ * Pass { isAdmin: true } to bypass the flag for admin/operational emails.
+ *
  * @param {string}  to         Recipient address
  * @param {{ subject: string, html: string, text: string }} emailObj
- * @returns {Promise<Object>}  SendGrid response or Nodemailer info object
+ * @param {{ isAdmin?: boolean }} [opts]
+ * @returns {Promise<Object>}  SendGrid response, Nodemailer info, or skip marker
  */
-async function _send(to, emailObj) {
+async function _send(to, emailObj, { isAdmin = false } = {}) {
+  if (!isAdmin && isUserEmailsDisabled()) {
+    logger.warn(`[emailService] User email suppressed (DISABLE_USER_EMAILS=true): subject="${emailObj.subject}"`);
+    return { skipped: true, reason: 'DISABLE_USER_EMAILS' };
+  }
+
   if (process.env.SENDGRID_API_KEY) {
     const msg = {
       to,
@@ -442,7 +461,7 @@ async function sendTeamEnterpriseAdminNotification(to, vars) {
     text: ['Atlas Team Enterprise Inquiry', '='.repeat(40), ...lines].join('\n'),
   };
 
-  return _send(to, emailObj);
+  return _send(to, emailObj, { isAdmin: true });
 }
 
 /**
