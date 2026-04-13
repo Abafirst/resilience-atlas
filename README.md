@@ -196,6 +196,139 @@ See [`docs/brand/social-templates.md`](docs/brand/social-templates.md) for the f
 
 ---
 
+## 💻 Local Development
+
+This section explains how to run the full stack locally so that every feature works without committing any secrets.
+
+### Prerequisites
+
+| Tool | Minimum version | Notes |
+|------|----------------|-------|
+| Node.js | 18 LTS | `node --version` |
+| npm | 9+ | bundled with Node |
+| MongoDB | Atlas free tier or local 6+ | optional — app runs without it |
+
+### 1. Clone and install dependencies
+
+```bash
+git clone https://github.com/Abafirst/resilience-atlas.git
+cd resilience-atlas
+
+# Backend dependencies
+cd backend && npm install && cd ..
+
+# Frontend dependencies
+cd client && npm install && cd ..
+```
+
+### 2. Configure backend environment variables
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Open `backend/.env` and fill in your real values.  The minimum set needed to
+get the frontend fully configured at runtime:
+
+```env
+PORT=3000
+AUTH0_DOMAIN=your-tenant.us.auth0.com
+AUTH0_CLIENT_ID=your-auth0-client-id
+AUTH0_AUDIENCE=https://your-api-identifier   # optional
+AUTH0_SECRET=<long-random-string>            # express-openid-connect session secret
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
+
+> **Why backend `.env`, not `client/.env.local`?**
+> The React SPA fetches `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_AUDIENCE`, and
+> `STRIPE_PUBLISHABLE_KEY` at *runtime* from the backend `GET /config` endpoint.
+> Setting them in `backend/.env` means both the backend CSP headers and the
+> frontend Auth0Provider share the exact same values automatically.
+> You only need `client/.env.local` (see step 3) if you want to override a value
+> at *build time* (e.g. working offline without the backend running).
+
+### 3. (Optional) Configure frontend build-time fallbacks
+
+The Vite dev server proxies `/config` → `http://localhost:3000/config`, so if
+the backend is running you usually do **not** need a client `.env.local`.
+
+If you ever need build-time overrides:
+
+```bash
+cd client
+cp .env.example .env.local
+# Edit .env.local — values here shadow whatever /config returns
+```
+
+### 4. Start the backend
+
+```bash
+cd backend
+npm run dev        # uses nodemon for auto-reload
+```
+
+You should see:
+- `✅ Server running on port 3000`
+- `✅ Mounted route: /auth`, `/api/quiz`, `/api/stripe`, …
+- Either a MongoDB connected message or `⚠️ MONGODB_URI not set` (expected if you skipped DB setup)
+- If `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_SECRET` are all set: no OIDC warning
+
+### 5. Start the frontend
+
+In a **separate terminal**:
+
+```bash
+cd client
+npm run dev        # Vite dev server on http://localhost:5173
+```
+
+### 6. Verify the setup
+
+| URL | Expected result |
+|-----|----------------|
+| `http://localhost:3000/health` | `{"status":"OK","service":"Resilience Atlas API",...}` |
+| `http://localhost:5173/config` | JSON with non-null `auth0Domain`, `stripePublishableKey`, … |
+| `http://localhost:5173` | React SPA loads without Auth0 errors in the console |
+
+### How the Vite proxy works
+
+In development, Vite forwards these path prefixes from `http://localhost:5173`
+to `http://localhost:3000` (configured in `client/vite.config.js`):
+
+| Proxy prefix | Forwarded to |
+|---|---|
+| `/api` | `http://localhost:3000/api` |
+| `/auth` | `http://localhost:3000/auth` |
+| `/config` | `http://localhost:3000/config` |
+| `/user-status` | `http://localhost:3000/user-status` |
+| `/access` | `http://localhost:3000/access` |
+
+This means the frontend never hard-codes `http://localhost:3000`; all requests
+use relative paths that work identically in production (where the Express server
+serves the React build directly).
+
+**The backend must be running on port 3000** for the proxy to work.  If you
+change `PORT` in `backend/.env`, update the proxy target in
+`client/vite.config.js` to match.
+
+### Where to put env vars (summary)
+
+| Variable type | File | Committed? |
+|---|---|---|
+| Backend secrets (DB, Stripe secret, Auth0 secret) | `backend/.env` | ❌ Never |
+| Public runtime config (Auth0 domain, publishable key) | `backend/.env` → served via `/config` | ❌ Never |
+| Vite build-time overrides | `client/.env.local` | ❌ Never |
+| Templates with placeholder values | `backend/.env.example`, `client/.env.example` | ✅ Yes |
+
+### Security reminder
+
+- `.env` and `.env.local` are in `.gitignore` — they will not be committed.
+- **Never** paste real secrets into `.env.example` files.
+- Rotate `AUTH0_SECRET` and `JWT_SECRET` immediately if they are ever exposed.
+
+---
+
 ## 🚀 Deployment
 
 ### Frontend Build
