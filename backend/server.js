@@ -252,6 +252,16 @@ app.use(sanitiseInput);
 // without falling through to the SPA catch-all.
 const clientDist = path.join(__dirname, "../client/dist");
 
+// Serve app-owned assets (logos, shared images) from public/assets at /assets/*.
+// This must come BEFORE the Vite /assets mount so that files like
+// logo-256x256.png are found here first and served correctly.
+// fallthrough:true allows requests for files that don't exist in public/assets
+// to continue to the Vite assets mount below.
+app.use(
+  "/assets",
+  express.static(path.join(__dirname, "../public/assets"), { fallthrough: true })
+);
+
 // Explicitly mount the Vite assets directory with fallthrough:false so that
 // any /assets/* request that doesn't match a real file returns 404 immediately
 // instead of falling through to API handlers (which return JSON) or the SPA
