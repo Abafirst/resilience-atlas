@@ -363,6 +363,14 @@ No manual build step is required when deploying via Railway with the Dockerfile 
 
 `backend/server.js` serves static files from `client/dist` first (the React production build), then falls back to the legacy `public/` directory. Any route not handled by the API returns `client/dist/index.html` so React Router can handle client-side navigation.
 
+### Static Assets (`/assets/*`)
+
+All files under `public/assets/` in the repository root are served directly at `/assets/<filename>` by the Express static middleware. This includes brand icons and shared images needed by both the React SPA and any standalone HTML pages (`quiz.html`, `research.html`, etc.).
+
+- **Compass icon** — `public/assets/compass-icon.svg` is served at `/assets/compass-icon.svg` and is referenced by `SiteHeader.jsx` and other components for the top-left header logo.
+  - Source master: `brand/compass-symbol/svg/compass-icon.svg`
+  - If the file is ever missing or updated, copy the master here to restore the logo.
+
 ---
 
 
