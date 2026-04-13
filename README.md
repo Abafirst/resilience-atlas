@@ -367,9 +367,14 @@ No manual build step is required when deploying via Railway with the Dockerfile 
 
 All files under `public/assets/` in the repository root are served directly at `/assets/<filename>` by the Express static middleware. This includes brand icons and shared images needed by both the React SPA and any standalone HTML pages (`quiz.html`, `research.html`, etc.).
 
-- **Compass icon** — `public/assets/compass-icon.svg` is served at `/assets/compass-icon.svg` and is referenced by `SiteHeader.jsx` and other components for the top-left header logo.
-  - Source master: `brand/compass-symbol/svg/compass-icon.svg`
+The server mounts `public/assets` at `/assets/*` first (with `fallthrough:true`), then `client/dist/assets` second (with `fallthrough:false`). This means:
+- App-owned assets like `logo-256x256.png` are served from `public/assets/`.
+- Vite-generated hashed JS/CSS bundles are served from `client/dist/assets/`.
+
+- **Header logo** — `public/assets/logo-256x256.png` is served at `/assets/logo-256x256.png` and is referenced by `SiteHeader.jsx` and other components for the top-left header logo.
+  - Source master: `brand/symbol/png/logo-256x256.png`
   - If the file is ever missing or updated, copy the master here to restore the logo.
+- **Compass icon** — `public/assets/compass-icon.svg` is served at `/assets/compass-icon.svg` and is used by the PDF generation service (`backend/services/pdfService.js`). Keep this file in place.
 
 ---
 
