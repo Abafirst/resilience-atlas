@@ -47,55 +47,64 @@ const SKILL_SUBTITLES = {
   'Somatic-Regulative':    'Grounder',
 };
 
+/* ── Maps a category id to the stable section anchor for that category ── */
+const CATEGORY_SECTION_MAP = {
+  activities: 'kids-activities',
+  stories:    'kids-stories',
+  videos:     'kids-videos',
+  games:      'kids-games',
+  skills:     'kids-skills',
+};
+
 /* ── Richer modal content for each skill ── */
 const SKILL_DETAILS = {
   'Agentic-Generative': {
     fullDesc: "Builders are the doers — they take action, set goals, and make things happen even when it feels hard. A Builder doesn't wait for permission; they find a way forward one small step at a time. You show this skill when you start a project, help solve a problem, or keep going after a mistake. Every great journey begins with one brave step.",
     tryThis: [
-      { label: 'Set a Tiny Goal', href: '/kids?category=activities' },
-      { label: 'Builder Stories', href: '/kids?category=stories' },
-      { label: 'Action Activity', href: '/kids?category=activities' },
+      { label: 'Set a Tiny Goal', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
+      { label: 'Builder Stories', href: '/kids?category=stories#kids-stories',       category: 'stories',    sectionId: 'kids-stories'    },
+      { label: 'Action Activity', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
     ],
   },
   'Relational-Connective': {
     fullDesc: "Connectors are warm, caring, and always notice when someone feels left out. This skill is about building real friendships, asking for help when you need it, and letting people know they matter. You use this skill when you include a new kid, check in on a friend, or tell someone how you're feeling. Connection is a superpower — it makes hard things easier.",
     tryThis: [
-      { label: 'Connection Stories', href: '/kids?category=stories' },
-      { label: 'Friendship Activities', href: '/kids?category=activities' },
+      { label: 'Connection Stories',   href: '/kids?category=stories#kids-stories',       category: 'stories',    sectionId: 'kids-stories'    },
+      { label: 'Friendship Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
     ],
   },
   'Spiritual-Reflective': {
     fullDesc: "Guides are the deep thinkers who ask big questions: Why am I here? What really matters? What do I believe? This skill helps you find meaning in tough times and stay true to your values. You use it when you reflect on a hard day, help others figure out what's important, or feel connected to something bigger than yourself. Guides light the way for others.",
     tryThis: [
-      { label: 'Reflection Activities', href: '/kids?category=activities' },
-      { label: 'Values Builder', href: '/kids?category=skills' },
+      { label: 'Reflection Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
+      { label: 'Values Builder',        href: '/kids?category=skills#kids-skills',         category: 'skills',     sectionId: 'kids-skills'     },
     ],
   },
   'Emotional-Adaptive': {
     fullDesc: "Feelers are in tune with their emotions — and the emotions of the people around them. This skill is about naming feelings, riding the waves of big emotions, and bouncing back after hard moments. You use it when you notice you're scared or sad, take a breath before reacting, or support a friend who's upset. Feeling your feelings (all of them) is a real strength.",
     tryThis: [
-      { label: 'Emotion Activities', href: '/kids?category=activities' },
-      { label: 'Feeler Stories', href: '/kids?category=stories' },
+      { label: 'Emotion Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
+      { label: 'Feeler Stories',     href: '/kids?category=stories#kids-stories',       category: 'stories',    sectionId: 'kids-stories'    },
     ],
   },
   'Somatic-Regulative': {
     fullDesc: "Grounders know that your body holds wisdom. This skill is about listening to your body — noticing tension, using breath and movement to calm down, and building steady habits that help you feel safe. You use it when you take slow breaths before a test, go for a walk when you're upset, or get enough sleep so you can face the day. Your body is your first home.",
     tryThis: [
-      { label: 'Body Activities', href: '/kids?category=activities' },
-      { label: 'Grounder Stories', href: '/kids?category=stories' },
+      { label: 'Body Activities',   href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
+      { label: 'Grounder Stories',  href: '/kids?category=stories#kids-stories',       category: 'stories',    sectionId: 'kids-stories'    },
     ],
   },
   'Cognitive-Narrative': {
     fullDesc: "Thinkers are story-changers — they notice the stories they tell about themselves and choose to rewrite the unhelpful ones. This skill is about seeing challenges as chances to grow, catching negative self-talk, and building a growth mindset. You use it when you say 'I can't do this yet' instead of 'I can't do this', or when you see a hard situation from a new angle. Your mind is a powerful tool.",
     tryThis: [
-      { label: 'Mindset Activities', href: '/kids?category=activities' },
-      { label: 'Thinker Stories', href: '/kids?category=stories' },
+      { label: 'Mindset Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' },
+      { label: 'Thinker Stories',    href: '/kids?category=stories#kids-stories',       category: 'stories',    sectionId: 'kids-stories'    },
     ],
   },
 };
 
 /* ── Skill Modal ── */
-function SkillModal({ skill, onClose }) {
+function SkillModal({ skill, onClose, onTryThis }) {
   const modalRef = useRef(null);
   const subtitle = SKILL_SUBTITLES[skill.name] || skill.name;
   const details  = SKILL_DETAILS[skill.name] || {};
@@ -164,13 +173,13 @@ function SkillModal({ skill, onClose }) {
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
               {details.tryThis.map((item) => (
-                <a
+                <button
                   key={item.label}
-                  href={item.href}
+                  onClick={() => onTryThis(item)}
                   className="skill-modal-try-btn"
                 >
                   {item.label}
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -399,10 +408,25 @@ export default function KidsPage() {
     // A single rAF is enough for the layout to settle before scrolling.
     if (id !== 'all') {
       requestAnimationFrame(() => {
-        const el = document.getElementById('kids-content-area');
+        const sectionId = CATEGORY_SECTION_MAP[id] || 'kids-content-area';
+        const el = document.getElementById(sectionId) || document.getElementById('kids-content-area');
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     }
+  }, []);
+
+  const handleTryThis = useCallback((item) => {
+    // 1) Close the modal
+    setActiveSkill(null);
+    // 2) Switch to the target category
+    const category = item.category || 'all';
+    setActiveCategory(category);
+    // 3) After React renders the newly visible section, scroll to the specific anchor
+    requestAnimationFrame(() => {
+      const sectionId = item.sectionId || CATEGORY_SECTION_MAP[category] || 'kids-content-area';
+      const el = document.getElementById(sectionId) || document.getElementById('kids-content-area');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }, []);
 
   useEffect(() => {
@@ -412,7 +436,7 @@ export default function KidsPage() {
   return (
     <>
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
-      {activeSkill && <SkillModal skill={activeSkill} onClose={closeSkill} />}
+      {activeSkill && <SkillModal skill={activeSkill} onClose={closeSkill} onTryThis={handleTryThis} />}
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <SiteHeader activePage="kids" />
@@ -495,7 +519,7 @@ export default function KidsPage() {
 
         {/* Stories */}
         {show(activeCategory, 'stories') && (
-          <section className="stories-section" id="stories" aria-labelledby="stories-heading">
+          <section className="stories-section kids-scroll-anchor" id="kids-stories" aria-labelledby="stories-heading">
             <div className="section-inner">
               <div className="section-header" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
                 <span className="section-label">Resilience Stories</span>
@@ -558,11 +582,15 @@ export default function KidsPage() {
         )}
 
         {/* Video Stories */}
-        {show(activeCategory, 'videos') && <VideoStories />}
+        {show(activeCategory, 'videos') && (
+          <div id="kids-videos" className="kids-scroll-anchor">
+            <VideoStories />
+          </div>
+        )}
 
         {/* Skill Builders */}
         {show(activeCategory, 'skills') && (
-          <section className="skill-builders-section" id="skill-builders" aria-labelledby="skill-builders-heading">
+          <section className="skill-builders-section kids-scroll-anchor" id="kids-skills" aria-labelledby="skill-builders-heading">
             <div className="section-header">
               <span className="section-label">Skills Library</span>
               <h2 id="skill-builders-heading">Try a Skill Builder</h2>
@@ -580,7 +608,7 @@ export default function KidsPage() {
 
         {/* Interactive Games Hub */}
         {show(activeCategory, 'games') && (
-          <section className="games-section" id="games" aria-labelledby="games-heading">
+          <section className="games-section kids-scroll-anchor" id="kids-games" aria-labelledby="games-heading">
             <div className="section-header" style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <span className="section-label">Play &amp; Discover</span>
               <h2 id="games-heading">Interactive Discovery Games</h2>
@@ -594,7 +622,7 @@ export default function KidsPage() {
 
         {/* Age-group activities */}
         {show(activeCategory, 'activities') && (
-          <section className="activity-guides-section" id="activity-guides" aria-labelledby="activity-guides-heading">
+          <section className="activity-guides-section kids-scroll-anchor" id="kids-activities" aria-labelledby="activity-guides-heading">
             <div className="section-inner">
               <div className="section-header">
                 <span className="section-label">Activity Guides</span>

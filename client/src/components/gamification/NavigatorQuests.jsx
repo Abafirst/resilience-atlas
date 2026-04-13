@@ -11,11 +11,12 @@
  * State machine per quest:
  *   IDLE → ACTIVE (start quest) → STEP (step detail) → DONE (celebration)
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ADULT_QUESTS, DIMENSION_COLORS } from '../../data/adultGames.js';
 import { isStarterOrAbove, isNavigatorOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
 import { apiUrl } from '../../api/baseUrl.js';
+import { playQuestCompleteSound, isSfxEnabled } from '../../utils/soundEffects.js';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -372,6 +373,14 @@ function StepModal({ step, questAccent, completing, errorMsg, onComplete, onClos
 }
 
 function CelebrationModal({ quest, onClose }) {
+  const hasPlayedRef = useRef(false);
+  useEffect(() => {
+    if (!hasPlayedRef.current && isSfxEnabled()) {
+      hasPlayedRef.current = true;
+      playQuestCompleteSound();
+    }
+  }, []);
+
   return (
     <div style={s.overlay} onClick={onClose} role="dialog" aria-modal="true" aria-label="Quest complete!">
       <div style={s.modal} onClick={e => e.stopPropagation()}>

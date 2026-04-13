@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import ConfettiCelebration from './ConfettiCelebration.jsx';
-import { playBadgeUnlockSound } from '../../utils/soundEffects.js';
+import { playBadgeUnlockSound, isSfxEnabled } from '../../utils/soundEffects.js';
 
 /* ── Rarity styling ──────────────────────────────────────────────────────── */
 const RARITY_CONFIG = {
@@ -47,9 +47,9 @@ export default function AchievementNotification({ badge, onClose }) {
     }
   }, []);
 
-  /* Play celebration sound on mount */
+  /* Play celebration sound on mount (only if user has enabled sounds) */
   useEffect(() => {
-    if (badge) playBadgeUnlockSound();
+    if (badge && isSfxEnabled()) playBadgeUnlockSound();
   }, [badge]);
 
   /* Close on Escape key */

@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ADULT_QUESTS, DIMENSION_COLORS } from '../../data/adultGames.js';
 import { isNavigatorOrAbove, isStarterOrAbove, CHECKOUT_URLS } from '../../data/gamificationContent.js';
+import { playQuestCompleteSound, isSfxEnabled } from '../../utils/soundEffects.js';
 
 // ── Local-storage helpers ────────────────────────────────────────────────────
 const LS_KEY = 'ra_quest_progress';
@@ -268,6 +269,14 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
   const [notes, setNotes] = useState({});
   const [completing, setCompleting] = useState(false);
   const allDone = quest.steps.every(s => completedSteps.has(s.id));
+  const celebSoundRef = useRef(false);
+
+  useEffect(() => {
+    if (allDone && !celebSoundRef.current && isSfxEnabled()) {
+      celebSoundRef.current = true;
+      playQuestCompleteSound();
+    }
+  }, [allDone]);
 
   if (allDone) {
     return (

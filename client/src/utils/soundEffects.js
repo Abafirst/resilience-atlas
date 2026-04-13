@@ -5,6 +5,26 @@
  * has not yet occurred (browser autoplay policy).
  */
 
+// ── User preference (localStorage) ──────────────────────────────────────────
+
+const SFX_LS_KEY = 'ra_sfx_enabled';
+
+/** Returns true if the user has enabled sounds (default: false). */
+export function isSfxEnabled() {
+  try {
+    return localStorage.getItem(SFX_LS_KEY) === 'true';
+  } catch (_) {
+    return false;
+  }
+}
+
+/** Persist the user's sound preference. */
+export function setSfxEnabled(enabled) {
+  try {
+    localStorage.setItem(SFX_LS_KEY, enabled ? 'true' : 'false');
+  } catch (_) { /* storage unavailable */ }
+}
+
 function getAudioContext() {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -112,4 +132,34 @@ export function playPathwayStartSound() {
   gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
   osc.start(start);
   osc.stop(start + 0.3);
+}
+
+/**
+ * Plays a celebratory quest-complete fanfare — major triad arpeggiated upward,
+ * ending on a sustained top note.  Used for "Quest Complete!" modals.
+ */
+export function playQuestCompleteSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  // C5 → E5 → G5 → C6, each note slightly louder, last note sustained a bit longer
+  const notes = [
+    { freq: 523.25, delay: 0,    dur: 0.38, vol: 0.22 },
+    { freq: 659.25, delay: 0.12, dur: 0.38, vol: 0.25 },
+    { freq: 783.99, delay: 0.24, dur: 0.38, vol: 0.28 },
+    { freq: 1046.50, delay: 0.38, dur: 0.65, vol: 0.30 },
+  ];
+  notes.forEach(({ freq, delay, dur, vol }) => {
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const start = ctx.currentTime + delay;
+    gain.gain.setValueAtTime(0, start);
+    gain.gain.linearRampToValueAtTime(vol, start + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + dur);
+    osc.start(start);
+    osc.stop(start + dur + 0.05);
+  });
 }
