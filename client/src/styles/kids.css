@@ -137,6 +137,9 @@
   padding: .35rem .9rem;
   border-radius: 999px;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
   transition: background .15s, color .15s;
 }
 
@@ -1174,3 +1177,8 @@
   margin: 0 auto;
 }
 
+
+/* ── Scroll anchors: offset for sticky category nav (~80px) ── */
+.kids-scroll-anchor {
+  scroll-margin-top: 80px;
+}

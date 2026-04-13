@@ -30,27 +30,27 @@ const SKILL_SUBTITLES = {
 const SKILL_DETAILS = {
   'Agentic-Generative': {
     fullDesc: "Builders are the doers — they take action, set goals, and make things happen even when it feels hard.",
-    tryThis: [{ label: 'Set a Tiny Goal', href: '/kids?category=activities' }],
+    tryThis: [{ label: 'Set a Tiny Goal', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' }],
   },
   'Relational-Connective': {
     fullDesc: "Connectors are warm, caring, and always notice when someone feels left out.",
-    tryThis: [{ label: 'Connection Stories', href: '/kids?category=stories' }],
+    tryThis: [{ label: 'Connection Stories', href: '/kids?category=stories#kids-stories', category: 'stories', sectionId: 'kids-stories' }],
   },
   'Spiritual-Reflective': {
     fullDesc: "Guides are the deep thinkers who ask big questions.",
-    tryThis: [{ label: 'Reflection Activities', href: '/kids?category=activities' }],
+    tryThis: [{ label: 'Reflection Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' }],
   },
   'Emotional-Adaptive': {
     fullDesc: "Feelers are in tune with their emotions.",
-    tryThis: [{ label: 'Emotion Activities', href: '/kids?category=activities' }],
+    tryThis: [{ label: 'Emotion Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' }],
   },
   'Somatic-Regulative': {
     fullDesc: "Grounders know that your body holds wisdom.",
-    tryThis: [{ label: 'Body Activities', href: '/kids?category=activities' }],
+    tryThis: [{ label: 'Body Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' }],
   },
   'Cognitive-Narrative': {
     fullDesc: "Thinkers are story-changers.",
-    tryThis: [{ label: 'Mindset Activities', href: '/kids?category=activities' }],
+    tryThis: [{ label: 'Mindset Activities', href: '/kids?category=activities#kids-activities', category: 'activities', sectionId: 'kids-activities' }],
   },
 };
 
@@ -107,6 +107,26 @@ describe('SKILL_DETAILS data integrity', () => {
         expect(item.label.length).toBeGreaterThan(0);
         expect(typeof item.href).toBe('string');
         expect(item.href.startsWith('/')).toBe(true);
+      });
+    });
+  });
+
+  test('all tryThis items have category and sectionId for SPA navigation', () => {
+    const validCategories = ['activities', 'stories', 'videos', 'games', 'skills'];
+    DIMENSIONS.forEach(dim => {
+      SKILL_DETAILS[dim].tryThis.forEach(item => {
+        expect(typeof item.category).toBe('string');
+        expect(validCategories).toContain(item.category);
+        expect(typeof item.sectionId).toBe('string');
+        expect(item.sectionId.startsWith('kids-')).toBe(true);
+      });
+    });
+  });
+
+  test('tryThis hrefs include hash anchor matching sectionId', () => {
+    DIMENSIONS.forEach(dim => {
+      SKILL_DETAILS[dim].tryThis.forEach(item => {
+        expect(item.href).toContain(`#${item.sectionId}`);
       });
     });
   });

@@ -16,6 +16,7 @@ import AdultGameHub from './AdultGameHub.jsx';
 import ResilienceAdventureHub from './ResilienceAdventureHub.jsx';
 import '../../styles/gamification-animations.css';
 import { apiUrl } from '../../api/baseUrl.js';
+import { isSfxEnabled, setSfxEnabled } from '../../utils/soundEffects.js';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
@@ -335,6 +336,13 @@ export default function GamificationDashboard() {
   const [tierError, setTierError]     = useState(null);
   const [tierRetryKey, setTierRetryKey] = useState(0); // incremented to force-retry the tier check
   const [paymentBanner, setPaymentBanner] = useState(null);
+  const [sfxEnabled, setSfxEnabledState] = useState(() => isSfxEnabled());
+
+  const handleSfxToggle = () => {
+    const next = !sfxEnabled;
+    setSfxEnabled(next);
+    setSfxEnabledState(next);
+  };
 
   useEffect(() => {
     if (auth0Loading) return; // Wait for Auth0 to finish initialising
@@ -505,6 +513,31 @@ export default function GamificationDashboard() {
             <a href="/gamification" style={s.navLinkActive}>
               Resilience Journey
             </a>
+            <button
+              onClick={handleSfxToggle}
+              aria-pressed={sfxEnabled}
+              aria-label={sfxEnabled ? 'Sounds on — click to turn off' : 'Sounds off — click to turn on'}
+              title={sfxEnabled ? 'Sounds on' : 'Sounds off'}
+              style={{
+                background: sfxEnabled ? '#e0f2fe' : 'transparent',
+                border: `1.5px solid ${sfxEnabled ? '#38bdf8' : '#cbd5e1'}`,
+                borderRadius: 8,
+                cursor: 'pointer',
+                padding: '4px 10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+                fontSize: 12,
+                fontWeight: 600,
+                color: sfxEnabled ? '#0369a1' : '#64748b',
+                transition: 'background 0.15s, border-color 0.15s, color 0.15s',
+              }}
+            >
+              <span aria-hidden="true" style={{ fontSize: 14, lineHeight: 1 }}>
+                {sfxEnabled ? '\u266A' : '\u266B'}
+              </span>
+              {sfxEnabled ? 'Sounds: On' : 'Sounds: Off'}
+            </button>
           </nav>
         </header>
 
