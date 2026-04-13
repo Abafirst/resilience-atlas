@@ -83,6 +83,35 @@ The application sends all transactional emails through SendGrid's SMTP relay usi
 
 ---
 
+## Disabling User Emails (Staging / Testing)
+
+Set `DISABLE_USER_EMAILS=true` to suppress all user-facing transactional emails without touching your SendGrid or SMTP configuration. This is useful for staging environments where you want to run the full application flow without accidentally emailing real users.
+
+**Emails suppressed when `DISABLE_USER_EMAILS=true`:**
+- Welcome emails
+- Assessment results
+- Report-ready notifications
+- 90-day reassessment reminders
+- Streak milestone emails
+- Team invitation emails
+- Purchase/welcome confirmation emails
+- Daily micro-practice emails
+- Growth milestone emails
+
+**Emails that are always sent (admin bypass):**
+- Enterprise inquiry notifications sent to the admin address (POST `/api/growth/team-lead`)
+
+When an email is suppressed, the service logs a warning and returns `{ skipped: true, reason: 'DISABLE_USER_EMAILS' }` instead of calling SendGrid or Nodemailer.
+
+```env
+# In your staging .env or Railway staging Variables:
+DISABLE_USER_EMAILS=true
+```
+
+Leave this variable unset (or set to any value other than `"true"`) in production.
+
+---
+
 ## MongoDB Atlas (Cloud)
 
 1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com)

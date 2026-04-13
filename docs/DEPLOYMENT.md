@@ -56,6 +56,18 @@ Railway will automatically inject `MONGODB_URI` into your app environment.
 
 Railway auto-deploys on every push to `main`. You can also trigger a manual deploy from the dashboard.
 
+### Staging: Disabling User Emails
+
+On staging you typically want the full app to run without emailing real users. Add one variable to your Railway staging environment:
+
+```
+DISABLE_USER_EMAILS=true
+```
+
+This suppresses all user-facing transactional emails (welcome, assessment results, reminders, invitations, purchase confirmations, etc.) while still allowing admin/enterprise inquiry notifications to be delivered. When an email is suppressed the service logs a warning instead of calling SendGrid or Nodemailer.
+
+> **Important:** Do **not** set `DISABLE_USER_EMAILS=true` in your production environment.
+
 ---
 
 ## Docker

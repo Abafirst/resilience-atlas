@@ -627,6 +627,81 @@ describe('emailService — sendPurchaseWelcome', () => {
   });
 });
 
+/* ────────────────────────────────────────────────────────────────────────── */
+/* DISABLE_USER_EMAILS flag tests                                               */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+describe('emailService — DISABLE_USER_EMAILS flag', () => {
+  beforeEach(() => {
+    mockSendMail.mockClear();
+    delete process.env.DISABLE_USER_EMAILS;
+  });
+
+  afterEach(() => {
+    delete process.env.DISABLE_USER_EMAILS;
+  });
+
+  it('sends normally when DISABLE_USER_EMAILS is not set', async () => {
+    const result = await emailService.sendWelcome('user@example.com', { firstName: 'Alice' });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+    expect(result).not.toHaveProperty('skipped');
+  });
+
+  it('suppresses user email when DISABLE_USER_EMAILS=true', async () => {
+    process.env.DISABLE_USER_EMAILS = 'true';
+    const result = await emailService.sendWelcome('user@example.com', { firstName: 'Alice' });
+    expect(mockSendMail).not.toHaveBeenCalled();
+    expect(result).toEqual({ skipped: true, reason: 'DISABLE_USER_EMAILS' });
+  });
+
+  it('suppresses sendAssessmentResults when DISABLE_USER_EMAILS=true', async () => {
+    process.env.DISABLE_USER_EMAILS = 'true';
+    const result = await emailService.sendAssessmentResults('user@example.com', { firstName: 'Bob', overallScore: 80 });
+    expect(mockSendMail).not.toHaveBeenCalled();
+    expect(result.skipped).toBe(true);
+  });
+
+  it('suppresses sendReminder when DISABLE_USER_EMAILS=true', async () => {
+    process.env.DISABLE_USER_EMAILS = 'true';
+    const result = await emailService.sendReminder('user@example.com', { firstName: 'Carol' });
+    expect(mockSendMail).not.toHaveBeenCalled();
+    expect(result.skipped).toBe(true);
+  });
+
+  it('suppresses sendTeamInvitation when DISABLE_USER_EMAILS=true', async () => {
+    process.env.DISABLE_USER_EMAILS = 'true';
+    const result = await emailService.sendTeamInvitation('user@example.com', {
+      organizationName: 'Acme',
+      invitationLink: 'https://example.com/join',
+    });
+    expect(mockSendMail).not.toHaveBeenCalled();
+    expect(result.skipped).toBe(true);
+  });
+
+  it('does NOT suppress sendTeamEnterpriseAdminNotification when DISABLE_USER_EMAILS=true', async () => {
+    process.env.DISABLE_USER_EMAILS = 'true';
+    const result = await emailService.sendTeamEnterpriseAdminNotification('admin@example.com', {
+      contactName: 'Jane',
+      companyName: 'Acme Corp',
+      email: 'jane@acme.com',
+    });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+    expect(result).not.toHaveProperty('skipped');
+  });
+
+  it('does not suppress emails when DISABLE_USER_EMAILS=false', async () => {
+    process.env.DISABLE_USER_EMAILS = 'false';
+    await emailService.sendWelcome('user@example.com', { firstName: 'Dave' });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not suppress emails when DISABLE_USER_EMAILS is set to an arbitrary string', async () => {
+    process.env.DISABLE_USER_EMAILS = 'yes';
+    await emailService.sendWelcome('user@example.com', { firstName: 'Eve' });
+    expect(mockSendMail).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('emailService — capitalize utility', () => {
   it('capitalizes a lowercase word', () => {
     expect(emailService.capitalize('hello')).toBe('Hello');
