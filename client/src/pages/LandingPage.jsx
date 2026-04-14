@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from 'react-router-dom';
 
 const DIMENSIONS = [
   { key: 'relational',  icon: '/icons/relational-connective.svg',  name: 'Relational-Connective',  desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
@@ -12,6 +13,7 @@ const DIMENSIONS = [
 
 export default function LandingPage() {
   const { loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -29,7 +31,7 @@ export default function LandingPage() {
             <button
               type="button"
               className="btn-hero-primary"
-              onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
+              onClick={() => navigate('/quiz')}
             >
               <span aria-hidden="true">&#9654;</span> Explore Your Map
             </button>
@@ -105,7 +107,7 @@ export default function LandingPage() {
             <button
               type="button"
               className="btn-hero-primary"
-              onClick={() => loginWithRedirect({ appState: { returnTo: '/' } })}
+              onClick={() => navigate('/quiz')}
             >
               Discover Your Dimensions
             </button>
