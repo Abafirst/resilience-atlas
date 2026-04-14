@@ -445,7 +445,7 @@ export default function AboutPage() {
 
       {/* Hero */}
       <section className="about-hero" aria-labelledby="about-heading">
-        <span className="about-hero hero-tagline">About the Resilience Atlas</span>
+        <span className="about-hero hero-tagline">1About the Resilience Atlas</span>
         <h1 id="about-heading">The Resilience Atlas&#8482;<br />Maps, Not Formulas.</h1>
         <p className="hero-sub">
           A research-based resilience platform founded on published doctoral research&mdash;mapping
