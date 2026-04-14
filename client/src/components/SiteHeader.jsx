@@ -97,7 +97,7 @@ export default function SiteHeader({
       <div className="header-inner">
         <a className="logo" href="/">
           <div className="logo-icon" aria-hidden="true">
-            <img src="/assets/logo-256x256.png?v=2026-04-13" alt="The Resilience Atlas™" width="36" height="36" />
+            <img src={`${import.meta.env.BASE_URL}assets/logo-256x256.png?v=2026-04-13`} alt="The Resilience Atlas™" width="36" height="36" />
           </div>
           <span className="logo-text">The Resilience Atlas&#8482;</span>
         </a>
