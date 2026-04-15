@@ -306,6 +306,10 @@ main { flex: 1; }
   display: block;
 }
 
+/* Desktop shows new v5 logo; mobile shows existing logo */
+.logo-icon--desktop { display: flex; }
+.logo-icon--mobile  { display: none; }
+
 /* -- Hamburger toggle (mobile only) ----------------- */
 .hamburger-toggle {
   display: none;
@@ -432,6 +436,10 @@ main { flex: 1; }
     width: 32px;
     height: 32px;
   }
+
+  /* On mobile: show original logo, hide new v5 logo */
+  .logo-icon--desktop { display: none; }
+  .logo-icon--mobile  { display: flex; }
 
   .hamburger-toggle {
     display: flex;
