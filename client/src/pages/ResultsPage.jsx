@@ -2144,6 +2144,9 @@ export default function ResultsPage() {
   const [showAndroidModal, setShowAndroidModal] = useState(false);
   // True while loading results from the API via a ?hash= deep link.
   const [hashLoading, setHashLoading] = useState(!!hashParam);
+  // True while auto-fetching the user's latest assessment from history when
+  // results is null (no localStorage/hash) but the user has a known email.
+  const [latestAssessmentLoading, setLatestAssessmentLoading] = useState(false);
 
   // ── Upsell modal & promo-banner state ─────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
@@ -2337,6 +2340,60 @@ export default function ResultsPage() {
 
     return () => { cancelled = true; };
   }, [hashParam, auth0Loading, isAuthenticated]);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Auto-load latest assessment when results is null and user has email ─
+  // When the user navigates to /results without in-memory/localStorage results
+  // (and without a ?hash= deep link), automatically fetch their most recent
+  // assessment from history so the full results UI renders instead of the
+  // empty/history-only state.
+  // Does NOT run when hashParam is present — that flow has its own loader above.
+  useEffect(() => {
+    if (hashParam) return;           // hash flow handles its own loading
+    if (results) return;             // already have results — nothing to do
+    if (auth0Loading) return;        // wait for Auth0 to finish initialising
+
+    const email = (isAuthenticated && auth0User?.email) || getStoredEmail();
+    if (!email) return;              // no email — cannot fetch history
+
+    let cancelled = false;
+    setLatestAssessmentLoading(true);
+
+    apiFetch(`/api/assessment/history?email=${encodeURIComponent(email)}`, {}, getAccessTokenSilently)
+      .then(r => r.json())
+      .then(data => {
+        if (cancelled) return;
+        const list = Array.isArray(data.assessments) ? data.assessments : [];
+        // Filter to items that have actual result data
+        const valid = list.filter(a => a.overall !== undefined && a.dominantType);
+        if (valid.length === 0) return;
+        // Pick the most recent by createdAt; do not assume server ordering.
+        const latest = valid.reduce((best, a) => {
+          const bDate = best.createdAt ? new Date(best.createdAt).getTime() : 0;
+          const aDate = a.createdAt   ? new Date(a.createdAt).getTime()   : 0;
+          return aDate > bDate ? a : best;
+        }, valid[0]);
+        setResults(latest);
+        window.resilience_results = latest;
+        // Persist email so downstream access checks find it.
+        if (latest.email) {
+          try {
+            if (!localStorage.getItem('resilience_email')) {
+              localStorage.setItem('resilience_email', latest.email);
+            }
+          } catch (_) { /* ignore */ }
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          console.warn('[ResultsPage] Auto-fetch latest assessment failed:', err.message);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLatestAssessmentLoading(false);
+      });
+
+    return () => { cancelled = true; };
+  }, [hashParam, results, auth0Loading, isAuthenticated, auth0User]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Confetti celebration — fire 600 ms after results load ─────────────
   useEffect(() => {
@@ -2986,7 +3043,7 @@ export default function ResultsPage() {
     // While Auth0 is still initializing we don't know the user's identity yet.
     // Show a loading spinner rather than the empty state so we don't flash
     // "No assessment results found" for authenticated users.
-    if (auth0Loading || hashLoading) {
+    if (auth0Loading || hashLoading || latestAssessmentLoading) {
       return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f7f8fc' }}>
           <span style={{ color: '#718096', fontSize: 16 }}>Loading your results…</span>
@@ -3024,6 +3081,10 @@ export default function ResultsPage() {
           </div>
         </header>
         <DarkModeHint />
+        {/* ── Android "Available on the web" Modal ─────────────────── */}
+        {showAndroidModal && (
+          <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
+        )}
         <div style={s.page}>
           <div style={s.container}>
             {historyEmail ? (
@@ -3062,11 +3123,21 @@ export default function ResultsPage() {
                 <AssessmentHistory
                   email={historyEmail}
                   onUnlock={(assessment) => {
+                    // On Capacitor Android, do not start Stripe checkout — show
+                    // the "Available on the web" modal instead.
+                    if (isCapacitorAndroid()) {
+                      setShowAndroidModal(true);
+                      return;
+                    }
+                    // Persist the hash so the checkout success flow can link the
+                    // purchase to this specific assessment.
                     try {
                       if (assessment.hash) {
                         sessionStorage.setItem('pending_unlock_hash', assessment.hash);
                       }
                     } catch (_) { /* ignore */ }
+                    // Start checkout for the Atlas Starter tier.
+                    handleUpgrade('atlas-starter');
                   }}
                   checkoutLoading={checkoutLoading}
                   getTokenFn={getAccessTokenSilently}
@@ -3660,6 +3731,12 @@ export default function ResultsPage() {
         <AssessmentHistory
           email={getEffectiveEmail()}
           onUnlock={(assessment) => {
+            // On Capacitor Android, skip the Stripe modal entirely and direct
+            // the user to the website for purchase instead.
+            if (isCapacitorAndroid()) {
+              setShowAndroidModal(true);
+              return;
+            }
             // Store the assessment hash in sessionStorage so the checkout
             // success flow can link the purchase to this specific assessment.
             try {
