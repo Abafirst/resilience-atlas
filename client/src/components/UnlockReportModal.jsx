@@ -607,7 +607,7 @@ export default function UnlockReportModal({
                     {/* Gamification teaser bullets */}
                     {features && features.length > 0 && (
                       <>
-                        <div style={s.featuresLabel}>What&rsquo;s included</div>
+                        <div style={s.featuresLabel}>What's included</div>
                         <ul style={s.featuresList}>
                           {features.map((feat) => (
                             <li key={feat} style={s.featuresItem(highlighted)}>

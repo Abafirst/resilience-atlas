@@ -4350,7 +4350,7 @@ export default function ResultsPage() {
               />
               <ShareButton
                 label="Download Radar"
-                icon="↓"
+                icon={<img src="/icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', filter: 'brightness(0) invert(1)' }} />}
                 bg="#0891B2"
                 onClick={handleDownloadRadar}
               />
