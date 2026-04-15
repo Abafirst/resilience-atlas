@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import InAppWebsiteOnlyNotice from '../components/InAppWebsiteOnlyNotice.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
 import { TEAM_PLANS } from '../data/teamPlans';
 
@@ -512,6 +513,16 @@ export default function PricingTeamsPage() {
   />
   <DarkModeHint />
 
+  {/* ── In-app gate: replace pricing content on Capacitor Android ──────────── */}
+  {isCapacitorAndroid() ? (
+    <div style={{ padding: '3rem 1.5rem', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <InAppWebsiteOnlyNotice
+        title="Team plans on the website"
+        description="Team plans and purchases are managed on our website. Visit us there to explore options and get started."
+      />
+    </div>
+  ) : (
+    <>
   {/* ── Header ─────────────────────────────────────────────────────────────── */}
   <header className="pricing-header">
     <div className="pricing-header__eyebrow">Simple One-Time Pricing for Every Organization</div>
@@ -563,7 +574,7 @@ export default function PricingTeamsPage() {
               disabled={!!checkoutLoading}
               onClick={() => startCheckout(plan.key)}
             >
-              {checkoutLoading === plan.key ? '⏳ Redirecting…' : plan.ctaLabel}
+              {checkoutLoading === plan.key ? 'Redirecting…' : plan.ctaLabel}
             </button>
           ) : (
             <a className="ttc-btn ttc-btn--primary" href="/teams#teamLeadForm">
@@ -728,6 +739,8 @@ export default function PricingTeamsPage() {
       {showAndroidModal && (
         <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
       )}
+    </>
+  )}
     </>
   );
 }
