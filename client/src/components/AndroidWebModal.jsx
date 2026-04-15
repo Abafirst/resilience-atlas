@@ -1,7 +1,7 @@
 import React from 'react';
 import { getWebUrl, openExternalUrl } from '../utils/platform.js';
 
-const MARKETING_PATH = '/teams';
+const MARKETING_PATH = '/';
 
 // ── Styles ─────────────────────────────────────────────────────────────────
 
@@ -34,9 +34,8 @@ const s = {
     position:   'relative',
   },
   icon: {
-    fontSize:     36,
     display:      'block',
-    marginBottom: 8,
+    margin:       '0 auto 8px',
   },
   title: {
     fontSize:   20,
@@ -131,18 +130,18 @@ export default function AndroidWebModal({ onClose }) {
           >
             ×
           </button>
-          <span aria-hidden="true" style={s.icon}>🌐</span>
-          <h2 id="awm-title" style={s.title}>Available on the web</h2>
+          <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ ...s.icon, width: 36, height: 36 }} />
+          <h2 id="awm-title" style={s.title}>Available on the website</h2>
         </div>
         <div style={s.body}>
           <p style={s.message}>
-            This feature is available on the web. Visit our website to learn more.
+            Plans and purchases are managed on our website. Visit us there to get started.
           </p>
           <button type="button" style={s.btnPrimary} onClick={handleOpenWeb}>
-            Learn more on the web
+            Open website
           </button>
           <button type="button" style={s.btnSecondary} onClick={onClose}>
-            Close
+            Not now
           </button>
         </div>
       </div>

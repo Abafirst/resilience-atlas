@@ -9,6 +9,7 @@ import DimensionModal from '../components/DimensionModal.jsx';
 import { isStarterOrAbove } from '../data/gamificationContent.js';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import InAppWebsiteOnlyNotice from '../components/InAppWebsiteOnlyNotice.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
@@ -119,16 +120,16 @@ const UPSELL_VARIANT_COPY = {
   },
   variant_b: {
     'atlas-navigator': {
-      headline: '🎉 Complete Your Resilience Atlas',
+      headline: 'Complete Your Resilience Atlas',
       subtext:  "You've completed the assessment — now go deeper. Full dimension analysis, personalized strategies, and a beautiful PDF to keep forever.",
       ctaLabel: 'Get the Full Report — $49.99 Lifetime',
-      offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
+      offer:    { label: 'Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
     },
     'atlas-premium': {
       headline: 'Lifetime Access — No Subscriptions Ever',
       subtext:  'One payment. Unlimited reassessments, evolution tracking, growth pathways, and priority support. No recurring charges.',
       ctaLabel: 'Unlock Atlas Premium — $49.99 Lifetime',
-      offer:    { label: '🕐 Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
+      offer:    { label: 'Limited Offer: Founding Member Price', savingText: 'Lifetime access for just $49.99' },
     },
   },
   variant_c: {
@@ -543,7 +544,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             aria-busy={checkoutLoading === 'atlas-starter'}
           >
             {checkoutLoading === 'atlas-starter'
-              ? '⏳ Redirecting…'
+              ? 'Redirecting…'
               : `Get Starter Report — ${getPrice('atlas-starter')}`}
           </button>
           <p className="upgrade-card__trust">
@@ -576,7 +577,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             aria-busy={checkoutLoading === 'atlas-navigator'}
           >
             {checkoutLoading === 'atlas-navigator'
-              ? '⏳ Redirecting…'
+              ? 'Redirecting…'
               : `Get My Deep Report — ${getPrice('atlas-navigator')}`}
           </button>
           <p className="upgrade-card__trust">
@@ -2451,6 +2452,9 @@ export default function ResultsPage() {
     const isFree = tier === 'free' && !priorAccess;
     if (!isFree) return;
     if (upsellIsOnCooldown()) return;
+    // Do not show upsell/promo popups inside the native Android app —
+    // purchases are handled on the website.
+    if (isCapacitorAndroid()) return;
 
     // 2. Scroll trigger — fire when the upgrade cards section scrolls into view.
     const scrollTarget = document.getElementById('upgradeCardsContainer') ||
@@ -3195,9 +3199,9 @@ export default function ResultsPage() {
       <DarkModeHint />
 
       {/* ── Promotional banner (flash offer for free users) ──────────── */}
-      {promoBanner && (
+      {promoBanner && !isCapacitorAndroid() && (
         <PromoBanner
-          message="🎉 Get your complete Deep Resilience Report PDF for just $49.99 — lifetime access"
+          message="Get your complete Deep Resilience Report PDF for just $49.99 — lifetime access"
           ctaLabel="Claim Offer"
           targetTier={promoBanner.tier}
           trigger={promoBanner.trigger}
@@ -3207,7 +3211,7 @@ export default function ResultsPage() {
       )}
 
       {/* ── Upsell modal (smart-triggered) ───────────────────────────── */}
-      {upsellModal && !upsellIsOnCooldown() && (
+      {upsellModal && !upsellIsOnCooldown() && !isCapacitorAndroid() && (
         <UpsellModal
           targetTier={upsellModal.tier}
           trigger={upsellModal.trigger}
@@ -3693,18 +3697,21 @@ export default function ResultsPage() {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 20 }}>
                 {[
-                  { icon: '🧠', title: 'Science-backed', desc: 'Built on ACT, positive psychology, and ABA research spanning 40+ years of resilience science.' },
-                  { icon: '📊', title: 'Six dimensions', desc: 'Unlike one-dimensional stress tests, we measure the full landscape of how you navigate adversity.' },
-                  { icon: '🌱', title: 'Growable', desc: 'Every dimension you see here can be strengthened with targeted practices — your score is a starting point, not a ceiling.' },
-                  { icon: '🎯', title: 'Actionable', desc: 'Your results translate directly into evidence-based micro-practices tailored to your specific profile.' },
+                  { icon: '/icons/strength.svg', title: 'Science-backed', desc: 'Built on ACT, positive psychology, and ABA research spanning 40+ years of resilience science.' },
+                  { icon: '/icons/compass.svg', title: 'Six dimensions', desc: 'Unlike one-dimensional stress tests, we measure the full landscape of how you navigate adversity.' },
+                  { icon: '/icons/growth.svg', title: 'Growable', desc: 'Every dimension you see here can be strengthened with targeted practices — your score is a starting point, not a ceiling.' },
+                  { icon: '/icons/goal.svg', title: 'Actionable', desc: 'Your results translate directly into evidence-based micro-practices tailored to your specific profile.' },
                 ].map(({ icon, title, desc }) => (
                   <div key={title} style={{ background: '#fff', borderRadius: 12, padding: '16px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontSize: 24, marginBottom: 8 }} aria-hidden="true">{icon}</div>
+                    <div style={{ marginBottom: 8 }} aria-hidden="true">
+                      <img src={icon} alt="" width={24} height={24} />
+                    </div>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{title}</div>
                     <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>{desc}</div>
                   </div>
                 ))}
               </div>
+              {!isCapacitorAndroid() && (
               <div style={{ background: '#fff', border: '1px solid #ddd6fe', borderRadius: 12, padding: '16px 20px' }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>What upgrading gives you:</div>
                 <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: '#334155', lineHeight: 1.9 }}>
@@ -3712,13 +3719,22 @@ export default function ResultsPage() {
                   <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, unlimited PDF access, and the full resilience journey platform</li>
                 </ul>
               </div>
+              )}
             </section>
 
+            {isCapacitorAndroid() ? (
+              <InAppWebsiteOnlyNotice
+                title="Full report on the website"
+                description="To unlock your full PDF report and premium features, visit our website."
+                style={{ margin: '0 0 24px' }}
+              />
+            ) : (
             <UpgradeCardsSection
               getPrice={getPrice}
               onUpgrade={handleUpgrade}
               checkoutLoading={checkoutLoading}
             />
+            )}
           </>
         )}
 
@@ -3752,7 +3768,8 @@ export default function ResultsPage() {
         {hasPremiumAccess && (
           <div style={s.downloadSection}>
             <div style={s.downloadHeading}>
-              🎉 Your Full Report is Ready
+              <img src="/icons/success.svg" alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle', marginRight: 8 }} />
+              Your Full Report is Ready
             </div>
             <p style={s.downloadDesc}>
               {isAtlasPremium
@@ -3781,7 +3798,7 @@ export default function ResultsPage() {
               disabled={pdfLoading || tierLoading}
               aria-busy={pdfLoading}
             >
-              {pdfLoading ? '⏳ Generating PDF…' : '⬇ Download PDF Report'}
+              {pdfLoading ? 'Generating PDF…' : 'Download PDF Report'}
             </button>
           </div>
         )}
@@ -3796,7 +3813,7 @@ export default function ResultsPage() {
                 disabled
                 aria-label="Verifying your access…"
               >
-                ⏳ Verifying your access…
+                Verifying your access…
               </button>
             ) : (
               <button
@@ -3855,7 +3872,7 @@ export default function ResultsPage() {
               disabled={emailLoading}
               aria-busy={emailLoading}
             >
-              {emailLoading ? '⏳ Sending…' : '✉️ Send Report'}
+              {emailLoading ? 'Sending…' : 'Send Report'}
             </button>
           </div>
           {emailAlert && (
@@ -4333,7 +4350,7 @@ export default function ResultsPage() {
               />
               <ShareButton
                 label="Download Radar"
-                icon="⬇"
+                icon="↓"
                 bg="#0891B2"
                 onClick={handleDownloadRadar}
               />
@@ -4344,7 +4361,7 @@ export default function ResultsPage() {
               </p>
             )}
             <p style={s.shareInstagramHint}>
-              📷 <strong>Instagram tip:</strong> Click <em>Download Radar</em> above to save your radar graphic, then post it and tag{' '}
+              <strong>Instagram tip:</strong> Click <em>Download Radar</em> above to save your radar graphic, then post it and tag{' '}
               <a
                 href={SOCIAL_URLS.instagram}
                 target="_blank"

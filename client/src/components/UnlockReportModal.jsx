@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { UNLOCK_TIERS } from '../constants/unlockPricing.js';
 import { useUnlockPayment } from '../hooks/useUnlockPayment.js';
+import { isCapacitorAndroid, getWebUrl, openExternalUrl } from '../utils/platform.js';
 
 /**
  * UnlockReportModal — shown when a user tries to download a locked PDF report.
@@ -379,12 +380,57 @@ function InlinePaymentForm({ tier, highlighted, onConfirmPayment, loading, error
         disabled={loading || !stripe}
         aria-busy={loading}
       >
-        {loading ? '⏳ Processing payment…' : `Pay & Unlock Report`}
+        {loading ? 'Processing payment…' : `Pay & Unlock Report`}
       </button>
       <button type="button" style={s.backBtn} onClick={onBack} disabled={loading}>
         ← Back to options
       </button>
     </form>
+  );
+}
+
+// ── In-app notice (shown instead of payment form on Capacitor Android) ────────
+
+function InAppNotice({ onClose }) {
+  return (
+    <div style={{ padding: '28px', textAlign: 'center' }}>
+      <img
+        src="/icons/compass.svg"
+        alt=""
+        aria-hidden="true"
+        style={{ width: 44, height: 44, marginBottom: 14 }}
+      />
+      <h3 style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', margin: '0 0 10px' }}>
+        Available on the website
+      </h3>
+      <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.65, margin: '0 0 20px' }}>
+        Plans and purchases are managed on our website. Visit us there to get started.
+      </p>
+      <button
+        type="button"
+        style={{
+          display:    'block', width: '100%', padding: '11px 0',
+          background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+          color: '#fff', border: 'none', borderRadius: 8,
+          fontSize: 15, fontWeight: 700, cursor: 'pointer',
+          fontFamily: 'inherit', marginBottom: 10,
+        }}
+        onClick={() => openExternalUrl(getWebUrl('/'))}
+      >
+        Open website
+      </button>
+      <button
+        type="button"
+        style={{
+          display: 'block', width: '100%', padding: '9px 0',
+          background: 'none', color: '#718096', border: '1px solid #e2e8f0',
+          borderRadius: 8, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit',
+        }}
+        onClick={onClose}
+      >
+        Not now
+      </button>
+    </div>
   );
 }
 
@@ -419,6 +465,38 @@ export default function UnlockReportModal({
     reset();
     onClose();
   }, [reset, onClose]);
+
+  // On Capacitor Android show a simple "available on website" notice instead
+  // of the full Stripe payment form.
+  if (isCapacitorAndroid()) {
+    return (
+      <div
+        style={s.overlay}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="unlockModalTitle"
+        onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+      >
+        <div style={{ ...s.modal, maxWidth: 420 }}>
+          <div style={s.header}>
+            <button
+              type="button"
+              style={s.closeBtn}
+              onClick={handleClose}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <span style={s.headerIcon} aria-hidden="true">
+              <img src="/icons/lock.svg" alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} />
+            </span>
+            <h2 id="unlockModalTitle" style={s.headerTitle}>Available on the website</h2>
+          </div>
+          <InAppNotice onClose={handleClose} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -458,7 +536,10 @@ export default function UnlockReportModal({
         {/* ── Brief Results Summary ── */}
         {results && !paymentSuccess && (
           <div style={s.briefResults}>
-            <div style={s.briefTitle}>📊 Your Results Preview</div>
+            <div style={s.briefTitle}>
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" width={13} height={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+              Your Results Preview
+            </div>
             <div style={s.scoreRow}>
               <div style={s.scoreBadge}>
                 <span style={s.scoreValue}>{Math.round(overall)}%</span>
@@ -479,7 +560,9 @@ export default function UnlockReportModal({
         {/* ── Success State ── */}
         {paymentSuccess && (
           <div style={s.successBox} role="status">
-            <span style={s.successIcon} aria-hidden="true">🎉</span>
+            <span style={s.successIcon} aria-hidden="true">
+              <img src="/icons/success.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+            </span>
             <div style={s.successTitle}>Payment Successful!</div>
             <p style={s.successDesc}>
               Your report is now unlocked. Click below to download your full PDF.
@@ -489,7 +572,8 @@ export default function UnlockReportModal({
               style={s.downloadBtn}
               onClick={handleClose}
             >
-              ⬇ Download PDF Report
+              <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle', marginRight: 6, filter: 'brightness(0) invert(1)' }} />
+              Download PDF Report
             </button>
           </div>
         )}
@@ -523,7 +607,7 @@ export default function UnlockReportModal({
                     {/* Gamification teaser bullets */}
                     {features && features.length > 0 && (
                       <>
-                        <div style={s.featuresLabel}>What you\u2019ll unlock</div>
+                        <div style={s.featuresLabel}>What&rsquo;s included</div>
                         <ul style={s.featuresList}>
                           {features.map((feat) => (
                             <li key={feat} style={s.featuresItem(highlighted)}>
@@ -560,7 +644,7 @@ export default function UnlockReportModal({
                           onClick={() => selectTier(tier)}
                         >
                           {loading && selectedTier === tier
-                            ? '⏳ Preparing checkout…'
+                            ? 'Preparing checkout…'
                             : `Unlock with ${name}`
                           }
                         </button>
@@ -574,7 +658,7 @@ export default function UnlockReportModal({
             {/* Loading state while creating payment intent */}
             {loading && !clientSecret && (
               <div style={{ padding: '10px 28px', fontSize: 13, color: '#718096', textAlign: 'center' }}>
-                ⏳ Preparing secure checkout…
+                Preparing secure checkout…
               </div>
             )}
             {/* Top-level error (e.g. network failure before payment form shown) */}

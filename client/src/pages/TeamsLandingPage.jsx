@@ -5,6 +5,7 @@ import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getCurrentTeamsTier, canAccessFacilitationGuides } from '../utils/tierGating';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
+import InAppWebsiteOnlyNotice from '../components/InAppWebsiteOnlyNotice.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
 import { TEAM_PLANS } from '../data/teamPlans';
 
@@ -693,6 +694,14 @@ export default function TeamsLandingPage() {
         <a href="/privacy" style={{ color: '#4F46E5', fontWeight: 600 }}>Learn about our data model →</a>
       </p>
     </div>
+    {isCapacitorAndroid() ? (
+      <InAppWebsiteOnlyNotice
+        title="Team plans on the website"
+        description="Team plans and purchases are managed on our website. Visit us there to explore options and get started."
+        style={{ marginTop: '1.5rem' }}
+      />
+    ) : (
+      <>
     {checkoutError && (
       <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.85rem 1.5rem', textAlign: 'center', fontSize: '0.9rem', marginBottom: '1rem', borderRadius: 8 }}>
         {checkoutError}
@@ -733,7 +742,7 @@ export default function TeamsLandingPage() {
               disabled={!!checkoutLoading}
               onClick={() => startTeamCheckout(plan.key)}
             >
-              {checkoutLoading === plan.key ? '⏳ Redirecting…' : plan.ctaLabel}
+              {checkoutLoading === plan.key ? 'Redirecting…' : plan.ctaLabel}
             </button>
           ) : (
             <a
@@ -747,6 +756,8 @@ export default function TeamsLandingPage() {
         </div>
       ))}
     </div>
+      </>
+    )}
   </section>
 
   {/* Enterprise Contact Form (Enterprise plan only) */}

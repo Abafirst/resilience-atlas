@@ -17,6 +17,7 @@ import ResilienceAdventureHub from './ResilienceAdventureHub.jsx';
 import '../../styles/gamification-animations.css';
 import { apiUrl } from '../../api/baseUrl.js';
 import { isSfxEnabled, setSfxEnabled } from '../../utils/soundEffects.js';
+import { isCapacitorAndroid } from '../../utils/platform.js';
 
 // ── Tier detection ─────────────────────────────────────────────────────────────
 
@@ -751,7 +752,7 @@ export default function GamificationDashboard() {
                   hasStarter ? '#dcfce7' : '#eff6ff',
                   hasStarter ? '#15803d' : '#1d4ed8'
                 )}>
-                  {hasStarter ? '✓ Unlocked' : 'From $9.99'}
+                  {hasStarter ? '✓ Unlocked' : isCapacitorAndroid() ? 'Starter tier' : 'From $9.99'}
                 </span>
               </div>
               <p style={s.tierDesc}>
@@ -814,7 +815,7 @@ export default function GamificationDashboard() {
                   hasStarter ? '#dcfce7' : '#eff6ff',
                   hasStarter ? '#15803d' : '#1d4ed8'
                 )}>
-                  {hasStarter ? '✓ Unlocked' : 'From $9.99'}
+                  {hasStarter ? '✓ Unlocked' : isCapacitorAndroid() ? 'Starter tier' : 'From $9.99'}
                 </span>
               </div>
               <p style={s.tierDesc}>

@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import { TEAMS_CONTENT } from '../data/teamsContent';
+import { isCapacitorAndroid, getWebUrl, openExternalUrl } from '../utils/platform.js';
 
 /* ── Tier badge colors ───────────────────────────────────────────────────── */
 const TIER_BADGE = {
@@ -48,15 +49,20 @@ function TierGateModal({ item, onClose }) {
           id="gate-modal-title"
           style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', marginBottom: '.5rem' }}
         >
-          {item.minTierLabel || 'Teams Tier'} Required
+          {isCapacitorAndroid() ? 'Available on the website' : `${item.minTierLabel || 'Teams Tier'} Required`}
         </h2>
 
         <p style={{ color: '#475569', fontSize: '.95rem', textAlign: 'center', lineHeight: 1.65, marginBottom: '1rem' }}>
-          <strong>{item.title}</strong> is available on the{' '}
-          <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Atlas Team Premium'}</span>{' '}
-          plan and above. Unlock this resource and the full library by upgrading your Teams tier.
+          {isCapacitorAndroid() ? (
+            <>Plans and purchases are managed on our website. Visit us there to get started.</>
+          ) : (
+            <><strong>{item.title}</strong> is available on the{' '}
+            <span style={{ color: tier.color, fontWeight: 700 }}>{item.minTierLabel || 'Atlas Team Premium'}</span>{' '}
+            plan and above. Unlock this resource and the full library by upgrading your Teams tier.</>
+          )}
         </p>
 
+        {!isCapacitorAndroid() && (
         <div style={{
           background: '#f8fafc', borderRadius: 10, padding: '.85rem 1rem',
           fontSize: '.85rem', color: '#334155', marginBottom: '1.25rem',
@@ -109,20 +115,38 @@ function TierGateModal({ item, onClose }) {
             </ul>
           )}
         </div>
+        )}
 
         <div style={{ display: 'flex', gap: '.75rem', flexDirection: 'column' }}>
-          <a
-            href="/pricing-teams"
-            aria-label="Compare Teams tiers and unlock access"
-            style={{
-              display: 'block', textAlign: 'center',
-              background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
-              color: '#fff', borderRadius: 10, padding: '.75rem 1.5rem',
-              fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
-            }}
-          >
-            <img src="/icons/unlock.svg" alt="" aria-hidden="true" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /> Compare &amp; Unlock Tiers
-          </a>
+          {isCapacitorAndroid() ? (
+            <button
+              type="button"
+              onClick={() => openExternalUrl(getWebUrl('/'))}
+              style={{
+                display: 'block', textAlign: 'center',
+                background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+                color: '#fff', borderRadius: 10, padding: '.75rem 1.5rem',
+                fontWeight: 700, fontSize: '1rem', border: 'none', cursor: 'pointer',
+                fontFamily: 'inherit',
+              }}
+            >
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 16, height: 16, verticalAlign: 'middle', filter: 'brightness(0) invert(1)', marginRight: 6 }} />
+              Open website
+            </button>
+          ) : (
+            <a
+              href="/pricing-teams"
+              aria-label="Compare Teams tiers and unlock access"
+              style={{
+                display: 'block', textAlign: 'center',
+                background: 'linear-gradient(135deg,#4F46E5,#7c3aed)',
+                color: '#fff', borderRadius: 10, padding: '.75rem 1.5rem',
+                fontWeight: 700, fontSize: '1rem', textDecoration: 'none',
+              }}
+            >
+              <img src="/icons/unlock.svg" alt="" aria-hidden="true" style={{ width: 16, height: 16, verticalAlign: 'middle' }} /> Compare &amp; Unlock Tiers
+            </a>
+          )}
           <button
             type="button"
             onClick={onClose}
@@ -132,7 +156,7 @@ function TierGateModal({ item, onClose }) {
               cursor: 'pointer', fontFamily: 'inherit',
             }}
           >
-            Maybe later
+            {isCapacitorAndroid() ? 'Not now' : 'Maybe later'}
           </button>
         </div>
       </div>
@@ -312,8 +336,8 @@ function GamificationCard({ feature, onGate }) {
       {/* CTA button */}
       <button
         type="button"
-        aria-label={`Unlock ${feature.title} — requires ${feature.minTierLabel}`}
-        onClick={() => onGate(feature)}
+        aria-label={isCapacitorAndroid() ? `Open website to access ${feature.title}` : `Unlock ${feature.title} — requires ${feature.minTierLabel}`}
+        onClick={() => isCapacitorAndroid() ? openExternalUrl(getWebUrl('/')) : onGate(feature)}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -335,7 +359,15 @@ function GamificationCard({ feature, onGate }) {
         onMouseEnter={e => { e.currentTarget.style.opacity = '.88'; }}
         onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
       >
-        <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Unlock Feature
+        {isCapacitorAndroid() ? (
+          <>
+            <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Open website
+          </>
+        ) : (
+          <>
+            <img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: 15, height: 15, filter: 'brightness(0) invert(1)' }} /> Unlock Feature
+          </>
+        )}
       </button>
     </div>
   );
@@ -793,7 +825,7 @@ export default function TeamsResourcesPage() {
               ].map(t => (
                 <div key={t.label} style={{ padding: '5px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: 'rgba(255,255,255,0.1)', color: '#fff', border: `1px solid ${t.color}44`, display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.3 }}>
                   <span>{t.label}</span>
-                  <span style={{ fontSize: 10, fontWeight: 400, color: 'rgba(255,255,255,0.65)' }}>{t.sub}</span>
+                  {!isCapacitorAndroid() && <span style={{ fontSize: 10, fontWeight: 400, color: 'rgba(255,255,255,0.65)' }}>{t.sub}</span>}
                 </div>
               ))}
             </div>
@@ -804,7 +836,7 @@ export default function TeamsResourcesPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #dcfce7' }}>
               <img src="/icons/badges.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
               <span style={{ fontWeight: 700, color: '#166534', fontSize: '1rem' }}>Atlas Team Basic</span>
-              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $299/mo</span>
+              {!isCapacitorAndroid() && <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $299/mo</span>}
             </div>
             <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
               {GAMIFICATION_FEATURES.filter(f => f.minTier === 'starter').map(feature => (
@@ -818,7 +850,7 @@ export default function TeamsResourcesPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #ede9fe' }}>
               <img src="/icons/advanced-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
               <span style={{ fontWeight: 700, color: '#5b21b6', fontSize: '1rem' }}>Atlas Team Premium</span>
-              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $699/mo</span>
+              {!isCapacitorAndroid() && <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $699/mo</span>}
             </div>
             <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
               {GAMIFICATION_FEATURES.filter(f => f.minTier === 'pro').map(feature => (
@@ -832,7 +864,7 @@ export default function TeamsResourcesPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '2px solid #ffe4e6' }}>
               <img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '1.1rem', height: '1.1rem' }} />
               <span style={{ fontWeight: 700, color: '#be185d', fontSize: '1rem' }}>Atlas Team Enterprise</span>
-              <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $2,499/mo</span>
+              {!isCapacitorAndroid() && <span style={{ fontSize: '.8rem', color: '#64748b', fontWeight: 400 }}>from $2,499/mo</span>}
             </div>
             <div className="tr-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
               {GAMIFICATION_FEATURES.filter(f => f.minTier === 'enterprise').map(feature => (
