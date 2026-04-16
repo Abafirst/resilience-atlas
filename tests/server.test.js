@@ -493,6 +493,8 @@ describe('GET /api/payments/tiers', () => {
 describe('CORS middleware', () => {
   const ORIGIN_A = 'https://www.theresilienceatlas.com';
   const ORIGIN_B = 'https://resilience-atlas-staging.up.railway.app';
+  const CAPACITOR_ORIGIN_HTTPS = 'https://localhost';
+  const CAPACITOR_ORIGIN_HTTP = 'http://localhost';
 
   /** Re-require the app after mutating process.env so the new CORS_ORIGIN is picked up. */
   function loadFreshApp() {
@@ -554,6 +556,31 @@ describe('CORS middleware', () => {
       .get('/health')
       .set('Origin', ORIGIN_B);
     expect(res.headers['access-control-allow-origin']).toBe(ORIGIN_B);
+  });
+
+  test('allows Capacitor localhost origins by default (no CORS_ORIGIN env var)', async () => {
+    const freshApp = loadFreshApp();
+    const httpsRes = await request(freshApp)
+      .get('/config')
+      .set('Origin', CAPACITOR_ORIGIN_HTTPS);
+    expect(httpsRes.headers['access-control-allow-origin']).toBe(CAPACITOR_ORIGIN_HTTPS);
+
+    const httpRes = await request(freshApp)
+      .get('/config')
+      .set('Origin', CAPACITOR_ORIGIN_HTTP);
+    expect(httpRes.headers['access-control-allow-origin']).toBe(CAPACITOR_ORIGIN_HTTP);
+  });
+
+  test('handles /api/* CORS preflight from Capacitor origin', async () => {
+    const freshApp = loadFreshApp();
+    const res = await request(freshApp)
+      .options('/api/quiz')
+      .set('Origin', CAPACITOR_ORIGIN_HTTPS)
+      .set('Access-Control-Request-Method', 'POST')
+      .set('Access-Control-Request-Headers', 'Content-Type, Authorization');
+    expect([200, 204]).toContain(res.status);
+    expect(res.headers['access-control-allow-origin']).toBe(CAPACITOR_ORIGIN_HTTPS);
+    expect(res.headers['access-control-allow-methods']).toMatch(/OPTIONS/);
   });
 
   test('/assets/* from staging origin returns 404 not 500 (no CORS block)', async () => {
