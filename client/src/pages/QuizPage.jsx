@@ -640,11 +640,9 @@ export default function QuizPage() {
         throw new Error(body.error || `Server error (${res.status})`);
       }
 
-      const data = body;
-
       // Persist results for ResultsPage
       try {
-        localStorage.setItem(RESULTS_KEY, JSON.stringify(data));
+        localStorage.setItem(RESULTS_KEY, JSON.stringify(body));
         localStorage.setItem('resilience_name',  firstName.trim());
         localStorage.setItem('resilience_email', email.trim());
       } catch (_) {}
