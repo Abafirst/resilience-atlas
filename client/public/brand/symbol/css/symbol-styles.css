@@ -1,0 +1,142 @@
+/*
+ * Resilience Atlas — Symbol Styles
+ * =================================
+ * Base classes for embedding the brand symbol SVG across the platform.
+ *
+ * Usage:
+ *   <img  src="/brand/symbol/svg/symbol.svg" class="ra-symbol ra-symbol--medium" alt="Resilience Atlas">
+ *   <svg  class="ra-symbol ra-symbol--large"  …>…</svg>
+ */
+
+/* ── Custom Properties ───────────────────────────────────────────────── */
+:root {
+  --ra-color-primary:   #1565C0;
+  --ra-color-secondary: #0097A7;
+  --ra-color-tertiary:  #6A4C93;
+  --ra-color-neutral-1: #212121;
+  --ra-color-neutral-2: #424242;
+  --ra-color-neutral-3: #757575;
+  --ra-color-neutral-4: #BDBDBD;
+  --ra-color-neutral-5: #E0E0E0;
+  --ra-bg-primary:      #FFFFFF;
+  --ra-bg-secondary:    #FAFAFA;
+  --ra-bg-tertiary:     #F5F5F5;
+}
+
+/* ── Base Symbol ─────────────────────────────────────────────────────── */
+.ra-symbol {
+  display:      inline-block;
+  width:        100%;
+  height:       auto;
+  max-width:    200px;
+  aspect-ratio: 1 / 1;
+  flex-shrink:  0;
+}
+
+/* ── Size Modifiers ──────────────────────────────────────────────────── */
+.ra-symbol--favicon  { max-width:  16px; }
+.ra-symbol--tiny     { max-width:  24px; }
+.ra-symbol--small    { max-width:  48px; }
+.ra-symbol--medium   { max-width: 128px; }
+.ra-symbol--large    { max-width: 256px; }
+.ra-symbol--xlarge   { max-width: 512px; }
+
+/* ── Responsive Defaults ─────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .ra-symbol--responsive { max-width:  48px; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ra-symbol--responsive { max-width:  96px; }
+}
+@media (min-width: 1024px) {
+  .ra-symbol--responsive { max-width: 128px; }
+}
+
+/* ── Color Variants ──────────────────────────────────────────────────── */
+/* These work for inline SVG; for <img> tags use the appropriate SVG file */
+.ra-symbol--color   { color: var(--ra-color-primary); }
+.ra-symbol--teal    { color: var(--ra-color-secondary); }
+.ra-symbol--purple  { color: var(--ra-color-tertiary); }
+.ra-symbol--mono    { color: var(--ra-color-neutral-1); }
+.ra-symbol--light   { color: white; }
+
+/* ── Watermark Variant ───────────────────────────────────────────────── */
+.ra-symbol--watermark {
+  opacity:        0.08;
+  pointer-events: none;
+  user-select:    none;
+}
+
+/* ── Animation: subtle pulse ─────────────────────────────────────────── */
+@keyframes ra-pulse {
+  0%,  100% { transform: scale(1);    opacity: 1;    }
+  50%        { transform: scale(1.04); opacity: 0.85; }
+}
+
+.ra-symbol--pulse {
+  animation: ra-pulse 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* ── Animation: slow rotation ────────────────────────────────────────── */
+@keyframes ra-rotate {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+.ra-symbol--rotate {
+  animation: ra-rotate 30s linear infinite;
+  transform-origin: center;
+}
+
+/* ── Interactive: hover lift ─────────────────────────────────────────── */
+.ra-symbol--interactive {
+  cursor:     pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+.ra-symbol--interactive:hover {
+  transform: scale(1.06);
+  filter:    drop-shadow(0 4px 12px rgba(21, 101, 192, 0.35));
+}
+
+/* ── Logo Lockup ─────────────────────────────────────────────────────── */
+/*
+ * Use .ra-logo-lockup to pair the symbol with the wordmark:
+ *
+ *   <a class="ra-logo-lockup" href="/">
+ *     <img src="/brand/symbol/svg/symbol.svg" class="ra-symbol" alt="">
+ *     <span class="ra-logo-lockup__text">Resilience Atlas</span>
+ *   </a>
+ */
+.ra-logo-lockup {
+  display:     inline-flex;
+  align-items: center;
+  gap:         0.6em;
+  text-decoration: none;
+  color:       inherit;
+}
+
+.ra-logo-lockup .ra-symbol {
+  max-width: 36px;
+}
+
+.ra-logo-lockup__text {
+  font-weight: 700;
+  font-size:   1.1rem;
+  letter-spacing: 0.01em;
+  color: var(--ra-color-primary);
+}
+
+/* ── Clear Space ─────────────────────────────────────────────────────── */
+/*
+ * Surround the symbol with at least 8 px of clear space.
+ * Apply .ra-symbol--padded to enforce it automatically.
+ */
+.ra-symbol--padded {
+  padding: 8px;
+}
+
+/* ── Dark Mode ───────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  .ra-logo-lockup__text { color: #90CAF9; }
+}
