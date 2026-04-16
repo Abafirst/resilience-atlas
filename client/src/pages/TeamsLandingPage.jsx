@@ -521,6 +521,12 @@ function getBackendTierOrder(backendTier) {
   return BACKEND_TIER_ORDER[backendTier] || 1;
 }
 
+function handleIconLoadError(event) {
+  const target = event.target;
+  if (!target || target.tagName !== 'IMG') return;
+  target.style.display = 'none';
+}
+
 export default function TeamsLandingPage() {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect, user } = useAuth0();
   const [showGateModal, setShowGateModal] = useState(false);
@@ -662,12 +668,6 @@ export default function TeamsLandingPage() {
     return current >= required ? 'download' : 'upgrade';
   };
 
-  const handleIconLoadError = (event) => {
-    const target = event.target;
-    if (!target || target.tagName !== 'IMG') return;
-    target.style.display = 'none';
-  };
-
   return (
     <>
       {showGateModal && (
@@ -678,7 +678,6 @@ export default function TeamsLandingPage() {
       )}
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       {/* BODY CONTENT */}
-      <div onErrorCapture={handleIconLoadError}>
 
 
   <SiteHeader activePage="teams" />
@@ -725,7 +724,7 @@ export default function TeamsLandingPage() {
               <span className={`ttc-badge ttc-badge--${plan.badge.variant}`}>{plan.badge.text}</span>
             )}
             <div className="ttc-tier-icon" aria-hidden="true">
-              <img src={plan.icon} alt="" width="48" height="48" className="icon icon-lg" />
+              <img onError={handleIconLoadError} src={plan.icon} alt="" width="48" height="48" className="icon icon-lg" />
             </div>
             <h3 className="ttc-name">{plan.name}</h3>
             <div className="ttc-price">
@@ -806,7 +805,7 @@ export default function TeamsLandingPage() {
       </form>
 
       <div className="form-success" id="formSuccess" aria-live="polite">
-        <div className="success-icon" aria-hidden="true"><img src="icons/checkmark.svg" alt="" className="icon icon-md" /></div>
+        <div className="success-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/checkmark.svg" alt="" className="icon icon-md" /></div>
         <h3>Thank you!</h3>
         <p>We have received your Enterprise inquiry and will be in touch within one business day.</p>
         <a href="/quiz" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }}>
@@ -824,32 +823,32 @@ export default function TeamsLandingPage() {
     </div>
     <div className="features-list">
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/cognitive-narrative.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/cognitive-narrative.svg" alt="" className="icon icon-md" /></div>
         <h4>Team Dashboard</h4>
         <p>A shared map of your team&rsquo;s collective resilience&mdash;aggregated dimension profiles and completion tracking in one place.</p>
       </div>
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/compass.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/compass.svg" alt="" className="icon icon-md" /></div>
         <h4>Team Compass</h4>
         <p>Visualize your team&rsquo;s collective Six Dimensions profile on a single compass. See where strengths cluster and where edges exist.</p>
       </div>
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/agentic-generative.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/agentic-generative.svg" alt="" className="icon icon-md" /></div>
         <h4>Data Export</h4>
         <p>Download all member maps with dimension profiles for your own analysis or organizational reporting.</p>
       </div>
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/relational-connective.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" className="icon icon-md" /></div>
         <h4>Individual Navigation Guides</h4>
         <p>Each team member receives their personalized resilience map and dimension narrative&mdash;their own guide for growth.</p>
       </div>
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/emotional-adaptive.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" className="icon icon-md" /></div>
         <h4>Simple Onboarding</h4>
         <p>Invite your entire team via email with a single click. Minimal friction, maximum participation.</p>
       </div>
       <div className="feature-item">
-        <div className="feature-icon" aria-hidden="true"><img src="icons/lock.svg" alt="" className="icon icon-md" /></div>
+        <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" className="icon icon-md" /></div>
         <h4>Secure &amp; Private</h4>
         <p>Individual maps are always private by default. Admins see only aggregated team insights unless individuals choose to share.</p>
       </div>
@@ -870,7 +869,7 @@ export default function TeamsLandingPage() {
       {/* Dimension Deep-Dive */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/facilitation-team.svg" alt="" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem' }} />
+          <img onError={handleIconLoadError} src="icons/facilitation-team.svg" alt="" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem' }} />
           <div className="tac-title">Dimension Deep-Dive</div>
         </div>
         <div className="tac-meta">
@@ -879,7 +878,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Each team member shares which of the Six Dimensions feels strongest and which is a current growth edge. The group identifies patterns and creates a collective resilience profile together.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -896,7 +895,7 @@ export default function TeamsLandingPage() {
       {/* Resilience Story Circle */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
+          <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Resilience Story Circle</div>
         </div>
         <div className="tac-meta">
@@ -905,7 +904,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Team members share brief stories of navigating a professional challenge. The group identifies which resilience dimension was most active — building empathy, insight, and shared language.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -922,7 +921,7 @@ export default function TeamsLandingPage() {
       {/* Strengths Mapping */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/compass.svg" alt="" aria-hidden="true" className="tac-icon" />
+          <img onError={handleIconLoadError} src="icons/compass.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Team Strengths Mapping</div>
         </div>
         <div className="tac-meta">
@@ -931,7 +930,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
         <p className="tac-desc">Using individual assessment results, plot the team's collective dimension scores on a shared radar chart. Identify team strengths and coverage gaps — then assign roles accordingly.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -947,7 +946,7 @@ export default function TeamsLandingPage() {
       {/* The Pressure Test */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="tac-icon" />
+          <img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">The Pressure Test</div>
         </div>
         <div className="tac-meta">
@@ -956,7 +955,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Emotional-Adaptive</span>
         </div>
         <p className="tac-desc">Teams explore how pressure affects performance and emotional regulation. They identify their collective early warning signs and build a shared "pressure protocol" for high-stakes moments.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -973,7 +972,7 @@ export default function TeamsLandingPage() {
       {/* Values Alignment */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/spiritual-reflective.svg" alt="" aria-hidden="true" className="tac-icon" />
+          <img onError={handleIconLoadError} src="icons/spiritual-reflective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Values Alignment Workshop</div>
         </div>
         <div className="tac-meta">
@@ -982,7 +981,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Spiritual-Reflective</span>
         </div>
         <p className="tac-desc">Team members clarify their personal top values and compare with the team's stated values. The group identifies alignment, tensions, and opportunities — and commits to shared working principles.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -1000,7 +999,7 @@ export default function TeamsLandingPage() {
       {/* Connection Map */}
       <div className="team-activity-card">
         <div className="tac-header">
-          <img src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
+          <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Connection Map</div>
         </div>
         <div className="tac-meta">
@@ -1009,7 +1008,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--dim">Relational-Connective</span>
         </div>
         <p className="tac-desc">Teams visually map their internal connections, support networks, and collaboration patterns. They identify who might feel isolated, who is over-relied upon, and what gaps need bridging.</p>
-        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
+        <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
           <ol>
@@ -1041,7 +1040,7 @@ export default function TeamsLandingPage() {
           <div className="handout-card" key={handout.id}>
             <div className="handout-icon" aria-hidden="true">
               {handout.icon
-                ? <img src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
+                ? <img onError={handleIconLoadError} src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
                 : handout.emoji}
             </div>
             <div className="handout-body">
@@ -1076,7 +1075,7 @@ export default function TeamsLandingPage() {
                     className="handout-btn handout-btn--upgrade"
                     aria-label={`Upgrade to download ${handout.title} — requires ${TIER_LABELS[handout.minTier]}`}
                   >
-                    <img src="icons/lock.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle' }} />
+                    <img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle' }} />
                     {' '}Upgrade to download
                   </a>
                 )}
@@ -1117,7 +1116,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--relational">
         <div className="dgc-header">
-          <img src="icons/relational-connective.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Relational-Connective</div>
             <div className="dgc-archetype">The Connector</div>
@@ -1135,7 +1134,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--cognitive">
         <div className="dgc-header">
-          <img src="icons/cognitive-narrative.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/cognitive-narrative.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Cognitive-Narrative</div>
             <div className="dgc-archetype">The Thinker</div>
@@ -1153,7 +1152,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--somatic">
         <div className="dgc-header">
-          <img src="icons/somatic-regulative.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/somatic-regulative.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Somatic-Regulative</div>
             <div className="dgc-archetype">The Grounder</div>
@@ -1171,7 +1170,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--emotional">
         <div className="dgc-header">
-          <img src="icons/emotional-adaptive.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Emotional-Adaptive</div>
             <div className="dgc-archetype">The Feeler</div>
@@ -1189,7 +1188,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--spiritual">
         <div className="dgc-header">
-          <img src="icons/spiritual-reflective.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/spiritual-reflective.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Spiritual-Reflective</div>
             <div className="dgc-archetype">The Guide</div>
@@ -1207,7 +1206,7 @@ export default function TeamsLandingPage() {
 
       <div className="dim-guide-card dim-guide-card--agentic">
         <div className="dgc-header">
-          <img src="icons/agentic-generative.svg" alt="" className="dgc-icon" />
+          <img onError={handleIconLoadError} src="icons/agentic-generative.svg" alt="" className="dgc-icon" />
           <div>
             <div className="dgc-name">Agentic-Generative</div>
             <div className="dgc-archetype">The Builder</div>
@@ -1240,7 +1239,6 @@ export default function TeamsLandingPage() {
       {showAndroidModal && (
         <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
       )}
-      </div>
     </>
   );
 }
