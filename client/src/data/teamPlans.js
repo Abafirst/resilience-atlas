@@ -19,7 +19,7 @@ export const TEAM_PLANS = [
     description: 'Perfect for small teams starting their resilience journey.',
     badge: null,
     featured: false,
-    icon: '/icons/games/tier-starter.svg',
+    icon: 'icons/games/tier-starter.svg',
     ctaLabel: 'Get Started — $299 one-time',
     cta: 'checkout',
     features: [
@@ -41,7 +41,7 @@ export const TEAM_PLANS = [
     description: 'For growing organizations with multiple teams and deeper analytics needs.',
     badge: { text: 'Most Popular', variant: 'blue' },
     featured: true,
-    icon: '/icons/games/tier-team.svg',
+    icon: 'icons/games/tier-team.svg',
     ctaLabel: 'Get Started — $699 one-time',
     cta: 'checkout',
     features: [
@@ -65,7 +65,7 @@ export const TEAM_PLANS = [
       'Built for large organizations who want full control. Self-manage your team, branding, authentication, and data \u2014 no white-glove setup or support required.',
     badge: { text: 'Enterprise', variant: 'slate' },
     featured: false,
-    icon: '/icons/games/tier-enterprise.svg',
+    icon: 'icons/games/tier-enterprise.svg',
     ctaLabel: 'Contact Sales',
     cta: 'contact',
     features: [
