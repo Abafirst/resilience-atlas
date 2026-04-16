@@ -484,6 +484,12 @@ export default function PricingTeamsPage() {
     document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleIconLoadError = useCallback((event) => {
+    const target = event.target;
+    if (!target || target.tagName !== 'IMG') return;
+    target.style.display = 'none';
+  }, []);
+
   useEffect(() => {
     try {
       const t = localStorage.getItem('ra-theme');
@@ -498,6 +504,7 @@ export default function PricingTeamsPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       {/* BODY CONTENT */}
+      <div onErrorCapture={handleIconLoadError}>
 
 
   {/* ── Navigation ─────────────────────────────────────────────────────────── */}
@@ -729,7 +736,7 @@ export default function PricingTeamsPage() {
   {/* ── Self-Service Data Note ─────────────────────────────────────────────── */}
   <section style={{ background: '#f0fdf4', borderTop: '1px solid #bbf7d0', padding: '1.5rem', textAlign: 'center' }}>
     <p style={{ fontSize: '.9rem', color: '#166534', margin: 0, lineHeight: 1.7 }}>
-      <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
+      <img src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />
       <strong>Self-service platform.</strong> All tiers include data export (CSV, PDF, ZIP).
       Teams manage their own data — we don't track or retain analytics on your end.{' '}
       <a href="/privacy" style={{ color: '#15803d', fontWeight: 700 }}>Learn about our data model →</a>
@@ -741,6 +748,7 @@ export default function PricingTeamsPage() {
       )}
     </>
   )}
+      </div>
     </>
   );
 }
