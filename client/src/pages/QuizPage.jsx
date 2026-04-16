@@ -416,8 +416,16 @@ export default function QuizPage() {
     // If user has partial quiz progress, let them decide to continue or start fresh
     if (savedProgress !== null) return;
 
-    fetch(`/api/assessment/history?email=${encodeURIComponent(auth0User.email)}`)
-      .then(r => r.ok ? r.json() : null)
+    fetch(apiUrl(`/api/assessment/history?email=${encodeURIComponent(auth0User.email)}`))
+      .then(async (r) => {
+        if (!r.ok) return null;
+        const contentType = (r.headers.get('content-type') || '').toLowerCase();
+        if (!contentType.includes('application/json')) {
+          await r.text().catch(() => '');
+          return null;
+        }
+        return r.json().catch(() => null);
+      })
       .then(data => {
         if (data?.assessments?.length > 0) {
           navigate('/results', { replace: true });
@@ -615,18 +623,24 @@ export default function QuizPage() {
         answers:   orderedAnswers,
       };
 
-      const res = await fetch('/api/quiz', {
+      const res = await fetch(apiUrl('/api/quiz'), {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(payload),
       });
 
+      const contentType = (res.headers.get('content-type') || '').toLowerCase();
+      if (!contentType.includes('application/json')) {
+        await res.text().catch(() => '');
+        throw new Error('Could not load your results right now. Please try again.');
+      }
+
+      const body = await res.json();
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `Server error (${res.status})`);
       }
 
-      const data = await res.json();
+      const data = body;
 
       // Persist results for ResultsPage
       try {
@@ -638,7 +652,7 @@ export default function QuizPage() {
       // Send flagged questions (non-blocking, best-effort)
       const flags = Array.from(flaggedQuestions);
       if (flags.length > 0) {
-        fetch('/api/quiz/feedback', {
+        fetch(apiUrl('/api/quiz/feedback'), {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({
