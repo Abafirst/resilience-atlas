@@ -15,6 +15,36 @@ const PORT = process.env.PORT || 3000;
 const isTestEnv = Boolean(process.env.JEST_WORKER_ID);
 app.locals.ready = isTestEnv;
 
+const DEFAULT_ALLOWED_ORIGINS = [
+    'https://theresilienceatlas.com',
+    // Capacitor serves native WebView apps from localhost origins.
+    'https://localhost',
+    'http://localhost',
+    'capacitor://localhost',
+    'ionic://localhost',
+    'http://localhost:3000',
+];
+const corsOriginRaw = process.env.CORS_ORIGIN;
+const corsOrigins = !corsOriginRaw
+    ? DEFAULT_ALLOWED_ORIGINS
+    : corsOriginRaw === '*'
+        ? '*'
+        : corsOriginRaw.split(',').map((origin) => origin.trim()).filter(Boolean);
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (corsOrigins === '*') return callback(null, true);
+        if (corsOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+};
+app.use(cors(corsOptions));
+app.options('/api/*', cors(corsOptions));
+app.options('/config', cors(corsOptions));
+
 // Apply a broad rate limit to all requests to mitigate DoS
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false });
 app.use(limiter);
