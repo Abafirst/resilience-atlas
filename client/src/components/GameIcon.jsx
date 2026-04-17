@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 const gameIconCache = new Map();
+const KEEP_PAINT_VALUES = new Set(['none', 'currentcolor', 'inherit']);
+const GAME_ICON_NAME_RE = /^[a-z0-9-]+$/i;
 
 function sanitizeGameSvg(rawSvg) {
   if (typeof window === 'undefined' || typeof DOMParser === 'undefined') return null;
@@ -40,7 +42,7 @@ function sanitizeGameSvg(rawSvg) {
 
       if (paintAttrs.includes(attrName)) {
         const normalized = attrValue.toLowerCase();
-        if (normalized !== 'none' && normalized !== 'currentcolor' && normalized !== 'inherit' && !normalized.startsWith('url(')) {
+        if (!KEEP_PAINT_VALUES.has(normalized) && !normalized.startsWith('url(')) {
           node.setAttribute(attr.name, 'currentColor');
         }
       }
@@ -57,9 +59,15 @@ function sanitizeGameSvg(rawSvg) {
 }
 
 async function loadGameSvg(name) {
+  if (!GAME_ICON_NAME_RE.test(name)) {
+    throw new Error('Invalid game icon name');
+  }
+
   const cached = gameIconCache.get(name);
   if (cached) return cached;
 
+  // Security assumption: /icons/games is application-owned static content.
+  // If this path ever serves user-supplied SVG, add server-side sanitization.
   const promise = fetch(`/icons/games/${name}.svg`)
     .then((res) => {
       if (!res.ok) throw new Error(`Failed to load icon: ${name}`);
@@ -121,7 +129,7 @@ export default function GameIcon({
 }) {
   const sizeMap = { sm: 16, md: 24, lg: 32, xl: 48 };
   const px = typeof size === 'number' ? size : (sizeMap[size] ?? 24);
-  const safeName = useMemo(() => (typeof name === 'string' && /^[a-z0-9-]+$/i.test(name) ? name : null), [name]);
+  const safeName = useMemo(() => (typeof name === 'string' && GAME_ICON_NAME_RE.test(name) ? name : null), [name]);
   const [inlineSvg, setInlineSvg] = useState(null);
   const [hasError, setHasError] = useState(false);
   const iconLabel = alt ?? (safeName ? safeName.replace(/-/g, ' ') : 'Game icon');
@@ -177,7 +185,12 @@ export default function GameIcon({
       aria-label={iconLabel || undefined}
       aria-hidden={iconLabel ? undefined : 'true'}
     >
-      {inlineSvg ? <span className="game-icon__svg" dangerouslySetInnerHTML={{ __html: inlineSvg }} /> : <InlineFallbackSvg />}
+      {inlineSvg
+        ? (
+            // Safe usage: sanitizeGameSvg removes active content and this source is app-owned /icons/games assets.
+            <span className="game-icon__svg" dangerouslySetInnerHTML={{ __html: inlineSvg }} />
+          )
+        : <InlineFallbackSvg />}
     </span>
   );
 }
