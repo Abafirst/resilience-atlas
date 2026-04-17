@@ -29,7 +29,7 @@ VITE_AUTH0_CLIENT_ID=your-auth0-client-id
 # Optional – set if your app calls a protected backend API
 VITE_AUTH0_AUDIENCE=https://your-api-identifier
 # Optional – defaults to http://localhost:5173 (Vite dev server)
-VITE_AUTH0_REDIRECT_URI=http://localhost:5173
+VITE_AUTH0_REDIRECT_URI=http://localhost:5173/callback
 ```
 
 > **Note:** All variables must start with `VITE_` so Vite exposes them in the browser via `import.meta.env`.
@@ -88,7 +88,7 @@ The app will be available at <http://localhost:5173>.
 | `VITE_AUTH0_DOMAIN` | **Yes** | Your Auth0 tenant domain |
 | `VITE_AUTH0_CLIENT_ID` | **Yes** | Your Auth0 application Client ID |
 | `VITE_AUTH0_AUDIENCE` | No | API audience identifier (for access tokens) |
-| `VITE_AUTH0_REDIRECT_URI` | No | Callback URL after login (default: `window.location.origin`) |
+| `VITE_AUTH0_REDIRECT_URI` | No | Callback URL after login for web builds (web default: `window.location.origin`; native Capacitor always uses `capacitor://localhost`) |
 
 ---
 

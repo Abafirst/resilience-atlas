@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import BrandCompass from '../components/BrandCompass.jsx';
+import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
 import DimensionModal from '../components/DimensionModal.jsx';
@@ -11,6 +12,8 @@ import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
 import InAppWebsiteOnlyNotice from '../components/InAppWebsiteOnlyNotice.jsx';
 import { isCapacitorAndroid } from '../utils/platform.js';
+
+const GAME_ICON_PATH_RE = /^\/icons\/games\/([a-z0-9-]+)\.svg$/i;
 
 // ── Branded SVG Icon set ───────────────────────────────────────────────────
 const BRAND_ICONS = {
@@ -3904,7 +3907,10 @@ export default function ResultsPage() {
                       <span style={s.gamStatLabel}>Completed</span>
                     </div>
                     <div style={s.gamStat}>
-                      <span style={s.gamStatValue}><img src="/icons/games/star-earned.svg" alt="" aria-hidden="true" width="18" height="18" style={{ verticalAlign: 'middle', marginRight: 2 }} />{gamData.points}</span>
+                      <span style={s.gamStatValue}>
+                        <GameIcon name="star-earned" alt="" size={18} className="game-stat-icon" />
+                        {gamData.points}
+                      </span>
                       <span style={s.gamStatLabel}>Points</span>
                     </div>
                     <div style={s.gamStat}>
@@ -3923,7 +3929,9 @@ export default function ResultsPage() {
                     <div style={s.gamBadgesRow} aria-label="Earned badges">
                       {gamData.badges.map(b => (
                         <div key={b.name} style={s.gamBadge} title={b.desc} role="img" aria-label={`Badge: ${b.name} — ${b.desc}`}>
-                          {b.icon && b.icon.startsWith('/icons/')
+                          {b.icon && GAME_ICON_PATH_RE.test(b.icon)
+                            ? <GameIcon name={b.icon.replace(GAME_ICON_PATH_RE, '$1')} alt="" size={20} />
+                            : b.icon && b.icon.startsWith('/icons/')
                             ? <img src={b.icon} alt="" aria-hidden="true" width="20" height="20" />
                             : <span aria-hidden="true">{b.icon}</span>}
                           <span>{b.name}</span>

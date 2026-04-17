@@ -190,6 +190,11 @@ const DEFAULT_ALLOWED_ORIGINS = [
   // Staging Railway deployment — included by default so staging works
   // out-of-the-box without requiring a manual CORS_ORIGIN env var override.
   "https://resilience-atlas-staging.up.railway.app",
+  // Capacitor serves the SPA from localhost origins in native WebViews.
+  "https://localhost",
+  "http://localhost",
+  "capacitor://localhost",
+  "ionic://localhost",
   // http is intentional here — localhost is never reached over the public
   // internet, so there is no credential-leakage risk for local development.
   "http://localhost:3000",
@@ -206,8 +211,7 @@ logger.info(
   `✅ CORS allowed origins: ${Array.isArray(corsOrigins) ? corsOrigins.join(", ") : corsOrigins}`
 );
 
-app.use(
-  cors({
+const corsOptions = {
     // Using an origin function (rather than the string "*") ensures that
     // callback(null, true) reflects the actual request origin back to the
     // browser.  This is required for credentials: true to work correctly —
@@ -222,11 +226,14 @@ app.use(
       if (corsOrigins.includes(origin)) return callback(null, true);
       return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  })
-);
+  };
+
+app.use(cors(corsOptions));
+app.options("/api/*", cors(corsOptions));
+app.options("/config", cors(corsOptions));
 
 // Gzip compression
 app.use(compression());
@@ -733,4 +740,3 @@ if (!process.env.JEST_WORKER_ID) {
 }
 
 module.exports = app;
-
