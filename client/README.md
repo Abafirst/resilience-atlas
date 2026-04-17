@@ -88,7 +88,7 @@ The app will be available at <http://localhost:5173>.
 | `VITE_AUTH0_DOMAIN` | **Yes** | Your Auth0 tenant domain |
 | `VITE_AUTH0_CLIENT_ID` | **Yes** | Your Auth0 application Client ID |
 | `VITE_AUTH0_AUDIENCE` | No | API audience identifier (for access tokens) |
-| `VITE_AUTH0_REDIRECT_URI` | No | Callback URL after login (web default: `window.location.origin`; native Capacitor uses `capacitor://localhost`) |
+| `VITE_AUTH0_REDIRECT_URI` | No | Callback URL after login for web builds (web default: `window.location.origin`; native Capacitor always uses `capacitor://localhost`) |
 
 ---
 
