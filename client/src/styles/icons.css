@@ -95,7 +95,19 @@
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
+  color: var(--accent-primary, #4f46e5);
   transition: filter 0.2s ease, opacity 0.2s ease;
+}
+
+.game-icon__svg,
+.game-icon__svg > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+[data-theme="dark"] .game-icon {
+  color: var(--accent-primary, #818cf8);
 }
 
 .game-icon--locked {
@@ -111,3 +123,6 @@
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
 }
 
+.game-stat-icon {
+  margin-right: 2px;
+}
