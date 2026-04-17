@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { Capacitor } from '@capacitor/core';
 import App from './App.jsx';
 import { apiUrl } from './api/baseUrl.js';
 
@@ -51,7 +52,9 @@ async function loadAuth0Config() {
 async function init() {
   const { domain, clientId, audience: configAudience } = await loadAuth0Config();
   const audience    = configAudience;
-  const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI || window.location.origin;
+  const redirectUri = Capacitor.isNativePlatform()
+    ? 'capacitor://localhost'
+    : (import.meta.env.VITE_AUTH0_REDIRECT_URI || window.location.origin);
 
   if (!domain || !clientId) {
     // Render a visible error so developers know what to fix.
