@@ -103,7 +103,7 @@ export default function StarterMicroQuests({ tier, progress }) {
   const [newBadge, setNewBadge]         = useState(null);
   const [errorMsg, setErrorMsg]         = useState(null);
 
-  // Respect the tier prop: only allow interaction when the user has a paid tier.
+  // Respect the tier prop: Starter and above can use this 12-practice starter track.
   const unlocked = isStarterOrAbove(tier);
 
   const completedIds = new Set([
@@ -184,7 +184,7 @@ export default function StarterMicroQuests({ tier, progress }) {
         <h3 style={s.sectionTitle}>Micro-Commitment Practices</h3>
         <p style={s.sectionSub}>
           Five-minute values-aligned practices — one for each resilience dimension. Each practice is designed around behavioral activation and ACT committed action principles.{' '}
-          Completed {completedCount} {completedCount === 1 ? 'practice' : 'practices'}.
+          Completed {completedCount} {completedCount === 1 ? 'practice' : 'practices'}. Starter includes 12 in-app practices and no daily practice emails; paid/full tiers unlock the full 30-day journey with daily emails.
         </p>
         <div style={s.grid}>
           {MICRO_QUESTS.map(quest => {

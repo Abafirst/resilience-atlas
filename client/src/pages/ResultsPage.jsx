@@ -7,7 +7,7 @@ import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
 import DimensionModal from '../components/DimensionModal.jsx';
-import { isStarterOrAbove } from '../data/gamificationContent.js';
+import { isStarterOrAbove, isNavigatorOrAbove } from '../data/gamificationContent.js';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import AndroidWebModal from '../components/AndroidWebModal.jsx';
 import InAppWebsiteOnlyNotice from '../components/InAppWebsiteOnlyNotice.jsx';
@@ -159,7 +159,7 @@ const UPSELL_VALUE_PROPS = {
   ad_free:             { icon: '/icons/lock.svg', text: 'Completely ad-free experience throughout the app' },
   pdf_download:        { icon: '/icons/story.svg', text: 'Beautiful downloadable PDF report you keep forever' },
   unlimited_retakes:   { icon: '/icons/compass.svg', text: 'Unlimited reassessments to track your growth' },
-  growth_roadmap:      { icon: '/icons/game-map.svg', text: '30-day personalised growth roadmap' },
+  growth_roadmap:      { icon: '/icons/game-map.svg', text: 'Full 30-day in-app practice roadmap + daily email guidance' },
   benchmarking:        { icon: '/icons/advanced-leaderboards.svg', text: 'See how you rank against thousands of users' },
 };
 
@@ -394,14 +394,16 @@ const STARTER_FEATURES   = [
   'Full PDF summary report',
   'Overall resilience score',
   'Top dimension highlights',
-  'Actionable starter practices',
+  '12 in-app starter micro-practices',
+  'No daily micro-practice emails',
 ];
 const NAVIGATOR_FEATURES = [
   'Detailed explanation of all 6 resilience dimensions',
   'Deeper interpretation of your strengths',
   'Personalized narrative analysis',
   'Recommended growth strategies',
-  'Expanded micro-practices for each dimension',
+  'All 30 in-app micro-practices (30-day track)',
+  'Daily micro-practice email (1 per day)',
   'Downloadable PDF report: 1 every 30 days (per user)',
   'One-time purchase — use anytime',
 ];
@@ -519,7 +521,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
     <div className="upgrade-comparison" role="region" aria-label="Upgrade options" id="upgradeCardsContainer">
       <h2 className="upgrade-comparison__title">Unlock Your Full Resilience Report</h2>
       <p className="upgrade-comparison__subtitle">
-        Your on-screen summary is always free. Upgrade to Atlas Starter or Atlas Navigator to download/email the full PDF report.
+        Your on-screen summary is always free. Upgrade to Atlas Starter or Atlas Navigator to download/email the full PDF report and unlock premium practice pathways.
       </p>
       <div className="upgrade-cards-grid">
         {/* Atlas Starter */}
@@ -529,7 +531,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             <h3 id="upgrade-title-atlas-starter" className="upgrade-card__title">Atlas Starter</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-starter">{getPrice('atlas-starter')}</p>
             <p className="upgrade-card__description">
-              Unlock this assessment’s full PDF report with download + email delivery.
+              Unlock this assessment’s full PDF report with download + email delivery, plus the 12-practice starter track.
             </p>
           </div>
           <ul className="upgrade-card__features" aria-label="Features included in Atlas Starter">
@@ -562,7 +564,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
             <p className="upgrade-card__description">
-              Download/email your complete Deep Resilience Report PDF. 1 report every 30 days — one-time purchase.
+              Download/email your complete Deep Resilience Report PDF. Includes all 30 in-app practices plus daily practice emails.
             </p>
           </div>
           <ul className="upgrade-card__features" aria-label="Features included in Atlas Navigator">
@@ -620,14 +622,16 @@ const TIER_FEATURES = {
     'Email the full PDF to your inbox',
     'Overall resilience score',
     'Top dimension highlights',
-    'Actionable starter practices',
+    '12 in-app starter micro-practices',
+    'No daily micro-practice emails',
   ],
   'atlas-navigator': [
     'Detailed explanation of all 6 resilience dimensions',
     'Deeper interpretation of your strengths',
     'Personalized narrative analysis',
     'Recommended growth strategies',
-    'Expanded micro-practices for each dimension',
+    'All 30 in-app micro-practices (30-day track)',
+    'Daily micro-practice email (1 per day)',
     'Downloadable + emailable full PDF report',
   ],
   'atlas-premium': [
@@ -2055,9 +2059,10 @@ function tierLabel(tierId) {
 }
 
 // ── Returns true for any tier that grants paid report access ──────────────
-// isPaidTier: alias of isStarterOrAbove — returns true for any paid tier
-// (individual: atlas-starter/navigator/premium; teams: starter/pro/enterprise)
+// isPaidTier: alias of isStarterOrAbove — returns true for any paid tier.
 const isPaidTier = isStarterOrAbove;
+// Tiers that unlock the full 30-day in-app practice track + daily emails.
+const hasFullPracticeTier = isNavigatorOrAbove;
 
 // ── Gamification helpers ───────────────────────────────────────────────────
 const GAM_KEY = 'resilience_gamification';
@@ -2066,7 +2071,7 @@ const GAM_BADGE_DEFS = [
   { name: 'First Step',       icon: '/icons/badge.svg',           desc: 'Completed your first practice',                 test: (c)        => Object.keys(c).length >= 1  },
   { name: 'Week Warrior',     icon: '/icons/game-shield.svg',     desc: '5 practices completed',                         test: (c)        => Object.keys(c).length >= 5  },
   { name: 'Dimension Master', icon: '/icons/game-map.svg',        desc: '10 practices completed across dimensions',       test: (c)        => Object.keys(c).length >= 10 },
-  { name: 'Champion',         icon: '/icons/kids-trophy.svg',     desc: 'All 12 practices completed!',                   test: (c)        => Object.keys(c).length >= 12 },
+  { name: 'Champion',         icon: '/icons/kids-trophy.svg',     desc: 'Complete your full practice track!',            test: (c, _, targetCount) => Object.keys(c).length >= targetCount },
   { name: 'Streak Master',    icon: '/icons/streaks.svg',         desc: '7 consecutive days of practice',                test: (_, streak) => streak >= 7                },
 ];
 
@@ -2090,8 +2095,13 @@ function calcGamStreak(completions) {
   return streak;
 }
 
-function calcGamBadges(completions, streak) {
-  return GAM_BADGE_DEFS.filter(b => b.test(completions, streak)).map(b => ({ name: b.name, icon: b.icon, desc: b.desc }));
+function calcGamBadges(completions, streak, targetCount) {
+  return GAM_BADGE_DEFS.filter(b => b.test(completions, streak, targetCount)).map((b) => {
+    if (b.name === 'Champion') {
+      return { ...b, desc: `All ${targetCount} practices completed!` };
+    }
+    return { name: b.name, icon: b.icon, desc: b.desc };
+  });
 }
 
 /** Parse a duration string like "3 min", "5 min", "15 min" to seconds. */
@@ -2137,6 +2147,7 @@ export default function ResultsPage() {
   const [pdfLoading, setPdfLoading]   = useState(false);
   const [pdfError, setPdfError]       = useState('');
   const [priorAccess, setPriorAccess] = useState(false);  // true if /api/report/access confirms prior purchase
+  const [hasNavigatorAccess, setHasNavigatorAccess] = useState(false); // true when backend confirms full/blanket practice tier
   // Tracks whether both tier checks (payments/status and report/access) have completed.
   // The download button is only shown once the backend has confirmed the tier, preventing
   // stale localStorage values from granting premature access.
@@ -2661,10 +2672,11 @@ export default function ResultsPage() {
     const email = getEffectiveEmail();
     if (!email) {
       // No email to check with — mark as complete so UI renders (tier stays 'free').
-      setIsCurrentAssessmentUnlocked(false);
-      setTierCheckComplete(true);
-      return;
-    }
+        setIsCurrentAssessmentUnlocked(false);
+        setHasNavigatorAccess(false);
+        setTierCheckComplete(true);
+        return;
+      }
 
     // Build URL with current assessment data so the backend can check per-assessment unlock.
     // Prefer the already-resolved `results` state over a fresh localStorage read so that
@@ -2687,6 +2699,7 @@ export default function ResultsPage() {
         // isCurrentAssessmentUnlocked: this specific assessment's PDF is accessible.
         const unlocked = data.isCurrentAssessmentUnlocked ?? (data.hasActiveAccess ?? data.hasAccess);
         setIsCurrentAssessmentUnlocked(!!unlocked);
+        setHasNavigatorAccess(!!data.hasNavigatorAccess);
         if (unlocked) {
           setPriorAccess(true);
         } else {
@@ -2962,10 +2975,11 @@ export default function ResultsPage() {
       }
       const streak = calcGamStreak(newCompletions);
       const points = Object.keys(newCompletions).length * 10;
-      const badges = calcGamBadges(newCompletions, streak);
+      const targetCount = hasFullPracticeTier(tier) ? 30 : 12;
+      const badges = calcGamBadges(newCompletions, streak, targetCount);
       return { completions: newCompletions, streak, lastDate: today, points, badges };
     });
-  }, []);
+  }, [tier]);
 
   // ── Gamification: timer controls ──────────────────────────────────────
   const startTimer = useCallback((practiceKey, totalSecs) => {
@@ -2998,6 +3012,7 @@ export default function ResultsPage() {
   //     assessments with a matching purchase)
   //   - No "first assessment free" exception.
   const hasPremiumAccess = tierCheckComplete && (isCurrentAssessmentUnlocked === true || isPaidTier(tier) || priorAccess);
+  const hasFullPracticeAccess = hasPremiumAccess && (hasFullPracticeTier(tier) || hasNavigatorAccess);
   const isAtlasPremium   = tier === 'atlas-premium';
 
   const rankedDims = results
@@ -3006,37 +3021,68 @@ export default function ResultsPage() {
 
   const dominantType = rankedDims.length > 0 ? rankedDims[0][0] : '';
 
-  // ── Derive "today's practice" from the 30-day plan ────────────────────
-  // Build a deterministic 30-day sequence from assessment scores (same algorithm
-  // as the backend buildPlan function in micro-practice-plan.js).
-  const todaysPractice = (() => {
+  // ── Build deterministic 30-day micro-practice plan ─────────────────────
+  const thirtyDayPracticePlan = (() => {
     if (!results || !results.scores) return null;
     const dims = Object.keys(EVIDENCE_PRACTICES);
-    // Weight: lower score → more weight (needs more work)
     const weights = dims.map((dim) => {
       const pct = (results.scores[dim] && results.scores[dim].percentage != null)
         ? results.scores[dim].percentage : 50;
       return Math.max(1, 100 - Math.round(pct));
     });
-    // Simple seeded LCG from overall score to keep it stable
-    let seed = Math.round((results.overall || 50) * 137) + (practicePlanDay * 7);
-    function nextRand() {
+
+    let seed = Math.round((results.overall || 50) * 137);
+    const nextRand = () => {
       seed = (seed * 1664525 + 1013904223) & 0xffffffff;
       return (seed >>> 0) / 0x100000000;
-    }
-    // Build weighted pool
+    };
+
     const totalWeight = weights.reduce((a, b) => a + b, 0);
     const pool = [];
     dims.forEach((dim, i) => {
-      const extra = Math.max(1, Math.round((weights[i] / totalWeight) * 30));
-      for (let e = 0; e < extra; e++) pool.push(dim);
+      const extra = Math.max(1, Math.round((weights[i] / totalWeight) * 24));
+      pool.push({ dim, idx: 0 });
+      for (let e = 0; e < extra; e++) {
+        pool.push({ dim, idx: nextRand() > 0.5 ? 1 : 0 });
+      }
     });
-    // Deterministic pick for this day
-    const dayIndex = (practicePlanDay - 1) % pool.length;
-    const dim = pool[dayIndex] || dims[0];
-    const practices = EVIDENCE_PRACTICES[dim] || [];
-    const practice = practices[practicePlanDay % 2 === 0 ? 0 : (practices.length - 1)] || practices[0];
-    return practice ? { dim, practice } : null;
+
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(nextRand() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+
+    while (pool.length < 30) {
+      const extra = pool[Math.floor(nextRand() * pool.length)];
+      pool.push({ ...extra });
+    }
+
+    const planEntries = pool.slice(0, 30).map((entry, idx) => {
+      const practices = EVIDENCE_PRACTICES[entry.dim] || [];
+      const practice = practices[entry.idx] || practices[0];
+      return practice ? { day: idx + 1, dim: entry.dim, practice } : null;
+    }).filter(Boolean);
+
+    return planEntries.length ? planEntries : null;
+  })();
+
+  const todaysPractice = thirtyDayPracticePlan
+    ? (thirtyDayPracticePlan.find((entry) => entry.day === practicePlanDay) || null)
+    : null;
+
+  const starterPracticeList = (() => {
+    let dayCounter = 0;
+    return Object.entries(EVIDENCE_PRACTICES).flatMap(([dim, practices]) =>
+      practices.map((practice) => {
+        dayCounter += 1;
+        return {
+          day: dayCounter,
+          dim,
+          practice,
+          starterKey: practice.title,
+        };
+      })
+    );
   })();
 
   const getPrice = (tierId) => {
@@ -3564,7 +3610,9 @@ export default function ResultsPage() {
                   Ready to build your practice?
                 </div>
                 <p style={{ fontSize: 13, color: '#6d28d9', margin: 0, lineHeight: 1.5 }}>
-                  Start your Resilience Journey with values-aligned micro-practices tailored to your unique resilience profile.
+                  {hasFullPracticeAccess
+                    ? 'You have full access: all 30 in-app practices plus daily micro-practice emails.'
+                    : 'Starter access includes 12 in-app practices. Upgrade to Atlas Navigator for all 30 practices and daily micro-practice emails.'}
                 </p>
               </div>
             </div>
@@ -3723,8 +3771,8 @@ export default function ResultsPage() {
               <div style={{ background: '#fff', border: '1px solid #ddd6fe', borderRadius: 12, padding: '16px 20px' }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>What upgrading gives you:</div>
                 <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: '#334155', lineHeight: 1.9 }}>
-                  <li><strong>Atlas Starter ($9.99)</strong> — Full PDF download + email for this assessment, dimension explanations, and starter micro-practices</li>
-                  <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, PDF download + email access (1 every 30 days), and the full resilience journey platform</li>
+                  <li><strong>Atlas Starter ($9.99)</strong> — Full PDF download + email for this assessment, dimension explanations, and 12 in-app starter practices</li>
+                  <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, full PDF download + email (1 every 30 days), all 30 in-app practices, and daily micro-practice emails</li>
                 </ul>
               </div>
               )}
@@ -3894,13 +3942,19 @@ export default function ResultsPage() {
             <div style={s.practicesHeading} id="practicesHeading"><BrandIcon name="flask" size={17} color="#10b981" /> Evidence-Based Micro-Practices</div>
             <p style={s.practicesSubheading}>
               {showAllPractices
-                ? 'All practices across all 6 resilience dimensions — grounded in ACT and ABA.'
-                : `Your 30-day resilience journey — one practice per day, tailored to your results. Day ${practicePlanDay} of 30.`}
+                ? hasFullPracticeAccess
+                  ? 'All 30 practices in your full resilience journey — grounded in ACT and ABA.'
+                  : 'Starter track: 12 in-app practices. Daily practice emails unlock with Atlas Navigator or above.'
+                : hasFullPracticeAccess
+                  ? `Your 30-day resilience journey — one practice per day, tailored to your results. Day ${practicePlanDay} of 30.`
+                  : `Starter track: 12 in-app practices and no daily emails. Practice ${((practicePlanDay - 1) % 12) + 1} of 12.`}
             </p>
 
             {/* ── Gamification header (Atlas Starter+) ────────────────── */}
             {hasPremiumAccess && (() => {
-              const allPracticeKeys = Object.values(EVIDENCE_PRACTICES).flat().map(p => p.title);
+              const allPracticeKeys = hasFullPracticeAccess
+                ? Array.from({ length: 30 }, (_, idx) => `day-${idx + 1}`)
+                : starterPracticeList.map((entry) => entry.starterKey);
               const totalAll = allPracticeKeys.length;
               const completedAll = allPracticeKeys.filter(k => gamData.completions[k]).length;
               const progressPct = totalAll > 0 ? Math.round((completedAll / totalAll) * 100) : 0;
@@ -3949,11 +4003,13 @@ export default function ResultsPage() {
             })()}
 
             {/* ── Today's practice (paced 30-day delivery) ──────────────── */}
-            {!showAllPractices && todaysPractice && (() => {
-              const { dim, practice } = todaysPractice;
+            {!showAllPractices && (hasFullPracticeAccess ? todaysPractice : starterPracticeList[((practicePlanDay - 1) % 12)]) && (() => {
+              const entry = hasFullPracticeAccess
+                ? todaysPractice
+                : starterPracticeList[((practicePlanDay - 1) % 12)];
+              const { day, dim, practice } = entry;
               const color = DIM_COLORS[dim] || '#667eea';
-              const dimIcon = DIM_ICONS[dim];
-              const practiceKey = practice.title;
+              const practiceKey = hasFullPracticeAccess ? `day-${day}` : practice.title;
               const isCompleted = !!(gamData.completions[practiceKey]);
               const isTimerActive = timerData && timerData.practiceKey === practiceKey;
               const timerFinished = isTimerActive && timerData.secondsLeft === 0;
@@ -3969,7 +4025,8 @@ export default function ResultsPage() {
                       background: color + '18', color, border: `1px solid ${color}30`,
                       borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 700,
                     }}>
-                      <img src="/icons/story.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Day {practicePlanDay} of 30
+                      <img src="/icons/story.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />
+                      {hasFullPracticeAccess ? `Day ${day} of 30` : `Practice ${day} of 12`}
                     </span>
                     <span style={{ fontSize: 12, color: '#94a3b8' }}>
                       {dim}
@@ -4049,17 +4106,21 @@ export default function ResultsPage() {
                     borderRadius: 10, padding: '14px 16px', marginTop: 12,
                   }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
-                      <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Coming up in your 30-day plan:
+                      <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />
+                      {hasFullPracticeAccess ? 'Coming up in your 30-day plan:' : 'More starter practices:'}
                     </div>
                     {[1, 2, 3].map((offset) => {
-                      const nextDay = practicePlanDay + offset;
-                      if (nextDay > 30) return null;
-                      const dims2 = Object.keys(EVIDENCE_PRACTICES);
-                      const preview = dims2[(nextDay - 1) % dims2.length];
+                      const nextDay = day + offset;
+                      const previewEntry = hasFullPracticeAccess
+                        ? (thirtyDayPracticePlan || []).find((p) => p.day === nextDay)
+                        : starterPracticeList.find((p) => p.day === nextDay);
+                      if (!previewEntry) return null;
                       return (
                         <div key={offset} style={{ fontSize: 12, color: '#94a3b8', marginBottom: 4, display: 'flex', gap: 8 }}>
-                          <span style={{ fontWeight: 600, color: '#64748b', minWidth: 52 }}>Day {nextDay}:</span>
-                          <span>{preview}</span>
+                          <span style={{ fontWeight: 600, color: '#64748b', minWidth: 72 }}>
+                            {hasFullPracticeAccess ? `Day ${nextDay}:` : `Practice ${nextDay}:`}
+                          </span>
+                          <span>{previewEntry.dim}</span>
                         </div>
                       );
                     })}
@@ -4094,93 +4155,89 @@ export default function ResultsPage() {
                     ← Back to today's practice
                   </button>
                 </div>
-                {Object.entries(EVIDENCE_PRACTICES).map(([dim, practices]) => {
+                {(hasFullPracticeAccess ? (thirtyDayPracticePlan || []) : starterPracticeList).map((entry) => {
+                  const { day, dim, practice } = entry;
                   const color = DIM_COLORS[dim] || '#667eea';
                   const dimIcon = DIM_ICONS[dim];
+                  const practiceKey = hasFullPracticeAccess ? `day-${day}` : practice.title;
+                  const isCompleted = !!(gamData.completions[practiceKey]);
+                  const isTimerActive = timerData && timerData.practiceKey === practiceKey;
+                  const timerFinished = isTimerActive && timerData.secondsLeft === 0;
+                  const durSecs = parseDurationSecs(practice.duration);
                   return (
-                    <div key={dim}>
+                    <div key={practiceKey}>
                       <div style={s.practiceDimHeader(color)} aria-label={`${dim} practices`}>
                         {dimIcon && (
                           <img src={dimIcon} alt="" aria-hidden="true" width="20" height="20"
                             style={{ verticalAlign: 'middle', marginRight: 6, flexShrink: 0 }} />
                         )}
-                        <span>{dim}</span>
+                        <span>{hasFullPracticeAccess ? `Day ${day} · ${dim}` : dim}</span>
                       </div>
-                      {practices.map((practice) => {
-                        const practiceKey = practice.title;
-                        const isCompleted = !!(gamData.completions[practiceKey]);
-                        const isTimerActive = timerData && timerData.practiceKey === practiceKey;
-                        const timerFinished = isTimerActive && timerData.secondsLeft === 0;
-                        const durSecs = parseDurationSecs(practice.duration);
-                        return (
-                          <div
-                            key={practice.title}
-                            style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
-                          >
-                            <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
-                                <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
-                              </div>
-                              {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
-                            </div>
-                            <div style={s.practiceTags}>
-                              <span style={s.practiceTag}>{practice.duration}</span>
-                              <span style={s.practiceTag}>{practice.difficulty}</span>
-                            </div>
-                            <div style={s.practicePrinciples}>
-                              <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
-                              <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
-                            </div>
-                            <ol style={s.practiceSteps}>
-                              {practice.instructions.map((step, i) => (
-                                <li key={i}>{step}</li>
-                              ))}
-                            </ol>
-                            <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
-                              Educational note: These practices support self-reflection. Not therapeutic treatment.
-                            </p>
+                      <div
+                        style={{ ...s.practiceCard(color), ...(isCompleted ? s.gamCompleteCard : {}) }}
+                      >
+                        <div style={{ ...s.practiceCardHeader, justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <img src={practice.icon} alt="" aria-hidden="true" width="20" height="20" style={{ flexShrink: 0 }} />
+                            <span style={{ ...s.practiceTitle, textDecoration: isCompleted ? 'line-through' : 'none' }}>{practice.title}</span>
+                          </div>
+                          {isCompleted && <span style={{ fontSize: 16 }} aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                        </div>
+                        <div style={s.practiceTags}>
+                          <span style={s.practiceTag}>{practice.duration}</span>
+                          <span style={s.practiceTag}>{practice.difficulty}</span>
+                        </div>
+                        <div style={s.practicePrinciples}>
+                          <span style={s.practicePrincipleBadge('rgba(79,70,229,0.7)')}>ACT: {practice.actPrinciple}</span>
+                          <span style={s.practicePrincipleBadge('rgba(5,150,105,0.7)')}>ABA: {practice.abaPrinciple}</span>
+                        </div>
+                        <ol style={s.practiceSteps}>
+                          {practice.instructions.map((step, i) => (
+                            <li key={i}>{step}</li>
+                          ))}
+                        </ol>
+                        <p style={{ fontSize: 11, color: '#4a5568', margin: 0, fontStyle: 'italic' }}>
+                          Educational note: These practices support self-reflection. Not therapeutic treatment.
+                        </p>
 
-                            {/* ── Gamification controls (Atlas Starter+) ────────── */}
-                            {hasPremiumAccess && (
-                              <div style={s.gamActions}>
-                                {durSecs > 0 && !isCompleted && !isTimerActive && (
-                                  <button
-                                    type="button"
-                                    style={s.gamTimerBtn}
-                                    onClick={() => startTimer(practiceKey, durSecs)}
-                                    aria-label={`Start ${practice.duration} timer for ${practice.title}`}
-                                  >
-                                    ⏱ Start Timer
+                        {/* ── Gamification controls (Atlas Starter+) ────────── */}
+                        {hasPremiumAccess && (
+                          <div style={s.gamActions}>
+                            {durSecs > 0 && !isCompleted && !isTimerActive && (
+                              <button
+                                type="button"
+                                style={s.gamTimerBtn}
+                                onClick={() => startTimer(practiceKey, durSecs)}
+                                aria-label={`Start ${practice.duration} timer for ${practice.title}`}
+                              >
+                                ⏱ Start Timer
+                              </button>
+                            )}
+                            {isTimerActive && (
+                              <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
+                                <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
+                                {!timerFinished && (
+                                  <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
+                                    {timerData.running ? '⏸' : '▶'}
                                   </button>
                                 )}
-                                {isTimerActive && (
-                                  <div style={s.gamTimerDisplay} role="timer" aria-label={`Timer: ${fmtSecs(timerData.secondsLeft)} remaining`}>
-                                    <span style={s.gamTimerCount}>{fmtSecs(timerData.secondsLeft)}</span>
-                                    {!timerFinished && (
-                                      <button type="button" style={s.gamTimerPauseBtn} onClick={pauseTimer} aria-label={timerData.running ? 'Pause timer' : 'Resume timer'}>
-                                        {timerData.running ? '⏸' : '▶'}
-                                      </button>
-                                    )}
-                                    <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
-                                  </div>
-                                )}
-                                <button
-                                  type="button"
-                                  style={s.gamCompleteBtn(isCompleted)}
-                                  onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
-                                  aria-pressed={isCompleted}
-                                  aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
-                                >
-                                  {isCompleted
-                                    ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
-                                    : '☐ Mark Complete'}
-                                </button>
+                                <button type="button" style={s.gamTimerStopBtn} onClick={stopTimer} aria-label="Stop timer">✕</button>
                               </div>
                             )}
+                            <button
+                              type="button"
+                              style={s.gamCompleteBtn(isCompleted)}
+                              onClick={() => handleTogglePractice(practiceKey, isTimerActive)}
+                              aria-pressed={isCompleted}
+                              aria-label={isCompleted ? `Unmark ${practice.title} as complete` : `Mark ${practice.title} as complete`}
+                            >
+                              {isCompleted
+                                ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Completed!</>
+                                : '☐ Mark Complete'}
+                            </button>
                           </div>
-                        );
-                      })}
+                        )}
+                      </div>
                     </div>
                   );
                 })}
