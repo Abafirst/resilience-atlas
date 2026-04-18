@@ -16,7 +16,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <main className="about-page landing-story">
+    <main className="storytelling-page landing-story">
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner story-wrap">
@@ -98,20 +98,22 @@ export default function LandingPage() {
 
       {/* Final CTA */}
       <section className="landing-section">
-        <div className="final-cta soft-card story-wrap">
-          <h2>Ready to Map Your Resilience?</h2>
-          <p>
-            This is your starting position&mdash;honest, multidimensional, and genuinely useful.
-            Understand where you stand. Discover where you&rsquo;re growing.
-          </p>
-          <div className="hero-ctas">
-            <button
-              type="button"
-              className="btn-hero-primary"
-              onClick={() => navigate('/quiz')}
-            >
-              Discover Your Dimensions
-            </button>
+        <div className="story-wrap">
+          <div className="final-cta soft-card">
+            <h2>Ready to Map Your Resilience?</h2>
+            <p>
+              This is your starting position&mdash;honest, multidimensional, and genuinely useful.
+              Understand where you stand. Discover where you&rsquo;re growing.
+            </p>
+            <div className="hero-ctas">
+              <button
+                type="button"
+                className="btn-hero-primary"
+                onClick={() => navigate('/quiz')}
+              >
+                Discover Your Dimensions
+              </button>
+            </div>
           </div>
         </div>
       </section>

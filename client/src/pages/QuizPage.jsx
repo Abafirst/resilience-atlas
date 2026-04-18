@@ -733,7 +733,7 @@ export default function QuizPage() {
       />
 
       {/* ── Main quiz area ─────────────────────────────── */}
-      <main className="about-page quiz-story">
+      <main className="storytelling-page quiz-story">
         <div className="quiz-page">
           <div className="quiz-wrapper">
 

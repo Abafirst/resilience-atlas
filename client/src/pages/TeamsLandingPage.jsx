@@ -682,7 +682,7 @@ export default function TeamsLandingPage() {
 
   <SiteHeader activePage="teams" />
   <DarkModeHint />
-  <main className="about-page teams-story">
+  <main className="storytelling-page teams-story">
 
   <section className="team-hero" aria-label="Team page hero">
     <span className="hero-eyebrow">Business Tier</span>

@@ -3092,7 +3092,7 @@ export default function ResultsPage() {
         {showAndroidModal && (
           <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
         )}
-        <div style={s.page} className="about-page results-story">
+        <div style={s.page} className="storytelling-page results-story">
           <div style={s.container} className="story-results-wrap">
             {historyEmail ? (
               // Authenticated user (or has stored email): show their history
@@ -3288,7 +3288,7 @@ export default function ResultsPage() {
         </div>
       </header>
 
-      <div style={s.page} className="about-page results-story">
+      <div style={s.page} className="storytelling-page results-story">
       <div style={s.container} className="story-results-wrap">
 
         {/* Banner */}

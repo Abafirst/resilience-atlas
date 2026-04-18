@@ -71,7 +71,7 @@ export default function DashboardPage() {
   const dailyAffirmation = useMemo(() => getDailyAffirmationAny(), []);
 
   return (
-    <main id="main-content" className="dash-layout about-page dashboard-story" aria-live="polite">
+    <main id="main-content" className="dash-layout storytelling-page dashboard-story" aria-live="polite">
 
       {/* ── Page heading ──────────────────────────────────────────── */}
       <div className="dash-card soft-card" style={{ marginBottom: '1.5rem' }}>
