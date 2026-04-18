@@ -612,7 +612,7 @@ export default function AboutPage() {
           <div className="about-wrap">
             <div className="hero-card">
               <div>
-                <span className="hero-kicker">✨ About the Resilience Atlas</span>
+                <span className="hero-kicker"><span aria-hidden="true">✨</span> About the Resilience Atlas</span>
                 <h1 id="about-heading" className="hero-title">A warm, research-grounded map for real human resilience.</h1>
                 <p className="hero-sub">
                   We combine doctoral research, lived experience, and clear language so you can see where you are,
@@ -681,7 +681,7 @@ export default function AboutPage() {
                   <span className="team-avatar" aria-hidden="true">{member.avatar}</span>
                   <h3 className="team-name">{member.name}</h3>
                   <p className="team-role">{member.role}</p>
-                  <p className="team-fact">💬 {member.fact}</p>
+                  <p className="team-fact"><span aria-hidden="true">💬</span> {member.fact}</p>
                 </article>
               ))}
             </div>
