@@ -2,12 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { ARENA_QUESTIONS } from '../../data/kidsGameChallenges';
 
 const CHARACTERS_FOR_ARENA = [
-  { name: 'Kai — The Builder',     color: '#fef9c3', accentColor: '#854d0e', emoji: '🔨' },
-  { name: 'Alex — The Thinker',    color: '#e0f2fe', accentColor: '#0284c7', emoji: '💡' },
-  { name: 'Maya — The Connector',  color: '#ede9fe', accentColor: '#7c3aed', emoji: '🤝' },
-  { name: 'Jordan — The Feeler',   color: '#ffe4e6', accentColor: '#be123c', emoji: '💭' },
-  { name: 'Sam — The Grounder',    color: '#dcfce7', accentColor: '#15803d', emoji: '🌬️' },
-  { name: 'River — The Guide',     color: '#f0fdf4', accentColor: '#065f46', emoji: '✨' },
+  { name: 'Kai — The Builder',     color: '#fef9c3', accentColor: '#854d0e', icon: '/icons/agentic-generative.svg' },
+  { name: 'Alex — The Thinker',    color: '#e0f2fe', accentColor: '#0284c7', icon: '/icons/cognitive-narrative.svg' },
+  { name: 'Maya — The Connector',  color: '#ede9fe', accentColor: '#7c3aed', icon: '/icons/relational-connective.svg' },
+  { name: 'Jordan — The Feeler',   color: '#ffe4e6', accentColor: '#be123c', icon: '/icons/emotional-adaptive.svg' },
+  { name: 'Sam — The Grounder',    color: '#dcfce7', accentColor: '#15803d', icon: '/icons/somatic-regulative.svg' },
+  { name: 'River — The Guide',     color: '#f0fdf4', accentColor: '#065f46', icon: '/icons/spiritual-reflective.svg' },
 ];
 
 function shuffle(arr) {
@@ -115,10 +115,10 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
               role="listitem"
               aria-label={`Battle ${char.name}`}
             >
-              <div className="kg-arena-char-emoji" aria-hidden="true">{char.emoji}</div>
+              <div className="kg-arena-char-emoji" aria-hidden="true"><img src={char.icon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} /></div>
               <div className="kg-arena-char-name">{char.name}</div>
               <div className="kg-arena-char-cta" style={{ color: char.accentColor }}>
-                ⚔️ Challenge!
+                Challenge!
               </div>
             </button>
           ))}
@@ -145,15 +145,15 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
           </p>
           <p>
             {won
-              ? 'Incredible! You really know your resilience. The characters are proud of you! 🌟'
+              ? 'Incredible! You really know your resilience. The characters are proud of you!'
               : 'Great try! Every battle makes you stronger. Want to try again?'
             }
           </p>
           {won && <p className="kg-battle-tip">{questions[questions.length - 1]?.tip}</p>}
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '1.5rem' }}>
-          <button className="kg-spin-btn" onClick={() => startBattle(opponent)}>🔄 Rematch!</button>
-          <button className="kg-spin-btn" style={{ background: '#475569' }} onClick={() => setView('select')}>⚔️ New Battle</button>
+          <button className="kg-spin-btn" onClick={() => startBattle(opponent)}>Rematch!</button>
+          <button className="kg-spin-btn" style={{ background: '#475569' }} onClick={() => setView('select')}>New Battle</button>
           <button className="kg-back-btn" style={{ position: 'static' }} onClick={onBack}>← Back</button>
         </div>
       </div>
@@ -173,7 +173,7 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
         </div>
         <div className="kg-battle-vs">VS</div>
         <div className="kg-battle-opponent" style={{ color: opponent.accentColor }}>
-          <span aria-hidden="true">{opponent.emoji}</span>
+          <span aria-hidden="true"><img src={opponent.icon} alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
           <span>{opponent.name.split(' — ')[1]}: {aiScore}</span>
         </div>
       </div>
@@ -214,7 +214,10 @@ export default function ArenaBattles({ onBack, onEarnBadge }) {
             className={`kg-feedback ${selected === q.correct ? 'kg-feedback-match' : 'kg-feedback-miss'}`}
             aria-live="polite" role="status"
           >
-            {selected === q.correct ? `✓ Correct! ` : `Not quite! `}{q.tip}
+            {selected === q.correct
+              ? <><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />Correct! {q.tip}</>
+              : <>Not quite! {q.tip}</>
+            }
           </div>
         )}
       </div>

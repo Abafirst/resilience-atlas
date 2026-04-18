@@ -52,10 +52,10 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
       <div className="kg-game-container">
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">💎</div>
+          <div className="kg-game-emoji" aria-hidden="true"><img src="/icons/games/treasure-explorer.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
           <h2 className="kg-game-title">Treasure Explorer</h2>
           <p className="kg-game-subtitle">Explore islands and find hidden story treasures!</p>
-          <div className="kg-score-badge" aria-live="polite">💎 {unlocked.size}/{TREASURE_ISLANDS.length} treasures found</div>
+          <div className="kg-score-badge" aria-live="polite"><img src="/icons/games/treasure-explorer.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />{unlocked.size}/{TREASURE_ISLANDS.length} treasures found</div>
         </div>
 
         <div className="kg-island-grid" role="list" aria-label="Islands to explore">
@@ -70,11 +70,11 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
                 role="listitem"
                 aria-label={`${island.name} — ${isUnlocked ? 'treasure found!' : 'explore to find treasure'}`}
               >
-                <div className="kg-island-emoji" aria-hidden="true">{island.emoji}</div>
+                <div className="kg-island-emoji" aria-hidden="true"><img src={island.icon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} /></div>
                 <div className="kg-island-name">{island.name}</div>
                 <div className="kg-island-dim" style={{ color: island.accentColor }}>{island.dimension}</div>
                 {isUnlocked
-                  ? <div className="kg-island-unlocked" aria-hidden="true">💎 Treasure Found!</div>
+                  ? <div className="kg-island-unlocked" aria-hidden="true"><img src="/icons/games/treasure-explorer.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />Treasure Found!</div>
                   : <div className="kg-island-hint">Tap to explore →</div>
                 }
               </button>
@@ -84,9 +84,9 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
 
         {unlocked.size === TREASURE_ISLANDS.length && (
           <div className="kg-completion-panel">
-            <div className="kg-completion-emoji" aria-hidden="true">👑</div>
+            <div className="kg-completion-emoji" aria-hidden="true"><img src="/icons/kids-trophy.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
             <h3>All treasures found!</h3>
-            <p>You're a legendary Treasure Explorer! You've discovered the wisdom of all four islands! 🌟</p>
+            <p>You're a legendary Treasure Explorer! You've discovered the wisdom of all four islands!</p>
           </div>
         )}
       </div>
@@ -102,7 +102,7 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
       <button className="kg-back-btn" onClick={() => setView('map')} aria-label="Back to map">← Map</button>
 
       <div className="kg-island-header" style={{ background: activeIsland.color }}>
-        <span className="kg-island-header-emoji" aria-hidden="true">{activeIsland.emoji}</span>
+        <span className="kg-island-header-emoji" aria-hidden="true"><img src={activeIsland.icon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} /></span>
         <div>
           <h2 className="kg-island-header-name">{activeIsland.name}</h2>
           <p style={{ fontSize: '.82rem', color: activeIsland.accentColor, margin: 0 }}>{activeIsland.dimension}</p>
@@ -113,7 +113,7 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
 
       {showTreasure ? (
         <div className="kg-treasure-reveal" style={{ borderColor: activeIsland.accentColor }}>
-          <div className="kg-treasure-icon" aria-hidden="true">💎</div>
+          <div className="kg-treasure-icon" aria-hidden="true"><img src="/icons/games/treasure-explorer.svg" alt="" width={32} height={32} style={{ verticalAlign: 'middle' }} /></div>
           <h3 className="kg-treasure-title">Treasure Unlocked!</h3>
           <p className="kg-treasure-story-title"><strong>{activeIsland.treasureTitle}</strong></p>
           <p className="kg-treasure-preview">{activeIsland.treasurePreview}</p>
@@ -147,12 +147,12 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
 
             {isCorrect && (
               <div className="kg-feedback kg-feedback-match" role="status" aria-live="polite">
-                🎉 That's right! You're unlocking the treasure now…
+                That's right! You're unlocking the treasure now…
               </div>
             )}
             {isWrong && (
               <div className="kg-feedback kg-feedback-miss" role="status" aria-live="polite">
-                Not quite! Try again — you can do it! 💪
+                Not quite! Try again — you can do it!
               </div>
             )}
           </div>
@@ -163,7 +163,7 @@ export default function TreasureExplorer({ onBack, onEarnBadge }) {
               style={{ background: activeIsland.accentColor }}
               onClick={checkAnswer}
             >
-              Check Answer 🔍
+              Check Answer
             </button>
           )}
           {isWrong && (

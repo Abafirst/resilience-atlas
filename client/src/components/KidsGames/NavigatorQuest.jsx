@@ -72,7 +72,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
         return next;
       });
       if (onEarnBadge) onEarnBadge(activeQuest.badge);
-      setQuestToast(`Congratulations! ${activeQuest.title} completed! 🎉`);
+      setQuestToast(`Congratulations! ${activeQuest.title} completed!`);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2200);
       setTimeout(() => setQuestToast(''), 3200);
@@ -85,7 +85,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
       <div className="kg-game-container">
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">⚔️</div>
+          <div className="kg-game-emoji" aria-hidden="true"><img src="/icons/games/navigator-quest.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
           <h2 className="kg-game-title">Navigator Quest</h2>
           <p className="kg-game-subtitle">Choose your adventure! Each quest has 3 steps.</p>
         </div>
@@ -104,7 +104,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
                     <h3 className="kg-quest-card-title">{quest.title}</h3>
                     <p className="kg-quest-card-char">{quest.character}</p>
                   </div>
-                  {isCompleted && <span className="kg-quest-done-badge" aria-label="Completed">✅</span>}
+                  {isCompleted && <span className="kg-quest-done-badge" aria-label="Completed"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
                 </div>
                 <p style={{ fontSize: '.85rem', color: '#334155', margin: '.5rem 0 1rem' }}>
                   {quest.steps.length} steps · {quest.dimension}
@@ -114,7 +114,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
                   style={{ background: quest.accentColor }}
                   onClick={() => startQuest(quest)}
                 >
-                  {isCompleted ? '🔄 Replay Quest' : '⚔️ Start Quest'}
+                  {isCompleted ? 'Replay Quest' : 'Start Quest'}
                 </button>
               </div>
             );
@@ -206,7 +206,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
             <p className="kg-reveal-message">{currentStep.message}</p>
             {currentStep.storyUnlock && (
               <div className="kg-story-unlock">
-                <span aria-hidden="true">📖</span> Story Unlocked: <strong>{currentStep.storyUnlock}</strong>
+                <img src="/icons/story.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Story Unlocked: <strong>{currentStep.storyUnlock}</strong>
               </div>
             )}
           </div>
@@ -225,7 +225,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
           disabled={!canAdvance}
           style={{ background: activeQuest.accentColor }}
         >
-          {step < activeQuest.steps.length - 1 ? 'Next Step →' : '🎉 Complete Quest!'}
+          {step < activeQuest.steps.length - 1 ? 'Next Step →' : 'Complete Quest!'}
         </button>
         {!canAdvance && (
           <div className="kg-quest-warning" role="status" aria-live="polite">

@@ -131,7 +131,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
           )}
         </div>
         <div className="kg-intro-rules">
-          <p><strong>📋 How to play:</strong></p>
+          <p><strong><img src="/icons/info.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />How to play:</strong></p>
           <ul>
             <li>You'll get {ROUND_SIZE} resilience scenarios</li>
             <li>You have {TIME_PER_QUESTION} seconds per question</li>
@@ -140,7 +140,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
           </ul>
         </div>
         <button className="kg-spin-btn" onClick={startGame}>
-          🎯 Start Challenge!
+          Start Challenge!
         </button>
       </div>
     );
@@ -161,9 +161,9 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
           <p className="kg-results-label">
             {finalScore === ROUND_SIZE
               ? <><img src="/icons/kids-trophy.svg" alt="" aria-hidden="true" width={18} height={18} style={{ verticalAlign: 'middle', marginRight: 4 }} />Perfect score!</>
-              : finalScore >= 4 ? '🌟 Outstanding!'
-              : finalScore >= 3 ? '💪 Great effort!'
-              : '🌱 Keep growing!'}
+              : finalScore >= 4 ? 'Outstanding!'
+              : finalScore >= 3 ? 'Great effort!'
+              : 'Keep growing!'}
           </p>
           {maxStreak >= 3 && <p className="kg-streak-note" aria-live="polite"><img src="/icons/streaks.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />Best streak: {maxStreak} in a row!</p>}
           {finalScore > personalBest && (
@@ -184,7 +184,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
                         <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
                         {r.q.options[r.selected]}
                       </span>
-                    : <span className="kg-result-miss">✗ {r.q.options[r.selected]}</span>
+                    : <span className="kg-result-miss"><img src="/icons/warning.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />{r.q.options[r.selected]}</span>
                 }
               </div>
               {!r.correct && <p className="kg-result-explain">{r.q.explanation}</p>}
@@ -193,7 +193,7 @@ export default function NavigatorChallenges({ onBack, onEarnBadge }) {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '1.5rem' }}>
-          <button className="kg-spin-btn" onClick={startGame}>🔄 Play Again</button>
+          <button className="kg-spin-btn" onClick={startGame}>Play Again</button>
           <button className="kg-back-btn" style={{ position: 'static' }} onClick={onBack}>← Back to Games</button>
         </div>
       </div>

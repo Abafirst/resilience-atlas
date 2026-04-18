@@ -64,7 +64,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
               </span>
               <span className="bq-option-text">{opt.text}</span>
               {answered && opt.correct  && <span className="bq-option-icon" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
-              {answered && selected === opt && !opt.correct && <span className="bq-option-icon" aria-hidden="true" style={{ color: '#ef4444', fontWeight: 'bold' }}>✗</span>}
+              {answered && selected === opt && !opt.correct && <span className="bq-option-icon" aria-hidden="true" style={{ color: '#ef4444', fontWeight: 'bold' }}><img src="/icons/warning.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
             </button>
           );
         })}
@@ -79,7 +79,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
         >
           {selected?.correct ? (
             <>
-              <span className="bq-feedback-icon" aria-hidden="true">🎉</span>
+              <span className="bq-feedback-icon" aria-hidden="true"><img src="/icons/success.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
               <div>
                 <strong>Correct!</strong>
                 <p>{question.explanation}</p>
@@ -87,7 +87,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
             </>
           ) : (
             <>
-              <span className="bq-feedback-icon" aria-hidden="true">💡</span>
+              <span className="bq-feedback-icon" aria-hidden="true"><img src="/icons/info.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
               <div>
                 <strong>Not quite!</strong>
                 <p>
@@ -110,7 +110,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
         ) : (
           <>
             <button className="bq-btn-primary" onClick={handleNext}>
-              {questionIndex + 1 < total ? 'Next Question →' : 'See Results 🏆'}
+               {questionIndex + 1 < total ? 'Next Question →' : 'See Results'}
             </button>
             <button className="bq-btn-secondary" onClick={handleQuit}>
               Quit
@@ -157,7 +157,8 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
       {earnedBadges.length > 0 && (
         <div className="bq-results-badges" aria-label={`You earned ${earnedBadges.length} badge${earnedBadges.length !== 1 ? 's' : ''}`}>
           <p className="bq-results-badges-label">
-            🎉 You earned {earnedBadges.length} badge{earnedBadges.length !== 1 ? 's' : ''}!
+            <img src="/icons/success.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            You earned {earnedBadges.length} badge{earnedBadges.length !== 1 ? 's' : ''}!
           </p>
           <div className="bq-results-badge-row">
             {earnedBadges.map((b, i) => (
@@ -174,7 +175,7 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
 
       {score === 0 && (
         <p className="bq-results-encourage">
-          Keep trying — every question you attempt makes you stronger! 💪
+          Keep trying — every question you attempt makes you stronger!
         </p>
       )}
 
@@ -187,7 +188,7 @@ function ResultsCard({ score, total, earnedBadges, bestScore, onPlayAgain, onBac
 
       <div className="bq-action-row">
         <button className="bq-btn-primary" onClick={onPlayAgain}>
-          Play Again 🔄
+          Play Again
         </button>
         <button className="bq-btn-secondary" onClick={onBack}>
           Back
@@ -281,13 +282,13 @@ export default function BadgeQuestGame({ onBack, onEarnBadge, ageGroup = 'young'
 
         <div className="bq-intro-panel">
           <ul className="bq-intro-list" aria-label="How to play">
-            <li>📋 {total} multiple-choice questions</li>
-            <li>✅ Each correct answer earns you a badge</li>
-            <li>🔀 Questions are different every time</li>
-            <li>🏆 See how many you can get right!</li>
+            <li>{total} multiple-choice questions</li>
+            <li>Each correct answer earns you a badge</li>
+            <li>Questions are different every time</li>
+            <li>See how many you can get right!</li>
           </ul>
           <button className="bq-btn-primary bq-btn-large" onClick={startQuiz}>
-            Start Quest! 🚀
+            Start Quest!
           </button>
         </div>
       </div>

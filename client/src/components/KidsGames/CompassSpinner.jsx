@@ -47,7 +47,7 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
           return next;
         });
         setMatched(m => m + 1);
-        setFeedback({ type: 'match', msg: `🎉 You found "${word.word}"! +2 stars!` });
+        setFeedback({ type: 'match', msg: `Great match! You found "${word.word}"! +2 stars!` });
         setTimeout(pickNewTarget, 1800);
       } else {
         setScore(s => s + 1);
@@ -83,7 +83,9 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
       <div className="kg-target-box">
         <p className="kg-target-label">Find this word:</p>
         <div className="kg-target-word" style={{ background: target.color }}>
-          <span className="kg-target-emoji" aria-hidden="true">{target.emoji}</span>
+          <span className="kg-target-emoji" aria-hidden="true">
+            <img src={target.icon} alt="" width={18} height={18} style={{ verticalAlign: 'middle' }} />
+          </span>
           <span className="kg-target-text">{target.word}</span>
         </div>
         <p className="kg-target-hint">{target.hint}</p>
@@ -111,13 +113,15 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
               aria-hidden="true"
             >
               <div className="kg-segment-label" style={{ transform: `rotate(${segmentSize / 2}deg) translateY(-42%)` }}>
-                <span>{w.emoji}</span>
+                <span>
+                  <img src={w.icon} alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} />
+                </span>
                 <span className="kg-segment-word">{w.word}</span>
               </div>
             </div>
           ))}
         </div>
-        <div className="kg-spinner-needle" aria-hidden="true">▼</div>
+        <div className="kg-spinner-needle" aria-hidden="true"><img src="/icons/game-target.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></div>
       </div>
 
       {/* Spin button */}
@@ -127,7 +131,7 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
         disabled={spinning}
         aria-label="Spin the compass"
       >
-        {spinning ? 'Spinning…' : '🌀 Spin!'}
+        {spinning ? 'Spinning…' : 'Spin!'}
       </button>
 
       {/* Feedback */}
@@ -144,7 +148,7 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
       {/* Landed word info */}
       {landed && (
         <div className="kg-landed-info" style={{ background: landed.color }} aria-live="polite">
-          <strong>{landed.emoji} {landed.word}:</strong> {landed.hint}
+          <strong><img src={landed.icon} alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />{landed.word}:</strong> {landed.hint}
         </div>
       )}
     </div>

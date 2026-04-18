@@ -48,7 +48,7 @@ function QuizChallenge({ card, onComplete }) {
       </div>
       {answered && !correct && (
         <p className="kg-challenge-try-again">
-          Not quite — have another look and try again! 💪
+          Not quite — have another look and try again!
           <button
             className="kg-challenge-retry-btn"
             onClick={() => { setSelected(null); setAnswered(false); setCorrect(false); }}
@@ -58,7 +58,7 @@ function QuizChallenge({ card, onComplete }) {
         </p>
       )}
       {answered && correct && (
-        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />That's right! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />That's right! Earning your badge now…</p>
       )}
     </div>
   );
@@ -116,7 +116,7 @@ function PickChallenge({ card, onComplete }) {
         </button>
       )}
       {done && (
-        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Awesome! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Awesome! Earning your badge now…</p>
       )}
     </div>
   );
@@ -147,9 +147,9 @@ function BreatheChallenge({ card, onComplete }) {
   }, [phase, done, needed, onComplete]);
 
   const bubbleLabel =
-    phase === 'idle' ? 'Tap to breathe in 🫁' :
-    phase === 'in'   ? 'Breathe in… now tap to breathe out 😮‍💨' :
-                       count >= needed ? '🎉 Done!' : 'Tap to breathe in again 🫁';
+    phase === 'idle' ? 'Tap to breathe in' :
+    phase === 'in'   ? 'Breathe in… now tap to breathe out' :
+                       count >= needed ? 'Done!' : 'Tap to breathe in again';
 
   return (
     <div className="kg-challenge-panel kg-breathe-panel">
@@ -161,14 +161,14 @@ function BreatheChallenge({ card, onComplete }) {
         disabled={done}
         style={{ background: card.color, borderColor: card.border }}
       >
-        <span className="kg-breathe-emoji" aria-hidden="true">🫧</span>
+        <span className="kg-breathe-emoji" aria-hidden="true"><img src="/icons/breathing.svg" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} /></span>
         <span className="kg-breathe-label">{bubbleLabel}</span>
       </button>
       <p className="kg-pick-count" aria-live="polite">
         {count}/{needed} breaths completed
       </p>
       {done && (
-        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Great breathing! Earning your badge now… 🎉</p>
+        <p className="kg-challenge-success"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Great breathing! Earning your badge now…</p>
       )}
     </div>
   );
@@ -333,4 +333,3 @@ export default function BuilderBadges({ onBack, onEarnBadge }) {
     </div>
   );
 }
-
