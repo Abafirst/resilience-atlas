@@ -77,7 +77,11 @@ The app will be available at <http://localhost:5173>.
 |---------|-------------|
 | `npm run dev` | Start the Vite development server |
 | `npm run build` | Build for production (output in `dist/`) |
+| `npm run build:mobile` | Build mobile/Capacitor/Android using `.env.production` (`vite build --mode production`) |
+| `npm run android` | Build mobile, sync Android project, and open Android Studio |
 | `npm run preview` | Preview the production build locally |
+
+> **Mobile/Capacitor/Android builds:** always run `npm run build:mobile` (or `npm run android`) and **do not** use `npm run build` for mobile packaging. This guarantees the build uses `.env.production` and avoids picking up values from `.env.local`.
 
 ---
 
