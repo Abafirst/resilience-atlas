@@ -69,12 +69,12 @@ export default function CompassSpinner({ onBack, onEarnBadge }) {
 
       <div className="kg-game-header">
         <div className="kg-game-emoji" aria-hidden="true">
-          <img src="./icons/games/compass-spinner.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
+          <img src="/icons/games/compass-spinner.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} />
         </div>
         <h2 className="kg-game-title">Compass Spinner</h2>
         <p className="kg-game-subtitle">Spin and find the resilience word!</p>
         <div className="kg-score-badge" aria-live="polite">
-          <img src="./icons/star.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+          <img src="/icons/star.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
           {score} stars
         </div>
       </div>

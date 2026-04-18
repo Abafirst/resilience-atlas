@@ -97,7 +97,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                     <p className="kg-quest-card-char">{series.character}</p>
                     <p style={{ fontSize: '.78rem', color: '#64748b', margin: 0 }}>{series.subtitle}</p>
                   </div>
-                  {isDone && <span className="kg-quest-done-badge" aria-label="Series complete"><img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                  {isDone && <span className="kg-quest-done-badge" aria-label="Series complete"><img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
                 </div>
                 <p style={{ fontSize: '.82rem', color: '#475569', margin: '.5rem 0 .25rem' }}>
                   {partsComplete}/{series.parts.length} parts complete
@@ -150,7 +150,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                   style={{ background: isDone ? activeSeries.accentColor : '#e2e8f0', color: isDone ? '#fff' : '#475569' }}
                 >
                   {isDone
-                    ? <img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle' }} />
+                    ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle' }} />
                     : part.partNumber}
                 </div>
                 <div className="kg-activity-step-content">
@@ -167,7 +167,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                     Open →
                   </button>
                 )}
-                {isLocked && <span className="kg-activity-locked" aria-label="Locked"><img src="./icons/lock.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                {isLocked && <span className="kg-activity-locked" aria-label="Locked"><img src="/icons/lock.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
               </div>
             );
           })}
@@ -368,7 +368,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                 >
                   <span className="kg-challenge-item-emoji" aria-hidden="true">{c.emoji}</span>
                   <span>{c.label}</span>
-                  {challenges[c.id] && <span className="kg-check" aria-hidden="true"><img src="./icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
+                  {challenges[c.id] && <span className="kg-check" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
                 </button>
               ))}
             </div>
@@ -385,13 +385,13 @@ export default function QuestLog({ onBack, onEarnBadge }) {
             style={{ background: activeSeries.accentColor, marginTop: '1.5rem' }}
             onClick={() => completePart(part.id, part.badge)}
           >
-            <img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
             Mark as Complete
           </button>
         )}
         {isPartDone && (
           <div className="kg-encourage" style={{ marginTop: '1rem' }}>
-            <img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
             Part complete! Great work!
           </div>
         )}

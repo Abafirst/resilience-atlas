@@ -32,7 +32,7 @@ export default function SiteFooter() {
       <div className="footer-bottom">
         <p><strong>The Resilience Atlas&#8482; — Understand. Strengthen. Transform.</strong></p>
         <p className="footer-research-line">
-          <img src="./icons/story.svg" alt="" aria-hidden="true" className="footer-research-icon" />
+          <img src="/icons/story.svg" alt="" aria-hidden="true" className="footer-research-icon" />
           A research-based resilience assessment platform founded on published 2013 doctoral research.
         </p>
         <p>&copy; {new Date().getFullYear()} The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
