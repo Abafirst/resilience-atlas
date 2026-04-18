@@ -5,12 +5,12 @@
  */
 
 export const KIDS_DIMENSION_ICON_MAP = {
-  'Emotional-Adaptive':    '/icons/emotional-adaptive.svg',
-  'Somatic-Regulative':    '/icons/somatic-regulative.svg',
-  'Relational-Connective': '/icons/relational-connective.svg',
-  'Agentic-Generative':    '/icons/agentic-generative.svg',
-  'Spiritual-Reflective':  '/icons/spiritual-reflective.svg',
-  'Cognitive-Narrative':   '/icons/cognitive-narrative.svg',
+  'Emotional-Adaptive':    './icons/emotional-adaptive.svg',
+  'Somatic-Regulative':    './icons/somatic-regulative.svg',
+  'Relational-Connective': './icons/relational-connective.svg',
+  'Agentic-Generative':    './icons/agentic-generative.svg',
+  'Spiritual-Reflective':  './icons/spiritual-reflective.svg',
+  'Cognitive-Narrative':   './icons/cognitive-narrative.svg',
 };
 
 export const KIDS_ACTIVITIES = {
@@ -18,7 +18,7 @@ export const KIDS_ACTIVITIES = {
   /* ── Ages 5–7 (Early Elementary) ── */
   'age-5-7': [
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Feeling Faces Drawing',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -27,7 +27,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Bubble Breathing',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -36,7 +36,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'My Helper List',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -45,7 +45,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'My Superhero Power',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -54,7 +54,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'My Happy Thought Box',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -63,7 +63,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'What Can I Change?',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -72,7 +72,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Support Circle Drawing',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -81,7 +81,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Gratitude Jar',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -90,7 +90,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Star of the Day',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -99,7 +99,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Feelings Color Wheel',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -108,7 +108,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Butterfly Hug',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -117,7 +117,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Different Perspectives Game',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -130,7 +130,7 @@ export const KIDS_ACTIVITIES = {
   /* ── Ages 8–10 (Upper Elementary) ── */
   'age-8-10': [
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Feelings Journal',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -139,7 +139,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: '5-4-3-2-1 Grounding',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -148,7 +148,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Buddy Check-In',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -157,7 +157,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Goal and Steps Map',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -166,7 +166,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Flip-It Challenge',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -175,7 +175,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Values Sorting',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -184,7 +184,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'My Help Menu',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -193,7 +193,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Thought Journal',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -202,7 +202,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Breathing Ladder',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -211,7 +211,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Habit Tracker',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -220,7 +220,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Emotions Scale',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -229,7 +229,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Inspiration Board',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -242,7 +242,7 @@ export const KIDS_ACTIVITIES = {
   /* ── Ages 11–14 (Early Teen / Middle School) ── */
   'age-11-14': [
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Resilience Interview',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -251,7 +251,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Reframing Practice',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -260,7 +260,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Body Scan Journal',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -269,7 +269,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Emotion Mapping',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -278,7 +278,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Purpose Letter',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -287,7 +287,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: '30-Day Challenge',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -296,7 +296,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Strengths Inventory',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -305,7 +305,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Support Plan',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -314,7 +314,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Values Debate',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -323,7 +323,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Trigger Journal',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -332,7 +332,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Accountability Partner',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -341,7 +341,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Movement Reset',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -354,7 +354,7 @@ export const KIDS_ACTIVITIES = {
   /* ── Ages 15–18 (High School / Older Teen) ── */
   'age-15-18': [
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Identity Collage',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -363,7 +363,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Feelings Temperature Check',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -372,7 +372,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Movement Playlist',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -381,7 +381,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Relationship Map',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -390,7 +390,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Values Compass',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -399,7 +399,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Small Wins Tracker',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -408,7 +408,7 @@ export const KIDS_ACTIVITIES = {
       level: 'beginner'
     },
     {
-      icon: '/icons/somatic-regulative.svg',
+      icon: './icons/somatic-regulative.svg',
       title: 'Digital Audit',
       dimension: 'Somatic-Regulative',
       subtype: 'The Grounder',
@@ -417,7 +417,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Stress Audit',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -426,7 +426,7 @@ export const KIDS_ACTIVITIES = {
       level: 'intermediate'
     },
     {
-      icon: '/icons/agentic-generative.svg',
+      icon: './icons/agentic-generative.svg',
       title: 'Personal Leadership Plan',
       dimension: 'Agentic-Generative',
       subtype: 'The Builder',
@@ -435,7 +435,7 @@ export const KIDS_ACTIVITIES = {
       level: 'advanced'
     },
     {
-      icon: '/icons/emotional-adaptive.svg',
+      icon: './icons/emotional-adaptive.svg',
       title: 'Emotional Cycle Tracker',
       dimension: 'Emotional-Adaptive',
       subtype: 'The Feeler',
@@ -444,7 +444,7 @@ export const KIDS_ACTIVITIES = {
       level: 'advanced'
     },
     {
-      icon: '/icons/cognitive-narrative.svg',
+      icon: './icons/cognitive-narrative.svg',
       title: 'Personal Philosophy Statement',
       dimension: 'Cognitive-Narrative',
       subtype: 'The Thinker',
@@ -453,7 +453,7 @@ export const KIDS_ACTIVITIES = {
       level: 'advanced'
     },
     {
-      icon: '/icons/relational-connective.svg',
+      icon: './icons/relational-connective.svg',
       title: 'Vulnerability as Strength',
       dimension: 'Relational-Connective',
       subtype: 'The Connector',
@@ -462,7 +462,7 @@ export const KIDS_ACTIVITIES = {
       level: 'advanced'
     },
     {
-      icon: '/icons/spiritual-reflective.svg',
+      icon: './icons/spiritual-reflective.svg',
       title: 'Contribution Map',
       dimension: 'Spiritual-Reflective',
       subtype: 'The Guide',
@@ -480,7 +480,7 @@ export const KIDS_CHARACTERS = [
     name: 'Maya — The Connector',
     title: 'Connection Skill · Relational-Connective',
     dimension: 'Relational-Connective',
-    icon: '/icons/relational-connective.svg',
+    icon: './icons/relational-connective.svg',
     avatarBg: '#ede9fe',
     tagBg: '#ede9fe',
     tagColor: '#5b21b6',
@@ -491,7 +491,7 @@ export const KIDS_CHARACTERS = [
     name: 'Alex — The Thinker',
     title: 'Thinking Skill · Cognitive-Narrative',
     dimension: 'Cognitive-Narrative',
-    icon: '/icons/cognitive-narrative.svg',
+    icon: './icons/cognitive-narrative.svg',
     avatarBg: '#e0f2fe',
     tagBg: '#e0f2fe',
     tagColor: '#075985',
@@ -502,7 +502,7 @@ export const KIDS_CHARACTERS = [
     name: 'Sam — The Grounder',
     title: 'Body Skill · Somatic-Regulative',
     dimension: 'Somatic-Regulative',
-    icon: '/icons/somatic-regulative.svg',
+    icon: './icons/somatic-regulative.svg',
     avatarBg: '#dcfce7',
     tagBg: '#dcfce7',
     tagColor: '#15803d',
@@ -513,7 +513,7 @@ export const KIDS_CHARACTERS = [
     name: 'Jordan — The Feeler',
     title: 'Feelings Skill · Emotional-Adaptive',
     dimension: 'Emotional-Adaptive',
-    icon: '/icons/emotional-adaptive.svg',
+    icon: './icons/emotional-adaptive.svg',
     avatarBg: '#ffe4e6',
     tagBg: '#ffe4e6',
     tagColor: '#be123c',
@@ -524,7 +524,7 @@ export const KIDS_CHARACTERS = [
     name: 'River — The Guide',
     title: 'Meaning Skill · Spiritual-Reflective',
     dimension: 'Spiritual-Reflective',
-    icon: '/icons/spiritual-reflective.svg',
+    icon: './icons/spiritual-reflective.svg',
     avatarBg: '#f0fdf4',
     tagBg: '#d1fae5',
     tagColor: '#065f46',
@@ -535,7 +535,7 @@ export const KIDS_CHARACTERS = [
     name: 'Kai — The Builder',
     title: 'Action Skill · Agentic-Generative',
     dimension: 'Agentic-Generative',
-    icon: '/icons/agentic-generative.svg',
+    icon: './icons/agentic-generative.svg',
     avatarBg: '#fef9c3',
     tagBg: '#fef9c3',
     tagColor: '#854d0e',
@@ -547,7 +547,7 @@ export const KIDS_CHARACTERS = [
 /* ── Stories ── */
 export const KIDS_STORIES = [
   {
-    icon: '/icons/relational-connective.svg',
+    icon: './icons/relational-connective.svg',
     subtitle: 'Relational-Connective · The Connector',
     title: 'Maya and the Mountain of Cardboard',
     meta: 'Relational-Connective · The Connector · Ages 7–12',
@@ -567,7 +567,7 @@ export const KIDS_STORIES = [
     lesson: "The Connector's Lesson: We don't have to face hard things alone. When things feel too big, reaching out brings people together and makes you stronger than you'd ever be on your own.",
   },
   {
-    icon: '/icons/cognitive-narrative.svg',
+    icon: './icons/cognitive-narrative.svg',
     subtitle: 'Cognitive-Narrative · The Thinker',
     title: 'Alex and the Flooded Experiment',
     meta: 'Cognitive-Narrative · The Thinker · Ages 8–13',
@@ -587,7 +587,7 @@ export const KIDS_STORIES = [
     lesson: "The Thinker's Lesson: When something goes wrong, ask yourself: What can I control? What can I learn? What haven't I tried yet? Changing the angle can turn a problem into a discovery.",
   },
   {
-    icon: '/icons/somatic-regulative.svg',
+    icon: './icons/somatic-regulative.svg',
     subtitle: 'Somatic-Regulative · The Grounder',
     title: 'Sam and the Big Game',
     meta: 'Somatic-Regulative · The Grounder · Ages 6–12',
@@ -607,7 +607,7 @@ export const KIDS_STORIES = [
     lesson: "The Grounder's Lesson: When your body feels out of control, you can bring it back. Feel your feet on the ground. Breathe slowly. Look around. Your body knows how to calm down — you just have to remind it.",
   },
   {
-    icon: '/icons/emotional-adaptive.svg',
+    icon: './icons/emotional-adaptive.svg',
     subtitle: 'Emotional-Adaptive · The Feeler',
     title: 'Jordan and the Invisible Knot',
     meta: 'Emotional-Adaptive · The Feeler · Ages 5–10',
@@ -627,7 +627,7 @@ export const KIDS_STORIES = [
     lesson: "The Feeler's Lesson: All feelings are okay — even the hard ones. When we give a feeling a name, it loses some of its power over us. Feelings are messages, not enemies.",
   },
   {
-    icon: '/icons/spiritual-reflective.svg',
+    icon: './icons/spiritual-reflective.svg',
     subtitle: 'Spiritual-Reflective · The Guide',
     title: 'River and the Compass',
     meta: 'Spiritual-Reflective · The Guide · Ages 9–14',
@@ -647,7 +647,7 @@ export const KIDS_STORIES = [
     lesson: "The Guide's Lesson: When everything feels unfamiliar and hard, look for the one thing that still feels like you. Your values and what you love are your compass — they'll show you which way to go.",
   },
   {
-    icon: '/icons/agentic-generative.svg',
+    icon: './icons/agentic-generative.svg',
     subtitle: 'Agentic-Generative · The Builder',
     title: 'Kai and the Six-String Mountain',
     meta: 'Agentic-Generative · The Builder · Ages 8–14',
@@ -670,7 +670,7 @@ export const KIDS_STORIES = [
 
 export const KIDS_MORE_STORIES = [
   {
-    icon: '/icons/relational-connective.svg',
+    icon: './icons/relational-connective.svg',
     subtitle: 'Relational-Connective · The Connector · Ages 5–8',
     title: "Jamal's Birthday Party",
     meta: "Relational-Connective · The Connector · Ages 5–8",
@@ -690,7 +690,7 @@ export const KIDS_MORE_STORIES = [
     lesson: "The Connector's Lesson: Saying \"I'm scared\" or \"I need help\" isn't weak — it's how real connections begin. Start with one honest conversation, and see what grows.",
   },
   {
-    icon: '/icons/cognitive-narrative.svg',
+    icon: './icons/cognitive-narrative.svg',
     subtitle: 'Cognitive-Narrative · The Thinker · Ages 8–11',
     title: 'Sofia and the Big Test',
     meta: 'Cognitive-Narrative · The Thinker · Ages 8–11',
@@ -710,7 +710,7 @@ export const KIDS_MORE_STORIES = [
     lesson: "The Thinker's Lesson: When something isn't working, don't just try harder — try differently. Ask: what haven't I noticed yet? The answer is usually in the question you haven't asked.",
   },
   {
-    icon: '/icons/somatic-regulative.svg',
+    icon: './icons/somatic-regulative.svg',
     subtitle: 'Somatic-Regulative · The Grounder · Ages 11–14',
     title: 'Marcus and Moving Day',
     meta: 'Somatic-Regulative · The Grounder · Ages 11–14',
@@ -730,7 +730,7 @@ export const KIDS_MORE_STORIES = [
     lesson: "The Grounder's Lesson: When your body goes into alarm mode, you can bring it back. Feet on the ground, slow breath, look around. You are here. You are okay. That's where recovery begins.",
   },
   {
-    icon: '/icons/emotional-adaptive.svg',
+    icon: './icons/emotional-adaptive.svg',
     subtitle: 'Emotional-Adaptive · The Feeler · Ages 7–11',
     title: 'Lily and the Lunch Table',
     meta: 'Emotional-Adaptive · The Feeler · Ages 7–11',
@@ -750,7 +750,7 @@ export const KIDS_MORE_STORIES = [
     lesson: "The Feeler's Lesson: Anger is often a cover for a deeper feeling — sadness, loneliness, fear, or something else that needs attention. When you find the feeling underneath, you find the real message.",
   },
   {
-    icon: '/icons/spiritual-reflective.svg',
+    icon: './icons/spiritual-reflective.svg',
     subtitle: 'Spiritual-Reflective · The Guide · Ages 11–15',
     title: "Diego's Dream",
     meta: "Spiritual-Reflective · The Guide · Ages 11–15",
@@ -769,7 +769,7 @@ export const KIDS_MORE_STORIES = [
     lesson: "The Guide's Lesson: Your values don't disappear when life gets hard — they get tested. When you know what you truly care about, you find creative ways to honor it, even in difficult circumstances.",
   },
   {
-    icon: '/icons/agentic-generative.svg',
+    icon: './icons/agentic-generative.svg',
     subtitle: 'Agentic-Generative · The Builder · Ages 5–8',
     title: 'Zoe and the Swimming Race',
     meta: 'Agentic-Generative · The Builder · Ages 5–8',
@@ -795,7 +795,7 @@ export const KIDS_MORE_STORIES = [
 /* ── Skill Builders ── */
 export const KIDS_SKILL_BUILDERS = [
   {
-    icon: '/icons/relational-connective.svg',
+    icon: './icons/relational-connective.svg',
     name: 'Ask for Help',
     tag: 'Relational-Connective · The Connector',
     tagBg: '#ede9fe', tagColor: '#5b21b6',
@@ -810,7 +810,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#5b21b6',
   },
   {
-    icon: '/icons/cognitive-narrative.svg',
+    icon: './icons/cognitive-narrative.svg',
     name: 'Problem-Solving Challenge',
     tag: 'Cognitive-Narrative · The Thinker',
     tagBg: '#e0f2fe', tagColor: '#075985',
@@ -826,7 +826,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#075985',
   },
   {
-    icon: '/icons/emotional-adaptive.svg',
+    icon: './icons/emotional-adaptive.svg',
     name: 'Feelings Detective',
     tag: 'Emotional-Adaptive · The Feeler',
     tagBg: '#ffe4e6', tagColor: '#be123c',
@@ -849,7 +849,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#be123c',
   },
   {
-    icon: '/icons/spiritual-reflective.svg',
+    icon: './icons/spiritual-reflective.svg',
     name: 'What Matters Most',
     tag: 'Spiritual-Reflective · The Guide',
     tagBg: '#d1fae5', tagColor: '#065f46',
@@ -860,7 +860,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#065f46',
   },
   {
-    icon: '/icons/agentic-generative.svg',
+    icon: './icons/agentic-generative.svg',
     name: 'One Small Step',
     tag: 'Agentic-Generative · The Builder',
     tagBg: '#fef9c3', tagColor: '#854d0e',
@@ -875,7 +875,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#854d0e',
   },
   {
-    icon: '/icons/relational-connective.svg',
+    icon: './icons/relational-connective.svg',
     name: 'Gratitude Booster',
     tag: 'Relational-Connective · The Connector',
     tagBg: '#ede9fe', tagColor: '#5b21b6',
@@ -890,7 +890,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#5b21b6',
   },
   {
-    icon: '/icons/cognitive-narrative.svg',
+    icon: './icons/cognitive-narrative.svg',
     name: 'Thought Reframer',
     tag: 'Cognitive-Narrative · The Thinker',
     tagBg: '#e0f2fe', tagColor: '#075985',
@@ -905,7 +905,7 @@ export const KIDS_SKILL_BUILDERS = [
     quoteColor: '#075985',
   },
   {
-    icon: '/icons/somatic-regulative.svg',
+    icon: './icons/somatic-regulative.svg',
     name: 'Body Check-In',
     tag: 'Somatic-Regulative · The Grounder',
     tagBg: '#dcfce7', tagColor: '#15803d',
