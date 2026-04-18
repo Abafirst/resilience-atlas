@@ -21,13 +21,13 @@ import { playQuestCompleteSound, isSfxEnabled } from '../../utils/soundEffects.j
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const DIM_ICONS = {
-  'Agentic-Generative':    './icons/agentic-generative.svg',
-  'Relational-Connective': './icons/relational-connective.svg',
-  'Emotional-Adaptive':    './icons/emotional-adaptive.svg',
-  'Spiritual-Reflective':  './icons/spiritual-reflective.svg',
-  'Somatic-Regulative':    './icons/somatic-regulative.svg',
-  'Cognitive-Narrative':   './icons/cognitive-narrative.svg',
-  'All Dimensions':        './icons/compass.svg',
+  'Agentic-Generative':    '/icons/agentic-generative.svg',
+  'Relational-Connective': '/icons/relational-connective.svg',
+  'Emotional-Adaptive':    '/icons/emotional-adaptive.svg',
+  'Spiritual-Reflective':  '/icons/spiritual-reflective.svg',
+  'Somatic-Regulative':    '/icons/somatic-regulative.svg',
+  'Cognitive-Narrative':   '/icons/cognitive-narrative.svg',
+  'All Dimensions':        '/icons/compass.svg',
 };
 
 function stepIdsDone(quest, completedIds) {
@@ -259,7 +259,7 @@ function QuestCard({ quest, completedIds, isUnlocked, onStart, onContinue }) {
           <p style={s.cardDesc}>{quest.description}</p>
         </div>
         <div style={s.lockedOverlay}>
-          <img src="./icons/lock.svg" alt="" width={28} height={28} style={{ marginBottom: 8 }} />
+          <img src="/icons/lock.svg" alt="" width={28} height={28} style={{ marginBottom: 8 }} />
           <div style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', marginBottom: 6 }}>Navigator Only</div>
           <div style={{ fontSize: 12, color: '#475569', marginBottom: 14, lineHeight: 1.5, maxWidth: 200 }}>
             Unlock this quest with Atlas Navigator.
@@ -268,7 +268,7 @@ function QuestCard({ quest, completedIds, isUnlocked, onStart, onContinue }) {
             href={CHECKOUT_URLS['atlas-navigator']}
             style={{ padding: '8px 18px', borderRadius: 8, background: '#4f46e5', color: '#fff', fontWeight: 700, fontSize: 12, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5 }}
           >
-            <img src="./icons/compass.svg" alt="" width={13} height={13} />
+            <img src="/icons/compass.svg" alt="" width={13} height={13} />
             Upgrade to Navigator
           </a>
         </div>
@@ -287,13 +287,13 @@ function QuestCard({ quest, completedIds, isUnlocked, onStart, onContinue }) {
     >
       {finished && (
         <div style={s.doneChip} aria-hidden="true">
-          <img src="./icons/checkmark.svg" alt="" width={11} height={11} />
+          <img src="/icons/checkmark.svg" alt="" width={11} height={11} />
           Complete
         </div>
       )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-        <img src={quest.icon} alt="" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0 }} onError={e => { e.currentTarget.src = './icons/compass.svg'; e.currentTarget.onerror = null; }} />
+        <img src={quest.icon} alt="" width={36} height={36} style={{ borderRadius: 8, flexShrink: 0 }} onError={e => { e.currentTarget.src = '/icons/compass.svg'; e.currentTarget.onerror = null; }} />
         <div>
           <div style={s.cardSubtitle}>{quest.subtitle}</div>
           <h3 style={{ ...s.cardTitle, fontSize: 15 }}>{quest.title}</h3>
@@ -316,10 +316,10 @@ function QuestCard({ quest, completedIds, isUnlocked, onStart, onContinue }) {
       </div>
 
       <div style={s.rewardRow}>
-        <img src="./icons/star.svg" alt="" width={14} height={14} />
+        <img src="/icons/star.svg" alt="" width={14} height={14} />
         <span>+{quest.steps.reduce((sum, step) => sum + (step.points || 0), 0)} stars</span>
         <span style={{ color: '#e2e8f0' }}>·</span>
-        <img src={quest.reward.badgeIcon} alt="" width={14} height={14} onError={e => { e.currentTarget.src = './icons/badges.svg'; e.currentTarget.onerror = null; }} />
+        <img src={quest.reward.badgeIcon} alt="" width={14} height={14} onError={e => { e.currentTarget.src = '/icons/badges.svg'; e.currentTarget.onerror = null; }} />
         <span>{quest.reward.badgeName} badge</span>
       </div>
 
@@ -387,7 +387,7 @@ function CelebrationModal({ quest, onClose }) {
         <button style={s.closeBtn} onClick={onClose} aria-label="Close">✕</button>
         <div style={s.celebWrap}>
           <div style={s.celebIcon}>
-            <img src="./icons/trophy.svg" alt="" width={64} height={64} />
+            <img src="/icons/trophy.svg" alt="" width={64} height={64} />
           </div>
           <h2 style={s.celebTitle}>Quest Complete!</h2>
           <p style={s.celebSub}>
@@ -399,13 +399,13 @@ function CelebrationModal({ quest, onClose }) {
               alt=""
               width={48}
               height={48}
-              onError={e => { e.currentTarget.src = './icons/badges.svg'; e.currentTarget.onerror = null; }}
+              onError={e => { e.currentTarget.src = '/icons/badges.svg'; e.currentTarget.onerror = null; }}
             />
             <div style={s.celebBadgeLabel}>{quest.reward.badgeName}</div>
             <div style={{ fontSize: 11, color: '#a16207', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.07em' }}>{quest.reward.badgeRarity} badge earned</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 22, color: '#d97706', fontWeight: 700, fontSize: 16 }}>
-            <img src="./icons/star.svg" alt="" width={20} height={20} />
+            <img src="/icons/star.svg" alt="" width={20} height={20} />
             +{quest.reward.stars} stars earned
           </div>
           <button
@@ -430,7 +430,7 @@ function QuestDetailView({ quest, completedIds, onBack, onStepSelect }) {
       </button>
       <div style={s.detailHeader(quest.color, quest.accentColor)}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <img src={quest.icon} alt="" width={40} height={40} style={{ borderRadius: 8 }} onError={e => { e.currentTarget.src = './icons/compass.svg'; e.currentTarget.onerror = null; }} />
+          <img src={quest.icon} alt="" width={40} height={40} style={{ borderRadius: 8 }} onError={e => { e.currentTarget.src = '/icons/compass.svg'; e.currentTarget.onerror = null; }} />
           <div>
             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.09em', color: quest.accentColor }}>{quest.subtitle}</div>
             <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', margin: 0 }}>{quest.title}</h2>
@@ -440,11 +440,11 @@ function QuestDetailView({ quest, completedIds, onBack, onStepSelect }) {
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 }}>
           <span style={s.metaChip(quest.accentColor)}>{quest.days}</span>
           <span style={s.metaChip(quest.accentColor)}>
-            <img src="./icons/star.svg" alt="" width={12} height={12} />
+            <img src="/icons/star.svg" alt="" width={12} height={12} />
             +{quest.reward.stars} stars on completion
           </span>
           <span style={s.metaChip(quest.accentColor)}>
-            <img src={quest.reward.badgeIcon} alt="" width={12} height={12} onError={e => { e.currentTarget.src = './icons/badges.svg'; e.currentTarget.onerror = null; }} />
+            <img src={quest.reward.badgeIcon} alt="" width={12} height={12} onError={e => { e.currentTarget.src = '/icons/badges.svg'; e.currentTarget.onerror = null; }} />
             {quest.reward.badgeName} badge
           </span>
         </div>
@@ -472,7 +472,7 @@ function QuestDetailView({ quest, completedIds, onBack, onStepSelect }) {
             >
               <div style={s.stepNum(active, done, quest.accentColor)} aria-hidden="true">
                 {done
-                  ? <img src="./icons/checkmark.svg" alt="" width={14} height={14} />
+                  ? <img src="/icons/checkmark.svg" alt="" width={14} height={14} />
                   : i + 1}
               </div>
               <div style={s.stepBody}>
@@ -591,7 +591,7 @@ export default function NavigatorQuests({ tier, progress }) {
   if (!isStarter) {
     return (
       <div style={{ textAlign: 'center', padding: '36px 20px', color: '#64748b' }}>
-        <img src="./icons/lock.svg" alt="" width={40} height={40} style={{ marginBottom: 12, opacity: 0.5 }} />
+        <img src="/icons/lock.svg" alt="" width={40} height={40} style={{ marginBottom: 12, opacity: 0.5 }} />
         <p style={{ fontSize: 14, maxWidth: 340, margin: '0 auto 16px', lineHeight: 1.65 }}>
           Sign up for Atlas Starter to begin your resilience quests.
         </p>
