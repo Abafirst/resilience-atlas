@@ -279,8 +279,6 @@ export const GAME_CARDS = {
     },
     {
       id: 'builder-badges',
-      title: 'Builder Badges',
-      icon: './icons/games/builder-badges.svg',
       title: 'Badge Quest Challenge',
       icon: './icons/badge.svg',
       ageRange: 'Ages 5–8',

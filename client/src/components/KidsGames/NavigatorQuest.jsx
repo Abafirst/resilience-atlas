@@ -2,6 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { NAVIGATOR_QUESTS } from '../../data/kidsGameQuests';
 import ConfettiCelebration from '../gamification/ConfettiCelebration';
 
+function stepCanAdvance(currentStep, stepSelection) {
+  return currentStep.type === 'reveal'
+    || (currentStep.type === 'choice' && stepSelection !== undefined)
+    || (currentStep.type === 'multi-choice' && (stepSelection || []).length >= (currentStep.minSelections || 1));
+}
+
 /**
  * NavigatorQuest — Ages 8–12
  * Multi-step adventure quests with story unlocks.
@@ -42,9 +48,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
   const advance = useCallback(() => {
     const currentStep = activeQuest.steps[step];
     const stepSelection = selections[currentStep.id];
-    const canAdvance = currentStep.type === 'reveal'
-      || (currentStep.type === 'choice' && stepSelection !== undefined)
-      || (currentStep.type === 'multi-choice' && (stepSelection || []).length >= (currentStep.minSelections || 1));
+    const canAdvance = stepCanAdvance(currentStep, stepSelection);
 
     if (!canAdvance) {
       if (currentStep.type === 'choice') {
@@ -122,9 +126,7 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
 
   const currentStep = activeQuest.steps[step];
   const stepSelection = selections[currentStep.id];
-  const canAdvance = currentStep.type === 'reveal'
-    || (currentStep.type === 'choice' && stepSelection !== undefined)
-    || (currentStep.type === 'multi-choice' && (stepSelection || []).length >= (currentStep.minSelections || 1));
+  const canAdvance = stepCanAdvance(currentStep, stepSelection);
 
   return (
     <div className="kg-game-container">
