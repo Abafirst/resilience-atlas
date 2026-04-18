@@ -136,7 +136,10 @@ const SAMPLE_SCORES = JSON.stringify({
 // ── /api/report/generate ─────────────────────────────────────────────────────
 
 describe('GET /api/report/generate', () => {
-    afterEach(() => jobStore.clear());
+    afterEach(() => {
+        jobStore.clear();
+        delete process.env.STRIPE_SECRET_KEY;
+    });
 
     test('returns 401 when no auth token is provided', async () => {
         const res = await request(app)
@@ -343,7 +346,10 @@ describe('GET /api/report/generate', () => {
 });
 
 describe('GET /api/report/status', () => {
-    afterEach(() => jobStore.clear());
+    afterEach(() => {
+        jobStore.clear();
+        delete process.env.STRIPE_SECRET_KEY;
+    });
 
     test('returns 400 when hash is missing', async () => {
         const res = await request(app)
@@ -436,6 +442,9 @@ describe('GET /api/report/status', () => {
 // ── /api/report/download (hash mode) ─────────────────────────────────────────
 
 describe('GET /api/report/download (hash mode)', () => {
+    const Purchase = require('../backend/models/Purchase');
+    const User = require('../backend/models/User');
+
     afterEach(() => jobStore.clear());
 
     test('returns 404 for unknown hash', async () => {
@@ -488,6 +497,109 @@ describe('GET /api/report/download (hash mode)', () => {
             .query({ hash });
         expect(res.status).toBe(200);
         expect(res.headers['content-type']).toMatch(/application\/pdf/);
+    });
+
+    test('returns 402 when STRIPE_SECRET_KEY is set and email is missing', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const hash = 'readydownloadhash-no-email';
+        const mockPdf = Buffer.from('%PDF-1.4 mock content');
+        jobStore.set(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: null,
+            pdfBuffer: mockPdf,
+        });
+
+        const res = await request(app)
+            .get('/api/report/download')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash });
+
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+
+    test('returns 402 when STRIPE_SECRET_KEY is set and email has no qualifying purchase', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const hash = 'readydownloadhash-no-purchase';
+        const mockPdf = Buffer.from('%PDF-1.4 mock content');
+        jobStore.set(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: null,
+            pdfBuffer: mockPdf,
+        });
+        Purchase.find.mockReset();
+        User.findOne.mockReset();
+        Purchase.find.mockReturnValueOnce({
+            lean: jest.fn().mockResolvedValue([]),
+        });
+        User.findOne.mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            lean: jest.fn().mockResolvedValue(null),
+        });
+
+        const res = await request(app)
+            .get('/api/report/download')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .query({ hash, email: 'free@example.com' });
+
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
+        delete process.env.STRIPE_SECRET_KEY;
+    });
+});
+
+describe('POST /api/report/email', () => {
+    const Purchase = require('../backend/models/Purchase');
+    const User = require('../backend/models/User');
+
+    afterEach(() => jobStore.clear());
+
+    test('returns 402 when STRIPE_SECRET_KEY is set and requester lacks access', async () => {
+        process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
+        const hash = 'ready-email-no-access';
+        const mockPdf = Buffer.concat([Buffer.from('%PDF-1.4\n'), Buffer.alloc(1300, 'x')]);
+        jobStore.set(hash, {
+            status: 'ready',
+            progress: 100,
+            message: 'Your report is ready!',
+            estimatedSeconds: 0,
+            createdAt: new Date(),
+            startedAt: new Date(),
+            completedAt: new Date(),
+            error: null,
+            pdfBuffer: mockPdf,
+        });
+        Purchase.find.mockReset();
+        User.findOne.mockReset();
+        Purchase.find.mockReturnValueOnce({
+            lean: jest.fn().mockResolvedValue([]),
+        });
+        User.findOne.mockReturnValue({
+            select: jest.fn().mockReturnThis(),
+            lean: jest.fn().mockResolvedValue(null),
+        });
+
+        const res = await request(app)
+            .post('/api/report/email')
+            .set('Authorization', `Bearer ${authToken()}`)
+            .send({ hash, email: 'recipient@example.com', requesterEmail: 'free@example.com' });
+
+        expect(res.status).toBe(402);
+        expect(res.body).toHaveProperty('upgradeRequired', true);
+        delete process.env.STRIPE_SECRET_KEY;
     });
 });
 

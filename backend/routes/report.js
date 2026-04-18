@@ -145,6 +145,45 @@ function unescapeHtmlEntities(str) {
 }
 
 /**
+ * Check whether an email currently has permission to access a specific report hash.
+ * Used to secure direct /download and /email calls in production.
+ *
+ * @param {string} email
+ * @param {string} hash
+ * @returns {Promise<boolean>}
+ */
+async function hasAccessToReportHash(email, hash) {
+    const cleanEmail = String(email || '').toLowerCase().trim();
+    if (!cleanEmail || !hash) return false;
+
+    const purchases = await Purchase.find({
+        email: cleanEmail,
+        tier: { $in: REPORT_ACCESS_TIERS },
+        status: 'completed',
+    }).lean();
+
+    const hasBlanketAccess = purchases.some((p) => BLANKET_ACCESS_TIERS.has(p.tier));
+    if (hasBlanketAccess) return true;
+
+    const hasStarterHashAccess = purchases.some((p) => {
+        if (!p.assessmentData || !p.assessmentData.scores) return false;
+        const pHash = buildJobHash(
+            String(p.assessmentData.overall),
+            p.assessmentData.dominantType || '',
+            JSON.stringify(p.assessmentData.scores)
+        );
+        return pHash === hash;
+    });
+    if (hasStarterHashAccess) return true;
+
+    // Fallback for legacy/admin grants.
+    const user = await User.findOne({ email: cleanEmail })
+        .select('purchasedDeepReport atlasPremium')
+        .lean();
+    return Boolean(user && (user.purchasedDeepReport || user.atlasPremium));
+}
+
+/**
  * GET /api/report/download
  * Generate and download a comprehensive PDF resilience report.
  * Query params: overall, dominantType, scores (JSON-encoded), email (required for tier verification)
@@ -496,7 +535,7 @@ router.get('/status', accessLimiter, authenticateJWT, async (req, res) => {
  * Query params: hash (required)
  */
 router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
-    const { hash } = req.query;
+    const { hash, email } = req.query;
 
     if (!hash) {
         return res.status(400).json({ error: 'Missing hash parameter' });
@@ -519,6 +558,31 @@ router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
         return res.status(404).json({ error: 'Report not available.' });
     }
 
+    // Production security gate: do not allow direct download requests unless
+    // the caller can prove paid access to this report hash.
+    if (process.env.STRIPE_SECRET_KEY) {
+        if (!email) {
+            return res.status(402).json({
+                error: 'Atlas Starter or Atlas Navigator is required to download this full PDF report.',
+                upgradeRequired: true,
+            });
+        }
+        try {
+            const allowed = await hasAccessToReportHash(email, String(hash));
+            if (!allowed) {
+                return res.status(402).json({
+                    error: 'Atlas Starter or Atlas Navigator is required to download this full PDF report.',
+                    upgradeRequired: true,
+                });
+            }
+        } catch (dbErr) {
+            console.warn('[report/download] Purchase check failed (DB unavailable):', dbErr.message);
+            return res.status(503).json({
+                error: 'Unable to verify your purchase at this time. Please try again shortly.',
+            });
+        }
+    }
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename="resilience-atlas-report.pdf"');
     return res.send(job.pdfBuffer);
@@ -531,7 +595,7 @@ router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
  * Body: { hash, email }
  */
 router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
-    const { hash, email } = req.body;
+    const { hash, email, requesterEmail } = req.body;
 
     if (!hash) {
         return res.status(400).json({ error: 'Missing hash parameter' });
@@ -553,6 +617,31 @@ router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
     if (!validatePdfBuffer(job.pdfBuffer)) {
         console.error(`[report/email] Invalid PDF buffer for hash ${hash}: length=${job.pdfBuffer ? job.pdfBuffer.length : 0}`);
         return res.status(500).json({ error: 'The generated report is corrupted. Please regenerate your report and try again.' });
+    }
+
+    // Production security gate: require paid access for full PDF email delivery.
+    if (process.env.STRIPE_SECRET_KEY) {
+        const accessEmail = requesterEmail || email;
+        if (!accessEmail) {
+            return res.status(402).json({
+                error: 'Atlas Starter or Atlas Navigator is required to email the full PDF report.',
+                upgradeRequired: true,
+            });
+        }
+        try {
+            const allowed = await hasAccessToReportHash(accessEmail, String(hash));
+            if (!allowed) {
+                return res.status(402).json({
+                    error: 'Atlas Starter or Atlas Navigator is required to email the full PDF report.',
+                    upgradeRequired: true,
+                });
+            }
+        } catch (dbErr) {
+            console.warn('[report/email] Purchase check failed (DB unavailable):', dbErr.message);
+            return res.status(503).json({
+                error: 'Unable to verify your purchase at this time. Please try again shortly.',
+            });
+        }
     }
 
     try {

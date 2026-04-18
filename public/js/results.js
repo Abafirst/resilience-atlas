@@ -516,7 +516,9 @@ async function downloadPdfForAssessment(assessmentData, email) {
     var statusRes = await fetch('/api/report/status?hash=' + encodeURIComponent(hash), { headers: authHeaders });
     var statusData = await statusRes.json();
     if (statusData.status === 'ready') {
-      var dlRes = await fetch('/api/report/download?hash=' + encodeURIComponent(hash), { headers: authHeaders });
+      var dlQuery = '/api/report/download?hash=' + encodeURIComponent(hash) +
+        (email ? '&email=' + encodeURIComponent(email) : '');
+      var dlRes = await fetch(dlQuery, { headers: authHeaders });
       if (!dlRes.ok) throw new Error('Failed to download report (' + dlRes.status + ')');
       var blob = await dlRes.blob();
       var dlUrl = URL.createObjectURL(blob);
@@ -843,9 +845,8 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButton.addEventListener('click', () => {
       try {
         // Allow download if the user has an active paid tier OR if a prior
-        // purchase was confirmed by the backend (window._hasPriorPdfAccess),
-        // OR if this is their first assessment (window._isFirstAssessment).
-        if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess && !window._isFirstAssessment) {
+        // purchase was confirmed by the backend (window._hasPriorPdfAccess).
+        if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
           // Direct free users to the upgrade/purchase flow instead of just an alert.
           // Scroll to upgrade cards and show a clear call-to-action.
           const upgradeEl = document.getElementById('upgradeCardsContainer');
@@ -901,7 +902,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
                 const status = await statusRes.json();
                 if (status.status === 'ready') {
-                  window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}`;
+                  const dlEmailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
+                  window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}${dlEmailParam}`;
                   return;
                 }
                 if (status.status === 'failed') throw new Error(status.error || 'Report generation failed');
@@ -955,10 +957,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailInput) emailInput.focus();
         return;
       }
-      // Gate: a paid report purchase is required to email the PDF.
-      // Allow if the user has an active tier, a prior purchase confirmed by the backend,
-      // or this is their first assessment (free PDF).
-      if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess && !window._isFirstAssessment) {
+      // Gate: a paid report purchase is required to email the full PDF.
+      // Allow if the user has an active tier or a prior purchase confirmed by the backend.
+      if (window.PaymentGating && !window.PaymentGating.isAnyPaidTier() && !window._hasPriorPdfAccess) {
         showAlert('emailAlert', 'Sending your PDF report requires an Atlas Starter or Atlas Navigator purchase.', 'error', 'lock');
         const upgradeEl = document.getElementById('upgradeCardsContainer');
         upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1017,7 +1018,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailRes = await fetch('/api/report/email', {
           method:  'POST',
           headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
-          body:    JSON.stringify({ hash, email: inputEmail }),
+          body:    JSON.stringify({ hash, email: inputEmail, requesterEmail: inputEmail }),
         });
         if (!emailRes.ok) {
           const body = await emailRes.json().catch(() => ({}));

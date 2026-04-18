@@ -265,7 +265,10 @@
 
   function _downloadPdf(hash) {
     var headers = _getAuthHeaders();
-    fetch('/api/report/download?hash=' + encodeURIComponent(hash), { headers: headers })
+    var email = _lastParams && _lastParams.email ? String(_lastParams.email).trim() : '';
+    var dlUrl = '/api/report/download?hash=' + encodeURIComponent(hash) +
+      (email ? '&email=' + encodeURIComponent(email) : '');
+    fetch(dlUrl, { headers: headers })
       .then(function (r) {
         if (!r.ok) throw new Error('Download failed (' + r.status + ')');
         return r.blob();
