@@ -1,12 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-  <!-- Shield -->
-  <path d="M32 6 L54 16 L54 36 C54 49 44 58 32 60 C20 58 10 49 10 36 L10 16 Z" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2.5" stroke-linejoin="round"/>
-  <!-- Crossed swords / battle icon -->
-  <line x1="20" y1="20" x2="44" y2="44" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="44" y1="20" x2="20" y2="44" stroke="#7C3AED" stroke-width="2.5" stroke-linecap="round"/>
-  <!-- Handles -->
-  <line x1="16" y1="16" x2="22" y2="22" stroke="#5B21B6" stroke-width="3" stroke-linecap="round"/>
-  <line x1="42" y1="42" x2="48" y2="48" stroke="#5B21B6" stroke-width="3" stroke-linecap="round"/>
-  <line x1="48" y1="16" x2="42" y2="22" stroke="#5B21B6" stroke-width="3" stroke-linecap="round"/>
-  <line x1="22" y1="42" x2="16" y2="48" stroke="#5B21B6" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" role="img" aria-hidden="true">
+  <circle cx="12" cy="12" r="11" fill="#FEE2E2"/>
+  <g fill="none" stroke="#DC2626" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 4.6 17 19.4" />
+    <path d="M17 4.6 7 19.4" />
+    <path d="M5.2 8h13.6" />
+  </g>
 </svg>
