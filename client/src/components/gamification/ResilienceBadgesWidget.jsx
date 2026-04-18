@@ -3,9 +3,9 @@ import { STARTER_BADGES, NAVIGATOR_BADGES } from '../../data/gamificationContent
 
 // ── Rarity tier config ────────────────────────────────────────────────────────
 const RARITY_CONFIG = {
-  common:    { label: 'Bronze',   bg: '#fef3c7', color: '#92400e', border: 'rgba(146,64,14,0.22)',  glow: 'rgba(180,120,0,0.32)',   gradient: 'linear-gradient(135deg,#d97706,#f59e0b)', icon: '/icons/games/star-earned.svg' },
+  common:    { label: 'Bronze',   bg: '#fef3c7', color: '#92400e', border: 'rgba(146,64,14,0.22)',  glow: 'rgba(180,120,0,0.32)',   gradient: 'linear-gradient(135deg,#d97706,#f59e0b)', icon: '/icons/games/star-locked.svg' },
   uncommon:  { label: 'Silver',   bg: '#f0f9ff', color: '#0369a1', border: 'rgba(3,105,161,0.25)',  glow: 'rgba(14,165,233,0.35)',  gradient: 'linear-gradient(135deg,#0369a1,#0ea5e9)', icon: '/icons/games/star-earned.svg' },
-  rare:      { label: 'Gold',     bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(29,78,216,0.25)',  glow: 'rgba(59,130,246,0.35)',  gradient: 'linear-gradient(135deg,#1d4ed8,#6366f1)', icon: '/icons/games/star-earned.svg' },
+  rare:      { label: 'Gold',     bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(29,78,216,0.25)',  glow: 'rgba(59,130,246,0.35)',  gradient: 'linear-gradient(135deg,#1d4ed8,#6366f1)', icon: '/icons/trophy.svg' },
   legendary: { label: 'Platinum', bg: '#fdf4ff', color: '#7e22ce', border: 'rgba(126,34,206,0.28)', glow: 'rgba(168,85,247,0.45)',  gradient: 'linear-gradient(135deg,#7e22ce,#a855f7)', icon: '/icons/badge.svg' },
 };
 
