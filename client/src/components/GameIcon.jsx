@@ -68,7 +68,7 @@ async function loadGameSvg(name) {
 
   // Security assumption: /icons/games is application-owned static content.
   // If this path ever serves user-supplied SVG, add server-side sanitization.
-  const promise = fetch(`/icons/games/${name}.svg`)
+  const promise = fetch(`./icons/games/${name}.svg`)
     .then((res) => {
       if (!res.ok) throw new Error(`Failed to load icon: ${name}`);
       return res.text();

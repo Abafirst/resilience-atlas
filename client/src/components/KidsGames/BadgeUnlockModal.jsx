@@ -176,7 +176,7 @@ export default function BadgeUnlockModal({ badge, nextHint, onClose, soundOn = t
 
         {nextHint && (
           <div className="kg-modal-next-hint">
-            <img src="/icons/game-target.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Next badge: {nextHint}
+            <img src="./icons/game-target.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Next badge: {nextHint}
           </div>
         )}
 

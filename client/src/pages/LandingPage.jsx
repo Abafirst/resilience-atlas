@@ -3,12 +3,12 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 
 const DIMENSIONS = [
-  { key: 'relational',  icon: '/icons/relational-connective.svg',  name: 'Relational-Connective',  desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
-  { key: 'cognitive',   icon: '/icons/cognitive-narrative.svg',    name: 'Cognitive-Narrative',     desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
-  { key: 'somatic',     icon: '/icons/somatic-regulative.svg',     name: 'Somatic-Regulative',      desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
-  { key: 'emotional',   icon: '/icons/emotional-adaptive.svg',     name: 'Emotional-Adaptive',      desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
-  { key: 'spiritual',   icon: '/icons/spiritual-reflective.svg',   name: 'Spiritual-Reflective',    desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
-  { key: 'agentic',     icon: '/icons/agentic-generative.svg',     name: 'Agentic-Generative',      desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
+  { key: 'relational', icon: './icons/relational-connective.svg', name: 'Relational-Connective', desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
+  { key: 'cognitive', icon: './icons/cognitive-narrative.svg', name: 'Cognitive-Narrative', desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
+  { key: 'somatic', icon: './icons/somatic-regulative.svg', name: 'Somatic-Regulative', desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
+  { key: 'emotional', icon: './icons/emotional-adaptive.svg', name: 'Emotional-Adaptive', desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
+  { key: 'spiritual', icon: './icons/spiritual-reflective.svg', name: 'Spiritual-Reflective', desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
+  { key: 'agentic', icon: './icons/agentic-generative.svg', name: 'Agentic-Generative', desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
 ];
 
 export default function LandingPage() {
@@ -23,9 +23,10 @@ export default function LandingPage() {
           <span className="hero-eyebrow">Over 20 years of professional experience and a lifetime of application</span>
           <h1>Map Your Resilience</h1>
           <p className="hero-subheadline">
-            Your resilience isn&rsquo;t one thing&mdash;it&rsquo;s a constellation of six interconnected capacities.
-            Discover how you navigate challenges, where you&rsquo;re strongest, and where you&rsquo;re emerging.
-            Not a score. A map.
+            Resilience is multi-dimensional&mdash;just like you. By mapping your resilience, you can see where you&rsquo;re most powerful and find new areas ready for growth. Use your results to celebrate your strongest dimension and nourish those still developing.
+          </p>
+          <p className="hero-subheadline">
+            To support your growth, you&rsquo;ll find actionable, research-based strategies from Applied Behavior Analysis (ABA) and Acceptance and Commitment Therapy (ACT)&mdash;empowering you to actively strengthen your resilience every day.
           </p>
           <div className="hero-ctas">
             <button
@@ -33,7 +34,7 @@ export default function LandingPage() {
               className="btn-hero-primary"
               onClick={() => navigate('/quiz')}
             >
-              <span aria-hidden="true">&#9654;</span> Explore Your Map
+              <span aria-hidden="true">&#9654;</span> Start Your Resilience Map
             </button>
             <button
               type="button"
@@ -50,10 +51,9 @@ export default function LandingPage() {
       <section className="landing-section">
         <div className="section-header">
           <span className="section-label">The Six Dimensions</span>
-          <h2>Your Resilience Is a Constellation, Not a Score</h2>
+          <h2>Your Resilience: Connected, Evolving, Mapped</h2>
           <p>
-            Resilience isn&rsquo;t one thing&mdash;it&rsquo;s six interconnected capacities. Your profile
-            shows where your strengths live, and where new capacity is waiting to emerge.
+            Resilience is made of six dynamic strengths, all working together. Your profile reveals your brightest capacities and highlights new areas ready for growth.
           </p>
         </div>
         <div className="dimensions-grid">
@@ -62,6 +62,7 @@ export default function LandingPage() {
               <div className={`dimension-icon dimension-icon--${key}`}>
                 <img src={icon} alt="" aria-hidden="true" className="icon icon-md" />
               </div>
+              <span className={`dimension-pill dimension-pill--${key}`}>Strength</span>
               <h3>{name}</h3>
               <p>{desc}</p>
             </div>

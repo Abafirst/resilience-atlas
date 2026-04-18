@@ -205,7 +205,7 @@ function QuestCard({ quest, questProg, onStart, locked }) {
     <div style={q.card(quest.dimension, locked)}>
       {locked && (
         <div style={q.lockedBadge}>
-          <img src="/icons/lock.svg" alt="" width={10} height={10} />
+          <img src="./icons/lock.svg" alt="" width={10} height={10} />
           Navigator
         </div>
       )}
@@ -217,7 +217,7 @@ function QuestCard({ quest, questProg, onStart, locked }) {
           width={12}
           height={12}
           style={{ opacity: 0.85 }}
-          onError={e => { e.currentTarget.src = '/icons/quest.svg'; }}
+          onError={e => { e.currentTarget.src = './icons/quest.svg'; }}
         />
         {quest.dimension}
       </div>
@@ -240,7 +240,7 @@ function QuestCard({ quest, questProg, onStart, locked }) {
 
       {done && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: '#059669' }}>
-          <img src="/icons/checkmark.svg" alt="" width={14} height={14} />
+          <img src="./icons/checkmark.svg" alt="" width={14} height={14} />
           Quest Complete — {quest.totalPoints} stars earned
         </div>
       )}
@@ -251,7 +251,7 @@ function QuestCard({ quest, questProg, onStart, locked }) {
           onClick={() => onStart(quest)}
           aria-label={started ? `Continue ${quest.title}` : `Start ${quest.title}`}
         >
-          <img src="/icons/quest.svg" alt="" width={14} height={14} style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src="./icons/quest.svg" alt="" width={14} height={14} style={{ filter: 'brightness(0) invert(1)' }} />
           {started ? 'Continue Quest' : 'Start Quest'}
         </button>
       )}
@@ -284,7 +284,7 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
         <div style={q.modalBox}>
           <div style={q.celebrationBox}>
             <div style={q.celebrationIcon}>
-              <img src="/icons/quest.svg" alt="" width={36} height={36} style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src="./icons/quest.svg" alt="" width={36} height={36} style={{ filter: 'brightness(0) invert(1)' }} />
             </div>
             <h2 style={q.celebrationTitle}>Quest Complete!</h2>
             <p style={q.celebrationSub}>
@@ -292,7 +292,7 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
               <strong>{quest.dimension}</strong> resilience.
             </p>
             <div style={q.starsBadge}>
-              <img src="/icons/star.svg" alt="" width={18} height={18} />
+              <img src="./icons/star.svg" alt="" width={18} height={18} />
               {quest.totalPoints} Stars Earned
             </div>
             <div style={{ fontSize: 12, color: '#64748b' }}>
@@ -355,7 +355,7 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
                 title={`Step ${i + 1}`}
               >
                 {completedSteps.has(s.id) ? (
-                  <img src="/icons/checkmark.svg" alt="Done" width={12} height={12} style={{ filter: "brightness(0) invert(0.25)" }} />
+                  <img src="./icons/checkmark.svg" alt="Done" width={12} height={12} style={{ filter: "brightness(0) invert(0.25)" }} />
                 ) : (i + 1)}
               </div>
             ))}
@@ -394,7 +394,7 @@ function QuestModal({ quest, questProg, onClose, onComplete }) {
 
           {stepDone && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0' }}>
-              <img src="/icons/checkmark.svg" alt="" width={16} height={16} />
+              <img src="./icons/checkmark.svg" alt="" width={16} height={16} />
               <span style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>Step complete — {step.points} stars earned</span>
             </div>
           )}
@@ -478,12 +478,12 @@ export default function QuestsHub({ tier }) {
       {/* Intro / summary bar */}
       <div style={q.intro}>
         <img
-          src="/icons/quest.svg"
+          src="./icons/quest.svg"
           alt=""
           width={32}
           height={32}
           style={{ flexShrink: 0, marginTop: 2 }}
-          onError={e => { e.currentTarget.src = '/icons/game-mountain.svg'; }}
+          onError={e => { e.currentTarget.src = './icons/game-mountain.svg'; }}
         />
         <div style={q.introText}>
           <strong>Resilience Quests</strong> are structured multi-day missions — 3 focused steps per quest, each
@@ -525,11 +525,11 @@ export default function QuestsHub({ tier }) {
           </div>
           <div style={q.lockedOverlay}>
             <img
-              src="/icons/quest.svg"
+              src="./icons/quest.svg"
               alt=""
               width={40}
               height={40}
-              onError={e => { e.currentTarget.src = '/icons/game-mountain.svg'; }}
+              onError={e => { e.currentTarget.src = './icons/game-mountain.svg'; }}
             />
             <div style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>Quests — Navigator Only</div>
             <div style={{ fontSize: 13, color: '#475569', maxWidth: 380, lineHeight: 1.6 }}>
@@ -544,7 +544,7 @@ export default function QuestsHub({ tier }) {
                 textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6,
               }}
             >
-              <img src="/icons/compass.svg" alt="" width={14} height={14} style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src="./icons/compass.svg" alt="" width={14} height={14} style={{ filter: 'brightness(0) invert(1)' }} />
               Unlock Quests — Atlas Navigator
             </a>
           </div>
@@ -552,11 +552,11 @@ export default function QuestsHub({ tier }) {
       ) : (
         <div style={q.lockedOverlay}>
           <img
-            src="/icons/quest.svg"
+            src="./icons/quest.svg"
             alt=""
             width={40}
             height={40}
-            onError={e => { e.currentTarget.src = '/icons/game-mountain.svg'; }}
+            onError={e => { e.currentTarget.src = './icons/game-mountain.svg'; }}
           />
           <div style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>Sign In to Access Quests</div>
           <div style={{ fontSize: 13, color: '#475569', maxWidth: 380, lineHeight: 1.6 }}>

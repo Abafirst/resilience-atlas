@@ -39,7 +39,7 @@ export const MAP_ITEMS = [
 export const BUILDER_BADGE_CARDS = [
   {
     id: 'bb-first-step',
-    icon: '/icons/badge.svg',
+    icon: './icons/badge.svg',
     title: 'First Step',
     desc: 'Answer correctly to start your resilience journey!',
     unlockMessage: '🎉 Amazing! You took your first step on the resilience journey!',
@@ -58,7 +58,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-story-listener',
-    icon: '/icons/story.svg',
+    icon: './icons/story.svg',
     title: 'Story Listener',
     desc: 'Read Maya\'s story, then answer the question to earn this badge.',
     unlockMessage: '📖 Wonderful! Stories teach us how to be brave and kind.',
@@ -78,7 +78,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-feelings-explorer',
-    icon: '/icons/emotion.svg',
+    icon: './icons/emotion.svg',
     title: 'Feelings Explorer',
     desc: 'Tap 3 feelings you have felt today to earn this badge.',
     unlockMessage: '💜 Brilliant! Knowing your feelings is Jordan\'s biggest superpower.',
@@ -103,7 +103,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-helper-hero',
-    icon: '/icons/connection.svg',
+    icon: './icons/connection.svg',
     title: 'Helper Hero',
     desc: 'Choose 2 people who help you when things get tough.',
     unlockMessage: '🌟 Superstar! Maya the Connector would be so proud of you!',
@@ -126,7 +126,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-calm-champion',
-    icon: '/icons/breathing.svg',
+    icon: './icons/breathing.svg',
     title: 'Calm Champion',
     desc: 'Do 3 bubble breaths with Sam to earn this badge!',
     unlockMessage: '🌊 Excellent! Sam the Grounder knows: calm starts from inside.',
@@ -141,7 +141,7 @@ export const BUILDER_BADGE_CARDS = [
   },
   {
     id: 'bb-brave-builder',
-    icon: '/icons/goal.svg',
+    icon: './icons/goal.svg',
     title: 'Brave Builder',
     desc: 'Answer correctly to show you kept going even when it was hard!',
     unlockMessage: '🏗️ YES! Kai the Builder says: one small step at a time!',
@@ -260,7 +260,7 @@ export const GAME_CARDS = {
     {
       id: 'compass-spinner',
       title: 'Compass Spinner',
-      icon: '/icons/games/compass-spinner.svg',
+      icon: './icons/games/compass-spinner.svg',
       ageRange: 'Ages 5–8',
       description: 'Spin the compass and match resilience words! Collect points and earn sticker badges.',
       cta: 'Spin the Compass!',
@@ -270,7 +270,7 @@ export const GAME_CARDS = {
     {
       id: 'map-collector',
       title: 'Map Collector',
-      icon: '/icons/games/map-collector.svg',
+      icon: './icons/games/map-collector.svg',
       ageRange: 'Ages 5–8',
       description: 'Tap glowing items on a resilience map! Collect one item from each dimension to fill your map.',
       cta: 'Explore the Map!',
@@ -279,10 +279,8 @@ export const GAME_CARDS = {
     },
     {
       id: 'builder-badges',
-      title: 'Builder Badges',
-      icon: '/icons/games/builder-badges.svg',
       title: 'Badge Quest Challenge',
-      icon: '/icons/badge.svg',
+      icon: './icons/badge.svg',
       ageRange: 'Ages 5–8',
       description: 'Answer fun resilience questions and earn badges for each correct answer! How many can you get?',
       cta: 'Start the Quest!',
@@ -294,7 +292,7 @@ export const GAME_CARDS = {
     {
       id: 'navigator-quest',
       title: 'Navigator Quest',
-      icon: '/icons/games/navigator-quest.svg',
+      icon: './icons/games/navigator-quest.svg',
       ageRange: 'Ages 8–12',
       description: 'Go on a multi-step adventure! Choose a dimension, solve challenges, unlock story chapters.',
       cta: 'Start Adventure!',
@@ -304,7 +302,7 @@ export const GAME_CARDS = {
     {
       id: 'resilience-mountain',
       title: 'Resilience Mountain',
-      icon: '/icons/games/resilience-mountain.svg',
+      icon: './icons/games/resilience-mountain.svg',
       ageRange: 'Ages 8–12',
       description: 'Climb a mountain with 6 peaks — one for each resilience dimension. Reach the summit!',
       cta: 'Start Climbing!',
@@ -314,7 +312,7 @@ export const GAME_CARDS = {
     {
       id: 'treasure-explorer',
       title: 'Treasure Explorer',
-      icon: '/icons/games/treasure-explorer.svg',
+      icon: './icons/games/treasure-explorer.svg',
       ageRange: 'Ages 8–12',
       description: 'Explore islands, solve challenges, and find story treasures. How many can you unlock?',
       cta: 'Find Treasure!',
@@ -326,7 +324,7 @@ export const GAME_CARDS = {
     {
       id: 'navigator-challenges',
       title: 'Navigator Challenges',
-      icon: '/icons/games/navigator-challenges.svg',
+      icon: './icons/games/navigator-challenges.svg',
       ageRange: 'Ages 12+',
       description: 'Timed resilience challenges! Quick-fire scenarios, scoring system, and personal bests.',
       cta: 'Take a Challenge!',
@@ -336,7 +334,7 @@ export const GAME_CARDS = {
     {
       id: 'arena-battles',
       title: 'Arena Battles',
-      icon: '/icons/games/arena-battles.svg',
+      icon: './icons/games/arena-battles.svg',
       ageRange: 'Ages 12+',
       description: 'Quiz the resilience characters! Beat the Builder, challenge the Thinker, and earn battle badges.',
       cta: 'Enter the Arena!',
@@ -346,7 +344,7 @@ export const GAME_CARDS = {
     {
       id: 'quest-log',
       title: 'Quest Log',
-      icon: '/icons/games/quest-log.svg',
+      icon: './icons/games/quest-log.svg',
       ageRange: 'Ages 12+',
       description: 'Multi-part story quests tied to each dimension. Read, reflect, and create your own story.',
       cta: 'Open Quest Log!',

@@ -204,7 +204,7 @@ export default function KidsGamesHub() {
       <div className="kg-hub-header">
         <span className="section-label">Interactive Games</span>
         <h2 className="kg-hub-title">
-          <img src="/icons/compass.svg" alt="" aria-hidden="true" className="kg-hub-title-icon" />
+          <img src="./icons/compass.svg" alt="" aria-hidden="true" className="kg-hub-title-icon" />
           Resilience Games
         </h2>
         <p className="kg-hub-subtitle">
@@ -215,14 +215,14 @@ export default function KidsGamesHub() {
         <div className="kg-hub-stats" aria-label="Your progress">
           <div className="kg-stat">
             <span className="kg-stat-icon" aria-hidden="true">
-              <img src="/icons/games/star-earned.svg" alt="" className="kg-stat-icon-img" />
+              <img src="./icons/games/star-earned.svg" alt="" className="kg-stat-icon-img" />
             </span>
             <span className="kg-stat-num">{stars}</span>
             <span className="kg-stat-label">Stars</span>
           </div>
           <div className="kg-stat">
             <span className="kg-stat-icon" aria-hidden="true">
-              <img src="/icons/games/builder-badges.svg" alt="" className="kg-stat-icon-img" />
+              <img src="./icons/games/builder-badges.svg" alt="" className="kg-stat-icon-img" />
             </span>
             <span className="kg-stat-num">{earnedBadges.length}/{totalBadges}</span>
             <span className="kg-stat-label">Badges</span>
@@ -254,7 +254,7 @@ export default function KidsGamesHub() {
       {/* Badge collection — show all badges (locked + unlocked) */}
       <div className="kg-badge-shelf" aria-label="Your badge collection">
         <h3 className="kg-badge-shelf-title">
-          <img src="/icons/games/builder-badges.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
+          <img src="./icons/games/builder-badges.svg" alt="" aria-hidden="true" className="kg-shelf-title-icon" />
           Your Badges ({earnedBadges.length}/{totalBadges} unlocked)
         </h3>
         <div className="kg-badge-shelf-row">
@@ -278,7 +278,7 @@ export default function KidsGamesHub() {
                 <span className="kg-shelf-badge-emoji" aria-hidden="true">
                   {isEarned
                     ? <img src={badge.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
-                    : <img src="/icons/lock.svg" alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />}
+                    : <img src="./icons/lock.svg" alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />}
                 </span>
                 <span className="kg-shelf-badge-label">
                   {badge.label}
@@ -307,7 +307,7 @@ function BadgeToast({ badge }) {
         <img src={badge.icon} alt="" width={28} height={28} style={{ verticalAlign: 'middle' }} />
       </span>
       <div>
-        <strong><img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
+        <strong><img src="./icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
         <p style={{ margin: 0, fontSize: '.82rem' }}>{badge.desc}</p>
       </div>
     </div>
