@@ -23,28 +23,29 @@ export default function ResearchPage() {
       <SiteHeader activePage="research" />
       <DarkModeHint />
 
-      {/* ── Hero / Overview ───────────────────────────────────── */}
-      <section className="research-hero" aria-labelledby="hero-heading">
-        <div className="research-container">
-          <span className="section-label">Research &amp; Foundations</span>
-          <h1 id="hero-heading">The Research Foundations of the&nbsp;Resilience&nbsp;Atlas</h1>
-          <p className="hero-description">
-            The Resilience Atlas originated from doctoral research exploring how individuals
-            adapt to stress and adversity across multiple interacting dimensions. This framework
-            integrates findings from multiple scientific traditions to offer a comprehensive,
-            strengths-based model of human resilience.
-          </p>
-          <div className="hero-frameworks" role="list" aria-label="Theoretical frameworks">
-            <span className="framework-chip" role="listitem">Positive Psychology</span>
-            <span className="framework-chip" role="listitem">Resilience Science</span>
-            <span className="framework-chip" role="listitem">Cross-Cultural Research</span>
-            <span className="framework-chip" role="listitem">Applied Behavior Analysis</span>
-            <span className="framework-chip" role="listitem">Acceptance &amp; Commitment Therapy</span>
+      <div className="storytelling-page research-story">
+        {/* ── Hero / Overview ───────────────────────────────────── */}
+        <section className="research-hero" aria-labelledby="hero-heading">
+          <div className="research-container">
+            <span className="section-label">Research &amp; Foundations</span>
+            <h1 id="hero-heading">The Research Foundations of the&nbsp;Resilience&nbsp;Atlas</h1>
+            <p className="hero-description">
+              The Resilience Atlas originated from doctoral research exploring how individuals
+              adapt to stress and adversity across multiple interacting dimensions. This framework
+              integrates findings from multiple scientific traditions to offer a comprehensive,
+              strengths-based model of human resilience.
+            </p>
+            <div className="hero-frameworks" role="list" aria-label="Theoretical frameworks">
+              <span className="framework-chip" role="listitem">Positive Psychology</span>
+              <span className="framework-chip" role="listitem">Resilience Science</span>
+              <span className="framework-chip" role="listitem">Cross-Cultural Research</span>
+              <span className="framework-chip" role="listitem">Applied Behavior Analysis</span>
+              <span className="framework-chip" role="listitem">Acceptance &amp; Commitment Therapy</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <main id="main-content" className="research-main">
+        <main id="main-content" className="research-main">
 
         {/* ── Section 1b: Dissertation & Exemplars ──────────────── */}
         <section className="research-section alt-bg" aria-labelledby="dissertation-heading">
@@ -633,31 +634,32 @@ export default function ResearchPage() {
           </div>
         </section>
 
-      </main>
+        </main>
 
-      {/* ── Section 9: Author Credentials ──────────────────── */}
-      <section className="credentials-section" aria-labelledby="author-heading">
-        <span className="section-label">About the Developer</span>
-        <div className="author-card">
-          <div className="author-avatar" aria-hidden="true">
-            <img src="/icons/spiritual-reflective.svg" alt="" className="icon icon-xl" />
+        {/* ── Section 9: Author Credentials ──────────────────── */}
+        <section className="credentials-section" aria-labelledby="author-heading">
+          <span className="section-label">About the Developer</span>
+          <div className="author-card">
+            <div className="author-avatar" aria-hidden="true">
+              <img src="/icons/spiritual-reflective.svg" alt="" className="icon icon-xl" />
+            </div>
+            <h2 className="author-name" id="author-heading">Janeen Molchany, Ph.D., BCBA</h2>
+            <p className="author-title">Founder &amp; Chief Resilience Scientist — The Resilience Atlas&#8482;</p>
+            <p className="author-bio">
+              The Resilience Atlas&#8482; framework was developed as part of Janeen's 2013 doctoral dissertation —
+              a comprehensive mixed-methods study of resilience drawing on 18 resilience exemplars and 6
+              validated psychometric assessments. Janeen is a Board Certified Behavior Analyst (BCBA) and
+              foster care alumna with over a decade of clinical practice with vulnerable populations,
+              including foster youth and autistic children and families. The platform reflects 13 years of
+              continuous research refinement, grounded in science and designed for real-world impact.
+            </p>
           </div>
-          <h2 className="author-name" id="author-heading">Janeen Molchany, Ph.D., BCBA</h2>
-          <p className="author-title">Founder &amp; Chief Resilience Scientist — The Resilience Atlas&#8482;</p>
-          <p className="author-bio">
-            The Resilience Atlas&#8482; framework was developed as part of Janeen's 2013 doctoral dissertation —
-            a comprehensive mixed-methods study of resilience drawing on 18 resilience exemplars and 6
-            validated psychometric assessments. Janeen is a Board Certified Behavior Analyst (BCBA) and
-            foster care alumna with over a decade of clinical practice with vulnerable populations,
-            including foster youth and autistic children and families. The platform reflects 13 years of
-            continuous research refinement, grounded in science and designed for real-world impact.
-          </p>
-        </div>
-        <div className="credentials-cta">
-          <a href="/quiz" className="btn btn-primary">Take the Assessment</a>
-          <a href="/founder" className="btn btn-light">Meet the Founder</a>
-        </div>
-      </section>
+          <div className="credentials-cta">
+            <a href="/quiz" className="btn btn-primary">Take the Assessment</a>
+            <a href="/founder" className="btn btn-light">Meet the Founder</a>
+          </div>
+        </section>
+      </div>
     </>
   );
 }

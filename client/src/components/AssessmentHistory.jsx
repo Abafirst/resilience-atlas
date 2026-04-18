@@ -24,7 +24,7 @@ const s = {
     maxWidth:   680,
   },
   heading: {
-    color:        '#2d3748',
+    color:        'var(--history-text, #334155)',
     fontSize:     18,
     fontWeight:   700,
     marginBottom: 6,
@@ -33,7 +33,7 @@ const s = {
     gap:          8,
   },
   desc: {
-    color:        '#718096',
+    color:        'var(--history-text-muted, #64748b)',
     fontSize:     13,
     marginBottom: 16,
     lineHeight:   1.5,
@@ -47,11 +47,11 @@ const s = {
     display:        'flex',
     justifyContent: 'space-between',
     alignItems:     'flex-start',
-    background:     '#ffffff',
-    border:         '1px solid #e2e8f0',
-    borderRadius:   10,
+    background:     'var(--history-bg, #ffffff)',
+    border:         '1px solid var(--history-border, rgba(148, 163, 184, .32))',
+    borderRadius:   16,
     padding:        '14px 18px',
-    boxShadow:      '0 1px 6px rgba(0,0,0,0.04)',
+    boxShadow:      '0 10px 24px rgba(15, 23, 42, .06)',
     gap:            12,
     flexWrap:       'wrap',
   },
@@ -67,17 +67,17 @@ const s = {
     gap:        8,
   },
   overallScore: {
-    color:      '#1a202c',
+    color:      'var(--history-text, #1a202c)',
     fontWeight: 700,
     fontSize:   15,
   },
   dominantType: {
-    color:      '#667eea',
+    color:      'var(--history-btn-primary, #667eea)',
     fontSize:   13,
     fontWeight: 600,
   },
   date: {
-    color:    '#718096',
+    color:    'var(--history-text-muted, #64748b)',
     fontSize: 12,
   },
   badge: (unlocked) => ({
@@ -100,10 +100,10 @@ const s = {
   },
   btn: (variant, disabled) => ({
     padding:      '7px 14px',
-    background:   variant === 'download' ? '#667eea' : '#f8fafc',
-    color:        variant === 'download' ? '#fff' : '#4a5568',
-    border:       variant === 'download' ? 'none' : '1.5px solid #e2e8f0',
-    borderRadius: 7,
+    background:   variant === 'download' ? 'var(--history-btn-primary, #667eea)' : 'var(--history-btn-secondary-bg, #f8fafc)',
+    color:        variant === 'download' ? 'var(--history-btn-primary-text, #fff)' : 'var(--history-btn-secondary-text, #4a5568)',
+    border:       variant === 'download' ? 'none' : '1.5px solid var(--history-btn-secondary-border, #e2e8f0)',
+    borderRadius: 10,
     fontSize:     13,
     fontWeight:   600,
     cursor:       disabled ? 'not-allowed' : 'pointer',
@@ -113,7 +113,7 @@ const s = {
   }),
   unlockNote: {
     fontSize:  12,
-    color:     '#718096',
+    color:     'var(--history-text-muted, #64748b)',
     textAlign: 'right',
   },
   errorBox: {
@@ -128,11 +128,11 @@ const s = {
   emptyState: {
     textAlign:    'center',
     padding:      '32px 16px',
-    color:        '#718096',
+    color:        'var(--history-text-muted, #64748b)',
     fontSize:     14,
-    background:   '#f8fafc',
-    borderRadius: 10,
-    border:       '1px dashed #e2e8f0',
+    background:   'var(--history-btn-secondary-bg, #f8fafc)',
+    borderRadius: 14,
+    border:       '1px dashed var(--history-btn-secondary-border, #e2e8f0)',
   },
 };
 
