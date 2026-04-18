@@ -2,426 +2,589 @@ import React, { useEffect } from 'react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 
+const milestones = [
+  {
+    year: '2004',
+    title: 'Practice begins',
+    detail: 'Direct work with youth and families highlighted how resilience is lived, not theorized.',
+  },
+  {
+    year: '2013',
+    title: 'Doctoral research published',
+    detail: 'A multidimensional model emerged from interviews with 18 resilience exemplars and six validated assessments.',
+  },
+  {
+    year: 'Today',
+    title: 'Atlas in motion',
+    detail: 'Individuals, teams, and organizations use the Atlas to orient, reflect, and navigate growth with clarity.',
+  },
+];
+
+const missionCards = [
+  {
+    icon: '🧭',
+    title: 'Our mission',
+    detail: 'Help people read their current map and move forward with confidence, context, and compassion.',
+  },
+  {
+    icon: '🔬',
+    title: 'Our promise',
+    detail: 'Keep every insight grounded in research, lived experience, and practical application.',
+  },
+  {
+    icon: '🤝',
+    title: 'Our stance',
+    detail: 'We are not here to fix you. You are not broken. We are here to help you navigate.',
+  },
+];
+
+const teamMembers = [
+  {
+    name: 'Janeen Molchany',
+    role: 'Founder & Chief Resilience Scientist',
+    avatar: 'J',
+    fact: 'Favorite metaphor: “Map first, then movement.”',
+  },
+  {
+    name: 'Research & Insights Team',
+    role: 'Psychometrics + Translational Research',
+    avatar: 'R',
+    fact: 'We turn dense data into clear compass points people can use right away.',
+  },
+  {
+    name: 'Design & Experience Team',
+    role: 'Product + Content Experience',
+    avatar: 'D',
+    fact: 'We test language for warmth and clarity so every screen feels human.',
+  },
+];
+
+const values = [
+  {
+    icon: '/icons/cognitive-narrative.svg',
+    title: 'Clarity over noise',
+    detail: 'We simplify complexity without flattening what is human and nuanced.',
+  },
+  {
+    icon: '/icons/relational-connective.svg',
+    title: 'Connection matters',
+    detail: 'Resilience grows in relationship—with self, community, and purpose.',
+  },
+  {
+    icon: '/icons/somatic-regulative.svg',
+    title: 'Whole-person lens',
+    detail: 'Mind, body, story, and environment all shape how people navigate stress.',
+  },
+  {
+    icon: '/icons/spiritual-reflective.svg',
+    title: 'Purposeful growth',
+    detail: 'We focus on emerging edges and development, never deficit labels.',
+  },
+];
+
 const styles = `
-    .about-hero {
-      background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 100%);
-      color: #fff;
-      padding: 5rem 1.5rem 4rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+  .about-page {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(251, 191, 36, .15) 0%, transparent 38%),
+      radial-gradient(circle at 100% 0%, rgba(244, 114, 182, .12) 0%, transparent 34%),
+      linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
+  }
+
+  .about-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  .about-hero {
+    padding: 3.25rem 0 2.25rem;
+  }
+
+  .hero-card {
+    border-radius: 26px;
+    border: 1px solid rgba(79, 70, 229, .16);
+    background: linear-gradient(140deg, #fff8f1 0%, #fdf2f8 45%, #eef2ff 100%);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, .08);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.5rem;
+    padding: clamp(1.35rem, 3vw, 2.2rem);
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-card::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    right: -120px;
+    bottom: -170px;
+    background: radial-gradient(circle, rgba(79, 70, 229, .18) 0%, rgba(79, 70, 229, 0) 70%);
+    pointer-events: none;
+  }
+
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .82);
+    border: 1px solid rgba(79, 70, 229, .18);
+    padding: .36rem .82rem;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #4338ca;
+    margin-bottom: .9rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.9rem, 4.6vw, 3rem);
+    line-height: 1.15;
+    margin: 0 0 .65rem;
+    color: #1f2937;
+  }
+
+  .hero-sub {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 1.02rem;
+    line-height: 1.72;
+    color: #475569;
+  }
+
+  .hero-links {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+  }
+
+  .hero-logo-wrap {
+    justify-self: center;
+    width: min(260px, 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(79, 70, 229, .18);
+    background: rgba(255, 255, 255, .78);
+    text-align: center;
+    padding: 1.2rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .92);
+  }
+
+  .hero-logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 22px;
+    object-fit: contain;
+    animation: avatar-pulse 3.2s ease-in-out infinite;
+  }
+
+  .hero-logo-copy {
+    margin: .8rem 0 0;
+    font-size: .86rem;
+    color: #475569;
+  }
+
+  .story-section,
+  .team-section,
+  .values-section,
+  .cta-section {
+    margin-top: 1.75rem;
+  }
+
+  .section-title {
+    margin: 0 0 .5rem;
+    font-size: clamp(1.4rem, 3.2vw, 2rem);
+    color: #0f172a;
+    letter-spacing: -.01em;
+  }
+
+  .section-intro {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+    max-width: 70ch;
+  }
+
+  .story-grid {
+    margin-top: 1.1rem;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 1rem;
+  }
+
+  .soft-card {
+    background: #ffffff;
+    border: 1px solid var(--slate-200, #e2e8f0);
+    border-radius: 18px;
+    padding: 1.15rem;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+
+  .soft-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, .1);
+    border-color: rgba(79, 70, 229, .3);
+  }
+
+  .timeline-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: .75rem;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: .75rem;
+    align-items: start;
+  }
+
+  .timeline-year {
+    font-weight: 700;
+    color: #4338ca;
+    font-size: .92rem;
+    background: #eef2ff;
+    border-radius: 999px;
+    padding: .28rem .6rem;
+    text-align: center;
+  }
+
+  .timeline-title {
+    margin: 0;
+    font-size: .98rem;
+    color: #1e293b;
+  }
+
+  .timeline-detail {
+    margin: .25rem 0 0;
+    font-size: .9rem;
+    color: #475569;
+    line-height: 1.62;
+  }
+
+  .mission-cards {
+    display: grid;
+    gap: .75rem;
+  }
+
+  .mission-card-title {
+    margin: 0;
+    font-size: .96rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+  }
+
+  .mission-card-title .icon {
+    font-size: 1.1rem;
+  }
+
+  .mission-card p {
+    margin: .4rem 0 0;
+    color: #475569;
+    line-height: 1.64;
+    font-size: .9rem;
+  }
+
+  .team-grid {
+    margin-top: 1rem;
+    display: grid;
+    gap: .9rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .team-avatar {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
+    animation: avatar-pulse 3.2s ease-in-out infinite;
+  }
+
+  .team-name {
+    margin: .65rem 0 .1rem;
+    font-size: 1rem;
+    color: #0f172a;
+  }
+
+  .team-role {
+    margin: 0;
+    font-size: .86rem;
+    color: #64748b;
+  }
+
+  .team-fact {
+    margin: .65rem 0 0;
+    font-size: .9rem;
+    line-height: 1.62;
+    color: #334155;
+  }
+
+  .values-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: .8rem;
+  }
+
+  .value-pill {
+    border-radius: 999px;
+    border: 1px solid rgba(79, 70, 229, .18);
+    background: linear-gradient(125deg, #ffffff 0%, #f8fafc 100%);
+    padding: .95rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+
+  .value-pill:hover {
+    transform: translateY(-3px);
+    border-color: rgba(79, 70, 229, .42);
+  }
+
+  .value-pill img {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: .2rem;
+    flex-shrink: 0;
+  }
+
+  .value-pill h3 {
+    margin: 0;
+    font-size: .93rem;
+    color: #1e293b;
+  }
+
+  .value-pill p {
+    margin: .2rem 0 0;
+    font-size: .84rem;
+    line-height: 1.52;
+    color: #475569;
+  }
+
+  .cta-card {
+    border-radius: 24px;
+    background: linear-gradient(135deg, #312e81 0%, #4f46e5 48%, #7c3aed 100%);
+    color: #ffffff;
+    border: 1px solid rgba(129, 140, 248, .5);
+    box-shadow: 0 18px 35px rgba(49, 46, 129, .28);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    display: grid;
+    gap: .6rem;
+    margin: 2rem 0 2.8rem;
+  }
+
+  .cta-card h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 3.2vw, 1.9rem);
+  }
+
+  .cta-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, .92);
+    max-width: 62ch;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    margin-top: .4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .65rem;
+  }
+
+  .btn-soft,
+  .btn-outline-soft {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: .74rem 1rem;
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease, border-color .2s ease;
+  }
+
+  .btn-soft {
+    background: #ffffff;
+    color: #4338ca;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, .16);
+  }
+
+  .btn-soft:hover {
+    transform: translateY(-2px);
+    background: #f8fafc;
+  }
+
+  .btn-outline-soft {
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, .6);
+    background: rgba(255, 255, 255, .06);
+  }
+
+  .btn-outline-soft:hover {
+    transform: translateY(-2px);
+    border-color: #ffffff;
+    background: rgba(255, 255, 255, .16);
+  }
+
+  @keyframes avatar-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  @media (max-width: 880px) {
+    .hero-card,
+    .story-grid {
+      grid-template-columns: 1fr;
     }
-    .about-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 70% 30%, rgba(79,70,229,.25) 0%, transparent 60%);
-      pointer-events: none;
+
+    .hero-logo-wrap {
+      justify-self: start;
+      width: 100%;
+      max-width: 260px;
     }
-    .about-hero .hero-tagline {
-      display: inline-block;
-      background: rgba(79,70,229,.3);
-      color: #a5b4fc;
-      font-size: .8rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: .35rem 1rem;
-      border-radius: 999px;
-      margin-bottom: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .about-wrap { padding: 0 1rem; }
+    .timeline-item { grid-template-columns: 62px 1fr; }
+    .value-pill { border-radius: 18px; }
+    .cta-actions a { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .soft-card,
+    .value-pill,
+    .btn-soft,
+    .btn-outline-soft,
+    .team-avatar,
+    .hero-logo {
+      transition: none;
+      animation: none;
     }
-    .about-hero h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: .75rem; line-height: 1.2; }
-    .about-hero .hero-sub { color: #cbd5e1; font-size: 1.05rem; max-width: 580px; margin: 0 auto 1.5rem; line-height: 1.7; }
-    .about-hero .hero-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-top: 2rem;
+  }
+
+  [data-theme="dark"] .about-page {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(168, 85, 247, .16) 0%, transparent 38%),
+      radial-gradient(circle at 100% 0%, rgba(59, 130, 246, .14) 0%, transparent 34%),
+      linear-gradient(180deg, #020617 0%, #0b1120 44%, #020617 100%);
+  }
+
+  [data-theme="dark"] .hero-card {
+    background: linear-gradient(140deg, rgba(30, 41, 59, .95) 0%, rgba(51, 65, 85, .92) 52%, rgba(30, 41, 59, .95) 100%);
+    border-color: rgba(148, 163, 184, .25);
+    box-shadow: 0 16px 40px rgba(2, 6, 23, .55);
+  }
+
+  [data-theme="dark"] .hero-kicker {
+    background: rgba(15, 23, 42, .55);
+    border-color: rgba(99, 102, 241, .5);
+    color: #c7d2fe;
+  }
+
+  [data-theme="dark"] .hero-title,
+  [data-theme="dark"] .section-title,
+  [data-theme="dark"] .team-name,
+  [data-theme="dark"] .timeline-title,
+  [data-theme="dark"] .mission-card-title,
+  [data-theme="dark"] .value-pill h3 {
+    color: #f8fafc;
+  }
+
+  [data-theme="dark"] .hero-sub,
+  [data-theme="dark"] .hero-logo-copy,
+  [data-theme="dark"] .section-intro,
+  [data-theme="dark"] .team-role,
+  [data-theme="dark"] .team-fact,
+  [data-theme="dark"] .timeline-detail,
+  [data-theme="dark"] .mission-card p,
+  [data-theme="dark"] .value-pill p {
+    color: #cbd5e1;
+  }
+
+  [data-theme="dark"] .hero-logo-wrap,
+  [data-theme="dark"] .soft-card,
+  [data-theme="dark"] .value-pill {
+    background: #111827;
+    border-color: #334155;
+    box-shadow: 0 12px 28px rgba(2, 6, 23, .45);
+  }
+
+  [data-theme="dark"] .timeline-year {
+    background: rgba(99, 102, 241, .2);
+    color: #c7d2fe;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .about-page {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(168, 85, 247, .16) 0%, transparent 38%),
+        radial-gradient(circle at 100% 0%, rgba(59, 130, 246, .14) 0%, transparent 34%),
+        linear-gradient(180deg, #020617 0%, #0b1120 44%, #020617 100%);
     }
-    .about-hero .stat-item {
-      text-align: center;
+
+    :root:not([data-theme="light"]) .hero-card {
+      background: linear-gradient(140deg, rgba(30, 41, 59, .95) 0%, rgba(51, 65, 85, .92) 52%, rgba(30, 41, 59, .95) 100%);
+      border-color: rgba(148, 163, 184, .25);
+      box-shadow: 0 16px 40px rgba(2, 6, 23, .55);
     }
-    .about-hero .stat-number {
-      display: block;
-      font-size: 2rem;
-      font-weight: 800;
-      color: #a5b4fc;
-      line-height: 1;
+
+    :root:not([data-theme="light"]) .hero-kicker {
+      background: rgba(15, 23, 42, .55);
+      border-color: rgba(99, 102, 241, .5);
+      color: #c7d2fe;
     }
-    .about-hero .stat-label {
-      display: block;
-      font-size: .8rem;
+
+    :root:not([data-theme="light"]) .hero-title,
+    :root:not([data-theme="light"]) .section-title,
+    :root:not([data-theme="light"]) .team-name,
+    :root:not([data-theme="light"]) .timeline-title,
+    :root:not([data-theme="light"]) .mission-card-title,
+    :root:not([data-theme="light"]) .value-pill h3 {
+      color: #f8fafc;
+    }
+
+    :root:not([data-theme="light"]) .hero-sub,
+    :root:not([data-theme="light"]) .hero-logo-copy,
+    :root:not([data-theme="light"]) .section-intro,
+    :root:not([data-theme="light"]) .team-role,
+    :root:not([data-theme="light"]) .team-fact,
+    :root:not([data-theme="light"]) .timeline-detail,
+    :root:not([data-theme="light"]) .mission-card p,
+    :root:not([data-theme="light"]) .value-pill p {
       color: #cbd5e1;
-      margin-top: .3rem;
     }
 
-    .about-content {
-      max-width: 840px;
-      margin: 0 auto;
-      padding: 4rem 1.5rem;
+    :root:not([data-theme="light"]) .hero-logo-wrap,
+    :root:not([data-theme="light"]) .soft-card,
+    :root:not([data-theme="light"]) .value-pill {
+      background: #111827;
+      border-color: #334155;
+      box-shadow: 0 12px 28px rgba(2, 6, 23, .45);
     }
 
-    .founder-block {
-      display: flex;
-      gap: 2.5rem;
-      align-items: flex-start;
-      margin-bottom: 4rem;
-      padding: 2.5rem;
-      background: #fff;
-      border: 1px solid var(--slate-200);
-      border-radius: 16px;
-      box-shadow: var(--shadow-sm);
+    :root:not([data-theme="light"]) .timeline-year {
+      background: rgba(99, 102, 241, .2);
+      color: #c7d2fe;
     }
-    .founder-avatar {
-      flex-shrink: 0;
-      width: 110px; height: 110px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4F46E5 0%, #7c3aed 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-      color: #fff;
-    }
-    .founder-info h2 { font-size: 1.5rem; margin-bottom: .25rem; }
-    .founder-title { color: var(--slate-700); font-size: .9rem; margin-bottom: .75rem; }
-    .founder-credentials {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .5rem;
-      margin: .5rem 0 1rem;
-    }
-    .credential-tag {
-      background: #ede9fe;
-      color: #5b21b6;
-      font-size: .78rem;
-      font-weight: 600;
-      padding: .25rem .65rem;
-      border-radius: 999px;
-    }
-    .founder-info p { color: var(--slate-600); line-height: 1.75; font-size: .95rem; }
-    .founder-link {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      color: #4F46E5;
-      font-weight: 600;
-      font-size: .9rem;
-      text-decoration: none;
-      margin-top: .75rem;
-    }
-    .founder-link:hover { text-decoration: underline; }
-
-    .about-section {
-      margin-bottom: 3.5rem;
-    }
-    .about-section h2 {
-      font-size: 1.5rem;
-      color: var(--slate-900);
-      margin-bottom: 1rem;
-      padding-bottom: .5rem;
-      border-bottom: 2px solid var(--slate-100);
-    }
-    .about-section p {
-      color: var(--slate-600);
-      line-height: 1.75;
-      margin-bottom: 1rem;
-    }
-    .about-section ul {
-      color: var(--slate-600);
-      line-height: 1.75;
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .about-section ul li { margin-bottom: .5rem; }
-
-    .mission-callout {
-      background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
-      border-radius: 12px;
-      padding: 2rem 2.5rem;
-      margin: 2rem 0;
-      border-left: 4px solid #4F46E5;
-    }
-    .mission-callout p {
-      font-size: 1.15rem;
-      font-weight: 500;
-      color: #3730a3;
-      line-height: 1.75;
-      margin: 0;
-      font-style: italic;
-    }
-
-    .framework-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .6rem;
-      margin-top: 1rem;
-    }
-    .framework-pill {
-      background: var(--slate-100);
-      color: var(--slate-700);
-      font-size: .85rem;
-      font-weight: 500;
-      padding: .35rem .85rem;
-      border-radius: 999px;
-    }
-
-    .research-highlights {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
-      margin: 1.5rem 0;
-    }
-    .highlight-card {
-      background: #f8fafc;
-      border: 1px solid var(--slate-200);
-      border-radius: 12px;
-      padding: 1.5rem 1.25rem;
-      text-align: center;
-    }
-    .highlight-card .highlight-number {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #4F46E5;
-      display: block;
-    }
-    .highlight-card .highlight-label {
-      font-size: .85rem;
-      color: var(--slate-700);
-      margin-top: .25rem;
-    }
-
-    .assessments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-top: 1.25rem;
-    }
-    .assessment-card {
-      background: #fff;
-      border: 1px solid var(--slate-200);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-    .assessment-card h4 {
-      font-size: .9rem;
-      font-weight: 700;
-      color: var(--slate-800);
-      margin-bottom: .4rem;
-    }
-    .assessment-card p {
-      font-size: .82rem;
-      color: var(--slate-700);
-      margin: 0;
-      line-height: 1.55;
-    }
-
-    .timeline-list {
-      position: relative;
-      list-style: none;
-      padding: 0;
-      margin: 1.25rem 0;
-    }
-    .timeline-list::before {
-      content: '';
-      position: absolute;
-      left: .85rem;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--slate-200);
-    }
-    .timeline-item {
-      display: flex;
-      gap: 1.25rem;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-      padding-left: .25rem;
-    }
-    .timeline-dot {
-      flex-shrink: 0;
-      width: 1.75rem;
-      height: 1.75rem;
-      border-radius: 50%;
-      background: #4F46E5;
-      color: #fff;
-      font-size: .7rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-    .timeline-item-body h4 {
-      font-size: .95rem;
-      font-weight: 700;
-      color: var(--slate-800);
-      margin-bottom: .25rem;
-    }
-    .timeline-item-body p {
-      font-size: .88rem;
-      color: var(--slate-700);
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    .how-it-works-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .step-card {
-      text-align: center;
-      padding: 1.75rem 1.25rem;
-      background: #fff;
-      border: 1px solid var(--slate-200);
-      border-radius: 12px;
-    }
-    .step-number {
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 50%;
-      background: #4F46E5;
-      color: #fff;
-      font-weight: 800;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto .75rem;
-    }
-    .step-card h4 {
-      font-size: .95rem;
-      font-weight: 700;
-      color: var(--slate-800);
-      margin-bottom: .4rem;
-    }
-    .step-card p {
-      font-size: .85rem;
-      color: var(--slate-700);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .impact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1.25rem;
-    }
-    .impact-card {
-      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-      border: 1px solid #bbf7d0;
-      border-radius: 12px;
-      padding: 1.5rem;
-    }
-    .impact-card .impact-icon { font-size: 1.5rem; margin-bottom: .5rem; }
-    .impact-card h4 {
-      font-size: .95rem;
-      font-weight: 700;
-      color: #065f46;
-      margin-bottom: .35rem;
-    }
-    .impact-card p {
-      font-size: .85rem;
-      color: #047857;
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    .cta-band {
-      background: #4F46E5;
-      color: #fff;
-      text-align: center;
-      padding: 4rem 1.5rem;
-    }
-    .cta-band h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); margin-bottom: 1rem; }
-    .cta-band p { color: rgba(255,255,255,.8); max-width: 520px; margin: 0 auto 2rem; line-height: 1.7; }
-    .cta-band .btn-white {
-      background: #fff;
-      color: #4F46E5;
-      font-weight: 700;
-      padding: .85rem 2rem;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-block;
-      margin: .4rem;
-    }
-    .cta-band .btn-white:hover { background: #e8e7fe; }
-    .cta-band .btn-outline {
-      background: transparent;
-      color: #fff;
-      font-weight: 600;
-      padding: .85rem 2rem;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-block;
-      border: 2px solid rgba(255,255,255,.5);
-      margin: .4rem;
-    }
-    .cta-band .btn-outline:hover { border-color: #fff; }
-
-    @media (max-width: 640px) {
-      .founder-block { flex-direction: column; align-items: center; text-align: center; }
-      .founder-credentials { justify-content: center; }
-      .about-hero .hero-stats { gap: 1rem; }
-    }
-
-    /* ── Dark Mode ─────────────────────────────────────────── */
-    [data-theme="dark"] .founder-block,
-    [data-theme="dark"] .assessment-card,
-    [data-theme="dark"] .step-card {
-      background: #ffffff;
-      border-color: #e2e8f0;
-    }
-    [data-theme="dark"] .highlight-card {
-      background: #ffffff;
-      border-color: #e2e8f0;
-    }
-    [data-theme="dark"] .founder-info h2 { color: #0f172a; }
-    [data-theme="dark"] .founder-title { color: #475569; }
-    [data-theme="dark"] .founder-info p { color: #475569; }
-    [data-theme="dark"] .about-section h2 { color: var(--slate-900, #f1f5f9); border-bottom-color: var(--slate-200, #334155); }
-    [data-theme="dark"] .about-section p,
-    [data-theme="dark"] .about-section ul { color: var(--slate-600, #94a3b8); }
-    [data-theme="dark"] .assessment-card h4 { color: #1e293b; }
-    [data-theme="dark"] .assessment-card p { color: #475569; }
-    [data-theme="dark"] .timeline-item-body h4 { color: var(--slate-800, #e2e8f0); }
-    [data-theme="dark"] .timeline-item-body p { color: var(--slate-600, #94a3b8); }
-    [data-theme="dark"] .timeline-list::before { background: #334155; }
-    [data-theme="dark"] .step-card h4 { color: #1e293b; }
-    [data-theme="dark"] .step-card p { color: #475569; }
-    [data-theme="dark"] .highlight-card .highlight-label { color: #475569; }
-    [data-theme="dark"] .framework-pill { background: #f1f5f9; color: #334155; }
-    [data-theme="dark"] .mission-callout { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
-    [data-theme="dark"] .mission-callout p { color: #a5b4fc; }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) .founder-block,
-      :root:not([data-theme="light"]) .assessment-card,
-      :root:not([data-theme="light"]) .step-card { background: #ffffff; border-color: #e2e8f0; }
-      :root:not([data-theme="light"]) .highlight-card { background: #ffffff; border-color: #e2e8f0; }
-      :root:not([data-theme="light"]) .founder-info h2 { color: #0f172a; }
-      :root:not([data-theme="light"]) .founder-title { color: #475569; }
-      :root:not([data-theme="light"]) .founder-info p { color: #475569; }
-      :root:not([data-theme="light"]) .about-section h2 { color: #f1f5f9; border-bottom-color: #334155; }
-      :root:not([data-theme="light"]) .about-section p,
-      :root:not([data-theme="light"]) .about-section ul { color: #94a3b8; }
-      :root:not([data-theme="light"]) .assessment-card h4 { color: #1e293b; }
-      :root:not([data-theme="light"]) .assessment-card p { color: #475569; }
-      :root:not([data-theme="light"]) .timeline-item-body h4 { color: #e2e8f0; }
-      :root:not([data-theme="light"]) .timeline-item-body p { color: #94a3b8; }
-      :root:not([data-theme="light"]) .timeline-list::before { background: #334155; }
-      :root:not([data-theme="light"]) .step-card h4 { color: #1e293b; }
-      :root:not([data-theme="light"]) .step-card p { color: #475569; }
-      :root:not([data-theme="light"]) .highlight-card .highlight-label { color: #475569; }
-      :root:not([data-theme="light"]) .framework-pill { background: #f1f5f9; color: #334155; }
-      :root:not([data-theme="light"]) .mission-callout { background: rgba(79,70,229,.15); border-left-color: #818cf8; }
-      :root:not([data-theme="light"]) .mission-callout p { color: #a5b4fc; }
-    }
+  }
 `;
 
 export default function AboutPage() {
@@ -430,9 +593,10 @@ export default function AboutPage() {
       const t = localStorage.getItem('ra-theme');
       if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
       else if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
-      else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.setAttribute('data-theme', 'dark');
-    } catch(e) {}
+      }
+    } catch (e) {}
   }, []);
 
   return (
@@ -443,312 +607,124 @@ export default function AboutPage() {
       <SiteHeader activePage="about" />
       <DarkModeHint />
 
-      {/* Hero */}
-      <section className="about-hero" aria-labelledby="about-heading">
-        <span className="about-hero hero-tagline">1About the Resilience Atlas</span>
-        <h1 id="about-heading">The Resilience Atlas&#8482;<br />Maps, Not Formulas.</h1>
-        <p className="hero-sub">
-          A research-based resilience platform founded on published doctoral research&mdash;mapping
-          six interconnected dimensions of resilience for individuals, teams, and organizations.
-          Grounded in science and lived experience. Designed for genuine impact.
-        </p>
-        <div className="hero-stats" role="list" aria-label="Key research credentials">
-          <div className="stat-item" role="listitem">
-            <span className="stat-number">2013</span>
-            <span className="stat-label">Published Dissertation</span>
-          </div>
-          <div className="stat-item" role="listitem">
-            <span className="stat-number">6</span>
-            <span className="stat-label">Psychometric Assessments</span>
-          </div>
-          <div className="stat-item" role="listitem">
-            <span className="stat-number">18</span>
-            <span className="stat-label">Resilience Exemplars</span>
-          </div>
-          <div className="stat-item" role="listitem">
-            <span className="stat-number">13+</span>
-            <span className="stat-label">Years of Refinement</span>
-          </div>
-        </div>
-      </section>
-
-      <main id="main-content">
-
-        {/* Content */}
-        <div className="about-content">
-
-          {/* Founder */}
-          <div className="founder-block" aria-label="About the founder">
-            <div className="founder-avatar" aria-hidden="true">J</div>
-            <div className="founder-info">
-              <h2>Janeen Molchany</h2>
-              <p className="founder-title">Founder &amp; Chief Resilience Scientist</p>
-              <div className="founder-credentials">
-                <span className="credential-tag">Ph.D.</span>
-                <span className="credential-tag">BCBA</span>
-                <span className="credential-tag">Foster Care Alumna</span>
-                <span className="credential-tag">Published Researcher</span>
-                <span className="credential-tag">Author</span>
+      <main id="main-content" className="about-page">
+        <section className="about-hero" aria-labelledby="about-heading">
+          <div className="about-wrap">
+            <div className="hero-card">
+              <div>
+                <span className="hero-kicker">About the Resilience Atlas</span>
+                <h1 id="about-heading" className="hero-title">A warm, research-grounded map for real human resilience.</h1>
+                <p className="hero-sub">
+                  We combine doctoral research, lived experience, and clear language so you can see where you are,
+                  what strengths already anchor you, and where your emerging edge is ready to grow.
+                </p>
+                <div className="hero-links">
+                  <a className="btn-soft" href="/quiz">Explore Your Map</a>
+                  <a className="btn-outline-soft" href="/research">See the Research</a>
+                </div>
               </div>
+              <aside className="hero-logo-wrap" aria-label="Resilience Atlas brand mark">
+                <img src="/assets/logo-256x256.png" alt="Resilience Atlas logo" className="hero-logo" />
+                <p className="hero-logo-copy">Maps, not formulas. Compass points, not labels.</p>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section className="story-section" aria-labelledby="story-heading">
+          <div className="about-wrap">
+            <h2 id="story-heading" className="section-title">Our story and mission</h2>
+            <p className="section-intro">
+              The Atlas grew from years of direct practice and research. It is built to help people orient without
+              judgment—professional enough for teams, personal enough for everyday life.
+            </p>
+            <div className="story-grid">
+              <article className="soft-card" aria-label="Resilience Atlas milestones">
+                <ul className="timeline-list">
+                  {milestones.map((item) => (
+                    <li key={item.year} className="timeline-item">
+                      <span className="timeline-year">{item.year}</span>
+                      <div>
+                        <h3 className="timeline-title">{item.title}</h3>
+                        <p className="timeline-detail">{item.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+
+              <div className="mission-cards" role="list" aria-label="Mission and values summary">
+                {missionCards.map((item) => (
+                  <article key={item.title} className="soft-card mission-card" role="listitem">
+                    <h3 className="mission-card-title">
+                      <span className="icon" aria-hidden="true">{item.icon}</span>
+                      {item.title}
+                    </h3>
+                    <p>{item.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="team-section" aria-labelledby="team-heading">
+          <div className="about-wrap">
+            <h2 id="team-heading" className="section-title">Meet the team</h2>
+            <p className="section-intro">
+              Behind the Atlas is a cross-disciplinary team focused on one thing: helping people navigate with
+              credibility, warmth, and practical next steps.
+            </p>
+            <div className="team-grid" role="list" aria-label="Resilience Atlas team members">
+              {teamMembers.map((member) => (
+                <article key={member.name} className="soft-card" role="listitem">
+                  <span className="team-avatar" aria-hidden="true">{member.avatar}</span>
+                  <h3 className="team-name">{member.name}</h3>
+                  <p className="team-role">{member.role}</p>
+                  <p className="team-fact"><span aria-hidden="true">💬</span> {member.fact}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="values-section" aria-labelledby="values-heading">
+          <div className="about-wrap">
+            <h2 id="values-heading" className="section-title">What we value</h2>
+            <p className="section-intro">
+              These values shape how we design tools, write copy, and support people across individual and
+              organizational settings.
+            </p>
+            <div className="values-grid" role="list" aria-label="Resilience Atlas values">
+              {values.map((value) => (
+                <article key={value.title} className="value-pill" role="listitem">
+                  <img src={value.icon} alt="" />
+                  <div>
+                    <h3>{value.title}</h3>
+                    <p>{value.detail}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="cta-section">
+          <div className="about-wrap">
+            <div className="cta-card" aria-label="Join the Resilience Atlas community">
+              <h2>Join us on the map</h2>
               <p>
-                Janeen Molchany is a doctoral-level researcher, Board Certified Behavior Analyst (BCBA),
-                and the creator of the Resilience Atlas framework. Her career began in 2004 at a children's
-                shelter and group home, where she witnessed firsthand how young people in crisis develop—or
-                lose—the capacity to adapt and recover.
+                Whether you&rsquo;re exploring your own resilience or supporting a full team, we&rsquo;d love to help you
+                navigate what comes next.
               </p>
-              <p>
-                She then worked in Wraparound services for five years with at-risk youth, learning how
-                relationship, meaning-making, and agency transform outcomes. Since 2013, she has continued
-                her work with children in autism communities while publishing her doctoral dissertation that
-                same year — research that would become the foundation for the Resilience Atlas framework.
-              </p>
-              <p>
-                Her 20+ years of direct clinical experience, combined with rigorous behavioral science and
-                resilience research, enables her to create practical tools for understanding and building
-                human resilience.
-              </p>
-              <a href="/founder" className="founder-link">Read full biography &rarr;</a>
+              <div className="cta-actions">
+                <a className="btn-soft" href="/quiz">Begin Navigation</a>
+                <a className="btn-outline-soft" href="/contact">Contact Us</a>
+              </div>
             </div>
           </div>
-
-          {/* Personal Story & Lived Experience */}
-          <section className="about-section" aria-labelledby="story-heading">
-            <h2 id="story-heading">The Map Comes from Real Navigation</h2>
-            <p>
-              The Resilience Atlas did not begin in a laboratory. It began in life. Janeen Molchany's
-              journey through the foster care system gave her an intimate, firsthand understanding of
-              adversity — and of the extraordinary capacity human beings have to adapt, recover, and grow
-              through even the most challenging circumstances.
-            </p>
-            <p>
-              That personal experience became the foundation of a lifelong professional mission: to understand
-              what makes resilience possible, and to make that understanding accessible to everyone.
-              As a BCBA working with foster youth and families of autistic children, Janeen saw daily how
-              resilience — or its absence — shaped lives and outcomes. She also saw how rarely people had
-              real, science-based tools to understand their own resilience.
-            </p>
-            <p>
-              Janeen observed that most resilience tools treated resilience as a single trait, or focused
-              on only one domain — psychology, spirituality, or physical wellness. Her 2013 doctoral
-              dissertation revealed that resilience is fundamentally <em>multidimensional</em>: a constellation
-              of capacities that interact in complex, personal, and deeply human ways.
-            </p>
-            <p>
-              The Resilience Atlas was created to reflect that complexity&mdash;giving people a map, not just
-              a number, for understanding how they navigate under pressure.
-            </p>
-          </section>
-
-          {/* Mission */}
-          <section className="about-section" aria-labelledby="mission-heading">
-            <h2 id="mission-heading">Mission: To Create Maps, Not Formulas</h2>
-            <div className="mission-callout">
-              <p>
-                "We believe resilience is not something you either have or don&rsquo;t have. It&rsquo;s a
-                constellation of six interconnected capacities&mdash;multidimensional, complex, and
-                deeply personal. The Resilience Atlas exists to make that complexity visible, give
-                you a map of where you stand, and orient you toward genuine growth."
-              </p>
-            </div>
-            <p>
-              We&rsquo;re not here to fix you. You&rsquo;re not broken. We&rsquo;re here to help you navigate&mdash;to
-              understand how you currently show up, where your strengths live, and where your
-              edges are waiting to expand.
-            </p>
-          </section>
-
-          {/* Research Foundation */}
-          <section className="about-section" aria-labelledby="research-heading">
-            <h2 id="research-heading">The Research Foundation</h2>
-            <p>
-              The Resilience Atlas framework was built on rigorous academic research, including Janeen's
-              2013 published doctoral dissertation — a comprehensive study of resilience that drew on
-              multiple theoretical traditions and original empirical data.
-            </p>
-            <div className="research-highlights" role="list" aria-label="Key research metrics">
-              <div className="highlight-card" role="listitem">
-                <span className="highlight-number">2013</span>
-                <span className="highlight-label">Year of Published Dissertation</span>
-              </div>
-              <div className="highlight-card" role="listitem">
-                <span className="highlight-number">6</span>
-                <span className="highlight-label">Psychometric Assessments Used</span>
-              </div>
-              <div className="highlight-card" role="listitem">
-                <span className="highlight-number">18</span>
-                <span className="highlight-label">Resilience Exemplars Studied</span>
-              </div>
-              <div className="highlight-card" role="listitem">
-                <span className="highlight-number">13+</span>
-                <span className="highlight-label">Years of Framework Refinement</span>
-              </div>
-            </div>
-            <p>
-              The dissertation identified and validated a multidimensional model of resilience through
-              in-depth interviews with <strong>18 resilience exemplars</strong> — individuals who had
-              demonstrated extraordinary resilience in the face of adversity — and through the
-              administration of <strong>6 validated psychometric assessments</strong> spanning emotional
-              regulation, social support, purpose, coping, cognitive flexibility, and somatic awareness.
-            </p>
-            <a href="/research" className="btn btn-secondary" style={{marginTop:'.5rem'}}>Explore the Research Foundations &rarr;</a>
-          </section>
-
-          {/* Psychometric Assessments */}
-          <section className="about-section" aria-labelledby="assessments-heading">
-            <h2 id="assessments-heading">Six Psychometric Assessments</h2>
-            <p>
-              The Resilience Atlas platform is grounded in Janeen Molchany's 2013 doctoral dissertation,
-              which administered six validated psychometric instruments to 18 resilience exemplars. These
-              assessments provided the scientific foundation for identifying and measuring the dimensions
-              of resilience integrated throughout this platform:
-            </p>
-            <div className="assessments-grid" role="list" aria-label="Psychometric assessments used in dissertation research">
-              <article className="assessment-card" role="listitem">
-                <h4>Myers-Briggs Type Indicator (MBTI)</h4>
-                <p>A widely used instrument for understanding psychological personality types and preferences, providing insight into how individuals perceive the world and make decisions.</p>
-              </article>
-              <article className="assessment-card" role="listitem">
-                <h4>Resilience Scale (RS)</h4>
-                <p>Measures the degree of individual resilience — the capacity to adapt to, withstand, and recover from adversity, hardship, and significant sources of stress.</p>
-              </article>
-              <article className="assessment-card" role="listitem">
-                <h4>VIA Character Strengths Survey (VIA)</h4>
-                <p>Assesses positive character strengths and core virtues that contribute to personal fulfillment, well-being, and flourishing in the face of life's challenges.</p>
-              </article>
-              <article className="assessment-card" role="listitem">
-                <h4>MPS (Mental, Physical &amp; Spiritual Scale)</h4>
-                <p>Evaluates holistic well-being and balance across mental, physical, and spiritual domains — capturing the full-spectrum dimensions of human health and resilience.</p>
-              </article>
-              <article className="assessment-card" role="listitem">
-                <h4>Multiple Intelligence Inventory (MII)</h4>
-                <p>Examines the various dimensions of human intelligence beyond traditional cognitive measures, reflecting Howard Gardner's theory of multiple intelligences.</p>
-              </article>
-              <article className="assessment-card" role="listitem">
-                <h4>Self Transcendence Scale (STS)</h4>
-                <p>Captures an individual's capacity for self transcendence — the ability to find meaning, connection, and perspective that extends beyond one's immediate self and circumstances.</p>
-              </article>
-            </div>
-          </section>
-
-          {/* How It Works */}
-          <section className="about-section" aria-labelledby="how-heading">
-            <h2 id="how-heading">How It Works</h2>
-            <p>
-              The Resilience Atlas translates doctoral-level research into an accessible, actionable
-              experience anyone can complete in under 15 minutes:
-            </p>
-            <div className="how-it-works-steps" role="list" aria-label="Steps to use the Resilience Atlas">
-              <div className="step-card" role="listitem">
-                <div className="step-number" aria-hidden="true">1</div>
-                <h4>Take the Assessment</h4>
-                <p>Complete the 72-question resilience assessment, spanning all six dimensions.</p>
-              </div>
-              <div className="step-card" role="listitem">
-                <div className="step-number" aria-hidden="true">2</div>
-                <h4>Map Your Profile</h4>
-                <p>Receive a personalized radar chart showing your unique resilience profile across six dimensions.</p>
-              </div>
-              <div className="step-card" role="listitem">
-                <div className="step-number" aria-hidden="true">3</div>
-                <h4>Read Your Report</h4>
-                <p>Get a detailed, evidence-based narrative report interpreting your strengths and growth areas.</p>
-              </div>
-              <div className="step-card" role="listitem">
-                <div className="step-number" aria-hidden="true">4</div>
-                <h4>Track Your Growth</h4>
-                <p>Retake over time to see how your resilience evolves using the longitudinal Atlas tracker.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Impact */}
-          <section className="about-section" aria-labelledby="impact-heading">
-            <h2 id="impact-heading">Impact &amp; Outcomes</h2>
-            <p>
-              The Resilience Atlas is designed to create meaningful, lasting change — for individuals
-              navigating personal challenges, teams building collective strength, and organizations
-              cultivating resilient cultures:
-            </p>
-            <div className="impact-grid" role="list" aria-label="Impact outcomes">
-              <div className="impact-card" role="listitem">
-                <div className="impact-icon" aria-hidden="true"><img src="/icons/compass.svg" alt="" className="icon icon-md" /></div>
-                <h4>Self-Understanding</h4>
-                <p>Individuals gain a clear, nuanced picture of their resilience — not a single score, but a full map.</p>
-              </div>
-              <div className="impact-card" role="listitem">
-                <div className="impact-icon" aria-hidden="true"><img src="/icons/agentic-generative.svg" alt="" className="icon icon-md" /></div>
-                <h4>Targeted Growth</h4>
-                <p>Dimension-specific insights help people focus their development efforts where they matter most.</p>
-              </div>
-              <div className="impact-card" role="listitem">
-                <div className="impact-icon" aria-hidden="true"><img src="/icons/relational-connective.svg" alt="" className="icon icon-md" /></div>
-                <h4>Team Resilience</h4>
-                <p>Teams see aggregated profiles, identify collective gaps, and build shared resilience strategies.</p>
-              </div>
-              <div className="impact-card" role="listitem">
-                <div className="impact-icon" aria-hidden="true"><img src="/icons/spiritual-reflective.svg" alt="" className="icon icon-md" /></div>
-                <h4>Organizational Culture</h4>
-                <p>Organizations embed resilience as a cultural value, not just an individual wellness initiative.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Framework */}
-          <section className="about-section" aria-labelledby="framework-heading">
-            <h2 id="framework-heading">The Six Dimensions</h2>
-            <p>
-              The Six Dimensions of Resilience framework integrates findings from multiple scientific
-              traditions. Each dimension reflects a distinct way that humans adapt to and recover from
-              adversity:
-            </p>
-            <div className="framework-pills">
-              <span className="framework-pill"><img src="/icons/relational-connective.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Relational-Connective — social support and connection</span>
-              <span className="framework-pill"><img src="/icons/cognitive-narrative.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Cognitive-Narrative — reframing and perspective-taking</span>
-              <span className="framework-pill"><img src="/icons/somatic-regulative.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Somatic-Regulative — physical regulation and body awareness</span>
-              <span className="framework-pill"><img src="/icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Emotional-Adaptive — processing and moving through feelings</span>
-              <span className="framework-pill"><img src="/icons/spiritual-reflective.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Spiritual-Reflective — meaning, purpose, and values</span>
-              <span className="framework-pill"><img src="/icons/agentic-generative.svg" alt="" aria-hidden="true" className="icon icon-xs" /> Agentic-Generative — action, agency, and forward movement</span>
-            </div>
-            <p style={{marginTop:'1.5rem'}}>
-              The atlas metaphor is intentional: a map doesn't tell you where to go — it helps you understand
-              where you are and what paths are available. The Resilience Atlas does the same for your inner life.
-            </p>
-          </section>
-
-          {/* Research Origins */}
-          <section className="about-section" aria-labelledby="foundations-heading">
-            <h2 id="foundations-heading">Theoretical Foundations</h2>
-            <p>
-              The Resilience Atlas framework is grounded in peer-reviewed research across six disciplines:
-            </p>
-            <div className="framework-pills">
-              <span className="framework-pill">Positive Psychology</span>
-              <span className="framework-pill">Resilience Science</span>
-              <span className="framework-pill">Applied Behavior Analysis (ABA)</span>
-              <span className="framework-pill">Acceptance &amp; Commitment Therapy (ACT)</span>
-              <span className="framework-pill">Cross-Cultural Research</span>
-              <span className="framework-pill">Trauma-Informed Practice</span>
-            </div>
-            <p style={{marginTop:'1.5rem'}}>
-              The assessment instrument was developed through doctoral research and refined through
-              iterative testing across clinical populations to ensure it reflects the full complexity
-              of real human resilience.
-            </p>
-            <a href="/research" className="btn btn-secondary" style={{marginTop:'.5rem'}}>Explore the Research Foundations &rarr;</a>
-          </section>
-
-        </div>
-
+        </section>
       </main>
-
-      {/* CTA */}
-      <section className="cta-band" aria-label="Get started with the Resilience Atlas">
-        <h2>Your Map is Waiting.</h2>
-        <p>Explore your resilience, navigate your terrain, or bring the Atlas to your team.</p>
-        <a className="btn-white" href="/quiz">Explore Your Map</a>
-        <a className="btn-outline" href="/founder">Meet the Founder</a>
-        <a className="btn-outline" href="/research">Navigate the Research</a>
-      </section>
     </>
   );
 }
