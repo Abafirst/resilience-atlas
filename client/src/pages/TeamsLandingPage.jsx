@@ -682,6 +682,7 @@ export default function TeamsLandingPage() {
 
   <SiteHeader activePage="teams" />
   <DarkModeHint />
+  <main className="storytelling-page teams-story">
 
   <section className="team-hero" aria-label="Team page hero">
     <span className="hero-eyebrow">Business Tier</span>
@@ -717,7 +718,7 @@ export default function TeamsLandingPage() {
       {TEAM_PLANS.map((plan) => (
         <div
           key={plan.key}
-          className={`team-tier-card${plan.featured ? ' team-tier-card--featured' : ''}`}
+          className={`team-tier-card soft-card${plan.featured ? ' team-tier-card--featured' : ''}`}
         >
           <div className="ttc-header">
             {plan.badge && (
@@ -768,7 +769,7 @@ export default function TeamsLandingPage() {
 
   {/* Enterprise Contact Form (Enterprise plan only) */}
   <section className="landing-section alt-bg" aria-labelledby="formHeading" id="teamLeadForm">
-    <div className="lead-form-wrap">
+    <div className="lead-form-wrap soft-card">
       <h2 id="formHeading">Atlas Enterprise Inquiry</h2>
       <p>Tell us about your organization and we will be in touch within one business day to discuss your custom Enterprise plan.</p>
 
@@ -822,32 +823,32 @@ export default function TeamsLandingPage() {
       <h2 id="featuresHeading">Your Team&rsquo;s Navigation Toolkit</h2>
     </div>
     <div className="features-list">
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/cognitive-narrative.svg" alt="" className="icon icon-md" /></div>
         <h4>Team Dashboard</h4>
         <p>A shared map of your team&rsquo;s collective resilience&mdash;aggregated dimension profiles and completion tracking in one place.</p>
       </div>
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/compass.svg" alt="" className="icon icon-md" /></div>
         <h4>Team Compass</h4>
         <p>Visualize your team&rsquo;s collective Six Dimensions profile on a single compass. See where strengths cluster and where edges exist.</p>
       </div>
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/agentic-generative.svg" alt="" className="icon icon-md" /></div>
         <h4>Data Export</h4>
         <p>Download all member maps with dimension profiles for your own analysis or organizational reporting.</p>
       </div>
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" className="icon icon-md" /></div>
         <h4>Individual Navigation Guides</h4>
         <p>Each team member receives their personalized resilience map and dimension narrative&mdash;their own guide for growth.</p>
       </div>
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" className="icon icon-md" /></div>
         <h4>Simple Onboarding</h4>
         <p>Invite your entire team via email with a single click. Minimal friction, maximum participation.</p>
       </div>
-      <div className="feature-item">
+      <div className="feature-item soft-card">
         <div className="feature-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" className="icon icon-md" /></div>
         <h4>Secure &amp; Private</h4>
         <p>Individual maps are always private by default. Admins see only aggregated team insights unless individuals choose to share.</p>
@@ -867,7 +868,7 @@ export default function TeamsLandingPage() {
     <div className="team-activities-grid">
 
       {/* Dimension Deep-Dive */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/facilitation-team.svg" alt="" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem' }} />
           <div className="tac-title">Dimension Deep-Dive</div>
@@ -893,7 +894,7 @@ export default function TeamsLandingPage() {
       </div>
 
       {/* Resilience Story Circle */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Resilience Story Circle</div>
@@ -919,7 +920,7 @@ export default function TeamsLandingPage() {
       </div>
 
       {/* Strengths Mapping */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/compass.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Team Strengths Mapping</div>
@@ -944,7 +945,7 @@ export default function TeamsLandingPage() {
       </div>
 
       {/* The Pressure Test */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">The Pressure Test</div>
@@ -970,7 +971,7 @@ export default function TeamsLandingPage() {
       </div>
 
       {/* Values Alignment */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/spiritual-reflective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Values Alignment Workshop</div>
@@ -997,7 +998,7 @@ export default function TeamsLandingPage() {
       </div>
 
       {/* Connection Map */}
-      <div className="team-activity-card">
+      <div className="team-activity-card soft-card">
         <div className="tac-header">
           <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" aria-hidden="true" className="tac-icon" />
           <div className="tac-title">Connection Map</div>
@@ -1037,7 +1038,7 @@ export default function TeamsLandingPage() {
         const ctaState = getHandoutCtaState(handout.minTier);
         const isDownloading = downloadingId === handout.id;
         return (
-          <div className="handout-card" key={handout.id}>
+          <div className="handout-card soft-card" key={handout.id}>
             <div className="handout-icon" aria-hidden="true">
               {handout.icon
                 ? <img onError={handleIconLoadError} src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
@@ -1114,7 +1115,7 @@ export default function TeamsLandingPage() {
     </div>
     <div className="dimension-guide-grid">
 
-      <div className="dim-guide-card dim-guide-card--relational">
+      <div className="dim-guide-card dim-guide-card--relational soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/relational-connective.svg" alt="" className="dgc-icon" />
           <div>
@@ -1132,7 +1133,7 @@ export default function TeamsLandingPage() {
         </ul>
       </div>
 
-      <div className="dim-guide-card dim-guide-card--cognitive">
+      <div className="dim-guide-card dim-guide-card--cognitive soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/cognitive-narrative.svg" alt="" className="dgc-icon" />
           <div>
@@ -1150,7 +1151,7 @@ export default function TeamsLandingPage() {
         </ul>
       </div>
 
-      <div className="dim-guide-card dim-guide-card--somatic">
+      <div className="dim-guide-card dim-guide-card--somatic soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/somatic-regulative.svg" alt="" className="dgc-icon" />
           <div>
@@ -1168,7 +1169,7 @@ export default function TeamsLandingPage() {
         </ul>
       </div>
 
-      <div className="dim-guide-card dim-guide-card--emotional">
+      <div className="dim-guide-card dim-guide-card--emotional soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/emotional-adaptive.svg" alt="" className="dgc-icon" />
           <div>
@@ -1186,7 +1187,7 @@ export default function TeamsLandingPage() {
         </ul>
       </div>
 
-      <div className="dim-guide-card dim-guide-card--spiritual">
+      <div className="dim-guide-card dim-guide-card--spiritual soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/spiritual-reflective.svg" alt="" className="dgc-icon" />
           <div>
@@ -1204,7 +1205,7 @@ export default function TeamsLandingPage() {
         </ul>
       </div>
 
-      <div className="dim-guide-card dim-guide-card--agentic">
+      <div className="dim-guide-card dim-guide-card--agentic soft-card">
         <div className="dgc-header">
           <img onError={handleIconLoadError} src="icons/agentic-generative.svg" alt="" className="dgc-icon" />
           <div>
@@ -1227,7 +1228,7 @@ export default function TeamsLandingPage() {
 
   {/* Final CTA */}
   <section className="landing-section" style={{ background: '#fff' }}>
-    <div className="final-cta">
+    <div className="final-cta soft-card">
       <h2>Start with an Individual Assessment</h2>
       <p>Not ready for a team rollout? Take the free individual assessment first and experience the Six Dimensions model yourself.</p>
       <a className="btn-hero-primary" href="/quiz" style={{ display: 'inline-flex', margin: '0 auto' }}>
@@ -1235,6 +1236,7 @@ export default function TeamsLandingPage() {
       </a>
     </div>
   </section>
+  </main>
 
       {showAndroidModal && (
         <AndroidWebModal onClose={() => setShowAndroidModal(false)} />

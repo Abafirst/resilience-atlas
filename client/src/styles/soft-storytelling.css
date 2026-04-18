@@ -1,0 +1,230 @@
+/* Shared soft-card storytelling system inspired by About page */
+
+.about-page,
+.storytelling-page {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251, 191, 36, 0.12) 0%, transparent 36%),
+    radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.1) 0%, transparent 32%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
+}
+
+.story-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.soft-card {
+  background: #ffffff;
+  border: 1px solid var(--slate-200, #e2e8f0);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.soft-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+  border-color: rgba(79, 70, 229, 0.28);
+}
+
+.story-button,
+.btn-soft-story {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 0.72rem 1rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.story-button {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.story-button:hover {
+  transform: translateY(-2px);
+  background: #4338ca;
+}
+
+.btn-soft-story {
+  background: #ffffff;
+  color: #4338ca;
+  border-color: rgba(79, 70, 229, 0.22);
+}
+
+.btn-soft-story:hover {
+  transform: translateY(-2px);
+  background: #f8fafc;
+}
+
+/* Landing page alignment */
+.landing-story .hero {
+  background: linear-gradient(140deg, #fff8f1 0%, #fdf2f8 45%, #eef2ff 100%);
+  color: #1f2937;
+  border-bottom: 1px solid rgba(79, 70, 229, 0.14);
+}
+
+.landing-story .hero::before,
+.landing-story .hero::after {
+  opacity: 0.65;
+}
+
+.landing-story .hero h1,
+.landing-story .hero-subheadline {
+  color: #334155;
+}
+
+.landing-story .hero-eyebrow {
+  background: rgba(255, 255, 255, 0.86);
+  border-color: rgba(79, 70, 229, 0.22);
+  color: #4338ca;
+}
+
+.landing-story .landing-section {
+  position: relative;
+}
+
+.landing-story .dimension-card,
+.landing-story .why-card,
+.landing-story .final-cta {
+  border-radius: 18px;
+}
+
+/* Dashboard alignment */
+.dashboard-story .dash-layout {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.dashboard-story .dash-card,
+.dashboard-story .dim-card {
+  border-radius: 18px;
+  border-color: rgba(148, 163, 184, 0.32);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+/* Quiz alignment */
+.quiz-story {
+  padding-bottom: 2rem;
+}
+
+.quiz-story .quiz-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 0;
+}
+
+.quiz-story .progress-container,
+.quiz-story .card {
+  border-radius: 18px;
+  border: 1px solid var(--slate-200, #e2e8f0);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  background: #ffffff;
+}
+
+/* Teams alignment */
+.teams-story .team-hero {
+  background: linear-gradient(140deg, #fff8f1 0%, #fdf2f8 45%, #eef2ff 100%);
+  color: #1f2937;
+  border-bottom: 1px solid rgba(79, 70, 229, 0.16);
+}
+
+.teams-story .team-hero h1 {
+  color: #1f2937;
+}
+
+.teams-story .team-hero p {
+  color: #475569;
+}
+
+.teams-story .lead-form-wrap,
+.teams-story .feature-item,
+.teams-story .team-tier-card,
+.teams-story .team-activity-card,
+.teams-story .handout-card,
+.teams-story .dim-guide-card,
+.teams-story .final-cta {
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+/* Results alignment */
+.results-story {
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+.results-story .story-results-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.results-story .story-results-card {
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+@media (max-width: 768px) {
+  .story-wrap,
+  .results-story .story-results-wrap {
+    padding: 0 1rem;
+  }
+
+  .quiz-story .quiz-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+[data-theme='dark'] .about-page,
+[data-theme='dark'] .storytelling-page {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(168, 85, 247, 0.16) 0%, transparent 38%),
+    radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.14) 0%, transparent 34%),
+    linear-gradient(180deg, #020617 0%, #0b1120 44%, #020617 100%);
+}
+
+[data-theme='dark'] .soft-card,
+[data-theme='dark'] .dashboard-story .dash-card,
+[data-theme='dark'] .dashboard-story .dim-card,
+[data-theme='dark'] .quiz-story .progress-container,
+[data-theme='dark'] .quiz-story .card,
+[data-theme='dark'] .teams-story .lead-form-wrap,
+[data-theme='dark'] .teams-story .feature-item,
+[data-theme='dark'] .teams-story .team-tier-card,
+[data-theme='dark'] .teams-story .team-activity-card,
+[data-theme='dark'] .teams-story .handout-card,
+[data-theme='dark'] .teams-story .dim-guide-card,
+[data-theme='dark'] .teams-story .final-cta,
+[data-theme='dark'] .results-story .story-results-card {
+  background: #111827;
+  border-color: #334155;
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.45);
+}
+
+[data-theme='dark'] .landing-story .hero,
+[data-theme='dark'] .teams-story .team-hero {
+  background: linear-gradient(140deg, rgba(30, 41, 59, 0.95) 0%, rgba(51, 65, 85, 0.92) 52%, rgba(30, 41, 59, 0.95) 100%);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+[data-theme='dark'] .landing-story .hero h1,
+[data-theme='dark'] .landing-story .hero-subheadline,
+[data-theme='dark'] .teams-story .team-hero h1,
+[data-theme='dark'] .teams-story .team-hero p {
+  color: #e2e8f0;
+}
+
+[data-theme='dark'] .landing-story .hero-eyebrow {
+  background: rgba(15, 23, 42, 0.55);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #c7d2fe;
+}

@@ -13,6 +13,7 @@ import './styles/sharing.css';
 import './styles/teams-enhanced.css';
 import './styles/upsell.css';
 import './styles/icons.css';
+import './styles/soft-storytelling.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';

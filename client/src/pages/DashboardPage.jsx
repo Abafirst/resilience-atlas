@@ -71,10 +71,10 @@ export default function DashboardPage() {
   const dailyAffirmation = useMemo(() => getDailyAffirmationAny(), []);
 
   return (
-    <main id="main-content" className="dash-layout" aria-live="polite">
+    <main id="main-content" className="dash-layout storytelling-page dashboard-story" aria-live="polite">
 
       {/* ── Page heading ──────────────────────────────────────────── */}
-      <div className="dash-card" style={{ marginBottom: '1.5rem' }}>
+      <div className="dash-card soft-card" style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>My Resilience Dashboard</h1>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
             const sampleAffirmation = affirmations.find(a => a.difficulty === 'foundational');
 
             return (
-              <div key={key} className="dim-card" aria-label={`${label} resilience dimension`}>
+              <div key={key} className="dim-card soft-card" aria-label={`${label} resilience dimension`}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
                   <img src={iconSrc} alt="" aria-hidden="true" width="24" height="24" style={{ flexShrink: 0 }} />
                   <span className="dim-card__name">{label}</span>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
       {/* ── Daily Affirmation ─────────────────────────────────────── */}
       {dailyAffirmation && (
         <section
-          className="dash-card"
+          className="dash-card soft-card"
           aria-labelledby="daily-aff-heading"
           style={{ marginTop: '2rem' }}
         >
@@ -183,7 +183,7 @@ export default function DashboardPage() {
 
       {/* ── CTA ───────────────────────────────────────────────────── */}
       <section
-        className="dash-card"
+        className="dash-card soft-card"
         aria-labelledby="cta-heading"
         style={{ marginTop: '2rem', textAlign: 'center' }}
       >

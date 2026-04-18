@@ -202,7 +202,7 @@ function RestoreBanner({ saved, onRestore, onFresh }) {
 /** Single question card with Likert scale and flag button */
 function QuestionCard({ question, displayIdx, answer, isFlagged, onAnswer, onToggleFlag }) {
   return (
-    <div className="question-step card active">
+    <div className="question-step card active soft-card">
       <p className="question-frequency-prompt">How often is this true for you?</p>
       <p className="question-text">{question.text}</p>
       <div className="likert-scale" role="group" aria-label="Rate your agreement">
@@ -733,12 +733,12 @@ export default function QuizPage() {
       />
 
       {/* ── Main quiz area ─────────────────────────────── */}
-      <main>
+      <main className="storytelling-page quiz-story">
         <div className="quiz-page">
           <div className="quiz-wrapper">
 
             {/* Progress bar */}
-            <div className="progress-container" role="region" aria-label="Quiz progress">
+            <div className="progress-container soft-card" role="region" aria-label="Quiz progress">
               <div className="progress-header">
                 <span id="progressLabel">{progressLabel}</span>
                 <span id="progressPct">{step !== 'info' ? `${progressPct}%` : ''}</span>
@@ -753,7 +753,7 @@ export default function QuizPage() {
 
             {/* ── Step 1: Name & Email ────────────────────── */}
             {step === 'info' && (
-              <div className="info-step card active">
+              <div className="info-step card active soft-card">
                 <h2>Welcome to The Resilience Atlas&#8482;</h2>
                 <p className="description">
                   This 72-question assessment takes about 15–20 minutes to complete.
@@ -871,7 +871,7 @@ export default function QuizPage() {
 
             {/* ── Step 3: Review & Submit ──────────────────── */}
             {step === 'submit' && (
-              <div className="submit-step card active">
+              <div className="submit-step card active soft-card">
                 <h2>You have answered all {QUESTIONS.length} questions!</h2>
                 <p>
                   Click <strong>Submit</strong> to generate your personalized
