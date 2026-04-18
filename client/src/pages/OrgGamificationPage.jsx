@@ -218,7 +218,7 @@ const styles = `
   }
 `;
 
-function getRankIconFilter(rank) {
+function getTopRankIconFilter(rank) {
   if (rank === 1) return 'drop-shadow(0 0 2px rgba(245, 158, 11, 0.9))';
   if (rank === 2) return 'grayscale(0.15) brightness(1.08)';
   return 'sepia(0.65) hue-rotate(-15deg) saturate(1.2)';
@@ -554,7 +554,7 @@ export default function OrgGamificationPage() {
                                 height={14}
                                 style={{
                                   verticalAlign: 'text-bottom',
-                                  filter: getRankIconFilter(entry.rank),
+                                  filter: getTopRankIconFilter(entry.rank),
                                 }}
                               />
                             ) : `#${entry.rank}`}

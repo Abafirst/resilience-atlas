@@ -1041,7 +1041,7 @@ export default function TeamsLandingPage() {
             <div className="handout-icon" aria-hidden="true">
               {handout.icon
                 ? <img onError={handleIconLoadError} src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
-                : null}
+                : <img onError={handleIconLoadError} src="icons/compass.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />}
             </div>
             <div className="handout-body">
               <div className="handout-title">{handout.title}</div>
