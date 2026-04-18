@@ -835,11 +835,11 @@ export default function AtlasJourneyPage() {
         <SiteHeader activePage="atlas" navItems={NAV_ITEMS} />
         <DarkModeHint />
         <section style={s.hero}>
-          <h1 style={s.heroTitle}>🗺 The Resilience Atlas™</h1>
+          <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
           <p style={s.heroSub}>Navigate your resilience journey. Each assessment marks a new point on your personal atlas.</p>
         </section>
         <div style={s.signInBanner}>
-          <p style={s.signInText}>🔐 Sign in to view your assessment history and track your resilience journey over time.</p>
+          <p style={s.signInText}><img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Sign in to view your assessment history and track your resilience journey over time.</p>
           <button
             style={s.signInBtn}
             onClick={() => loginWithRedirect({ appState: { returnTo: '/atlas' } })}
@@ -858,7 +858,7 @@ export default function AtlasJourneyPage() {
 
       {/* Hero */}
       <section style={s.hero} role="banner">
-        <h1 style={s.heroTitle}>🗺 The Resilience Atlas™</h1>
+        <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
         <p style={s.heroSub}>
           Navigate your resilience journey. Each assessment marks a new point on your
           personal atlas — tracking how your resilience evolves over time.
@@ -953,7 +953,7 @@ export default function AtlasJourneyPage() {
               {/* Growth narrative */}
               {narrative.length > 0 && (
                 <div style={s.narrative} role="region" aria-label="Growth narrative">
-                  <div style={s.narrativeTitle}>📖 Your Growth Story</div>
+                  <div style={s.narrativeTitle}><img src="/icons/story.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />Your Growth Story</div>
                   <ul style={s.narrativeList}>
                     {narrative.map((item, i) => (
                       <li key={i}>
@@ -1014,7 +1014,7 @@ export default function AtlasJourneyPage() {
                             <span style={s.tlScore(color)}>{overall}%</span>
                             {overallDelta !== null && <DeltaBadge delta={overallDelta} />}
                             {idx === 0 && assessments.length === 1 && (
-                              <span style={s.tlBadge}>First Assessment 🎯</span>
+                              <span style={s.tlBadge}>First Assessment <img src="/icons/goal.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginLeft: 4 }} /></span>
                             )}
                           </div>
                           {a.dominantType && (

@@ -539,7 +539,7 @@ export default function OrgGamificationPage() {
                       <tr key={entry.userId}>
                         <td>
                           <span className={entry.rank <= 3 ? `og-rank-${entry.rank}` : ''}>
-                            {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                            {entry.rank <= 3 ? <img src="/icons/trophy.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} /> : `#${entry.rank}`}
                           </span>
                         </td>
                         <td>{entry.email || entry.userId}</td>

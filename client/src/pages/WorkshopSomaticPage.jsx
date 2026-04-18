@@ -11,7 +11,7 @@ const styles = `
   .guide-meta { display: flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.65); }
   .section { background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.75rem; margin-bottom: 1.25rem; }
   .section-title { font-size: 1rem; font-weight: 700; color: #1a2e5a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
-  .section-title::before { content: attr(data-icon); font-size: 1.1rem; }
+  .section-title img { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
   p { font-size: 0.9rem; color: #374151; margin-bottom: 0.75rem; }
   ol, ul { padding-left: 1.5rem; }
   li { font-size: 0.9rem; color: #374151; margin-bottom: 0.625rem; line-height: 1.6; }
@@ -44,7 +44,7 @@ export default function WorkshopSomaticPage() {
       <style dangerouslySetInnerHTML={{ __html: styles }} />
       <div className="guide">
         <a href="/dashboard-advanced" className="back-link">← Back to Dashboard</a>
-        <button className="print-btn" onClick={() => window.print()} type="button">🖨️ Print / Save as PDF</button>
+        <button className="print-btn" onClick={() => window.print()} type="button"><img src="/icons/print.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: "middle" }} /> Print / Save as PDF</button>
 
         <header className="guide-header">
           <div className="guide-header__badge">Workshop Guide</div>
@@ -53,12 +53,12 @@ export default function WorkshopSomaticPage() {
           <div className="guide-meta">
             <span>⏱ 60–90 minutes</span>
             <span>5–25 participants</span>
-            <span>🎯 Team development</span>
+            <span><img src="/icons/goal.svg" alt="" aria-hidden="true" width={13} height={13} style={{ verticalAlign: "text-bottom", marginRight: 4 }} />Team development</span>
           </div>
         </header>
 
         <section className="section">
-          <h2 className="section-title" data-icon="📖">Overview</h2>
+          <h2 className="section-title"><img src="/icons/story.svg" alt="" aria-hidden="true" width={18} height={18} />Overview</h2>
           <p>Somatic-Behavioral resilience refers to physical self-regulation, body awareness, and the ability to ground oneself under stress. Teams with high somatic resilience understand their physical stress signals and have practices to restore balance and vitality.</p>
           <p>This guide provides a structured facilitation framework including discussion prompts, activities, and reflection questions. Adapt the timing and sequence to suit your team's needs.</p>
           <div className="tip-box">
@@ -67,7 +67,7 @@ export default function WorkshopSomaticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title" data-icon="💬">Discussion Prompts</h2>
+          <h2 className="section-title"><img src="/icons/dialogue.svg" alt="" aria-hidden="true" width={18} height={18} />Discussion Prompts</h2>
           <p>Choose 3–5 prompts that feel most relevant to your team. Allow 5–8 minutes per prompt for open discussion.</p>
           <ol>
             <li>How do you know when you're in a stress response vs. a grounded, resourced state?</li>
@@ -81,7 +81,7 @@ export default function WorkshopSomaticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title" data-icon="🔧">Team Activities</h2>
+          <h2 className="section-title"><img src="/icons/challenges.svg" alt="" aria-hidden="true" width={18} height={18} />Team Activities</h2>
           <p>Select one or two activities depending on your available time.</p>
           <ul>
             <li><strong>Body Scan (10 min):</strong> Guide the team through a brief body scan. Ask: Where do you hold tension? What does your body need right now?</li>
@@ -91,7 +91,7 @@ export default function WorkshopSomaticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title" data-icon="🪞">Reflection Questions</h2>
+          <h2 className="section-title"><img src="/icons/reframe.svg" alt="" aria-hidden="true" width={18} height={18} />Reflection Questions</h2>
           <p>Close the session with individual reflection (5 min silent writing) followed by brief sharing.</p>
           <ul>
             <li>What is your body telling you about your current level of resilience?</li>
@@ -101,7 +101,7 @@ export default function WorkshopSomaticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title" data-icon="📅">Next Steps</h2>
+          <h2 className="section-title"><img src="/icons/compass.svg" alt="" aria-hidden="true" width={18} height={18} />Next Steps</h2>
           <p>After the workshop, capture commitments and schedule a follow-up check-in:</p>
           <ul>
             <li>Each person identifies one concrete action they'll take before the next check-in.</li>

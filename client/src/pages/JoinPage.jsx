@@ -155,7 +155,7 @@ export default function JoinPage() {
 
         {/* Not found / expired */}
         <div id="not-found">
-          <div style={{fontSize:'2.5rem',marginBottom:'0.75rem'}}>❌</div>
+          <img src="/icons/warning.svg" alt="" aria-hidden="true" width={40} height={40} style={{ marginBottom: '0.75rem' }} />
           <h1 style={{fontSize:'1.25rem',color:'var(--brand-dark)',margin:'0 0 0.5rem'}}>Invitation Not Found</h1>
           <p id="not-found-msg" style={{color:'var(--text-muted)',fontSize:'0.9rem',margin:'0 0 1.5rem'}}>
             This invitation link is invalid or has expired.
@@ -166,7 +166,7 @@ export default function JoinPage() {
         {/* Valid invite */}
         <div id="invite-info">
           <div className="brand">The Resilience Atlas™</div>
-          <div style={{fontSize:'2.5rem',marginBottom:'0.5rem'}}>🤝</div>
+          <img src="/icons/connection.svg" alt="" aria-hidden="true" width={40} height={40} style={{ marginBottom: '0.5rem' }} />
           <h1 className="org-name" id="org-display">Join Your Team</h1>
           <p className="invite-detail">
             You've been invited to participate in a team resilience assessment.
@@ -177,14 +177,14 @@ export default function JoinPage() {
 
           <div className="actions" id="action-buttons">
             <button className="btn btn--primary" id="btn-accept-logged-in" style={{display:'none'}}>
-              ✅ Accept &amp; Join Organization
+              <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Accept &amp; Join Organization
             </button>
             <a id="btn-signup" href="/register" className="btn btn--primary">
-              🚀 Create Account &amp; Join
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Create Account &amp; Join
             </a>
             <div className="divider">or</div>
             <a id="btn-login" href="/login" className="btn btn--secondary">
-              🔑 Log In to Accept
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Log In to Accept
             </a>
             <button className="btn btn--ghost" onClick={() => { window.location.href = '/'; }}>Decline</button>
           </div>

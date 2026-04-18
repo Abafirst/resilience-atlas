@@ -437,7 +437,7 @@ export default function TeamPage() {
           {/* Post-payment confirmation card */}
           {verified && tierName && (
             <div style={s.confirmCard}>
-              <div style={s.confirmIcon}>🎉</div>
+              <div style={s.confirmIcon}><img src="/icons/success.svg" alt="" aria-hidden="true" width={36} height={36} /></div>
               <div style={s.confirmTitle}>Welcome to {tierName}!</div>
               <p style={s.confirmSubtitle}>
                 Your team plan is active. Set up your team dashboard to invite members
@@ -445,7 +445,7 @@ export default function TeamPage() {
               </p>
 
               <div style={s.nextSteps}>
-                <div style={s.nextStepsTitle}>🚀 Getting Started</div>
+                <div style={s.nextStepsTitle}><img src="/icons/compass.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />Getting Started</div>
                 <ol style={s.nextStepsList}>
                   <li>Access your <strong>Team Dashboard</strong> to manage members and settings.</li>
                   <li>Invite team members by email — they'll each complete the assessment.</li>

@@ -153,14 +153,14 @@ const UPSELL_VARIANT_COPY = {
 
 // Value propositions catalogue
 const UPSELL_VALUE_PROPS = {
-  detailed_analytics:  { icon: '📊', text: 'Detailed analytics across all 6 resilience dimensions' },
-  comparison:          { icon: '🔁', text: 'Side-by-side comparison with your previous assessments' },
-  priority_support:    { icon: '🛟', text: 'Priority email support from our resilience coaches' },
-  ad_free:             { icon: '🚫', text: 'Completely ad-free experience throughout the app' },
-  pdf_download:        { icon: '📄', text: 'Beautiful downloadable PDF report you keep forever' },
-  unlimited_retakes:   { icon: '🔄', text: 'Unlimited reassessments to track your growth' },
-  growth_roadmap:      { icon: '🗺️', text: '30-day personalised growth roadmap' },
-  benchmarking:        { icon: '📈', text: 'See how you rank against thousands of users' },
+  detailed_analytics:  { icon: '/icons/leaderboards.svg', text: 'Detailed analytics across all 6 resilience dimensions' },
+  comparison:          { icon: '/icons/growth.svg', text: 'Side-by-side comparison with your previous assessments' },
+  priority_support:    { icon: '/icons/connection.svg', text: 'Priority email support from our resilience coaches' },
+  ad_free:             { icon: '/icons/lock.svg', text: 'Completely ad-free experience throughout the app' },
+  pdf_download:        { icon: '/icons/story.svg', text: 'Beautiful downloadable PDF report you keep forever' },
+  unlimited_retakes:   { icon: '/icons/compass.svg', text: 'Unlimited reassessments to track your growth' },
+  growth_roadmap:      { icon: '/icons/game-map.svg', text: '30-day personalised growth roadmap' },
+  benchmarking:        { icon: '/icons/advanced-leaderboards.svg', text: 'See how you rank against thousands of users' },
 };
 
 // ── Upsell helpers ────────────────────────────────────────────────────────
@@ -325,7 +325,7 @@ function UpsellModal({ targetTier, trigger, onClose, onUpgrade }) {
             if (!p) return null;
             return (
               <li key={k} className="upsell-value-prop">
-                <span className="upsell-value-prop__icon" aria-hidden="true">{p.icon}</span>
+                <span className="upsell-value-prop__icon" aria-hidden="true"><img src={p.icon} alt="" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} /></span>
                 <span>{p.text}</span>
               </li>
             );
@@ -478,7 +478,7 @@ function PdfQuotaModal({ nextAvailableAt, onClose }) {
         maxWidth: 420, width: '90%', boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
         textAlign: 'center',
       }}>
-        <div style={{ fontSize: 36, marginBottom: 8 }} aria-hidden="true">📅</div>
+        <div style={{ marginBottom: 8 }} aria-hidden="true"><img src="/icons/compass.svg" alt="" width={36} height={36} /></div>
         <h2 id="pdf-quota-title" style={{ margin: '0 0 0.75rem', fontSize: '1.2rem', color: '#1e293b' }}>
           Report Limit Reached
         </h2>
@@ -3122,7 +3122,7 @@ export default function ResultsPage() {
                       style={{ ...s.primaryBtn, background: '#7c3aed', marginLeft: 12, marginTop: 8 }}
                       aria-label="Start your Resilience Journey — go to micro-practices"
                     >
-                      🧭 Start Practice
+                      <img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Start Practice
                     </a>
                   )}
                 </div>
@@ -3964,7 +3964,7 @@ export default function ResultsPage() {
                       background: color + '18', color, border: `1px solid ${color}30`,
                       borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 700,
                     }}>
-                      📅 Day {practicePlanDay} of 30
+                      <img src="/icons/story.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Day {practicePlanDay} of 30
                     </span>
                     <span style={{ fontSize: 12, color: '#94a3b8' }}>
                       {dim}
@@ -4044,7 +4044,7 @@ export default function ResultsPage() {
                     borderRadius: 10, padding: '14px 16px', marginTop: 12,
                   }}>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#64748b', marginBottom: 8 }}>
-                      📆 Coming up in your 30-day plan:
+                      <img src="/icons/compass.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Coming up in your 30-day plan:
                     </div>
                     {[1, 2, 3].map((offset) => {
                       const nextDay = practicePlanDay + offset;
@@ -4325,7 +4325,7 @@ export default function ResultsPage() {
               />
               <ShareButton
                 label="Instagram"
-                icon="📷"
+                icon={<img src="/icons/video.svg" alt="" width={14} height={14} style={{ verticalAlign: "middle", filter: "brightness(0) invert(1)" }} />}
                 bg="#e1306c"
                 onClick={() => {
                   trackShareEvent('instagram', dominantType);
@@ -4352,7 +4352,7 @@ export default function ResultsPage() {
               />
               <ShareButton
                 label={copyLabel}
-                icon="🔗"
+                icon={<img src="/icons/network.svg" alt="" width={14} height={14} style={{ verticalAlign: "middle", filter: "brightness(0) invert(1)" }} />}
                 bg="#4a5568"
                 onClick={handleCopyLink}
               />
@@ -4468,7 +4468,7 @@ export default function ResultsPage() {
             <SocialFollowLink label="LinkedIn" icon="in" href={SOCIAL_URLS.linkedin} bg="#0a66c2" />
             <SocialFollowLink label="X / Twitter" icon="𝕏" href={SOCIAL_URLS.twitter} bg="#000000" />
             <SocialFollowLink label="Facebook" icon="f" href={SOCIAL_URLS.facebook} bg="#1877f2" />
-            <SocialFollowLink label="Instagram" icon="📷" href={SOCIAL_URLS.instagram} bg="#e1306c" />
+            <SocialFollowLink label="Instagram" icon={<img src="/icons/video.svg" alt="" width={14} height={14} style={{ verticalAlign: "middle", filter: "brightness(0) invert(1)" }} />} href={SOCIAL_URLS.instagram} bg="#e1306c" />
             <SocialFollowLink label="YouTube" icon="▶" href={SOCIAL_URLS.youtube} bg="#C41E3A" />
           </div>
 

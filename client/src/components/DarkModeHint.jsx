@@ -49,7 +49,7 @@ export default function DarkModeHint() {
 
   return (
     <div className="dm-quiz-hint" role="note" aria-label="Accessibility tip">
-      <span aria-hidden="true">💡</span>
+      <img src="/icons/info.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} />
       {' '}Finding content hard to read? Select the{' '}
       <strong><span aria-hidden="true">&#9728;&#65039;</span> sun icon</strong> (top right) to switch to <strong>Light Mode</strong>.
       <button

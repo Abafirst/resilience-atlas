@@ -81,7 +81,7 @@ export default function BadgesWidget({ progress }) {
       </h3>
 
       {badges.length === 0 ? (
-        <p style={s.empty}>Complete your first practice to earn badges! 🌱</p>
+        <p style={s.empty}>Complete your first practice to earn badges!</p>
       ) : (
         <ul style={s.list} aria-label="Earned badges">
           {badges

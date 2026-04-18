@@ -103,7 +103,7 @@ export default function ReinforcementMenu({ progress, showReentry = false }) {
     <div>
       {needsReentry && reentryStep !== null && (
         <div style={s.reentryBox}>
-          <div style={s.reentryTitle}>🔄 Return-to-Practice</div>
+          <div style={s.reentryTitle}><img src="/icons/compass.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />Return-to-Practice</div>
           <p style={s.reentryText}>{REENTRY_PATHWAYS[reentryStep].message}</p>
           <p style={{ fontSize: 13, color: '#fbbf24', fontStyle: 'italic', marginBottom: 12 }}>
             {REENTRY_PATHWAYS[reentryStep].prompt}

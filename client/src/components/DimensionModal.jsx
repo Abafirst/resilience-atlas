@@ -413,13 +413,13 @@ export default function DimensionModal({ dimension, onClose, triggerRef }) {
 
           {/* Why it matters */}
           <div style={s.sectionLabel(color)}>
-            <span aria-hidden="true">💡</span> Why It Matters
+            <img src="/icons/info.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} /> Why It Matters
           </div>
           <p style={s.p}>{whyItMatters}</p>
 
           {/* How to improve */}
           <div style={s.sectionLabel(color)}>
-            <span aria-hidden="true">🎯</span> How to Strengthen This Dimension
+            <img src="/icons/goal.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} /> How to Strengthen This Dimension
           </div>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px' }}>
             {howToImprove.map((tip, i) => (
@@ -432,7 +432,7 @@ export default function DimensionModal({ dimension, onClose, triggerRef }) {
 
           {/* Examples */}
           <div style={s.sectionLabel(color)}>
-            <span aria-hidden="true">🌿</span> Real-World Examples
+            <img src="/icons/growth.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} /> Real-World Examples
           </div>
           {examples.map((ex, i) => (
             <div key={i} style={s.exampleBox(color)}>{ex}</div>

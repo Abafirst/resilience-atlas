@@ -380,21 +380,21 @@ export default function PrivacyPage() {
 
           <div className="privacy-principles">
             <div className="privacy-principle-card">
-              <div className="privacy-principle-icon">🔐</div>
+              <div className="privacy-principle-icon"><img src="/icons/lock.svg" alt="" aria-hidden="true" width={20} height={20} /></div>
               <div>
                 <h3>You own your team's results</h3>
                 <p>Assessment data belongs to your team. Export it, store it, and manage it entirely on your end.</p>
               </div>
             </div>
             <div className="privacy-principle-card">
-              <div className="privacy-principle-icon">📥</div>
+              <div className="privacy-principle-icon"><img src="/icons/story.svg" alt="" aria-hidden="true" width={20} height={20} /></div>
               <div>
                 <h3>All data exports are on the team</h3>
                 <p>Download your results as CSV, PDFs, or bulk exports anytime from your dashboard. No waiting, no requests.</p>
               </div>
             </div>
             <div className="privacy-principle-card">
-              <div className="privacy-principle-icon">⚙️</div>
+              <div className="privacy-principle-icon"><img src="/icons/challenges.svg" alt="" aria-hidden="true" width={20} height={20} /></div>
               <div>
                 <h3>Self-service management</h3>
                 <p>Add members, manage your team, and configure settings — all without needing our involvement.</p>
@@ -443,13 +443,13 @@ export default function PrivacyPage() {
 
           <div className="privacy-export-grid" role="list" aria-label="Available export formats">
             {[
-              { icon: '📊', title: 'Assessment Results', desc: 'CSV / Excel' },
-              { icon: '👥', title: 'Member List', desc: 'CSV / Excel' },
-              { icon: '📄', title: 'Team Reports', desc: 'PDF' },
-              { icon: '📦', title: 'Facilitation Resources', desc: 'ZIP bundle' },
+              { icon: '/icons/leaderboards.svg', title: 'Assessment Results', desc: 'CSV / Excel' },
+              { icon: '/icons/connection.svg', title: 'Member List', desc: 'CSV / Excel' },
+              { icon: '/icons/story.svg', title: 'Team Reports', desc: 'PDF' },
+              { icon: '/icons/game-map.svg', title: 'Facilitation Resources', desc: 'ZIP bundle' },
             ].map(item => (
               <div className="privacy-export-card" role="listitem" key={item.title}>
-                <div className="export-icon" aria-hidden="true">{item.icon}</div>
+                <div className="export-icon" aria-hidden="true"><img src={item.icon} alt="" width={20} height={20} onError={handleIconLoadError} /></div>
                 <h4>{item.title}</h4>
                 <p>{item.desc}</p>
               </div>
@@ -475,7 +475,7 @@ export default function PrivacyPage() {
             <h3 style={{ margin: '0 0 1.25rem', fontSize: '1.1rem', color: '#0f172a' }}>Enterprise Access &amp; Setup Inquiry</h3>
             {submitted ? (
               <div className="privacy-success-banner" role="status" aria-live="polite">
-                <span aria-hidden="true">✅</span>
+                <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom' }} />
                 Thanks! We've received your message and will be in touch shortly regarding your enterprise access issue.
               </div>
             ) : (
