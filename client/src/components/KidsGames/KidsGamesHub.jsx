@@ -236,14 +236,9 @@ export default function KidsGamesHub() {
             aria-label={soundOn ? 'Mute celebration sounds' : 'Unmute celebration sounds'}
             title={soundOn ? 'Sounds on — click to mute' : 'Sounds off — click to unmute'}
           >
-            <img
-              src={soundOn ? '/icons/success.svg' : '/icons/lock.svg'}
-              alt=""
-              aria-hidden="true"
-              width={14}
-              height={14}
-              style={{ verticalAlign: 'middle' }}
-            />
+            <span aria-hidden="true" style={{ fontSize: '.75rem', fontWeight: 700 }}>
+              {soundOn ? 'ON' : 'OFF'}
+            </span>
           </button>
         </div>
       </div>

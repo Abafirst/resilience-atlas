@@ -110,7 +110,7 @@ function QuestionCard({ question, questionIndex, total, onAnswer }) {
         ) : (
           <>
             <button className="bq-btn-primary" onClick={handleNext}>
-               {questionIndex + 1 < total ? 'Next Question →' : 'See Results'}
+              {questionIndex + 1 < total ? 'Next Question →' : 'See Results'}
             </button>
             <button className="bq-btn-secondary" onClick={handleQuit}>
               Quit
