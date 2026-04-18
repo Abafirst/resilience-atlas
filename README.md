@@ -374,7 +374,7 @@ The server mounts `public/assets` at `/assets/*` first (with `fallthrough:true`)
 - **Header logo** — `public/assets/logo-256x256.png` is served at `/assets/logo-256x256.png` and is referenced by `SiteHeader.jsx` and other components for the top-left header logo.
   - Source master: `brand/symbol/png/logo-256x256.png`
   - If the file is ever missing or updated, copy the master here to restore the logo.
-- **Compass icon** — `public/assets/compass-icon.svg` is served at `/assets/compass-icon.svg` and is used by the PDF generation service (`backend/services/pdfService.js`). Keep this file in place.
+- **PDF cover logo** — `backend/services/pdfService.js` uses `public/assets/logo-256x256.png` directly for generated report cover branding.
 
 ---
 
@@ -641,5 +641,4 @@ const assessmentHash = crypto
 ```
 
 This matches the algorithm used by `/api/report/generate` (`buildJobHash` in `backend/routes/report.js`) and `buildAssessmentHash` in `backend/services/assessmentAccessControl.js`.
-
 

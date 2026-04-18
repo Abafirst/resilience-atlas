@@ -4,12 +4,9 @@ const path = require('path');
 const PDFDocument = require('pdfkit');
 const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
 const branding = require('../config/branding');
-const { svgToPng } = require('../utils/svgToPng');
 
-// Path to the needle-compass SVG logo (source of truth for the PDF cover).
-const LOGO_SVG_PATH = path.resolve(__dirname, '../../public/assets/compass-icon.svg');
-// Resolved PNG path is cached here after first render (module-level singleton).
-let _logoPngPath = null;
+// Use the static brand logo file directly for PDF cover rendering.
+const LOGO_PNG_PATH = path.resolve(__dirname, '../../public/assets/logo-256x256.png');
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const COLORS = {
@@ -230,14 +227,12 @@ function buildCoverPage(doc, report, overall) {
         { width: CONTENT_WIDTH, align: 'center', lineBreak: false }
     );
 
-    // Outline logo (PNG rendered from SVG at runtime)
+    // Brand logo
     const cx = PAGE_WIDTH / 2;
     const logoSize = 140;
     const logoX = cx - logoSize / 2;
     const logoY = 110;
-    if (_logoPngPath) {
-        doc.image(_logoPngPath, logoX, logoY, { width: logoSize, height: logoSize });
-    }
+    doc.image(LOGO_PNG_PATH, logoX, logoY, { width: logoSize, height: logoSize });
 
     // Main title
     fillColor(doc, COLORS.white);
@@ -1202,15 +1197,7 @@ function buildBenchmarkingPage(doc, report, overall) {
  * @returns {Promise<Buffer>} Valid PDF binary buffer
  */
 function buildPdfWithPDFKit(report, overall) {
-    // Pre-render the SVG logo to a cached PNG (async, Railway-friendly).
-    const logoReady = svgToPng(LOGO_SVG_PATH, 'resilience-atlas-compass-icon')
-        .then((p) => { _logoPngPath = p; })
-        .catch((err) => {
-            console.warn('[pdfService] Logo render failed, continuing without logo:', err.message);
-            _logoPngPath = null;
-        });
-
-    return logoReady.then(() => new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         try {
             const overallNum = Number(overall) || 0;
 
@@ -1283,7 +1270,7 @@ function buildPdfWithPDFKit(report, overall) {
         } catch (initErr) {
             reject(initErr);
         }
-    }));
+    });
 }
 
 module.exports = { buildPdfWithPDFKit };
