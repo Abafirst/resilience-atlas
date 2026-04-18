@@ -77,7 +77,11 @@ The app will be available at <http://localhost:5173>.
 |---------|-------------|
 | `npm run dev` | Start the Vite development server |
 | `npm run build` | Build for production (output in `dist/`) |
+| `npm run build:mobile` | Build mobile/Capacitor/Android using `.env.production` (`vite build --mode production`) |
+| `npm run android` | Build mobile, sync Android project, and open Android Studio |
 | `npm run preview` | Preview the production build locally |
+
+> **Mobile/Capacitor/Android builds:** always run `npm run build:mobile` (or `npm run android`) and **do not** use `npm run build` for mobile packaging. This repository treats `build:mobile` as the required mobile release path so Capacitor workflows consistently use production env values (`.env.production`) and avoid accidental local overrides from `.env.local`.
 
 ---
 
