@@ -12,12 +12,15 @@
  *   Body: { email, assessmentHash, scores, timezone }
  *   — Creates a new plan (idempotent: returns existing if one already exists).
  *   — `scores` is a map of dimension → { percentage } (mirrors ResultsPage data).
+ *   — `tier` is derived server-side from completed purchases and stored on the plan.
  */
 
 const express     = require('express');
 const rateLimit   = require('express-rate-limit');
 const MicroPracticePlan = require('../models/MicroPracticePlan');
+const Purchase    = require('../models/Purchase');
 const logger      = require('../utils/logger');
+const { resolvePlanTierFromPurchases } = require('../utils/microPracticeTier');
 
 const router = express.Router();
 
@@ -163,6 +166,14 @@ function isValidEmail(email) {
   return domain.length >= 3 && domain.includes('.');
 }
 
+async function getPlanTierForEmail(email) {
+  const purchases = await Purchase.find({
+    email,
+    status: 'completed',
+  }).select('tier').lean();
+  return resolvePlanTierFromPurchases(purchases);
+}
+
 // ── GET /api/micro-practice-plan ─────────────────────────────────────────────
 
 router.get('/', async (req, res) => {
@@ -210,14 +221,19 @@ router.post('/', async (req, res) => {
   }
 
   try {
+    const resolvedTier = await getPlanTierForEmail(cleanEmail);
     // Return existing plan (idempotent).
-    const existing = await MicroPracticePlan.findOne({
+    let existing = await MicroPracticePlan.findOne({
       email: cleanEmail,
       ...(cleanHash ? { assessmentHash: cleanHash } : {}),
-    }).lean();
+    });
 
     if (existing) {
-      return res.json({ plan: existing, created: false });
+      if ((existing.tier || 'starter') !== resolvedTier && resolvedTier !== 'starter') {
+        existing.tier = resolvedTier;
+        await existing.save();
+      }
+      return res.json({ plan: existing.toObject(), created: false });
     }
 
     const days = buildPlan(scores || {}, cleanHash || '', startDate);
@@ -227,6 +243,7 @@ router.post('/', async (req, res) => {
       assessmentHash: cleanHash,
       startDate,
       timezone:       cleanTz,
+      tier:           resolvedTier,
       days,
     });
 

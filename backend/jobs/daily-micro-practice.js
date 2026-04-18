@@ -9,9 +9,9 @@
  * Run daily via cron / system scheduler:
  *   node backend/jobs/daily-micro-practice.js
  *
- * The job queries all active MicroPracticePlan documents, determines which
+ * The job queries paid/full MicroPracticePlan documents, determines which
  * "day" each user is on (relative to their plan's startDate), and sends
- * them a short email with that day's practice.  It is idempotent within a
+ * them a short email with that day's practice. It is idempotent within a
  * single calendar day because it skips plans whose lastEmailSentDate is
  * already today.
  *
@@ -200,8 +200,8 @@ async function runDailyMicroPracticeJob() {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const batch = await MicroPracticePlan.find(
-      {},
-      { email: 1, startDate: 1, timezone: 1, lastEmailSentDate: 1, days: 1 },
+      { tier: { $in: ['paid', 'full'] } },
+      { email: 1, startDate: 1, timezone: 1, lastEmailSentDate: 1, days: 1, tier: 1 },
       { skip, limit: BATCH_SIZE, lean: true }
     );
 
