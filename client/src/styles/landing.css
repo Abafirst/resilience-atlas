@@ -5,7 +5,7 @@
 
 /* ── Hero Section ─────────────────────────────────────────── */
 .hero {
-  background: linear-gradient(135deg, #0f2942 0%, #1a3a5c 60%, #163351 100%);
+  background: linear-gradient(135deg, #0f2942 0%, #1d3b63 45%, #244c74 100%);
   color: #fff;
   padding: 5rem 1.5rem 4rem;
   text-align: center;
@@ -17,7 +17,24 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 70% 30%, rgba(79,70,229,.25) 0%, transparent 60%);
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(56, 189, 248, .18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 25%, rgba(99, 102, 241, .26) 0%, transparent 60%);
+  animation: heroGlowShift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto -12% -24% auto;
+  width: 420px;
+  height: 420px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(16, 185, 129, .2), rgba(16, 185, 129, 0) 70%),
+    radial-gradient(circle at 70% 70%, rgba(139, 92, 246, .26), rgba(139, 92, 246, 0) 72%);
+  transform: rotate(-14deg);
+  opacity: .85;
   pointer-events: none;
 }
 
@@ -52,9 +69,9 @@
 
 .hero-subheadline {
   font-size: clamp(1rem, 2.5vw, 1.2rem);
-  color: #94a3b8;
+  color: #d6e3f1;
   max-width: 580px;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 1rem;
   line-height: 1.65;
 }
 
@@ -159,15 +176,16 @@
 
 .dimension-card {
   background: #fff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dbe6f3;
   border-radius: 14px;
   padding: 1.75rem 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,.05);
-  transition: box-shadow 200ms, transform 200ms;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, .06);
+  transition: box-shadow 220ms, transform 220ms, border-color 220ms;
 }
 
 .dimension-card:hover {
-  box-shadow: 0 6px 20px rgba(0,0,0,.09);
+  border-color: #c7d9ef;
+  box-shadow: 0 10px 26px rgba(37, 99, 235, .12);
   transform: translateY(-3px);
 }
 
@@ -188,6 +206,25 @@
 .dimension-icon--emotional   { background: #FEE2E2; }
 .dimension-icon--spiritual   { background: #FEF3C7; }
 .dimension-icon--agentic     { background: #FCE7F3; }
+
+.dimension-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  border-radius: 999px;
+  padding: .2rem .6rem;
+  margin-bottom: .6rem;
+}
+
+.dimension-pill--relational { color: #0f766e; background: #ccfbf1; }
+.dimension-pill--cognitive { color: #1d4ed8; background: #dbeafe; }
+.dimension-pill--somatic { color: #15803d; background: #dcfce7; }
+.dimension-pill--emotional { color: #be123c; background: #ffe4e6; }
+.dimension-pill--spiritual { color: #92400e; background: #fef3c7; }
+.dimension-pill--agentic { color: #9d174d; background: #fce7f3; }
 
 .dimension-card h3 {
   font-size: 1.15rem;
@@ -527,6 +564,11 @@
   opacity: .95;
   /* ensure canvas is never clipped by the hero overflow:hidden */
   overflow: visible;
+}
+
+@keyframes heroGlowShift {
+  0% { transform: scale(1) translateX(0); opacity: .85; }
+  100% { transform: scale(1.06) translateX(-2%); opacity: 1; }
 }
 
 /* ── Compass dominant-dimension label (HTML fallback) ─────── */

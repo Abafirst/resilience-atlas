@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { NAVIGATOR_QUESTS } from '../../data/kidsGameQuests';
+import ConfettiCelebration from '../gamification/ConfettiCelebration';
+
+function stepCanAdvance(currentStep, stepSelection) {
+  return currentStep.type === 'reveal'
+    || (currentStep.type === 'choice' && stepSelection !== undefined)
+    || (currentStep.type === 'multi-choice' && (stepSelection || []).length >= (currentStep.minSelections || 1));
+}
 
 /**
  * NavigatorQuest — Ages 8–12
@@ -11,6 +18,9 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
   const [step, setStep] = useState(0);
   const [selections, setSelections] = useState({});
   const [completed, setCompleted] = useState(new Set());
+  const [questError, setQuestError] = useState('');
+  const [questToast, setQuestToast] = useState('');
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const startQuest = useCallback((quest) => {
     setActiveQuest(quest);
@@ -20,10 +30,12 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
   }, []);
 
   const handleChoice = useCallback((stepId, value) => {
+    setQuestError('');
     setSelections(prev => ({ ...prev, [stepId]: value }));
   }, []);
 
   const handleMultiChoice = useCallback((stepId, value) => {
+    setQuestError('');
     setSelections(prev => {
       const current = prev[stepId] || [];
       const next = current.includes(value)
@@ -35,8 +47,23 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
 
   const advance = useCallback(() => {
     const currentStep = activeQuest.steps[step];
+    const stepSelection = selections[currentStep.id];
+    const canAdvance = stepCanAdvance(currentStep, stepSelection);
+
+    if (!canAdvance) {
+      if (currentStep.type === 'choice') {
+        setQuestError('Choose an option to continue this quest step.');
+      } else if (currentStep.type === 'multi-choice') {
+        setQuestError(`Select at least ${currentStep.minSelections || 1} options before completing this step.`);
+      } else {
+        setQuestError('Complete the step requirements before continuing.');
+      }
+      return;
+    }
+
     if (step < activeQuest.steps.length - 1) {
       setStep(s => s + 1);
+      setQuestError('');
     } else {
       // Complete quest
       setCompleted(prev => {
@@ -45,9 +72,13 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
         return next;
       });
       if (onEarnBadge) onEarnBadge(activeQuest.badge);
+      setQuestToast(`Congratulations! ${activeQuest.title} completed! 🎉`);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 2200);
+      setTimeout(() => setQuestToast(''), 3200);
       setView('list');
     }
-  }, [step, activeQuest, onEarnBadge]);
+  }, [step, activeQuest, onEarnBadge, selections]);
 
   if (view === 'list') {
     return (
@@ -95,13 +126,16 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
 
   const currentStep = activeQuest.steps[step];
   const stepSelection = selections[currentStep.id];
-  const canAdvance = currentStep.type === 'reveal'
-    || currentStep.type === 'choice' ? stepSelection !== undefined
-    : currentStep.type === 'multi-choice' ? (stepSelection || []).length >= (currentStep.minSelections || 1)
-    : true;
+  const canAdvance = stepCanAdvance(currentStep, stepSelection);
 
   return (
     <div className="kg-game-container">
+      <ConfettiCelebration active={showConfetti} />
+      {questToast && (
+        <div className="kg-quest-toast" role="status" aria-live="polite">
+          {questToast}
+        </div>
+      )}
       <button className="kg-back-btn" onClick={() => setView('list')} aria-label="Back to quest list">← Quests</button>
 
       {/* Quest header */}
@@ -193,6 +227,15 @@ export default function NavigatorQuest({ onBack, onEarnBadge }) {
         >
           {step < activeQuest.steps.length - 1 ? 'Next Step →' : '🎉 Complete Quest!'}
         </button>
+        {!canAdvance && (
+          <div className="kg-quest-warning" role="status" aria-live="polite">
+            {questError || (currentStep.type === 'multi-choice'
+              ? `Select at least ${currentStep.minSelections || 1} options to complete this step.`
+              : currentStep.type === 'choice'
+                ? 'Select one option to complete this step.'
+                : 'Complete this step to continue.')}
+          </div>
+        )}
       </div>
     </div>
   );

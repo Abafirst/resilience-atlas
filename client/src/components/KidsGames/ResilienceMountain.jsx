@@ -127,14 +127,14 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
                 >
                   <div className="kg-activity-step-num" style={{ background: isDone ? activePeak.accentColor : '#e2e8f0' }}>
                     {isDone
-                      ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle' }} />
+                      ? <img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle' }} />
                       : i + 1}
                   </div>
                   <div className="kg-activity-step-content">
                     <p className="kg-activity-step-title">{activity.title}</p>
                     {activity.badge && (
                       <span className="kg-activity-badge-label">
-                        <img src="/icons/badge.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+                        <img src="./icons/badge.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginRight: 3 }} />
                         Badge reward
                       </span>
                     )}
@@ -146,10 +146,10 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
                       onClick={() => completeActivity(activePeak.id, activity)}
                       aria-label={`Mark "${activity.title}" as done`}
                     >
-                      Done! <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginLeft: 3 }} />
+                      Done! <img src="./icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'middle', marginLeft: 3 }} />
                     </button>
                   )}
-                  {isLocked && <span className="kg-activity-locked" aria-label="Locked"><img src="/icons/lock.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
+                  {isLocked && <span className="kg-activity-locked" aria-label="Locked"><img src="./icons/lock.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>}
                 </div>
               );
             })}
