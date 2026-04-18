@@ -311,7 +311,7 @@ const styles = `
     font-weight: 700;
     color: #ffffff;
     background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);
-    animation: avatar-pulse 3.4s ease-in-out infinite;
+    animation: avatar-pulse 3.2s ease-in-out infinite;
   }
 
   .team-name {
@@ -612,7 +612,7 @@ export default function AboutPage() {
           <div className="about-wrap">
             <div className="hero-card">
               <div>
-                <span className="hero-kicker"><span aria-hidden="true">✨</span> About the Resilience Atlas</span>
+                <span className="hero-kicker">About the Resilience Atlas</span>
                 <h1 id="about-heading" className="hero-title">A warm, research-grounded map for real human resilience.</h1>
                 <p className="hero-sub">
                   We combine doctoral research, lived experience, and clear language so you can see where you are,
@@ -698,7 +698,7 @@ export default function AboutPage() {
             <div className="values-grid" role="list" aria-label="Resilience Atlas values">
               {values.map((value) => (
                 <article key={value.title} className="value-pill" role="listitem">
-                  <img src={value.icon} alt="" aria-hidden="true" />
+                  <img src={value.icon} alt="" />
                   <div>
                     <h3>{value.title}</h3>
                     <p>{value.detail}</p>
