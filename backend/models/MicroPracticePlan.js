@@ -73,6 +73,18 @@ const microPracticePlanSchema = new mongoose.Schema(
       default: 'UTC',
     },
 
+    /**
+     * Practice access tier:
+     *  - starter: in-app limited set (12), no daily practice emails
+     *  - paid/full: full 30-day in-app plan + daily practice emails
+     */
+    tier: {
+      type: String,
+      enum: ['starter', 'paid', 'full'],
+      default: 'starter',
+      index: true,
+    },
+
     days: {
       type: [daySchema],
       default: [],

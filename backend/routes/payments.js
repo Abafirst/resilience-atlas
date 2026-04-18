@@ -8,9 +8,11 @@ const rateLimit = require('express-rate-limit');
 const stripe = require('../config/stripe');
 const Purchase = require('../models/Purchase');
 const User = require('../models/User');
+const MicroPracticePlan = require('../models/MicroPracticePlan');
 const logger = require('../utils/logger');
 const emailService = require('../services/emailService');
 const { TIER_CONFIG, PLAN_ALIASES } = require('../config/tiers');
+const { mapPurchaseTierToPlanTier } = require('../utils/microPracticeTier');
 
 // One-time log at module load so Railway logs show the diagnostic state of the
 // running container.  Safe: no secrets — only reflects whether the flag is set.
@@ -110,6 +112,21 @@ TIERS['atlas-enterprise'] = TIERS['enterprise'];
 
 /** Team tiers that use the /team page instead of /results after checkout. */
 const TEAM_TIER_SET = new Set(['starter', 'pro', 'enterprise', 'atlas-enterprise']);
+
+async function promoteMicroPracticePlansForPurchase(email, purchaseTier) {
+    const planTier = mapPurchaseTierToPlanTier(purchaseTier);
+    if (!email || planTier === 'starter') return;
+
+    if (planTier === 'full') {
+        await MicroPracticePlan.updateMany({ email }, { $set: { tier: 'full' } });
+        return;
+    }
+
+    await MicroPracticePlan.updateMany(
+        { email, tier: { $ne: 'full' } },
+        { $set: { tier: 'paid' } }
+    );
+}
 
 /** Rate limiter for all payment endpoints — low limit to prevent abuse. */
 const paymentsLimiter = rateLimit({
@@ -453,6 +470,10 @@ router.get('/verify', paymentsLimiter, async (req, res) => {
             await User.findOneAndUpdate({ email }, updateFields, { upsert: false }).catch(
                 (err) => logger.warn('User update skipped:', err.message)
             );
+
+            await promoteMicroPracticePlansForPurchase(email, tier).catch(
+                (err) => logger.warn('Micro-practice plan tier update skipped:', err.message)
+            );
         }
 
         // Send confirmation email for team tiers (Basic/Premium/Enterprise) — self-serve only.
@@ -600,6 +621,10 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
 
                 await User.findOneAndUpdate({ email }, updateFields, { upsert: false }).catch(
                     (err) => logger.warn('Webhook user update skipped:', err.message)
+                );
+
+                await promoteMicroPracticePlansForPurchase(email, tier).catch(
+                    (err) => logger.warn('Webhook micro-practice plan tier update skipped:', err.message)
                 );
 
                 // Send purchase confirmation email for team tiers (Basic/Premium).
