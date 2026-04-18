@@ -3092,13 +3092,13 @@ export default function ResultsPage() {
         {showAndroidModal && (
           <AndroidWebModal onClose={() => setShowAndroidModal(false)} />
         )}
-        <div style={s.page}>
-          <div style={s.container}>
+        <div style={s.page} className="about-page results-story">
+          <div style={s.container} className="story-results-wrap">
             {historyEmail ? (
               // Authenticated user (or has stored email): show their history
               // even when there are no current localStorage results.
               <>
-                <div style={s.emptyCard}>
+                <div style={s.emptyCard} className="story-results-card">
                   <div style={s.emptyIcon}>
                     {isReturnFromPayment
                       ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={48} height={48} />
@@ -3152,7 +3152,7 @@ export default function ResultsPage() {
               </>
             ) : (
               // No email available — show the original empty state with a sign-in option.
-              <div style={s.emptyCard}>
+               <div style={s.emptyCard} className="story-results-card">
                 <div style={s.emptyIcon}>
                   {isReturnFromPayment
                     ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={48} height={48} />
@@ -3288,8 +3288,8 @@ export default function ResultsPage() {
         </div>
       </header>
 
-      <div style={s.page}>
-      <div style={s.container}>
+      <div style={s.page} className="about-page results-story">
+      <div style={s.container} className="story-results-wrap">
 
         {/* Banner */}
         {banner && (
@@ -3299,7 +3299,7 @@ export default function ResultsPage() {
         )}
 
         {/* ── Results header / greeting ─────────────────────────────── */}
-        <div style={s.scoreHero}>
+        <div style={s.scoreHero} className="story-results-card">
           <div style={s.scoreCircle} aria-label={`Overall resilience score ${results.overall}%`}>
             <span style={s.scoreNum}>{results.overall}</span>
             <span style={s.scorePct}>%</span>
@@ -3327,7 +3327,7 @@ export default function ResultsPage() {
         </div>
 
         {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
-        <div style={s.freeBriefReport} role="region" aria-label="Your Resilience Terrain">
+        <div style={s.freeBriefReport} className="story-results-card" role="region" aria-label="Your Resilience Terrain">
           <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Terrain</div>
           {rankedDims.map(([dim, score]) => {
             const pct   = Math.round(score.percentage);

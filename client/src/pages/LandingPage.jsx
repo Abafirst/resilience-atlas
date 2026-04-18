@@ -16,10 +16,10 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <main className="about-page landing-story">
       {/* Hero */}
       <section className="hero">
-        <div className="hero-inner">
+        <div className="hero-inner story-wrap">
           <span className="hero-eyebrow">Over 20 years of professional experience and a lifetime of application</span>
           <h1>Map Your Resilience</h1>
           <p className="hero-subheadline">
@@ -49,16 +49,16 @@ export default function LandingPage() {
 
       {/* Six Dimensions */}
       <section className="landing-section">
-        <div className="section-header">
+        <div className="section-header story-wrap">
           <span className="section-label">The Six Dimensions</span>
           <h2>Your Resilience: Connected, Evolving, Mapped</h2>
           <p>
             Resilience is made of six dynamic strengths, all working together. Your profile reveals your brightest capacities and highlights new areas ready for growth.
           </p>
         </div>
-        <div className="dimensions-grid">
+        <div className="dimensions-grid story-wrap">
           {DIMENSIONS.map(({ key, icon, name, desc }) => (
-            <div key={key} className="dimension-card">
+            <div key={key} className="dimension-card soft-card">
               <div className={`dimension-icon dimension-icon--${key}`}>
                 <img src={icon} alt="" aria-hidden="true" className="icon icon-md" />
               </div>
@@ -72,24 +72,24 @@ export default function LandingPage() {
 
       {/* Why Section */}
       <section className="landing-section alt-bg">
-        <div className="section-header">
+        <div className="section-header story-wrap">
           <span className="section-label">Why It Works</span>
           <h2>Grounded in Research and Lived Experience</h2>
         </div>
-        <div className="why-grid">
-          <div className="why-card">
+        <div className="why-grid story-wrap">
+          <div className="why-card soft-card">
             <h4>A Map, Not a Formula</h4>
             <p>Built on 20+ years of professional experience and doctoral research combined with direct clinical practice. This isn&rsquo;t a generic quiz&mdash;it&rsquo;s a genuine portrait of how you navigate adversity.</p>
           </div>
-          <div className="why-card">
+          <div className="why-card soft-card">
             <h4>Your Unique Profile</h4>
             <p>Your results show the specific shape of your resilience&mdash;not a single number that flattens nuance. A real map of where you stand.</p>
           </div>
-          <div className="why-card">
+          <div className="why-card soft-card">
             <h4>Compass Points for Growth</h4>
             <p>Each dimension comes with practical next steps you can start today. Targeted guidance matched to your specific terrain.</p>
           </div>
-          <div className="why-card">
+          <div className="why-card soft-card">
             <h4>Watch Your Journey Unfold</h4>
             <p>Reassess as you grow. Watch your constellation shift as you cultivate new capacities and deepen existing ones.</p>
           </div>
@@ -98,7 +98,7 @@ export default function LandingPage() {
 
       {/* Final CTA */}
       <section className="landing-section">
-        <div className="final-cta">
+        <div className="final-cta soft-card story-wrap">
           <h2>Ready to Map Your Resilience?</h2>
           <p>
             This is your starting position&mdash;honest, multidimensional, and genuinely useful.
@@ -115,6 +115,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 }
