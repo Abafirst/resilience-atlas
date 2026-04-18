@@ -2882,7 +2882,7 @@ export default function ResultsPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setEmailAlert({ success: true, message: '✅ Summary sent! Check your inbox.' });
+        setEmailAlert({ success: true, message: '✅ Email sent! Check your inbox.' });
         setEmailInput('');
       } else if (res.status === 429) {
         setEmailAlert({ success: false, message: 'Too many requests. Please wait a moment and try again.' });
@@ -3859,7 +3859,7 @@ export default function ResultsPage() {
 
         {/* ── Email Report Section ──────────────────────────────────── */}
         <section style={s.emailSection} aria-labelledby="emailHeading">
-          <div style={s.emailHeading} id="emailHeading"><BrandIcon name="mail" size={17} color="#0891B2" /> Email Your Summary</div>
+          <div style={s.emailHeading} id="emailHeading"><BrandIcon name="mail" size={17} color="#0891B2" /> Email Your Brief Summary</div>
           <p style={s.emailDesc}>
             Free users can email a brief summary. Full PDF report email delivery requires Atlas Starter or Atlas Navigator.
           </p>
@@ -3880,7 +3880,7 @@ export default function ResultsPage() {
               disabled={emailLoading}
               aria-busy={emailLoading}
             >
-              {emailLoading ? 'Sending…' : 'Send Summary'}
+              {emailLoading ? 'Sending…' : 'Send Brief Summary'}
             </button>
           </div>
           {emailAlert && (

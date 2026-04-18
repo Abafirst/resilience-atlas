@@ -115,6 +115,8 @@ jest.mock('../backend/models/ResilienceReport', () => {
 
 const request = require('supertest');
 const jwt = require('jsonwebtoken');
+const Purchase = require('../backend/models/Purchase');
+const User = require('../backend/models/User');
 
 // Remove STRIPE_SECRET_KEY so tier-gating is bypassed in tests.
 delete process.env.STRIPE_SECRET_KEY;
@@ -442,10 +444,10 @@ describe('GET /api/report/status', () => {
 // ── /api/report/download (hash mode) ─────────────────────────────────────────
 
 describe('GET /api/report/download (hash mode)', () => {
-    const Purchase = require('../backend/models/Purchase');
-    const User = require('../backend/models/User');
-
-    afterEach(() => jobStore.clear());
+    afterEach(() => {
+        jobStore.clear();
+        delete process.env.STRIPE_SECRET_KEY;
+    });
 
     test('returns 404 for unknown hash', async () => {
         const res = await request(app)
@@ -522,7 +524,6 @@ describe('GET /api/report/download (hash mode)', () => {
 
         expect(res.status).toBe(402);
         expect(res.body).toHaveProperty('upgradeRequired', true);
-        delete process.env.STRIPE_SECRET_KEY;
     });
 
     test('returns 402 when STRIPE_SECRET_KEY is set and email has no qualifying purchase', async () => {
@@ -557,15 +558,14 @@ describe('GET /api/report/download (hash mode)', () => {
 
         expect(res.status).toBe(402);
         expect(res.body).toHaveProperty('upgradeRequired', true);
-        delete process.env.STRIPE_SECRET_KEY;
     });
 });
 
 describe('POST /api/report/email', () => {
-    const Purchase = require('../backend/models/Purchase');
-    const User = require('../backend/models/User');
-
-    afterEach(() => jobStore.clear());
+    afterEach(() => {
+        jobStore.clear();
+        delete process.env.STRIPE_SECRET_KEY;
+    });
 
     test('returns 402 when STRIPE_SECRET_KEY is set and requester lacks access', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
@@ -599,7 +599,6 @@ describe('POST /api/report/email', () => {
 
         expect(res.status).toBe(402);
         expect(res.body).toHaveProperty('upgradeRequired', true);
-        delete process.env.STRIPE_SECRET_KEY;
     });
 });
 

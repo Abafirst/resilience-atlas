@@ -176,7 +176,10 @@ async function hasAccessToReportHash(email, hash) {
     });
     if (hasStarterHashAccess) return true;
 
-    // Fallback for legacy/admin grants.
+    // Fallback for legacy/admin grants:
+    // - purchasedDeepReport: older boolean flag from pre-tier migrations
+    // - atlasPremium: legacy lifetime-access flag
+    // Either should continue to grant full-report access for backwards compatibility.
     const user = await User.findOne({ email: cleanEmail })
         .select('purchasedDeepReport atlasPremium')
         .lean();
@@ -592,7 +595,7 @@ router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
  * POST /api/report/email
  * Send a completed PDF report to an email address.
  *
- * Body: { hash, email }
+ * Body: { hash, email, requesterEmail }
  */
 router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
     const { hash, email, requesterEmail } = req.body;
@@ -621,15 +624,13 @@ router.post('/email', reportLimiter, authenticateJWT, async (req, res) => {
 
     // Production security gate: require paid access for full PDF email delivery.
     if (process.env.STRIPE_SECRET_KEY) {
-        const accessEmail = requesterEmail || email;
-        if (!accessEmail) {
-            return res.status(402).json({
-                error: 'Atlas Starter or Atlas Navigator is required to email the full PDF report.',
-                upgradeRequired: true,
+        if (!requesterEmail) {
+            return res.status(400).json({
+                error: 'Missing requesterEmail parameter for access verification.',
             });
         }
         try {
-            const allowed = await hasAccessToReportHash(accessEmail, String(hash));
+            const allowed = await hasAccessToReportHash(requesterEmail, String(hash));
             if (!allowed) {
                 return res.status(402).json({
                     error: 'Atlas Starter or Atlas Navigator is required to email the full PDF report.',

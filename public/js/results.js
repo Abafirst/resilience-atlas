@@ -1015,10 +1015,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Send the PDF to the provided email address via the backend.
         showAlert('emailAlert', 'Sending report to ' + inputEmail + '…', 'success', 'email');
+        const requesterEmail = (localStorage.getItem('resilience_email') || (emailResults && emailResults.email) || inputEmail || '').trim();
         const emailRes = await fetch('/api/report/email', {
           method:  'POST',
           headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders),
-          body:    JSON.stringify({ hash, email: inputEmail, requesterEmail: inputEmail }),
+          body:    JSON.stringify({ hash, email: inputEmail, requesterEmail }),
         });
         if (!emailRes.ok) {
           const body = await emailRes.json().catch(() => ({}));
