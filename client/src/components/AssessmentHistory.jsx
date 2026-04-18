@@ -338,7 +338,7 @@ export default function AssessmentHistory({ email, onUnlock, checkoutLoading, ge
                         aria-label={`Unlock PDF for assessment from ${date}`}
                         onClick={() => handleUnlock(a)}
                       >
-                        🔓 Unlock PDF
+                        <img src="/icons/unlock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "text-bottom", marginRight: 4 }} />Unlock PDF
                       </button>
                       <div style={s.unlockNote}>from {STARTER_PRICE_LABEL}</div>
                     </div>

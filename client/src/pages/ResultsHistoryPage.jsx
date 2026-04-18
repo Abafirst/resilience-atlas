@@ -117,7 +117,7 @@ export default function ResultsHistoryPage() {
           </section>
           <div style={s.signInBanner}>
             <p style={s.signInText}>
-              🔐 Sign in to view your saved results, download PDF reports, and track your
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Sign in to view your saved results, download PDF reports, and track your
               resilience journey over time.
             </p>
             <button

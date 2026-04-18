@@ -36,7 +36,7 @@ function getMotivation(pct) {
   if (pct < 30)   return "You've taken your first steps!";
   if (pct < 60)   return "You're making real progress!";
   if (pct < 90)   return 'Almost there — keep going!';
-  return '🎉 Journey complete!';
+  return 'Journey complete!';
 }
 
 /**

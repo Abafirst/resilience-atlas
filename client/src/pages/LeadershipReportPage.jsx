@@ -5,27 +5,27 @@ import { Link } from 'react-router-dom';
 
 const REPORT_SECTIONS = [
   {
-    icon: '📊',
+    icon: '/icons/leaderboards.svg',
     title: 'Team Overview',
     description: 'Aggregated KPIs: team size, overall average resilience score, and primary strength distribution across your organisation.',
   },
   {
-    icon: '🧩',
+    icon: '/icons/network.svg',
     title: 'Dimension Analysis',
     description: 'Team averages (0–100) across all six resilience dimensions — Agentic, Relational, Spiritual, Emotional, Somatic, and Cognitive. No individual data is shown.',
   },
   {
-    icon: '🔍',
+    icon: '/icons/goal.svg',
     title: 'Key Observations',
     description: 'Automatically generated insights highlighting your team\'s strengths, growth areas, balance patterns, and any emerging risks.',
   },
   {
-    icon: '💡',
+    icon: '/icons/info.svg',
     title: 'Leadership Recommendations',
     description: 'Actionable, evidence-based recommendations tailored to your team\'s unique resilience profile, ready to bring into team meetings.',
   },
   {
-    icon: '📖',
+    icon: '/icons/story.svg',
     title: 'How to Use This Report',
     description: 'Guidance on sharing insights with HR partners, using findings as conversation starters, and scheduling a 60–90 day reassessment.',
   },
@@ -62,7 +62,7 @@ export default function LeadershipReportPage() {
         {/* ── Preview notice ────────────────────────────────────── */}
         <section className="report-section" aria-labelledby="preview-heading">
           <h2 className="section-title" id="preview-heading">
-            <span className="icon" aria-hidden="true">🚀</span> What's in your report
+            <img src="/icons/compass.svg" alt="" aria-hidden="true" width={16} height={16} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} /> What's in your report
           </h2>
           <p style={{ fontSize: '0.9rem', color: 'var(--text-muted, #666)', marginBottom: '1.25rem' }}>
             Complete the Resilience Atlas assessment with your team to unlock a full leadership report.
@@ -73,7 +73,7 @@ export default function LeadershipReportPage() {
             {REPORT_SECTIONS.map(({ icon, title, description }) => (
               <div key={title} className="dimension-card" role="listitem">
                 <div className="dimension-card__header">
-                  <span className="icon" aria-hidden="true">{icon}</span>
+                  <img src={icon} alt="" aria-hidden="true" width={18} height={18} style={{ marginRight: 6, verticalAlign: 'text-bottom' }} />
                   <span className="dimension-card__name">{title}</span>
                 </div>
                 <p className="dimension-detail" style={{ margin: '0.5rem 0 0', fontSize: '0.88rem' }}>

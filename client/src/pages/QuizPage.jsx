@@ -184,7 +184,7 @@ function RestoreBanner({ saved, onRestore, onFresh }) {
   return (
     <div className="restore-banner" role="alert" aria-live="polite">
       <div className="restore-banner-inner">
-        <span className="restore-banner-icon" aria-hidden="true">💾</span>
+        <span className="restore-banner-icon" aria-hidden="true"><img src="/icons/story.svg" alt="" width={16} height={16} /></span>
         <p className="restore-banner-msg">{msg}</p>
         <div className="restore-banner-actions">
           <button type="button" className="btn btn-primary btn-sm" onClick={onRestore}>

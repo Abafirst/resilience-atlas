@@ -235,7 +235,7 @@ export default function AssessmentHub({ user, userEmail, onUpgrade, onLogout }) 
 
           {/* Premium report card */}
           <div style={{ ...styles.card, ...styles.cardPremium }}>
-            <div style={styles.cardIcon}>📋</div>
+            <div style={styles.cardIcon}><img src="/icons/story.svg" alt="" aria-hidden="true" width={40} height={40} style={{ verticalAlign: 'middle' }} /></div>
             <span style={styles.premiumBadge}>PREMIUM</span>
             <div style={styles.cardTitle}>Full Deep Report</div>
             <p style={styles.cardDesc}>

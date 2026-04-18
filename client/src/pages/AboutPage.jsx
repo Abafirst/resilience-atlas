@@ -22,17 +22,17 @@ const milestones = [
 
 const missionCards = [
   {
-    icon: '🧭',
+    icon: '/icons/compass.svg',
     title: 'Our mission',
     detail: 'Help people read their current map and move forward with confidence, context, and compassion.',
   },
   {
-    icon: '🔬',
+    icon: '/icons/cognitive-narrative.svg',
     title: 'Our promise',
     detail: 'Keep every insight grounded in research, lived experience, and practical application.',
   },
   {
-    icon: '🤝',
+    icon: '/icons/connection.svg',
     title: 'Our stance',
     detail: 'We are not here to fix you. You are not broken. We are here to help you navigate.',
   },
@@ -284,7 +284,10 @@ const styles = `
   }
 
   .mission-card-title .icon {
-    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    display: inline-block;
+    flex-shrink: 0;
   }
 
   .mission-card p {
@@ -657,7 +660,7 @@ export default function AboutPage() {
                 {missionCards.map((item) => (
                   <article key={item.title} className="soft-card mission-card" role="listitem">
                     <h3 className="mission-card-title">
-                      <span className="icon" aria-hidden="true">{item.icon}</span>
+                      <img className="icon" src={item.icon} alt="" aria-hidden="true" />
                       {item.title}
                     </h3>
                     <p>{item.detail}</p>
@@ -681,7 +684,7 @@ export default function AboutPage() {
                   <span className="team-avatar" aria-hidden="true">{member.avatar}</span>
                   <h3 className="team-name">{member.name}</h3>
                   <p className="team-role">{member.role}</p>
-                  <p className="team-fact"><span aria-hidden="true">💬</span> {member.fact}</p>
+                  <p className="team-fact"><img src="/icons/dialogue.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />{member.fact}</p>
                 </article>
               ))}
             </div>

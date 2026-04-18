@@ -218,6 +218,12 @@ const styles = `
   }
 `;
 
+function getTopRankIconFilter(rank) {
+  if (rank === 1) return 'drop-shadow(0 0 2px rgba(245, 158, 11, 0.9))';
+  if (rank === 2) return 'grayscale(0.15) brightness(1.08)';
+  return 'sepia(0.65) hue-rotate(-15deg) saturate(1.2)';
+}
+
 export default function OrgGamificationPage() {
   const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
@@ -539,7 +545,19 @@ export default function OrgGamificationPage() {
                       <tr key={entry.userId}>
                         <td>
                           <span className={entry.rank <= 3 ? `og-rank-${entry.rank}` : ''}>
-                            {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : entry.rank === 3 ? '🥉' : `#${entry.rank}`}
+                            {entry.rank <= 3 ? (
+                              <img
+                                src="/icons/trophy.svg"
+                                alt=""
+                                aria-hidden="true"
+                                width={14}
+                                height={14}
+                                style={{
+                                  verticalAlign: 'text-bottom',
+                                  filter: getTopRankIconFilter(entry.rank),
+                                }}
+                              />
+                            ) : `#${entry.rank}`}
                           </span>
                         </td>
                         <td>{entry.email || entry.userId}</td>

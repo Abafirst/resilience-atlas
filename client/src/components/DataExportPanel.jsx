@@ -51,7 +51,7 @@ export default function DataExportPanel({ orgId, token }) {
   const exports = [
     {
       key: 'csv',
-      icon: '📊',
+      icon: '/icons/leaderboards.svg',
       title: 'Assessment Results',
       desc: 'All team member scores and dimension breakdowns',
       format: 'CSV',
@@ -59,7 +59,7 @@ export default function DataExportPanel({ orgId, token }) {
     },
     {
       key: 'members',
-      icon: '👥',
+      icon: '/icons/connection.svg',
       title: 'Member List',
       desc: 'Team member names, emails, and status',
       format: 'CSV',
@@ -67,7 +67,7 @@ export default function DataExportPanel({ orgId, token }) {
     },
     {
       key: 'pdf',
-      icon: '📄',
+      icon: '/icons/story.svg',
       title: 'Team Report',
       desc: 'Full team resilience report with charts',
       format: 'PDF',
@@ -75,7 +75,7 @@ export default function DataExportPanel({ orgId, token }) {
     },
     {
       key: 'resources',
-      icon: '📦',
+      icon: '/icons/game-map.svg',
       title: 'Facilitation Resources',
       desc: 'Workshop guides, templates, and activity cards',
       format: 'ZIP',
@@ -124,7 +124,7 @@ export default function DataExportPanel({ orgId, token }) {
               boxShadow: '0 2px 6px rgba(0,0,0,.04)',
             }}
           >
-            <div style={{ fontSize: '2rem', lineHeight: 1 }} aria-hidden="true">{exp.icon}</div>
+            <img src={exp.icon} alt="" aria-hidden="true" width={32} height={32} style={{ display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             <div>
               <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: '#0f172a', margin: '0 0 .2rem' }}>
                 {exp.title}

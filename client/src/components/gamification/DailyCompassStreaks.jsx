@@ -145,7 +145,7 @@ export default function DailyCompassStreaks({ progress }) {
     const newMilestone = STREAK_MILESTONES_DESC.find(m => days >= m.days && prev < m.days);
     if (newMilestone) {
       playStreakMilestoneSound();
-      setMilestoneMsg(`🔥 ${newMilestone.label} — ${newMilestone.days}-day streak reached!`);
+      setMilestoneMsg(`${newMilestone.label} — ${newMilestone.days}-day streak reached!`);
       const t = setTimeout(() => setMilestoneMsg(null), 5000);
       return () => clearTimeout(t);
     }

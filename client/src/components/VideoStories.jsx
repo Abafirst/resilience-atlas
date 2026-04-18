@@ -58,7 +58,7 @@ function VideoModal({ video, onClose }) {
           {showFallback && (
             <div className="kids-video-overlay" role="alert" aria-label="Video error – open in YouTube">
               <div className="kids-video-overlay-card">
-                <div className="kids-video-overlay-icon" aria-hidden="true">🎬</div>
+                <div className="kids-video-overlay-icon" aria-hidden="true"><img src="/icons/video.svg" alt="" width={20} height={20} /></div>
                 <div className="kids-video-overlay-title">Oops! This video won't play here.</div>
                 <div className="kids-video-overlay-text">Let's open it in YouTube instead!</div>
                 <div className="kids-video-overlay-actions">

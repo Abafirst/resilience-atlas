@@ -454,8 +454,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-012',
-    icon: null,
-    emoji: '📡',
+    icon: 'icons/network.svg',
+    emoji: null,
     title: 'Team Dashboard Interpretation Guide',
     desc: "How to read and discuss your team's aggregated radar chart. Includes facilitation questions and action-planning prompts for each dimension.",
     tag: 'Facilitator Guide',
@@ -463,8 +463,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-011',
-    icon: null,
-    emoji: '🪞',
+    icon: 'icons/reframe.svg',
+    emoji: null,
     title: 'Individual Reflection Worksheet',
     desc: 'A fillable worksheet for participants to use before or after taking the assessment. Includes personal scoring, dimension reflections, and goal-setting prompts.',
     tag: 'Participant Worksheet',
@@ -472,8 +472,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-010',
-    icon: null,
-    emoji: '🛡️',
+    icon: 'icons/shield.svg',
+    emoji: null,
     title: 'Resilience Under Pressure Card',
     desc: 'A pocket-sized reference card with grounding techniques, reframing prompts, and regulation strategies for each dimension — for use in real-time high-stress moments.',
     tag: 'Reference Card',
@@ -481,8 +481,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-009',
-    icon: null,
-    emoji: '⚓',
+    icon: 'icons/compass.svg',
+    emoji: null,
     title: 'Team Values Charter Template',
     desc: 'A structured template for teams to document their shared values, working principles, and resilience commitments — for display, onboarding, and quarterly review.',
     tag: 'Template',
@@ -490,8 +490,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-002',
-    icon: null,
-    emoji: '🔭',
+    icon: 'icons/goal.svg',
+    emoji: null,
     title: 'Dimension Signals Observer Sheet',
     desc: "A tool for managers and coaches to observe and recognize resilience dimension signals in team members' behavior — useful for coaching conversations and performance support.",
     tag: 'Manager Tool',
@@ -499,8 +499,8 @@ const FEATURED_HANDOUTS = [
   },
   {
     id: 'hand-016',
-    icon: null,
-    emoji: '🏔️',
+    icon: 'icons/game-mountain.svg',
+    emoji: null,
     title: '90-Day Resilience Action Plan',
     desc: 'A structured plan template for individuals and teams to set resilience development goals, identify support, and track progress across a quarter.',
     tag: 'Planning Template',
@@ -1041,7 +1041,7 @@ export default function TeamsLandingPage() {
             <div className="handout-icon" aria-hidden="true">
               {handout.icon
                 ? <img onError={handleIconLoadError} src={handout.icon} alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />
-                : handout.emoji}
+                : <img onError={handleIconLoadError} src="icons/compass.svg" alt="" width={40} height={40} style={{ verticalAlign: 'middle' }} />}
             </div>
             <div className="handout-body">
               <div className="handout-title">{handout.title}</div>

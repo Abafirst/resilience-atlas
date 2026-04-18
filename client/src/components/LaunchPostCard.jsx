@@ -192,7 +192,7 @@ function LinkedInCard({ cardRef }) {
           padding: '8px 14px',
           flex: 1,
         }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: BRAND.green }}>🌱 Launch Week Bonus</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: BRAND.green }}><img src="/icons/growth.svg" alt="" aria-hidden="true" width={12} height={12} style={{ verticalAlign: 'text-bottom', marginRight: 4 }} />Launch Week Bonus</span>
           <p style={{ margin: '2px 0 0', fontSize: 12, color: BRAND.textMid }}>
             All kids' resources are <strong>free this week</strong>. Because resilience should be accessible to everyone.
           </p>

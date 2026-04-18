@@ -196,7 +196,7 @@ function ChallengeModal({ onClose, onSubmit }) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div style={s.modalBox}>
-        <h2 style={s.modalTitle}>Start Weekly Challenge 🎯</h2>
+        <h2 style={s.modalTitle}><img src="/icons/goal.svg" alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />Start Weekly Challenge</h2>
 
         <label style={s.label} htmlFor="gam-dim-select">Choose a dimension</label>
         <select
@@ -261,7 +261,7 @@ export default function ChallengeWidget({ progress, onSetChallenge }) {
           <>
             <p style={s.empty}>No active challenge this week.</p>
             <button style={s.startBtn} onClick={() => setShowModal(true)}>
-              Start a Challenge 🎯
+              <img src="/icons/goal.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Start a Challenge
             </button>
           </>
         ) : (
@@ -277,14 +277,14 @@ export default function ChallengeWidget({ progress, onSetChallenge }) {
             >
               {Array.from({ length: TOTAL_DAYS }, (_, i) => (
                 <span key={i} style={s.pip(i < (ch.completedDays ?? 0))} aria-hidden="true">
-                  {i < (ch.completedDays ?? 0) ? '✅' : '⬜'}
+                  {i < (ch.completedDays ?? 0) ? <img src="/icons/checkmark.svg" alt="" aria-hidden="true" width={12} height={12} /> : '⬜'}
                 </span>
               ))}
               <span style={s.fraction}>{ch.completedDays ?? 0}/{TOTAL_DAYS}</span>
             </div>
 
             <div style={s.reward}>
-              🎁 Reward: +{ch.reward ?? 10} pts on completion
+              <img src="/icons/badge.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Reward: +{ch.reward ?? 10} pts on completion
             </div>
           </>
         )}
