@@ -81,7 +81,7 @@ The app will be available at <http://localhost:5173>.
 | `npm run android` | Build mobile, sync Android project, and open Android Studio |
 | `npm run preview` | Preview the production build locally |
 
-> **Mobile/Capacitor/Android builds:** always run `npm run build:mobile` (or `npm run android`) and **do not** use `npm run build` for mobile packaging. This guarantees the build uses `.env.production` and avoids picking up values from `.env.local`.
+> **Mobile/Capacitor/Android builds:** always run `npm run build:mobile` (or `npm run android`) and **do not** use `npm run build` for mobile packaging. This repository treats `build:mobile` as the required mobile release path so Capacitor workflows consistently use production env values (`.env.production`) and avoid accidental local overrides from `.env.local`.
 
 ---
 
