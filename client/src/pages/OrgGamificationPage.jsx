@@ -218,6 +218,12 @@ const styles = `
   }
 `;
 
+function getRankIconFilter(rank) {
+  if (rank === 1) return 'drop-shadow(0 0 2px rgba(245, 158, 11, 0.9))';
+  if (rank === 2) return 'grayscale(0.15) brightness(1.08)';
+  return 'sepia(0.65) hue-rotate(-15deg) saturate(1.2)';
+}
+
 export default function OrgGamificationPage() {
   const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0();
 
@@ -548,11 +554,7 @@ export default function OrgGamificationPage() {
                                 height={14}
                                 style={{
                                   verticalAlign: 'text-bottom',
-                                  filter: entry.rank === 1
-                                    ? 'drop-shadow(0 0 2px rgba(245, 158, 11, 0.9))'
-                                    : entry.rank === 2
-                                      ? 'grayscale(0.15) brightness(1.08)'
-                                      : 'sepia(0.65) hue-rotate(-15deg) saturate(1.2)',
+                                  filter: getRankIconFilter(entry.rank),
                                 }}
                               />
                             ) : `#${entry.rank}`}
