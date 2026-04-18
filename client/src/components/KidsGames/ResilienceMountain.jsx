@@ -58,11 +58,12 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
       {!activePeak ? (
         <>
           <div className="kg-game-header">
-            <div className="kg-game-emoji" aria-hidden="true">🏔️</div>
+            <div className="kg-game-emoji" aria-hidden="true"><img src="/icons/game-mountain.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
             <h2 className="kg-game-title">Resilience Mountain</h2>
             <p className="kg-game-subtitle">Climb each peak and reach the summit!</p>
             <div className="kg-score-badge" aria-live="polite">
-              🏔️ {allSummits.size}/{MOUNTAIN_PEAKS.length} peaks summited
+              <img src="/icons/game-mountain.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 3 }} />
+              {allSummits.size}/{MOUNTAIN_PEAKS.length} peaks summited
             </div>
           </div>
 
@@ -82,7 +83,7 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
                   role="listitem"
                   aria-label={`${peak.name} — ${progress.level}/${peak.totalLevels} activities done`}
                 >
-                  <div className="kg-peak-emoji" aria-hidden="true">{peak.emoji}</div>
+                  <div className="kg-peak-emoji" aria-hidden="true"><img src={peak.icon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} /></div>
                   <div className="kg-peak-name">{peak.name}</div>
                   <div className="kg-peak-char" style={{ color: peak.accentColor }}>{peak.character}</div>
                   <div className="kg-peak-progress-wrap">
@@ -92,7 +93,7 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
                     />
                   </div>
                   <div className="kg-peak-level">{progress.level}/{peak.totalLevels}</div>
-                  {isSummited && <div className="kg-peak-summit-flag" aria-hidden="true">🚩</div>}
+                  {isSummited && <div className="kg-peak-summit-flag" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></div>}
                 </button>
               );
             })}
@@ -102,7 +103,7 @@ export default function ResilienceMountain({ onBack, onEarnBadge }) {
         /* Peak detail view */
         <div className="kg-peak-detail">
           <div className="kg-peak-detail-header" style={{ background: activePeak.color }}>
-            <span className="kg-peak-detail-emoji" aria-hidden="true">{activePeak.emoji}</span>
+            <span className="kg-peak-detail-emoji" aria-hidden="true"><img src={activePeak.icon} alt="" width={24} height={24} style={{ verticalAlign: 'middle' }} /></span>
             <div>
               <h2 className="kg-peak-detail-name">{activePeak.name}</h2>
               <p className="kg-peak-detail-char" style={{ color: activePeak.accentColor }}>{activePeak.character}</p>

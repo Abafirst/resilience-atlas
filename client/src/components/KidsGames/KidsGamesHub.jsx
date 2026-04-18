@@ -236,7 +236,9 @@ export default function KidsGamesHub() {
             aria-label={soundOn ? 'Mute celebration sounds' : 'Unmute celebration sounds'}
             title={soundOn ? 'Sounds on — click to mute' : 'Sounds off — click to unmute'}
           >
-            {soundOn ? '🔊' : '🔇'}
+            <span aria-hidden="true" style={{ fontSize: '.75rem', fontWeight: 700 }}>
+              {soundOn ? 'ON' : 'OFF'}
+            </span>
           </button>
         </div>
       </div>

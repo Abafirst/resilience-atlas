@@ -69,9 +69,9 @@ export default function MapCollector({ onBack, onEarnBadge }) {
 
       {completed ? (
         <div className="kg-completion-panel">
-          <div className="kg-completion-emoji" aria-hidden="true">🎉</div>
+          <div className="kg-completion-emoji" aria-hidden="true"><img src="/icons/success.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
           <h3>You completed the map!</h3>
-          <p>Amazing explorer! You found every item. You're a true Resilience Map Master! 🏅</p>
+          <p>Amazing explorer! You found every item. You're a true Resilience Map Master!</p>
           <button className="kg-spin-btn" onClick={reset}>Play Again!</button>
         </div>
       ) : (
@@ -84,12 +84,12 @@ export default function MapCollector({ onBack, onEarnBadge }) {
           >
             {/* Decorative background elements */}
             <div className="kg-map-bg-deco" aria-hidden="true">
-              <span className="kg-deco-tree" style={{ left: '5%', top: '10%' }}>🌲</span>
-              <span className="kg-deco-tree" style={{ left: '90%', top: '5%' }}>🌳</span>
-              <span className="kg-deco-tree" style={{ left: '48%', top: '45%' }}>🌿</span>
-              <span className="kg-deco-river" style={{ left: '25%', top: '50%' }}>🌊</span>
-              <span className="kg-deco-mountain" style={{ left: '75%', top: '40%' }}>⛰️</span>
-              <span className="kg-deco-sun" style={{ left: '50%', top: '2%' }}>☀️</span>
+              <span className="kg-deco-tree" style={{ left: '5%', top: '10%' }}><img src="/icons/spiritual-reflective.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
+              <span className="kg-deco-tree" style={{ left: '90%', top: '5%' }}><img src="/icons/spiritual-reflective.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
+              <span className="kg-deco-tree" style={{ left: '48%', top: '45%' }}><img src="/icons/somatic-regulative.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
+              <span className="kg-deco-river" style={{ left: '25%', top: '50%' }}><img src="/icons/breathing.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
+              <span className="kg-deco-mountain" style={{ left: '75%', top: '40%' }}><img src="/icons/game-mountain.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
+              <span className="kg-deco-sun" style={{ left: '50%', top: '2%' }}><img src="/icons/kids-spark.svg" alt="" width={16} height={16} style={{ verticalAlign: 'middle' }} /></span>
             </div>
 
             {MAP_ITEMS.map(item => {
@@ -104,7 +104,7 @@ export default function MapCollector({ onBack, onEarnBadge }) {
                   aria-pressed={isCollected}
                   disabled={isCollected}
                 >
-                  <span className="kg-map-item-emoji" aria-hidden="true">{item.emoji}</span>
+                  <span className="kg-map-item-emoji" aria-hidden="true"><img src={item.icon} alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} /></span>
                   {isCollected && <span className="kg-map-item-check" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
                 </button>
               );
@@ -119,7 +119,7 @@ export default function MapCollector({ onBack, onEarnBadge }) {
               aria-live="polite"
               role="status"
             >
-              <strong>{lastCollected.emoji} Found: {lastCollected.label}!</strong>
+              <strong><img src={lastCollected.icon} alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Found: {lastCollected.label}!</strong>
               <br />
               <span style={{ fontSize: '.82rem', color: '#334155' }}>{lastCollected.dimension}</span>
             </div>

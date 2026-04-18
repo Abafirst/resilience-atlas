@@ -75,7 +75,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
       <div className="kg-game-container">
         <button className="kg-back-btn" onClick={onBack} aria-label="Back to games">← Back</button>
         <div className="kg-game-header">
-          <div className="kg-game-emoji" aria-hidden="true">📜</div>
+          <div className="kg-game-emoji" aria-hidden="true"><img src="/icons/games/quest-log.svg" alt="" width={48} height={48} style={{ verticalAlign: 'middle' }} /></div>
           <h2 className="kg-game-title">Quest Log</h2>
           <p className="kg-game-subtitle">Multi-part quests — read, reflect, and create!</p>
           <div className="kg-score-badge">{completedSeries.size}/{QUEST_LOG_SERIES.length} series complete</div>
@@ -113,7 +113,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                   style={{ background: series.accentColor }}
                   onClick={() => startSeries(series)}
                 >
-                  {partsComplete > 0 ? '📖 Continue Quest' : '📜 Start Quest'}
+                  {partsComplete > 0 ? 'Continue Quest' : 'Start Quest'}
                 </button>
               </div>
             );
@@ -202,7 +202,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
             </div>
             {part.reflection && (
               <div className="kg-reflection-prompt">
-                <strong>💭 Reflect:</strong> {part.reflection}
+                <strong><img src="/icons/emotional-adaptive.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Reflect:</strong> {part.reflection}
                 <textarea
                   className="reflection-input"
                   rows={3}
@@ -229,11 +229,11 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                   aria-label={reframeFlipped[i] ? `Flip back: ${item.negative}` : `Flip to reframe: ${item.negative}`}
                 >
                   <div className="kg-reframe-front" aria-hidden={reframeFlipped[i]}>
-                    <span className="kg-reframe-icon" aria-hidden="true">💭</span>
+                    <span className="kg-reframe-icon" aria-hidden="true"><img src="/icons/emotional-adaptive.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>
                     <span>{item.negative}</span>
                   </div>
                   <div className="kg-reframe-back" aria-hidden={!reframeFlipped[i]}>
-                    <span className="kg-reframe-icon" aria-hidden="true">✨</span>
+                    <span className="kg-reframe-icon" aria-hidden="true"><img src="/icons/reframe.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>
                     <span>{item.positive}</span>
                   </div>
                 </button>
@@ -338,7 +338,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
               ))}
               {part.reflection && (
                 <div className="kg-reflection-prompt">
-                  <strong>💭 Reflect:</strong> {part.reflection}
+                  <strong><img src="/icons/emotional-adaptive.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />Reflect:</strong> {part.reflection}
                   <textarea
                     className="reflection-input"
                     rows={2}
@@ -366,7 +366,7 @@ export default function QuestLog({ onBack, onEarnBadge }) {
                   role="listitem"
                   aria-pressed={challenges[c.id]}
                 >
-                  <span className="kg-challenge-item-emoji" aria-hidden="true">{c.emoji}</span>
+                  <span className="kg-challenge-item-emoji" aria-hidden="true"><img src={c.icon} alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>
                   <span>{c.label}</span>
                   {challenges[c.id] && <span className="kg-check" aria-hidden="true"><img src="/icons/checkmark.svg" alt="" width={14} height={14} style={{ verticalAlign: 'middle' }} /></span>}
                 </button>

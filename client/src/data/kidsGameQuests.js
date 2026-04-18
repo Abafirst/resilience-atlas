@@ -145,7 +145,7 @@ export const TREASURE_ISLANDS = [
   {
     id: 'friendship-beach',
     name: 'Friendship Beach',
-    emoji: '🏖️',
+    icon: '/icons/relational-connective.svg',
     dimension: 'Relational-Connective',
     color: '#ede9fe',
     accentColor: '#7c3aed',
@@ -161,7 +161,7 @@ export const TREASURE_ISLANDS = [
   {
     id: 'feelings-forest',
     name: 'Feelings Forest',
-    emoji: '🌳',
+    icon: '/icons/emotional-adaptive.svg',
     dimension: 'Emotional-Adaptive',
     color: '#ffe4e6',
     accentColor: '#be123c',
@@ -182,7 +182,7 @@ export const TREASURE_ISLANDS = [
   {
     id: 'thinkers-peak',
     name: 'Thinker\'s Peak',
-    emoji: '⛰️',
+    icon: '/icons/cognitive-narrative.svg',
     dimension: 'Cognitive-Narrative',
     color: '#e0f2fe',
     accentColor: '#0284c7',
@@ -203,7 +203,7 @@ export const TREASURE_ISLANDS = [
   {
     id: 'builders-cove',
     name: 'Builder\'s Cove',
-    emoji: '🏗️',
+    icon: '/icons/agentic-generative.svg',
     dimension: 'Agentic-Generative',
     color: '#fef9c3',
     accentColor: '#854d0e',
@@ -378,10 +378,10 @@ export const QUEST_LOG_SERIES = [
         type: 'challenge',
         prompt: 'Complete Maya\'s Reach-Out Challenge this week:',
         challenges: [
-          { id: 'c1', label: 'Text someone you haven\'t talked to in a while', emoji: '📱' },
-          { id: 'c2', label: 'Ask someone a deeper question than "How are you?"', emoji: '❓' },
-          { id: 'c3', label: 'Tell someone what you appreciate about them', emoji: '💙' },
-          { id: 'c4', label: 'Ask for help with something — anything', emoji: '🤝' },
+          { id: 'c1', label: 'Text someone you haven\'t talked to in a while', icon: '/icons/dialogue.svg' },
+          { id: 'c2', label: 'Ask someone a deeper question than "How are you?"', icon: '/icons/reframe.svg' },
+          { id: 'c3', label: 'Tell someone what you appreciate about them', icon: '/icons/connection.svg' },
+          { id: 'c4', label: 'Ask for help with something — anything', icon: '/icons/relational-connective.svg' },
         ],
         encouragement: 'Every connection you strengthen is a thread in your resilience web. You\'re building something that will support you through anything life brings.',
         badge: 'quest-legend',
