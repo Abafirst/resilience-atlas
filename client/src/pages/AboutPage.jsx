@@ -627,7 +627,7 @@ export default function AboutPage() {
             <h2 id="story-heading" className="section-title">The story and mission</h2>
             <p className="section-intro">
               The Resilience Atlas was created through lived experience, professional practice, and doctoral research to
-              help people orient without judgment and navigate practical next steps.
+              help people orient without judgment and navigate with practical next steps.
             </p>
             <div className="story-grid">
               <article className="soft-card" aria-label="Resilience Atlas milestones">
