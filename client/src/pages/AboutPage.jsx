@@ -23,18 +23,18 @@ const milestones = [
 const missionCards = [
   {
     icon: '/icons/compass.svg',
-    title: 'My mission',
-    detail: 'I help people read their current map and move forward with confidence, context, and compassion.',
+    title: 'Mission',
+    detail: 'The Resilience Atlas exists to empower every person to understand their unique resilience profile and move forward with clarity, confidence, and actionable strategies.',
   },
   {
     icon: '/icons/cognitive-narrative.svg',
-    title: 'My promise',
-    detail: 'I keep every insight grounded in research, lived experience, and practical application.',
+    title: 'Promise',
+    detail: 'Every insight and tool in The Resilience Atlas is grounded in research, real-world experience, and practical application—ensuring clarity and credibility at every step.',
   },
   {
     icon: '/icons/connection.svg',
-    title: 'My stance',
-    detail: 'I am not here to fix you. You are not broken. I am here to help you navigate.',
+    title: 'Stance',
+    detail: 'Every user is seen as resourceful and capable; the Atlas simply helps highlight new paths and possibilities.',
   },
 ];
 
@@ -624,10 +624,10 @@ export default function AboutPage() {
 
         <section className="story-section" aria-labelledby="story-heading">
           <div className="about-wrap">
-            <h2 id="story-heading" className="section-title">My story and mission</h2>
+            <h2 id="story-heading" className="section-title">The story and mission</h2>
             <p className="section-intro">
-              I created The Resilience Atlas through lived experience, professional practice, and doctoral research to
-              help people orient without judgment and navigate with practical next steps.
+              The Resilience Atlas was created through lived experience, professional practice, and doctoral research to
+              help people orient without judgment and navigate practical next steps.
             </p>
             <div className="story-grid">
               <article className="soft-card" aria-label="Resilience Atlas milestones">
