@@ -162,7 +162,9 @@ async function downloadPdfForPurchase(purchase, email, getTokenFn) {
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
       // Fetch the PDF as a blob to send the Authorization header.
-      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
+      const dlParams = new URLSearchParams({ hash: String(hash) });
+      if (email) dlParams.set('email', email);
+      const dlRes = await fetch(`/api/report/download?${dlParams.toString()}`, { headers: authHeaders });
       if (!dlRes.ok) {
         if (dlRes.status === 401) {
           throw new Error('Authentication expired. Please log in again and retry.');

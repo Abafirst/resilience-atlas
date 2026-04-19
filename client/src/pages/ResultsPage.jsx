@@ -521,7 +521,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
     <div className="upgrade-comparison" role="region" aria-label="Upgrade options" id="upgradeCardsContainer">
       <h2 className="upgrade-comparison__title">Unlock Your Full Resilience Report</h2>
       <p className="upgrade-comparison__subtitle">
-        Choose the option that fits you best — Starter includes 12 in-app practices (no daily emails), while Navigator unlocks the full 30-day practice journey and daily practice emails.
+        Your on-screen summary is always free. Upgrade to Atlas Starter or Atlas Navigator to download/email the full PDF report and unlock premium practice pathways.
       </p>
       <div className="upgrade-cards-grid">
         {/* Atlas Starter */}
@@ -531,7 +531,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             <h3 id="upgrade-title-atlas-starter" className="upgrade-card__title">Atlas Starter</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-starter">{getPrice('atlas-starter')}</p>
             <p className="upgrade-card__description">
-              Get your personalised PDF summary with your overall score, top dimension highlights, and the 12-practice starter track.
+              Unlock this assessment’s full PDF report with download + email delivery, plus the 12-practice starter track.
             </p>
           </div>
           <ul className="upgrade-card__features" aria-label="Features included in Atlas Starter">
@@ -564,7 +564,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
             <h3 id="upgrade-title-atlas-navigator" className="upgrade-card__title">Atlas Navigator</h3>
             <p className="upgrade-card__price" data-price-tier="atlas-navigator">{getPrice('atlas-navigator')}</p>
             <p className="upgrade-card__description">
-              Download your complete Deep Resilience Report as a beautiful PDF. Includes all 30 in-app practices plus daily practice emails.
+              Download/email your complete Deep Resilience Report PDF. Includes all 30 in-app practices plus daily practice emails.
             </p>
           </div>
           <ul className="upgrade-card__features" aria-label="Features included in Atlas Navigator">
@@ -618,7 +618,8 @@ const DIM_ICONS = {
 
 const TIER_FEATURES = {
   'atlas-starter': [
-    'Full PDF summary report',
+    'Full PDF report for this assessment',
+    'Email the full PDF to your inbox',
     'Overall resilience score',
     'Top dimension highlights',
     '12 in-app starter micro-practices',
@@ -631,7 +632,7 @@ const TIER_FEATURES = {
     'Recommended growth strategies',
     'All 30 in-app micro-practices (30-day track)',
     'Daily micro-practice email (1 per day)',
-    'Downloadable PDF report',
+    'Downloadable + emailable full PDF report',
   ],
   'atlas-premium': [
     'Everything in Atlas Navigator',
@@ -2000,13 +2001,17 @@ async function triggerPdfDownload(results, email, getTokenFn) {
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
       // Fetch the PDF as a blob to send the Authorization header.
-      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(hash)}`, { headers: authHeaders });
+      const dlParams = new URLSearchParams({ hash: String(hash) });
+      if (email) dlParams.set('email', email);
+      const dlRes = await fetch(`/api/report/download?${dlParams.toString()}`, { headers: authHeaders });
       if (!dlRes.ok) {
         if (dlRes.status === 401) {
           throw new Error('Authentication expired. Please log in again and retry.');
         }
         const body = await dlRes.json().catch(() => ({}));
-        throw new Error(body.error || 'Failed to download report');
+        const err = new Error(body.error || 'Failed to download report');
+        if (dlRes.status === 402) err.upgradeRequired = true;
+        throw err;
       }
       const blob = await dlRes.blob();
       const url  = URL.createObjectURL(blob);
@@ -2890,7 +2895,7 @@ export default function ResultsPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setEmailAlert({ success: true, message: '✅ Report sent! Check your inbox.' });
+        setEmailAlert({ success: true, message: '✅ Email sent! Check your inbox.' });
         setEmailInput('');
       } else if (res.status === 429) {
         setEmailAlert({ success: false, message: 'Too many requests. Please wait a moment and try again.' });
@@ -3766,8 +3771,8 @@ export default function ResultsPage() {
               <div style={{ background: '#fff', border: '1px solid #ddd6fe', borderRadius: 12, padding: '16px 20px' }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#7c3aed', marginBottom: 6 }}>What upgrading gives you:</div>
                 <ul style={{ margin: 0, padding: '0 0 0 20px', fontSize: 13, color: '#334155', lineHeight: 1.9 }}>
-                  <li><strong>Atlas Starter ($9.99)</strong> — Full PDF report, dimension explanations, 12 in-app starter practices, and no daily practice emails</li>
-                  <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, all 30 in-app practices, and daily micro-practice emails</li>
+                  <li><strong>Atlas Starter ($9.99)</strong> — Full PDF download + email for this assessment, dimension explanations, and 12 in-app starter practices</li>
+                  <li><strong>Atlas Navigator ($49.99)</strong> — Deep analysis of all 6 dimensions, personalized growth strategies, full PDF download + email (1 every 30 days), all 30 in-app practices, and daily micro-practice emails</li>
                 </ul>
               </div>
               )}
@@ -3902,9 +3907,9 @@ export default function ResultsPage() {
 
         {/* ── Email Report Section ──────────────────────────────────── */}
         <section style={s.emailSection} aria-labelledby="emailHeading">
-          <div style={s.emailHeading} id="emailHeading"><BrandIcon name="mail" size={17} color="#0891B2" /> Email Your Report</div>
+          <div style={s.emailHeading} id="emailHeading"><BrandIcon name="mail" size={17} color="#0891B2" /> Email Your Brief Summary</div>
           <p style={s.emailDesc}>
-            Send your resilience profile to your inbox for future reference.
+            Free users can email a brief summary. Full PDF report email delivery requires Atlas Starter or Atlas Navigator.
           </p>
           <div style={s.emailInputRow}>
             <input
@@ -3923,7 +3928,7 @@ export default function ResultsPage() {
               disabled={emailLoading}
               aria-busy={emailLoading}
             >
-              {emailLoading ? 'Sending…' : 'Send Report'}
+              {emailLoading ? 'Sending…' : 'Send Brief Summary'}
             </button>
           </div>
           {emailAlert && (

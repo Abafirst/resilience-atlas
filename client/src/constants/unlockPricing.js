@@ -14,9 +14,10 @@ export const UNLOCK_TIERS = [
     badge:       '1 Report',
     type:        'single-report',
     highlighted: false,
-    description: 'Unlock this report only. Pay $9.99 each time you want to download a new report.',
+    description: 'Unlock this report only. Includes full PDF download + PDF email delivery for this assessment.',
     features: [
       'Full PDF report for this assessment',
+      'Email this full PDF report to your inbox',
       '12 in-app starter micro-practices',
       'No daily micro-practice emails',
       'Starter progress and badges (12-practice track)',
@@ -32,9 +33,10 @@ export const UNLOCK_TIERS = [
     badge:       'Best Value',
     type:        'quota',
     highlighted: true,
-    description: 'One-time $49.99 payment. Generate 1 full PDF report every 30 days, plus full 30-day practice access.',
+    description: 'One-time $49.99 payment. Generate 1 full PDF report every 30 days with download/email delivery, plus full 30-day practice access.',
     features: [
       'PDF report: 1 every 30 days (per user)',
+      'Email each full PDF report to your inbox',
       'All 30 in-app micro-practices (30-day plan)',
       'Daily micro-practice email (1 per day)',
       'Skill paths across all 6 resilience dimensions',

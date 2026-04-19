@@ -191,7 +191,9 @@ async function downloadPdfByHash(hash, overall, dominantType, scores, email, get
     }
     const st = await statusRes.json();
     if (st.status === 'ready') {
-      const dlRes = await fetch(`/api/report/download?hash=${encodeURIComponent(jobHash)}`, { headers: authHeaders });
+      const dlParams = new URLSearchParams({ hash: String(jobHash) });
+      if (email) dlParams.set('email', email);
+      const dlRes = await fetch(`/api/report/download?${dlParams.toString()}`, { headers: authHeaders });
       if (!dlRes.ok) {
         if (dlRes.status === 401) {
           throw new Error('Authentication expired. Please log in again and retry.');

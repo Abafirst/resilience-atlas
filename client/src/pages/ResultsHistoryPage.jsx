@@ -202,12 +202,12 @@ export default function ResultsHistoryPage() {
             </h1>
             <p className="results-history-sub">
               Track how your resilience evolves over time. Sign in to view your assessment
-              history, download reports, and access your personal resilience dashboard.
+              history and brief summary results. Full PDF download/email is available with Atlas Starter or Atlas Navigator.
             </p>
           </section>
           <div className="results-history-panel results-history-signin">
             <p className="results-history-signin-text">
-              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Sign in to view your saved results, download PDF reports, and track your
+              <img src="/icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 5 }} />Sign in to view your saved results, summary history, and track your
               resilience journey over time.
             </p>
             <button
@@ -237,7 +237,7 @@ export default function ResultsHistoryPage() {
             Your Resilience Journey
           </h1>
           <p className="results-history-sub">
-            Your assessment history and PDF reports are below. Each assessment marks a new
+            Your assessment history is below. Full PDF download/email requires Atlas Starter or Atlas Navigator. Each assessment marks a new
             point on your personal resilience atlas.
           </p>
         </section>
