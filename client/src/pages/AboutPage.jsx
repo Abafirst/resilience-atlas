@@ -16,46 +16,34 @@ const milestones = [
   {
     year: 'Today',
     title: 'Atlas in motion',
-    detail: 'Individuals, teams, and organizations use the Atlas to orient, reflect, and navigate growth with clarity.',
+    detail: 'People use the Atlas to orient, reflect, and navigate growth with clarity.',
   },
 ];
 
 const missionCards = [
   {
     icon: '/icons/compass.svg',
-    title: 'Our mission',
-    detail: 'Help people read their current map and move forward with confidence, context, and compassion.',
+    title: 'My mission',
+    detail: 'I help people read their current map and move forward with confidence, context, and compassion.',
   },
   {
     icon: '/icons/cognitive-narrative.svg',
-    title: 'Our promise',
-    detail: 'Keep every insight grounded in research, lived experience, and practical application.',
+    title: 'My promise',
+    detail: 'I keep every insight grounded in research, lived experience, and practical application.',
   },
   {
     icon: '/icons/connection.svg',
-    title: 'Our stance',
-    detail: 'We are not here to fix you. You are not broken. We are here to help you navigate.',
+    title: 'My stance',
+    detail: 'I am not here to fix you. You are not broken. I am here to help you navigate.',
   },
 ];
 
 const teamMembers = [
   {
-    name: 'Janeen Molchany',
-    role: 'Founder & Chief Resilience Scientist',
+    name: 'Janeen Molchany, Ph.D., BCBA',
+    role: 'Owner, Developer, and Researcher',
     avatar: 'J',
-    fact: 'Favorite metaphor: “Map first, then movement.”',
-  },
-  {
-    name: 'Research & Insights Team',
-    role: 'Psychometrics + Translational Research',
-    avatar: 'R',
-    fact: 'We turn dense data into clear compass points people can use right away.',
-  },
-  {
-    name: 'Design & Experience Team',
-    role: 'Product + Content Experience',
-    avatar: 'D',
-    fact: 'We test language for warmth and clarity so every screen feels human.',
+    fact: 'Personal experience and evidence-based science shape every part of The Resilience Atlas.',
   },
 ];
 
@@ -63,22 +51,22 @@ const values = [
   {
     icon: '/icons/cognitive-narrative.svg',
     title: 'Clarity over noise',
-    detail: 'We simplify complexity without flattening what is human and nuanced.',
+    detail: 'I simplify complexity without flattening what is human and nuanced.',
   },
   {
     icon: '/icons/relational-connective.svg',
     title: 'Connection matters',
-    detail: 'Resilience grows in relationship—with self, community, and purpose.',
+    detail: 'I believe resilience grows in relationship—with self, community, and purpose.',
   },
   {
     icon: '/icons/somatic-regulative.svg',
     title: 'Whole-person lens',
-    detail: 'Mind, body, story, and environment all shape how people navigate stress.',
+    detail: 'I use a whole-person lens where mind, body, story, and environment shape how people navigate stress.',
   },
   {
     icon: '/icons/spiritual-reflective.svg',
     title: 'Purposeful growth',
-    detail: 'We focus on emerging edges and development, never deficit labels.',
+    detail: 'I focus on emerging edges and development, never deficit labels.',
   },
 ];
 
@@ -618,7 +606,7 @@ export default function AboutPage() {
                 <span className="hero-kicker">About the Resilience Atlas</span>
                 <h1 id="about-heading" className="hero-title">A warm, research-grounded map for real human resilience.</h1>
                 <p className="hero-sub">
-                  We combine doctoral research, lived experience, and clear language so you can see where you are,
+                  I combine doctoral research, lived experience, and clear language so you can see where you are,
                   what strengths already anchor you, and where your emerging edge is ready to grow.
                 </p>
                 <div className="hero-links">
@@ -636,10 +624,10 @@ export default function AboutPage() {
 
         <section className="story-section" aria-labelledby="story-heading">
           <div className="about-wrap">
-            <h2 id="story-heading" className="section-title">Our story and mission</h2>
+            <h2 id="story-heading" className="section-title">My story and mission</h2>
             <p className="section-intro">
-              The Atlas grew from years of direct practice and research. It is built to help people orient without
-              judgment—professional enough for teams, personal enough for everyday life.
+              I created The Resilience Atlas through lived experience, professional practice, and doctoral research to
+              help people orient without judgment and navigate with practical next steps.
             </p>
             <div className="story-grid">
               <article className="soft-card" aria-label="Resilience Atlas milestones">
@@ -673,12 +661,17 @@ export default function AboutPage() {
 
         <section className="team-section" aria-labelledby="team-heading">
           <div className="about-wrap">
-            <h2 id="team-heading" className="section-title">Meet the team</h2>
+            <h2 id="team-heading" className="section-title">About the creator</h2>
             <p className="section-intro">
-              Behind the Atlas is a cross-disciplinary team focused on one thing: helping people navigate with
-              credibility, warmth, and practical next steps.
+              Hello, I&rsquo;m Janeen Molchany, Ph.D., BCBA&mdash;Owner, Developer, and Researcher behind The Resilience
+              Atlas. I created this platform based on my lived experience as a former foster youth, more than 20 years
+              of professional work with children and families, and my doctoral research, which identified six key types
+              of resilience. My mission is to make research-driven and empowering resilience tools accessible to
+              everyone. Every part of this platform&mdash;from the quiz questions to the daily practices&mdash;has been shaped
+              by both personal experience and evidence-based science. Thank you for being part of this journey. Janeen
+              Molchany, Ph.D., BCBA Owner, Developer, and Researcher.
             </p>
-            <div className="team-grid" role="list" aria-label="Resilience Atlas team members">
+            <div className="team-grid" role="list" aria-label="Resilience Atlas founder profile">
               {teamMembers.map((member) => (
                 <article key={member.name} className="soft-card" role="listitem">
                   <span className="team-avatar" aria-hidden="true">{member.avatar}</span>
@@ -693,10 +686,10 @@ export default function AboutPage() {
 
         <section className="values-section" aria-labelledby="values-heading">
           <div className="about-wrap">
-            <h2 id="values-heading" className="section-title">What we value</h2>
+            <h2 id="values-heading" className="section-title">What I value</h2>
             <p className="section-intro">
-              These values shape how we design tools, write copy, and support people across individual and
-              organizational settings.
+              These values shape how I design tools, write copy, and support people in daily life and professional
+              settings.
             </p>
             <div className="values-grid" role="list" aria-label="Resilience Atlas values">
               {values.map((value) => (
@@ -715,14 +708,14 @@ export default function AboutPage() {
         <section className="cta-section">
           <div className="about-wrap">
             <div className="cta-card" aria-label="Join the Resilience Atlas community">
-              <h2>Join us on the map</h2>
+              <h2>Join me on the map</h2>
               <p>
-                Whether you&rsquo;re exploring your own resilience or supporting a full team, we&rsquo;d love to help you
+                Whether you&rsquo;re exploring your own resilience or supporting others, I&rsquo;d love to help you
                 navigate what comes next.
               </p>
               <div className="cta-actions">
                 <a className="btn-soft" href="/quiz">Begin Navigation</a>
-                <a className="btn-outline-soft" href="/contact">Contact Us</a>
+                <a className="btn-outline-soft" href="/contact">Contact Me</a>
               </div>
             </div>
           </div>
