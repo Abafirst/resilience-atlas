@@ -299,6 +299,12 @@ const FAQS = [
   },
 ];
 
+function handleIconLoadError(event) {
+  const target = event.target;
+  if (!target || target.tagName !== 'IMG') return;
+  target.style.display = 'none';
+}
+
 export default function PrivacyPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [formState, setFormState] = useState({ name: '', email: '', company: '', issueType: '', message: '' });
