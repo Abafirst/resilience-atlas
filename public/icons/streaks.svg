@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-  <!-- Outer flame -->
-  <path d="M32 8 C32 8 44 20 44 32 C44 40 39 47 32 50 C32 50 36 44 34 38 C34 38 42 36 40 28 C40 28 36 34 32 32 C32 32 38 24 32 8 Z" fill="#FED7AA" stroke="#F97316" stroke-width="2" stroke-linejoin="round"/>
-  <!-- Inner flame -->
-  <path d="M32 22 C32 22 39 30 38 37 C37 42 35 46 32 48 C32 48 29 44 30 39 C30 39 35 37 34 32 C34 32 31 35 28 33 C28 33 30 28 32 22 Z" fill="#F97316"/>
-  <!-- Small base dot -->
-  <circle cx="32" cy="50" r="3" fill="#F97316"/>
-</svg>

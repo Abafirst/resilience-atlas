@@ -81,18 +81,24 @@ async function init() {
       sessionStorage.removeItem('returnAfterLogin');
     } catch (_) {}
     const returnTarget = explicitTarget || sessionTarget;
+    console.log('[Auth0] onRedirectCallback invoked', {
+      appState,
+      returnTo: returnTarget,
+      email: user?.email || null,
+    });
     if (
       returnTarget &&
       typeof returnTarget === 'string' &&
       returnTarget.startsWith('/') &&
       returnTarget !== '/'
     ) {
-      console.debug('[Auth0] onRedirectCallback returnTo:', returnTarget);
+      console.debug('[Auth0] onRedirectCallback explicit returnTo:', returnTarget);
       // Use window.location.replace so that React Router initialises at the
       // correct path.  window.history.replaceState only changes the address
       // bar without firing a popstate event, so React Router v6 would never
       // re-render the matching route.  A full navigation (replace, not push)
       // keeps the back-button behaviour clean.
+      console.log('[Auth0] Final navigation target:', returnTarget);
       window.location.replace(returnTarget);
       return;
     }
@@ -100,21 +106,30 @@ async function init() {
     // No explicit destination — check quiz/subscription status and redirect smartly.
     const email = user?.email;
     if (email) {
-      fetch(apiUrl(`/api/auth/user-status?email=${encodeURIComponent(email)}`))
+      const userStatusUrl = apiUrl(`/api/auth/user-status?email=${encodeURIComponent(email)}`);
+      console.log('[Auth0] Fetching user-status from:', userStatusUrl);
+      fetch(userStatusUrl)
         .then((r) => {
+          console.log('[Auth0] user-status response status:', r.status, 'ok:', r.ok);
           if (!r.ok) throw new Error('Failed to fetch user status');
           return r.json();
         })
         .then((data) => {
+          console.log('[Auth0] user-status response data:', data);
           const target = data.hasCompletedQuiz ? '/results' : '/';
           console.debug('[Auth0] onRedirectCallback status check → navigating to', target);
+          console.log('[Auth0] Final navigation target:', target);
           window.location.replace(target);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('[Auth0] user-status fetch error:', error);
           // On error fall back to home; HomeRoute will re-check on mount.
+          console.log('[Auth0] Final navigation target:', '/');
           window.location.replace('/');
         });
     } else {
+      console.warn('[Auth0] No email found on authenticated user in callback.');
+      console.log('[Auth0] Final navigation target:', '/');
       window.location.replace('/');
     }
   };

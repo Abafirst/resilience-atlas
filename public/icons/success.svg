@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-  <!-- Central star burst -->
-  <polygon points="32,6 35.5,23 51,16 41,29 58,32 41,35 51,48 35.5,41 32,58 28.5,41 13,48 23,35 6,32 23,29 13,16 28.5,23" fill="#F97316"/>
-  <!-- Small accent circles at corners -->
-  <circle cx="10" cy="10" r="3" fill="#8B5CF6" opacity="0.8"/>
-  <circle cx="54" cy="10" r="3" fill="#E8507A" opacity="0.8"/>
-  <circle cx="10" cy="54" r="2.5" fill="#F4B942" opacity="0.8"/>
-  <circle cx="54" cy="54" r="2.5" fill="#2DBF8A" opacity="0.8"/>
-</svg>
