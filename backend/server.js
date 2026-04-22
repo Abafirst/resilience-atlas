@@ -338,10 +338,19 @@ app.get("/health", (req, res) => {
 // ==============================
 
 app.get("/config", (req, res) => {
+  const userAgent = req.get("user-agent") || "";
+  const clientType = typeof req.query.clientType === "string"
+    ? req.query.clientType.toLowerCase()
+    : "";
+  const isNativeClient = clientType === "native" || userAgent.toLowerCase().includes("capacitor");
+  const auth0ClientId = isNativeClient
+    ? (process.env.AUTH0_CLIENT_ID_NATIVE || process.env.AUTH0_CLIENT_ID || null)
+    : (process.env.AUTH0_CLIENT_ID_PRODUCTION || process.env.AUTH0_CLIENT_ID || null);
+
   res.json({
     stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null,
     auth0Domain:    process.env.AUTH0_DOMAIN    || null,
-    auth0ClientId:  process.env.AUTH0_CLIENT_ID || null,
+    auth0ClientId,
     auth0Audience:  process.env.AUTH0_AUDIENCE  || null,
   });
 });
