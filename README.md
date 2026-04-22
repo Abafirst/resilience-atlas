@@ -400,11 +400,13 @@ The application uses [Auth0](https://auth0.com/) for user authentication across 
 |---|---|---|
 | `AUTH0_DOMAIN` | `your-tenant.us.auth0.com` | Auth0 tenant domain |
 | `AUTH0_CLIENT_ID` | `abc123…` | Client ID of your Auth0 Single-Page Application |
+| `AUTH0_CLIENT_ID_PRODUCTION` | `abc123…` | Website Auth0 client ID returned by `GET /config` for web requests |
+| `AUTH0_CLIENT_ID_NATIVE` | `xyz789…` | Native app Auth0 client ID returned by `GET /config` for Capacitor/native requests |
 | `AUTH0_AUDIENCE` | `https://theresilienceatlas.com/api` | **API Identifier** — enables JWT access tokens for the backend |
 | `AUTH0_SECRET` | _(32+ random bytes)_ | Long random secret used for the server-side OIDC session (optional, only needed for `/oidc-status`) |
 | `BASE_URL` | `https://theresilienceatlas.com` | Full public URL (used by `express-openid-connect`, optional) |
 
-`AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_AUDIENCE` are exposed safely via `GET /config` (no secrets).
+`GET /config` selects `AUTH0_CLIENT_ID_NATIVE` when `clientType=native` is present or when the User-Agent contains `Capacitor`; otherwise it selects `AUTH0_CLIENT_ID_PRODUCTION`. `AUTH0_CLIENT_ID` remains a backwards-compatible fallback.
 
 > ℹ️ `AUTH0_AUDIENCE` is the most important new variable. Without it, Auth0 issues opaque tokens that cannot be validated by the backend, causing all `/api/auth/profile` and protected-endpoint calls to fail with 401.
 
@@ -641,4 +643,3 @@ const assessmentHash = crypto
 ```
 
 This matches the algorithm used by `/api/report/generate` (`buildJobHash` in `backend/routes/report.js`) and `buildAssessmentHash` in `backend/services/assessmentAccessControl.js`.
-

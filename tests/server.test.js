@@ -627,6 +627,74 @@ describe('GET /config', () => {
         expect(res.body).toHaveProperty('auth0Domain');
         expect(res.body).toHaveProperty('auth0ClientId');
     });
+
+    const AUTH0_ENV_KEYS = [
+      'AUTH0_CLIENT_ID',
+      'AUTH0_CLIENT_ID_NATIVE',
+      'AUTH0_CLIENT_ID_PRODUCTION',
+    ];
+    const originalAuth0Env = {};
+
+    function requireFreshApp() {
+      jest.resetModules();
+      return require('../backend/server');
+    }
+
+    beforeAll(() => {
+      AUTH0_ENV_KEYS.forEach((key) => {
+        originalAuth0Env[key] = process.env[key];
+      });
+    });
+
+    afterEach(() => {
+      AUTH0_ENV_KEYS.forEach((key) => {
+        if (originalAuth0Env[key] === undefined) delete process.env[key];
+        else process.env[key] = originalAuth0Env[key];
+      });
+      jest.resetModules();
+    });
+
+    test('returns native client id when clientType=native', async () => {
+      process.env.AUTH0_CLIENT_ID_NATIVE = 'native-client-id';
+      const freshApp = requireFreshApp();
+
+      const res = await request(freshApp).get('/config?clientType=native');
+
+      expect(res.status).toBe(200);
+      expect(res.body.auth0ClientId).toBe('native-client-id');
+    });
+
+    test('returns native client id when User-Agent contains Capacitor', async () => {
+      process.env.AUTH0_CLIENT_ID_NATIVE = 'native-client-id';
+      const freshApp = requireFreshApp();
+
+      const res = await request(freshApp)
+        .get('/config')
+        .set('User-Agent', 'Capacitor Android');
+
+      expect(res.status).toBe(200);
+      expect(res.body.auth0ClientId).toBe('native-client-id');
+    });
+
+    test('returns AUTH0_CLIENT_ID fallback for web requests when production ID is not set', async () => {
+      process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
+      delete process.env.AUTH0_CLIENT_ID_PRODUCTION;
+      const freshApp = requireFreshApp();
+
+      const fallbackRes = await request(freshApp).get('/config');
+      expect(fallbackRes.status).toBe(200);
+      expect(fallbackRes.body.auth0ClientId).toBe('legacy-client-id');
+    });
+
+    test('returns production client id for web requests when AUTH0_CLIENT_ID_PRODUCTION is set', async () => {
+      process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
+      process.env.AUTH0_CLIENT_ID_PRODUCTION = 'web-client-id';
+      const freshAppWithProductionId = requireFreshApp();
+      const productionRes = await request(freshAppWithProductionId).get('/config');
+
+      expect(productionRes.status).toBe(200);
+      expect(productionRes.body.auth0ClientId).toBe('web-client-id');
+    });
 });
 
 // ── Affiliate routes ──────────────────────────────────────────────────────────
