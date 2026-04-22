@@ -338,10 +338,8 @@ app.get("/health", (req, res) => {
 // ==============================
 
 app.get("/config", (req, res) => {
-  const userAgent = req.get("user-agent") || "";
-  const clientType = typeof req.query.clientType === "string"
-    ? req.query.clientType.toLowerCase()
-    : "";
+  const userAgent = req.get("User-Agent") || "";
+  const clientType = req.query.clientType?.toString().toLowerCase() || "";
   const isNativeClient = clientType === "native" || userAgent.toLowerCase().includes("capacitor");
   const auth0ClientId = isNativeClient
     ? (process.env.AUTH0_CLIENT_ID_NATIVE || process.env.AUTH0_CLIENT_ID || null)

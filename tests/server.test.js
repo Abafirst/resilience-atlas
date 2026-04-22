@@ -635,7 +635,7 @@ describe('GET /config', () => {
     ];
     const originalAuth0Env = {};
 
-    function loadFreshApp() {
+    function requireFreshApp() {
       jest.resetModules();
       return require('../backend/server');
     }
@@ -656,9 +656,7 @@ describe('GET /config', () => {
 
     test('returns native client id when clientType=native', async () => {
       process.env.AUTH0_CLIENT_ID_NATIVE = 'native-client-id';
-      process.env.AUTH0_CLIENT_ID_PRODUCTION = 'web-client-id';
-      process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
-      const freshApp = loadFreshApp();
+      const freshApp = requireFreshApp();
 
       const res = await request(freshApp).get('/config?clientType=native');
 
@@ -668,9 +666,7 @@ describe('GET /config', () => {
 
     test('returns native client id when User-Agent contains Capacitor', async () => {
       process.env.AUTH0_CLIENT_ID_NATIVE = 'native-client-id';
-      process.env.AUTH0_CLIENT_ID_PRODUCTION = 'web-client-id';
-      process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
-      const freshApp = loadFreshApp();
+      const freshApp = requireFreshApp();
 
       const res = await request(freshApp)
         .get('/config')
@@ -680,16 +676,20 @@ describe('GET /config', () => {
       expect(res.body.auth0ClientId).toBe('native-client-id');
     });
 
-    test('returns production client id for web requests with AUTH0_CLIENT_ID fallback', async () => {
+    test('returns AUTH0_CLIENT_ID fallback for web requests when production ID is not set', async () => {
       process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
-      const freshApp = loadFreshApp();
+      delete process.env.AUTH0_CLIENT_ID_PRODUCTION;
+      const freshApp = requireFreshApp();
 
       const fallbackRes = await request(freshApp).get('/config');
       expect(fallbackRes.status).toBe(200);
       expect(fallbackRes.body.auth0ClientId).toBe('legacy-client-id');
+    });
 
+    test('returns production client id for web requests when AUTH0_CLIENT_ID_PRODUCTION is set', async () => {
+      process.env.AUTH0_CLIENT_ID = 'legacy-client-id';
       process.env.AUTH0_CLIENT_ID_PRODUCTION = 'web-client-id';
-      const freshAppWithProductionId = loadFreshApp();
+      const freshAppWithProductionId = requireFreshApp();
       const productionRes = await request(freshAppWithProductionId).get('/config');
 
       expect(productionRes.status).toBe(200);
