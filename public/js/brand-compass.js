@@ -142,6 +142,10 @@
   var BREATHING_FREQ        = (Math.PI * 2) / BREATHING_PERIOD;
   var PULSE_PERIOD          = 2600;
   var PULSE_FREQ            = (Math.PI * 2) / PULSE_PERIOD;
+  var MAX_FPS               = 30;
+  var FRAME_INTERVAL_MS     = 1000 / MAX_FPS;
+  var NEEDLE_RENDER_PADDING = 24;
+  var NEEDLE_RENDER_RADIUS  = R_OUTER + 22;
 
   var PHASE_GRID_START    = 0;
   var PHASE_GRID_DUR      = 300;
@@ -155,6 +159,73 @@
 
   function phaseProgress(elapsed, start, dur) {
     return clamp((elapsed - start) / dur, 0, 1);
+  }
+
+  var activeCompassCanvases = [];
+  var lifecycleBound = false;
+
+  function trackCompassCanvas(canvas) {
+    if (activeCompassCanvases.indexOf(canvas) === -1) {
+      activeCompassCanvases.push(canvas);
+    }
+  }
+
+  function untrackCompassCanvas(canvas) {
+    var idx = activeCompassCanvases.indexOf(canvas);
+    if (idx !== -1) {
+      activeCompassCanvases.splice(idx, 1);
+    }
+  }
+
+  function forEachActiveCompassControl(method) {
+    activeCompassCanvases.slice().forEach(function (canvas) {
+      if (canvas && canvas._brandCompassControl && typeof canvas._brandCompassControl[method] === 'function') {
+        canvas._brandCompassControl[method]();
+      }
+    });
+  }
+
+  function isAppPaused() {
+    return !!(window && window.__RA_APP_PAUSED) || !!(document && document.hidden);
+  }
+
+  function bindLifecycleControls() {
+    if (lifecycleBound || typeof window === 'undefined') { return; }
+    lifecycleBound = true;
+    window.addEventListener('ra-app-pause', function () {
+      window.__RA_APP_PAUSED = true;
+      forEachActiveCompassControl('pause');
+    });
+    window.addEventListener('ra-app-resume', function () {
+      window.__RA_APP_PAUSED = false;
+      forEachActiveCompassControl('resume');
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        forEachActiveCompassControl('pause');
+        return;
+      }
+      forEachActiveCompassControl('resume');
+    });
+  }
+
+  function clampRect(rect) {
+    var x1 = clamp(rect.x, 0, CW);
+    var y1 = clamp(rect.y, 0, CH);
+    var x2 = clamp(rect.x + rect.w, 0, CW);
+    var y2 = clamp(rect.y + rect.h, 0, CH);
+    return { x: x1, y: y1, w: Math.max(0, x2 - x1), h: Math.max(0, y2 - y1) };
+  }
+
+  function getNeedleDirtyRect(angle) {
+    var tipX = CX + Math.cos(angle) * NEEDLE_RENDER_RADIUS;
+    var tipY = CY + Math.sin(angle) * NEEDLE_RENDER_RADIUS;
+    return clampRect({
+      x: Math.min(CX, tipX) - NEEDLE_RENDER_PADDING,
+      y: Math.min(CY, tipY) - NEEDLE_RENDER_PADDING,
+      w: Math.abs(tipX - CX) + NEEDLE_RENDER_PADDING * 2,
+      h: Math.abs(tipY - CY) + NEEDLE_RENDER_PADDING * 2,
+    });
   }
 
   // Ease-out cubic
@@ -617,10 +688,13 @@
     // Cancel any previous animation loop.
     // canvas._bcRafId stores the requestAnimationFrame handle for this canvas
     // so that re-renders cleanly cancel the prior loop before starting a new one.
-    if (canvas._bcRafId) {
+    if (canvas._brandCompassControl && typeof canvas._brandCompassControl.destroy === 'function') {
+      canvas._brandCompassControl.destroy();
+    } else if (canvas._bcRafId) {
       cancelAnimationFrame(canvas._bcRafId);
       canvas._bcRafId = null;
     }
+    untrackCompassCanvas(canvas);
 
     // Set physical canvas size
     canvas.width  = CW;
@@ -662,20 +736,65 @@
     var prevState   = getState(canvas);
     var startAngle  = prevState ? prevState.needleAngle : -Math.PI / 2;
     var angleDelta  = shortestDelta(startAngle, targetAngle);
+    var staticCanvas = document.createElement('canvas');
+    staticCanvas.width = CW;
+    staticCanvas.height = CH;
+    var staticCtx = staticCanvas.getContext('2d');
+    drawBackground(staticCtx, pal);
+    drawGridRings(staticCtx, pal, 1);
+    drawAxes(staticCtx, pal, 1);
+    drawHexagon(staticCtx, pal, 1);
+    drawOuterRing(staticCtx, pal, 1);
+    drawInnerRing(staticCtx, pal, 1);
+    drawCardinalTicks(staticCtx, pal, 1);
+    drawMinorTicks(staticCtx, pal, 1);
+    drawDataPolygon(staticCtx, values, dominantIdx, pal, 1);
+    drawDominantBand(staticCtx, dominantIdx, pal, 1);
+    drawDimensionNodes(staticCtx, values, dominantIdx, pal, 1);
+    drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
+    drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
+    ctx.drawImage(staticCanvas, 0, 0);
+
     var currentAngle = startAngle;
-    var startTime   = null;
+    var startTime = null;
+    var lastFrameTs = 0;
+    var lastDirtyRect = null;
+    var disposed = false;
+
+    function restoreDirtyRect(rect) {
+      if (!rect || rect.w <= 0 || rect.h <= 0) { return; }
+      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+    }
+
+    function pauseAnimation() {
+      if (canvas._bcRafId) {
+        cancelAnimationFrame(canvas._bcRafId);
+        canvas._bcRafId = null;
+      }
+    }
+
+    function scheduleFrame() {
+      if (disposed || canvas._bcRafId || isAppPaused()) { return; }
+      canvas._bcRafId = requestAnimationFrame(frame);
+    }
 
     function frame(ts) {
+      canvas._bcRafId = null;
+      if (disposed || isAppPaused()) { return; }
+      if ((ts - lastFrameTs) < FRAME_INTERVAL_MS) {
+        scheduleFrame();
+        return;
+      }
+      lastFrameTs = ts;
+
       if (!startTime) startTime = ts;
       var elapsed = ts - startTime;
 
-      // ── Needle angle interpolation ─────────────────────────────────
       var t = clamp(elapsed / NEEDLE_SWEEP_DURATION, 0, 1);
       var te = easeOutBack(t);
       if (t < 1) {
         currentAngle = startAngle + angleDelta * te;
       } else {
-        // Settled — add small oscillation that decays over time
         var settle = elapsed - NEEDLE_SWEEP_DURATION;
         currentAngle = targetAngle +
           Math.sin(settle * NEEDLE_OSC_FREQ) *
@@ -683,37 +802,31 @@
           Math.exp(-settle / NEEDLE_OSC_DECAY);
       }
 
-      // ── Phase alphas ───────────────────────────────────────────────
-      var gridAlpha = phaseProgress(elapsed, PHASE_GRID_START, PHASE_GRID_DUR);
-      var polyAlpha = phaseProgress(elapsed, PHASE_POLY_START, PHASE_POLY_DUR);
-      var hubAlpha  = phaseProgress(elapsed, PHASE_HUB_START,  PHASE_HUB_DUR);
-
-      var pulse     = elapsed * PULSE_FREQ;
-
-      // ── Draw ───────────────────────────────────────────────────────
-      drawBackground(ctx, pal);
-      drawGridRings(ctx, pal, gridAlpha);
-      drawAxes(ctx, pal, gridAlpha);
-      drawHexagon(ctx, pal, gridAlpha);
-      drawOuterRing(ctx, pal, gridAlpha);
-      drawInnerRing(ctx, pal, gridAlpha);
-      drawCardinalTicks(ctx, pal, gridAlpha);
-      drawMinorTicks(ctx, pal, gridAlpha);
-      drawDataPolygon(ctx, values, dominantIdx, pal, polyAlpha);
-      drawDominantBand(ctx, dominantIdx, pal, polyAlpha);
-      drawDimensionNodes(ctx, values, dominantIdx, pal, polyAlpha);
-      drawDimensionLabels(ctx, values, dominantIdx, pal, polyAlpha);
+      var hubAlpha = phaseProgress(elapsed, PHASE_HUB_START, PHASE_HUB_DUR);
+      var pulse = elapsed * PULSE_FREQ;
+      var nextDirtyRect = getNeedleDirtyRect(currentAngle);
+      restoreDirtyRect(lastDirtyRect);
+      restoreDirtyRect(nextDirtyRect);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
-      drawDominantLabel(ctx, dominantIdx, values, pal, polyAlpha);
+      lastDirtyRect = nextDirtyRect;
 
-      // Persist state
       setState(canvas, { needleAngle: currentAngle });
-
-      canvas._bcRafId = requestAnimationFrame(frame);
+      scheduleFrame();
     }
 
-    canvas._bcRafId = requestAnimationFrame(frame);
+    canvas._brandCompassControl = {
+      pause: pauseAnimation,
+      resume: scheduleFrame,
+      destroy: function () {
+        disposed = true;
+        pauseAnimation();
+        untrackCompassCanvas(canvas);
+      },
+    };
+    bindLifecycleControls();
+    trackCompassCanvas(canvas);
+    scheduleFrame();
   }
 
   // ── Expose global API ───────────────────────────────────────────────────────
