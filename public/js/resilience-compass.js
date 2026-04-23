@@ -74,6 +74,10 @@
   var PULSE_PERIOD_MS        = 2800;
   var BREATHING_FREQ         = (Math.PI * 2) / BREATHING_PERIOD_MS;
   var PULSE_FREQ             = (Math.PI * 2) / PULSE_PERIOD_MS;
+  var MAX_FPS                = 30;
+  var FRAME_INTERVAL_MS      = 1000 / MAX_FPS;
+  var NEEDLE_RENDER_PADDING  = 34;
+  var NEEDLE_RENDER_RADIUS   = OUTER_R + 30;
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
   var GRID_RINGS = [0.2, 0.4, 0.6, 0.8, 1.0];
@@ -184,6 +188,73 @@
       }
     }
     needleAnglesFallback.push({ canvas: canvas, angle: angle });
+  }
+
+  var activeCompassCanvases = [];
+  var lifecycleBound = false;
+
+  function trackCompassCanvas(canvas) {
+    if (activeCompassCanvases.indexOf(canvas) === -1) {
+      activeCompassCanvases.push(canvas);
+    }
+  }
+
+  function untrackCompassCanvas(canvas) {
+    var idx = activeCompassCanvases.indexOf(canvas);
+    if (idx !== -1) {
+      activeCompassCanvases.splice(idx, 1);
+    }
+  }
+
+  function forEachActiveCompassControl(method) {
+    activeCompassCanvases.slice().forEach(function (canvas) {
+      if (canvas && canvas._compassControl && typeof canvas._compassControl[method] === 'function') {
+        canvas._compassControl[method]();
+      }
+    });
+  }
+
+  function isAppPaused() {
+    return !!(window && window.__RA_APP_PAUSED) || !!(document && document.hidden);
+  }
+
+  function bindLifecycleControls() {
+    if (lifecycleBound || typeof window === 'undefined') { return; }
+    lifecycleBound = true;
+    window.addEventListener('ra-app-pause', function () {
+      window.__RA_APP_PAUSED = true;
+      forEachActiveCompassControl('pause');
+    });
+    window.addEventListener('ra-app-resume', function () {
+      window.__RA_APP_PAUSED = false;
+      forEachActiveCompassControl('resume');
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        forEachActiveCompassControl('pause');
+        return;
+      }
+      forEachActiveCompassControl('resume');
+    });
+  }
+
+  function clampRect(rect) {
+    var x1 = clamp(rect.x, 0, CW);
+    var y1 = clamp(rect.y, 0, CH);
+    var x2 = clamp(rect.x + rect.w, 0, CW);
+    var y2 = clamp(rect.y + rect.h, 0, CH);
+    return { x: x1, y: y1, w: Math.max(0, x2 - x1), h: Math.max(0, y2 - y1) };
+  }
+
+  function getNeedleDirtyRect(angle) {
+    var tipX = CX + Math.cos(angle) * NEEDLE_RENDER_RADIUS;
+    var tipY = CY + Math.sin(angle) * NEEDLE_RENDER_RADIUS;
+    return clampRect({
+      x: Math.min(CX, tipX) - NEEDLE_RENDER_PADDING,
+      y: Math.min(CY, tipY) - NEEDLE_RENDER_PADDING,
+      w: Math.abs(tipX - CX) + NEEDLE_RENDER_PADDING * 2,
+      h: Math.abs(tipY - CY) + NEEDLE_RENDER_PADDING * 2,
+    });
   }
 
   /**
@@ -351,10 +422,13 @@ return false; // Default to dark
       : 'drop-shadow(0 0 18px rgba(56,189,248,0.12))';
 
     // Cancel any previous animation loop on this canvas element
-    if (canvas._compassRafId) {
+    if (canvas._compassControl && typeof canvas._compassControl.destroy === 'function') {
+      canvas._compassControl.destroy();
+    } else if (canvas._compassRafId) {
       cancelAnimationFrame(canvas._compassRafId);
       canvas._compassRafId = null;
     }
+    untrackCompassCanvas(canvas);
 
     canvas.width  = CW;
     canvas.height = CH;
@@ -402,10 +476,61 @@ return false; // Default to dark
     var variance = values.reduce(function (s, v) { return s + (v - avg) * (v - avg); }, 0) / values.length;
     var equilibrium = Math.max(0, 1 - Math.sqrt(variance) * 2.5);
 
+    var staticCanvas = document.createElement('canvas');
+    staticCanvas.width = CW;
+    staticCanvas.height = CH;
+    var staticCtx = staticCanvas.getContext('2d');
+    _isLightBackground = _canvasIsLight;
+    drawBackground(staticCtx, 0);
+    drawBezel(staticCtx);
+    drawDoubleRing(staticCtx);
+    drawCompassNub(staticCtx);
+    drawTicks(staticCtx);
+    drawGlassRing(staticCtx);
+    drawGrid(staticCtx, 1);
+    drawAxes(staticCtx, dominantIdx, 0, 1);
+    drawEnergyField(staticCtx, 0.5, 1);
+    drawDataPolygon(staticCtx, values, dominantIdx, 0, 1);
+    drawDimensionNodes(staticCtx, values, dominantIdx, 1);
+    drawIcons(staticCtx);
+    drawEquilibriumRing(staticCtx, equilibrium, 1, 0);
+    drawDominantGlowBand(staticCtx, dominantIdx, 1);
+    drawCompassRose(staticCtx);
+    drawDominantLabel(staticCtx, dominantIdx, maxVal);
+    ctx.drawImage(staticCanvas, 0, 0);
+
     var startTime = null;
     var currentAngle = startAngle;
+    var lastFrameTs = 0;
+    var lastDirtyRect = null;
+    var disposed = false;
+
+    function restoreDirtyRect(rect) {
+      if (!rect || rect.w <= 0 || rect.h <= 0) { return; }
+      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+    }
+
+    function pauseAnimation() {
+      if (canvas._compassRafId) {
+        cancelAnimationFrame(canvas._compassRafId);
+        canvas._compassRafId = null;
+      }
+    }
+
+    function scheduleFrame() {
+      if (disposed || canvas._compassRafId || isAppPaused()) { return; }
+      canvas._compassRafId = requestAnimationFrame(frame);
+    }
 
     function frame(ts) {
+      canvas._compassRafId = null;
+      if (disposed || isAppPaused()) { return; }
+      if ((ts - lastFrameTs) < FRAME_INTERVAL_MS) {
+        scheduleFrame();
+        return;
+      }
+      lastFrameTs = ts;
+
       // Restore per-canvas light/dark state so concurrent compass instances
       // on the same page don't inherit each other's background detection.
       _isLightBackground = _canvasIsLight;
@@ -422,41 +547,30 @@ return false; // Default to dark
       }
 
       var pulse = elapsed * PULSE_FREQ;
-      var breathing = (Math.sin(elapsed * BREATHING_FREQ - Math.PI / 2) + 1) / 2;
-
-      var gridIn       = phaseProgress(elapsed, GRID_FADE_START, GRID_FADE_DURATION);
-      var fieldIn      = phaseProgress(elapsed, FIELD_FADE_START, FIELD_FADE_DURATION);
-      var polygonIn    = phaseProgress(elapsed, POLYGON_START, POLYGON_DURATION);
-      var ringIn       = phaseProgress(elapsed, RING_START, RING_DURATION);
-      var bandIn       = phaseProgress(elapsed, BAND_START, BAND_DURATION);
-      var hubIn        = phaseProgress(elapsed, HUB_START, HUB_DURATION);
-
-      ctx.clearRect(0, 0, CW, CH);
-
-      drawBackground(ctx, pulse);
-      drawBezel(ctx);
-      drawDoubleRing(ctx);
-      drawCompassNub(ctx);
-      drawTicks(ctx);
-      drawGlassRing(ctx);
-      drawGrid(ctx, gridIn);
-      drawAxes(ctx, dominantIdx, pulse, gridIn);
-      drawEnergyField(ctx, breathing, fieldIn);
-      drawDataPolygon(ctx, values, dominantIdx, pulse, polygonIn);
-      drawDimensionNodes(ctx, values, dominantIdx, polygonIn);
-      drawIcons(ctx);
-      drawEquilibriumRing(ctx, equilibrium, ringIn, pulse);
-      drawDominantGlowBand(ctx, dominantIdx, bandIn);
-      drawCompassRose(ctx);
+      var hubIn = phaseProgress(elapsed, HUB_START, HUB_DURATION);
+      var nextDirtyRect = getNeedleDirtyRect(currentAngle);
+      restoreDirtyRect(lastDirtyRect);
+      restoreDirtyRect(nextDirtyRect);
       drawNeedle(ctx, currentAngle);
       drawCenterHub(ctx, hubIn, pulse);
-      drawDominantLabel(ctx, dominantIdx, maxVal);
+      lastDirtyRect = nextDirtyRect;
 
       setStoredNeedleAngle(canvas, currentAngle);
-      canvas._compassRafId = requestAnimationFrame(frame);
+      scheduleFrame();
     }
 
-    canvas._compassRafId = requestAnimationFrame(frame);
+    canvas._compassControl = {
+      pause: pauseAnimation,
+      resume: scheduleFrame,
+      destroy: function () {
+        disposed = true;
+        pauseAnimation();
+        untrackCompassCanvas(canvas);
+      },
+    };
+    bindLifecycleControls();
+    trackCompassCanvas(canvas);
+    scheduleFrame();
   }
 
   // ── Drawing helpers ────────────────────────────────────────────────────────

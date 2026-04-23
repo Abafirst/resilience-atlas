@@ -49,7 +49,56 @@ async function loadAuth0Config() {
   };
 }
 
+function emitLifecycleEvent(name, detail) {
+  if (typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') return;
+  window.dispatchEvent(new CustomEvent(name, { detail }));
+}
+
+function setupLifecycleBridge() {
+  if (typeof window === 'undefined') return;
+
+  const markPaused = (paused, source) => {
+    window.__RA_APP_PAUSED = paused;
+    emitLifecycleEvent(paused ? 'ra-app-pause' : 'ra-app-resume', { source });
+  };
+
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', () => {
+      markPaused(document.hidden, 'visibilitychange');
+    });
+  }
+
+  window.addEventListener('blur', () => markPaused(true, 'blur'));
+  window.addEventListener('focus', () => markPaused(false, 'focus'));
+
+  const capApp =
+    window.Capacitor &&
+    window.Capacitor.Plugins &&
+    window.Capacitor.Plugins.App;
+
+  if (capApp && typeof capApp.addListener === 'function') {
+    capApp.addListener('pause', () => markPaused(true, 'capacitor-pause'));
+    capApp.addListener('resume', () => markPaused(false, 'capacitor-resume'));
+    capApp.addListener('appStateChange', (state) => {
+      markPaused(!state.isActive, 'capacitor-appStateChange');
+    });
+  }
+}
+
+function onAppProfileRender(id, phase, actualDuration, baseDuration, startTime, commitTime) {
+  if (actualDuration <= 100) return;
+  console.warn('[Performance] Slow render detected', {
+    id,
+    phase,
+    actualDuration: `${actualDuration.toFixed(1)}ms`,
+    baseDuration: `${baseDuration.toFixed(1)}ms`,
+    renderStartedAt: Math.round(startTime),
+    committedAt: Math.round(commitTime),
+  });
+}
+
 async function init() {
+  setupLifecycleBridge();
   const { domain, clientId, audience: configAudience } = await loadAuth0Config();
   const audience    = configAudience;
   const redirectUri = Capacitor.isNativePlatform()
@@ -165,7 +214,9 @@ async function init() {
         // "Loading…" indefinitely.
         useRefreshTokens={true}
       >
-        <App />
+        <React.Profiler id="AppRoot" onRender={onAppProfileRender}>
+          <App />
+        </React.Profiler>
       </Auth0Provider>
     </React.StrictMode>
   );

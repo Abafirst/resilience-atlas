@@ -34,12 +34,28 @@
 
   // ── Registered Chart instances (to allow destroy/re-render) ─────────────────
   const _charts = {};
+  const _throttleTimers = {};
+  const _throttleArgs = {};
 
   function destroyChart(id) {
     if (_charts[id]) {
       _charts[id].destroy();
       delete _charts[id];
     }
+  }
+
+  function throttleByKey(fn, waitMs) {
+    return function throttled(key, ...args) {
+      _throttleArgs[key] = args;
+      if (_throttleTimers[key]) return;
+      _throttleTimers[key] = window.setTimeout(() => {
+        const latest = _throttleArgs[key];
+        _throttleTimers[key] = null;
+        if (latest) {
+          fn(key, ...latest);
+        }
+      }, waitMs);
+    };
   }
 
   // ── Distribution Chart (stacked bar) ────────────────────────────────────────
@@ -50,16 +66,28 @@
    * @param {string} canvasId    – id of <canvas> element
    * @param {Object} distribution – { relational: { high, medium, low }, … }
    */
-  function renderDistributionChart(canvasId, distribution) {
+  function renderDistributionChartNow(canvasId, distribution) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || !distribution) return;
-
-    destroyChart(canvasId);
 
     const labels = DIMS.map((d) => DIMENSION_LABELS[d]);
     const highData   = DIMS.map((d) => (distribution[d] || {}).high   || 0);
     const mediumData = DIMS.map((d) => (distribution[d] || {}).medium || 0);
     const lowData    = DIMS.map((d) => (distribution[d] || {}).low    || 0);
+
+    const existing = _charts[canvasId];
+    if (existing) {
+      try {
+        existing.data.labels = labels;
+        existing.data.datasets[0].data = highData;
+        existing.data.datasets[1].data = mediumData;
+        existing.data.datasets[2].data = lowData;
+        existing.update('none');
+        return;
+      } catch (_) {
+        destroyChart(canvasId);
+      }
+    }
 
     _charts[canvasId] = new Chart(canvas, {
       type: 'bar',
@@ -87,6 +115,7 @@
         ],
       },
       options: {
+        animation: false,
         indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
@@ -120,6 +149,7 @@
       },
     });
   }
+  const renderDistributionChart = throttleByKey(renderDistributionChartNow, 120);
 
   // ── Heatmap (rendered with DOM, not canvas) ──────────────────────────────────
 
@@ -133,9 +163,10 @@
     const container = document.getElementById(containerId);
     if (!container || !heatmap) return;
 
-    container.innerHTML = '';
+    container.textContent = '';
     container.className = 'teams-heatmap';
     container.setAttribute('role', 'list');
+    const fragment = document.createDocumentFragment();
 
     for (const item of heatmap) {
       const row = document.createElement('div');
@@ -154,8 +185,9 @@
         <span class="teams-heatmap__score" aria-hidden="true">${item.score}%</span>
       `;
 
-      container.appendChild(row);
+      fragment.appendChild(row);
     }
+    container.appendChild(fragment);
   }
 
   // ── Trend Section (DOM render) ───────────────────────────────────────────────
@@ -217,25 +249,28 @@
   function renderBenchmarks(containerId, benchmarks) {
     const container = document.getElementById(containerId);
     if (!container || !benchmarks) return;
+    const fragment = document.createDocumentFragment();
+    container.textContent = '';
 
-    container.innerHTML = benchmarks.map((b) => {
-      const cls   = b.direction === 'above' ? 'above' : 'below';
-      const sign  = b.delta >= 0 ? '+' : '';
-
-      return `
-        <div class="teams-benchmark-item">
-          <div class="teams-benchmark-item__header">
-            <span class="teams-benchmark-item__label">${escHtml(b.label)}</span>
-            <span class="teams-benchmark-item__delta teams-benchmark-item__delta--${cls}">
-              ${sign}${b.delta}% vs baseline
-            </span>
-          </div>
-          <div class="text-sm text-muted">
-            Team: <strong>${b.teamScore}%</strong> &nbsp;|&nbsp; Industry avg: <strong>${b.baseline}%</strong>
-          </div>
+    benchmarks.forEach((b) => {
+      const cls  = b.direction === 'above' ? 'above' : 'below';
+      const sign = b.delta >= 0 ? '+' : '';
+      const item = document.createElement('div');
+      item.className = 'teams-benchmark-item';
+      item.innerHTML = `
+        <div class="teams-benchmark-item__header">
+          <span class="teams-benchmark-item__label">${escHtml(b.label)}</span>
+          <span class="teams-benchmark-item__delta teams-benchmark-item__delta--${cls}">
+            ${sign}${b.delta}% vs baseline
+          </span>
+        </div>
+        <div class="text-sm text-muted">
+          Team: <strong>${b.teamScore}%</strong> &nbsp;|&nbsp; Industry avg: <strong>${b.baseline}%</strong>
         </div>
       `;
-    }).join('');
+      fragment.appendChild(item);
+    });
+    container.appendChild(fragment);
   }
 
   // ── Risk Summary ─────────────────────────────────────────────────────────────
@@ -281,7 +316,7 @@
     relational: [
       'When do you feel most connected to your teammates — and what contributes to that?',
       'What gets in the way of asking for support when you need it most?',
-      'How do we celebrate each other's wins and milestones as a team?',
+      'How do we celebrate each other\'s wins and milestones as a team?',
       'What does belonging feel like in our team, and how can we strengthen it?',
       'Who in our network outside this team do we lean on, and do we have enough of those connections?',
     ],
@@ -293,7 +328,7 @@
       'What does "growth mindset" actually look like in day-to-day team behaviour?',
     ],
     somatic: [
-      'How do we know when we're operating in stress response vs. grounded presence?',
+      'How do we know when we\'re operating in stress response vs. grounded presence?',
       'What physical signals tell us we\'re approaching burnout, and what do we do about it?',
       'How does our physical environment affect our energy and focus?',
       'What collective habits or rituals support our physical wellbeing as a team?',
@@ -304,20 +339,20 @@
       'How do we support each other when someone is struggling emotionally?',
       'What does psychological safety look and feel like in our day-to-day interactions?',
       'How do we express appreciation and care for one another?',
-      'What would change if we had more honest conversations about how we're really feeling?',
+      'What would change if we had more honest conversations about how we\'re really feeling?',
     ],
     spiritual: [
       'What is the deeper "why" behind the work we do together?',
-      'How aligned are our individual values with the team's mission and culture?',
+      'How aligned are our individual values with the team\'s mission and culture?',
       'When do we feel most purposeful in our work — and what conditions enable that?',
       'How do we find meaning in difficult or monotonous periods?',
       'What legacy do we want to leave — as a team and as individuals?',
     ],
     agentic: [
       'Where do we feel most empowered to take initiative — and where do we hold back?',
-      'What would we do differently if we knew we couldn't fail?',
+      'What would we do differently if we knew we couldn\'t fail?',
       'How do we support each other to step into leadership moments?',
-      'What resources or permissions do we need that we don't currently have?',
+      'What resources or permissions do we need that we don\'t currently have?',
       'How do we celebrate effort and learning, not just outcomes?',
     ],
   };
@@ -364,11 +399,9 @@
    * @param {Object} teamAverages – { relational, cognitive, … }
    * @param {Object} [previous]   – previous cycle averages for comparison
    */
-  function renderRadarChart(canvasId, teamAverages, previous) {
+  function renderRadarChartNow(canvasId, teamAverages, previous) {
     const canvas = document.getElementById(canvasId);
     if (!canvas || !teamAverages) return;
-
-    destroyChart(canvasId);
 
     const labels   = DIMS.map((d) => DIMENSION_LABELS[d]);
     const current  = DIMS.map((d) => teamAverages[d] || 0);
@@ -397,10 +430,24 @@
       });
     }
 
+    const existing = _charts[canvasId];
+    if (existing) {
+      try {
+        existing.data.labels = labels;
+        existing.data.datasets = datasets;
+        existing.options.plugins.legend.display = !!previous;
+        existing.update('none');
+        return;
+      } catch (_) {
+        destroyChart(canvasId);
+      }
+    }
+
     _charts[canvasId] = new Chart(canvas, {
       type: 'radar',
       data: { labels, datasets },
       options: {
+        animation: false,
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -431,6 +478,7 @@
       },
     });
   }
+  const renderRadarChart = throttleByKey(renderRadarChartNow, 120);
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 

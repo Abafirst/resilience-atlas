@@ -13,6 +13,10 @@ const config: CapacitorConfig = {
   android: {
     // Keep the default splash/status bar behaviour.
     backgroundColor: '#1a1a2e',
+    // Performance-oriented WebView defaults for Android devices.
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: false,
   },
 };
 

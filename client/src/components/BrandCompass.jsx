@@ -134,6 +134,10 @@ const PHASE_POLY_START = 220;
 const PHASE_POLY_DUR   = 450;
 const PHASE_HUB_START  = 550;
 const PHASE_HUB_DUR    = 220;
+const MAX_FPS = 30;
+const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
+const NEEDLE_RENDER_PADDING = 34;
+const NEEDLE_RENDER_RADIUS = R_OUTER + 22;
 
 // ── Utilities ────────────────────────────────────────────────────────────────
 function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
@@ -147,6 +151,16 @@ function shortestDelta(from, to) {
   return d;
 }
 function dimAngle(i) { return -Math.PI / 2 + (i * Math.PI * 2) / 6; }
+
+function getNeedleDirtyRect(angle) {
+  const tipX = CX + Math.cos(angle) * NEEDLE_RENDER_RADIUS;
+  const tipY = CY + Math.sin(angle) * NEEDLE_RENDER_RADIUS;
+  const x = Math.max(0, Math.min(CX, tipX) - NEEDLE_RENDER_PADDING);
+  const y = Math.max(0, Math.min(CY, tipY) - NEEDLE_RENDER_PADDING);
+  const w = Math.min(CW - x, Math.abs(tipX - CX) + NEEDLE_RENDER_PADDING * 2);
+  const h = Math.min(CH - y, Math.abs(tipY - CY) + NEEDLE_RENDER_PADDING * 2);
+  return { x, y, w: Math.max(0, w), h: Math.max(0, h) };
+}
 
 function normalizeScore(raw) {
   if (raw === null || raw === undefined) return 0;
@@ -543,8 +557,53 @@ function BrandCompass({ scores, darkMode }) {
     const angleDelta   = shortestDelta(startAngle, targetAngle);
     let   currentAngle = startAngle;
     let   startTime    = null;
+    let   lastFrameTs  = 0;
+    let   lastDirtyRect = null;
+
+    const staticCanvas = document.createElement('canvas');
+    staticCanvas.width = CW;
+    staticCanvas.height = CH;
+    const staticCtx = staticCanvas.getContext('2d');
+    drawGridRings(staticCtx, pal, 1);
+    drawAxes(staticCtx, pal, 1);
+    drawHexagon(staticCtx, pal, 1);
+    drawOuterRing(staticCtx, pal, 1);
+    drawInnerRing(staticCtx, pal, 1);
+    drawCardinalTicks(staticCtx, pal, 1);
+    drawMinorTicks(staticCtx, pal, 1);
+    drawDataPolygon(staticCtx, values, dominantIdx, pal, 1);
+    drawDominantBand(staticCtx, dominantIdx, pal, 1);
+    drawDimensionNodes(staticCtx, values, dominantIdx, pal, 1);
+    drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
+    drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
+    ctx.drawImage(staticCanvas, 0, 0);
+
+    const restoreDirtyRect = (rect) => {
+      if (!rect || rect.w <= 0 || rect.h <= 0) return;
+      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+    };
+
+    const isPaused = () => !!window.__RA_APP_PAUSED || document.hidden;
+    const cancelFrame = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+    const scheduleFrame = () => {
+      if (rafRef.current || isPaused()) return;
+      rafRef.current = requestAnimationFrame(frame);
+    };
 
     function frame(ts) {
+      rafRef.current = null;
+      if (isPaused()) return;
+      if ((ts - lastFrameTs) < FRAME_INTERVAL_MS) {
+        scheduleFrame();
+        return;
+      }
+      lastFrameTs = ts;
+
       if (!startTime) startTime = ts;
       const elapsed = ts - startTime;
 
@@ -560,37 +619,37 @@ function BrandCompass({ scores, darkMode }) {
           Math.exp(-settle / NEEDLE_OSC_DECAY);
       }
 
-      const gridAlpha = phaseProgress(elapsed, PHASE_GRID_START, PHASE_GRID_DUR);
-      const polyAlpha = phaseProgress(elapsed, PHASE_POLY_START, PHASE_POLY_DUR);
       const hubAlpha  = phaseProgress(elapsed, PHASE_HUB_START,  PHASE_HUB_DUR);
       const pulse     = elapsed * PULSE_FREQ;
 
-      ctx.clearRect(0, 0, CW, CH);
-      drawGridRings(ctx, pal, gridAlpha);
-      drawAxes(ctx, pal, gridAlpha);
-      drawHexagon(ctx, pal, gridAlpha);
-      drawOuterRing(ctx, pal, gridAlpha);
-      drawInnerRing(ctx, pal, gridAlpha);
-      drawCardinalTicks(ctx, pal, gridAlpha);
-      drawMinorTicks(ctx, pal, gridAlpha);
-      drawDataPolygon(ctx, values, dominantIdx, pal, polyAlpha);
-      drawDominantBand(ctx, dominantIdx, pal, polyAlpha);
-      drawDimensionNodes(ctx, values, dominantIdx, pal, polyAlpha);
-      drawDimensionLabels(ctx, values, dominantIdx, pal, polyAlpha);
+      const nextDirtyRect = getNeedleDirtyRect(currentAngle);
+      restoreDirtyRect(lastDirtyRect);
+      restoreDirtyRect(nextDirtyRect);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
-      drawDominantLabel(ctx, dominantIdx, values, pal, polyAlpha);
+      lastDirtyRect = nextDirtyRect;
 
-      rafRef.current = requestAnimationFrame(frame);
+      scheduleFrame();
     }
-
-    rafRef.current = requestAnimationFrame(frame);
+    const onPause = () => cancelFrame();
+    const onResume = () => scheduleFrame();
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        onPause();
+        return;
+      }
+      onResume();
+    };
+    window.addEventListener('ra-app-pause', onPause);
+    window.addEventListener('ra-app-resume', onResume);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    scheduleFrame();
 
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
+      window.removeEventListener('ra-app-pause', onPause);
+      window.removeEventListener('ra-app-resume', onResume);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      cancelFrame();
     };
   }, [scores, darkMode]);
 
