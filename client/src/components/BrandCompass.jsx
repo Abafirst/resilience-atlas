@@ -136,7 +136,7 @@ const PHASE_HUB_START  = 550;
 const PHASE_HUB_DUR    = 220;
 const MAX_FPS = 30;
 const FRAME_INTERVAL_MS = 1000 / MAX_FPS;
-const NEEDLE_RENDER_PADDING = 24;
+const NEEDLE_RENDER_PADDING = 34;
 const NEEDLE_RENDER_RADIUS = R_OUTER + 22;
 
 // ── Utilities ────────────────────────────────────────────────────────────────
@@ -619,14 +619,8 @@ function BrandCompass({ scores, darkMode }) {
           Math.exp(-settle / NEEDLE_OSC_DECAY);
       }
 
-      const gridAlpha = phaseProgress(elapsed, PHASE_GRID_START, PHASE_GRID_DUR);
-      const polyAlpha = phaseProgress(elapsed, PHASE_POLY_START, PHASE_POLY_DUR);
       const hubAlpha  = phaseProgress(elapsed, PHASE_HUB_START,  PHASE_HUB_DUR);
       const pulse     = elapsed * PULSE_FREQ;
-
-      if (gridAlpha < 1 || polyAlpha < 1) {
-        ctx.drawImage(staticCanvas, 0, 0);
-      }
 
       const nextDirtyRect = getNeedleDirtyRect(currentAngle);
       restoreDirtyRect(lastDirtyRect);
@@ -639,15 +633,22 @@ function BrandCompass({ scores, darkMode }) {
     }
     const onPause = () => cancelFrame();
     const onResume = () => scheduleFrame();
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        onPause();
+        return;
+      }
+      onResume();
+    };
     window.addEventListener('ra-app-pause', onPause);
     window.addEventListener('ra-app-resume', onResume);
-    document.addEventListener('visibilitychange', onResume);
+    document.addEventListener('visibilitychange', onVisibilityChange);
     scheduleFrame();
 
     return () => {
       window.removeEventListener('ra-app-pause', onPause);
       window.removeEventListener('ra-app-resume', onResume);
-      document.removeEventListener('visibilitychange', onResume);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       cancelFrame();
     };
   }, [scores, darkMode]);

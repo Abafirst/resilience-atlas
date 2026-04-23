@@ -144,7 +144,7 @@
   var PULSE_FREQ            = (Math.PI * 2) / PULSE_PERIOD;
   var MAX_FPS               = 30;
   var FRAME_INTERVAL_MS     = 1000 / MAX_FPS;
-  var NEEDLE_RENDER_PADDING = 24;
+  var NEEDLE_RENDER_PADDING = 34;
   var NEEDLE_RENDER_RADIUS  = R_OUTER + 22;
 
   var PHASE_GRID_START    = 0;

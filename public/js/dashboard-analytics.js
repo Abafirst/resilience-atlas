@@ -77,12 +77,16 @@
 
     const existing = _charts[canvasId];
     if (existing) {
-      existing.data.labels = labels;
-      existing.data.datasets[0].data = highData;
-      existing.data.datasets[1].data = mediumData;
-      existing.data.datasets[2].data = lowData;
-      existing.update('none');
-      return;
+      try {
+        existing.data.labels = labels;
+        existing.data.datasets[0].data = highData;
+        existing.data.datasets[1].data = mediumData;
+        existing.data.datasets[2].data = lowData;
+        existing.update('none');
+        return;
+      } catch (_) {
+        destroyChart(canvasId);
+      }
     }
 
     _charts[canvasId] = new Chart(canvas, {
@@ -428,11 +432,15 @@
 
     const existing = _charts[canvasId];
     if (existing) {
-      existing.data.labels = labels;
-      existing.data.datasets = datasets;
-      existing.options.plugins.legend.display = !!previous;
-      existing.update('none');
-      return;
+      try {
+        existing.data.labels = labels;
+        existing.data.datasets = datasets;
+        existing.options.plugins.legend.display = !!previous;
+        existing.update('none');
+        return;
+      } catch (_) {
+        destroyChart(canvasId);
+      }
     }
 
     _charts[canvasId] = new Chart(canvas, {

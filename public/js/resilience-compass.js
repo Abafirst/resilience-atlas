@@ -76,7 +76,7 @@
   var PULSE_FREQ             = (Math.PI * 2) / PULSE_PERIOD_MS;
   var MAX_FPS                = 30;
   var FRAME_INTERVAL_MS      = 1000 / MAX_FPS;
-  var NEEDLE_RENDER_PADDING  = 26;
+  var NEEDLE_RENDER_PADDING  = 34;
   var NEEDLE_RENDER_RADIUS   = OUTER_R + 30;
 
   // Grid ring positions (fraction of R). Also used for crosshair arm length.
