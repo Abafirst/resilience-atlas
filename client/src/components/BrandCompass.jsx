@@ -524,11 +524,15 @@ function BrandCompass({ scores, darkMode }) {
       rafRef.current = null;
     }
 
-    canvas.width  = CW;
-    canvas.height = CH;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width  = CW * dpr;
+    canvas.height = CH * dpr;
+    canvas.style.width  = CW + 'px';
+    canvas.style.height = CH + 'px';
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    ctx.scale(dpr, dpr);
 
     const pal = darkMode !== undefined ? (darkMode ? DARK_PAL : LIGHT_PAL)
                                        : (detectDarkMode(canvas) ? DARK_PAL : LIGHT_PAL);
@@ -561,9 +565,10 @@ function BrandCompass({ scores, darkMode }) {
     let   lastDirtyRect = null;
 
     const staticCanvas = document.createElement('canvas');
-    staticCanvas.width = CW;
-    staticCanvas.height = CH;
+    staticCanvas.width = CW * dpr;
+    staticCanvas.height = CH * dpr;
     const staticCtx = staticCanvas.getContext('2d');
+    staticCtx.scale(dpr, dpr);
     drawGridRings(staticCtx, pal, 1);
     drawAxes(staticCtx, pal, 1);
     drawHexagon(staticCtx, pal, 1);
@@ -576,11 +581,11 @@ function BrandCompass({ scores, darkMode }) {
     drawDimensionNodes(staticCtx, values, dominantIdx, pal, 1);
     drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
     drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
-    ctx.drawImage(staticCanvas, 0, 0);
+    ctx.drawImage(staticCanvas, 0, 0, CW, CH);
 
     const restoreDirtyRect = (rect) => {
       if (!rect || rect.w <= 0 || rect.h <= 0) return;
-      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+      ctx.drawImage(staticCanvas, rect.x * dpr, rect.y * dpr, rect.w * dpr, rect.h * dpr, rect.x, rect.y, rect.w, rect.h);
     };
 
     const isPaused = () => !!window.__RA_APP_PAUSED || document.hidden;
