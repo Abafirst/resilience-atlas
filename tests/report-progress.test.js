@@ -135,6 +135,9 @@ const SAMPLE_SCORES = JSON.stringify({
     'Relational':          { raw: 18, max: 30, percentage: 60 },
 });
 
+// A minimal valid mock PDF buffer: starts with %PDF-1 and is at least 1024 bytes.
+const MOCK_PDF = Buffer.concat([Buffer.from('%PDF-1.4 mock\n'), Buffer.alloc(1024, 0x0a)]);
+
 // ── /api/report/generate ─────────────────────────────────────────────────────
 
 describe('GET /api/report/generate', () => {
@@ -480,7 +483,6 @@ describe('GET /api/report/download (hash mode)', () => {
 
     test('returns PDF when job is ready', async () => {
         const hash = 'readydownloadhash';
-        const mockPdf = Buffer.from('%PDF-1.4 mock content');
         jobStore.set(hash, {
             status: 'ready',
             progress: 100,
@@ -490,7 +492,7 @@ describe('GET /api/report/download (hash mode)', () => {
             startedAt: new Date(),
             completedAt: new Date(),
             error: null,
-            pdfBuffer: mockPdf,
+            pdfBuffer: MOCK_PDF,
         });
 
         const res = await request(app)
@@ -504,7 +506,6 @@ describe('GET /api/report/download (hash mode)', () => {
     test('returns 402 when STRIPE_SECRET_KEY is set and email is missing', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const hash = 'readydownloadhash-no-email';
-        const mockPdf = Buffer.from('%PDF-1.4 mock content');
         jobStore.set(hash, {
             status: 'ready',
             progress: 100,
@@ -514,7 +515,7 @@ describe('GET /api/report/download (hash mode)', () => {
             startedAt: new Date(),
             completedAt: new Date(),
             error: null,
-            pdfBuffer: mockPdf,
+            pdfBuffer: MOCK_PDF,
         });
 
         const res = await request(app)
@@ -529,7 +530,6 @@ describe('GET /api/report/download (hash mode)', () => {
     test('returns 402 when STRIPE_SECRET_KEY is set and email has no qualifying purchase', async () => {
         process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
         const hash = 'readydownloadhash-no-purchase';
-        const mockPdf = Buffer.from('%PDF-1.4 mock content');
         jobStore.set(hash, {
             status: 'ready',
             progress: 100,
@@ -539,7 +539,7 @@ describe('GET /api/report/download (hash mode)', () => {
             startedAt: new Date(),
             completedAt: new Date(),
             error: null,
-            pdfBuffer: mockPdf,
+            pdfBuffer: MOCK_PDF,
         });
         Purchase.find.mockReset();
         User.findOne.mockReset();

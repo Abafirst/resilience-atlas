@@ -172,7 +172,9 @@ async function downloadPdfForPurchase(purchase, email, getTokenFn) {
         const body = await dlRes.json().catch(() => ({}));
         throw new Error(body.error || 'Failed to download report');
       }
-      const blob = await dlRes.blob();
+      // Explicitly create a PDF blob to ensure the correct MIME type is used
+      // across all browsers, regardless of what Content-Type the server sends.
+      const blob = new Blob([await dlRes.arrayBuffer()], { type: 'application/pdf' });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;
