@@ -6,12 +6,12 @@
   'use strict';
 
   var DIMENSIONS = [
+    'Agentic-Generative',
     'Relational-Connective',
-    'Cognitive-Narrative',
-    'Somatic-Regulative',
-    'Emotional-Adaptive',
     'Spiritual-Reflective',
-    'Agentic-Generative'
+    'Emotional-Adaptive',
+    'Somatic-Regulative',
+    'Cognitive-Narrative'
   ];
 
   var HERO_SCORES = {

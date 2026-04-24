@@ -430,12 +430,19 @@ return false; // Default to dark
     }
     untrackCompassCanvas(canvas);
 
-    canvas.width  = CW;
-    canvas.height = CH;
+    // Scale canvas buffer for high-DPI (Retina) displays.
+    var dpr = Math.min(Math.max(1, Math.round(window.devicePixelRatio || 1)), 3);
+    canvas.width  = Math.round(CW * dpr);
+    canvas.height = Math.round(CH * dpr);
+    canvas.style.width  = CW + 'px';
+    canvas.style.height = CH + 'px';
     var ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    if (ctx.imageSmoothingQuality !== undefined) { ctx.imageSmoothingQuality = 'high'; }
     if (!_isLightBackground) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+      ctx.clearRect(0, 0, CW, CH);
+    }
     var rawValues = DIMENSIONS.map(function (d) {
       var scoreValue = normalizeScore(scores && scores[d]);
       return Math.min(100, Math.max(0, scoreValue));
@@ -477,9 +484,12 @@ return false; // Default to dark
     var equilibrium = Math.max(0, 1 - Math.sqrt(variance) * 2.5);
 
     var staticCanvas = document.createElement('canvas');
-    staticCanvas.width = CW;
-    staticCanvas.height = CH;
+    staticCanvas.width = Math.round(CW * dpr);
+    staticCanvas.height = Math.round(CH * dpr);
     var staticCtx = staticCanvas.getContext('2d');
+    staticCtx.scale(dpr, dpr);
+    staticCtx.imageSmoothingEnabled = true;
+    if (staticCtx.imageSmoothingQuality !== undefined) { staticCtx.imageSmoothingQuality = 'high'; }
     _isLightBackground = _canvasIsLight;
     drawBackground(staticCtx, 0);
     drawBezel(staticCtx);
@@ -497,7 +507,7 @@ return false; // Default to dark
     drawDominantGlowBand(staticCtx, dominantIdx, 1);
     drawCompassRose(staticCtx);
     drawDominantLabel(staticCtx, dominantIdx, maxVal);
-    ctx.drawImage(staticCanvas, 0, 0);
+    ctx.drawImage(staticCanvas, 0, 0, CW, CH);
 
     var startTime = null;
     var currentAngle = startAngle;
@@ -507,7 +517,12 @@ return false; // Default to dark
 
     function restoreDirtyRect(rect) {
       if (!rect || rect.w <= 0 || rect.h <= 0) { return; }
-      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+      ctx.drawImage(
+        staticCanvas,
+        Math.floor(rect.x * dpr), Math.floor(rect.y * dpr),
+        Math.ceil(rect.w * dpr),  Math.ceil(rect.h * dpr),
+        rect.x, rect.y, rect.w, rect.h
+      );
     }
 
     function pauseAnimation() {

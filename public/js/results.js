@@ -886,11 +886,14 @@ document.addEventListener('DOMContentLoaded', () => {
           // Fallback: generate → poll → download (no PdfProgress module).
           (async () => {
             try {
+              var fbToken = getAuth0Token();
+              var fbHeaders = fbToken ? { 'Authorization': 'Bearer ' + fbToken } : {};
               const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
               const genRes = await fetch(
                 `/api/report/generate?overall=${encodeURIComponent(results.overall)}` +
                 `&dominantType=${encodeURIComponent(results.dominantType)}` +
-                `&scores=${encodeURIComponent(scoresStr)}${emailParam}`
+                `&scores=${encodeURIComponent(scoresStr)}${emailParam}`,
+                { headers: fbHeaders }
               );
               if (!genRes.ok) {
                 const body = await genRes.json().catch(() => ({}));
@@ -899,11 +902,25 @@ document.addEventListener('DOMContentLoaded', () => {
               const { hash } = await genRes.json();
               for (let i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
                 await new Promise(r => setTimeout(r, REPORT_POLL_INTERVAL_MS));
-                const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`);
+                const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: fbHeaders });
                 const status = await statusRes.json();
                 if (status.status === 'ready') {
                   const dlEmailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
-                  window.location.href = `/api/report/download?hash=${encodeURIComponent(hash)}${dlEmailParam}`;
+                  const dlRes = await fetch(
+                    `/api/report/download?hash=${encodeURIComponent(hash)}${dlEmailParam}`,
+                    { headers: fbHeaders }
+                  );
+                  if (!dlRes.ok) throw new Error('Failed to download report (' + dlRes.status + ')');
+                  const blob = await dlRes.blob();
+                  const dlUrl = URL.createObjectURL(blob);
+                  const dlLink = document.createElement('a');
+                  dlLink.href = dlUrl;
+                  dlLink.download = 'resilience-atlas-report.pdf';
+                  dlLink.style.display = 'none';
+                  document.body.appendChild(dlLink);
+                  dlLink.click();
+                  document.body.removeChild(dlLink);
+                  setTimeout(() => URL.revokeObjectURL(dlUrl), 10000);
                   return;
                 }
                 if (status.status === 'failed') throw new Error(status.error || 'Report generation failed');

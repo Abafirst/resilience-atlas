@@ -140,8 +140,11 @@ router.get('/user-status', userStatusLimiter, async (req, res) => {
  */
 router.get('/profile-status', authStatusLimiter, authenticateJWT, async (req, res) => {
     const jwtEmail = req.user && req.user.email;
+
+    // Auth0 access tokens do not always include the email claim.
+    // When the claim is absent, fail open so the user is not blocked.
     if (!jwtEmail) {
-        return res.status(400).json({ error: 'Email not found in token.' });
+        return res.json({ hasName: false });
     }
 
     const { email } = req.query;
