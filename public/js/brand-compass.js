@@ -807,6 +807,7 @@
 
       var hubAlpha = phaseProgress(elapsed, PHASE_HUB_START, PHASE_HUB_DUR);
       var pulse = elapsed * PULSE_FREQ;
+      ctx.clearRect(0, 0, CW, CH);
       ctx.drawImage(staticCanvas, 0, 0, CW * dpr, CH * dpr, 0, 0, CW, CH);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
