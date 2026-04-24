@@ -696,12 +696,18 @@
     }
     untrackCompassCanvas(canvas);
 
-    // Set physical canvas size
-    canvas.width  = CW;
-    canvas.height = CH;
+    // Set physical canvas size, scaled for high-DPI displays.
+    var dpr = Math.min(Math.max(1, Math.round(window.devicePixelRatio || 1)), 3);
+    canvas.width  = Math.round(CW * dpr);
+    canvas.height = Math.round(CH * dpr);
+    canvas.style.width  = CW + 'px';
+    canvas.style.height = CH + 'px';
 
     var ctx = canvas.getContext('2d');
     if (!ctx) return;
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    if (ctx.imageSmoothingQuality !== undefined) { ctx.imageSmoothingQuality = 'high'; }
 
     // Detect light/dark background
     var isLight = detectBackground(canvas);
@@ -737,9 +743,12 @@
     var startAngle  = prevState ? prevState.needleAngle : -Math.PI / 2;
     var angleDelta  = shortestDelta(startAngle, targetAngle);
     var staticCanvas = document.createElement('canvas');
-    staticCanvas.width = CW;
-    staticCanvas.height = CH;
+    staticCanvas.width = Math.round(CW * dpr);
+    staticCanvas.height = Math.round(CH * dpr);
     var staticCtx = staticCanvas.getContext('2d');
+    staticCtx.scale(dpr, dpr);
+    staticCtx.imageSmoothingEnabled = true;
+    if (staticCtx.imageSmoothingQuality !== undefined) { staticCtx.imageSmoothingQuality = 'high'; }
     drawBackground(staticCtx, pal);
     drawGridRings(staticCtx, pal, 1);
     drawAxes(staticCtx, pal, 1);
@@ -753,7 +762,7 @@
     drawDimensionNodes(staticCtx, values, dominantIdx, pal, 1);
     drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
     drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
-    ctx.drawImage(staticCanvas, 0, 0);
+    ctx.drawImage(staticCanvas, 0, 0, CW, CH);
 
     var currentAngle = startAngle;
     var startTime = null;
@@ -763,7 +772,12 @@
 
     function restoreDirtyRect(rect) {
       if (!rect || rect.w <= 0 || rect.h <= 0) { return; }
-      ctx.drawImage(staticCanvas, rect.x, rect.y, rect.w, rect.h, rect.x, rect.y, rect.w, rect.h);
+      ctx.drawImage(
+        staticCanvas,
+        Math.floor(rect.x * dpr), Math.floor(rect.y * dpr),
+        Math.ceil(rect.w * dpr),  Math.ceil(rect.h * dpr),
+        rect.x, rect.y, rect.w, rect.h
+      );
     }
 
     function pauseAnimation() {

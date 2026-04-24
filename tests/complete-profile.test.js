@@ -116,6 +116,21 @@ describe('GET /api/auth/profile-status', () => {
     });
   });
 
+  describe('when authenticated without email claim in JWT', () => {
+    it('returns hasName: false (fail-open) instead of 400', async () => {
+      // Auth0 access tokens do not always include the email claim.
+      // The endpoint should fail open (return hasName: false) rather than
+      // blocking the user with a 400 error.
+      mockUser = { sub: 'auth0|no-email-user', userId: 'auth0|no-email-user' };
+      const app = buildApp();
+      const res = await request(app)
+        .get('/api/auth/profile-status?email=user@example.com')
+        .set('Authorization', 'Bearer fake-token');
+      expect(res.status).toBe(200);
+      expect(res.body.hasName).toBe(false);
+    });
+  });
+
   describe('when authenticated', () => {
     beforeEach(() => {
       mockUser = { email: 'alice@example.com', sub: 'auth0|alice', userId: 'auth0|alice' };
