@@ -328,7 +328,10 @@ async function runGeneration(hash, overall, dominantType, scores, email, quotaTr
  */
 router.get('/generate', reportLimiter, authenticateJWT, async (req, res) => {
     try {
-        const { overall, dominantType, email } = req.query;
+        const { overall, dominantType } = req.query;
+        // Unescape HTML entities that the sanitiseInput middleware may have encoded
+        // so that email addresses and the scores JSON can be used correctly.
+        const email = unescapeHtmlEntities(req.query.email || '');
         console.log(`[report/generate] Request from user=${req.user && req.user.userId} email=${email || '(none)'} overall=${overall}`);
         // Reverse any HTML entity encoding applied by the sanitiseInput middleware
         // so that the JSON string can be parsed correctly.
@@ -538,7 +541,11 @@ router.get('/status', accessLimiter, authenticateJWT, async (req, res) => {
  * Query params: hash (required)
  */
 router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
-    const { hash, email } = req.query;
+    const { hash } = req.query;
+    // Unescape HTML entities that the sanitiseInput middleware may have encoded
+    // (e.g. '/' → '&#x2F;', '=' → '&#x3D;') so the email can be matched against
+    // the database correctly.
+    const email = unescapeHtmlEntities(req.query.email || '');
 
     if (!hash) {
         return res.status(400).json({ error: 'Missing hash parameter' });
@@ -584,6 +591,11 @@ router.get('/download', accessLimiter, authenticateJWT, async (req, res) => {
                 error: 'Unable to verify your purchase at this time. Please try again shortly.',
             });
         }
+    }
+
+    if (!validatePdfBuffer(job.pdfBuffer)) {
+        console.error(`[report/download] Invalid PDF buffer for hash ${hash}: length=${job.pdfBuffer ? job.pdfBuffer.length : 0}`);
+        return res.status(500).json({ error: 'The generated report is corrupted. Please regenerate your report and try again.' });
     }
 
     res.setHeader('Content-Type', 'application/pdf');

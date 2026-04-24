@@ -38,7 +38,7 @@
       var parsed = JSON.parse(raw);
       var firstKey = Object.keys(parsed)[0];
       if (!firstKey) return '';
-      return (parsed[firstKey][0] && parsed[firstKey][0].body && parsed[firstKey][0].body.access_token) || '';
+      return (parsed[firstKey] && parsed[firstKey].body && parsed[firstKey].body.access_token) || '';
     } catch (e) {
       return '';
     }
@@ -264,14 +264,24 @@
   // ── PDF download trigger ─────────────────────────────────────────────────────
 
   function _downloadPdf(hash) {
+    if (!hash) {
+      showError('Download failed: missing report hash. Please try again.');
+      return;
+    }
     var headers = _getAuthHeaders();
     var email = _lastParams && _lastParams.email ? String(_lastParams.email).trim() : '';
     var dlUrl = '/api/report/download?hash=' + encodeURIComponent(hash) +
       (email ? '&email=' + encodeURIComponent(email) : '');
     fetch(dlUrl, { headers: headers })
       .then(function (r) {
-        if (!r.ok) throw new Error('Download failed (' + r.status + ')');
-        return r.blob();
+        if (!r.ok) {
+          return r.json().catch(function () { return {}; }).then(function (body) {
+            throw new Error(body.error || 'Download failed (' + r.status + ')');
+          });
+        }
+        return r.arrayBuffer().then(function (buf) {
+          return new Blob([buf], { type: 'application/pdf' });
+        });
       })
       .then(function (blob) {
         var url  = URL.createObjectURL(blob);
@@ -340,8 +350,10 @@
       });
 
       // Build the generate URL.
+      // Use explicit null/undefined check for overall so a numeric value of 0
+      // is not incorrectly treated as falsy (which would cause a 400 on the backend).
       var url = '/api/report/generate'
-        + '?overall='      + encodeURIComponent(params.overall || '')
+        + '?overall='      + encodeURIComponent(params.overall != null ? params.overall : '')
         + '&dominantType=' + encodeURIComponent(params.dominantType || '')
         + '&scores='       + encodeURIComponent(params.scores || '')
         + (params.email ? '&email=' + encodeURIComponent(params.email) : '');
