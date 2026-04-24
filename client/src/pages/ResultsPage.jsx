@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
-import BrandCompass from '../components/BrandCompass.jsx';
+import ResilienceCompass from '../components/ResilienceCompass.jsx';
 import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
@@ -3581,7 +3581,7 @@ export default function ResultsPage() {
           <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
           </p>
-          <BrandCompass scores={results.scores} darkMode={false} />
+          <ResilienceCompass scores={results.scores} />
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
               Your strongest resilience dimension is:{' '}
