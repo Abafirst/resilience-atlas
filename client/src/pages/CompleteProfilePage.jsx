@@ -7,7 +7,12 @@ export default function CompleteProfilePage() {
   const { user, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState('');
+  // Pre-fill with the Auth0 name if available (filters out email-like values).
+  const auth0Name = [user?.name, user?.given_name].find(
+    (n) => n && n.trim().length >= 2 && n.trim().length <= 80 && !n.includes('@')
+  ) || '';
+
+  const [fullName, setFullName] = useState(auth0Name);
   const [error, setError]       = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -59,7 +64,7 @@ export default function CompleteProfilePage() {
       <div style={styles.card}>
         <h1 style={styles.heading}>Complete your profile</h1>
         <p style={styles.subtext}>
-          Enter your full name so we can personalise your reports and exports.
+          Enter your full name so we can personalize your reports and exports.
           Spaces are allowed — use your real display name.
         </p>
 
