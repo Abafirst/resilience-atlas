@@ -172,28 +172,53 @@ function RequireProfileCompletion({ children }) {
     checked.current = true;
     setChecking(true);
 
-    getAccessTokenSilently()
-      .then((token) =>
-        fetch(
+    const run = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        const r = await fetch(
           apiUrl(`/api/auth/profile-status?email=${encodeURIComponent(user.email)}`),
           { headers: { Authorization: `Bearer ${token}` } }
-        )
-      )
-      .then((r) => {
-        if (!r.ok) throw new Error('profile-status check failed');
-        return r.json();
-      })
-      .then((data) => {
-        if (data.hasName === false) {
+        );
+        if (!r.ok) return; // fail open
+        const data = await r.json();
+
+        if (data.hasName !== false) return; // name already stored — proceed
+
+        // Check whether Auth0 already provided a usable display name.
+        // user.name is set to the email address when no name was given, so
+        // filter out any value that looks like an email address.
+        const auth0Name = [user?.name, user?.given_name].find(
+          (n) => n && n.trim().length >= 2 && n.trim().length <= 80 && !n.includes('@')
+        );
+
+        if (auth0Name) {
+          // Auto-save the Auth0 name to the database and skip the profile page.
+          const saveRes = await fetch(apiUrl('/api/auth/complete-profile'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ email: user.email, fullName: auth0Name.trim() }),
+          });
+          if (!saveRes.ok) {
+            // Save failed — fall through to the profile completion page.
+            navigate('/complete-profile', { replace: true });
+            return;
+          }
+          // Save succeeded — no redirect needed.
+        } else {
+          // No name from Auth0 — ask the user to provide one.
           navigate('/complete-profile', { replace: true });
         }
-      })
-      .catch(() => {
+      } catch {
         // Fail open — do not block the user if the check fails.
-      })
-      .finally(() => {
+      } finally {
         setChecking(false);
-      });
+      }
+    };
+
+    run();
   }, [isLoading, isAuthenticated, user, location.pathname, getAccessTokenSilently, navigate]);
 
   if (checking) {
