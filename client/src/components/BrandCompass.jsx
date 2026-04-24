@@ -562,7 +562,6 @@ function BrandCompass({ scores, darkMode }) {
     let   currentAngle = startAngle;
     let   startTime    = null;
     let   lastFrameTs  = 0;
-    let   lastDirtyRect = null;
 
     const staticCanvas = document.createElement('canvas');
     staticCanvas.width = CW * dpr;
@@ -582,11 +581,6 @@ function BrandCompass({ scores, darkMode }) {
     drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
     drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
     ctx.drawImage(staticCanvas, 0, 0, CW, CH);
-
-    const restoreDirtyRect = (rect) => {
-      if (!rect || rect.w <= 0 || rect.h <= 0) return;
-      ctx.drawImage(staticCanvas, rect.x * dpr, rect.y * dpr, rect.w * dpr, rect.h * dpr, rect.x, rect.y, rect.w, rect.h);
-    };
 
     const isPaused = () => !!window.__RA_APP_PAUSED || document.hidden;
     const cancelFrame = () => {
@@ -627,12 +621,9 @@ function BrandCompass({ scores, darkMode }) {
       const hubAlpha  = phaseProgress(elapsed, PHASE_HUB_START,  PHASE_HUB_DUR);
       const pulse     = elapsed * PULSE_FREQ;
 
-      const nextDirtyRect = getNeedleDirtyRect(currentAngle);
-      restoreDirtyRect(lastDirtyRect);
-      restoreDirtyRect(nextDirtyRect);
+      ctx.drawImage(staticCanvas, 0, 0, CW, CH);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
-      lastDirtyRect = nextDirtyRect;
 
       scheduleFrame();
     }

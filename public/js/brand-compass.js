@@ -767,18 +767,7 @@
     var currentAngle = startAngle;
     var startTime = null;
     var lastFrameTs = 0;
-    var lastDirtyRect = null;
     var disposed = false;
-
-    function restoreDirtyRect(rect) {
-      if (!rect || rect.w <= 0 || rect.h <= 0) { return; }
-      ctx.drawImage(
-        staticCanvas,
-        Math.floor(rect.x * dpr), Math.floor(rect.y * dpr),
-        Math.ceil(rect.w * dpr),  Math.ceil(rect.h * dpr),
-        rect.x, rect.y, rect.w, rect.h
-      );
-    }
 
     function pauseAnimation() {
       if (canvas._bcRafId) {
@@ -818,12 +807,9 @@
 
       var hubAlpha = phaseProgress(elapsed, PHASE_HUB_START, PHASE_HUB_DUR);
       var pulse = elapsed * PULSE_FREQ;
-      var nextDirtyRect = getNeedleDirtyRect(currentAngle);
-      restoreDirtyRect(lastDirtyRect);
-      restoreDirtyRect(nextDirtyRect);
+      ctx.drawImage(staticCanvas, 0, 0, CW, CH);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
-      lastDirtyRect = nextDirtyRect;
 
       setState(canvas, { needleAngle: currentAngle });
       scheduleFrame();
