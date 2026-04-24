@@ -204,6 +204,7 @@ function RequireProfileCompletion({ children }) {
           if (!saveRes.ok) {
             // Save failed — fall through to the profile completion page.
             navigate('/complete-profile', { replace: true });
+            return;
           }
           // Save succeeded — no redirect needed.
         } else {
