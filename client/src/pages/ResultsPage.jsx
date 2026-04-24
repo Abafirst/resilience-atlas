@@ -2001,6 +2001,9 @@ async function triggerPdfDownload(results, email, getTokenFn) {
     const statusData = await statusRes.json();
     if (statusData.status === 'ready') {
       // Fetch the PDF as a blob to send the Authorization header.
+      if (!hash) {
+        throw new Error('Report hash is missing. Please try generating the report again.');
+      }
       const dlParams = new URLSearchParams({ hash: String(hash) });
       if (email) dlParams.set('email', email);
       const dlRes = await fetch(`/api/report/download?${dlParams.toString()}`, { headers: authHeaders });
@@ -2013,7 +2016,9 @@ async function triggerPdfDownload(results, email, getTokenFn) {
         if (dlRes.status === 402) err.upgradeRequired = true;
         throw err;
       }
-      const blob = await dlRes.blob();
+      // Explicitly create a PDF blob to ensure the correct MIME type is used
+      // across all browsers, regardless of what Content-Type the server sends.
+      const blob = new Blob([await dlRes.arrayBuffer()], { type: 'application/pdf' });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;

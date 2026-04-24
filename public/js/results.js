@@ -22,7 +22,7 @@ function getAuth0Token() {
     var parsed = JSON.parse(raw);
     var firstKey = Object.keys(parsed)[0];
     if (!firstKey) return '';
-    return (parsed[firstKey][0] && parsed[firstKey][0].body && parsed[firstKey][0].body.access_token) || '';
+    return (parsed[firstKey] && parsed[firstKey].body && parsed[firstKey].body.access_token) || '';
   } catch (e) {
     return '';
   }
@@ -886,32 +886,38 @@ document.addEventListener('DOMContentLoaded', () => {
           // Fallback: generate → poll → download (no PdfProgress module).
           (async () => {
             try {
-              var fallbackToken = getAuth0Token();
-              var fallbackHeaders = fallbackToken ? { 'Authorization': 'Bearer ' + fallbackToken } : {};
+              const storedToken = getAuth0Token();
+              const fallbackAuthHeaders = storedToken ? { 'Authorization': 'Bearer ' + storedToken } : {};
               const emailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
               const genRes = await fetch(
                 `/api/report/generate?overall=${encodeURIComponent(results.overall)}` +
                 `&dominantType=${encodeURIComponent(results.dominantType)}` +
                 `&scores=${encodeURIComponent(scoresStr)}${emailParam}`,
-                { headers: fallbackHeaders }
+                { headers: fallbackAuthHeaders }
               );
               if (!genRes.ok) {
                 const body = await genRes.json().catch(() => ({}));
                 throw new Error(body.error || 'Failed to start report generation');
               }
               const { hash } = await genRes.json();
+              if (!hash) throw new Error('Report generation did not return a valid hash. Please try again.');
               for (let i = 0; i < REPORT_MAX_POLL_ATTEMPTS; i++) {
                 await new Promise(r => setTimeout(r, REPORT_POLL_INTERVAL_MS));
-                const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: fallbackHeaders });
+                const statusRes = await fetch(`/api/report/status?hash=${encodeURIComponent(hash)}`, { headers: fallbackAuthHeaders });
                 const status = await statusRes.json();
                 if (status.status === 'ready') {
+                  // Use fetch + blob to ensure Authorization header is sent and
+                  // to provide consistent cross-browser blob download handling.
                   const dlEmailParam = downloadEmail ? `&email=${encodeURIComponent(downloadEmail)}` : '';
                   const dlRes = await fetch(
                     `/api/report/download?hash=${encodeURIComponent(hash)}${dlEmailParam}`,
-                    { headers: fallbackHeaders }
+                    { headers: fallbackAuthHeaders }
                   );
-                  if (!dlRes.ok) throw new Error('Failed to download report (' + dlRes.status + ')');
-                  const blob = await dlRes.blob();
+                  if (!dlRes.ok) {
+                    const dlBody = await dlRes.json().catch(() => ({}));
+                    throw new Error(dlBody.error || `Download failed (${dlRes.status})`);
+                  }
+                  const blob = new Blob([await dlRes.arrayBuffer()], { type: 'application/pdf' });
                   const dlUrl = URL.createObjectURL(blob);
                   const dlLink = document.createElement('a');
                   dlLink.href = dlUrl;
@@ -920,7 +926,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   document.body.appendChild(dlLink);
                   dlLink.click();
                   document.body.removeChild(dlLink);
-                  setTimeout(() => URL.revokeObjectURL(dlUrl), 10000);
+                  setTimeout(function () { URL.revokeObjectURL(dlUrl); }, 10000);
                   return;
                 }
                 if (status.status === 'failed') throw new Error(status.error || 'Report generation failed');
