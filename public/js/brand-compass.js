@@ -436,28 +436,53 @@
     ctx.restore();
   }
 
-  // Data polygon — maps dimension scores onto the hexagonal axes
+  // Semi-transparent fill alpha for each rainbow compass segment
+  var SEGMENT_FILL_ALPHA = 0.18;
+
+  // Dimension accent colors for the rainbow compass segments
+  var DIM_SEGMENT_COLORS = [
+    '#D97706',  // Agentic-Generative    — Amber
+    '#059669',  // Relational-Connective — Green
+    '#7C3AED',  // Spiritual-Reflective  — Purple
+    '#DC2626',  // Emotional-Adaptive    — Red
+    '#0891B2',  // Somatic-Regulative    — Cyan
+    '#4F46E5',  // Cognitive-Narrative   — Indigo
+  ];
+
+  // Data polygon — maps dimension scores onto the hexagonal axes with rainbow segments
   function drawDataPolygon(ctx, values, dominantIdx, pal, alpha) {
     if (alpha <= 0) return;
     ctx.save();
-    ctx.globalAlpha = alpha;
 
-    // Build polygon path
-    ctx.beginPath();
+    // Draw six colored triangular segments radiating from the center
     for (var i = 0; i < 6; i++) {
-      var a = dimAngle(i);
-      var r = (values[i] / 100) * R_DATA;
-      var x = CX + Math.cos(a) * r;
-      var y = CY + Math.sin(a) * r;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
+      var a     = dimAngle(i);
+      var r     = (values[i] / 100) * R_DATA;
+      var x     = CX + Math.cos(a) * r;
+      var y     = CY + Math.sin(a) * r;
 
-    ctx.fillStyle   = pal.polygonFill;
-    ctx.fill();
-    ctx.strokeStyle = pal.polygonStroke;
-    ctx.lineWidth   = 1.5;
-    ctx.stroke();
+      var nextI = (i + 1) % 6;
+      var na    = dimAngle(nextI);
+      var nr    = (values[nextI] / 100) * R_DATA;
+      var nx    = CX + Math.cos(na) * nr;
+      var ny    = CY + Math.sin(na) * nr;
+
+      ctx.beginPath();
+      ctx.moveTo(CX, CY);
+      ctx.lineTo(x, y);
+      ctx.lineTo(nx, ny);
+      ctx.closePath();
+
+      ctx.globalAlpha = alpha * SEGMENT_FILL_ALPHA;
+      ctx.fillStyle   = DIM_SEGMENT_COLORS[i];
+      ctx.fill();
+
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = DIM_SEGMENT_COLORS[i];
+      ctx.lineWidth   = 1.5;
+      ctx.stroke();
+    }
+
     ctx.restore();
   }
 
