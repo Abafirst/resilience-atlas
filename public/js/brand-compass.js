@@ -762,7 +762,7 @@
     drawDimensionNodes(staticCtx, values, dominantIdx, pal, 1);
     drawDimensionLabels(staticCtx, values, dominantIdx, pal, 1);
     drawDominantLabel(staticCtx, dominantIdx, values, pal, 1);
-    ctx.drawImage(staticCanvas, 0, 0, CW, CH);
+    ctx.drawImage(staticCanvas, 0, 0, CW * dpr, CH * dpr, 0, 0, CW, CH);
 
     var currentAngle = startAngle;
     var startTime = null;
@@ -807,7 +807,7 @@
 
       var hubAlpha = phaseProgress(elapsed, PHASE_HUB_START, PHASE_HUB_DUR);
       var pulse = elapsed * PULSE_FREQ;
-      ctx.drawImage(staticCanvas, 0, 0, CW, CH);
+      ctx.drawImage(staticCanvas, 0, 0, CW * dpr, CH * dpr, 0, 0, CW, CH);
       drawNeedle(ctx, currentAngle, pal, pulse);
       drawCenterHub(ctx, pal, hubAlpha, pulse);
 
