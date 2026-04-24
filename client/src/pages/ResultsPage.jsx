@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
-import RadarChart from '../components/RadarChart.jsx';
+import BrandCompass from '../components/BrandCompass.jsx';
 import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
@@ -2951,40 +2951,19 @@ export default function ResultsPage() {
 
   // ── Download radar chart as PNG ────────────────────────────────────────
   const handleDownloadRadar = useCallback(() => {
-    // The radar chart is rendered as an SVG by RadarChart.
-    const svg = document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
-    if (!svg) {
+    // The radar chart is rendered as a canvas by BrandCompass.
+    const canvas = document.querySelector('canvas[aria-label="Animated resilience compass showing your six dimension scores"]');
+    if (!canvas) {
       alert('Radar chart not found. Please wait for the chart to load.');
       return;
     }
     try {
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const vb = svg.viewBox && svg.viewBox.baseVal;
-        canvas.width  = (svg.width.baseVal.value  > 0 ? svg.width.baseVal.value  : vb && vb.width)  || 340;
-        canvas.height = (svg.height.baseVal.value > 0 ? svg.height.baseVal.value : vb && vb.height) || 340;
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-        const link = document.createElement('a');
-        link.download = 'resilience-atlas-radar.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        trackShareEvent('download_radar', (results && results.dominantType) || '');
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        alert('Could not download radar chart. Please try taking a screenshot.');
-      };
-      img.src = url;
-    } catch (err) {
-      console.error('Could not download radar chart:', err);
+      const link = document.createElement('a');
+      link.download = 'resilience-atlas-radar.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      trackShareEvent('download_radar', (results && results.dominantType) || '');
+    } catch (_) {
       alert('Could not download radar chart. Please try taking a screenshot.');
     }
   }, [results]);
@@ -3586,7 +3565,7 @@ export default function ResultsPage() {
           );
         })()}
 
-        {/* ── Resilience Compass (RadarChart) ──────────────────────── */}
+        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
         <section style={{
           background: '#ffffff',
           border: '1px solid #e2e8f0',
@@ -3602,7 +3581,7 @@ export default function ResultsPage() {
           <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
           </p>
-          <RadarChart scores={results.scores} />
+          <BrandCompass scores={results.scores} darkMode={false} />
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
               Your strongest resilience dimension is:{' '}
