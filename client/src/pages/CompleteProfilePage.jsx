@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiUrl } from '../api/baseUrl.js';
@@ -15,6 +15,59 @@ export default function CompleteProfilePage() {
   const [fullName, setFullName] = useState(auth0Name);
   const [error, setError]       = useState('');
   const [submitting, setSubmitting] = useState(false);
+  // When Auth0 provides a valid name, start in auto-saving state so we skip the form.
+  const [autoSaving, setAutoSaving] = useState(!!auth0Name);
+  const autoSaveAttempted = useRef(false);
+
+  // If Auth0 already provided a valid name, auto-save it and redirect immediately.
+  const userEmail = user?.email;
+  useEffect(() => {
+    if (!auth0Name || autoSaveAttempted.current) return;
+    autoSaveAttempted.current = true;
+
+    // Without an email we cannot identify the user on the backend — skip
+    // auto-save and show the form instead (backend requires email in body).
+    if (!userEmail) {
+      setAutoSaving(false);
+      return;
+    }
+
+    const save = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        const res = await fetch(apiUrl('/api/auth/complete-profile'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ email: userEmail, fullName: auth0Name.trim() }),
+        });
+        if (res.ok) {
+          navigate('/', { replace: true });
+          return;
+        }
+        // Save failed — show the form so the user can confirm their name.
+        setError('Could not save your profile automatically. Please confirm your name and try again.');
+      } catch {
+        setError('Could not save your profile automatically. Please confirm your name and try again.');
+      }
+      setAutoSaving(false);
+    };
+
+    save();
+  }, [auth0Name, userEmail, getAccessTokenSilently, navigate]);
+
+  // Show a brief loading state while auto-saving the Auth0 name.
+  if (autoSaving) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.card}>
+          <p style={{ color: '#64748b', textAlign: 'center', margin: 0 }}>Setting up your profile…</p>
+        </div>
+      </div>
+    );
+  }
 
   const validate = (name) => {
     const trimmed = name.trim();
@@ -42,7 +95,7 @@ export default function CompleteProfilePage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email: user.email, fullName: fullName.trim() }),
+        body: JSON.stringify({ email: userEmail, fullName: fullName.trim() }),
       });
 
       if (!res.ok) {

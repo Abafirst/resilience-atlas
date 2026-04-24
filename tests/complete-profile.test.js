@@ -199,6 +199,32 @@ describe('POST /api/auth/complete-profile', () => {
     });
   });
 
+  describe('when authenticated without email claim in JWT', () => {
+    it('saves the profile using the body email when JWT has no email claim', async () => {
+      // Auth0 access tokens frequently omit the email claim.
+      // The endpoint should accept the body email when the sub claim is present.
+      mockUser = { sub: 'auth0|no-email', userId: 'auth0|no-email' };
+      const app = buildApp();
+      const res = await request(app)
+        .post('/api/auth/complete-profile')
+        .set('Authorization', 'Bearer fake-token')
+        .send({ email: 'noemail@example.com', fullName: 'No Email User' });
+      expect(res.status).toBe(200);
+      expect(res.body.fullName).toBe('No Email User');
+    });
+
+    it('returns 400 when JWT has neither email nor sub', async () => {
+      mockUser = {}; // no email, no sub
+      const app = buildApp();
+      const res = await request(app)
+        .post('/api/auth/complete-profile')
+        .set('Authorization', 'Bearer fake-token')
+        .send({ email: 'user@example.com', fullName: 'Some User' });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/email not found in token/i);
+    });
+  });
+
   describe('when authenticated', () => {
     beforeEach(() => {
       mockUser = { email: 'bob@example.com', sub: 'auth0|bob', userId: 'auth0|bob' };
