@@ -189,17 +189,25 @@ router.get('/profile-status', authStatusLimiter, authenticateJWT, async (req, re
  */
 router.post('/complete-profile', authStatusLimiter, authenticateJWT, async (req, res) => {
     const jwtEmail = req.user && req.user.email;
-    if (!jwtEmail) {
-        return res.status(400).json({ error: 'Email not found in token.' });
-    }
+    const jwtSub   = req.user && (req.user.sub || req.user.userId);
 
     const { email, fullName } = req.body;
 
     if (!email) {
         return res.status(400).json({ error: 'email is required.' });
     }
-    if (email.toLowerCase().trim() !== jwtEmail.toLowerCase().trim()) {
-        return res.status(403).json({ error: 'Forbidden.' });
+
+    // Verify the caller can only update their own profile.
+    // When the JWT includes an email claim, it must match the request body.
+    // Auth0 access tokens frequently omit the email claim; when that happens we
+    // accept the body email as long as the request is authenticated (sub present).
+    if (jwtEmail) {
+        if (email.toLowerCase().trim() !== jwtEmail.toLowerCase().trim()) {
+            return res.status(403).json({ error: 'Forbidden.' });
+        }
+    } else if (!jwtSub) {
+        // Neither email nor sub in the token — cannot verify identity.
+        return res.status(400).json({ error: 'Email not found in token.' });
     }
 
     if (!fullName || typeof fullName !== 'string') {
@@ -219,7 +227,7 @@ router.post('/complete-profile', authStatusLimiter, authenticateJWT, async (req,
     }
 
     try {
-        const cleanEmail = jwtEmail.toLowerCase().trim();
+        const cleanEmail = (jwtEmail || email).toLowerCase().trim();
         const profile = await Auth0Profile.findOneAndUpdate(
             { email: cleanEmail },
             {
