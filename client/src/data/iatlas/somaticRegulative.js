@@ -1,0 +1,596 @@
+/**
+ * somaticRegulative.js
+ * Skill module definitions for the Somatic-Regulative dimension.
+ * Grounded in breathwork, body scan practices, and somatic grounding.
+ */
+
+export const somaticRegulativeModules = [
+  // ── Foundation Level ────────────────────────────────────────────────────────
+  {
+    id: 'somatic-478-breathing',
+    dimension: 'somatic-regulative',
+    level: 'foundation',
+    order: 1,
+    title: '4-7-8 Breathing Technique',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '5–10 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'breath-beginner',
+      name: 'Breath Beginner',
+      icon: '🫁',
+      requirement: 'Complete 3 rounds of 4-7-8 breathing',
+    },
+    learningObjective: 'Use breath to regulate your nervous system in moments of stress',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'The 4-7-8 breathing technique activates the parasympathetic nervous system — the body\'s "rest and digest" mode. By extending the exhale, you directly signal safety to your brain and slow your heart rate. This is a portable, evidence-supported tool for acute stress regulation with no equipment required.',
+    },
+    instructions: [
+      'Find a comfortable seated position and close your eyes if safe to do so.',
+      'Place the tip of your tongue on the ridge behind your upper front teeth.',
+      'Exhale completely through your mouth, making a whoosh sound.',
+      'Close your mouth and inhale quietly through your nose for 4 counts.',
+      'Hold your breath for 7 counts.',
+      'Exhale completely through your mouth for 8 counts (whoosh sound).',
+      'This is one breath cycle. Repeat for 3–4 cycles.',
+      'After completing, notice how your body feels.',
+    ],
+    activity: {
+      type: 'reflection',
+      fields: [
+        {
+          id: 'before_feeling',
+          label: 'How I felt BEFORE the breathing exercise (describe physically and emotionally)',
+          placeholder: 'e.g., Heart racing, shoulders tense, mind scattered',
+          type: 'textarea',
+        },
+        {
+          id: 'rounds_completed',
+          label: 'Number of breath cycles completed',
+          placeholder: 'e.g., 4',
+          type: 'text',
+        },
+        {
+          id: 'after_feeling',
+          label: 'How I felt AFTER the breathing exercise',
+          placeholder: 'e.g., Shoulders dropped, breathing easier, mind calmer',
+          type: 'textarea',
+        },
+        {
+          id: 'difficulty',
+          label: 'What was challenging about this practice?',
+          placeholder: 'e.g., Hard to hold for 7 counts; felt lightheaded',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'When in your daily life could you use this technique most?',
+      'What physical sensations did you notice during the holds?',
+      'How quickly did you notice a shift in your nervous system state?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'somatic-body-scan',
+    dimension: 'somatic-regulative',
+    level: 'foundation',
+    order: 2,
+    title: 'Body Scan Basics',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '10 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'body-awareness',
+      name: 'Body Awareness',
+      icon: '🧘',
+      requirement: 'Complete a full body scan and record observations',
+    },
+    learningObjective: 'Develop interoceptive awareness by systematically noticing body sensations',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Interoception — the ability to sense internal body states — is foundational to emotional regulation. Research by Bessel van der Kolk and others shows that reconnecting with body sensations helps process stored stress. Body scanning is a core mindfulness practice that builds the somatic awareness necessary for all other regulation skills.',
+    },
+    instructions: [
+      'Lie down or sit comfortably. Close your eyes.',
+      'Take three slow deep breaths to settle.',
+      'Bring your attention to the top of your head. What do you notice? (tension, tingling, warmth, nothing)',
+      'Slowly move attention down: forehead, eyes, jaw, neck.',
+      'Continue to shoulders, chest, upper back, arms, hands.',
+      'Move to belly, lower back, hips.',
+      'Continue to thighs, knees, calves, feet, toes.',
+      'Notice any areas of tension, pain, comfort, or numbness without judgment.',
+      'Take three more deep breaths and gently open your eyes.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'head_neck',
+          label: 'Head & Neck — what I noticed',
+          placeholder: 'e.g., Tight jaw, tension behind eyes',
+          type: 'textarea',
+        },
+        {
+          id: 'chest_shoulders',
+          label: 'Chest & Shoulders — what I noticed',
+          placeholder: 'e.g., Tight shoulders, slight pressure in chest',
+          type: 'textarea',
+        },
+        {
+          id: 'belly_back',
+          label: 'Belly & Back — what I noticed',
+          placeholder: 'e.g., Stomach settled, lower back ache',
+          type: 'textarea',
+        },
+        {
+          id: 'legs_feet',
+          label: 'Legs & Feet — what I noticed',
+          placeholder: 'e.g., Heavy legs, cold feet',
+          type: 'textarea',
+        },
+        {
+          id: 'most_tension',
+          label: 'Area holding the most tension or discomfort',
+          placeholder: 'e.g., Jaw and shoulders',
+          type: 'text',
+        },
+        {
+          id: 'overall_state',
+          label: 'My overall body state after the scan (1 word)',
+          placeholder: 'e.g., Calmer, tense, neutral, grounded',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Were there areas of your body you had been ignoring or hadn\'t noticed before?',
+      'What emotions, if any, did you notice as you scanned different areas?',
+      'How might a daily 5-minute body scan change your relationship with stress?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'somatic-5-4-3-2-1',
+    dimension: 'somatic-regulative',
+    level: 'foundation',
+    order: 3,
+    title: 'Grounding 5-4-3-2-1',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '5 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'grounded',
+      name: 'Grounded',
+      icon: '⚓',
+      requirement: 'Complete the 5-4-3-2-1 grounding exercise',
+    },
+    learningObjective: 'Use sensory grounding to return to the present moment in overwhelm',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'The 5-4-3-2-1 technique works by engaging all five senses, which interrupts the fight-flight-freeze response and anchors attention in present-moment reality. It\'s used in trauma-informed care and ACT as a rapid grounding technique because sensory experience is always available, always present, and always safe.',
+    },
+    instructions: [
+      'Take one slow deep breath.',
+      'Name 5 things you can SEE right now (look around the room).',
+      'Name 4 things you can physically FEEL (e.g., feet on floor, fabric on skin).',
+      'Name 3 things you can HEAR right now.',
+      'Name 2 things you can SMELL right now (or 2 you like to smell).',
+      'Name 1 thing you can TASTE right now (or sip water).',
+      'Take one more slow deep breath and notice your state.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'see',
+          label: '5 things I can SEE',
+          placeholder: 'e.g., Blue mug, window, plant, book, lamp',
+          type: 'textarea',
+        },
+        {
+          id: 'feel',
+          label: '4 things I can physically FEEL',
+          placeholder: 'e.g., Cool air on arms, feet on carpet, back of chair, warmth of hands',
+          type: 'textarea',
+        },
+        {
+          id: 'hear',
+          label: '3 things I can HEAR',
+          placeholder: 'e.g., Traffic outside, humming computer, birds',
+          type: 'textarea',
+        },
+        {
+          id: 'smell',
+          label: '2 things I can SMELL',
+          placeholder: 'e.g., Coffee, fresh air',
+          type: 'text',
+        },
+        {
+          id: 'taste',
+          label: '1 thing I can TASTE',
+          placeholder: 'e.g., Mint toothpaste, coffee',
+          type: 'text',
+        },
+        {
+          id: 'after_state',
+          label: 'How I feel after this exercise',
+          placeholder: 'e.g., More present, less anxious, connected to my surroundings',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'When in your day is this technique most needed?',
+      'What surprised you about what you noticed in your environment?',
+      'How quickly did focusing on senses shift your attention from worry to present?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'somatic-movement-break',
+    dimension: 'somatic-regulative',
+    level: 'foundation',
+    order: 4,
+    title: 'Movement Break Routine',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '5 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'movement-starter',
+      name: 'Movement Starter',
+      icon: '🤸',
+      requirement: 'Complete the 5-stretch movement break',
+    },
+    learningObjective: 'Release physical tension through mindful movement',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Physical tension is a primary vehicle for stored stress. Movement — even brief, gentle movement — releases muscle tension, increases circulation, and shifts neurochemistry. Research shows that 5 minutes of gentle stretching can meaningfully reduce cortisol and improve mood. Movement is one of the most accessible somatic regulation tools.',
+    },
+    instructions: [
+      'Stand up (or sit up tall if seated).',
+      'Stretch 1: Neck rolls — slowly roll head side to side, 5 times each direction.',
+      'Stretch 2: Shoulder shrugs — shrug shoulders up to ears, hold 3 seconds, release. Repeat 5 times.',
+      'Stretch 3: Chest opener — clasp hands behind back, open chest, hold 10 seconds.',
+      'Stretch 4: Side stretch — reach one arm overhead, lean gently to the opposite side, 10 seconds each side.',
+      'Stretch 5: Shake it out — shake hands, arms, legs for 30 seconds.',
+      'Take three deep breaths and notice how your body feels.',
+    ],
+    activity: {
+      type: 'reflection',
+      fields: [
+        {
+          id: 'tension_before',
+          label: 'Tension level BEFORE movement break (1–10)',
+          placeholder: 'e.g., 7',
+          type: 'text',
+        },
+        {
+          id: 'tension_after',
+          label: 'Tension level AFTER movement break (1–10)',
+          placeholder: 'e.g., 4',
+          type: 'text',
+        },
+        {
+          id: 'areas_released',
+          label: 'Areas where I felt tension release',
+          placeholder: 'e.g., Neck, shoulders, lower back',
+          type: 'textarea',
+        },
+        {
+          id: 'best_stretch',
+          label: 'The stretch that helped most',
+          placeholder: 'e.g., Chest opener — I always hold tension there',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What time of day do you most need a movement break?',
+      'What would it mean for your wellbeing to take a 5-minute movement break every 2 hours?',
+      'Which stretch felt most needed for your body today?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'somatic-daily-checkin',
+    dimension: 'somatic-regulative',
+    level: 'foundation',
+    order: 5,
+    title: 'Daily Somatic Check-In',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '5 minutes daily',
+    xpReward: 15,
+    badge: {
+      id: 'body-listener',
+      name: 'Body Listener',
+      icon: '📊',
+      requirement: 'Complete 5 consecutive daily check-ins',
+    },
+    learningObjective: 'Build the habit of listening to your body\'s signals every morning',
+    whyItMatters: {
+      framework: 'ABA',
+      rationale:
+        'Daily self-monitoring is a cornerstone ABA technique for building awareness and behavior change. A morning body check-in creates a feedback loop between your physical state and your choices for the day. When you know how your body feels, you can make informed decisions about pacing, self-care, and energy management.',
+    },
+    instructions: [
+      'Each morning, before looking at your phone, take 2 minutes for this check-in.',
+      'Ask yourself: How is my body today? Where do I notice tension, fatigue, or discomfort?',
+      'Rate your energy (1–10) and tension (1–10).',
+      'Identify one somatic need (e.g., rest, movement, warmth, stretching).',
+      'Plan one concrete way to meet that need today.',
+      'Record your observations below.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'date',
+          label: 'Date',
+          placeholder: 'Today\'s date',
+          type: 'text',
+        },
+        {
+          id: 'energy_rating',
+          label: 'Energy level this morning (1–10)',
+          placeholder: 'e.g., 6',
+          type: 'text',
+        },
+        {
+          id: 'tension_rating',
+          label: 'Tension level this morning (1–10)',
+          placeholder: 'e.g., 5',
+          type: 'text',
+        },
+        {
+          id: 'body_observations',
+          label: 'What I notice in my body',
+          placeholder: 'e.g., Tight shoulders, tired eyes, restless legs',
+          type: 'textarea',
+        },
+        {
+          id: 'somatic_need',
+          label: 'My body\'s biggest need today',
+          placeholder: 'e.g., Movement, rest, fresh air, nourishment',
+          type: 'text',
+        },
+        {
+          id: 'care_plan',
+          label: 'How I will meet this need today',
+          placeholder: 'e.g., Take a 15-minute walk at lunch',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What patterns are you noticing in your morning check-ins over time?',
+      'How does your body state in the morning affect the rest of your day?',
+      'What has your body been telling you that you\'ve been ignoring?',
+    ],
+    resources: [],
+  },
+
+  // ── Building Level ───────────────────────────────────────────────────────────
+  {
+    id: 'somatic-box-breathing',
+    dimension: 'somatic-regulative',
+    level: 'building',
+    order: 6,
+    title: 'Box Breathing Mastery',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '10 minutes',
+    xpReward: 20,
+    badge: {
+      id: 'box-breath-pro',
+      name: 'Box Breath Pro',
+      icon: '📦',
+      requirement: 'Complete 5 rounds of box breathing without breaking rhythm',
+    },
+    learningObjective: 'Use advanced breath control to regulate the nervous system under stress',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Box breathing (4-4-4-4) is used by Navy SEALs, elite athletes, and trauma therapists because it creates a precise, rhythmic breath pattern that strongly activates the vagal brake — the neural pathway that brings the nervous system back into regulation. It\'s more demanding than 4-7-8 and builds greater breath control capacity.',
+    },
+    instructions: [
+      'Sit upright in a comfortable position.',
+      'Exhale all air from your lungs.',
+      'Inhale slowly through the nose for 4 counts.',
+      'Hold your breath for 4 counts.',
+      'Exhale slowly through the mouth for 4 counts.',
+      'Hold empty for 4 counts.',
+      'This is one box. Complete 5 full boxes.',
+      'Gradually extend each side to 5, then 6 counts as you build capacity.',
+    ],
+    activity: {
+      type: 'reflection',
+      fields: [
+        {
+          id: 'count_used',
+          label: 'Count I used for each side (4, 5, or 6)',
+          placeholder: 'e.g., 4',
+          type: 'text',
+        },
+        {
+          id: 'boxes_completed',
+          label: 'Number of complete boxes',
+          placeholder: 'e.g., 5',
+          type: 'text',
+        },
+        {
+          id: 'hardest_part',
+          label: 'Which part was most challenging?',
+          placeholder: 'e.g., The empty hold at the end of the exhale',
+          type: 'textarea',
+        },
+        {
+          id: 'state_after',
+          label: 'How I felt after completing all boxes',
+          placeholder: 'e.g., Very calm, focused, slightly dizzy (I breathed too fast)',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'How does box breathing compare to 4-7-8? Which feels more effective for you?',
+      'When would you use this technique in your real life?',
+      'What happened to your thoughts during the holds?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'somatic-pmr',
+    dimension: 'somatic-regulative',
+    level: 'building',
+    order: 7,
+    title: 'Progressive Muscle Relaxation',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '15 minutes',
+    xpReward: 25,
+    badge: {
+      id: 'relaxation-expert',
+      name: 'Relaxation Expert',
+      icon: '💆',
+      requirement: 'Complete a full PMR session from head to toe',
+    },
+    learningObjective: 'Systematically release physical tension through deliberate muscle contraction and release',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Progressive Muscle Relaxation (PMR), developed by Edmund Jacobson, is one of the most research-supported relaxation techniques available. By deliberately tensing and releasing muscle groups, you train the nervous system to distinguish between tension and relaxation states — building the capacity for voluntary relaxation even under stress.',
+    },
+    instructions: [
+      'Lie down or recline comfortably. Close your eyes.',
+      'Take three slow deep breaths.',
+      'For each muscle group: tense firmly (not painfully) for 5 seconds, then release completely for 10 seconds.',
+      'Work through: feet → calves → thighs → buttocks → stomach → hands → forearms → shoulders → face.',
+      'With each release, exhale and notice the contrast between tension and relaxation.',
+      'After all groups, do a final full-body scan and notice the difference.',
+    ],
+    activity: {
+      type: 'reflection',
+      fields: [
+        {
+          id: 'groups_completed',
+          label: 'Muscle groups I worked through',
+          placeholder: 'e.g., All 9 groups: feet, calves, thighs, glutes, stomach, hands, forearms, shoulders, face',
+          type: 'textarea',
+        },
+        {
+          id: 'tension_before',
+          label: 'Overall tension before PMR (1–10)',
+          placeholder: 'e.g., 8',
+          type: 'text',
+        },
+        {
+          id: 'tension_after',
+          label: 'Overall tension after PMR (1–10)',
+          placeholder: 'e.g., 3',
+          type: 'text',
+        },
+        {
+          id: 'most_tense_area',
+          label: 'The most tension I held was in',
+          placeholder: 'e.g., Shoulders and jaw',
+          type: 'text',
+        },
+        {
+          id: 'observations',
+          label: 'What I noticed about the tension-release contrast',
+          placeholder: 'e.g., The release felt amazing in my shoulders — I didn\'t realize how much I was holding',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Where do you habitually store tension in your body?',
+      'What time of day would PMR be most beneficial for you?',
+      'How did your body feel compared to before? Can you describe the difference?',
+    ],
+    resources: [],
+  },
+
+  // ── Mastery Level ────────────────────────────────────────────────────────────
+  {
+    id: 'somatic-resilience-toolkit',
+    dimension: 'somatic-regulative',
+    level: 'mastery',
+    order: 8,
+    title: 'Somatic Resilience Toolkit',
+    icon: '/icons/somatic-regulative.svg',
+    duration: '30–45 minutes',
+    xpReward: 30,
+    badge: {
+      id: 'somatic-master',
+      name: 'Somatic Master',
+      icon: '🧰',
+      requirement: 'Build a personalized somatic regulation menu with 6+ techniques',
+    },
+    learningObjective: 'Create a personalized somatic regulation toolkit tailored to your nervous system',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Having a personalized toolkit — rather than relying on one technique — is the mark of somatic mastery. Different stress states require different regulation approaches: high-activation (anxiety, anger) needs down-regulation; low-activation (shutdown, freeze) needs up-regulation. Knowing your patterns and having a menu of matched tools is the foundation of robust somatic resilience.',
+    },
+    instructions: [
+      'Review all the somatic skills you\'ve practiced in this dimension.',
+      'Categorize each technique: Down-regulation (calming) vs. Up-regulation (activating).',
+      'Identify your typical stress pattern: Do you tend toward high activation (anxiety) or low activation (shutdown)?',
+      'Build your menu: 3 go-to tools for high activation, 3 for low activation, 1 for maintenance.',
+      'Write a "When/Then" plan for each category.',
+      'Create a visual cue (word, image, or reminder) that will trigger you to use your toolkit.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'stress_pattern',
+          label: 'My typical stress pattern (high activation / low activation / both)',
+          placeholder: 'e.g., Mostly high activation — I get anxious and scattered',
+          type: 'textarea',
+        },
+        {
+          id: 'down_reg_tools',
+          label: 'My 3 go-to DOWN-REGULATION tools (for anxiety, overwhelm)',
+          placeholder: 'e.g., 1. Box breathing, 2. 5-4-3-2-1 grounding, 3. Progressive muscle relaxation',
+          type: 'textarea',
+        },
+        {
+          id: 'up_reg_tools',
+          label: 'My 3 go-to UP-REGULATION tools (for shutdown, low energy)',
+          placeholder: 'e.g., 1. Movement break, 2. Cold water on face, 3. Upbeat music + movement',
+          type: 'textarea',
+        },
+        {
+          id: 'maintenance_tool',
+          label: 'My daily MAINTENANCE practice',
+          placeholder: 'e.g., Morning body scan + 5-minute movement break',
+          type: 'textarea',
+        },
+        {
+          id: 'when_then',
+          label: 'My "When/Then" activation plan',
+          placeholder: 'When I notice tension in my shoulders, then I will do box breathing before responding',
+          type: 'textarea',
+        },
+        {
+          id: 'visual_cue',
+          label: 'My visual cue or reminder to use my toolkit',
+          placeholder: 'e.g., A blue dot sticker on my laptop; the word BREATHE on my phone lock screen',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Which technique has been most transformative for your stress response?',
+      'What have you learned about your nervous system\'s patterns?',
+      'How will you share or teach one of these tools to someone you care about?',
+    ],
+    resources: [],
+  },
+];
