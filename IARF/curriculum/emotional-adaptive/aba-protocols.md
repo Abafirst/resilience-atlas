@@ -11,9 +11,9 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Applied Behavior Analysis offers systematic, data-driven approaches to building emotional skills and reducing the behavioral consequences of emotional dysregulation. ABA's precise focus on observable behavior makes it uniquely positioned to address the behavioral manifestations of emotional difficulty — including avoidance, emotional outbursts, self-injury, and interpersonal conflict — while the IARF's integration with ACT ensures that behavioral change is values-grounded and psychologically flexible.
+Applied Behavior Analysis offers systematic, data-driven approaches to building emotional skills and reducing the behavioral consequences of emotional dysregulation. ABA's precise focus on observable behavior makes it uniquely positioned to address the behavioral manifestations of emotional difficulty — including avoidance, emotional outbursts, self-injury, and interpersonal conflict — while the IATLAS's integration with ACT ensures that behavioral change is values-grounded and psychologically flexible.
 
-This document presents ABA protocols specifically adapted for the Emotional-Adaptive dimension of The Resilience Atlas™ IARF. All protocols are implemented through a trauma-informed, culturally responsive lens that honors the complexity and dignity of emotional experience.
+This document presents ABA protocols specifically adapted for the Emotional-Adaptive dimension of The Resilience Atlas™ IATLAS. All protocols are implemented through a trauma-informed, culturally responsive lens that honors the complexity and dignity of emotional experience.
 
 ---
 
@@ -220,5 +220,5 @@ A behavioral crisis prevention plan identifies early warning signs of emotional 
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Emotional-Adaptive*

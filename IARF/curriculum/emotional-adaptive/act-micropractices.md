@@ -258,5 +258,5 @@ Say silently: 'This is a moment of real suffering. Suffering is part of life. Ma
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Emotional-Adaptive*

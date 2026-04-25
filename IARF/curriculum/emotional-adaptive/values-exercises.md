@@ -204,5 +204,5 @@ This letter is not to be shared unless you choose to. It's a document of your ow
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Emotional-Adaptive*

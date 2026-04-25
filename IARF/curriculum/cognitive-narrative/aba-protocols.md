@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 The application of ABA principles to cognitive and narrative processes represents an important frontier in behavioral science. While cognitions are not directly observable, their behavioral products — verbal reports, written records, problem-solving behaviors, and narrative productions — are. ABA offers tools for systematically shaping, reinforcing, and generalizing adaptive cognitive behaviors including reframing, flexible thinking, growth mindset language, and strengths-based narrative.
 
-This document presents ABA protocols for the Cognitive-Narrative dimension of The Resilience Atlas™ IARF, adapted for use within a trauma-informed, values-aligned, and psychologically flexible treatment framework.
+This document presents ABA protocols for the Cognitive-Narrative dimension of The Resilience Atlas™ IATLAS, adapted for use within a trauma-informed, values-aligned, and psychologically flexible treatment framework.
 
 ---
 
@@ -207,5 +207,5 @@ To build the narrative competencies — coherent storytelling, strengths identif
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Cognitive-Narrative*

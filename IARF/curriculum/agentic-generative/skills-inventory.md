@@ -14,7 +14,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Agentic-Generative dimension of the IARF addresses the individual's capacity to initiate purposeful action, pursue meaningful goals, navigate obstacles, and sustain behavioral momentum in the direction of their values. Rooted in both Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT), this dimension recognizes that resilience is not merely the absence of distress — it is the active expression of agency in the face of adversity.
+The Agentic-Generative dimension of the IATLAS addresses the individual's capacity to initiate purposeful action, pursue meaningful goals, navigate obstacles, and sustain behavioral momentum in the direction of their values. Rooted in both Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT), this dimension recognizes that resilience is not merely the absence of distress — it is the active expression of agency in the face of adversity.
 
 "Agentic" refers to the capacity for self-directed, intentional action. "Generative" refers to the capacity to produce, create, and contribute — to generate outcomes, relationships, and meaning rather than merely survive. Together, these qualities form the behavioral spine of resilience: the ability to move toward what matters even when circumstances are difficult.
 
@@ -106,7 +106,7 @@ The following prerequisites are recommended for structured skill-building. Pract
 
 ## Cross-Dimensional Connections
 
-The Agentic-Generative dimension does not operate in isolation. Agentic skills are deeply interconnected with all five other IARF dimensions:
+The Agentic-Generative dimension does not operate in isolation. Agentic skills are deeply interconnected with all five other IATLAS dimensions:
 
 | Connected Dimension | Nature of Connection |
 |---|---|
@@ -133,9 +133,9 @@ Before introducing Agentic-Generative skills work, practitioners should conduct 
 - Valued Living Questionnaire (VLQ; Wilson et al.) [Research citation needed]
 - General Self-Efficacy Scale (Schwarzer & Jerusalem, 1995) [Research citation needed]
 - Action and Acceptance Questionnaire–II (AAQ-II; Bond et al., 2011) [Research citation needed]
-- IARF Agentic-Generative Skill Checklist (see measurement.md)
+- IATLAS Agentic-Generative Skill Checklist (see measurement.md)
 
-[Future development: Validated IARF-specific skills assessment tool for Agentic-Generative dimension]
+[Future development: Validated IATLAS-specific skills assessment tool for Agentic-Generative dimension]
 
 ---
 
@@ -168,6 +168,6 @@ Trauma can significantly disrupt agentic functioning through dissociation, hyper
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum. It should be read in conjunction with aba-protocols.md, act-micropractices.md, values-exercises.md, and measurement.md for the Agentic-Generative dimension.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum. It should be read in conjunction with aba-protocols.md, act-micropractices.md, values-exercises.md, and measurement.md for the Agentic-Generative dimension.*
 
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Agentic-Generative*

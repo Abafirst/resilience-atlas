@@ -272,5 +272,5 @@ Let's practice: who's one person you could reach out to this week? What would yo
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Relational-Connective*

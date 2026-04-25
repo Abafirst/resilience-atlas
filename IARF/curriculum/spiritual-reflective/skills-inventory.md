@@ -14,11 +14,11 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Spiritual-Reflective dimension of the IARF addresses meaning, purpose, values, and the capacity for transcendent perspective — the ability to see one's life within a larger context of significance. This dimension is intentionally broadly inclusive and not religiously prescriptive. Whether a client identifies as deeply religious, broadly spiritual, secular humanist, agnostic, or atheist, the Spiritual-Reflective dimension offers practices and skills that are accessible and relevant.
+The Spiritual-Reflective dimension of the IATLAS addresses meaning, purpose, values, and the capacity for transcendent perspective — the ability to see one's life within a larger context of significance. This dimension is intentionally broadly inclusive and not religiously prescriptive. Whether a client identifies as deeply religious, broadly spiritual, secular humanist, agnostic, or atheist, the Spiritual-Reflective dimension offers practices and skills that are accessible and relevant.
 
-"Spiritual" in the IARF sense refers not to belief in any particular deity or tradition, but to the human capacity for meaning-making, connection to something larger than the self, and the experience of what is sacred, precious, or ultimately significant. "Reflective" refers to the contemplative, introspective capacity to examine one's life with depth, honesty, and growing wisdom.
+"Spiritual" in the IATLAS sense refers not to belief in any particular deity or tradition, but to the human capacity for meaning-making, connection to something larger than the self, and the experience of what is sacred, precious, or ultimately significant. "Reflective" refers to the contemplative, introspective capacity to examine one's life with depth, honesty, and growing wisdom.
 
-Research consistently identifies meaning and purpose as among the strongest resilience factors across populations. Frankl's logotherapy, derived from extreme adversity, demonstrated that meaning can be found even in suffering — indeed, that the search for meaning is a fundamental human drive. The IARF's Spiritual-Reflective dimension operationalizes this insight into concrete, teachable skills.
+Research consistently identifies meaning and purpose as among the strongest resilience factors across populations. Frankl's logotherapy, derived from extreme adversity, demonstrated that meaning can be found even in suffering — indeed, that the search for meaning is a fundamental human drive. The IATLAS's Spiritual-Reflective dimension operationalizes this insight into concrete, teachable skills.
 
 ---
 
@@ -120,5 +120,5 @@ The Spiritual-Reflective dimension requires particular cultural and religious se
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Spiritual-Reflective*

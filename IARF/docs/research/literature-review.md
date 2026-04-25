@@ -1,19 +1,19 @@
 ---
-title: "IARF Literature Review"
+title: "IATLAS Literature Review"
 category: research
 status: draft
 last_updated: 2026-04-25
 ---
 
-# IARF Literature Review
+# IATLAS Literature Review
 
-> *The framework stands on decades of research. This document tracks the literature that informs, supports, and challenges the IARF model.*
+> *The framework stands on decades of research. This document tracks the literature that informs, supports, and challenges the IATLAS model.*
 
 ---
 
 ## Overview
 
-This document catalogs and summarizes the research literature underpinning the Integrated ABA Resilience Framework. It is organized by theoretical domain and is intended as a living document — updated as new research is incorporated.
+This document catalogs and summarizes the research literature underpinning the Integrated Applied Teaching and Learning Adaptive System. It is organized by theoretical domain and is intended as a living document — updated as new research is incorporated.
 
 **Domains covered:**
 1. Resilience Science
@@ -61,7 +61,7 @@ This document catalogs and summarizes the research literature underpinning the I
 > The foundational articulation of the seven dimensions of ABA; still the touchstone for ABA practice.
 
 **Cooper, J. O., Heron, T. E., & Heward, W. L. (2020).** *Applied behavior analysis* (3rd ed.). Pearson.
-> The primary textbook and reference for ABA principles and procedures used in IARF.
+> The primary textbook and reference for ABA principles and procedures used in IATLAS.
 
 **Mayer, G. R., Sulzer-Azaroff, B., & Wallace, M. (2019).** *Behavior analysis for lasting change* (4th ed.). Sloan Publishing.
 > Applied focus on behavior change strategies relevant to clinical practice.
@@ -77,7 +77,7 @@ This document catalogs and summarizes the research literature underpinning the I
 ### Foundational Works
 
 **Hayes, S. C., Strosahl, K. D., & Wilson, K. G. (2012).** *Acceptance and commitment therapy: The process and practice of mindful change* (2nd ed.). Guilford Press.
-> The definitive ACT text; primary source for IARF's ACT integration.
+> The definitive ACT text; primary source for IATLAS's ACT integration.
 
 **Hayes, S. C., Barnes-Holmes, D., & Roche, B. (Eds.). (2001).** *Relational frame theory: A post-Skinnerian account of human language and cognition*. Kluwer Academic/Plenum.
 > The theoretical foundation underlying ACT; explains why language and thought create psychological suffering and how flexibility resolves it.
@@ -99,7 +99,7 @@ This document catalogs and summarizes the research literature underpinning the I
 **Fredrickson, B. L. (2001).** The role of positive emotions in positive psychology: The broaden-and-build theory of positive emotions. *American Psychologist, 56*(3), 218–226.
 > Broaden-and-build theory: positive emotions expand cognitive and behavioral repertoires, building lasting resilience resources.
 
-**[PLACEHOLDER]** — Add additional positive psychology sources relevant to IARF dimensions.
+**[PLACEHOLDER]** — Add additional positive psychology sources relevant to IATLAS dimensions.
 
 ---
 
@@ -112,7 +112,7 @@ This document catalogs and summarizes the research literature underpinning the I
 > Key source for somatic dimension work; explains how trauma is stored and processed in the body.
 
 **Substance Abuse and Mental Health Services Administration (SAMHSA). (2014).** *SAMHSA's concept of trauma and guidance for a trauma-informed approach.* SAMHSA.
-> The primary federal framework for trauma-informed approaches; guides IARF's trauma-informed principles.
+> The primary federal framework for trauma-informed approaches; guides IATLAS's trauma-informed principles.
 
 **[PLACEHOLDER]** — Add additional trauma-informed practice literature.
 
@@ -139,7 +139,7 @@ This document catalogs and summarizes the research literature underpinning the I
 
 ## Annotated Bibliography (In Progress)
 
-[PLACEHOLDER — as the framework develops, key sources will be moved here with detailed annotations summarizing implications for IARF practice]
+[PLACEHOLDER — as the framework develops, key sources will be moved here with detailed annotations summarizing implications for IATLAS practice]
 
 ---
 
@@ -147,7 +147,7 @@ This document catalogs and summarizes the research literature underpinning the I
 
 To add literature to this review:
 1. Include full citation in APA 7th edition format
-2. Add a brief annotation (2–4 sentences) summarizing relevance to IARF
+2. Add a brief annotation (2–4 sentences) summarizing relevance to IATLAS
 3. Place in the appropriate section
 4. Note the dimension(s) most directly relevant
 5. Tag with `[PLACEHOLDER]` if annotation is not yet complete

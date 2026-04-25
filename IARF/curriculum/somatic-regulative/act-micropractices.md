@@ -270,5 +270,5 @@ Willingness with physical discomfort isn't masochism — it's choosing to priori
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Somatic-Regulative*

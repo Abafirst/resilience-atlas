@@ -1,5 +1,5 @@
 ---
-title: "IARF Intervention Plan"
+title: "IATLAS Intervention Plan"
 template_version: "1.0"
 client_id: "[CLIENT ID / CODE]"
 clinician: "[CLINICIAN NAME]"
@@ -8,7 +8,7 @@ plan_period: "[START DATE] to [END DATE]"
 review_date: "[YYYY-MM-DD]"
 ---
 
-# IARF Intervention Plan
+# IATLAS Intervention Plan
 
 ---
 
@@ -191,4 +191,4 @@ review_date: "[YYYY-MM-DD]"
 
 ---
 
-*Template version 1.0 | IARF Framework | See [Phase 3: Intervention](../docs/methodology/03-intervention.md) for guidance*
+*Template version 1.0 | IATLAS Framework | See [Phase 3: Intervention](../docs/methodology/03-intervention.md) for guidance*

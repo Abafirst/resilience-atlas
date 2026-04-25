@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Assessment Phase establishes a complete, multi-dimensional picture of an individual's current resilience profile. Using the Resilience Atlas™ as the primary instrument, supplemented by clinical observation and structured interviews, this phase generates the data needed to guide all subsequent IARF work.
+The Assessment Phase establishes a complete, multi-dimensional picture of an individual's current resilience profile. Using the Resilience Atlas™ as the primary instrument, supplemented by clinical observation and structured interviews, this phase generates the data needed to guide all subsequent IATLAS work.
 
 **Goals of Phase 1:**
 - Establish baseline resilience scores across all six dimensions
@@ -65,7 +65,7 @@ For each of the six dimensions, the assessment examines:
 
 ## ABA-Informed Assessment Considerations
 
-Drawing from Applied Behavior Analysis, the IARF assessment includes a **functional lens**:
+Drawing from Applied Behavior Analysis, the IATLAS assessment includes a **functional lens**:
 
 - **Antecedents**: What conditions precede resilient or non-resilient responses?
 - **Behaviors**: What observable behaviors reflect each resilience dimension?

@@ -1,4 +1,4 @@
-# IARF Curriculum Overview
+# IATLAS Curriculum Overview
 
 > *Curriculum is how the framework becomes practice — structured pathways for building resilience, dimension by dimension.*
 
@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The IARF Curriculum provides structured learning materials, intervention modules, and practice resources organized by resilience dimension. Each dimension folder contains materials that can be used flexibly — adapted for individual clients, group settings, workshops, or self-directed learning.
+The IATLAS Curriculum provides structured learning materials, intervention modules, and practice resources organized by resilience dimension. Each dimension folder contains materials that can be used flexibly — adapted for individual clients, group settings, workshops, or self-directed learning.
 
 ---
 
@@ -71,7 +71,7 @@ Each dimension folder follows the same structure:
 
 ---
 
-## Integration with the IARF Methodology
+## Integration with the IATLAS Methodology
 
 The curriculum is used primarily during **Phase 3: Intervention** but informs all phases:
 
@@ -82,4 +82,4 @@ The curriculum is used primarily during **Phase 3: Intervention** but informs al
 
 ---
 
-*See also: [IARF README](../README.md) | [Phase 3: Intervention](../docs/methodology/03-intervention.md) | [Templates](../templates/)*
+*See also: [IATLAS README](../README.md) | [Phase 3: Intervention](../docs/methodology/03-intervention.md) | [Templates](../templates/)*

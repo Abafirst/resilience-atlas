@@ -1,5 +1,5 @@
 ---
-title: "IARF Progress Note"
+title: "IATLAS Progress Note"
 template_version: "1.0"
 client_id: "[CLIENT ID / CODE]"
 clinician: "[CLINICIAN NAME]"
@@ -9,7 +9,7 @@ session_type: "☐ Individual  ☐ Group  ☐ Telehealth  ☐ Home  ☐ Communit
 session_duration: "[minutes]"
 ---
 
-# IARF Progress Note
+# IATLAS Progress Note
 
 ---
 
@@ -150,4 +150,4 @@ session_duration: "[minutes]"
 
 ---
 
-*Template version 1.0 | IARF Framework | See [Phase 4: Monitoring](../docs/methodology/04-monitoring.md) for guidance*
+*Template version 1.0 | IATLAS Framework | See [Phase 4: Monitoring](../docs/methodology/04-monitoring.md) for guidance*

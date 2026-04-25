@@ -13,13 +13,13 @@ last_updated: 2026-04-25
 
 Measurement in the Cognitive-Narrative dimension captures the evolution of thinking patterns, narrative structure, cognitive flexibility, and adaptive interpretation over the course of treatment. This dimension presents particular measurement challenges because cognition and narrative are internal processes, but it also offers rich behavioral indicators — thought records, written narratives, verbal productions in session, and standardized self-report — that together provide a comprehensive clinical picture.
 
-This document provides a multi-modal measurement framework for the Cognitive-Narrative dimension within The Resilience Atlas™ IARF.
+This document provides a multi-modal measurement framework for the Cognitive-Narrative dimension within The Resilience Atlas™ IATLAS.
 
 ---
 
 ## Measurement Philosophy
 
-Cognitive-narrative measurement in the IARF is:
+Cognitive-narrative measurement in the IATLAS is:
 - **Process-focused**: Measuring how clients are thinking, not only what they conclude
 - **Narrative-sensitive**: Recognizing that some of the most important changes appear in narrative quality and richness
 - **Non-pathologizing**: Measuring adaptive thinking gains, not only cognitive deficit reduction
@@ -203,5 +203,5 @@ Track monthly. Rising trend indicates narrative development.
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Cognitive-Narrative*

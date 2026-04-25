@@ -14,7 +14,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Relational-Connective dimension of the IARF addresses one of the most consistently identified protective factors in resilience research: social connection. From Werner and Smith's Kauai study to Southwick and Charney's trauma resilience research, the presence of meaningful, supportive relationships is among the strongest predictors of positive outcomes under adversity.
+The Relational-Connective dimension of the IATLAS addresses one of the most consistently identified protective factors in resilience research: social connection. From Werner and Smith's Kauai study to Southwick and Charney's trauma resilience research, the presence of meaningful, supportive relationships is among the strongest predictors of positive outcomes under adversity.
 
 "Relational" refers to the quality, depth, and bidirectionality of human connections. "Connective" refers to the active behaviors that build, maintain, and repair relationships over time. Together, these dimensions capture both the state of connection and the skills that create and sustain it.
 
@@ -113,7 +113,7 @@ Before beginning relational-connective skills work, assess:
 
 ## Cultural and Contextual Factors
 
-The Relational-Connective dimension is perhaps the most culturally shaped of all six IARF dimensions. Practitioners must attend carefully to cultural context in all aspects of relational skills work.
+The Relational-Connective dimension is perhaps the most culturally shaped of all six IATLAS dimensions. Practitioners must attend carefully to cultural context in all aspects of relational skills work.
 
 **Key considerations:**
 
@@ -128,5 +128,5 @@ The Relational-Connective dimension is perhaps the most culturally shaped of all
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Relational-Connective*

@@ -232,7 +232,7 @@ The six dimensions are interdependent. Some common interaction patterns:
 Each dimension is measured by the Resilience Atlas™ 72-question assessment (12 questions per dimension). Dimensional scores provide a profile that is:
 - **Normatively referenced** — situating the individual within the broader distribution
 - **Ipsative** — showing relative strengths across the individual's own profile
-- **Actionable** — directly linked to IARF intervention targets
+- **Actionable** — directly linked to IATLAS intervention targets
 
 ---
 

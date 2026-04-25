@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 const DEFAULT_NAV_ITEMS = [
   { href: '/', label: 'Home', key: 'home' },
   { href: '/assessment', label: 'Assessment', key: 'assessment' },
-  { href: '/iarf', label: 'IARF Curriculum', key: 'iarf' },
+  { href: '/iatlas', label: 'IATLAS Curriculum', key: 'iatlas' },
   { href: '/research', label: 'Research', key: 'research' },
   { href: '/resources', label: 'Resources', key: 'resources' },
   { href: '/teams', label: 'Teams', key: 'teams' },

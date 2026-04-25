@@ -1,11 +1,11 @@
 ---
-title: "ABA Principles in IARF"
+title: "ABA Principles in IATLAS"
 category: theoretical-foundations
 status: draft
 last_updated: 2026-04-25
 ---
 
-# Applied Behavior Analysis (ABA) Principles in IARF
+# Applied Behavior Analysis (ABA) Principles in IATLAS
 
 > *ABA is not a technique — it is a science of behavior that offers a systematic, data-driven approach to understanding why people do what they do, and how that can change.*
 
@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Applied Behavior Analysis (ABA) is the scientific discipline concerned with understanding and improving socially significant behavior. In IARF, ABA provides:
+Applied Behavior Analysis (ABA) is the scientific discipline concerned with understanding and improving socially significant behavior. In IATLAS, ABA provides:
 - The **methodological rigor** of data-driven practice
 - The **functional lens** for understanding resilience behaviors
 - The **technology** of behavior change (teaching, shaping, reinforcement)
@@ -38,7 +38,7 @@ Antecedent → Behavior → Consequence
 - *B*: Resilient response (seeking support, adaptive problem-solving, self-regulation)
 - *C*: Outcome (support received, problem resolved, stress reduced)
 
-Understanding the ABC sequence is the starting point for all IARF functional analysis.
+Understanding the ABC sequence is the starting point for all IATLAS functional analysis.
 
 ---
 
@@ -52,7 +52,7 @@ Understanding the ABC sequence is the starting point for all IARF functional ana
 *Example*: A client uses somatic regulation (behavior) and their anxiety decreases (consequence) → regulation practices increase.
 
 ### Punishment
-Behaviors decrease when consequences are aversive (positive punishment) or when something desirable is removed (negative punishment). IARF avoids punitive approaches; this principle is relevant primarily to understanding what *reduces* adaptive resilience behavior in natural environments.
+Behaviors decrease when consequences are aversive (positive punishment) or when something desirable is removed (negative punishment). IATLAS avoids punitive approaches; this principle is relevant primarily to understanding what *reduces* adaptive resilience behavior in natural environments.
 
 ### Extinction
 When reinforcement for a behavior is removed, the behavior decreases over time. Relevant in understanding why avoidance behaviors can persist even when they are no longer "working."
@@ -84,10 +84,10 @@ Identifying the *function* of a behavior determines the most effective intervent
 ## Behavioral Principles in Skill Building
 
 ### Shaping
-Reinforcing successive approximations toward a target skill. Used in IARF when a client does not yet have the complete skill but can engage with simpler forms.
+Reinforcing successive approximations toward a target skill. Used in IATLAS when a client does not yet have the complete skill but can engage with simpler forms.
 
 ### Chaining
-Teaching complex behaviors by linking smaller steps. Used in IARF for multi-step skills (e.g., a full self-regulation sequence: notice → label → breathe → reframe → act).
+Teaching complex behaviors by linking smaller steps. Used in IATLAS for multi-step skills (e.g., a full self-regulation sequence: notice → label → breathe → reframe → act).
 
 ### Modeling
 Demonstrating a behavior for the client to observe and imitate. A key teaching strategy across all six dimensions.
@@ -102,7 +102,7 @@ Deliberately planning for skills to transfer across settings, people, and stimul
 
 ## The Seven Dimensions of ABA (Baer, Wolf & Risley, 1968)
 
-These foundational principles guide all IARF practice:
+These foundational principles guide all IATLAS practice:
 
 1. **Applied** — Focus on behaviors of social significance to the individual
 2. **Behavioral** — Target observable, measurable behaviors
@@ -116,7 +116,7 @@ These foundational principles guide all IARF practice:
 
 ## ABA and Trauma-Informed Practice
 
-IARF integrates ABA with a trauma-informed lens:
+IATLAS integrates ABA with a trauma-informed lens:
 - **Power and control**: Client always has choice and agency in ABA procedures
 - **Safety**: No aversive procedures; focus entirely on reinforcement-based strategies
 - **Pacing**: Follow the client's lead on rate of change and content of work

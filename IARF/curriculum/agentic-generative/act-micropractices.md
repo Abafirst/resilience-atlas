@@ -294,5 +294,5 @@ All practices in this document can be adapted for group delivery:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Agentic-Generative*

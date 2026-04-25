@@ -14,9 +14,9 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Emotional-Adaptive dimension of the IARF addresses the capacity to recognize, process, regulate, and express emotions in ways that support resilience, meaningful relationships, and values-aligned action. Emotional intelligence and adaptive emotional functioning are among the most reliably identified factors distinguishing resilient individuals from those who struggle under adversity.
+The Emotional-Adaptive dimension of the IATLAS addresses the capacity to recognize, process, regulate, and express emotions in ways that support resilience, meaningful relationships, and values-aligned action. Emotional intelligence and adaptive emotional functioning are among the most reliably identified factors distinguishing resilient individuals from those who struggle under adversity.
 
-"Emotional" refers to the full range of affective experience — not only positive emotions, but the complete spectrum including grief, fear, anger, shame, and despair. The IARF does not privilege positive over negative emotions; all emotions carry information and serve functional purposes. "Adaptive" refers to the capacity to work with emotional experience in ways that support rather than undermine wellbeing and values-aligned living.
+"Emotional" refers to the full range of affective experience — not only positive emotions, but the complete spectrum including grief, fear, anger, shame, and despair. The IATLAS does not privilege positive over negative emotions; all emotions carry information and serve functional purposes. "Adaptive" refers to the capacity to work with emotional experience in ways that support rather than undermine wellbeing and values-aligned living.
 
 This dimension draws from ABA's behavioral approaches to emotional skill-building, ACT's radical acceptance of emotional experience, and the broader emotion regulation literature (Gross, Linehan, Greenberg). Together, these perspectives provide a comprehensive, evidence-based approach to emotional resilience within The Resilience Atlas™ framework.
 
@@ -123,5 +123,5 @@ Baseline emotional assessment should include:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Emotional-Adaptive*

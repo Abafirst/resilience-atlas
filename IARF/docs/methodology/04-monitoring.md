@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Monitoring Phase is not a final step — it is a **continuous process** that runs in parallel with intervention. IARF's monitoring system tracks progress at multiple levels: session by session, dimension by dimension, and across the full intervention arc. Data drives every decision.
+The Monitoring Phase is not a final step — it is a **continuous process** that runs in parallel with intervention. IATLAS's monitoring system tracks progress at multiple levels: session by session, dimension by dimension, and across the full intervention arc. Data drives every decision.
 
 **Goals of Phase 4:**
 - Collect meaningful, actionable data on intervention targets
@@ -72,7 +72,7 @@ At plan review or program completion:
 
 ## Visual Analysis & Decision-Making
 
-IARF uses ABA's tradition of **visual analysis** of graphed data:
+IATLAS uses ABA's tradition of **visual analysis** of graphed data:
 
 ### When to Continue the Current Plan
 - Data trend shows consistent progress toward objectives
@@ -118,7 +118,7 @@ At program conclusion, compile an **Outcome Summary Report** including:
 
 ---
 
-## The Continuous IARF Cycle
+## The Continuous IATLAS Cycle
 
 Monitoring feeds back into all preceding phases:
 
@@ -133,7 +133,7 @@ New data from monitoring may prompt:
 - Return to **Analysis** (revise functional hypotheses)
 - Modification of **Intervention** (change strategies or targets)
 
-This iterative cycle is what makes IARF a living, adaptive framework — not a static protocol.
+This iterative cycle is what makes IATLAS a living, adaptive framework — not a static protocol.
 
 ---
 

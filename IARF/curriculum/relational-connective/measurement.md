@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Measuring relational wellbeing requires attending to multiple levels: the frequency of social contact, the quality of connections, the breadth and resilience of the support network, and the behavioral skills that build and sustain relationships. This document provides a comprehensive measurement framework for the Relational-Connective dimension of the IARF.
+Measuring relational wellbeing requires attending to multiple levels: the frequency of social contact, the quality of connections, the breadth and resilience of the support network, and the behavioral skills that build and sustain relationships. This document provides a comprehensive measurement framework for the Relational-Connective dimension of the IATLAS.
 
 Relational measurement is inherently more complex than behavioral frequency counts alone. Quality, reciprocity, and felt experience of connection must be captured alongside observable contact behaviors. The measurement tools in this document integrate behavioral data with subjective quality ratings and standardized assessment to provide a complete clinical picture.
 
@@ -19,7 +19,7 @@ Relational measurement is inherently more complex than behavioral frequency coun
 
 ## Measurement Philosophy
 
-Relational measurement in the IARF is:
+Relational measurement in the IATLAS is:
 - **Multi-level**: Addresses network structure, contact frequency, quality, and skill development
 - **Collaborative**: Clients understand what is being measured and contribute to interpreting results
 - **Culturally humble**: Measurement tools are applied with awareness of cultural definitions of connection and support
@@ -57,7 +57,7 @@ Clients track social contacts across a one-week period, recording:
 
 Contact frequency alone is insufficient — quality matters more than quantity for wellbeing and resilience outcomes.
 
-### Connection Quality Scale (IARF Relational)
+### Connection Quality Scale (IATLAS Relational)
 
 *Instructions: Rate the following statements about your most important relationships from 0 (not true at all) to 10 (completely true).*
 
@@ -205,5 +205,5 @@ The following indicators should prompt immediate clinical review:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Relational-Connective*

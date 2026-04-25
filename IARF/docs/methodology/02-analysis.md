@@ -26,7 +26,7 @@ The Analysis Phase transforms raw assessment data into a clinically meaningful p
 
 ## The Functional Analysis Framework
 
-IARF adapts ABA's **ABC (Antecedent-Behavior-Consequence)** model to resilience analysis:
+IATLAS adapts ABA's **ABC (Antecedent-Behavior-Consequence)** model to resilience analysis:
 
 ### Antecedents
 Conditions that set the occasion for resilient or non-resilient responding:
