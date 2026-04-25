@@ -16,6 +16,7 @@ import {
   getModulesByLevel,
 } from '../../data/iatlas/index.js';
 import { loadProgress } from './ProgressTracker.jsx';
+import IATLASComingSoonModal from './ComingSoonModal.jsx';
 
 const PAGE_STYLES = `
   .dcp-page {
@@ -346,6 +347,7 @@ export default function DimensionCurriculumPage() {
   const { dimensionKey } = useParams();
   const [activeLevel, setActiveLevel] = useState('foundation');
   const [progress, setProgress] = useState({});
+  const [showSkillModal, setShowSkillModal] = useState(false);
 
   const dimMeta = DIMENSION_META[dimensionKey];
   const allModules = ALL_MODULES_BY_DIMENSION[dimensionKey] || [];
@@ -384,6 +386,13 @@ export default function DimensionCurriculumPage() {
       <style dangerouslySetInnerHTML={{ __html: PAGE_STYLES }} />
       <SiteHeader activePage="iatlas" />
       <DarkModeHint />
+      {showSkillModal && (
+        <IATLASComingSoonModal
+          title="Full Skill Modules Launching Soon!"
+          message="Full skill modules are launching soon! Join the waitlist for Atlas Navigator access and be first to explore the complete curriculum."
+          onClose={() => setShowSkillModal(false)}
+        />
+      )}
 
       <main
         className="dcp-page"
@@ -460,11 +469,15 @@ export default function DimensionCurriculumPage() {
               {levelModules.map((mod, idx) => {
                 const completed = !!dimProgress[mod.id];
                 return (
-                  <Link
+                  <div
                     key={mod.id}
-                    to={`/iatlas/skills/${dimensionKey}/${mod.id}`}
                     className={`dcp-skill-card${completed ? ' dcp-skill-card--completed' : ''}`}
-                    aria-label={`${mod.title}${completed ? ' (completed)' : ''}`}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${mod.title}${completed ? ' (completed)' : ''} — coming soon`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setShowSkillModal(true)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setShowSkillModal(true); } }}
                   >
                     {completed && (
                       <span className="dcp-completed-check" aria-hidden="true">✓</span>
@@ -486,7 +499,7 @@ export default function DimensionCurriculumPage() {
                         Earn: {mod.badge.name}
                       </p>
                     )}
-                  </Link>
+                  </div>
                 );
               })}
             </div>
