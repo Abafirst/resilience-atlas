@@ -1248,6 +1248,137 @@ const STYLES = `
   [data-theme="dark"] .iatlas-btn-secondary { background: rgba(255,255,255,.08); color: #cbd5e1; border-color: #475569; }
   [data-theme="dark"] .iatlas-btn-secondary:hover { border-color: #818cf8; color: #a5b4fc; }
   [data-theme="dark"] .iatlas-expand-btn { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.12); }
+
+  /* ── Kids banner ──────────────────────────────────────────────────────────── */
+  .iatlas-kids-banner {
+    background: linear-gradient(135deg, #fef3c7 0%, #ede9fe 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  [data-theme="dark"] .iatlas-kids-banner {
+    background: linear-gradient(135deg, #1e2a1a 0%, #1a1a2e 100%);
+    border-color: #334155;
+  }
+
+  .iatlas-kids-banner-left {
+    flex: 1;
+    min-width: 260px;
+  }
+
+  .iatlas-kids-banner-right {
+    flex-shrink: 0;
+  }
+
+  .iatlas-kids-banner-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: #f59e0b;
+    color: #ffffff;
+    border-radius: 20px;
+    padding: .2rem .7rem;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: .65rem;
+  }
+
+  .iatlas-kids-banner-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 .5rem;
+    line-height: 1.2;
+  }
+
+  [data-theme="dark"] .iatlas-kids-banner-title { color: #f1f5f9; }
+
+  .iatlas-kids-banner-sub {
+    font-size: .9rem;
+    color: #475569;
+    line-height: 1.65;
+    margin: 0 0 1rem;
+    max-width: 460px;
+  }
+
+  [data-theme="dark"] .iatlas-kids-banner-sub { color: #94a3b8; }
+
+  .iatlas-kids-banner-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .iatlas-kids-stat {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: rgba(255,255,255,.65);
+    border-radius: 20px;
+    padding: .25rem .7rem;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  [data-theme="dark"] .iatlas-kids-stat {
+    background: rgba(255,255,255,.08);
+    color: #cbd5e1;
+  }
+
+  .iatlas-kids-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: center;
+  }
+
+  .iatlas-kids-age-pills {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .iatlas-kids-age-pill {
+    background: rgba(255,255,255,.7);
+    border-left: 3px solid;
+    border-radius: 0 8px 8px 0;
+    padding: .4rem .8rem;
+    min-width: 140px;
+  }
+
+  [data-theme="dark"] .iatlas-kids-age-pill {
+    background: rgba(255,255,255,.06);
+  }
+
+  .iatlas-kids-age-pill-label {
+    display: block;
+    font-size: .8rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  [data-theme="dark"] .iatlas-kids-age-pill-label { color: #f1f5f9; }
+
+  .iatlas-kids-age-pill-sub {
+    display: block;
+    font-size: .72rem;
+    color: #64748b;
+  }
+
+  [data-theme="dark"] .iatlas-kids-age-pill-sub { color: #94a3b8; }
+
+  @media (max-width: 600px) {
+    .iatlas-kids-banner-right { display: none; }
+  }
 `;
 
 // ── Main page component ────────────────────────────────────────────────────────
@@ -1400,6 +1531,64 @@ export default function IATLASCurriculumPage() {
                   <DimensionCard dim={dim} index={i} />
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* ── IATLAS Kids ──────────────────────────────────────────────── */}
+          <section aria-labelledby="iatlas-kids-title" style={{ marginTop: '2.5rem' }}>
+            <div className="iatlas-kids-banner">
+              <div className="iatlas-kids-banner-left">
+                <span className="iatlas-kids-banner-kicker">
+                  <img src="/icons/kids-spark.svg" alt="" width={14} height={14} aria-hidden="true" />
+                  New
+                </span>
+                <h2 className="iatlas-kids-banner-title" id="iatlas-kids-title">
+                  IATLAS Kids Curriculum
+                </h2>
+                <p className="iatlas-kids-banner-sub">
+                  Play-based resilience activities for children ages 5–18, spanning all 6 dimensions.
+                  Designed for parents, teachers, and kids who want to build resilience through
+                  exploration, games, and real-world challenges.
+                </p>
+                <div className="iatlas-kids-banner-stats" aria-label="Kids curriculum statistics">
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/movement.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    96+ activities
+                  </span>
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/strength.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    4 age groups
+                  </span>
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/compass.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    6 dimensions
+                  </span>
+                </div>
+                <div className="iatlas-kids-banner-actions">
+                  <Link to="/iatlas/kids" className="iatlas-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+                    <img src="/icons/kids-spark.svg" alt="" width={15} height={15} aria-hidden="true" style={{ filter: 'brightness(0) invert(1)' }} />
+                    Explore Kids Curriculum
+                  </Link>
+                  <Link to="/iatlas/roadmap" className="iatlas-btn-secondary">
+                    View Content Roadmap →
+                  </Link>
+                </div>
+              </div>
+              <div className="iatlas-kids-banner-right" aria-hidden="true">
+                <div className="iatlas-kids-age-pills">
+                  {[
+                    { label: 'Ages 5–7', sub: 'Little Explorers', color: '#f59e0b' },
+                    { label: 'Ages 8–10', sub: 'Young Adventurers', color: '#10b981' },
+                    { label: 'Ages 11–14', sub: 'Resilience Builders', color: '#6366f1' },
+                    { label: 'Ages 15–18', sub: 'Resilience Leaders', color: '#8b5cf6' },
+                  ].map(ag => (
+                    <div key={ag.label} className="iatlas-kids-age-pill" style={{ borderLeftColor: ag.color }}>
+                      <span className="iatlas-kids-age-pill-label">{ag.label}</span>
+                      <span className="iatlas-kids-age-pill-sub">{ag.sub}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
 
