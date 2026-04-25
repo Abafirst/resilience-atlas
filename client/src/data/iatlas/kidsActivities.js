@@ -1482,7 +1482,7 @@ export const KIDS_ACTIVITIES_BY_DIMENSION = {
             'End with: "I\'m most grateful today for ___."',
           ],
           learningGoal: 'Build a playful gratitude practice through active exploration.',
-          parentNote: 'Gratitude hunts build the habitof noticing the good — a foundational wellbeing skill.',
+          parentNote: 'Gratitude hunts build the habit of noticing the good — a foundational wellbeing skill.',
         },
         {
           id: 'you-matter-story',
