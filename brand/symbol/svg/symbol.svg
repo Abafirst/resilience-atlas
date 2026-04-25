@@ -115,11 +115,11 @@
   <circle cx="55"    cy="85"  r="5" fill="#A8D8FF"/>
 
   <!-- ── 6. Central focal sphere — the individual ──────────────────── -->
-  <circle cx="128" cy="128" r="15"
+  <circle cx="128" cy="128" r="10"
     fill="url(#ra-center-grad)"
   />
   <!-- Subtle specular highlight -->
-  <circle cx="124" cy="124" r="4"
+  <circle cx="125" cy="125" r="3"
     fill="white"
     opacity="0.3"
   />
