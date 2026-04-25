@@ -364,9 +364,9 @@ function RadarChart({ scores, size = 380 }) {
       {/* ── Diamond needle ────────────────────────────────────────────────── */}
       {/* Outer <g> handles the translate to chart center; inner <g> handles rotation */}
       <g transform={`translate(${cx.toFixed(2)},${cy.toFixed(2)})`}>
-        {/* key tied to needleDeg ensures the element is remounted when the dominant
+        {/* key tied to dominantIdx ensures the element is remounted when the dominant
             dimension changes so the SVG animateTransform restarts correctly */}
-        <g key={needleDeg.toFixed(2)} transform={`rotate(${needleDeg.toFixed(2)})`}>
+        <g key={dominantIdx} transform={`rotate(${needleDeg.toFixed(2)})`}>
           {/* Needle glow */}
           <ellipse
             cx="0" cy={(-lenFwd * 0.5).toFixed(2)}
