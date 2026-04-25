@@ -12,7 +12,7 @@ export const LEVELS = [
   { level: 6, title: 'Expert',       minXP: 2000,  maxXP: 3499,     color: '#db2777', icon: '/icons/badges.svg' },
   { level: 7, title: 'Master',       minXP: 3500,  maxXP: 5499,     color: '#d97706', icon: '/icons/kids-trophy.svg' },
   { level: 8, title: 'Sage',         minXP: 5500,  maxXP: 9999,     color: '#059669', icon: '/icons/spiritual-reflective.svg' },
-  { level: 9, title: 'Luminary',     minXP: 10000, maxXP: Infinity, color: '#eab308', icon: '/icons/star.svg' },
+  { level: 9, title: 'Luminary',     minXP: 10000, maxXP: Infinity, color: '#eab308', icon: '/icons/trophy.svg' },
 ];
 
 /**

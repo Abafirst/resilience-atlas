@@ -294,7 +294,7 @@ export default function StreakTracker({ overallStreak, dimensionStreaks = {}, ne
               aria-label={`${d.label}: ${d.active ? 'practiced' : 'no activity'}`}
               title={`${d.label}: ${d.active ? 'practiced' : 'no activity'}`}
             >
-              {d.active ? <img src="/icons/fire.svg" alt="active" width={14} height={14} aria-hidden="true" /> : '·'}
+              {d.active ? <img src="/icons/fire.svg" alt="" width={14} height={14} aria-hidden="true" /> : '·'}
               <span className="st-dot-day">{d.label.slice(0, 2)}</span>
             </div>
           ))}
