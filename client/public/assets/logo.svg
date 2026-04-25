@@ -25,6 +25,12 @@
       <stop offset="100%" stop-color="#2E5C8A"/>
     </radialGradient>
 
+    <!-- Linear gradient for the diamond needle (light at tip, dark at base) -->
+    <linearGradient id="ra-needle-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#6BA8F5"/>
+      <stop offset="100%" stop-color="#2E5C8A"/>
+    </linearGradient>
+
     <!-- Clip path keeps all content inside the outer circle -->
     <clipPath id="ra-clip">
       <circle cx="128" cy="128" r="118"/>
@@ -70,7 +76,17 @@
   <line x1="128" y1="128" x2="25.8" y2="69"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
 
-  <!-- ── 4. Six dimension dots (hexagon arrangement, r=78 from center) ── -->
+  <!-- ── 4. Diamond needle (compass pointer) — vertical, points upward ── -->
+  <!-- Points: top-tip, right-equator, bottom-notch, left-equator         -->
+  <!-- Tip at y=62 clears the Agentic dot (cy=50, r=8 → bottom edge y=58) -->
+  <polygon points="128,62 135,120 128,135 121,120"
+    fill="url(#ra-needle-grad)"
+    stroke="#2E5C8A"
+    stroke-width="0.5"
+    opacity="0.95"
+  />
+
+  <!-- ── 5. Six dimension dots (hexagon arrangement, r=78 from center) ── -->
   <!-- Agentic  (top, 0°)    — Pastel orange/peach -->
   <circle cx="128"   cy="50"  r="8" fill="#FFB89D"/>
   <!-- Relational (2 o'clock, 60°) — Pastel pink/rose -->
@@ -84,7 +100,7 @@
   <!-- Cognitive  (10 o'clock, 300°) — Pastel blue/sky -->
   <circle cx="60.5"  cy="89"  r="8" fill="#A8D8FF"/>
 
-  <!-- ── 5. Central focal sphere — the individual ──────────────────── -->
+  <!-- ── 6. Central focal sphere — the individual ──────────────────── -->
   <circle cx="128" cy="128" r="20"
     fill="url(#ra-center-grad)"
   />
