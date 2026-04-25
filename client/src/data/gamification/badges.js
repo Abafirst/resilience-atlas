@@ -180,9 +180,9 @@ export const UNIVERSAL_BADGES = [
     emoji: '🔥',
     dimension: 'universal',
     rarity: 'epic',
-    description: 'Maintain a 30-day overall practice streak',
-    requirement: { type: 'overall_streak', days: 30 },
-    xpBonus: 100,
+    description: 'Maintain a 60-day overall practice streak',
+    requirement: { type: 'overall_streak', days: 60 },
+    xpBonus: 150,
   },
   {
     id: 'diamond-dedication',

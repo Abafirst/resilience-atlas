@@ -173,7 +173,7 @@ export default function BadgeGallery({ allBadges = [], onBadgeClick }) {
                 className={`bg-filter-btn${filter === dim ? ' bg-active' : ''}`}
                 onClick={() => setFilter(dim)}
               >
-                {dim}
+                {dim.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
               </button>
             ))}
           </>

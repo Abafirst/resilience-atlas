@@ -273,11 +273,10 @@ export default function IATLASProgressDashboard() {
   const [showConfetti, setShowConfetti] = useState(false);
   const questBoardRef = useRef(null);
 
-  const progress = loadProgress();
-
   useEffect(() => {
+    const currentProgress = loadProgress();
     setActivities(loadActivityFeed());
-    setDimStats(getDimensionStats(progress));
+    setDimStats(getDimensionStats(currentProgress));
   }, [totalXP, earnedBadges.length]);
 
   // Show first new badge in queue
@@ -315,6 +314,7 @@ export default function IATLASProgressDashboard() {
     questBoardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  const progress = loadProgress();
   const stats = computeAllStats({
     progress,
     earnedBadges,

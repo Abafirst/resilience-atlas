@@ -8,6 +8,8 @@ import { ALL_QUESTS } from '../data/gamification/quests.js';
 import { loadJSON, saveJSON, addActivityEntry } from '../utils/gamificationHelpers.js';
 
 const QUESTS_KEY = 'iatlas_active_quests';
+/** Quests completed within this window (ms) are considered "just completed" and returned from updateQuestProgress */
+const RECENTLY_COMPLETED_THRESHOLD_MS = 5000;
 
 function loadActiveQuests() {
   return loadJSON(QUESTS_KEY, []);
@@ -85,7 +87,7 @@ export default function useQuests() {
       saveActiveQuests(all);
       refresh();
     }
-    return all.filter(q => q.status === 'completed' && q.completedAt && new Date(q.completedAt) > new Date(Date.now() - 5000));
+    return all.filter(q => q.status === 'completed' && q.completedAt && new Date(q.completedAt) > new Date(Date.now() - RECENTLY_COMPLETED_THRESHOLD_MS));
   }, [refresh]);
 
   return { activeQuests, completedQuests, startQuest, abandonQuest, updateQuestProgress, refresh };
