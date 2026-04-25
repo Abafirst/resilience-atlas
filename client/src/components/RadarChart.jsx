@@ -165,6 +165,7 @@ function RadarChart({ scores, size = 380 }) {
 
   return (
     <svg
+      id="resilience-radar-chart"
       width={svgW}
       height={svgH}
       viewBox={`0 0 ${svgW} ${svgH}`}

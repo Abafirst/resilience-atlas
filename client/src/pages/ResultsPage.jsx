@@ -2952,11 +2952,10 @@ export default function ResultsPage() {
   // ── Download radar chart as PNG ────────────────────────────────────────
   const handleDownloadRadar = useCallback(() => {
     try {
-      // RadarChart renders as SVG — find it in the DOM
+      // Find the exact SVG element displayed on the page by its unique ID
       const svg =
-        document.querySelector('svg[aria-label="Resilience dimension radar chart"]') ||
-        document.querySelector('.radar-chart svg') ||
-        document.querySelector('svg');
+        document.getElementById('resilience-radar-chart') ||
+        document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
 
       if (!svg) {
         alert('Radar chart not found. Please wait for the chart to load.');
@@ -2972,6 +2971,13 @@ export default function ResultsPage() {
       const svgClone = svg.cloneNode(true);
       svgClone.setAttribute('width', width);
       svgClone.setAttribute('height', height);
+
+      // Remove all SVG animation elements from the clone.
+      // animateTransform uses additive="replace" and restarts from from="0" when
+      // the SVG is loaded as an <img>, which overrides the correct static
+      // transform attribute and makes the needle point to the wrong dimension.
+      // Removing the animations preserves the final static rotation (needleDeg).
+      svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
       const serializer = new XMLSerializer();
