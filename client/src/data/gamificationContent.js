@@ -44,6 +44,93 @@ export function isNavigatorOrAbove(tier) {
   return NAVIGATOR_AND_ABOVE.includes(tier);
 }
 
+// ── IARF XP Level System ──────────────────────────────────────────────────────
+
+/**
+ * XP award amounts for IARF curriculum activities.
+ * Used for displaying activity values in the UI.
+ */
+export const XP_AWARDS = {
+  MICROPRACTICE_COMPLETE:   10,
+  SKILL_MODULE_COMPLETE:    50,
+  WEEKLY_REFLECTION:        25,
+  RETAKE_RESILIENCE_ATLAS: 100,
+  DIMENSIONAL_IMPROVEMENT: 150,
+  HELP_ANOTHER_USER:        75,
+  STREAK_BONUS_7:           20,
+  STREAK_BONUS_30:          60,
+  STREAK_BONUS_90:         150,
+  STREAK_BONUS_365:        500,
+  QUEST_COMPLETE:           80,
+  BALANCE_BONUS:            30,
+};
+
+/**
+ * XP level tier definitions. Each tier covers a range of XP and levels.
+ * XP displayed to users = totalPoints × 10 (scale factor).
+ */
+export const XP_LEVEL_TIERS = [
+  { name: 'Resilience Explorer',  minXP:      0, maxXP:   999, minLevel:  1, maxLevel: 10, icon: '🌱', color: '#22c55e' },
+  { name: 'Resilience Builder',   minXP:   1000, maxXP:  4999, minLevel: 11, maxLevel: 20, icon: '⚡', color: '#3b82f6' },
+  { name: 'Resilience Architect', minXP:   5000, maxXP: 14999, minLevel: 21, maxLevel: 30, icon: '🏛️', color: '#8b5cf6' },
+  { name: 'Resilience Master',    minXP:  15000, maxXP: Infinity, minLevel: 31, maxLevel: Infinity, icon: '👑', color: '#f59e0b' },
+];
+
+/**
+ * Compute XP level data from a raw points total (internal DB value).
+ * XP shown in UI = totalPoints × 10.
+ *
+ * @param {number} totalPoints
+ * @returns {{ xp, level, tierName, tierIcon, tierColor, nextLevelXP, progressPct }}
+ */
+export function computeXPLevel(totalPoints) {
+  const xp = (totalPoints || 0) * 10;
+  let tierIdx = 0;
+
+  for (let i = 0; i < XP_LEVEL_TIERS.length; i++) {
+    if (xp >= XP_LEVEL_TIERS[i].minXP) tierIdx = i;
+  }
+
+  const tier = XP_LEVEL_TIERS[tierIdx];
+  const tierRange     = tier.maxXP === Infinity ? 15000 : (tier.maxXP - tier.minXP);
+  const levelsInTier  = tier.maxLevel === Infinity ? 10 : (tier.maxLevel - tier.minLevel + 1);
+  const xpPerLevel    = Math.floor(tierRange / levelsInTier);
+  const xpInTier      = xp - tier.minXP;
+  const levelsEarned  = xpPerLevel > 0 ? Math.min(Math.floor(xpInTier / xpPerLevel), levelsInTier - 1) : 0;
+  const level         = tier.minLevel + levelsEarned;
+  const xpInCurrentLevel = xpPerLevel > 0 ? xpInTier % xpPerLevel : 0;
+  const progressPct   = xpPerLevel > 0 ? Math.round((xpInCurrentLevel / xpPerLevel) * 100) : 100;
+  const nextLevelXP   = tier.minXP + (levelsEarned + 1) * xpPerLevel;
+
+  return {
+    xp,
+    level,
+    tierName:    tier.name,
+    tierIcon:    tier.icon,
+    tierColor:   tier.color,
+    nextLevelXP: tier.maxXP === Infinity && levelsEarned === levelsInTier - 1 ? null : Math.min(nextLevelXP, tier.maxXP === Infinity ? Infinity : tier.maxXP + 1),
+    progressPct: Math.min(progressPct, 100),
+  };
+}
+
+/**
+ * Streak badge tiers for dimension micropractices.
+ */
+export const STREAK_BADGE_TIERS = [
+  { days: 365, label: '💎 Diamond', rarity: 'legendary', xpBonus: 500 },
+  { days:  90, label: '🥇 Gold',    rarity: 'rare',      xpBonus: 150 },
+  { days:  30, label: '🥈 Silver',  rarity: 'uncommon',  xpBonus:  60 },
+  { days:   7, label: '🥉 Bronze',  rarity: 'common',    xpBonus:  20 },
+];
+
+/** Get the highest earned streak badge tier for a given streak length. */
+export function getStreakBadgeTier(days) {
+  for (const tier of STREAK_BADGE_TIERS) {
+    if (days >= tier.days) return tier;
+  }
+  return null;
+}
+
 // ── Navigation Milestones (Atlas Starter) ─────────────────────────────────────
 // Milestones are earned by completing practices (micro-quests, pathways, or
 // reinforcement practices) — not by completing assessments.
