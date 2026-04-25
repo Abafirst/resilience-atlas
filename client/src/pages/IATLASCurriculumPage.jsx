@@ -7,7 +7,6 @@ const DIMENSIONS = [
   {
     key: 'agentic-generative',
     icon: '/icons/agentic-generative.svg',
-    emoji: '🎯',
     title: 'Agentic-Generative',
     tagline: 'Master your goals and take purposeful action',
     color: '#4f46e5',
@@ -38,7 +37,6 @@ const DIMENSIONS = [
   {
     key: 'somatic-regulative',
     icon: '/icons/somatic-regulative.svg',
-    emoji: '🧘',
     title: 'Somatic-Regulative',
     tagline: 'Harness your body as a resilience resource',
     color: '#059669',
@@ -69,7 +67,6 @@ const DIMENSIONS = [
   {
     key: 'cognitive-narrative',
     icon: '/icons/cognitive-narrative.svg',
-    emoji: '🧠',
     title: 'Cognitive-Interpretive',
     tagline: 'Reshape how you interpret challenge and adversity',
     color: '#7c3aed',
@@ -100,7 +97,6 @@ const DIMENSIONS = [
   {
     key: 'relational-connective',
     icon: '/icons/relational-connective.svg',
-    emoji: '🤝',
     title: 'Relational-Connective',
     tagline: 'Build and sustain meaningful connections under stress',
     color: '#0891b2',
@@ -131,7 +127,6 @@ const DIMENSIONS = [
   {
     key: 'emotional-adaptive',
     icon: '/icons/emotional-adaptive.svg',
-    emoji: '💙',
     title: 'Emotional-Adaptive',
     tagline: 'Process emotions with flexibility and compassion',
     color: '#db2777',
@@ -162,7 +157,6 @@ const DIMENSIONS = [
   {
     key: 'spiritual-reflective',
     icon: '/icons/spiritual-reflective.svg',
-    emoji: '✨',
     title: 'Spiritual-Existential',
     tagline: 'Ground resilience in values, meaning, and purpose',
     color: '#d97706',
@@ -232,7 +226,7 @@ function DimensionCard({ dim, index }) {
         <div className="iatlas-dim-meta">
           <span className="iatlas-dim-number" aria-hidden="true">Dimension {index + 1}</span>
           <h3 className="iatlas-dim-title" id={`dim-title-${dim.key}`}>
-            <span aria-hidden="true">{dim.emoji} </span>{dim.title}
+            {dim.title}
           </h3>
           <p className="iatlas-dim-tagline">{dim.tagline}</p>
         </div>
@@ -274,7 +268,7 @@ function DimensionCard({ dim, index }) {
         aria-controls={`gated-${dim.key}`}
         onClick={() => setExpanded(e => !e)}
       >
-        {expanded ? 'Hide details' : 'What&apos;s included when available'}
+        {expanded ? 'Hide details' : "What's included when available"}
         <span aria-hidden="true" className={`iatlas-chevron${expanded ? ' iatlas-chevron--up' : ''}`}>›</span>
       </button>
 
@@ -876,9 +870,11 @@ const STYLES = `
   }
 
   .iatlas-cf-card-icon {
-    font-size: 1.6rem;
+    width: 40px;
+    height: 40px;
     margin-bottom: .5rem;
     display: block;
+    flex-shrink: 0;
   }
 
   .iatlas-cf-card-title {
@@ -1084,9 +1080,11 @@ const STYLES = `
   }
 
   .iatlas-method-icon {
-    font-size: 1.5rem;
+    width: 32px;
+    height: 32px;
     margin-bottom: .5rem;
     display: block;
+    flex-shrink: 0;
   }
 
   .iatlas-method-title {
@@ -1312,14 +1310,14 @@ export default function IATLASCurriculumPage() {
 
             <div className="iatlas-overview" role="list">
               {[
-                { icon: '📐', bg: '#eef2ff', title: 'Evidence-Based', desc: 'Grounded in Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT) — two of the most rigorously validated approaches in behavioral science.' },
-                { icon: '🎯', bg: '#fef3c7', title: 'Assessment-Driven', desc: 'Built directly on your Resilience Atlas™ dimensional profile. Every skill module targets your real growth edges, not generic advice.' },
-                { icon: '🔄', bg: '#d1fae5', title: 'Four-Phase Cycle', desc: 'Assess → Analyze → Intervene → Monitor. A structured, data-informed process that ensures measurable, lasting resilience growth.' },
-                { icon: '🌱', bg: '#fce7f3', title: 'Values-Aligned', desc: 'Every practice and skill is anchored to what matters most to you. Resilience built on intrinsic motivation, not external pressure.' },
+                { icon: '/icons/planning.svg', bg: '#eef2ff', title: 'Evidence-Based', desc: 'Grounded in Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT) — two of the most rigorously validated approaches in behavioral science.' },
+                { icon: '/icons/compass.svg', bg: '#fef3c7', title: 'Assessment-Driven', desc: 'Built directly on your Resilience Atlas™ dimensional profile. Every skill module targets your real growth edges, not generic advice.' },
+                { icon: '/icons/reframe.svg', bg: '#d1fae5', title: 'Four-Phase Cycle', desc: 'Assess → Analyze → Intervene → Monitor. A structured, data-informed process that ensures measurable, lasting resilience growth.' },
+                { icon: '/icons/agentic-generative.svg', bg: '#fce7f3', title: 'Values-Aligned', desc: 'Every practice and skill is anchored to what matters most to you. Resilience built on intrinsic motivation, not external pressure.' },
               ].map((c) => (
                 <div key={c.title} className="iatlas-overview-card" role="listitem">
                   <div className="iatlas-ov-icon" style={{ background: c.bg }} aria-hidden="true">
-                    {c.icon}
+                    <img src={c.icon} alt="" width={28} height={28} className="icon" />
                   </div>
                   <h3 className="iatlas-ov-title">{c.title}</h3>
                   <p className="iatlas-ov-desc">{c.desc}</p>
@@ -1336,14 +1334,14 @@ export default function IATLASCurriculumPage() {
             </div>
             <div className="iatlas-method" role="list">
               {[
-                { step: 1, icon: '🗺️', title: 'Assess', desc: 'Start with a comprehensive Resilience Atlas™ assessment across all six dimensions to establish your baseline profile.' },
-                { step: 2, icon: '🔬', title: 'Analyze', desc: 'ABA-informed analysis of your dimensional strengths, growth edges, and the barriers and patterns shaping your resilience.' },
-                { step: 3, icon: '🛠️', title: 'Intervene', desc: 'Engage targeted, individualized skill modules and micropractices across each dimension, integrating ABA and ACT strategies.' },
-                { step: 4, icon: '📊', title: 'Monitor', desc: 'Continuous progress tracking and data collection to measure growth, guide decisions, and celebrate meaningful milestones.' },
+                { step: 1, icon: '/icons/compass.svg', title: 'Assess', desc: 'Start with a comprehensive Resilience Atlas™ assessment across all six dimensions to establish your baseline profile.' },
+                { step: 2, icon: '/icons/planning.svg', title: 'Analyze', desc: 'ABA-informed analysis of your dimensional strengths, growth edges, and the barriers and patterns shaping your resilience.' },
+                { step: 3, icon: '/icons/agentic-generative.svg', title: 'Intervene', desc: 'Engage targeted, individualized skill modules and micropractices across each dimension, integrating ABA and ACT strategies.' },
+                { step: 4, icon: '/icons/game-target.svg', title: 'Monitor', desc: 'Continuous progress tracking and data collection to measure growth, guide decisions, and celebrate meaningful milestones.' },
               ].map((m) => (
                 <div key={m.step} className="iatlas-method-card" role="listitem">
                   <span className="iatlas-method-step" aria-label={`Step ${m.step}`}>{m.step}</span>
-                  <span className="iatlas-method-icon" aria-hidden="true">{m.icon}</span>
+                  <img src={m.icon} alt="" width={32} height={32} className="icon iatlas-method-icon" aria-hidden="true" />
                   <h3 className="iatlas-method-title">{m.title}</h3>
                   <p className="iatlas-method-desc">{m.desc}</p>
                 </div>
@@ -1375,7 +1373,10 @@ export default function IATLASCurriculumPage() {
           {/* ── Coming Soon Features ─────────────────────────────────────── */}
           <section aria-labelledby="iatlas-cf-title">
             <div className="iatlas-coming-features" role="region" aria-label="Coming soon features">
-              <span className="iatlas-cf-kicker">🚀 Launching Soon</span>
+              <span className="iatlas-cf-kicker">
+                <img src="/icons/compass.svg" alt="" width={14} height={14} aria-hidden="true" />
+                Launching Soon
+              </span>
               <h2 className="iatlas-cf-title" id="iatlas-cf-title">Coming Soon to IATLAS</h2>
               <p className="iatlas-cf-sub">
                 We're building a full gamified learning experience for the IATLAS curriculum.
@@ -1385,28 +1386,28 @@ export default function IATLASCurriculumPage() {
               <div className="iatlas-cf-grid" role="list">
                 {[
                   {
-                    icon: '⚡',
+                    icon: '/icons/kids-trophy.svg',
                     title: 'Gamified Learning',
                     items: ['Earn XP for every practice', 'Level up: Explorer → Master', 'Unlock badges & achievements', 'Dimensional balance wheel'],
                   },
                   {
-                    icon: '🔥',
+                    icon: '/icons/agentic-generative.svg',
                     title: 'Practice Streaks',
                     items: ['Daily micropractice streaks', 'Bronze → Diamond badges', 'Streak forgiveness (1 miss/mo)', '7, 30, 90, 365-day milestones'],
                   },
                   {
-                    icon: '📜',
+                    icon: '/icons/quest.svg',
                     title: 'Quest System',
                     items: ['30-Day Foundation Quest', '7-Day Sprint Challenges', '90-Day Epic Transformation', 'Dimensional Deep-Dives'],
                   },
                   {
-                    icon: '📊',
+                    icon: '/icons/game-target.svg',
                     title: 'Progress Dashboard',
                     items: ['Animated radar chart', 'Before/after comparisons', 'Personalized skill recommendations', 'Celebration animations'],
                   },
                 ].map((cf) => (
                   <div key={cf.title} className="iatlas-cf-card" role="listitem">
-                    <span className="iatlas-cf-card-icon" aria-hidden="true">{cf.icon}</span>
+                    <img src={cf.icon} alt="" width={40} height={40} className="icon iatlas-cf-card-icon" aria-hidden="true" />
                     <h3 className="iatlas-cf-card-title">{cf.title}</h3>
                     <ul className="iatlas-cf-card-items">
                       {cf.items.map((item, i) => (
@@ -1422,7 +1423,7 @@ export default function IATLASCurriculumPage() {
 
               <div className="iatlas-cf-cta">
                 <a href="#iatlas-waitlist" className="iatlas-btn-white">
-                  🎉 Join the Waitlist
+                  Join the Waitlist
                 </a>
                 <a href="/quiz" className="iatlas-btn-ghost">
                   Take the Free Assessment →
@@ -1445,7 +1446,7 @@ export default function IATLASCurriculumPage() {
               </div>
               {waitlistStatus === 'success' ? (
                 <div className="iatlas-waitlist-success" role="status" aria-live="polite">
-                  <span aria-hidden="true">✅</span>
+                  <img src="/icons/checkmark.svg" alt="" width={20} height={20} aria-hidden="true" />
                   You're on the list — we'll be in touch!
                 </div>
               ) : (
