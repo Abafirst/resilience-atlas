@@ -402,7 +402,7 @@ function RadarChart({ scores, size = 380 }) {
               fill="freeze"
               calcMode="spline"
               keyTimes="0;1"
-              keySplines="0.68,-0.55,0.265,1.55"
+              keySplines="0.68,0,0.265,1"
               additive="replace"
             />
           )}

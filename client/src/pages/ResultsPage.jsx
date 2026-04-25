@@ -2968,11 +2968,17 @@ export default function ResultsPage() {
       const width = bbox.width || 340;
       const height = bbox.height || 340;
 
-      // Serialize SVG to a data URL
+      // Clone SVG to avoid modifying the live DOM, then set explicit dimensions
+      const svgClone = svg.cloneNode(true);
+      svgClone.setAttribute('width', width);
+      svgClone.setAttribute('height', height);
+
+      // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
       const serializer = new XMLSerializer();
-      const svgString = serializer.serializeToString(svg);
-      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
+      const svgString = serializer.serializeToString(svgClone);
+      const svgDataUrl = 'data:image/svg+xml;base64,' + btoa(
+        encodeURIComponent(svgString).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode('0x' + p1))
+      );
 
       // Draw onto an offscreen canvas at 2× for high-DPI quality
       const offscreen = document.createElement('canvas');
@@ -2981,22 +2987,28 @@ export default function ResultsPage() {
       const ctx = offscreen.getContext('2d');
       ctx.scale(2, 2);
 
+      // Fill white background before drawing SVG
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, width, height);
+
       const img = new Image();
       img.onload = () => {
         ctx.drawImage(img, 0, 0, width, height);
-        URL.revokeObjectURL(url);
 
-        const link = document.createElement('a');
-        link.download = `resilience-radar-${Date.now()}.png`;
-        link.href = offscreen.toDataURL('image/png');
-        link.click();
-        trackShareEvent('download_radar', (results && results.dominantType) || '');
+        offscreen.toBlob((blob) => {
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = `resilience-radar-${Date.now()}.png`;
+          link.href = blobUrl;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+          trackShareEvent('download_radar', (results && results.dominantType) || '');
+        }, 'image/png');
       };
       img.onerror = () => {
-        URL.revokeObjectURL(url);
         alert('Could not download radar chart. Please try taking a screenshot.');
       };
-      img.src = url;
+      img.src = svgDataUrl;
     } catch (_) {
       alert('Could not download radar chart. Please try taking a screenshot.');
     }
