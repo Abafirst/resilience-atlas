@@ -12,10 +12,10 @@
     Emotional  (bottom, 6 o'cl.) #D4BBFF  Pastel purple/lav.  — depth, introspection, feelings
     Somatic    (8 o'clock)       #B3E5C5  Pastel green/mint   — body, health, vitality
     Cognitive  (10 o'clock)      #A8D8FF  Pastel blue/sky     — thought, intellect, mind
-  Usage    : Primary branding, large displays, print
+  Usage    : Primary branding, large displays, print, web favicon
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img"
-     aria-label="Resilience Atlas">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"
+     role="img" aria-label="Resilience Atlas">
   <title>Resilience Atlas</title>
 
   <defs>
