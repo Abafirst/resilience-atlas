@@ -1310,6 +1310,10 @@ export default function IATLASCurriculumPage() {
                   <a href="#iatlas-overview" className="iatlas-btn-secondary">
                     Learn more about IATLAS
                   </a>
+                  <a href="/iatlas/dashboard" className="iatlas-btn-secondary">
+                    <img src="/icons/planning.svg" alt="" width={16} height={16} aria-hidden="true" />
+                    View My Progress
+                  </a>
                 </div>
               </div>
               <div className="iatlas-hero-visual" aria-hidden="true">

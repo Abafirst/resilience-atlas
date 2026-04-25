@@ -67,6 +67,7 @@ import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
 import IATLASCurriculumPage from './pages/IATLASCurriculumPage.jsx';
+import IATLASDashboardPage from './pages/IATLASDashboardPage.jsx';
 import DimensionCurriculumPage from './components/IATLAS/DimensionCurriculumPage.jsx';
 import SkillModulePage from './components/IATLAS/SkillModulePage.jsx';
 import { apiUrl } from './api/baseUrl.js';
@@ -357,6 +358,7 @@ function AppShell() {
 
           {/* IATLAS Curriculum */}
           <Route path="/iatlas" element={<IATLASCurriculumPage />} />
+          <Route path="/iatlas/dashboard" element={<IATLASDashboardPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
           {/* Legacy redirect */}
