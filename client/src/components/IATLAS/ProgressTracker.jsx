@@ -27,10 +27,23 @@ export function saveProgress(progress) {
   }
 }
 
+/** Allowed dimension keys — prevents prototype pollution from untrusted input */
+const VALID_DIMENSION_KEYS = new Set([
+  'agentic-generative',
+  'somatic-regulative',
+  'cognitive-narrative',
+  'relational-connective',
+  'emotional-adaptive',
+  'spiritual-existential',
+]);
+
 export function markSkillComplete(dimensionKey, skillId, xpReward) {
+  if (!VALID_DIMENSION_KEYS.has(dimensionKey)) return {};
   const progress = loadProgress();
-  if (!progress[dimensionKey]) progress[dimensionKey] = {};
-  if (!progress[dimensionKey][skillId]) {
+  if (!Object.prototype.hasOwnProperty.call(progress, dimensionKey)) {
+    progress[dimensionKey] = Object.create(null);
+  }
+  if (!Object.prototype.hasOwnProperty.call(progress[dimensionKey], skillId)) {
     progress[dimensionKey][skillId] = {
       completedAt: new Date().toISOString(),
       xpEarned: xpReward || 0,
@@ -43,11 +56,17 @@ export function markSkillComplete(dimensionKey, skillId, xpReward) {
 }
 
 function updateStreak(dimensionKey) {
+  if (!VALID_DIMENSION_KEYS.has(dimensionKey)) return;
   try {
     const raw = localStorage.getItem(STREAK_KEY);
     const streaks = raw ? JSON.parse(raw) : {};
     const today = new Date().toDateString();
-    const dim = streaks[dimensionKey] || { current: 0, longest: 0, lastDate: null };
+    const existing = Object.prototype.hasOwnProperty.call(streaks, dimensionKey)
+      ? streaks[dimensionKey]
+      : null;
+    const dim = existing && typeof existing === 'object'
+      ? existing
+      : { current: 0, longest: 0, lastDate: null };
     if (dim.lastDate === today) return; // Already counted today
     const yesterday = new Date(Date.now() - 86400000).toDateString();
     if (dim.lastDate === yesterday) {

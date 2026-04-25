@@ -427,7 +427,7 @@ export const spiritualExistentialModules = [
     whyItMatters: {
       framework: 'ACT',
       rationale:
-        'Existential psychology (Yalom, Frankl, Frankl) identifies four ultimate concerns: death, freedom, isolation, and meaninglessness. Engaging with these questions rather than avoiding them is associated with greater equanimity, reduced anxiety, and deeper life engagement. ACT explicitly encourages contact with what matters most — and what matters most is often revealed when we face our finitude.',
+        'Existential psychology (Yalom, Frankl, May) identifies four ultimate concerns: death, freedom, isolation, and meaninglessness. Engaging with these questions rather than avoiding them is associated with greater equanimity, reduced anxiety, and deeper life engagement. ACT explicitly encourages contact with what matters most — and what matters most is often revealed when we face our finitude.',
     },
     instructions: [
       'Choose one of the three existential prompts below.',
