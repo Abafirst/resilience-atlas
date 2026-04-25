@@ -66,6 +66,7 @@ import TeamManagementPage from './pages/TeamManagementPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
+import IARFCurriculumPage from './pages/IARFCurriculumPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -351,6 +352,9 @@ function AppShell() {
 
           {/* Post-login profile completion (skipped by RequireProfileCompletion guard) */}
           <Route path="/complete-profile" element={<CompleteProfilePage />} />
+
+          {/* IARF Curriculum */}
+          <Route path="/iarf" element={<IARFCurriculumPage />} />
 
           {/* Default auth-gated home route */}
           <Route path="/*" element={<HomeRoute />} />
