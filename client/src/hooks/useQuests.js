@@ -93,7 +93,11 @@ export default function useQuests() {
 
 function getQuestTarget(template) {
   const r = template.requirements;
-  return r.skillsComplete || r.dimensionsCount || r.dimensionComplete ? (r.skillsComplete || r.dimensionsCount || 1) : 1;
+  if (r.skillsComplete)    return r.skillsComplete;
+  if (r.dimensionsComplete) return r.dimensionsComplete;
+  if (r.dimensionsCount)   return r.dimensionsCount;
+  if (r.dimensionComplete) return 1;
+  return 1;
 }
 
 function computeQuestProgress(template, stats) {
@@ -101,11 +105,22 @@ function computeQuestProgress(template, stats) {
   let current = 0;
   let target = getQuestTarget(template);
   if (r.skillsComplete) {
-    current = r.level
-      ? (stats.skillsByLevel?.[r.level] || 0)
-      : (stats.totalSkills || 0);
+    if (r.sameDimension) {
+      // Track the highest skill count achieved in any single dimension
+      current = stats.maxSkillsInOneDimension || 0;
+    } else if (r.level) {
+      current = stats.skillsByLevel?.[r.level] || 0;
+    } else {
+      current = stats.totalSkills || 0;
+    }
   } else if (r.dimensionsCount) {
     current = stats.dimensionsStarted || 0;
+  } else if (r.dimensionsComplete) {
+    // e.g. { dimensionsComplete: 6, level: 'foundation' } — count dimensions with the given level fully done
+    current = r.level
+      ? (stats.dimensionsCompleteByLevel?.[r.level] || 0)
+      : (stats.dimensionsFullyComplete || 0);
+    target = r.dimensionsComplete;
   } else if (r.dimensionComplete) {
     current = stats.dimensionsFullyComplete || 0;
     target = 1;
