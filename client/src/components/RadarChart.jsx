@@ -64,6 +64,17 @@ const ICON_SRCS = [
   '/icons/cognitive-narrative.svg',
 ];
 
+// ── Static constants (computed once, outside component) ───────────────────────
+const CARD_ANGLES  = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
+const ORD_ANGLES   = [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4];
+const MINOR_TICK_ANGLES = (() => {
+  const result = [];
+  for (let deg = 0; deg < 360; deg += 30) {
+    if (deg % 90 !== 0) result.push((deg * Math.PI) / 180 - Math.PI / 2);
+  }
+  return result;
+})();
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function polarToCartesian(cx, cy, r, angleRad) {
   return {
@@ -138,21 +149,19 @@ function RadarChart({ scores, size = 380 }) {
   const lenBack = R_OUTER * 0.45;
   const halfW   = 9;
 
-  // Cardinal and ordinal tick angles
-  const cardAngles = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
-  const ordAngles  = [Math.PI / 4, 3 * Math.PI / 4, 5 * Math.PI / 4, 7 * Math.PI / 4];
-
-  // Minor tick angles (every 30°, skipping cardinals)
-  const minorTickAngles = [];
-  for (let deg = 0; deg < 360; deg += 30) {
-    if (deg % 90 !== 0) {
-      minorTickAngles.push((deg * Math.PI) / 180 - Math.PI / 2);
-    }
-  }
+  // Cardinal and ordinal tick angles (module-level constants)
+  const cardAngles = CARD_ANGLES;
+  const ordAngles  = ORD_ANGLES;
+  const minorTickAngles = MINOR_TICK_ANGLES;
 
   // SVG viewBox height is taller to accommodate labels below
   const svgW = size;
   const svgH = size + 20;
+
+  // Respect prefers-reduced-motion
+  const reducedMotion = typeof window !== 'undefined'
+    && window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   return (
     <svg
@@ -353,46 +362,51 @@ function RadarChart({ scores, size = 380 }) {
       })}
 
       {/* ── Diamond needle ────────────────────────────────────────────────── */}
-      <g transform={`translate(${cx.toFixed(2)},${cy.toFixed(2)}) rotate(${needleDeg.toFixed(2)})`}>
-        {/* Needle glow */}
-        <ellipse
-          cx="0" cy={(-lenFwd * 0.5).toFixed(2)}
-          rx="12" ry={(lenFwd * 0.55).toFixed(2)}
-          fill={PAL.needleGlow}
-          opacity="0.25"
-        />
-        {/* Forward half (tip to center) */}
-        <polygon
-          points={`0,${(-lenFwd).toFixed(2)} ${halfW},0 0,5 ${-halfW},0`}
-          fill="url(#rc-needleFwd)"
-          filter="drop-shadow(0 0 6px rgba(21,101,192,0.5))"
-        />
-        {/* Back half (center to tail) */}
-        <polygon
-          points={`0,${lenBack.toFixed(2)} ${halfW},0 0,5 ${-halfW},0`}
-          fill="url(#rc-needleBack)"
-          opacity="0.90"
-        />
-        {/* Outline */}
-        <polygon
-          points={`0,${(-lenFwd).toFixed(2)} ${halfW},0 0,${lenBack.toFixed(2)} ${-halfW},0`}
-          fill="none"
-          stroke="rgba(255,255,255,0.30)"
-          strokeWidth="1"
-        />
-        {/* Needle sweep animation */}
-        <animateTransform
-          attributeName="transform"
-          type="rotate"
-          from="0"
-          to={needleDeg.toFixed(2)}
-          dur="1.1s"
-          fill="freeze"
-          calcMode="spline"
-          keyTimes="0;1"
-          keySplines="0.68,-0.55,0.265,1.55"
-          additive="replace"
-        />
+      {/* Outer <g> handles the translate to chart center; inner <g> handles rotation */}
+      <g transform={`translate(${cx.toFixed(2)},${cy.toFixed(2)})`}>
+        <g transform={`rotate(${needleDeg.toFixed(2)})`}>
+          {/* Needle glow */}
+          <ellipse
+            cx="0" cy={(-lenFwd * 0.5).toFixed(2)}
+            rx="12" ry={(lenFwd * 0.55).toFixed(2)}
+            fill={PAL.needleGlow}
+            opacity="0.25"
+          />
+          {/* Forward half (tip to center) */}
+          <polygon
+            points={`0,${(-lenFwd).toFixed(2)} ${halfW},0 0,5 ${-halfW},0`}
+            fill="url(#rc-needleFwd)"
+            filter="drop-shadow(0 0 6px rgba(21,101,192,0.5))"
+          />
+          {/* Back half (center to tail) */}
+          <polygon
+            points={`0,${lenBack.toFixed(2)} ${halfW},0 0,5 ${-halfW},0`}
+            fill="url(#rc-needleBack)"
+            opacity="0.90"
+          />
+          {/* Outline */}
+          <polygon
+            points={`0,${(-lenFwd).toFixed(2)} ${halfW},0 0,${lenBack.toFixed(2)} ${-halfW},0`}
+            fill="none"
+            stroke="rgba(255,255,255,0.30)"
+            strokeWidth="1"
+          />
+          {/* Needle sweep animation — skipped when prefers-reduced-motion is set */}
+          {!reducedMotion && (
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              from="0"
+              to={needleDeg.toFixed(2)}
+              dur="1.1s"
+              fill="freeze"
+              calcMode="spline"
+              keyTimes="0;1"
+              keySplines="0.68,-0.55,0.265,1.55"
+              additive="replace"
+            />
+          )}
+        </g>
       </g>
 
       {/* ── Center hub ────────────────────────────────────────────────────── */}
