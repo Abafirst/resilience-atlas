@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 
@@ -155,7 +156,7 @@ const DIMENSIONS = [
     ],
   },
   {
-    key: 'spiritual-reflective',
+    key: 'spiritual-existential',
     icon: '/icons/spiritual-reflective.svg',
     title: 'Spiritual-Existential',
     tagline: 'Ground resilience in values, meaning, and purpose',
@@ -277,6 +278,15 @@ function DimensionCard({ dim, index }) {
           <GatedContent items={dim.comingSoon} />
         </div>
       )}
+
+      {/* Link to curriculum page */}
+      <Link
+        to={`/iatlas/curriculum/${dim.key}`}
+        className="iatlas-dim-curriculum-link"
+        aria-label={`Explore ${dim.title} curriculum`}
+      >
+        Explore Curriculum →
+      </Link>
     </article>
   );
 }
@@ -714,6 +724,25 @@ const STYLES = `
   .iatlas-expand-btn:focus-visible {
     outline: 2px solid var(--dim-color);
     outline-offset: 2px;
+  }
+
+  /* ── Curriculum link ─────────────────────────────────────────────────────── */
+  .iatlas-dim-curriculum-link {
+    display: block;
+    text-align: center;
+    background: var(--dim-color);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: .6rem 1rem;
+    font-size: .875rem;
+    font-weight: 700;
+    text-decoration: none;
+    margin-top: .75rem;
+    transition: opacity .15s;
+  }
+
+  .iatlas-dim-curriculum-link:hover {
+    opacity: .88;
   }
 
   .iatlas-chevron {
