@@ -25,10 +25,16 @@
       <stop offset="100%" stop-color="#2E5C8A"/>
     </radialGradient>
 
-    <!-- Linear gradient for the diamond needle (light at tip, dark at base) -->
-    <linearGradient id="ra-needle-grad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%"   stop-color="#6BA8F5"/>
+    <!-- Top needle gradient: lighter blue at tip (top), darker blue at base (center) -->
+    <linearGradient id="needleTopGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#4A6FA5"/>
       <stop offset="100%" stop-color="#2E5C8A"/>
+    </linearGradient>
+
+    <!-- Bottom needle gradient: slightly darker gray at base (center), lighter gray at tip (bottom) -->
+    <linearGradient id="needleBottomGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#B0B8C0"/>
+      <stop offset="100%" stop-color="#D8DCE0"/>
     </linearGradient>
 
     <!-- Clip path keeps all content inside the outer circle -->
@@ -76,12 +82,20 @@
   <line x1="128" y1="128" x2="25.8" y2="69"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
 
-  <!-- ── 4. Diamond needle (compass pointer) — vertical, points upward ── -->
-  <!-- Points: top-tip, right-equator, bottom-notch, left-equator         -->
-  <!-- Tip at y=62 clears the Agentic dot (cy=50, r=8 → bottom edge y=58) -->
-  <polygon points="128,62 135,120 128,135 121,120"
-    fill="url(#ra-needle-grad)"
+  <!-- ── 4. Double-pointed diamond needle (compass pointer) ────────────── -->
+  <!-- Top diamond: tip at y=62 (clears Agentic dot bottom edge ~y=58),     -->
+  <!--              widens at y=120, base meets center at y=128              -->
+  <polygon points="128,62 135,120 128,128 121,120"
+    fill="url(#needleTopGradient)"
     stroke="#2E5C8A"
+    stroke-width="0.5"
+    opacity="0.95"
+  />
+  <!-- Bottom diamond: base at y=128 (center), widens at y=136,             -->
+  <!--                 tip at y=196 (clears Emotional dot top edge ~y=198)  -->
+  <polygon points="128,128 135,136 128,196 121,136"
+    fill="url(#needleBottomGradient)"
+    stroke="#A0A8B0"
     stroke-width="0.5"
     opacity="0.95"
   />
