@@ -469,7 +469,246 @@ describe('gamificationService — unit tests', () => {
   });
 });
 
-// ── Entitlement gate (requirePaidTier) ────────────────────────────────────────
+// ── IARF XP Level System tests ────────────────────────────────────────────────
+
+describe('IARF XP level system — computeXPLevel', () => {
+  const svc = require('../backend/services/gamificationService');
+
+  test('0 points → Level 1 Resilience Explorer', () => {
+    const { xp, level, tierName } = svc.computeXPLevel(0);
+    expect(xp).toBe(0);
+    expect(level).toBe(1);
+    expect(tierName).toBe('Resilience Explorer');
+  });
+
+  test('50 points (500 XP) → Resilience Explorer tier', () => {
+    const { xp, tierName } = svc.computeXPLevel(50);
+    expect(xp).toBe(500);
+    expect(tierName).toBe('Resilience Explorer');
+  });
+
+  test('100 points (1000 XP) → Resilience Builder tier', () => {
+    const { xp, tierName, level } = svc.computeXPLevel(100);
+    expect(xp).toBe(1000);
+    expect(tierName).toBe('Resilience Builder');
+    expect(level).toBe(11);
+  });
+
+  test('500 points (5000 XP) → Resilience Architect tier', () => {
+    const { xp, tierName, level } = svc.computeXPLevel(500);
+    expect(xp).toBe(5000);
+    expect(tierName).toBe('Resilience Architect');
+    expect(level).toBe(21);
+  });
+
+  test('1500 points (15000 XP) → Resilience Master tier', () => {
+    const { xp, tierName, level } = svc.computeXPLevel(1500);
+    expect(xp).toBe(15000);
+    expect(tierName).toBe('Resilience Master');
+    expect(level).toBe(31);
+  });
+
+  test('progress percentage is between 0 and 100', () => {
+    [0, 10, 50, 100, 500, 1500, 2000].forEach(pts => {
+      const { progress } = svc.computeXPLevel(pts);
+      expect(progress).toBeGreaterThanOrEqual(0);
+      expect(progress).toBeLessThanOrEqual(100);
+    });
+  });
+
+  test('XP_LEVEL_TIERS exported and correctly structured', () => {
+    expect(Array.isArray(svc.XP_LEVEL_TIERS)).toBe(true);
+    expect(svc.XP_LEVEL_TIERS).toHaveLength(4);
+    svc.XP_LEVEL_TIERS.forEach(tier => {
+      expect(typeof tier.name).toBe('string');
+      expect(typeof tier.minXP).toBe('number');
+      expect(typeof tier.minLevel).toBe('number');
+    });
+  });
+});
+
+// ── IARF Streak Badge Tier tests ──────────────────────────────────────────────
+
+describe('IARF getStreakBadgeTier', () => {
+  const svc = require('../backend/services/gamificationService');
+
+  test('returns null for streaks below 7 days', () => {
+    expect(svc.getStreakBadgeTier(0)).toBeNull();
+    expect(svc.getStreakBadgeTier(6)).toBeNull();
+  });
+
+  test('returns Bronze for 7-day streak', () => {
+    const tier = svc.getStreakBadgeTier(7);
+    expect(tier).not.toBeNull();
+    expect(tier.badge).toContain('Bronze');
+    expect(tier.rarity).toBe('common');
+  });
+
+  test('returns Silver for 30-day streak', () => {
+    const tier = svc.getStreakBadgeTier(30);
+    expect(tier.badge).toContain('Silver');
+    expect(tier.rarity).toBe('uncommon');
+  });
+
+  test('returns Gold for 90-day streak', () => {
+    const tier = svc.getStreakBadgeTier(90);
+    expect(tier.badge).toContain('Gold');
+    expect(tier.rarity).toBe('rare');
+  });
+
+  test('returns Diamond for 365-day streak', () => {
+    const tier = svc.getStreakBadgeTier(365);
+    expect(tier.badge).toContain('Diamond');
+    expect(tier.rarity).toBe('legendary');
+  });
+
+  test('returns highest matching tier (e.g. 100 days → Gold)', () => {
+    const tier = svc.getStreakBadgeTier(100);
+    expect(tier.badge).toContain('Gold');
+  });
+});
+
+// ── IARF Dimensional Streak tests ─────────────────────────────────────────────
+
+describe('IARF updateDimensionalStreak', () => {
+  const svc = require('../backend/services/gamificationService');
+
+  function makeProgress(existing = []) {
+    return {
+      dimensionalStreaks: existing,
+      activityLog: [],
+    };
+  }
+
+  function dateOffset(days) {
+    const d = new Date('2026-04-25T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() + days);
+    return d;
+  }
+
+  test('creates new dimensional streak entry on first practice', () => {
+    const progress = makeProgress();
+    const now = dateOffset(0);
+    svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks.find(d => d.dimension === 'Somatic-Regulative');
+    expect(ds).toBeDefined();
+    expect(ds.current).toBe(1);
+    expect(ds.totalCount).toBe(1);
+    expect(ds.longest).toBe(1);
+  });
+
+  test('extends streak on consecutive day', () => {
+    const now = dateOffset(0);
+    const yesterday = dateOffset(-1);
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 5,
+      longest: 10,
+      lastPracticeDate: yesterday,
+      totalCount: 5,
+      lastRecoveryMonth: null,
+      lastRecoveryYear: null,
+    }]);
+    const extended = svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(extended).toBe(true);
+    expect(ds.current).toBe(6);
+    expect(ds.totalCount).toBe(6);
+  });
+
+  test('resets streak after gap > 2 days', () => {
+    const now = dateOffset(0);
+    const threeDaysAgo = dateOffset(-3);
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 5,
+      longest: 10,
+      lastPracticeDate: threeDaysAgo,
+      totalCount: 5,
+      lastRecoveryMonth: null,
+      lastRecoveryYear: null,
+    }]);
+    svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(ds.current).toBe(1);
+    expect(ds.longest).toBe(10); // longest preserved
+  });
+
+  test('same day practice does not double-count streak', () => {
+    const now = new Date('2026-04-25T12:00:00Z');
+    const earlier = new Date('2026-04-25T08:00:00Z');
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 3,
+      longest: 3,
+      lastPracticeDate: earlier,
+      totalCount: 3,
+      lastRecoveryMonth: null,
+      lastRecoveryYear: null,
+    }]);
+    const extended = svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(extended).toBe(false);
+    expect(ds.current).toBe(3); // no change to streak
+    expect(ds.totalCount).toBe(4); // count still increments
+  });
+
+  test('applies grace period for 2-day gap (streak recovery)', () => {
+    const now = dateOffset(0);
+    const twoDaysAgo = dateOffset(-2);
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 5,
+      longest: 10,
+      lastPracticeDate: twoDaysAgo,
+      totalCount: 5,
+      lastRecoveryMonth: null,  // no prior recovery this month
+      lastRecoveryYear: null,
+    }]);
+    const extended = svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(extended).toBe(true); // streak preserved with grace
+    expect(ds.current).toBe(6);
+    expect(ds.lastRecoveryMonth).not.toBeNull(); // recovery token consumed
+  });
+
+  test('does NOT apply grace period if already used this month', () => {
+    const now = new Date('2026-04-25T12:00:00Z');
+    const twoDaysAgo = new Date('2026-04-23T12:00:00Z');
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 5,
+      longest: 10,
+      lastPracticeDate: twoDaysAgo,
+      totalCount: 5,
+      lastRecoveryMonth: 3, // April = month 3 (0-indexed); already used
+      lastRecoveryYear: 2026,
+    }]);
+    svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(ds.current).toBe(1); // streak reset — no grace available
+  });
+
+  test('longest streak is updated when current exceeds it', () => {
+    const now = dateOffset(0);
+    const yesterday = dateOffset(-1);
+    const progress = makeProgress([{
+      dimension: 'Somatic-Regulative',
+      current: 9,
+      longest: 9,
+      lastPracticeDate: yesterday,
+      totalCount: 9,
+      lastRecoveryMonth: null,
+      lastRecoveryYear: null,
+    }]);
+    svc.updateDimensionalStreak(progress, 'Somatic-Regulative', now);
+    const ds = progress.dimensionalStreaks[0];
+    expect(ds.current).toBe(10);
+    expect(ds.longest).toBe(10); // updated
+  });
+});
+
+
 
 describe('requirePaidTier — entitlement gate', () => {
   const originalStripeKey = process.env.STRIPE_SECRET_KEY;

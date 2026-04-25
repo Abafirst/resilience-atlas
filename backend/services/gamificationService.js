@@ -8,6 +8,7 @@
  *   - Awarding badges
  *   - Managing weekly challenges
  *   - Leaderboard queries
+ *   - IARF XP levels and dimensional streak tracking
  */
 
 const GamificationProgress = require('../models/GamificationProgress');
@@ -22,6 +23,102 @@ const POINTS = {
   BADGE_UNLOCKED:      5,
   SHARE:               1,
 };
+
+// ── IARF XP System ────────────────────────────────────────────────────────────
+
+/**
+ * XP awards for each activity type (IARF curriculum gamification).
+ * These XP values are used in parallel with the points system for level display.
+ */
+const XP_AWARDS = {
+  MICROPRACTICE_COMPLETE:   10,
+  SKILL_MODULE_COMPLETE:    50,
+  WEEKLY_REFLECTION:        25,
+  RETAKE_RESILIENCE_ATLAS: 100,
+  DIMENSIONAL_IMPROVEMENT: 150,   // +5% score improvement
+  HELP_ANOTHER_USER:        75,
+  STREAK_BONUS_7:           20,   // bonus for 7-day streak milestone
+  STREAK_BONUS_30:          60,
+  STREAK_BONUS_90:         150,
+  STREAK_BONUS_365:        500,
+  QUEST_COMPLETE:           80,
+  BALANCE_BONUS:            30,   // all 6 dims within 15%
+};
+
+/**
+ * XP level tier definitions for the IARF curriculum gamification system.
+ */
+const XP_LEVEL_TIERS = [
+  { name: 'Resilience Explorer',  minXP:      0, maxXP:   999, minLevel:  1, maxLevel: 10 },
+  { name: 'Resilience Builder',   minXP:   1000, maxXP:  4999, minLevel: 11, maxLevel: 20 },
+  { name: 'Resilience Architect', minXP:   5000, maxXP: 14999, minLevel: 21, maxLevel: 30 },
+  { name: 'Resilience Master',    minXP:  15000, maxXP: Infinity, minLevel: 31, maxLevel: Infinity },
+];
+
+/**
+ * Compute IARF XP level from total XP.
+ * XP is scaled from the internal points system (1 point ≈ 10 XP for display).
+ *
+ * @param {number} totalPoints — raw points from the DB
+ * @returns {{ xp: number, level: number, tier: string, nextLevelXP: number, progress: number }}
+ */
+function computeXPLevel(totalPoints) {
+  const xp = totalPoints * 10; // scale factor: 1 point = 10 XP
+  let level = 1;
+  let tierIdx = 0;
+
+  for (let i = 0; i < XP_LEVEL_TIERS.length; i++) {
+    const t = XP_LEVEL_TIERS[i];
+    if (xp >= t.minXP) {
+      tierIdx = i;
+      // Compute level within tier
+      const xpInTier = xp - t.minXP;
+      const tierRange = t.maxXP === Infinity ? 15000 : (t.maxXP - t.minXP);
+      const levelsInTier = t.maxLevel === Infinity ? 10 : (t.maxLevel - t.minLevel + 1);
+      const xpPerLevel = Math.floor(tierRange / levelsInTier);
+      const levelsEarned = xpPerLevel > 0 ? Math.floor(xpInTier / xpPerLevel) : 0;
+      level = t.minLevel + Math.min(levelsEarned, levelsInTier - 1);
+    }
+  }
+
+  const tier = XP_LEVEL_TIERS[tierIdx];
+  const xpInTier = xp - tier.minXP;
+  const tierRange = tier.maxXP === Infinity ? 15000 : (tier.maxXP - tier.minXP);
+  const levelsInTier = tier.maxLevel === Infinity ? 10 : (tier.maxLevel - tier.minLevel + 1);
+  const xpPerLevel = Math.floor(tierRange / levelsInTier);
+  const xpForNextLevel = tier.maxXP === Infinity ? tier.minXP + tierRange : Math.min(tier.minXP + (level - tier.minLevel + 1) * xpPerLevel, tier.maxXP + 1);
+  const xpProgress = xpPerLevel > 0 ? ((xpInTier % xpPerLevel) / xpPerLevel) * 100 : 0;
+
+  return {
+    xp,
+    level,
+    tierName:     tier.name,
+    nextLevelXP:  xpForNextLevel,
+    progress:     Math.round(Math.min(xpProgress, 100)),
+  };
+}
+
+/**
+ * Streak badge tier names (IARF micropractice streak rewards).
+ */
+const STREAK_BADGE_TIERS = [
+  { days: 365, badge: '💎 Diamond', rarity: 'legendary' },
+  { days:  90, badge: '🥇 Gold',    rarity: 'rare'      },
+  { days:  30, badge: '🥈 Silver',  rarity: 'uncommon'  },
+  { days:   7, badge: '🥉 Bronze',  rarity: 'common'    },
+];
+
+/**
+ * Get streak badge tier for a given streak length.
+ * @param {number} days
+ * @returns {{ badge: string, rarity: string }|null}
+ */
+function getStreakBadgeTier(days) {
+  for (const tier of STREAK_BADGE_TIERS) {
+    if (days >= tier.days) return tier;
+  }
+  return null;
+}
 
 /** All badge definitions — ordered so early/easy ones are checked first. */
 const BADGE_DEFINITIONS = [
@@ -126,19 +223,21 @@ async function getOrCreateProgress(userId) {
 /**
  * Record a practice completion for a user. Updates streak, awards points
  * and triggers badge checks. Idempotent within the same calendar day.
+ * Also updates dimensional streak tracking when a dimension is provided.
  *
  * @param {string}  userId
  * @param {string}  practiceId
  * @param {string}  dimension   — resilience dimension (e.g. 'Cognitive-Narrative')
- * @returns {Promise<{progress, newBadges: string[], streakUpdated: boolean}>}
+ * @returns {Promise<{progress, newBadges: string[], streakUpdated: boolean, dimensionalStreakUpdated: boolean}>}
  */
 async function recordPracticeCompletion(userId, practiceId, dimension) {
   const progress = await getOrCreateProgress(userId);
   const now = new Date();
   const lastDate = progress.currentStreak.lastPracticeDate;
   let streakUpdated = false;
+  let dimensionalStreakUpdated = false;
 
-  // --- Update streak ---
+  // --- Update global streak ---
   if (!lastDate || (!isSameDay(lastDate, now) && !isConsecutiveDay(lastDate, now))) {
     // Streak broken (or first practice)
     progress.currentStreak.days = 1;
@@ -158,6 +257,11 @@ async function recordPracticeCompletion(userId, practiceId, dimension) {
     progress.longestStreak = progress.currentStreak.days;
   }
 
+  // --- Update dimensional streak when a dimension is provided ---
+  if (dimension) {
+    dimensionalStreakUpdated = updateDimensionalStreak(progress, dimension, now);
+  }
+
   // --- Award points for the practice ---
   progress.totalPoints += POINTS.PRACTICE_COMPLETE;
   progress.pointHistory.push({
@@ -165,6 +269,17 @@ async function recordPracticeCompletion(userId, practiceId, dimension) {
     points:      POINTS.PRACTICE_COMPLETE,
     description: `Completed practice: ${practiceId}`,
   });
+
+  // --- Log activity for IARF tracking ---
+  if (progress.activityLog) {
+    progress.activityLog.push({
+      type:      'micropractice_complete',
+      dimension: dimension || null,
+      skillId:   practiceId,
+      xpEarned:  XP_AWARDS.MICROPRACTICE_COMPLETE,
+      timestamp: now,
+    });
+  }
 
   // Streak maintenance bonus (awarded once per day when streak is ongoing)
   if (streakUpdated) {
@@ -227,7 +342,82 @@ async function recordPracticeCompletion(userId, practiceId, dimension) {
 
   logger.info(`Gamification: practice recorded for user ${userId} (streak: ${progress.currentStreak.days})`);
 
-  return { progress, newBadges: newBadgeNames, streakUpdated };
+  return { progress, newBadges: newBadgeNames, streakUpdated, dimensionalStreakUpdated };
+}
+
+/**
+ * Update dimensional streak tracking for a given dimension.
+ * Supports streak recovery: 1 miss forgiveness per calendar month.
+ *
+ * @param {object} progress  — GamificationProgress document
+ * @param {string} dimension — Canonical dimension name
+ * @param {Date}   now       — Current timestamp
+ * @returns {boolean} True if streak was extended (consecutive day)
+ */
+function updateDimensionalStreak(progress, dimension, now) {
+  if (!progress.dimensionalStreaks) {
+    progress.dimensionalStreaks = [];
+  }
+
+  let ds = progress.dimensionalStreaks.find(d => d.dimension === dimension);
+  if (!ds) {
+    progress.dimensionalStreaks.push({
+      dimension,
+      current:          0,
+      longest:          0,
+      lastPracticeDate: null,
+      totalCount:       0,
+      lastRecoveryMonth: null,
+      lastRecoveryYear:  null,
+    });
+    ds = progress.dimensionalStreaks[progress.dimensionalStreaks.length - 1];
+  }
+
+  const lastDate = ds.lastPracticeDate;
+  let streakExtended = false;
+
+  if (!lastDate) {
+    // First practice in this dimension
+    ds.current = 1;
+    ds.totalCount = 1;
+  } else if (isSameDay(lastDate, now)) {
+    // Already practiced today — increment count but not streak
+    ds.totalCount += 1;
+  } else if (isConsecutiveDay(lastDate, now)) {
+    // Consecutive day — extend streak
+    ds.current += 1;
+    ds.totalCount += 1;
+    streakExtended = true;
+  } else {
+    // Gap — check for streak recovery (1 miss per month)
+    const nowMonth = now.getUTCMonth();
+    const nowYear  = now.getUTCFullYear();
+    const daysSinceLast = Math.floor((now - lastDate) / (1000 * 60 * 60 * 24));
+    const canRecover = daysSinceLast === 2 &&
+      (ds.lastRecoveryMonth !== nowMonth || ds.lastRecoveryYear !== nowYear);
+
+    if (canRecover) {
+      // Use the forgiveness — extend streak as if consecutive
+      ds.current += 1;
+      ds.totalCount += 1;
+      ds.lastRecoveryMonth = nowMonth;
+      ds.lastRecoveryYear  = nowYear;
+      streakExtended = true;
+      logger.info(`Dimensional streak recovery used for dimension: ${dimension}`);
+    } else {
+      // Streak broken
+      ds.current = 1;
+      ds.totalCount += 1;
+    }
+  }
+
+  ds.lastPracticeDate = now;
+
+  if (ds.current > ds.longest) {
+    ds.longest = ds.current;
+  }
+
+  return streakExtended;
 }
 
 /**
@@ -371,6 +561,13 @@ module.exports = {
   updatePreferences,
   getLeaderboard,
   runDailyStreakCheck,
+  // IARF XP system
+  computeXPLevel,
+  getStreakBadgeTier,
+  updateDimensionalStreak,
+  XP_AWARDS,
+  XP_LEVEL_TIERS,
+  STREAK_BADGE_TIERS,
   // Exported for testing
   getISOWeekAndYear,
   POINTS,
