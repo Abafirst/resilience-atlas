@@ -39,12 +39,12 @@ Each dimension folder follows the same structure:
 
 | Folder | Dimension | Core Focus |
 |--------|-----------|------------|
-| [`agentic/`](agentic/) | Agentic-Generative | Purposeful action, self-efficacy, forward momentum |
-| [`relational/`](relational/) | Relational-Connective | Social support, connection, interdependence |
-| [`spiritual/`](spiritual/) | Spiritual-Reflective | Values, meaning, existential grounding |
-| [`emotional/`](emotional/) | Emotional-Adaptive | Emotional processing, flexibility, expression |
-| [`somatic/`](somatic/) | Somatic-Regulative | Body awareness, physical regulation |
-| [`cognitive/`](cognitive/) | Cognitive-Narrative | Meaning-making, reframing, narrative |
+| [`agentic-generative/`](agentic-generative/) | Agentic-Generative | Purposeful action, self-efficacy, forward momentum |
+| [`relational-connective/`](relational-connective/) | Relational-Connective | Social support, connection, interdependence |
+| [`spiritual-reflective/`](spiritual-reflective/) | Spiritual-Reflective | Values, meaning, existential grounding |
+| [`emotional-adaptive/`](emotional-adaptive/) | Emotional-Adaptive | Emotional processing, flexibility, expression |
+| [`somatic-regulative/`](somatic-regulative/) | Somatic-Regulative | Body awareness, physical regulation |
+| [`cognitive-narrative/`](cognitive-narrative/) | Cognitive-Narrative | Meaning-making, reframing, narrative |
 
 ---
 

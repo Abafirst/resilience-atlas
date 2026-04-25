@@ -68,12 +68,12 @@ IARF/
 │       └── literature-review.md       ← Supporting literature and citations
 ├── curriculum/
 │   ├── README.md                      ← Curriculum overview and how to use
-│   ├── agentic/                       ← Agentic-Generative dimension curriculum
-│   ├── relational/                    ← Relational-Connective dimension curriculum
-│   ├── spiritual/                     ← Spiritual-Reflective dimension curriculum
-│   ├── emotional/                     ← Emotional-Adaptive dimension curriculum
-│   ├── somatic/                       ← Somatic-Regulative dimension curriculum
-│   └── cognitive/                     ← Cognitive-Narrative dimension curriculum
+│   ├── agentic-generative/                ← Agentic-Generative dimension curriculum
+│   ├── relational-connective/             ← Relational-Connective dimension curriculum
+│   ├── spiritual-reflective/              ← Spiritual-Reflective dimension curriculum
+│   ├── emotional-adaptive/                ← Emotional-Adaptive dimension curriculum
+│   ├── somatic-regulative/                ← Somatic-Regulative dimension curriculum
+│   └── cognitive-narrative/               ← Cognitive-Narrative dimension curriculum
 └── templates/
     ├── intervention-plan.md           ← Intervention planning template
     ├── progress-note.md               ← Session/progress note template
