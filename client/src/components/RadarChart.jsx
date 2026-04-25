@@ -19,6 +19,13 @@ const DEFAULT_COLORS = {
   'Somatic-Regulative':    '#0891B2',
 };
 
+const CHART_COLORS = {
+  polygonFill:   'rgba(0,151,167,0.12)',
+  polygonStroke: 'rgba(0,151,167,0.65)',
+  outerRing:     '#1565C0',
+  innerRing:     '#0097A7',
+};
+
 // Convert polar coordinates to Cartesian
 function polarToCartesian(cx, cy, r, angleRad) {
   return {
@@ -74,22 +81,24 @@ function RadarChart({ scores, colors = DEFAULT_COLORS, size = 340 }) {
     >
       <defs>
         <radialGradient id="radarFill" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#667eea" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#4F46E5" stopOpacity="0.15" />
+          <stop offset="0%" stopColor="#0097A7" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="#0097A7" stopOpacity="0.06" />
         </radialGradient>
       </defs>
 
       {/* Concentric grid rings */}
-      {rings.map(pct => {
+      {rings.map((pct, idx) => {
         const r = (pct / 100) * maxR;
         const ringPts = angles.map(a => polarToCartesian(cx, cy, r, a));
+        const isOuter = idx === rings.length - 1;
         return (
           <polygon
             key={pct}
             points={pointsStr(ringPts)}
             fill="none"
-            stroke="rgba(160,174,192,0.35)"
-            strokeWidth="1"
+            stroke={isOuter ? CHART_COLORS.outerRing : CHART_COLORS.innerRing}
+            strokeOpacity={isOuter ? 0.7 : 0.3}
+            strokeWidth={isOuter ? 1.5 : 1}
           />
         );
       })}
@@ -131,7 +140,7 @@ function RadarChart({ scores, colors = DEFAULT_COLORS, size = 340 }) {
       <polygon
         points={pointsStr(dataPoints)}
         fill="url(#radarFill)"
-        stroke="#4F46E5"
+        stroke={CHART_COLORS.polygonStroke}
         strokeWidth="2.5"
         strokeLinejoin="round"
         opacity="0.9"
