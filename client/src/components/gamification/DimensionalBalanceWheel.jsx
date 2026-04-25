@@ -394,7 +394,9 @@ export default function DimensionalBalanceWheel({
           const { x, y } = polarToCartesian(angle, labelR);
           const meta      = IARF_DIMENSION_META[dim];
           const score     = rawScores[i];
-          const isTop     = angle < 0.3 || angle > 2 * Math.PI - 0.3;
+          // Threshold in radians to determine label text-anchor for top/bottom labels
+          const AXIS_TOP_THRESHOLD = 0.3;
+          const isTop     = angle < AXIS_TOP_THRESHOLD || angle > 2 * Math.PI - AXIS_TOP_THRESHOLD;
           const isLeft    = x < CENTER - 5;
           const anchor    = isLeft ? 'end' : isTop ? 'middle' : 'start';
 
