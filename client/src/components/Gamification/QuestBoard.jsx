@@ -7,9 +7,9 @@ import React, { useMemo } from 'react';
 import { ALL_QUESTS } from '../../data/gamification/quests.js';
 
 const TYPE_META = {
-  sprint:  { icon: '⚡', label: 'Sprint', color: '#f97316' },
-  monthly: { icon: '🏔️', label: 'Monthly', color: '#4f46e5' },
-  epic:    { icon: '🌟', label: 'Epic', color: '#eab308' },
+  sprint:  { icon: '/icons/game-target.svg', label: 'Sprint', color: '#f97316' },
+  monthly: { icon: '/icons/game-mountain.svg', label: 'Monthly', color: '#4f46e5' },
+  epic:    { icon: '/icons/star.svg', label: 'Epic', color: '#eab308' },
 };
 
 const STYLES = `
@@ -85,9 +85,11 @@ const STYLES = `
   }
 
   .qb-card-icon {
-    font-size: 1.5rem;
-    line-height: 1;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   .qb-card-meta {
@@ -276,7 +278,9 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
     return (
       <div className="qb-card" key={quest.id}>
         <div className="qb-card-header">
-          <span className="qb-card-icon" aria-hidden="true">{quest.icon || tm.icon}</span>
+          <span className="qb-card-icon" aria-hidden="true">
+            <img src={quest.icon || tm.icon} alt="" width={24} height={24} />
+          </span>
           <div className="qb-card-meta">
             <div className="qb-card-title">{quest.title}</div>
             <div className="qb-card-desc">{quest.description}</div>
@@ -290,7 +294,9 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
             <span className="qb-reward-pill">+{quest.rewards.xp} XP</span>
           )}
           {quest.rewards?.badge && (
-            <span className="qb-reward-pill">🏅 Badge</span>
+            <span className="qb-reward-pill">
+              <img src="/icons/badges.svg" alt="" width={12} height={12} aria-hidden="true" /> Badge
+            </span>
           )}
         </div>
 
@@ -326,7 +332,9 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
 
         {mode === 'completed' && (
           <>
-            <span className="qb-completed-badge">✅ Completed</span>
+            <span className="qb-completed-badge">
+              <img src="/icons/checkmark.svg" alt="" width={12} height={12} aria-hidden="true" /> Completed
+            </span>
             {activeData?.completedAt && (
               <div className="qb-completed-date">
                 {new Date(activeData.completedAt).toLocaleDateString()}
@@ -344,7 +352,8 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
 
       <div className="qb-section">
         <div className="qb-section-title">
-          ⚡ Available Quests
+          <img src="/icons/game-target.svg" alt="" width={16} height={16} aria-hidden="true" />
+          Available Quests
           <span className="qb-section-count">{availableQuests.length}</span>
         </div>
         {availableQuests.length === 0 ? (
@@ -358,7 +367,8 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
 
       <div className="qb-section">
         <div className="qb-section-title">
-          🏃 Active Quests
+          <img src="/icons/streaks.svg" alt="" width={16} height={16} aria-hidden="true" />
+          Active Quests
           <span className="qb-section-count">{activeQuests.length}</span>
         </div>
         {activeQuests.length === 0 ? (
@@ -376,7 +386,8 @@ export default function QuestBoard({ activeQuests = [], completedQuests = [], on
       {completedQuests.length > 0 && (
         <div className="qb-section">
           <div className="qb-section-title">
-            🏆 Completed
+            <img src="/icons/kids-trophy.svg" alt="" width={16} height={16} aria-hidden="true" />
+            Completed
             <span className="qb-section-count">{completedQuests.length}</span>
           </div>
           <div className="qb-grid">

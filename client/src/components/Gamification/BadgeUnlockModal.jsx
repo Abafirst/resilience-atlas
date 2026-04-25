@@ -253,7 +253,7 @@ export default function BadgeUnlockModal({ badge, onClose }) {
         </button>
 
         <div className="bum-subtitle-row">
-          <span className="bum-unlock-label">🎉 Badge Unlocked!</span>
+          <span className="bum-unlock-label">Badge Unlocked!</span>
         </div>
 
         <span className="bum-emoji" role="img" aria-label={name}>{emoji}</span>

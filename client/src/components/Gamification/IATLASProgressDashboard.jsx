@@ -163,8 +163,9 @@ const STYLES = `
     min-width: 0;
   }
 
-  .ipd-dim-emoji {
-    font-size: 1rem;
+  .ipd-dim-icon {
+    width: 16px;
+    height: 16px;
     flex-shrink: 0;
   }
 
@@ -348,10 +349,10 @@ export default function IATLASProgressDashboard() {
         </div>
         <div className="ipd-header-actions">
           <Link to="/iatlas" className="ipd-btn ipd-btn-primary">
-            📚 View Full Curriculum
+            View Full Curriculum
           </Link>
           <button className="ipd-btn ipd-btn-secondary" onClick={scrollToQuestBoard}>
-            🎯 Start a Quest
+            Start a Quest
           </button>
         </div>
       </div>
@@ -364,11 +365,11 @@ export default function IATLASProgressDashboard() {
       {/* Stats Row */}
       <div className="ipd-section">
         <div className="ipd-stats-grid">
-          <StatsCard icon="⭐" label="Total XP" value={totalXP.toLocaleString()} color="#eab308" />
-          <StatsCard icon="✅" label="Skills Completed" value={stats.totalSkills} color="#059669" />
-          <StatsCard icon="🏅" label="Badges Earned" value={stats.badgesEarned} color="#7c3aed" />
-          <StatsCard icon="🔥" label="Current Streak" value={`${stats.currentStreak}d`} color="#f97316" />
-          <StatsCard icon="🎯" label="Active Quests" value={stats.activeQuestsCount} color="#4f46e5" />
+          <StatsCard icon="/icons/star.svg" label="Total XP" value={totalXP.toLocaleString()} color="#eab308" />
+          <StatsCard icon="/icons/checkmark.svg" label="Skills Completed" value={stats.totalSkills} color="#059669" />
+          <StatsCard icon="/icons/badges.svg" label="Badges Earned" value={stats.badgesEarned} color="#7c3aed" />
+          <StatsCard icon="/icons/fire.svg" label="Current Streak" value={`${stats.currentStreak}d`} color="#f97316" />
+          <StatsCard icon="/icons/game-target.svg" label="Active Quests" value={stats.activeQuestsCount} color="#4f46e5" />
           <StatsCard
             icon={levelInfo.icon}
             label="Level"
@@ -382,13 +383,16 @@ export default function IATLASProgressDashboard() {
       {/* Two-column: Dimension Progress + Activity Feed */}
       <div className="ipd-section ipd-two-col">
         <div className="ipd-card">
-          <h2 className="ipd-section-title">🧭 Dimension Progress</h2>
+          <h2 className="ipd-section-title">
+            <img src="/icons/compass.svg" alt="" width={16} height={16} aria-hidden="true" />
+            Dimension Progress
+          </h2>
           <div className="ipd-dim-list">
             {Object.values(dimStats).map(dim => (
               <div className="ipd-dim-row" key={dim.key}>
                 <div className="ipd-dim-header">
                   <div className="ipd-dim-name-group">
-                    <span className="ipd-dim-emoji" aria-hidden="true">{dim.emoji}</span>
+                    <img src={dim.icon} alt="" width={16} height={16} className="ipd-dim-icon" aria-hidden="true" />
                     <Link
                       to={`/iatlas/curriculum/${dim.key}`}
                       className="ipd-dim-name"
@@ -432,7 +436,10 @@ export default function IATLASProgressDashboard() {
 
       {/* Quest Board */}
       <div className="ipd-section" ref={questBoardRef}>
-        <h2 className="ipd-section-title">📋 Quest Board</h2>
+        <h2 className="ipd-section-title">
+          <img src="/icons/quest.svg" alt="" width={16} height={16} aria-hidden="true" />
+          Quest Board
+        </h2>
         <QuestBoard
           activeQuests={activeQuests}
           completedQuests={completedQuests}
@@ -443,7 +450,10 @@ export default function IATLASProgressDashboard() {
 
       {/* Streak Tracker */}
       <div className="ipd-section ipd-card">
-        <h2 className="ipd-section-title">🔥 Streak Tracker</h2>
+        <h2 className="ipd-section-title">
+          <img src="/icons/fire.svg" alt="" width={16} height={16} aria-hidden="true" />
+          Streak Tracker
+        </h2>
         <StreakTracker
           overallStreak={overallStreak}
           dimensionStreaks={dimensionStreaks}

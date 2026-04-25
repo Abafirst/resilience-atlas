@@ -212,7 +212,11 @@ export default function BadgeCard({ badge, onClick, showDetails = true }) {
     >
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
 
-      <span className="bc-emoji" aria-hidden="true">{earned ? emoji : '🔒'}</span>
+      <span className="bc-emoji" aria-hidden="true">
+        {earned
+          ? emoji
+          : <img src="/icons/lock.svg" alt="" width={24} height={24} style={{ opacity: 0.5 }} />}
+      </span>
       {!earned && <span className="bc-lock-overlay">Locked</span>}
 
       {showDetails && (

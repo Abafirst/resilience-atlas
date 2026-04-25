@@ -230,7 +230,7 @@ export default function XPProgressBar({ totalXP = 0, levelInfo, compact = false 
 
         {!compact && (
           isMax ? (
-            <div className="xpb-max-label">✨ MAX LEVEL</div>
+            <div className="xpb-max-label">MAX LEVEL</div>
           ) : (
             <div className="xpb-footer">
               <span>{totalXP.toLocaleString()} XP total</span>

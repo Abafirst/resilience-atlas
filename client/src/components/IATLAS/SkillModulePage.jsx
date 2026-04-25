@@ -305,8 +305,12 @@ const PAGE_STYLES = `
   }
 
   .smp-badge-icon {
-    font-size: 2rem;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .smp-badge-info {
@@ -583,9 +587,14 @@ export default function SkillModulePage() {
           {/* Badge preview */}
           {module.badge && (
             <div className="smp-badge-preview" style={{ marginBottom: '1.25rem' }}>
-              <span className="smp-badge-icon" aria-hidden="true">{module.badge.icon}</span>
+              <span className="smp-badge-icon" aria-hidden="true">
+                <img src="/icons/badges.svg" alt="" width={32} height={32} />
+              </span>
               <div className="smp-badge-info">
-                <p className="smp-badge-name">🏅 Earn: {module.badge.name}</p>
+                <p className="smp-badge-name">
+                  <img src="/icons/badges.svg" alt="" width={14} height={14} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '4px' }} />
+                  Earn: {module.badge.name}
+                </p>
                 <p className="smp-badge-req">{module.badge.requirement}</p>
               </div>
             </div>
