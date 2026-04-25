@@ -435,6 +435,8 @@ function RadarChart({ scores, size = 380 }) {
             width={ICON_SZ}
             height={ICON_SZ}
             opacity={isDom ? 1.0 : 0.7}
+            aria-label={`${DIM_SHORT[i]} dimension icon`}
+            role="img"
           />
         );
       })}
@@ -476,7 +478,7 @@ function RadarChart({ scores, size = 380 }) {
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
             >
-              {score}
+              {score}%
             </text>
           </g>
         );
