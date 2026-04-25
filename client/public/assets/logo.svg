@@ -39,12 +39,12 @@
 
     <!-- Clip path keeps all content inside the outer circle -->
     <clipPath id="ra-clip">
-      <circle cx="128" cy="128" r="118"/>
+      <circle cx="128" cy="128" r="100"/>
     </clipPath>
   </defs>
 
   <!-- ── 1. Outer circular boundary ───────────────────────────────── -->
-  <circle cx="128" cy="128" r="118"
+  <circle cx="128" cy="128" r="100"
     fill="none"
     stroke="#4A90E2"
     stroke-width="3"
@@ -52,74 +52,74 @@
   />
 
   <!-- ── 2. Concentric rings radiating from center ─────────────────── -->
-  <!-- Innermost ring (r=28) -->
-  <circle cx="128" cy="128" r="28"
+  <!-- Innermost ring (r=42) -->
+  <circle cx="128" cy="128" r="42"
     fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.7"/>
-  <!-- Middle ring (r=52) -->
-  <circle cx="128" cy="128" r="52"
+  <!-- Middle ring (r=58) -->
+  <circle cx="128" cy="128" r="58"
     fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.6"/>
-  <!-- Outer ring (r=76) — near the dimension dots -->
-  <circle cx="128" cy="128" r="76"
+  <!-- Outer ring (r=75) — near the dimension dots -->
+  <circle cx="128" cy="128" r="75"
     fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.5"/>
 
   <!-- ── 3. Radial lines (spokes) from center to outer boundary ─────── -->
   <!-- Agentic — 0° (North/top) -->
-  <line x1="128" y1="128" x2="128"  y2="10"
+  <line x1="128" y1="128" x2="128"  y2="28"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Relational — 60° (NE) -->
-  <line x1="128" y1="128" x2="230.2" y2="69"
+  <line x1="128" y1="128" x2="214.6" y2="78"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Spiritual — 120° (SE) -->
-  <line x1="128" y1="128" x2="230.2" y2="187"
+  <line x1="128" y1="128" x2="214.6" y2="178"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Emotional — 180° (South/bottom) -->
-  <line x1="128" y1="128" x2="128"  y2="246"
+  <line x1="128" y1="128" x2="128"  y2="228"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Somatic — 240° (SW) -->
-  <line x1="128" y1="128" x2="25.8" y2="187"
+  <line x1="128" y1="128" x2="41.4" y2="178"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Cognitive — 300° (NW) -->
-  <line x1="128" y1="128" x2="25.8" y2="69"
+  <line x1="128" y1="128" x2="41.4" y2="78"
     stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
 
   <!-- ── 4. Double-pointed diamond needle (compass pointer) ────────────── -->
-  <!-- Top diamond: tip at y=42 (elongated, ~75% to Agentic dot at y=50),      -->
-  <!--              widens at y=120, base meets center at y=128                 -->
-  <polygon points="128,42 135,120 128,128 121,120"
+  <!-- Top diamond: tip at y=48 (elongated, proportional to new scale),      -->
+  <!--              widens at y=120, base meets center at y=128               -->
+  <polygon points="128,48 134,120 128,128 122,120"
     fill="url(#needleTopGradient)"
     stroke="#2E5C8A"
     stroke-width="0.5"
     opacity="0.95"
   />
-  <!-- Bottom diamond: base at y=128 (center), widens at y=136,                -->
-  <!--                 tip at y=214 (elongated, ~75% to Emotional dot at y=206) -->
-  <polygon points="128,128 135,136 128,214 121,136"
+  <!-- Bottom diamond: base at y=128 (center), widens at y=136,              -->
+  <!--                 tip at y=208 (elongated, proportional to new scale)    -->
+  <polygon points="128,128 134,136 128,208 122,136"
     fill="url(#needleBottomGradient)"
     stroke="#A0A8B0"
     stroke-width="0.5"
     opacity="0.95"
   />
 
-  <!-- ── 5. Six dimension dots (hexagon arrangement, r=78 from center) ── -->
+  <!-- ── 5. Six dimension dots (hexagon arrangement, r=85 from center) ── -->
   <!-- Agentic  (top, 0°)    — Pastel orange/peach -->
-  <circle cx="128"   cy="50"  r="8" fill="#FFB89D"/>
+  <circle cx="128"   cy="43"  r="5" fill="#FFB89D"/>
   <!-- Relational (2 o'clock, 60°) — Pastel pink/rose -->
-  <circle cx="195.5" cy="89"  r="8" fill="#FFB3D9"/>
+  <circle cx="201"   cy="85"  r="5" fill="#FFB3D9"/>
   <!-- Spiritual  (4 o'clock, 120°) — Pastel gold/yellow -->
-  <circle cx="195.5" cy="167" r="8" fill="#FFE699"/>
+  <circle cx="201"   cy="171" r="5" fill="#FFE699"/>
   <!-- Emotional  (bottom, 180°) — Pastel purple/lavender -->
-  <circle cx="128"   cy="206" r="8" fill="#D4BBFF"/>
+  <circle cx="128"   cy="213" r="5" fill="#D4BBFF"/>
   <!-- Somatic    (8 o'clock, 240°) — Pastel green/mint -->
-  <circle cx="60.5"  cy="167" r="8" fill="#B3E5C5"/>
+  <circle cx="55"    cy="171" r="5" fill="#B3E5C5"/>
   <!-- Cognitive  (10 o'clock, 300°) — Pastel blue/sky -->
-  <circle cx="60.5"  cy="89"  r="8" fill="#A8D8FF"/>
+  <circle cx="55"    cy="85"  r="5" fill="#A8D8FF"/>
 
   <!-- ── 6. Central focal sphere — the individual ──────────────────── -->
-  <circle cx="128" cy="128" r="20"
+  <circle cx="128" cy="128" r="15"
     fill="url(#ra-center-grad)"
   />
   <!-- Subtle specular highlight -->
-  <circle cx="122" cy="122" r="5.5"
+  <circle cx="124" cy="124" r="4"
     fill="white"
     opacity="0.3"
   />
