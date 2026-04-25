@@ -6,7 +6,9 @@ const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent')
 const branding = require('../config/branding');
 
 // Use the static brand logo file directly for PDF cover rendering.
-const LOGO_PNG_PATH = path.resolve(__dirname, '../../public/assets/logo-256x256.png');
+// The logo lives in client/public/assets/ and is copied to the container
+// image via `COPY . .` in the Dockerfile.
+const LOGO_PNG_PATH = path.resolve(__dirname, '../../client/public/assets/logo-256x256.png');
 
 // ── Colour palette ────────────────────────────────────────────────────────────
 const COLORS = {
