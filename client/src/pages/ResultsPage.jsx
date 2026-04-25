@@ -2987,9 +2987,8 @@ export default function ResultsPage() {
       const ctx = offscreen.getContext('2d');
       ctx.scale(2, 2);
 
-      // Fill white background before drawing SVG
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, width, height);
+      // Leave canvas transparent (no background fill) so the exported PNG has
+      // a transparent background instead of white.
 
       const img = new Image();
       img.onload = () => {
@@ -3880,11 +3879,11 @@ export default function ResultsPage() {
             </div>
             <p style={s.downloadDesc}>
               {isAtlasPremium
-                ? 'Your Atlas Premium lifetime access lets you download this report any time.'
+                ? 'Your Atlas Premium access lets you download this report any time.'
                 : tier === 'atlas-starter'
                   ? 'Your Atlas Starter report is ready. Download your personalised PDF report now.'
                   : tier === 'atlas-navigator'
-                    ? 'Your Atlas Navigator report is ready. Download your personalised PDF now.'
+                    ? 'Your Atlas Navigator lifetime access lets you download a new report every 30 days.'
                     : 'Your report is ready. Download your personalised PDF now.'
               }
             </p>
