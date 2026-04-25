@@ -1276,6 +1276,11 @@ export const IARF_LONG_QUESTS = [
     description: 'Your first structured resilience journey. Five days, five dimensions, five small steps toward a more resilient you.',
   },
 ];
+
+// ── Adult Quests ──────────────────────────────────────────────────────────────
+// Navigator tier: multi-step quests per dimension.
+
+export const ADULT_QUESTS = [
   {
     id:          'aq-values-foundation',
     dimension:   'Agentic-Generative',
