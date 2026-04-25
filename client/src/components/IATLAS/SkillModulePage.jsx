@@ -4,13 +4,19 @@
  * Route: /iatlas/skills/:dimensionKey/:skillId
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import SiteHeader from '../SiteHeader.jsx';
 import DarkModeHint from '../DarkModeHint.jsx';
 import WorksheetComponent from './WorksheetComponent.jsx';
+import LevelUpModal from '../Gamification/LevelUpModal.jsx';
+import BadgeUnlockModal from '../Gamification/BadgeUnlockModal.jsx';
+import CelebrationConfetti from '../Gamification/CelebrationConfetti.jsx';
 import { findModule, ALL_MODULES_BY_DIMENSION, DIMENSION_META, LEVEL_META } from '../../data/iatlas/index.js';
 import { loadProgress, markSkillComplete } from './ProgressTracker.jsx';
+import { computeTotalXP, addActivityEntry, updateOverallStreak } from '../../utils/gamificationHelpers.js';
+import { calculateLevel } from '../../data/gamification/levels.js';
+import { checkAndUnlockBadges } from '../../utils/badgeUnlockChecker.js';
 
 const PAGE_STYLES = `
   .smp-page {
@@ -444,6 +450,10 @@ export default function SkillModulePage() {
   const [whyOpen, setWhyOpen] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [justCompleted, setJustCompleted] = useState(false);
+  const [levelUp, setLevelUp] = useState(null);
+  const [pendingBadges, setPendingBadges] = useState([]);
+  const [currentBadge, setCurrentBadge] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const module = findModule(dimensionKey, skillId);
   const dimMeta = DIMENSION_META[dimensionKey];
@@ -479,9 +489,55 @@ export default function SkillModulePage() {
   const levelMeta = LEVEL_META[module.level] || {};
 
   function handleMarkComplete() {
+    const progressBefore = loadProgress();
+    const xpBefore = computeTotalXP(progressBefore);
+    const levelBefore = calculateLevel(xpBefore);
+
     markSkillComplete(dimensionKey, skillId, module.xpReward);
     setIsCompleted(true);
     setJustCompleted(true);
+
+    const progressAfter = loadProgress();
+    const xpAfter = computeTotalXP(progressAfter);
+    const levelAfter = calculateLevel(xpAfter);
+
+    // Update overall streak
+    updateOverallStreak();
+
+    // Add activity entry
+    addActivityEntry({
+      type: 'skill_complete',
+      skillId: module.id,
+      skillTitle: module.title,
+      dimensionKey,
+      xp: module.xpReward,
+    });
+
+    // Check for level-up
+    if (levelAfter.level > levelBefore.level) {
+      setLevelUp({ from: levelBefore, to: levelAfter });
+      setShowConfetti(true);
+      addActivityEntry({ type: 'level_up', levelTitle: levelAfter.title, level: levelAfter.level });
+    }
+
+    // Check badge unlocks
+    const newBadges = checkAndUnlockBadges(progressAfter, ALL_MODULES_BY_DIMENSION, {
+      activeDimension: dimensionKey,
+      currentLevel: levelAfter.level,
+    });
+    if (newBadges.length > 0) {
+      setPendingBadges(newBadges);
+      setCurrentBadge(newBadges[0]);
+      if (!(levelAfter.level > levelBefore.level)) {
+        setShowConfetti(true);
+      }
+    }
+  }
+
+  function handleBadgeClose() {
+    const remaining = pendingBadges.slice(1);
+    setPendingBadges(remaining);
+    setCurrentBadge(remaining[0] || null);
   }
 
   return (
@@ -489,6 +545,11 @@ export default function SkillModulePage() {
       <style dangerouslySetInnerHTML={{ __html: PAGE_STYLES }} />
       <SiteHeader activePage="iatlas" />
       <DarkModeHint />
+
+      {/* Gamification overlays */}
+      <CelebrationConfetti active={showConfetti} onComplete={() => setShowConfetti(false)} />
+      <LevelUpModal levelUp={levelUp} onClose={() => setLevelUp(null)} />
+      <BadgeUnlockModal badge={currentBadge} onClose={handleBadgeClose} />
 
       <main
         className="smp-page"
@@ -604,6 +665,11 @@ export default function SkillModulePage() {
                   {module.badge.icon} {module.badge.name} unlocked!
                 </span>
               )}
+              <div style={{ marginTop: '.75rem' }}>
+                <Link to="/iatlas/dashboard" style={{ fontSize: '.82rem', color: '#4f46e5', textDecoration: 'none', fontWeight: 600 }}>
+                  View your progress dashboard →
+                </Link>
+              </div>
             </div>
           ) : (
             <button

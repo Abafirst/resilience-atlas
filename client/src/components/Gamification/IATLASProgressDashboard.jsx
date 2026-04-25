@@ -247,14 +247,9 @@ function getDimensionStats(progress) {
   const stats = {};
   for (const [dimKey, dimMeta] of Object.entries(DIMENSION_META)) {
     const modules = ALL_MODULES_BY_DIMENSION[dimKey] || [];
-    let totalSkills = 0;
-    let completedSkills = 0;
-    for (const mod of modules) {
-      for (const skill of mod.skills || []) {
-        totalSkills++;
-        if (progress[dimKey]?.[skill.id]) completedSkills++;
-      }
-    }
+    const totalSkills = modules.length;
+    const dimProgress = progress[dimKey] || {};
+    const completedSkills = modules.filter(m => dimProgress[m.id]).length;
     stats[dimKey] = {
       ...dimMeta,
       total: totalSkills,
