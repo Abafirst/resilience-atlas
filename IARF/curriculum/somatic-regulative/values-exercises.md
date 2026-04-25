@@ -207,5 +207,5 @@ Complete this statement: 'Through how I inhabit and care for my body, I want to 
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Somatic-Regulative*

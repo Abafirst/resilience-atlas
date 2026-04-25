@@ -230,5 +230,5 @@ See act-micropractices.md for full ACT protocols that integrate with these proce
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Spiritual-Reflective*

@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Applied Behavior Analysis offers robust, evidence-based approaches to building social and relational skills. ABA's emphasis on observable behavior, systematic instruction, and reinforcement makes it particularly well-suited to the skill-building aspects of the Relational-Connective dimension. The protocols in this document adapt core ABA methodology for use in trauma-informed, values-aligned relational resilience work within The Resilience Atlas™ IARF.
+Applied Behavior Analysis offers robust, evidence-based approaches to building social and relational skills. ABA's emphasis on observable behavior, systematic instruction, and reinforcement makes it particularly well-suited to the skill-building aspects of the Relational-Connective dimension. The protocols in this document adapt core ABA methodology for use in trauma-informed, values-aligned relational resilience work within The Resilience Atlas™ IATLAS.
 
 Relational behaviors are shaped by the same principles as all behavior: they respond to antecedents, occur in functional contexts, and are maintained or extinguished by consequences. ABA provides clinicians with a systematic toolkit for assessing the current state of a client's social repertoire and building new relational behaviors with precision and care.
 
@@ -237,5 +237,5 @@ ABA social skills training and ACT work together powerfully in the Relational-Co
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Relational-Connective*

@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Somatic measurement in the IARF captures the behavioral, physiological, and subjective dimensions of physical wellbeing and somatic regulation. This dimension combines objective behavioral measures (frequency of somatic practices, sleep duration, physical activity), physiological self-report (energy levels, pain, stress response indicators), and subjective ratings of body awareness and somatic safety.
+Somatic measurement in the IATLAS captures the behavioral, physiological, and subjective dimensions of physical wellbeing and somatic regulation. This dimension combines objective behavioral measures (frequency of somatic practices, sleep duration, physical activity), physiological self-report (energy levels, pain, stress response indicators), and subjective ratings of body awareness and somatic safety.
 
 The goal of somatic measurement is to provide a data-rich picture of the client's physical resilience that supports clinical decision-making and demonstrates measurable growth over time.
 
@@ -58,7 +58,7 @@ Clients can self-monitor several physiological-adjacent indicators that reflect 
 
 ## Somatic Awareness Ratings
 
-Somatic awareness is measured using the IARF Somatic Awareness Scale (SAS):
+Somatic awareness is measured using the IATLAS Somatic Awareness Scale (SAS):
 
 *Rate from 0 (not at all true) to 10 (completely true):*
 
@@ -191,5 +191,5 @@ Somatic awareness is measured using the IARF Somatic Awareness Scale (SAS):
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Somatic-Regulative*

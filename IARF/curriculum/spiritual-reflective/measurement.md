@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 Measuring spiritual and reflective wellbeing presents unique challenges. Unlike frequency counts of observable behavior, the depth of a person's engagement with meaning, purpose, and transcendence is not directly accessible. Measurement in the Spiritual-Reflective dimension therefore combines behavioral indicators (frequency of reflective practices), self-report ratings (values alignment, purpose clarity), and qualitative approaches (narrative assessment, clinical observation) to build a comprehensive picture.
 
-The IARF's approach to spiritual-reflective measurement is guided by deep respect for the subjective, personal, and culturally embedded nature of spiritual life, while still maintaining the data-driven orientation that characterizes the framework as a whole.
+The IATLAS's approach to spiritual-reflective measurement is guided by deep respect for the subjective, personal, and culturally embedded nature of spiritual life, while still maintaining the data-driven orientation that characterizes the framework as a whole.
 
 ---
 
@@ -182,5 +182,5 @@ Quantitative measures alone are insufficient for the Spiritual-Reflective dimens
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Spiritual-Reflective*

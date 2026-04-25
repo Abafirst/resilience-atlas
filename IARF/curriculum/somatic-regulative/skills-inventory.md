@@ -14,11 +14,11 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Somatic-Regulative dimension of the IARF addresses the body as a fundamental resilience resource. Decades of research in trauma, neuroscience, and behavioral medicine have converged on a simple truth: physical health, bodily awareness, and somatic regulation are not peripheral to psychological resilience — they are foundational to it.
+The Somatic-Regulative dimension of the IATLAS addresses the body as a fundamental resilience resource. Decades of research in trauma, neuroscience, and behavioral medicine have converged on a simple truth: physical health, bodily awareness, and somatic regulation are not peripheral to psychological resilience — they are foundational to it.
 
 "Somatic" refers to the body as a living, sensing, responding system — not merely a vessel for the mind, but an integral part of how we experience, process, and respond to life. "Regulative" refers to the capacity to maintain and restore physiological equilibrium — to manage arousal, recover from stress, and sustain physical wellbeing under conditions of challenge.
 
-The IARF's Somatic-Regulative dimension draws from behavioral approaches to physical health, somatic psychology, trauma-informed body work, and mindfulness-based stress reduction. Together, these traditions offer a rich, evidence-based curriculum for building bodily resilience within The Resilience Atlas™ framework.
+The IATLAS's Somatic-Regulative dimension draws from behavioral approaches to physical health, somatic psychology, trauma-informed body work, and mindfulness-based stress reduction. Together, these traditions offer a rich, evidence-based curriculum for building bodily resilience within The Resilience Atlas™ framework.
 
 This dimension is critically important for trauma-exposed populations, for whom the body is often the primary site of suffering and, ultimately, of healing.
 
@@ -136,5 +136,5 @@ Baseline somatic assessment should include:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Somatic-Regulative*

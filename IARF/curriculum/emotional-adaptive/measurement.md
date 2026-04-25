@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Emotional measurement in the IARF requires multi-modal assessment: behavioral data (frequency of emotional skills use, coping behavior, adaptive expression), self-report ratings (emotion regulation quality, subjective distress), standardized instruments, and clinician observation. This document provides a comprehensive measurement framework for the Emotional-Adaptive dimension.
+Emotional measurement in the IATLAS requires multi-modal assessment: behavioral data (frequency of emotional skills use, coping behavior, adaptive expression), self-report ratings (emotion regulation quality, subjective distress), standardized instruments, and clinician observation. This document provides a comprehensive measurement framework for the Emotional-Adaptive dimension.
 
 Measurement in this dimension serves both clinical decision-making (what does this client need, and is the intervention working?) and client empowerment (helping clients see their own progress in concrete, meaningful terms).
 
@@ -19,7 +19,7 @@ Measurement in this dimension serves both clinical decision-making (what does th
 
 ## Measurement Philosophy
 
-Emotional measurement in the IARF is:
+Emotional measurement in the IATLAS is:
 - **Multi-modal**: No single measure captures the complexity of emotional functioning
 - **Strengths-visible**: Measures are designed to capture adaptive functioning, not only deficit
 - **Trauma-informed**: Data collection respects the vulnerability of emotional disclosure
@@ -163,5 +163,5 @@ The following behavioral indicators are observable signs of improving emotion re
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Emotional-Adaptive*

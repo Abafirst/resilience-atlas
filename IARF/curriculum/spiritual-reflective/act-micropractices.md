@@ -261,5 +261,5 @@ What one change in the coming week would move you toward it?"
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Spiritual-Reflective*

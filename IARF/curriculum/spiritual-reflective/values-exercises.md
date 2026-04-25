@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The values exercises in the Spiritual-Reflective dimension invite clients into the deepest layer of the IARF framework — the exploration of ultimate meaning, sacred priorities, and purposeful contribution. These exercises are designed to be broad enough to serve clients from any tradition (or no tradition) while being rich enough to facilitate genuine transformation.
+The values exercises in the Spiritual-Reflective dimension invite clients into the deepest layer of the IATLAS framework — the exploration of ultimate meaning, sacred priorities, and purposeful contribution. These exercises are designed to be broad enough to serve clients from any tradition (or no tradition) while being rich enough to facilitate genuine transformation.
 
 These exercises work best when approached with unhurried attention. Unlike skills-based exercises in other dimensions, the Spiritual-Reflective values exercises often require space for silence, emergence, and surprise. Practitioners are encouraged to slow down, be curious, and allow these exercises to unfold without a predetermined endpoint.
 
@@ -242,5 +242,5 @@ Identify 3–5 transcendent moments in your life. For each one, describe:"
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Spiritual-Reflective*

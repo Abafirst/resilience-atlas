@@ -1,5 +1,5 @@
 ---
-title: "IARF Case Study"
+title: "IATLAS Case Study"
 template_version: "1.0"
 case_code: "[CASE CODE — do not use real names]"
 clinician: "[CLINICIAN NAME]"
@@ -9,7 +9,7 @@ primary_dimensions: "[List dimensions targeted]"
 status: "☐ Active  ☐ Completed  ☐ Discontinued"
 ---
 
-# IARF Case Study
+# IATLAS Case Study
 
 > **Confidentiality Notice**: All case studies must be de-identified. Do not include real names, identifying information, or data that could identify the client. Use case codes only.
 
@@ -186,7 +186,7 @@ status: "☐ Active  ☐ Completed  ☐ Discontinued"
 
 ### Key Learning for the Framework
 
-> *What does this case contribute to IARF's understanding of resilience intervention? Identify any patterns, surprises, or insights that have implications beyond this individual case.*
+> *What does this case contribute to IATLAS's understanding of resilience intervention? Identify any patterns, surprises, or insights that have implications beyond this individual case.*
 
 [PLACEHOLDER — framework learning]
 
@@ -198,7 +198,7 @@ status: "☐ Active  ☐ Completed  ☐ Discontinued"
 
 [PLACEHOLDER — next steps for this client]
 
-### For the IARF Framework
+### For the IATLAS Framework
 
 [PLACEHOLDER — any framework-level recommendations emerging from this case]
 
@@ -214,4 +214,4 @@ I certify that this case study has been fully de-identified and that no identify
 
 ---
 
-*Template version 1.0 | IARF Framework | See [Phase 4: Monitoring](../docs/methodology/04-monitoring.md) and [IARF README](../README.md) for guidance*
+*Template version 1.0 | IATLAS Framework | See [Phase 4: Monitoring](../docs/methodology/04-monitoring.md) and [IATLAS README](../README.md) for guidance*

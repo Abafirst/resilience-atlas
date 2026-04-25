@@ -202,5 +202,5 @@ Complete this statement: 'The people who came before me survived ____________, a
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Cognitive-Narrative*

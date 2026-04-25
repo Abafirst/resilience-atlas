@@ -14,7 +14,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-This document presents Applied Behavior Analysis (ABA) protocols specifically adapted for the Agentic-Generative dimension of the Integrated Adaptive Resilience Framework (IARF). These evidence-based, data-driven protocols are designed to systematically build the behavioral repertoire associated with agency, goal pursuit, initiative, self-efficacy, and purposeful action.
+This document presents Applied Behavior Analysis (ABA) protocols specifically adapted for the Agentic-Generative dimension of the Integrated Adaptive Resilience Framework (IATLAS). These evidence-based, data-driven protocols are designed to systematically build the behavioral repertoire associated with agency, goal pursuit, initiative, self-efficacy, and purposeful action.
 
 ABA's core strengths — precision, measurability, individualization, and demonstrated effectiveness in skill acquisition — make it an ideal foundation for agentic skill development. The protocols in this document are grounded in the science of behavior change and adapted for use in trauma-informed, values-aligned resilience practice.
 
@@ -277,5 +277,5 @@ See act-micropractices.md for full ACT protocols that integrate with these ABA p
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Agentic-Generative*

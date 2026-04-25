@@ -1,14 +1,14 @@
 ---
-title: IARF Gamification System — Overview
+title: IATLAS Gamification System — Overview
 status: active
 last_updated: 2026-04-25
 ---
 
-# IARF Curriculum Gamification System
+# IATLAS Curriculum Gamification System
 
 ## Overview
 
-The IARF (Integrated ABA Resilience Framework) curriculum gamification system is designed to drive engagement, skill acquisition, and measurable progress using a combination of behavioral (ABA) reinforcement principles and intrinsic motivation (ACT values). This document provides a comprehensive overview of all gamification features, design principles, and implementation guidance.
+The IATLAS (Integrated Applied Teaching and Learning Adaptive System) curriculum gamification system is designed to drive engagement, skill acquisition, and measurable progress using a combination of behavioral (ABA) reinforcement principles and intrinsic motivation (ACT values). This document provides a comprehensive overview of all gamification features, design principles, and implementation guidance.
 
 ---
 
@@ -42,7 +42,7 @@ The system applies evidence-based behavioral principles:
 
 ### 1. Resilience XP System ⚡
 
-Experience points (XP) are earned for every IARF curriculum activity.
+Experience points (XP) are earned for every IATLAS curriculum activity.
 
 #### XP Award Table
 
@@ -72,7 +72,7 @@ Experience points (XP) are earned for every IARF curriculum activity.
 
 ### 2. Dimensional Skill Trees 🌳
 
-Each of the 6 IARF dimensions has a visual skill tree with three levels.
+Each of the 6 IATLAS dimensions has a visual skill tree with three levels.
 
 #### Dimension Overview
 
@@ -152,13 +152,13 @@ Component: `client/src/components/gamification/DimensionalBalanceWheel.jsx`
 
 ### 5. Quest System 📜
 
-Guided multi-step challenges integrating multiple IARF dimensions.
+Guided multi-step challenges integrating multiple IATLAS dimensions.
 
 #### Quest Types
 
 | Type | Duration | XP Multiplier | Description |
 |---|---|---|---|
-| 🌱 Foundation Quest | ~5 days | 1.0x | Beginner-friendly intro to IARF |
+| 🌱 Foundation Quest | ~5 days | 1.0x | Beginner-friendly intro to IATLAS |
 | ⚡ Sprint Quest | 7 days | 1.25x | Intensive single-dimension deep-dive |
 | 🏔️ Epic Quest | 30–90 days | 1.5–1.75x | Multi-dimension transformational journey |
 | 🎯 Dimensional Deep-Dive | 14 days | 1.5x | Focus mastery in one dimension |
@@ -246,7 +246,7 @@ Badge definitions: `client/src/data/adultGames.js` (`IARF_SKILL_BADGES`)
   },
   longestStreak: 21,
 
-  // Per-dimension streak tracking (IARF extension)
+  // Per-dimension streak tracking (IATLAS extension)
   dimensionalStreaks: [
     {
       dimension: "Somatic-Regulative",
@@ -271,7 +271,7 @@ Badge definitions: `client/src/data/adultGames.js` (`IARF_SKILL_BADGES`)
     { name: "Breath Master", rarity: "uncommon", icon: "/icons/somatic-regulative.svg", earnedAt: "2026-04-15" },
   ],
 
-  // Active quests (IARF extension)
+  // Active quests (IATLAS extension)
   activeQuests: [
     {
       questId: "iq-30-day-foundation",
@@ -283,7 +283,7 @@ Badge definitions: `client/src/data/adultGames.js` (`IARF_SKILL_BADGES`)
   ],
   completedQuestIds: ["iq-first-steps"],
 
-  // Activity log (IARF extension)
+  // Activity log (IATLAS extension)
   activityLog: [
     {
       type: "micropractice_complete",
@@ -335,12 +335,12 @@ Badge definitions: `client/src/data/adultGames.js` (`IARF_SKILL_BADGES`)
 
 - [x] XP system with level tiers (Explorer/Builder/Architect/Master)
 - [x] Skill completion tracking with dimensional progress bars
-- [x] IARF-specific badge system (skill + milestone + achievement badges)
+- [x] IATLAS-specific badge system (skill + milestone + achievement badges)
 - [x] Progress dashboard with XP level display and dimensional balance
 - [x] Database schemas extended with dimensional streaks, activity log, quest tracking
 - [x] Dimensional skill tree data for all 6 dimensions
 - [x] Dimensional Balance Wheel component (SVG radar chart)
-- [x] IARF documentation (this document)
+- [x] IATLAS documentation (this document)
 
 ### Phase 2: Engagement Boosters (Planned)
 
@@ -374,7 +374,7 @@ Badge definitions: `client/src/data/adultGames.js` (`IARF_SKILL_BADGES`)
 | File | Purpose |
 |---|---|
 | `client/src/data/gamificationContent.js` | XP level tiers, streak badges, tier helpers |
-| `client/src/data/adultGames.js` | Skill pathways, quests, IARF badges, quest types |
+| `client/src/data/adultGames.js` | Skill pathways, quests, IATLAS badges, quest types |
 | `client/src/data/iarf-skill-trees.js` | Skill tree definitions (Foundation/Building/Mastery per dimension) |
 
 ### Frontend Components
@@ -462,5 +462,5 @@ const somatic = progress.dimensionalStreaks.find(d => d.dimension === 'Somatic-R
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum documentation.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum documentation.*
 *Last reviewed: 2026-04-25 | Status: Active*

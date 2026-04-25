@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Measurement in the Agentic-Generative dimension is guided by two core commitments: data-driven precision and values-aligned meaningfulness. The IARF recognizes that measurement must serve the client's growth, not merely document it. Every data point collected should be interpretable, actionable, and connected to something the client cares about.
+Measurement in the Agentic-Generative dimension is guided by two core commitments: data-driven precision and values-aligned meaningfulness. The IATLAS recognizes that measurement must serve the client's growth, not merely document it. Every data point collected should be interpretable, actionable, and connected to something the client cares about.
 
 This document provides a comprehensive measurement system for the Agentic-Generative dimension, including behavioral frequency measures, skill acquisition data, standardized assessment tools, self-report scales, and progress monitoring templates. Taken together, these tools provide a complete picture of a client's growth across the domains of agency, initiative, goal pursuit, self-efficacy, and purposeful action.
 
@@ -111,13 +111,13 @@ The following standardized tools are recommended for use in the Agentic-Generati
 | Action and Acceptance Questionnaire–II (AAQ-II) | Psychological flexibility / experiential avoidance | Baseline; every 8 weeks | 7-item; well-validated for ACT outcomes [Research citation needed] |
 | General Self-Efficacy Scale (GSE) | General belief in one's capacity to handle challenges | Baseline; every 12 weeks | 10-item; Schwarzer & Jerusalem [Research citation needed] |
 | Behavioral Activation for Depression Scale (BADS) | Behavioral avoidance and activation | Baseline; every 4 weeks | Useful for low-activation presentations [Research citation needed] |
-| IARF Agentic Skills Checklist | Dimension-specific skill acquisition | Baseline; monthly | See below; IARF-internal tool |
+| IATLAS Agentic Skills Checklist | Dimension-specific skill acquisition | Baseline; monthly | See below; IATLAS-internal tool |
 
 ---
 
 ## Self-Report Measures
 
-### IARF Agentic-Generative Weekly Self-Rating Scale
+### IATLAS Agentic-Generative Weekly Self-Rating Scale
 
 *Instructions: Rate each item from 0 (not at all true this week) to 10 (completely true this week).*
 
@@ -235,5 +235,5 @@ The following indicators should prompt immediate clinical review and possible pr
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Agentic-Generative*

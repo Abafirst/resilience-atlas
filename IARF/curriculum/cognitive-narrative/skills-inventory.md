@@ -14,9 +14,9 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Cognitive-Narrative dimension of the IARF addresses the way human beings make sense of their lives through thought and story. Resilience is not only about what happens to us — it is profoundly shaped by how we interpret, narrate, and construct meaning from our experiences. The cognitive-narrative lens captures both the micro-level of individual thought patterns and the macro-level of life narrative: the story we tell about who we are, where we come from, and where we are going.
+The Cognitive-Narrative dimension of the IATLAS addresses the way human beings make sense of their lives through thought and story. Resilience is not only about what happens to us — it is profoundly shaped by how we interpret, narrate, and construct meaning from our experiences. The cognitive-narrative lens captures both the micro-level of individual thought patterns and the macro-level of life narrative: the story we tell about who we are, where we come from, and where we are going.
 
-"Cognitive" refers to the processes of thinking — recognizing patterns, evaluating situations, interpreting events, and making attributions. "Narrative" refers to the storied dimension of human experience — the way we organize events into sequences, characters, and meaning over time. Together, these constitute one of the most powerful resilience dimensions in the IARF framework.
+"Cognitive" refers to the processes of thinking — recognizing patterns, evaluating situations, interpreting events, and making attributions. "Narrative" refers to the storied dimension of human experience — the way we organize events into sequences, characters, and meaning over time. Together, these constitute one of the most powerful resilience dimensions in the IATLAS framework.
 
 Research across cognitive therapy (Beck), narrative therapy (White & Epston), ACT defusion and cognitive flexibility, and positive psychology's post-traumatic growth framework converge on a shared insight: how we think and story our experience powerfully shapes our resilience. And these cognitive-narrative processes are learnable, modifiable, and developable with appropriate support.
 
@@ -124,5 +124,5 @@ Baseline cognitive-narrative assessment should include:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Cognitive-Narrative*

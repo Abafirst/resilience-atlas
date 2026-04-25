@@ -1,4 +1,4 @@
-# Integrated ABA Resilience Framework (IARF)
+# Integrated Applied Teaching and Learning Adaptive System (IATLAS)
 
 > **A structured, science-based framework** for developing and delivering resilience interventions grounded in Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT).
 
@@ -6,9 +6,9 @@
 
 ## 🎯 Purpose & Overview
 
-The **Integrated ABA Resilience Framework (IARF)** is the practice-facing complement to the Resilience Atlas™ assessment platform. Where the Atlas measures and maps resilience, IARF provides the structured methodology for building it — translating assessment data into targeted, measurable interventions across six dimensions of human resilience.
+The **Integrated Applied Teaching and Learning Adaptive System (IATLAS)** is the practice-facing complement to the Resilience Atlas™ assessment platform. Where the Atlas measures and maps resilience, IATLAS provides the structured methodology for building it — translating assessment data into targeted, measurable interventions across six dimensions of human resilience.
 
-IARF bridges three domains:
+IATLAS bridges three domains:
 - **Applied Behavior Analysis (ABA)** — data-driven, functional, evidence-based behavior change
 - **Acceptance & Commitment Therapy (ACT)** — values-based, psychological flexibility, mindful action
 - **Resilience Science** — multi-dimensional, strengths-focused, adversity-informed
@@ -17,14 +17,14 @@ IARF bridges three domains:
 
 ## 🔗 Connection to the Resilience Atlas
 
-The Resilience Atlas™ generates a dimensional resilience profile across six domains. IARF provides the next step: a structured process for using that profile to design and implement meaningful, measurable interventions.
+The Resilience Atlas™ generates a dimensional resilience profile across six domains. IATLAS provides the next step: a structured process for using that profile to design and implement meaningful, measurable interventions.
 
 ```
 Resilience Atlas Assessment
          ↓
   Dimensional Profile
          ↓
-   IARF Methodology
+   IATLAS Methodology
   (Assess → Analyze → Intervene → Monitor)
          ↓
   Measurable Growth
@@ -34,7 +34,7 @@ Resilience Atlas Assessment
 
 ## 📐 The Six Dimensions
 
-IARF operates across the same six resilience dimensions validated in the original 2013 doctoral research:
+IATLAS operates across the same six resilience dimensions validated in the original 2013 doctoral research:
 
 | # | Dimension | Focus |
 |---|-----------|-------|
@@ -52,7 +52,7 @@ Each dimension has its own curriculum, intervention strategies, and measurement 
 ## 📁 Folder Structure
 
 ```
-IARF/
+IATLAS/
 ├── README.md                          ← You are here
 ├── docs/
 │   ├── methodology/
@@ -82,9 +82,9 @@ IARF/
 
 ---
 
-## 🔄 The IARF Methodology
+## 🔄 The IATLAS Methodology
 
-IARF uses a four-phase cycle adapted from ABA's data-driven practice model:
+IATLAS uses a four-phase cycle adapted from ABA's data-driven practice model:
 
 ### Phase 1: Assessment
 Comprehensive multi-dimensional resilience assessment using the Resilience Atlas™ tool and supplemental clinical observation. See [`docs/methodology/01-assessment.md`](docs/methodology/01-assessment.md).
@@ -104,7 +104,7 @@ Continuous data collection, progress tracking, and outcome measurement to guide 
 
 | Document | Description |
 |----------|-------------|
-| [ABA Principles](docs/theoretical-foundations/aba-principles.md) | Core ABA concepts applied in IARF |
+| [ABA Principles](docs/theoretical-foundations/aba-principles.md) | Core ABA concepts applied in IATLAS |
 | [ACT Integration](docs/theoretical-foundations/act-integration.md) | How ACT is woven into the framework |
 | [Six Dimensions](docs/theoretical-foundations/six-dimensions.md) | Detailed dimensional model |
 | [Literature Review](docs/research/literature-review.md) | Supporting research base |
@@ -131,4 +131,4 @@ Continuous data collection, progress tracking, and outcome measurement to guide 
 
 ---
 
-*IARF is developed by Janeen Molchany, Ph.D., BCBA — founder of the Resilience Atlas™*
+*IATLAS is developed by Janeen Molchany, Ph.D., BCBA — founder of the Resilience Atlas™*

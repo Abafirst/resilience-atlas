@@ -11,7 +11,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-Applied Behavior Analysis offers highly effective tools for establishing and maintaining the physical self-care behaviors, somatic regulation practices, and health behaviors that constitute the Somatic-Regulative dimension of the IARF. The challenge in somatic work is not a lack of knowledge — most clients know that sleep, movement, and breath regulation are beneficial. The challenge is behavioral: establishing these practices as consistent, self-sustaining habits that persist through periods of low motivation, stress, and life disruption.
+Applied Behavior Analysis offers highly effective tools for establishing and maintaining the physical self-care behaviors, somatic regulation practices, and health behaviors that constitute the Somatic-Regulative dimension of the IATLAS. The challenge in somatic work is not a lack of knowledge — most clients know that sleep, movement, and breath regulation are beneficial. The challenge is behavioral: establishing these practices as consistent, self-sustaining habits that persist through periods of low motivation, stress, and life disruption.
 
 ABA's strengths — habit formation, behavioral chaining, reinforcement, antecedent modification, and data-driven adjustment — are precisely what is needed to bridge the gap between knowing and doing in the somatic domain. The protocols in this document apply these tools systematically within The Resilience Atlas™ framework.
 
@@ -220,5 +220,5 @@ For sedentary or deconditioned clients, shaping is essential — reinforcing suc
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Somatic-Regulative*

@@ -1,11 +1,11 @@
 ---
-title: "ACT Integration in IARF"
+title: "ACT Integration in IATLAS"
 category: theoretical-foundations
 status: draft
 last_updated: 2026-04-25
 ---
 
-# Acceptance & Commitment Therapy (ACT) Integration in IARF
+# Acceptance & Commitment Therapy (ACT) Integration in IATLAS
 
 > *ACT doesn't ask you to fix yourself. It asks you to live — fully, flexibly, and in the direction of what matters most.*
 
@@ -15,7 +15,7 @@ last_updated: 2026-04-25
 
 Acceptance and Commitment Therapy (ACT) is a contextual behavioral therapy grounded in Relational Frame Theory (RFT) and developed by Steven C. Hayes and colleagues. ACT targets **psychological flexibility** — the capacity to be fully present with your experience and take valued action, even in the face of difficult thoughts, feelings, and circumstances.
 
-In IARF, ACT provides:
+In IATLAS, ACT provides:
 - The **values framework** that gives direction to resilience-building
 - The **acceptance and defusion tools** that dissolve barriers to action
 - The **present-moment orientation** that grounds intervention work
@@ -58,7 +58,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Accepting the pain of adversity rather than avoiding it is itself a resilient act. Experiential avoidance is one of the most common and costly barriers to resilience.
 
-**IARF application**: Help clients develop willingness exercises; distinguish between acceptance (feeling the feeling) and resignation (giving up).
+**IATLAS application**: Help clients develop willingness exercises; distinguish between acceptance (feeling the feeling) and resignation (giving up).
 
 ---
 
@@ -67,7 +67,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Unhelpful narratives ("I'll never recover," "I'm not strong enough") lose their power when clients can observe them without being fused to them.
 
-**IARF application**: Defusion techniques (labeling thoughts, naming the story, using metaphor) are especially powerful in the Cognitive-Narrative dimension.
+**IATLAS application**: Defusion techniques (labeling thoughts, naming the story, using metaphor) are especially powerful in the Cognitive-Narrative dimension.
 
 ---
 
@@ -76,7 +76,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Resilience is exercised *now* — not in a hypothetical future or a re-lived past. Present-moment awareness supports both somatic regulation and cognitive flexibility.
 
-**IARF application**: Mindfulness practices, grounding exercises, sensory awareness activities.
+**IATLAS application**: Mindfulness practices, grounding exercises, sensory awareness activities.
 
 ---
 
@@ -85,7 +85,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Identity fusion with adversity narratives ("I am broken," "I am a victim") is a barrier to resilience. Self-as-context provides a stable "self" that can hold even the most painful experiences without being defined by them.
 
-**IARF application**: Observer self exercises, perspective-taking, narrative work in the Spiritual and Cognitive dimensions.
+**IATLAS application**: Observer self exercises, perspective-taking, narrative work in the Spiritual and Cognitive dimensions.
 
 ---
 
@@ -94,7 +94,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Values provide direction and motivation for resilience-building. Knowing *why* you're doing the hard work makes the hard work possible.
 
-**IARF application**: Values clarification exercises are foundational to every IARF intervention plan. Values guide goal-setting and connect daily practice to deeper meaning.
+**IATLAS application**: Values clarification exercises are foundational to every IATLAS intervention plan. Values guide goal-setting and connect daily practice to deeper meaning.
 
 ---
 
@@ -103,7 +103,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 **In resilience terms**: Committed action is the behavioral expression of resilience. It's the observable, measurable end-product of the other five processes working together.
 
-**IARF application**: Committed action planning bridges ACT values work with ABA behavioral goals and objectives. This is where the two approaches most directly converge.
+**IATLAS application**: Committed action planning bridges ACT values work with ABA behavioral goals and objectives. This is where the two approaches most directly converge.
 
 ---
 
@@ -122,7 +122,7 @@ ACT describes psychological flexibility through six interconnected processes, of
 
 ## ACT Metaphors & Experiential Exercises
 
-ACT is notably metaphor-rich. Key metaphors used in IARF:
+ACT is notably metaphor-rich. Key metaphors used in IATLAS:
 
 | Metaphor | ACT Process | Application |
 |----------|-------------|-------------|

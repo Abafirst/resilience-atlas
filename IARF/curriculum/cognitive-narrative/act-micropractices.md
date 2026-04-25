@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 The Cognitive-Narrative dimension is where ACT's cognitive defusion processes are most centrally relevant. While traditional cognitive therapy focuses on changing the content of thoughts, ACT's defusion approach changes the relationship to thoughts — enabling clients to observe thoughts without being controlled by them.
 
-This document presents eight core ACT micropractices specifically designed for the Cognitive-Narrative dimension of The Resilience Atlas™ IARF. Together, they build the capacity for cognitive flexibility, perspective-taking, and narrative freedom that constitute advanced cognitive-narrative resilience.
+This document presents eight core ACT micropractices specifically designed for the Cognitive-Narrative dimension of The Resilience Atlas™ IATLAS. Together, they build the capacity for cognitive flexibility, perspective-taking, and narrative freedom that constitute advanced cognitive-narrative resilience.
 
 ---
 
@@ -260,5 +260,5 @@ These practices work best as an integrated sequence:
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Cognitive-Narrative*

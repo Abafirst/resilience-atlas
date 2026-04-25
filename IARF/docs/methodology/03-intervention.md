@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The Intervention Phase translates the case conceptualization from Phase 2 into a structured, individualized action plan. IARF interventions are dimensional (targeting specific resilience domains), evidence-based (grounded in ABA and ACT), collaborative (developed with the client), and measurable (tied to observable outcomes).
+The Intervention Phase translates the case conceptualization from Phase 2 into a structured, individualized action plan. IATLAS interventions are dimensional (targeting specific resilience domains), evidence-based (grounded in ABA and ACT), collaborative (developed with the client), and measurable (tied to observable outcomes).
 
 **Goals of Phase 3:**
 - Design a dimensional intervention plan tailored to the individual
@@ -39,7 +39,7 @@ Every intervention plan begins by identifying **existing strengths** within each
 Interventions are connected to the client's identified values. This provides intrinsic motivation and direction, especially when change is difficult.
 
 ### 5. Skill-Building + Environmental Design
-IARF targets both:
+IATLAS targets both:
 - **Skill building** — teaching new resilience behaviors
 - **Environmental modification** — arranging conditions that support those behaviors
 
@@ -99,7 +99,7 @@ IARF targets both:
 
 ## Intervention Plan Structure
 
-Each IARF Intervention Plan includes:
+Each IATLAS Intervention Plan includes:
 
 | Component | Description |
 |-----------|-------------|
@@ -118,7 +118,7 @@ Each IARF Intervention Plan includes:
 
 ## ABA Implementation Standards
 
-IARF intervention implementation follows ABA's seven dimensions (Baer, Wolf & Risley, 1968):
+IATLAS intervention implementation follows ABA's seven dimensions (Baer, Wolf & Risley, 1968):
 
 1. **Applied** — Socially significant goals
 2. **Behavioral** — Observable, measurable targets

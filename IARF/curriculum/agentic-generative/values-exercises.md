@@ -18,7 +18,7 @@ Values work is the foundation of the Agentic-Generative dimension. Without a cle
 
 These exercises draw from the ACT tradition (Hayes, Wilson, Luoma), meaning-centered psychotherapy (Frankl, Wong), and narrative approaches to identity and purpose. They are designed to be clinically rich and practically actionable — connecting values clarity directly to the purposeful behavioral choices that constitute resilience.
 
-Values, in the IARF framework, are not moral rules or obligations. They are chosen directions — qualities of living that give action its meaning. Values are not destinations (goals) but orientations that can be expressed in any moment regardless of circumstances.
+Values, in the IATLAS framework, are not moral rules or obligations. They are chosen directions — qualities of living that give action its meaning. Values are not destinations (goals) but orientations that can be expressed in any moment regardless of circumstances.
 
 ---
 
@@ -213,7 +213,7 @@ For each value, identify one specific, behavioral action you will take this week
 ### Facilitator Notes
 - Return to this plan at the beginning of the following session for review and reinforcement
 - Use completion data to inform behavioral activation planning
-- Connect the values plan to the broader IARF measurement system (see measurement.md)
+- Connect the values plan to the broader IATLAS measurement system (see measurement.md)
 
 ---
 
@@ -240,5 +240,5 @@ For each value, identify one specific, behavioral action you will take this week
 
 ---
 
-*This document is part of The Resilience Atlas™ IARF curriculum.*
+*This document is part of The Resilience Atlas™ IATLAS curriculum.*
 *Last reviewed: 2026-04-25 | Status: Active | Dimension: Agentic-Generative*
