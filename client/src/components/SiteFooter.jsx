@@ -18,6 +18,7 @@ export default function SiteFooter() {
         <div className="footer-nav-group">
           <strong className="footer-nav-heading">Programs</strong>
           <a href="/teams">For Teams</a>
+          <a href="/iatlas">IATLAS Curriculum</a>
           <a href="/resources">Resources</a>
           <a href="/gamification">Gamification</a>
           <a href="/kids">For Kids</a>
