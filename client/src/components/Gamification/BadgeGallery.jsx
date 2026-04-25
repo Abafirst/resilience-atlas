@@ -26,6 +26,9 @@ const STYLES = `
     font-size: 1.1rem;
     font-weight: 700;
     color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .bg-count {
@@ -146,7 +149,10 @@ export default function BadgeGallery({ allBadges = [], onBadgeClick }) {
     <div className="bg-root">
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       <div className="bg-header">
-        <span className="bg-title">🏅 Badge Collection</span>
+        <span className="bg-title">
+          <img src="/icons/badges.svg" alt="" width={16} height={16} aria-hidden="true" />
+          Badge Collection
+        </span>
         <span className="bg-count">{earnedCount} / {allBadges.length} Earned</span>
       </div>
 

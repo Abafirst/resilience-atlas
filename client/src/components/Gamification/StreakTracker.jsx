@@ -18,8 +18,13 @@ const STYLES = `
   }
 
   .st-fire {
-    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
     line-height: 1;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .st-hero-text {
@@ -52,6 +57,9 @@ const STYLES = `
     color: #64748b;
     font-weight: 600;
     margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .st-progress-track {
@@ -145,8 +153,9 @@ const STYLES = `
     border: 1px solid #e2e8f0;
   }
 
-  .st-dim-emoji {
-    font-size: 1.2rem;
+  .st-dim-icon {
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
   }
 
@@ -168,6 +177,9 @@ const STYLES = `
     font-size: 0.72rem;
     color: #f97316;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 3px;
   }
 
   /* Dark mode */
@@ -185,7 +197,7 @@ const STYLES = `
 
   @media (max-width: 640px) {
     .st-current { font-size: 1.3rem; }
-    .st-fire { font-size: 2.4rem; }
+    .st-fire { width: 2.4rem; height: 2.4rem; }
     .st-dots { gap: 4px; }
     .st-dot { width: 24px; height: 24px; font-size: 0.55rem; }
     .st-dim-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
@@ -239,7 +251,9 @@ export default function StreakTracker({ overallStreak, dimensionStreaks = {}, ne
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
 
       <div className="st-hero">
-        <div className="st-fire" aria-hidden="true">🔥</div>
+        <div className="st-fire" aria-hidden="true">
+          <img src="/icons/fire.svg" alt="" width={48} height={48} />
+        </div>
         <div className="st-hero-text">
           <div className="st-current">
             Current Streak: <span className="st-current-num">{streak.current}</span>{' '}
@@ -256,7 +270,8 @@ export default function StreakTracker({ overallStreak, dimensionStreaks = {}, ne
       {nextMilestone && (
         <div className="st-milestone-section">
           <div className="st-milestone-label">
-            {nextMilestone.icon} Next milestone: {nextMilestone.label} ({nextMilestone.days} days)
+            <img src={nextMilestone.icon} alt="" width={16} height={16} aria-hidden="true" />
+            Next milestone: {nextMilestone.label} ({nextMilestone.days} days)
           </div>
           <div className="st-progress-track">
             <div className="st-progress-fill" style={{ width: `${milestoneProgress}%` }} />
@@ -279,7 +294,7 @@ export default function StreakTracker({ overallStreak, dimensionStreaks = {}, ne
               aria-label={`${d.label}: ${d.active ? 'practiced' : 'no activity'}`}
               title={`${d.label}: ${d.active ? 'practiced' : 'no activity'}`}
             >
-              {d.active ? '🔥' : '·'}
+              {d.active ? <img src="/icons/fire.svg" alt="" width={14} height={14} aria-hidden="true" /> : '·'}
               <span className="st-dot-day">{d.label.slice(0, 2)}</span>
             </div>
           ))}
@@ -292,20 +307,27 @@ export default function StreakTracker({ overallStreak, dimensionStreaks = {}, ne
           <div className="st-dim-grid">
             {dimEntries.map(([dimKey, dimStreak]) => (
               <div className="st-dim-card" key={dimKey}>
-                <span className="st-dim-emoji" aria-hidden="true">
-                  {dimKey.includes('agentic') ? '🎯'
-                    : dimKey.includes('somatic') ? '🧘'
-                    : dimKey.includes('cognitive') ? '💭'
-                    : dimKey.includes('relational') ? '💗'
-                    : dimKey.includes('emotional') ? '🌊'
-                    : '✨'}
-                </span>
+                <img
+                  src={
+                    dimKey.includes('agentic') ? '/icons/agentic-generative.svg'
+                      : dimKey.includes('somatic') ? '/icons/somatic-regulative.svg'
+                      : dimKey.includes('cognitive') ? '/icons/cognitive-narrative.svg'
+                      : dimKey.includes('relational') ? '/icons/relational-connective.svg'
+                      : dimKey.includes('emotional') ? '/icons/emotional-adaptive.svg'
+                      : '/icons/spiritual-reflective.svg'
+                  }
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="st-dim-icon"
+                  aria-hidden="true"
+                />
                 <div className="st-dim-body">
                   <div className="st-dim-name" title={dimKey}>
                     {dimKey.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
                   </div>
                   <div className="st-dim-streak">
-                    🔥 {dimStreak.current || 0} days
+                    <img src="/icons/fire.svg" alt="" width={12} height={12} aria-hidden="true" /> {dimStreak.current || 0} days
                   </div>
                 </div>
               </div>

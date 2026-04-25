@@ -43,9 +43,13 @@ const STYLES = `
   }
 
   .af-icon {
-    font-size: 1.1rem;
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
-    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
   }
 
   .af-body {
@@ -109,7 +113,7 @@ function formatActivity(activity) {
   switch (type) {
     case 'skill_complete':
       return {
-        icon: '✅',
+        icon: '/icons/checkmark.svg',
         text: (
           <>
             Completed <strong>{activity.skillTitle || 'a skill'}</strong>
@@ -119,21 +123,21 @@ function formatActivity(activity) {
       };
     case 'badge_earned':
       return {
-        icon: activity.badgeEmoji || '🏅',
+        icon: '/icons/badges.svg',
         text: (
           <>Badge Unlocked: <strong>{activity.badgeName || 'a badge'}</strong></>
         ),
       };
     case 'level_up':
       return {
-        icon: '⬆️',
+        icon: '/icons/star.svg',
         text: (
           <>Level Up! You&apos;re now <strong>{activity.levelTitle || `Level ${activity.level}`}</strong></>
         ),
       };
     case 'quest_complete':
       return {
-        icon: '🎯',
+        icon: '/icons/quest.svg',
         text: (
           <>
             Quest Complete: <strong>{activity.questTitle || 'a quest'}</strong>
@@ -143,14 +147,14 @@ function formatActivity(activity) {
       };
     case 'streak_milestone':
       return {
-        icon: activity.icon || '🔥',
+        icon: activity.icon || '/icons/fire.svg',
         text: (
           <><strong>{activity.days}-Day</strong> Streak Milestone: {activity.label || ''}</>
         ),
       };
     default:
       return {
-        icon: '📌',
+        icon: '/icons/planning.svg',
         text: <>{activity.message || 'Activity recorded'}</>,
       };
   }
@@ -177,7 +181,11 @@ export default function ActivityFeed({ activities = [], maxItems = 10 }) {
                 key={activity.id || `${activity.type}-${i}`}
                 className={`af-item af-type-${activity.type}`}
               >
-                <span className="af-icon" aria-hidden="true">{icon}</span>
+                <span className="af-icon" aria-hidden="true">
+                  {typeof icon === 'string' && icon.startsWith('/')
+                    ? <img src={icon} alt="" width={18} height={18} />
+                    : icon}
+                </span>
                 <div className="af-body">
                   <div className="af-text">{text}</div>
                   {activity.timestamp && (

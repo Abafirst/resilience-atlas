@@ -281,7 +281,7 @@ export default function LevelUpModal({ levelUp, onClose }) {
           ref={btnRef}
           onClick={onClose}
         >
-          Awesome! 🎉
+          Awesome!
         </button>
       </div>
     </div>

@@ -26,9 +26,12 @@ const STYLES = `
   }
 
   .sc-icon {
-    font-size: 1.6rem;
+    width: 24px;
+    height: 24px;
     line-height: 1;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
   }
 
   .sc-value {
@@ -79,7 +82,7 @@ const STYLES = `
   @media (max-width: 640px) {
     .sc-card { padding: 12px; }
     .sc-value { font-size: 1.3rem; }
-    .sc-icon { font-size: 1.3rem; }
+    .sc-icon { width: 20px; height: 20px; }
   }
 `;
 
@@ -87,7 +90,13 @@ export default function StatsCard({ icon, label, value, color, subtitle }) {
   return (
     <div className="sc-card">
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
-      {icon && <div className="sc-icon" aria-hidden="true">{icon}</div>}
+      {icon && (
+        <div className="sc-icon" aria-hidden="true">
+          {typeof icon === 'string' && icon.startsWith('/')
+            ? <img src={icon} alt="" width={24} height={24} />
+            : icon}
+        </div>
+      )}
       <div className="sc-value" style={color ? { color } : undefined}>
         {value !== undefined && value !== null ? value : '—'}
       </div>

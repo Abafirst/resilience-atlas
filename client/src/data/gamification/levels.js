@@ -4,15 +4,15 @@
  */
 
 export const LEVELS = [
-  { level: 1, title: 'Explorer',     minXP: 0,     maxXP: 99,       color: '#94a3b8', icon: '🌱' },
-  { level: 2, title: 'Seeker',       minXP: 100,   maxXP: 249,      color: '#64748b', icon: '🔍' },
-  { level: 3, title: 'Apprentice',   minXP: 250,   maxXP: 499,      color: '#0891b2', icon: '📚' },
-  { level: 4, title: 'Practitioner', minXP: 500,   maxXP: 999,      color: '#4f46e5', icon: '⚡' },
-  { level: 5, title: 'Adept',        minXP: 1000,  maxXP: 1999,     color: '#7c3aed', icon: '🎯' },
-  { level: 6, title: 'Expert',       minXP: 2000,  maxXP: 3499,     color: '#db2777', icon: '🏅' },
-  { level: 7, title: 'Master',       minXP: 3500,  maxXP: 5499,     color: '#d97706', icon: '🏆' },
-  { level: 8, title: 'Sage',         minXP: 5500,  maxXP: 9999,     color: '#059669', icon: '🌟' },
-  { level: 9, title: 'Luminary',     minXP: 10000, maxXP: Infinity, color: '#eab308', icon: '👑' },
+  { level: 1, title: 'Explorer',     minXP: 0,     maxXP: 99,       color: '#94a3b8', icon: '/icons/compass.svg' },
+  { level: 2, title: 'Seeker',       minXP: 100,   maxXP: 249,      color: '#64748b', icon: '/icons/agentic-generative.svg' },
+  { level: 3, title: 'Apprentice',   minXP: 250,   maxXP: 499,      color: '#0891b2', icon: '/icons/journal.svg' },
+  { level: 4, title: 'Practitioner', minXP: 500,   maxXP: 999,      color: '#4f46e5', icon: '/icons/game-target.svg' },
+  { level: 5, title: 'Adept',        minXP: 1000,  maxXP: 1999,     color: '#7c3aed', icon: '/icons/planning.svg' },
+  { level: 6, title: 'Expert',       minXP: 2000,  maxXP: 3499,     color: '#db2777', icon: '/icons/badges.svg' },
+  { level: 7, title: 'Master',       minXP: 3500,  maxXP: 5499,     color: '#d97706', icon: '/icons/kids-trophy.svg' },
+  { level: 8, title: 'Sage',         minXP: 5500,  maxXP: 9999,     color: '#059669', icon: '/icons/spiritual-reflective.svg' },
+  { level: 9, title: 'Luminary',     minXP: 10000, maxXP: Infinity, color: '#eab308', icon: '/icons/trophy.svg' },
 ];
 
 /**

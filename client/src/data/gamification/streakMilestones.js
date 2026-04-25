@@ -4,14 +4,14 @@
  */
 
 export const STREAK_MILESTONES = [
-  { days: 3,   badge: 'streak-starter',    xp: 10,   icon: '🔥', label: '3-Day Streak'       },
-  { days: 7,   badge: 'week-warrior',       xp: 25,   icon: '⚡', label: 'Week Warrior'        },
-  { days: 14,  badge: 'fortnight-champion', xp: 50,   icon: '💪', label: 'Fortnight Champion'  },
-  { days: 30,  badge: 'month-legend',       xp: 100,  icon: '🏆', label: 'Month Legend'        },
-  { days: 60,  badge: 'dedication-diamond', xp: 200,  icon: '💎', label: 'Dedication Diamond'  },
-  { days: 90,  badge: 'quarter-master',     xp: 300,  icon: '👑', label: 'Quarter Master'      },
-  { days: 180, badge: 'half-year-hero',     xp: 500,  icon: '🌟', label: 'Half-Year Hero'      },
-  { days: 365, badge: 'year-long-legend',   xp: 1000, icon: '🎆', label: 'Year-Long Legend'    },
+  { days: 3,   badge: 'streak-starter',    xp: 10,   icon: '/icons/fire.svg',              label: '3-Day Streak'       },
+  { days: 7,   badge: 'week-warrior',       xp: 25,   icon: '/icons/game-target.svg',       label: 'Week Warrior'        },
+  { days: 14,  badge: 'fortnight-champion', xp: 50,   icon: '/icons/strength.svg',          label: 'Fortnight Champion'  },
+  { days: 30,  badge: 'month-legend',       xp: 100,  icon: '/icons/kids-trophy.svg',       label: 'Month Legend'        },
+  { days: 60,  badge: 'dedication-diamond', xp: 200,  icon: '/icons/game-diamond.svg',      label: 'Dedication Diamond'  },
+  { days: 90,  badge: 'quarter-master',     xp: 300,  icon: '/icons/star.svg',              label: 'Quarter Master'      },
+  { days: 180, badge: 'half-year-hero',     xp: 500,  icon: '/icons/star-burst.svg',        label: 'Half-Year Hero'      },
+  { days: 365, badge: 'year-long-legend',   xp: 1000, icon: '/icons/trophy.svg',            label: 'Year-Long Legend'    },
 ];
 
 /**

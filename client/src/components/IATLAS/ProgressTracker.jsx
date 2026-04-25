@@ -139,8 +139,10 @@ const TRACKER_STYLES = `
     gap: .5rem;
   }
 
-  .pt-dim-emoji {
-    font-size: 1.1rem;
+  .pt-dim-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
 
   .pt-dim-name {
@@ -347,7 +349,9 @@ export default function ProgressTracker({ compact = false }) {
         </div>
         <div style={{ textAlign: 'right' }}>
           <div className="pt-overall-label">Keep building!</div>
-          <div style={{ fontSize: '1.75rem' }}>🏆</div>
+          <div style={{ width: '1.75rem', height: '1.75rem' }}>
+            <img src="/icons/kids-trophy.svg" alt="" width={28} height={28} aria-hidden="true" />
+          </div>
         </div>
       </div>
 
@@ -358,14 +362,14 @@ export default function ProgressTracker({ compact = false }) {
           <div key={dimKey} className="pt-dim-row" role="listitem">
             <div className="pt-dim-header">
               <div className="pt-dim-info">
-                <span className="pt-dim-emoji" aria-hidden="true">{meta.emoji}</span>
+                <img src={meta.icon} alt="" width={18} height={18} className="pt-dim-icon" aria-hidden="true" />
                 <span className="pt-dim-name">{meta.title}</span>
               </div>
               <div className="pt-dim-stats">
                 {xp > 0 && <span className="pt-xp-badge">{xp} XP</span>}
                 {streak.current > 0 && (
                   <span className="pt-streak" title={`${streak.current}-day streak`}>
-                    🔥 {streak.current}
+                    <img src="/icons/fire.svg" alt="" width={12} height={12} aria-hidden="true" /> {streak.current}
                   </span>
                 )}
                 <span>{completed}/{total}</span>
