@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getIATLASSubscriptionStatus } from '../api/iatlas.js';
-import { IATLAS_TIER_KEY } from '../utils/iatlasGating.js';
+import { IATLAS_TIER_KEY, hasProfessionalAccess } from '../utils/iatlasGating.js';
 import { getAuth0CachedToken } from '../lib/apiFetch.js';
 import SpecialtyCard from '../components/IATLAS/SpecialtyCard.jsx';
 import SpecialtyComingSoonModal from '../components/IATLAS/SpecialtyComingSoonModal.jsx';
@@ -1894,6 +1894,7 @@ export default function IATLASCurriculumPage() {
   const [waitlistStatus, setWaitlistStatus] = useState('idle'); // idle | success | error
   const [upgradeSuccess, setUpgradeSuccess] = useState('');
   const [activeSpecialty, setActiveSpecialty] = useState(null);
+  const [isProfessional, setIsProfessional] = useState(false);
 
   // Sync dark-mode preference on mount
   useEffect(() => {
@@ -1905,6 +1906,7 @@ export default function IATLASCurriculumPage() {
       else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.setAttribute('data-theme', 'dark');
     } catch (_) {}
+    setIsProfessional(hasProfessionalAccess());
   }, []);
 
   // Handle post-Stripe upgrade redirect
@@ -2024,6 +2026,11 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/planning.svg" alt="" width={16} height={16} aria-hidden="true" />
                     View My Progress
                   </a>
+                  {isProfessional && (
+                    <Link to="/iatlas/clinical/session-plans" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+                      🩺 Session Plans
+                    </Link>
+                  )}
                 </div>
               </div>
               <div className="iatlas-hero-visual" aria-hidden="true">
