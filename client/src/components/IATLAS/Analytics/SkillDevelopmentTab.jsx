@@ -290,7 +290,7 @@ export default function SkillDevelopmentTab({ profiles = [], selectedProfileId =
         loading={loading}
         minHeight="120px"
       >
-        <DomainHeatmap data={hasSampleMode ? dimBreakdown : dimBreakdown} />
+        <DomainHeatmap data={dimBreakdown} />
       </ChartCard>
     </>
   );
