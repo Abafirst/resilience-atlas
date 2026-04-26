@@ -74,6 +74,7 @@ import SkillModulePage from './components/IATLAS/SkillModulePage.jsx';
 import KidsAgeGroupPage from './components/IATLAS/Kids/KidsAgeGroupPage.jsx';
 import KidsDimensionActivities from './components/IATLAS/Kids/KidsDimensionActivities.jsx';
 import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
+import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx';
 import SessionPlansPage from './pages/SessionPlansPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
@@ -369,6 +370,7 @@ function AppShell() {
           <Route path="/iatlas/kids/:ageGroup" element={<KidsAgeGroupPage />} />
           <Route path="/iatlas/kids/:ageGroup/:dimension" element={<KidsDimensionActivities />} />
           <Route path="/iatlas/roadmap" element={<ContentRoadmapPage />} />
+          <Route path="/iatlas/clinical/aba-protocols" element={<PractitionerProtocolLibrary />} />
           <Route path="/iatlas/clinical/session-plans" element={<SessionPlansPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />

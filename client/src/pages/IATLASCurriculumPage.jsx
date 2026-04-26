@@ -937,6 +937,19 @@ const STYLES = `
     line-height: 1.45;
   }
 
+  .iatlas-cf-card-link {
+    display: inline-block;
+    margin-top: .6rem;
+    font-size: .8rem;
+    font-weight: 700;
+    color: #6ee7b7;
+    text-decoration: none;
+  }
+
+  .iatlas-cf-card-link:hover {
+    text-decoration: underline;
+  }
+
   .iatlas-cf-cta {
     display: flex;
     flex-wrap: wrap;
@@ -2228,6 +2241,8 @@ export default function IATLASCurriculumPage() {
                     icon: '/icons/game-target.svg',
                     title: 'Professional — from $149/mo',
                     items: ['Clinical assessments & session plans', 'Client resources & worksheets', 'ABA protocol library', 'Practitioner / Practice / Enterprise tiers'],
+                    link: '/iatlas/clinical/aba-protocols',
+                    linkLabel: 'Browse Protocol Library →',
                   },
                 ].map((cf) => (
                   <div key={cf.title} className="iatlas-cf-card" role="listitem">
@@ -2241,6 +2256,11 @@ export default function IATLASCurriculumPage() {
                         </li>
                       ))}
                     </ul>
+                    {cf.link && (
+                      <a href={cf.link} className="iatlas-cf-card-link">
+                        {cf.linkLabel}
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>
