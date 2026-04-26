@@ -19,7 +19,7 @@ export default function SpecialtyCard({ specialty, onJoinWaitlist }) {
   return (
     <div className="iatlas-specialty-card">
       <div className="iatlas-specialty-icon" aria-hidden="true">
-        <img src={icon} alt="" width={40} height={40} />
+        <img src={icon} alt="" />
       </div>
       <h3 className="iatlas-specialty-title">{name}</h3>
       <p className="iatlas-specialty-desc">{description}</p>

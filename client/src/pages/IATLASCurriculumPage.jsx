@@ -1524,9 +1524,13 @@ const STYLES = `
   }
 
   .iatlas-specialty-icon {
+    flex-shrink: 0;
+  }
+
+  .iatlas-specialty-icon img {
     width: 40px;
     height: 40px;
-    flex-shrink: 0;
+    display: block;
   }
 
   .iatlas-specialty-title {
@@ -2043,10 +2047,7 @@ export default function IATLASCurriculumPage() {
                   <img
                     src={specialty.icon}
                     alt=""
-                    width={20}
-                    height={20}
                     className="iatlas-specialty-nav-icon"
-                    aria-hidden="true"
                   />
                   <span className="iatlas-specialty-nav-label">{specialty.name}</span>
                 </a>
