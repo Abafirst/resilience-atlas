@@ -61,7 +61,7 @@ function canViewBriefResults() {
 /**
  * Check whether an email address can download the PDF for a specific assessment.
  *
- * @param {string} email         Normalised (lowercase, trimmed) user email.
+ * @param {string} email         Normalized (lowercase, trimmed) user email.
  * @param {string} assessmentHash  MD5 hash of the assessment (from buildAssessmentHash).
  * @returns {Promise<{ allowed: boolean, reason: string, unlockOptions: Array }>}
  */

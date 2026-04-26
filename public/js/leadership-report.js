@@ -377,7 +377,7 @@
     $('state-error').style.display = 'block';
   }
 
-  // ── Initialise ────────────────────────────────────────────────
+  // ── Initialize ────────────────────────────────────────────────
 
   function init() {
     const orgId = qp('orgId');

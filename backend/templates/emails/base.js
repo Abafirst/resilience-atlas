@@ -9,7 +9,7 @@
 
 const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
 
-/* ── Brand colours ─────────────────────────────────────────────────────────── */
+/* ── Brand colors ─────────────────────────────────────────────────────────── */
 const COLORS = {
   primary:     '#2c5f8a',
   primaryDark: '#1a3a5c',
@@ -24,7 +24,7 @@ const COLORS = {
   bgCard:      '#ffffff',
 };
 
-/* ── Dimension colours ─────────────────────────────────────────────────────── */
+/* ── Dimension colors ─────────────────────────────────────────────────────── */
 const DIMENSION_COLORS = {
   emotional:  '#e74c3c',
   mental:     '#3498db',
@@ -40,7 +40,7 @@ const DIMENSION_COLORS = {
  * Build a score progress-bar row.
  * @param {string} label
  * @param {number} score  0-100
- * @param {string} color  hex colour
+ * @param {string} color  hex color
  */
 function progressBar(label, score, color) {
   const pct = Math.min(100, Math.max(0, Math.round(score)));

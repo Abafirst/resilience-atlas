@@ -9,7 +9,7 @@
  *   - On a native Capacitor platform: prefixes the path with the public
  *     production origin so every fetch goes to the real backend.
  *   - On the web (dev or production website): returns the path unchanged,
- *     preserving the existing same-origin / Vite-proxy behaviour.
+ *     preserving the existing same-origin / Vite-proxy behavior.
  */
 
 const PRODUCTION_ORIGIN = 'https://theresilienceatlas.com';

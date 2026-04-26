@@ -710,7 +710,7 @@ export default function AboutPage() {
                   <span className="team-avatar" aria-hidden="true">{member.avatar}</span>
                   <h3 className="team-name">{member.name}</h3>
                   <p className="team-role">{member.role}</p>
-                  <p className="team-fact"><img src="/icons/dialogue.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />{member.fact}</p>
+                  <p className="team-fact"><img src="/icons/dialog.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: 'text-bottom', marginRight: 6 }} />{member.fact}</p>
                 </article>
               ))}
             </div>

@@ -201,7 +201,7 @@ async function hasAccessToReportHash(email, hash) {
  * @param {string} overall
  * @param {string} dominantType
  * @param {string} scores  Cleaned JSON string (HTML entities already reversed)
- * @param {string} [email]  User email for personalisation (optional)
+ * @param {string} [email]  User email for personalization (optional)
  */
 async function runGeneration(hash, overall, dominantType, scores, email, quotaTrackedEmail = null) {
     const startTime = Date.now();

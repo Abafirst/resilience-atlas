@@ -1,7 +1,7 @@
 # Social Post Templates — The Resilience Atlas™
 
 Evergreen, reusable social graphics for automated Metricool posts.  
-Four template types × three colour variants = **12 ready-to-use assets**.
+Four template types × three color variants = **12 ready-to-use assets**.
 
 ---
 
@@ -14,9 +14,9 @@ Four template types × three colour variants = **12 ready-to-use assets**.
 | `myth-truth-` | Myth → Truth reframe | Friday | "Myth / Truth" |
 | `reflection-` | Weekly Reflection question | Sunday | "Weekly Reflection" |
 
-Each prefix has three variants (`-01`, `-02`, `-03`) differing by accent colour:
+Each prefix has three variants (`-01`, `-02`, `-03`) differing by accent color:
 
-| Suffix | Accent colour |
+| Suffix | Accent color |
 |--------|---------------|
 | `-01` | Teal `#2A9D8F` |
 | `-02` | Warm Sand `#E9C46A` |
@@ -35,7 +35,7 @@ The Resilience Atlas™          theresilienceatlas.com
 ```
 social-templates/
 ├── README.md             ← this file
-├── style-guide.md        ← colours, fonts, spacing, do/don't
+├── style-guide.md        ← colors, fonts, spacing, do/don't
 ├── svg/
 │   ├── micro-practice-01.svg
 │   ├── micro-practice-02.svg
@@ -154,7 +154,7 @@ Replace `<type>` with `micro-practice`, `dimension`, `myth-truth`, or `reflectio
 
 ---
 
-## Customising the templates
+## Customizing the templates
 
 The SVGs are plain XML — open any file in a text editor or vector editor and change:
 
@@ -162,7 +162,7 @@ The SVGs are plain XML — open any file in a text editor or vector editor and c
 |---------|---------------|
 | `<text>` inside the main title area | Your actual post title / question |
 | `<text>` bullet lines | Your specific bullet copy |
-| Accent colour (`#2A9D8F` / `#E9C46A` / `#E76F51`) | Find & replace to use a different colour |
+| Accent color (`#2A9D8F` / `#E9C46A` / `#E76F51`) | Find & replace to use a different color |
 | Footer URL | Replace `theresilienceatlas.com` with your custom domain if needed |
 
 All templates follow the brand rules in [`style-guide.md`](./style-guide.md).

@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 
-// ── Dimension colours & icons (mirrors ResultsPage) ────────────────────────
+// ── Dimension colors & icons (mirrors ResultsPage) ────────────────────────
 const DIM_COLORS = {
   'Cognitive-Narrative':   '#4F46E5',
   'Relational-Connective': '#059669',
@@ -290,7 +290,7 @@ function fmtDate(dateStr) {
   } catch (_) { return dateStr; }
 }
 
-// ── Helper: get score colour based on value ───────────────────────────────
+// ── Helper: get score color based on value ───────────────────────────────
 function scoreColor(pct) {
   if (pct >= 75) return '#059669';
   if (pct >= 50) return '#D97706';

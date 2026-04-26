@@ -102,7 +102,7 @@ const UPSELL_VARIANT_COPY = {
     },
     'atlas-premium': {
       headline: 'Take Your Resilience Journey Further',
-      subtext:  'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium licence.',
+      subtext:  'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium license.',
       ctaLabel: 'Upgrade to Atlas Premium — $49.99',
       offer:    null,
     },
@@ -151,7 +151,7 @@ const UPSELL_VARIANT_COPY = {
   },
 };
 
-// Value propositions catalogue
+// Value propositions catalog
 const UPSELL_VALUE_PROPS = {
   detailed_analytics:  { icon: '/icons/leaderboards.svg', text: 'Detailed analytics across all 6 resilience dimensions' },
   comparison:          { icon: '/icons/growth.svg', text: 'Side-by-side comparison with your previous assessments' },
@@ -597,7 +597,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
   );
 }
 
-// ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
+// ── Dimension accent colors (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
   'Cognitive-Narrative':   '#4F46E5',
   'Relational-Connective': '#059669',
@@ -678,7 +678,7 @@ const DIMENSION_NEXT_STEPS = {
   'Relational-Connective': [
     { icon: '/icons/connection.svg', title: 'Reach Out', desc: "Connect with one trusted person this week — share something real about how you're doing." },
     { icon: '/icons/network.svg', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
-    { icon: '/icons/dialogue.svg', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
+    { icon: '/icons/dialog.svg', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
   ],
   'Spiritual-Reflective': [
     { icon: '/icons/mindfulness.svg', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
@@ -2135,7 +2135,7 @@ function loadGamData() {
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
-  const upgradeParam  = params.get('upgrade');   // 'success' | 'cancelled'
+  const upgradeParam  = params.get('upgrade');   // 'success' | 'canceled'
   const sessionId     = params.get('session_id');
   const hashParam     = params.get('hash');      // assessment hash from email CTA deep link
 
@@ -2316,7 +2316,7 @@ export default function ResultsPage() {
   useEffect(() => {
     if (!hashParam) return;
 
-    // Wait for Auth0 to finish initialising before deciding on auth state.
+    // Wait for Auth0 to finish initializing before deciding on auth state.
     if (auth0Loading) return;
 
     if (!isAuthenticated) {
@@ -2329,7 +2329,7 @@ export default function ResultsPage() {
     }
 
     // Authenticated — fetch assessment data from the server.
-    let cancelled = false;
+    let canceled = false;
     setHashLoading(true);
 
     (async () => {
@@ -2340,7 +2340,7 @@ export default function ResultsPage() {
           getAccessTokenSilently
         ).then(r => r.json());
 
-        if (cancelled) return;
+        if (canceled) return;
 
         if (data && data.overall !== undefined) {
           setResults(data);
@@ -2352,18 +2352,18 @@ export default function ResultsPage() {
           });
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!canceled) {
           setBanner({
             type: 'error',
             message: 'Unable to load assessment. Please try again or re-take the quiz.',
           });
         }
       } finally {
-        if (!cancelled) setHashLoading(false);
+        if (!canceled) setHashLoading(false);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => { canceled = true; };
   }, [hashParam, auth0Loading, isAuthenticated]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Auto-load latest assessment when results is null and user has email ─
@@ -2375,18 +2375,18 @@ export default function ResultsPage() {
   useEffect(() => {
     if (hashParam) return;           // hash flow handles its own loading
     if (results) return;             // already have results — nothing to do
-    if (auth0Loading) return;        // wait for Auth0 to finish initialising
+    if (auth0Loading) return;        // wait for Auth0 to finish initializing
 
     const email = (isAuthenticated && auth0User?.email) || getStoredEmail();
     if (!email) return;              // no email — cannot fetch history
 
-    let cancelled = false;
+    let canceled = false;
     setLatestAssessmentLoading(true);
 
     apiFetch(`/api/assessment/history?email=${encodeURIComponent(email)}`, {}, getAccessTokenSilently)
       .then(r => r.json())
       .then(data => {
-        if (cancelled) return;
+        if (canceled) return;
         const list = Array.isArray(data.assessments) ? data.assessments : [];
         // Filter to items that have actual result data
         const valid = list.filter(a => a.overall !== undefined && a.dominantType);
@@ -2409,15 +2409,15 @@ export default function ResultsPage() {
         }
       })
       .catch(err => {
-        if (!cancelled) {
+        if (!canceled) {
           console.warn('[ResultsPage] Auto-fetch latest assessment failed:', err.message);
         }
       })
       .finally(() => {
-        if (!cancelled) setLatestAssessmentLoading(false);
+        if (!canceled) setLatestAssessmentLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => { canceled = true; };
   }, [hashParam, results, auth0Loading, isAuthenticated, auth0User]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Confetti celebration — fire 600 ms after results load ─────────────
@@ -2433,7 +2433,7 @@ export default function ResultsPage() {
     };
   }, [results]);
 
-  // ── 30-day practice plan: initialise start date on first view ──────────
+  // ── 30-day practice plan: initialize start date on first view ──────────
   useEffect(() => {
     if (!results) return;
     try {
@@ -2541,8 +2541,8 @@ export default function ResultsPage() {
 
   // ── Handle return from Stripe checkout ────────────────────────────────
   useEffect(() => {
-    if (upgradeParam === 'cancelled') {
-      setBanner({ type: 'warning', message: 'Payment was cancelled. Your free results are still available below.' });
+    if (upgradeParam === 'canceled') {
+      setBanner({ type: 'warning', message: 'Payment was canceled. Your free results are still available below.' });
       // Clean query string without reloading
       window.history.replaceState({}, '', '/results');
       return;
@@ -2666,7 +2666,7 @@ export default function ResultsPage() {
   // state is populated before the access check runs.
   useEffect(() => {
     if (auth0Loading) {
-      // Auth0 is still initialising — hold off until we know the user's identity.
+      // Auth0 is still initializing — hold off until we know the user's identity.
       return;
     }
 
@@ -3272,8 +3272,8 @@ export default function ResultsPage() {
                   {isReturnFromPayment
                     ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
                     : isAuthenticated
-                      ? 'Complete the free assessment to see your personalised resilience profile.'
-                      : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
+                      ? 'Complete the free assessment to see your personalized resilience profile.'
+                      : 'Complete the free assessment to see your personalized resilience profile, or sign in to access your previous results.'
                   }
                 </p>
                 <a href="/quiz" style={s.primaryBtn}>
@@ -3511,7 +3511,7 @@ export default function ResultsPage() {
           })}
           {!hasPremiumAccess && (
             <p style={s.fbrHint}>
-              Unlock your full map for personalised insights &amp; growth compass points.
+              Unlock your full map for personalized insights &amp; growth compass points.
             </p>
           )}
           <p style={{ margin: '8px 0 0', fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>
@@ -3887,10 +3887,10 @@ export default function ResultsPage() {
               {isAtlasPremium
                 ? 'Your Atlas Premium access lets you download this report any time.'
                 : tier === 'atlas-starter'
-                  ? 'Your Atlas Starter report is ready. Download your personalised PDF report now.'
+                  ? 'Your Atlas Starter report is ready. Download your personalized PDF report now.'
                   : tier === 'atlas-navigator'
                     ? 'Your Atlas Navigator lifetime access lets you download a new report every 30 days.'
-                    : 'Your report is ready. Download your personalised PDF now.'
+                    : 'Your report is ready. Download your personalized PDF now.'
               }
             </p>
             {pdfError && (

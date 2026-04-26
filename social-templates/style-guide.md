@@ -21,7 +21,7 @@
 
 - **Background**: Always Cream `#FAF7F2` (light templates) or Deep Navy `#0F2436` (dark templates).
 - **Body text**: Always Deep Navy on Cream; always Cream on Navy.
-- **Accent**: One accent colour per template. Never mix Teal + Coral on the same asset.
+- **Accent**: One accent color per template. Never mix Teal + Coral on the same asset.
 - **Footer**: Always `#091A28` background with Cream text regardless of template type.
 
 ### Variant rotation
@@ -54,10 +54,10 @@
 - **Canvas**: 1080 × 1080 px (square, cross-platform safe)
 - **Left margin**: 80 px
 - **Right margin**: 80 px from right edge (content up to x = 1000)
-- **Top accent strip**: 8 px (accent colour)
-- **Left accent rule**: 5 px wide (accent colour, 22–35% opacity)
+- **Top accent strip**: 8 px (accent color)
+- **Left accent rule**: 5 px wide (accent color, 22–35% opacity)
 - **Footer height**: 128 px (y = 952 → y = 1080)
-- **Footer divider line**: 2.5 px, accent colour at y = 952
+- **Footer divider line**: 2.5 px, accent color at y = 952
 - **Whitespace**: generous — keep bullet count to 3 maximum
 
 ---
@@ -71,7 +71,7 @@ The motif consists of:
 - Cardinal direction lines (N / S / E / W)
 - Diagonal lines at 45°
 - Bold tick marks at the four cardinal points
-- A small centre dot
+- A small center dot
 
 This references the Atlas / navigation metaphor without requiring an imported logo.  
 Additional subtle elements used per template type:
@@ -80,7 +80,7 @@ Additional subtle elements used per template type:
 |---------------|--------------------|
 | Micro-practice | Compass rose, top-right corner |
 | Dimension spotlight | Map grid lines + compass rose, bottom-right corner |
-| Myth → Truth | Compass rose centred on split divider |
+| Myth → Truth | Compass rose centered on split divider |
 | Reflection | Coordinate grid + compass rose + faint large "?" |
 
 ---
@@ -89,7 +89,7 @@ Additional subtle elements used per template type:
 
 | ✓ Do | ✗ Don't |
 |------|---------|
-| Use one accent colour per asset | Mix more than one accent |
+| Use one accent color per asset | Mix more than one accent |
 | Keep body text ≤ 3 bullets or 2 short lines | Add long paragraphs |
 | Use generous whitespace | Crowd the footer area |
 | Rotate variants (01 → 02 → 03 → 01…) | Use the same variant back-to-back |
@@ -107,4 +107,4 @@ The Resilience Atlas™          theresilienceatlas.com
 - Left-aligned brand name, font-weight 600, 26 px
 - Right-aligned URL, font-weight 400, 22 px, 75% opacity
 - Background: `#091A28`; Text: `#FAF7F2`
-- Top border: 2.5 px in current accent colour
+- Top border: 2.5 px in current accent color

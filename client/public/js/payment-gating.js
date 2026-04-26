@@ -334,11 +334,11 @@
         const isUpgradeRedirect = (upgrade === 'success' || upgrade === 'atlas-navigator' || upgrade === 'atlas-premium') && sessionId;
 
         if (!isUpgradeRedirect) {
-            // Show a notice when the user cancelled their payment.
-            if (upgrade === 'cancelled') {
+            // Show a notice when the user canceled their payment.
+            if (upgrade === 'canceled') {
                 _cleanUrl();
                 _showNoticeBanner(
-                    'Your payment was cancelled. You can upgrade any time to unlock your full report.',
+                    'Your payment was canceled. You can upgrade any time to unlock your full report.',
                     'info'
                 );
             }

@@ -132,7 +132,7 @@ const EVIDENCE_BASED_PRACTICES = [
       description: 'Directing attention to strengths-based aspects of one\'s history to build adaptive self-concept.',
       mechanism: 'Positive reinforcement of strengths-focused narrative behavior'
     },
-    reflectionQuestion: 'How does recognising your strengths in this story change how you see your current challenges?',
+    reflectionQuestion: 'How does recognizing your strengths in this story change how you see your current challenges?',
     difficulty: 'intermediate',
     outcomes: [
       'Stronger strengths-based identity',
@@ -376,7 +376,7 @@ const EVIDENCE_BASED_PRACTICES = [
     ],
     actPrinciple: {
       name: 'Values Alignment',
-      description: 'Recognising progress as evidence of living in accordance with your values.',
+      description: 'Recognizing progress as evidence of living in accordance with your values.',
       targetArea: 'Motivational renewal and positive self-regard'
     },
     abaPrinciple: {
@@ -754,7 +754,7 @@ const EVIDENCE_BASED_PRACTICES = [
       'Name 5 things you can see around you.',
       'Name 4 things you can physically feel (your feet on the floor, air on skin, etc.).',
       'Name 3 things you can hear.',
-      'Name 2 things you can smell (or recall two favourite scents).',
+      'Name 2 things you can smell (or recall two favorite scents).',
       'Name 1 thing you can taste.',
       'Take one deep breath. You are here, present, and safe.'
     ],
@@ -1080,7 +1080,7 @@ function renderPracticesSection(emergingStrength) {
   `;
 }
 
-// ── UI: Initialise practice interactions ─────────────────────────────────────
+// ── UI: Initialize practice interactions ─────────────────────────────────────
 function initPracticeInteractions() {
   const grid = document.getElementById('ep-cards-grid');
   if (!grid) return;

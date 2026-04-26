@@ -82,7 +82,7 @@ This document catalogs and summarizes the research literature underpinning the I
 **Hayes, S. C., Barnes-Holmes, D., & Roche, B. (Eds.). (2001).** *Relational frame theory: A post-Skinnerian account of human language and cognition*. Kluwer Academic/Plenum.
 > The theoretical foundation underlying ACT; explains why language and thought create psychological suffering and how flexibility resolves it.
 
-**Hayes, S. C., Luoma, J. B., Bond, F. W., Masuda, A., & Lillis, J. (2006).** Acceptance and commitment therapy: Model, processes and outcomes. *Behaviour Research and Therapy, 44*(1), 1–25.
+**Hayes, S. C., Luoma, J. B., Bond, F. W., Masuda, A., & Lillis, J. (2006).** Acceptance and commitment therapy: Model, processes and outcomes. *Behavior Research and Therapy, 44*(1), 1–25.
 > Empirical review of ACT efficacy across multiple outcome domains.
 
 ### ACT Meta-Analyses & Reviews

@@ -238,7 +238,7 @@ describe('tier helper functions', () => {
     });
 });
 
-// ── handleUpgradeSuccess behaviour ───────────────────────────────────────────
+// ── handleUpgradeSuccess behavior ───────────────────────────────────────────
 
 describe('handleUpgradeSuccess()', () => {
     // Helpers to set window.location.search inside jsdom using history API

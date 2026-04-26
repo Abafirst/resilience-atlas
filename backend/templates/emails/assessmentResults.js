@@ -35,7 +35,7 @@ function normalizeScore(val) {
 }
 
 /**
- * Score badge colour helper.
+ * Score badge color helper.
  * @param {number} score
  */
 function scoreBadgeColor(score) {

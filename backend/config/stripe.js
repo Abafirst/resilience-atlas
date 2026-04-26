@@ -16,7 +16,7 @@ const debugStripe =
 let stripeInstance;
 
 if (debugStripe) {
-    // Log Stripe SDK version so we can correlate behaviour across upgrades.
+    // Log Stripe SDK version so we can correlate behavior across upgrades.
     let stripePkgVersion = 'unknown';
     try {
         stripePkgVersion = require('stripe/package.json').version;

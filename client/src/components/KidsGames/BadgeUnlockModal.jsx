@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 
-/* ── Confetti colours (branded: purples, teals, greens) ── */
+/* ── Confetti colors (branded: purples, teals, greens) ── */
 const CONFETTI_COLORS = [
   '#7c3aed', '#a855f7', '#06b6d4', '#0891b2',
   '#16a34a', '#22c55e', '#fbbf24', '#f59e0b',

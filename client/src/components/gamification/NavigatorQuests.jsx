@@ -3,7 +3,7 @@
  *
  * Full end-to-end Quests experience for the Resilience Adventure Hub.
  *
- * Tier behaviour:
+ * Tier behavior:
  *   Navigator → all quests unlocked; full start → step → complete workflow.
  *   Starter   → 'starter'-tier quests playable; 'navigator'-tier quests
  *               show a locked preview card with upgrade CTA.

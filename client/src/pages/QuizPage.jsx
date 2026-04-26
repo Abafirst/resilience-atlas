@@ -407,7 +407,7 @@ export default function QuizPage() {
     if (backendRedirectCheckedRef.current) return; // only run once per mount
     backendRedirectCheckedRef.current = true;
 
-    // Honour explicit retake intent (?retake=1 query param set by ResultsPage)
+    // Honor explicit retake intent (?retake=1 query param set by ResultsPage)
     try {
       const params = new URLSearchParams(window.location.search);
       if (params.get('retake') === '1') return;

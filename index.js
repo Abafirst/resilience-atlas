@@ -166,7 +166,7 @@ app.post('/api/quiz', (req, res) => {
 // "Callback URL mismatch" errors.  The SPA's loginWithRedirect() always uses
 // window.location.origin as the callback URL, which is always correct.
 //
-// An optional same-origin ?returnTo= param is honoured.
+// An optional same-origin ?returnTo= param is honored.
 const sanitiseReturnTo = require('./backend/utils/sanitiseReturnTo');
 
 app.get('/login', (req, res) => {

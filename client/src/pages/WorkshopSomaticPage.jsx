@@ -67,7 +67,7 @@ export default function WorkshopSomaticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title"><img src="/icons/dialogue.svg" alt="" aria-hidden="true" width={18} height={18} />Discussion Prompts</h2>
+          <h2 className="section-title"><img src="/icons/dialog.svg" alt="" aria-hidden="true" width={18} height={18} />Discussion Prompts</h2>
           <p>Choose 3–5 prompts that feel most relevant to your team. Allow 5–8 minutes per prompt for open discussion.</p>
           <ol>
             <li>How do you know when you're in a stress response vs. a grounded, resourced state?</li>

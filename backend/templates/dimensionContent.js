@@ -63,7 +63,7 @@ const DIMENSION_CONTENT = {
                 'Ability to find meaning and lessons in adversity',
                 'Narrative coherence — can tell a growth story about challenges',
                 'Cognitive flexibility when faced with uncertainty',
-                'Empowering self-talk and inner dialogue',
+                'Empowering self-talk and inner dialog',
             ],
             mid: [
                 'Emerging ability to reframe setbacks constructively',
@@ -103,7 +103,7 @@ const DIMENSION_CONTENT = {
 
         weeklyProgression: [
             'Week 1 — Foundation: Spend 5 minutes each morning writing one empowering statement about yourself. This begins rewiring your narrative baseline.',
-            'Week 2 — Awareness: Keep a "thought log" — note three automatic thoughts each day and categorise them as helpful or unhelpful. Awareness precedes change.',
+            'Week 2 — Awareness: Keep a "thought log" — note three automatic thoughts each day and categorize them as helpful or unhelpful. Awareness precedes change.',
             'Week 3 — Reframing: Take your most common unhelpful thought pattern and practice writing three alternative, more balanced interpretations each time it appears.',
             'Week 4 — Integration: Write your personal "resilience story" — a 1-page narrative of how you have grown through a past challenge. Read it aloud to yourself or share it with someone you trust.',
         ],
@@ -236,7 +236,7 @@ const DIMENSION_CONTENT = {
 
         lifeApplications: {
             relationships:
-                'In intimate partnerships, relational resilience means you can maintain connection even during conflict — staying present, listening deeply, and prioritising the relationship over being right. This is the foundation of lasting love.',
+                'In intimate partnerships, relational resilience means you can maintain connection even during conflict — staying present, listening deeply, and prioritizing the relationship over being right. This is the foundation of lasting love.',
             friendships:
                 'With friends, this strength creates the depth and longevity that makes friendships feel like family. You invest in reciprocal care, show up authentically, and create the safety that allows true vulnerability.',
             parenting:
@@ -372,7 +372,7 @@ const DIMENSION_CONTENT = {
         label: 'Emotional-Adaptive',
         tagline: 'Emotions are data, not directives. Mastering them is mastering resilience.',
         description:
-            'Emotional-Adaptive resilience reflects your capacity to recognise, experience, ' +
+            'Emotional-Adaptive resilience reflects your capacity to recognize, experience, ' +
             'and regulate emotions without being overwhelmed by them. It encompasses ' +
             'emotional awareness, emotional regulation skills, tolerance for difficult ' +
             'feelings, and the ability to process emotions in healthy ways rather than ' +
@@ -382,7 +382,7 @@ const DIMENSION_CONTENT = {
             high:
                 'Your Emotional-Adaptive score suggests a well-developed capacity for ' +
                 'emotional awareness and regulation. You likely have a rich emotional ' +
-                'vocabulary, can sit with difficult feelings without being destabilised, and ' +
+                'vocabulary, can sit with difficult feelings without being destabilized, and ' +
                 'process emotions in ways that support rather than undermine your resilience.\n\n' +
                 'At this level, consider how you can use this emotional intelligence to ' +
                 'support others. The capacity to hold space for someone else\'s emotional ' +
@@ -400,7 +400,7 @@ const DIMENSION_CONTENT = {
             low:
                 'A lower Emotional-Adaptive score may suggest that emotions are often ' +
                 'overwhelming, hard to identify, or that you tend to push them away to ' +
-                'keep functioning. Many people have learned to survive by minimising ' +
+                'keep functioning. Many people have learned to survive by minimizing ' +
                 'emotional experience — this is often adaptive in harsh environments.\n\n' +
                 'Building emotional resilience is gradual work. It begins with simply ' +
                 'noticing what you feel — not fixing it, not judging it, just naming it. ' +
@@ -420,7 +420,7 @@ const DIMENSION_CONTENT = {
                 'Meaningful self-awareness about emotional states',
                 'Capacity to manage emotions in lower-stress situations',
                 'Growing tolerance for emotional discomfort',
-                'Awareness of how emotions affect your behaviour',
+                'Awareness of how emotions affect your behavior',
             ],
             low: [
                 'Awareness that emotional wellbeing matters for resilience',
@@ -432,23 +432,23 @@ const DIMENSION_CONTENT = {
         growthOpportunities: {
             high: [
                 'Deepen your capacity to hold space for others\' emotional experiences',
-                'Explore shadow emotions — the ones you still tend to avoid or minimise',
+                'Explore shadow emotions — the ones you still tend to avoid or minimize',
             ],
             mid: [
                 'Practice naming emotions with precision — there are hundreds of words, not just "good" and "bad"',
                 'Develop a regular emotion-processing practice: journaling, art, movement, or therapy',
-                'Identify your most common emotional triggers and practise responding rather than reacting',
+                'Identify your most common emotional triggers and practice responding rather than reacting',
             ],
             low: [
                 'Start with the simplest practice: at the end of each day, name one emotion you felt',
                 'Explore whether there are emotions you were taught were "not allowed" — this is often at the root of emotional disconnection',
-                'Consider working with a therapist or counsellor who specialises in emotional processing',
+                'Consider working with a therapist or counsellor who specializes in emotional processing',
             ],
         },
 
         microPractice:
             '"The RAIN Practice" (10 min): When you notice a difficult emotion:\n' +
-            '  R — Recognise what you are feeling. Name it.\n' +
+            '  R — Recognize what you are feeling. Name it.\n' +
             '  A — Allow it to be there without trying to fix or suppress it.\n' +
             '  I — Investigate with gentle curiosity: where do you feel it in your body?\n' +
             '  N — Nurture with self-compassion: what would you say to a friend feeling this?\n' +
@@ -466,7 +466,7 @@ const DIMENSION_CONTENT = {
             'of effective leadership, team dynamics, and conflict resolution. The capacity ' +
             'to remain emotionally regulated under pressure, to empathise with colleagues, ' +
             'and to process difficult feedback without defensiveness is increasingly ' +
-            'recognised as a critical professional skill.\n\n' +
+            'recognized as a critical professional skill.\n\n' +
             'In personal life, this dimension underpins the quality of all close ' +
             'relationships. The capacity to express vulnerability, to sit with a partner\'s ' +
             'pain, and to repair ruptures through emotional honesty is the foundation of ' +
@@ -476,11 +476,11 @@ const DIMENSION_CONTENT = {
             relationships:
                 'Emotional intelligence is the primary currency of intimate relationships. The capacity to express your own feelings clearly, receive your partner\'s emotions without defensiveness, and repair ruptures through emotional honesty is the basis of lasting connection.',
             friendships:
-                'With friends, emotional resilience means you can be present for their struggles without either minimising or absorbing their pain. You create the rare kind of friendship where both people feel genuinely understood.',
+                'With friends, emotional resilience means you can be present for their struggles without either minimizing or absorbing their pain. You create the rare kind of friendship where both people feel genuinely understood.',
             parenting:
                 'Parents who model emotional regulation give children one of the most valuable life skills. Naming your emotions, processing them openly and appropriately, and helping children navigate their own emotional worlds builds emotional intelligence from the earliest years.',
             work:
-                'In professional contexts, emotional regulation is increasingly recognised as a critical leadership competency — staying grounded under pressure, receiving critical feedback without defensiveness, and managing team emotional dynamics effectively.',
+                'In professional contexts, emotional regulation is increasingly recognized as a critical leadership competency — staying grounded under pressure, receiving critical feedback without defensiveness, and managing team emotional dynamics effectively.',
             personalGrowth:
                 'Your emotional life is a rich source of information about what you value, what you need, and where you are growing. Developing practices to process and express emotions — rather than suppress or be overwhelmed by them — accelerates growth in all dimensions.',
         },
@@ -675,8 +675,8 @@ const DIMENSION_CONTENT = {
             ],
             mid: [
                 'Establish a consistent daily movement practice, even if only 10 minutes',
-                'Learn and practise one breathwork technique for stress regulation',
-                'Prioritise sleep as a non-negotiable pillar of somatic resilience',
+                'Learn and practice one breathwork technique for stress regulation',
+                'Prioritize sleep as a non-negotiable pillar of somatic resilience',
             ],
             low: [
                 'Begin with one small daily act of physical self-care: a walk, a stretch, three deep breaths',
@@ -697,7 +697,7 @@ const DIMENSION_CONTENT = {
         weeklyProgression: [
             'Week 1 — Body Baseline: Spend 5 minutes each morning doing a simple body scan — notice where you hold tension, where you feel ease. This builds the interoceptive awareness that underlies somatic resilience.',
             'Week 2 — Movement: Add 20 minutes of intentional movement each day — walking, yoga, dancing, whatever feels right. Notice how movement affects your emotional state and energy levels.',
-            'Week 3 — Breathwork: Learn and practise one breathwork technique daily (box breathing, 4-7-8, or diaphragmatic breathing). Conscious breath is the most accessible nervous-system regulation tool.',
+            'Week 3 — Breathwork: Learn and practice one breathwork technique daily (box breathing, 4-7-8, or diaphragmatic breathing). Conscious breath is the most accessible nervous-system regulation tool.',
             'Week 4 — Sleep & Recovery: Audit your sleep practices this week. Create a consistent wind-down routine: no screens 30 minutes before bed, a brief body relaxation, consistent sleep and wake times. Recovery is the foundation of resilience.',
         ],
 
@@ -720,7 +720,7 @@ const DIMENSION_CONTENT = {
             parenting:
                 'Children regulate their nervous systems through co-regulation with calm caregivers. Your physical presence, your tone, your breath, and your body language communicate safety or danger to children before any words are spoken. Somatic resilience is transmitted, not just taught.',
             work:
-                'Physical wellbeing directly affects cognitive performance, emotional regulation, and creative capacity. Sleep, movement, and breath are not lifestyle extras — they are professional tools. Leaders who prioritise somatic health consistently perform more sustainably.',
+                'Physical wellbeing directly affects cognitive performance, emotional regulation, and creative capacity. Sleep, movement, and breath are not lifestyle extras — they are professional tools. Leaders who prioritize somatic health consistently perform more sustainably.',
             personalGrowth:
                 'Your body is your most immediate and accessible resilience tool. Daily movement, conscious breathing, adequate sleep, and mindful physical experience are the foundation on which all other growth is built. Start here when rebuilding resilience from the ground up.',
         },

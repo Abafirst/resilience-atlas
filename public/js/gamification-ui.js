@@ -308,7 +308,7 @@ function showGamificationToast(message, type = 'success') {
 // ── Main init ─────────────────────────────────────────────────────────────────
 
 /**
- * Initialise all gamification widgets on the dashboard.
+ * Initialize all gamification widgets on the dashboard.
  * Looks for elements by data-gam-widget attribute.
  *
  * Expected HTML:

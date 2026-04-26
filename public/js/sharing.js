@@ -157,7 +157,7 @@
     },
 
     /**
-     * Initialise sharing UI — call after DOM is ready and dimension is known.
+     * Initialize sharing UI — call after DOM is ready and dimension is known.
      * @param {string} dominantDimension
      */
     init(dominantDimension) {
