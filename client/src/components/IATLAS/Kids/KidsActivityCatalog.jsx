@@ -475,7 +475,10 @@ export default function KidsActivityCatalog() {
             <div className="kac-filter-group kac-filter-search-wrap" style={{ flex: '2 1 260px' }}>
               <label className="kac-filter-label" htmlFor="kac-search">Search</label>
               <div style={{ position: 'relative' }}>
-                <img src="/icons/compass.svg" alt="" className="kac-filter-search-icon" aria-hidden="true" />
+                <svg className="kac-filter-search-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.75"/>
+                  <path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+                </svg>
                 <input
                   id="kac-search"
                   className="kac-filter-input"

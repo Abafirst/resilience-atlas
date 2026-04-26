@@ -371,7 +371,10 @@ export default function KidsDimensionActivities() {
           {allActs.length > 0 && (
             <div className="kda-filter-bar" role="search" aria-label="Filter activities">
               <div className="kda-search-wrap">
-                <img src="/icons/compass.svg" alt="" className="kda-search-icon" aria-hidden="true" />
+                <svg className="kda-search-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.75"/>
+                  <path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
+                </svg>
                 <input
                   className="kda-search"
                   type="search"
