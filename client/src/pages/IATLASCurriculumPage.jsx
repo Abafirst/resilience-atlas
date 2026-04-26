@@ -2192,6 +2192,10 @@ export default function IATLASCurriculumPage() {
                       🩺 Session Plans
                     </Link>
                   )}
+                  <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,158,11,.12)', borderColor: 'rgba(245,158,11,.35)', color: '#fbbf24' }}>
+                    🎓 Train the Facilitator
+                    <span style={{ fontSize: '.72em', opacity: .85, fontStyle: 'italic' }}>Coming Soon</span>
+                  </Link>
                 </div>
               </div>
               <div className="iatlas-hero-visual" aria-hidden="true">
@@ -2233,6 +2237,104 @@ export default function IATLASCurriculumPage() {
                   <span className="iatlas-specialty-nav-label">{specialty.name}</span>
                 </a>
               ))}
+            </div>
+          </section>
+
+          {/* ── Train the Facilitator Teaser ─────────────────────────── */}
+          <section aria-labelledby="iatlas-ttf-title" style={{ margin: '2rem 0' }}>
+            <div style={{
+              background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+              borderRadius: 24,
+              padding: 'clamp(1.75rem, 4vw, 2.5rem)',
+              color: '#f1f5f9',
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              {/* Decorative bg circles */}
+              <div style={{ position: 'absolute', top: -50, right: -50, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,158,11,.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                {/* Coming Soon badge */}
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                  background: 'rgba(245,158,11,.2)', border: '1px solid rgba(245,158,11,.4)',
+                  borderRadius: 999, padding: '.28rem .8rem',
+                  fontSize: '.68rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase',
+                  color: '#fbbf24', marginBottom: '.8rem',
+                }}>
+                  🎓 Coming Soon — 2026
+                </span>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start' }}>
+                  <div style={{ flex: '1 1 340px' }}>
+                    <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, margin: '0 0 .6rem', color: '#f1f5f9' }} id="iatlas-ttf-title">
+                      Train the Facilitator
+                    </h2>
+                    <p style={{ fontSize: '.95rem', color: '#94a3b8', lineHeight: 1.65, margin: '0 0 1.25rem', maxWidth: '55ch' }}>
+                      A professional certification program that trains clinicians, caregivers, educators,
+                      Speech-Language Pathologists, Occupational Therapists, ABA therapists, teachers, and
+                      families to deliver IATLAS with fidelity — while building their own six-dimensional
+                      resilience along the way.
+                    </p>
+                    <p style={{ fontSize: '.88rem', color: '#c7d2fe', lineHeight: 1.6, margin: '0 0 1.5rem', fontStyle: 'italic' }}>
+                      "You can't pour from an empty cup. IATLAS is a recursive, all-inclusive system — everyone
+                      in the ecosystem grows together."
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
+                      <Link
+                        to="/iatlas/train-the-facilitator"
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                          background: '#6366f1', color: '#fff', borderRadius: 10,
+                          padding: '.65rem 1.4rem', fontWeight: 700, fontSize: '.9rem',
+                          textDecoration: 'none', transition: 'background .15s',
+                        }}
+                      >
+                        Learn More &amp; Join Waitlist →
+                      </Link>
+                      <Link
+                        to="/iatlas/practice/dashboard"
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                          background: 'rgba(255,255,255,.1)', color: '#e2e8f0',
+                          border: '1.5px solid rgba(255,255,255,.2)', borderRadius: 10,
+                          padding: '.62rem 1.3rem', fontWeight: 600, fontSize: '.88rem',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        🏢 Practice Dashboard
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* "Who it's for" quick tags */}
+                  <div style={{ flex: '0 1 260px' }}>
+                    <p style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#64748b', marginBottom: '.75rem' }}>
+                      One Stop Shop For
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
+                      {[
+                        { icon: '🩺', label: 'Clinicians & Therapists' },
+                        { icon: '🗣️', label: 'Speech-Language Pathologists' },
+                        { icon: '🤸', label: 'Occupational Therapists' },
+                        { icon: '👨‍🏫', label: 'Teachers & Educators' },
+                        { icon: '👨‍👩‍👧', label: 'Caregivers & Families' },
+                        { icon: '🧩', label: 'ABA Therapists' },
+                        { icon: '🤝', label: 'Social Skills Practitioners' },
+                      ].map(w => (
+                        <span key={w.label} style={{
+                          display: 'flex', alignItems: 'center', gap: '.5rem',
+                          fontSize: '.83rem', color: '#cbd5e1',
+                        }}>
+                          <span aria-hidden="true">{w.icon}</span>
+                          {w.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
