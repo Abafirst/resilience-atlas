@@ -105,7 +105,7 @@ function normalizeScore(raw) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-function RadarChart({ scores, size = 380 }) {
+function RadarChart({ scores, size = 380, onDimensionClick }) {
   if (!scores || typeof scores !== 'object') return null;
 
   // Map canonical dimension order → normalized values
@@ -450,6 +450,7 @@ function RadarChart({ scores, size = 380 }) {
         const pt    = polarToCartesian(cx, cy, R_LABEL, a);
         const isDom = i === dominantIdx;
         const score = Math.round(values[i]);
+        const isClickable = typeof onDimensionClick === 'function';
 
         // Text anchor based on horizontal position
         let anchor = 'middle';
@@ -457,7 +458,15 @@ function RadarChart({ scores, size = 380 }) {
         if (cosVal > 0.3)       anchor = 'start';
         else if (cosVal < -0.3) anchor = 'end';
 
-        return (
+        // Hit-target: a transparent rect sized to cover the label area
+        const hitW = 60;
+        const hitH = 28;
+        const hitX = anchor === 'start'  ? pt.x
+                   : anchor === 'end'    ? pt.x - hitW
+                   : pt.x - hitW / 2;
+        const hitY = pt.y - hitH / 2;
+
+        const labelGroup = (
           <g key={`label-${i}`} opacity={isDom ? 1 : 0.75}>
             <text
               x={pt.x.toFixed(2)}
@@ -468,6 +477,7 @@ function RadarChart({ scores, size = 380 }) {
               textAnchor={anchor}
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
+              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel } : undefined}
             >
               {DIM_SHORT[i]}
             </text>
@@ -483,8 +493,42 @@ function RadarChart({ scores, size = 380 }) {
             >
               {score}%
             </text>
+            {isClickable && (
+              <text
+                x={anchor === 'start'  ? (pt.x + 34).toFixed(2)
+                 : anchor === 'end'    ? (pt.x - 34).toFixed(2)
+                 : pt.x.toFixed(2)}
+                y={(pt.y - 5).toFixed(2)}
+                fontSize="7"
+                fill={PAL.dimLabel}
+                textAnchor={anchor}
+                dominantBaseline="middle"
+                fontFamily="Inter,system-ui,sans-serif"
+                opacity="0.65"
+              >
+                ⓘ
+              </text>
+            )}
+            {/* Transparent hit target for click/touch */}
+            {isClickable && (
+              <rect
+                x={hitX.toFixed(2)}
+                y={hitY.toFixed(2)}
+                width={hitW}
+                height={hitH}
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Learn more about ${dim}`}
+                onClick={() => onDimensionClick(dim)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onDimensionClick(dim); } }}
+              />
+            )}
           </g>
         );
+
+        return labelGroup;
       })}
     </svg>
   );

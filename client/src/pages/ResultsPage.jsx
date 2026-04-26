@@ -3433,67 +3433,6 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
-        <div style={s.freeBriefReport} className="story-results-card" role="region" aria-label="Your Resilience Terrain">
-          <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Terrain</div>
-          {rankedDims.map(([dim, score]) => {
-            const pct   = Math.round(score.percentage);
-            const color = DIM_COLORS[dim] || '#667eea';
-            return (
-              <div key={dim} style={s.dimRow}>
-                <button
-                  type="button"
-                  style={{
-                    ...s.dimLabel,
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    textDecoration: 'underline dotted',
-                    textDecorationColor: color,
-                    textUnderlineOffset: 2,
-                    color: 'inherit',
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
-                    fontWeight: 'inherit',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
-                  }}
-                  onClick={(e) => {
-                    dimModalTriggerRef.current = e.currentTarget;
-                    setActiveDimModal(dim);
-                  }}
-                  aria-label={`Learn more about ${dim} resilience dimension`}
-                  title={`Click to learn more about ${dim}`}
-                >
-                  {dim}
-                  <span style={{ fontSize: 10, color, opacity: 0.7, flexShrink: 0 }} aria-hidden="true">ⓘ</span>
-                </button>
-                <div style={s.dimBarWrap}
-                  role="progressbar"
-                  aria-valuenow={pct}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-label={`${dim} ${pct}%`}
-                >
-                  <div style={s.dimBarFill(color, pct)} />
-                </div>
-                <span style={s.dimPct}>{pct}%</span>
-              </div>
-            );
-          })}
-          {!hasPremiumAccess && (
-            <p style={s.fbrHint}>
-              Unlock your full map for personalised insights &amp; growth compass points.
-            </p>
-          )}
-          <p style={{ margin: '8px 0 0', fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>
-            <span aria-hidden="true">ⓘ</span> Click any dimension name to learn what it means and how to strengthen it.
-          </p>
-        </div>
-
         {/* ── Primary Resilience Mode ───────────────────────────────── */}
         {dominantType && (() => {
           const topScore    = rankedDims[0] ? Math.round(rankedDims[0][1].percentage) : 0;
@@ -3629,10 +3568,16 @@ export default function ResultsPage() {
           <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
             <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
           </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: '#718096', marginBottom: 4 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
           </p>
-          <RadarChart scores={results.scores} />
+          <p style={{ fontSize: 12, color: '#a0aec0', marginBottom: 16 }}>
+            Click any dimension label to learn what it means and how to strengthen it.
+          </p>
+          <RadarChart scores={results.scores} onDimensionClick={(dim) => {
+            dimModalTriggerRef.current = null;
+            setActiveDimModal(dim);
+          }} />
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
               Your strongest resilience dimension is:{' '}
