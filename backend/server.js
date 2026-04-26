@@ -420,6 +420,8 @@ app.use("/api/resources", require("./routes/resources"));
 console.log("✅ Mounted route: /api/resources");
 app.use("/api/teams", require("./routes/teams-resources"));
 console.log("✅ Mounted route: /api/teams");
+app.use("/api/iatlas", require("./routes/iatlas-subscriptions"));
+console.log("✅ Mounted route: /api/iatlas");
 
 // ==============================
 // Root API info

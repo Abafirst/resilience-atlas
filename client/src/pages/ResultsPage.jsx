@@ -2980,9 +2980,16 @@ export default function ResultsPage() {
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
       // Remove interactive UI elements so the downloaded image is clean.
+      // CSS classes (dimension-info-icon, dimension-label-text) are set in
+      // RadarChart.jsx on the ⓘ icon group and dimension name text elements.
       svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
       svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
         el.style.textDecoration = 'none';
+      });
+      // Also clear any inline underline styles on other text nodes (belt and
+      // suspenders — covers any future changes to the SVG structure).
+      svgClone.querySelectorAll('text').forEach(el => {
+        if (el.style && el.style.textDecoration) el.style.textDecoration = 'none';
       });
 
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
@@ -3455,8 +3462,21 @@ export default function ResultsPage() {
           <p style={{ fontSize: 13, color: '#718096', marginBottom: 8 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
           </p>
-          <p style={{ fontSize: 15, color: '#667eea', fontWeight: 600, marginBottom: 16, textAlign: 'center' }}>
-            👆 Click any dimension to learn what it means and discover personalized ways to strengthen it
+          <p style={{
+            fontSize: 12,
+            color: '#4a5568',
+            background: '#eef2ff',
+            border: '1px solid #c7d2fe',
+            borderRadius: 8,
+            padding: '7px 12px',
+            marginBottom: 14,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontWeight: 500,
+          }}>
+            <span aria-hidden="true" style={{ fontSize: 14, color: '#667eea' }}>👆</span>
+            Click any dimension label to learn what it means and discover personalized ways to strengthen it
           </p>
           <RadarChart
             scores={results.scores}
@@ -3465,7 +3485,7 @@ export default function ResultsPage() {
             }}
           />
           {dominantType && (
-            <p style={{ fontSize: 13, color: '#718096', marginTop: 6 }}>
+            <p style={{ fontSize: 13, color: '#718096', marginTop: 10 }}>
               Your strongest resilience dimension is:{' '}
               <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
             </p>

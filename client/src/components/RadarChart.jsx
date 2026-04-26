@@ -468,13 +468,27 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
         if (cosVal > 0.3)       anchor = 'start';
         else if (cosVal < -0.3) anchor = 'end';
 
-        // Hit-target: a transparent rect sized to cover the label area
-        const hitW = 60;
-        const hitH = 28;
-        const hitX = anchor === 'start'  ? pt.x
-                   : anchor === 'end'    ? pt.x - hitW
+        // Hit-target: a transparent rect sized to cover the full label area.
+        // 64px wide × 30px tall provides a comfortable touch/click area that
+        // covers the dimension name, score, and ⓘ icon without overlapping
+        // adjacent labels. The ±2px adjustments extend the hit rect slightly
+        // beyond the text anchor for consistent edge coverage: for 'start'
+        // anchor the rect begins 2px before pt.x; for 'end' it ends 2px
+        // after pt.x. Middle-anchored labels are centered exactly on pt.x.
+        const hitW = 64;
+        const hitH = 30;
+        const hitX = anchor === 'start'  ? pt.x - 2
+                   : anchor === 'end'    ? pt.x - hitW + 2
                    : pt.x - hitW / 2;
         const hitY = pt.y - hitH / 2;
+
+        // Background pill behind clickable labels — gives a subtle button feel.
+        // pillX is always hitX - pillPad to extend the background an equal
+        // amount on the outer side for all anchor positions.
+        const pillPad = 4;
+        const pillW = hitW + pillPad * 2;
+        const pillH = hitH + pillPad;
+        const pillX = hitX - pillPad;
 
         // Info icon x offset (to the right of text for start/middle, left for end)
         const iconX = (
@@ -484,19 +498,34 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
         );
 
         const labelGroup = (
-          <g key={`label-${i}`} opacity={isDom ? 1 : 0.85} className={isClickable ? 'dimension-label-group' : undefined}>
+          <g key={`label-${i}`} opacity={isDom ? 1 : 0.82} className={isClickable ? 'dimension-label-group' : undefined}>
             {isClickable && <title>{`Click to learn more about ${dim}`}</title>}
+            {/* Subtle background pill to signal interactivity */}
+            {isClickable && (
+              <rect
+                x={(pillX).toFixed(2)}
+                y={(hitY - pillPad / 2).toFixed(2)}
+                width={pillW}
+                height={pillH}
+                rx="5"
+                ry="5"
+                fill="rgba(21,101,192,0.06)"
+                stroke="rgba(21,101,192,0.18)"
+                strokeWidth="0.75"
+                style={{ pointerEvents: 'none' }}
+              />
+            )}
             <text
               x={pt.x.toFixed(2)}
               y={(pt.y - 5).toFixed(2)}
               fontSize={isDom ? '9.5' : '8.5'}
-              fontWeight={isDom ? '700' : '500'}
+              fontWeight={isDom ? '700' : '600'}
               fill={isDom ? PAL.dimLabelDom : PAL.dimLabel}
               textAnchor={anchor}
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
               className="dimension-label-text"
-              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel } : undefined}
+              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel, textUnderlineOffset: '2px' } : undefined}
             >
               {DIM_SHORT[i]}
             </text>
@@ -512,15 +541,17 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
             >
               {score}%
             </text>
+            {/* ⓘ info icon — filled circle with white "i" for better visibility */}
             {isClickable && (
               <g
                 className="dimension-info-icon"
-                transform={`translate(${iconX.toFixed(2)},${(pt.y - 5).toFixed(2)})`}
+                transform={`translate(${iconX.toFixed(2)},${(pt.y - 14).toFixed(2)})`}
+                style={{ pointerEvents: 'none' }}
               >
-                <circle r="5.5" fill="#667eea" opacity="0.85" />
+                <circle r="5.5" fill={PAL.dimLabel} opacity="0.85" />
                 <text
-                  fontSize="7"
-                  fill="white"
+                  fontSize="6.5"
+                  fill="#ffffff"
                   textAnchor="middle"
                   dominantBaseline="central"
                   fontFamily="Inter,system-ui,sans-serif"
