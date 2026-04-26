@@ -3195,6 +3195,7 @@ export default function ResultsPage() {
             <nav style={s.headerNav} aria-label="Main navigation">
               <a href="/" style={s.navLink}>Home</a>
               <a href="/assessment.html" style={s.navLink}>Assessment</a>
+              <a href="/iatlas" style={s.navLink}>IATLAS Curriculum</a>
               <a href="/research.html" style={s.navLink}>Research</a>
               <a href="/resources" style={s.navLink}>Resources</a>
               <a href="/teams" style={s.navLink}>Teams</a>
@@ -3395,6 +3396,7 @@ export default function ResultsPage() {
           <nav style={s.headerNav} aria-label="Main navigation">
             <a href="/" style={s.navLink}>Home</a>
             <a href="/assessment.html" style={s.navLink}>Assessment</a>
+            <a href="/iatlas" style={s.navLink}>IATLAS Curriculum</a>
             <a href="/research.html" style={s.navLink}>Research</a>
             <a href="/resources" style={s.navLink}>Resources</a>
             <a href="/teams" style={s.navLink}>Teams</a>
@@ -3402,9 +3404,6 @@ export default function ResultsPage() {
             <a href="/about.html" style={s.navLink}>About</a>
             {isPaidTier(tier) && (
               <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
-            )}
-            {isPaidTier(tier) && (
-              <a href="/iatlas" style={s.journeyNavLink} aria-label="IATLAS Curriculum">IATLAS</a>
             )}
             <a href="/quiz?retake=1" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
