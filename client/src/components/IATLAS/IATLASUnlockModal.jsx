@@ -13,9 +13,12 @@
  * Props:
  *   variant  {'kids'|'caregiver'|'professional'}
  *   onClose  {func}
+ *   token    {string}  — Auth bearer token (optional); enables direct Stripe Checkout
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createIATLASSubscription } from '../../api/iatlas.js';
+import { getAuth0CachedToken } from '../../lib/apiFetch.js';
 
 const MODAL_STYLES = `
   .iatlas-unlock-modal {
@@ -151,6 +154,11 @@ const MODAL_STYLES = `
     background: #4338ca;
   }
 
+  .iatlas-unlock-btn-primary:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
   .iatlas-unlock-btn-secondary {
     background: transparent;
     color: #64748b;
@@ -219,7 +227,20 @@ const MODAL_STYLES = `
     background: #334155;
     color: #f1f5f9;
   }
+
+  .iatlas-unlock-error {
+    color: #dc2626;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+  }
 `;
+
+// Map each variant to the best default Stripe tier for the primary CTA
+const VARIANT_DEFAULT_TIER = {
+  kids:         'family',
+  caregiver:    'family',
+  professional: 'practitioner',
+};
 
 const VARIANT_CONFIG = {
   kids: {
@@ -229,11 +250,12 @@ const VARIANT_CONFIG = {
     desc: 'These interactive games teach emotional regulation, stress management, and resilience skills through play.',
     tiersLabel: 'Included with:',
     tiers: [
-      { label: 'IATLAS Individual ($19.99/mo)', note: '1 child profile' },
-      { label: 'IATLAS Family ($39.99/mo)', note: 'Up to 5 child profiles' },
-      { label: 'IATLAS Complete ($99.99/mo)', note: 'Full curriculum access' },
+      { label: 'IATLAS Individual ($19.99/mo)', note: '1 child profile', tier: 'individual' },
+      { label: 'IATLAS Family ($39.99/mo)', note: 'Up to 5 child profiles', tier: 'family' },
+      { label: 'IATLAS Complete ($99.99/mo)', note: 'Full curriculum access', tier: 'complete' },
     ],
-    primaryLabel: 'Choose Your IATLAS Plan',
+    primaryLabel: 'Subscribe — Family $39.99/mo',
+    primaryTier: 'family',
     primaryHref: '/pricing/iatlas',
     secondaryLabel: 'Maybe Later',
   },
@@ -244,10 +266,11 @@ const VARIANT_CONFIG = {
     desc: 'Parent guides, family activities, and progress tracking tools to support your child\'s resilience journey.',
     tiersLabel: 'Included with:',
     tiers: [
-      { label: 'IATLAS Family ($39.99/mo)', note: null },
-      { label: 'IATLAS Complete ($99.99/mo)', note: null },
+      { label: 'IATLAS Family ($39.99/mo)', note: null, tier: 'family' },
+      { label: 'IATLAS Complete ($99.99/mo)', note: null, tier: 'complete' },
     ],
-    primaryLabel: 'Upgrade to Family Plan',
+    primaryLabel: 'Subscribe — Family $39.99/mo',
+    primaryTier: 'family',
     primaryHref: '/pricing/iatlas',
     secondaryLabel: 'View All IATLAS Plans',
     secondaryHref: '/pricing/iatlas',
@@ -259,20 +282,23 @@ const VARIANT_CONFIG = {
     desc: 'Clinical assessments, session plans, and client resources for mental health practitioners.',
     tiersLabel: 'Included with:',
     tiers: [
-      { label: 'IATLAS Practitioner ($149/mo)', note: 'Individual practice' },
-      { label: 'IATLAS Practice ($399/mo)', note: 'Group practice' },
-      { label: 'IATLAS Enterprise (Custom)', note: 'Organizations' },
+      { label: 'IATLAS Practitioner ($149/mo)', note: 'Individual practice', tier: 'practitioner' },
+      { label: 'IATLAS Practice ($399/mo)', note: 'Group practice', tier: 'practice' },
+      { label: 'IATLAS Enterprise (Custom)', note: 'Organizations', tier: null },
     ],
-    primaryLabel: 'Choose Professional Plan',
+    primaryLabel: 'Subscribe — Practitioner $149/mo',
+    primaryTier: 'practitioner',
     primaryHref: '/pricing/iatlas',
     secondaryLabel: 'Contact Sales',
     secondaryHref: 'mailto:sales@resilienceatlas.com',
   },
 };
 
-export default function IATLASUnlockModal({ variant = 'kids', onClose }) {
+export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) {
   const cardRef = useRef(null);
   const config = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.kids;
+  const [loading, setLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState('');
 
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
@@ -288,6 +314,35 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose }) {
   const handleBackdropClick = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
+
+  /**
+   * Initiate Stripe Checkout for a given IATLAS tier.
+   * Falls back to the pricing page if no auth token is available.
+   */
+  async function handleSubscribe(tier) {
+    const authToken = token || getAuth0CachedToken();
+    if (!authToken) {
+      // Not authenticated — redirect to pricing page
+      window.location.href = config.primaryHref;
+      return;
+    }
+
+    setLoading(true);
+    setCheckoutError('');
+
+    try {
+      const { url } = await createIATLASSubscription(authToken, tier);
+      if (url) {
+        window.location.href = url;
+      } else {
+        setCheckoutError('Unable to start checkout. Please try again.');
+      }
+    } catch (err) {
+      setCheckoutError(err.message || 'Checkout failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <>
@@ -341,12 +396,22 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose }) {
           </div>
 
           <div className="iatlas-unlock-actions">
-            <a
-              href={config.primaryHref}
-              className="iatlas-unlock-btn-primary"
-            >
-              {config.primaryLabel}
-            </a>
+            {config.primaryTier ? (
+              <button
+                className="iatlas-unlock-btn-primary"
+                onClick={() => handleSubscribe(config.primaryTier)}
+                disabled={loading}
+              >
+                {loading ? 'Redirecting to checkout…' : config.primaryLabel}
+              </button>
+            ) : (
+              <a
+                href={config.primaryHref}
+                className="iatlas-unlock-btn-primary"
+              >
+                {config.primaryLabel}
+              </a>
+            )}
             {config.secondaryHref ? (
               <a
                 href={config.secondaryHref}
@@ -363,6 +428,10 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose }) {
               </button>
             )}
           </div>
+
+          {checkoutError && (
+            <p className="iatlas-unlock-error" role="alert">{checkoutError}</p>
+          )}
 
           <p className="iatlas-unlock-compare">
             <a href="/pricing/iatlas">Compare all IATLAS plans →</a>

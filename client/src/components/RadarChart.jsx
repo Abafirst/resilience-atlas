@@ -459,25 +459,48 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
         else if (cosVal < -0.3) anchor = 'end';
 
         // Hit-target: a transparent rect sized to cover the label area
-        const hitW = 60;
-        const hitH = 28;
-        const hitX = anchor === 'start'  ? pt.x
-                   : anchor === 'end'    ? pt.x - hitW
+        const hitW = 64;
+        const hitH = 30;
+        const hitX = anchor === 'start'  ? pt.x - 2
+                   : anchor === 'end'    ? pt.x - hitW + 2
                    : pt.x - hitW / 2;
         const hitY = pt.y - hitH / 2;
 
+        // Background pill behind clickable labels — gives a subtle button feel
+        const pillPad = 4;
+        const pillW = hitW + pillPad * 2;
+        const pillH = hitH + pillPad;
+        const pillX = anchor === 'start'  ? hitX - pillPad
+                    : anchor === 'end'    ? hitX - pillPad
+                    : hitX - pillPad;
+
         const labelGroup = (
-          <g key={`label-${i}`} opacity={isDom ? 1 : 0.75}>
+          <g key={`label-${i}`} opacity={isDom ? 1 : 0.82}>
+            {/* Subtle background pill to signal interactivity */}
+            {isClickable && (
+              <rect
+                x={(pillX).toFixed(2)}
+                y={(hitY - pillPad / 2).toFixed(2)}
+                width={pillW}
+                height={pillH}
+                rx="5"
+                ry="5"
+                fill="rgba(21,101,192,0.06)"
+                stroke="rgba(21,101,192,0.18)"
+                strokeWidth="0.75"
+                style={{ pointerEvents: 'none' }}
+              />
+            )}
             <text
               x={pt.x.toFixed(2)}
               y={(pt.y - 5).toFixed(2)}
               fontSize={isDom ? '9.5' : '8.5'}
-              fontWeight={isDom ? '700' : '500'}
+              fontWeight={isDom ? '700' : '600'}
               fill={isDom ? PAL.dimLabelDom : PAL.dimLabel}
               textAnchor={anchor}
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
-              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel } : undefined}
+              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel, textUnderlineOffset: '2px' } : undefined}
             >
               {DIM_SHORT[i]}
             </text>
@@ -493,22 +516,32 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
             >
               {score}%
             </text>
-            {isClickable && (
-              <text
-                x={anchor === 'start'  ? (pt.x + 34).toFixed(2)
-                 : anchor === 'end'    ? (pt.x - 34).toFixed(2)
-                 : pt.x.toFixed(2)}
-                y={(pt.y - 5).toFixed(2)}
-                fontSize="7"
-                fill={PAL.dimLabel}
-                textAnchor={anchor}
-                dominantBaseline="middle"
-                fontFamily="Inter,system-ui,sans-serif"
-                opacity="0.65"
-              >
-                ⓘ
-              </text>
-            )}
+            {/* ⓘ info icon — larger circle background for better visibility */}
+            {isClickable && (() => {
+              const iconR  = 5.5;
+              const iconX  = anchor === 'start'  ? pt.x + 36
+                           : anchor === 'end'    ? pt.x - 36
+                           : pt.x;
+              const iconY  = pt.y - 14;
+              return (
+                <g style={{ pointerEvents: 'none' }}>
+                  <circle cx={iconX.toFixed(2)} cy={iconY.toFixed(2)} r={iconR}
+                    fill={PAL.dimLabel} opacity="0.85" />
+                  <text
+                    x={iconX.toFixed(2)}
+                    y={(iconY + 0.5).toFixed(2)}
+                    fontSize="6.5"
+                    fill="#ffffff"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fontFamily="Inter,system-ui,sans-serif"
+                    fontWeight="700"
+                  >
+                    i
+                  </text>
+                </g>
+              );
+            })()}
             {/* Transparent hit target for click/touch */}
             {isClickable && (
               <rect

@@ -223,3 +223,16 @@ node integrations/openclaw/webhook.js
 ```
 
 See [OPENCLAW.md](OPENCLAW.md) for full setup.
+
+---
+
+## IATLAS Stripe Subscription Setup
+
+IATLAS is a separate subscription product with its own Stripe Price IDs.
+
+See [IATLAS_STRIPE_SETUP.md](IATLAS_STRIPE_SETUP.md) for the full guide, including:
+
+- Creating products in the Stripe Dashboard
+- Adding Price IDs to Railway environment variables
+- Configuring webhook events
+- Testing with Stripe CLI

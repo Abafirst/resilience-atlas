@@ -4,6 +4,7 @@ const https = require('https');
 const express = require('express');
 const router = express.Router();
 const rateLimit = require('express-rate-limit');
+const mongoose = require('mongoose');
 
 const stripe = require('../config/stripe');
 const Purchase = require('../models/Purchase');
@@ -576,6 +577,8 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
     }
 
     try {
+        const db = mongoose.connection.db;
+
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
             const tier = session.metadata?.tier;
@@ -639,6 +642,105 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
                         planPrice: priceInDollars,
                         email,
                     }).catch((err) => logger.warn('[payments/webhook] Confirmation email failed:', err.message));
+                }
+            }
+        }
+
+        // ── IATLAS subscription lifecycle events ─────────────────────────────
+        if (
+            event.type === 'customer.subscription.created' ||
+            event.type === 'customer.subscription.updated'
+        ) {
+            const subscription = event.data.object;
+            const iatlasUserId = subscription.metadata?.userId;
+            const iatlasTier   = subscription.metadata?.tier;
+
+            if (subscription.metadata?.productType === 'iatlas' && iatlasUserId && db) {
+                await db.collection('iatlas_subscriptions').updateOne(
+                    { stripeSubscriptionId: subscription.id },
+                    {
+                        $set: {
+                            userId:              iatlasUserId,
+                            tier:                iatlasTier,
+                            status:              subscription.status,
+                            stripeSubscriptionId: subscription.id,
+                            stripeCustomerId:    subscription.customer,
+                            currentPeriodStart:  new Date(subscription.current_period_start * 1000),
+                            currentPeriodEnd:    new Date(subscription.current_period_end * 1000),
+                            cancelAtPeriodEnd:   subscription.cancel_at_period_end,
+                            updatedAt:           new Date(),
+                        },
+                        $setOnInsert: {
+                            createdAt: new Date(),
+                        },
+                    },
+                    { upsert: true }
+                );
+                logger.info(`IATLAS subscription ${event.type}: userId=${iatlasUserId} tier=${iatlasTier} status=${subscription.status}`);
+            }
+        }
+
+        if (event.type === 'customer.subscription.deleted') {
+            const deletedSub = event.data.object;
+
+            if (deletedSub.metadata?.productType === 'iatlas' && db) {
+                await db.collection('iatlas_subscriptions').updateOne(
+                    { stripeSubscriptionId: deletedSub.id },
+                    {
+                        $set: {
+                            status:    'canceled',
+                            canceledAt: new Date(),
+                            updatedAt:  new Date(),
+                        },
+                    }
+                );
+                logger.info(`IATLAS subscription deleted: ${deletedSub.id}`);
+            }
+        }
+
+        if (event.type === 'invoice.payment_succeeded') {
+            const invoice = event.data.object;
+
+            if (invoice.subscription && db) {
+                // Retrieve the subscription to check if it's an IATLAS product
+                const stripeSubscription = await stripe.subscriptions.retrieve(invoice.subscription)
+                    .catch(() => null);
+
+                if (stripeSubscription?.metadata?.productType === 'iatlas') {
+                    await db.collection('iatlas_payments').insertOne({
+                        stripeInvoiceId:      invoice.id,
+                        stripeSubscriptionId: invoice.subscription,
+                        amount:               invoice.amount_paid / 100,
+                        currency:             invoice.currency,
+                        status:               'paid',
+                        paidAt:               invoice.status_transitions?.paid_at
+                            ? new Date(invoice.status_transitions.paid_at * 1000)
+                            : new Date(),
+                        createdAt: new Date(),
+                    });
+                    logger.info(`IATLAS invoice paid: ${invoice.id}`);
+                }
+            }
+        }
+
+        if (event.type === 'invoice.payment_failed') {
+            const failedInvoice = event.data.object;
+
+            if (failedInvoice.subscription && db) {
+                const stripeSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription)
+                    .catch(() => null);
+
+                if (stripeSubscription?.metadata?.productType === 'iatlas') {
+                    await db.collection('iatlas_payments').insertOne({
+                        stripeInvoiceId:      failedInvoice.id,
+                        stripeSubscriptionId: failedInvoice.subscription,
+                        amount:               failedInvoice.amount_due / 100,
+                        currency:             failedInvoice.currency,
+                        status:               'failed',
+                        failedAt:             new Date(),
+                        createdAt:            new Date(),
+                    });
+                    logger.info(`IATLAS invoice payment failed: ${failedInvoice.id}`);
                 }
             }
         }

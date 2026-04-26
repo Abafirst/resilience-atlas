@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
+import { getIATLASSubscriptionStatus } from '../api/iatlas.js';
+import { IATLAS_TIER_KEY } from '../utils/iatlasGating.js';
+import { getAuth0CachedToken } from '../lib/apiFetch.js';
 
 // ── Dimension data ─────────────────────────────────────────────────────────────
 const DIMENSIONS = [
@@ -1385,6 +1388,7 @@ const STYLES = `
 export default function IATLASCurriculumPage() {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState('idle'); // idle | success | error
+  const [upgradeSuccess, setUpgradeSuccess] = useState('');
 
   // Sync dark-mode preference on mount
   useEffect(() => {
@@ -1396,6 +1400,35 @@ export default function IATLASCurriculumPage() {
       else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.setAttribute('data-theme', 'dark');
     } catch (_) {}
+  }, []);
+
+  // Handle post-Stripe upgrade redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('upgrade_success') !== 'true') return;
+
+    const token = getAuth0CachedToken();
+    if (!token) {
+      setUpgradeSuccess('Subscription activated! Refresh the page to see your new access.');
+      return;
+    }
+
+    getIATLASSubscriptionStatus(token)
+      .then(({ tier, status }) => {
+        if ((status === 'active' || status === 'trialing') && tier && tier !== 'free') {
+          try { localStorage.setItem(IATLAS_TIER_KEY, tier); } catch (_) {}
+          setUpgradeSuccess(`🎉 Welcome! Your IATLAS ${tier.charAt(0).toUpperCase() + tier.slice(1)} subscription is now active.`);
+        } else {
+          setUpgradeSuccess('Subscription activated! Your access will be updated shortly.');
+        }
+      })
+      .catch(() => {
+        setUpgradeSuccess('Subscription activated! Refresh the page to see your new access.');
+      });
+
+    // Remove query params from the URL without reloading the page
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
   }, []);
 
   function handleWaitlist(e) {
@@ -1416,6 +1449,47 @@ export default function IATLASCurriculumPage() {
 
       <main className="iatlas-page" id="main-content">
         <div className="iatlas-wrap">
+
+          {/* ── Upgrade success banner ───────────────────────────────────── */}
+          {upgradeSuccess && (
+            <div
+              role="status"
+              aria-live="polite"
+              style={{
+                background: '#dcfce7',
+                border: '1px solid #86efac',
+                borderRadius: 12,
+                padding: '14px 18px',
+                marginBottom: 16,
+                color: '#166534',
+                fontWeight: 600,
+                fontSize: 15,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+              }}
+            >
+              <span>{upgradeSuccess}</span>
+              <button
+                onClick={() => setUpgradeSuccess('')}
+                aria-label="Dismiss"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#166534',
+                  fontWeight: 700,
+                  fontSize: 16,
+                  lineHeight: 1,
+                  padding: '2px 6px',
+                  borderRadius: 6,
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
 
           {/* ── Hero ─────────────────────────────────────────────────────── */}
           <section className="iatlas-hero" aria-labelledby="iatlas-hero-title">
