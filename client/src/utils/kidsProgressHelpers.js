@@ -61,18 +61,21 @@ export function makeActivityId(ageGroup, title) {
  * ActivityCompletionRecord:
  *   activityId, dimension, ageGroup, completedAt, starsEarned,
  *   parentNote?, attemptNumber, selfRating?
+ *
+ * @param {object} [keys] — optional custom storage keys (profile-namespaced)
  */
-export function loadKidsProgress() {
-  return loadKidsJSON(KIDS_STORAGE_KEYS.PROGRESS, {});
+export function loadKidsProgress(keys = KIDS_STORAGE_KEYS) {
+  return loadKidsJSON(keys.PROGRESS, {});
 }
 
 /**
  * Record an activity completion and award stars.
  * Returns the number of stars awarded.
  * @param {object} record - ActivityCompletionRecord fields
+ * @param {object} [keys] — optional custom storage keys (profile-namespaced)
  */
-export function recordActivityCompletion(record) {
-  const progress = loadKidsProgress();
+export function recordActivityCompletion(record, keys = KIDS_STORAGE_KEYS) {
+  const progress = loadKidsProgress(keys);
 
   // Determine stars (3 for complete, 1 for partial)
   const isComplete = record.complete !== false;
@@ -94,17 +97,17 @@ export function recordActivityCompletion(record) {
   };
 
   progress[id] = entry;
-  saveKidsJSON(KIDS_STORAGE_KEYS.PROGRESS, progress);
+  saveKidsJSON(keys.PROGRESS, progress);
 
   // Update total stars
-  const newTotalStars = addKidsStars(baseStars);
+  const newTotalStars = addKidsStars(baseStars, keys);
 
   // Check if dimension is now complete and award bonus
   const dimComplete = checkDimensionComplete(progress, record.ageGroup, entry.dimension);
   let extraStars = 0;
   if (dimComplete) {
     extraStars = STAR_RULES.COMPLETE_DIMENSION;
-    addKidsStars(extraStars);
+    addKidsStars(extraStars, keys);
   }
 
   return { starsEarned: baseStars, extraStars, totalStars: newTotalStars + extraStars, dimComplete };
@@ -112,29 +115,38 @@ export function recordActivityCompletion(record) {
 
 // ── Stars ─────────────────────────────────────────────────────────────────────
 
-/** Load total stars */
-export function loadKidsStars() {
-  return loadKidsJSON(KIDS_STORAGE_KEYS.STARS, { total: 0, byDimension: {} });
+/** Load total stars
+ * @param {object} [keys] — optional profile-namespaced storage keys
+ */
+export function loadKidsStars(keys = KIDS_STORAGE_KEYS) {
+  return loadKidsJSON(keys.STARS, { total: 0, byDimension: {} });
 }
 
-/** Add stars and persist. Returns new total. */
-export function addKidsStars(amount) {
-  const current = loadKidsStars();
+/** Add stars and persist. Returns new total.
+ * @param {number} amount
+ * @param {object} [keys] — optional profile-namespaced storage keys
+ */
+export function addKidsStars(amount, keys = KIDS_STORAGE_KEYS) {
+  const current = loadKidsStars(keys);
   const updated = { ...current, total: (current.total || 0) + amount };
-  saveKidsJSON(KIDS_STORAGE_KEYS.STARS, updated);
+  saveKidsJSON(keys.STARS, updated);
   return updated.total;
 }
 
-/** Calculate total stars from the persisted store */
-export function getTotalKidsStars() {
-  return loadKidsStars().total || 0;
+/** Calculate total stars from the persisted store
+ * @param {object} [keys] — optional profile-namespaced storage keys
+ */
+export function getTotalKidsStars(keys = KIDS_STORAGE_KEYS) {
+  return loadKidsStars(keys).total || 0;
 }
 
 // ── Level ─────────────────────────────────────────────────────────────────────
 
-/** Get current level info */
-export function getKidsLevelInfo() {
-  return calculateKidsLevel(getTotalKidsStars());
+/** Get current level info
+ * @param {object} [keys] — optional profile-namespaced storage keys
+ */
+export function getKidsLevelInfo(keys = KIDS_STORAGE_KEYS) {
+  return calculateKidsLevel(getTotalKidsStars(keys));
 }
 
 // ── Dimension progress ────────────────────────────────────────────────────────
@@ -245,10 +257,12 @@ export function getTriedDimensions(progress) {
 
 /**
  * Get summary stats.
+ * @param {object} progress
+ * @param {object} [keys] — optional profile-namespaced storage keys
  */
-export function getKidsStats(progress) {
+export function getKidsStats(progress, keys = KIDS_STORAGE_KEYS) {
   const totalCompleted  = Object.keys(progress).length;
-  const totalStars      = getTotalKidsStars();
+  const totalStars      = getTotalKidsStars(keys);
   const levelInfo       = calculateKidsLevel(totalStars);
   const triedDimensions = getTriedDimensions(progress);
 

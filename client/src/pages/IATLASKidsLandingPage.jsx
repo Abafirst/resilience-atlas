@@ -8,6 +8,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
+import ProfileSwitcher from '../components/IATLAS/Profiles/ProfileSwitcher.jsx';
+import { useProfiles } from '../contexts/ProfileContext.jsx';
 import {
   KIDS_AGE_GROUPS,
   KIDS_ACTIVITIES_BY_DIMENSION,
@@ -500,6 +502,7 @@ const PAGE_STYLES = `
 export default function IATLASKidsLandingPage() {
   const totalActivities = countTotalActivities();
   const dimensions = Object.values(KIDS_ACTIVITIES_BY_DIMENSION);
+  const { activeProfile, profiles } = useProfiles();
 
   function getAgeGroupActivityCount(ageGroupId) {
     return dimensions.reduce((total, dim) => {
@@ -527,6 +530,11 @@ export default function IATLASKidsLandingPage() {
 
           {/* Hero */}
           <section className="ikids-hero" aria-labelledby="ikids-hero-title">
+            {profiles.length > 0 && (
+              <div style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', zIndex: 10 }}>
+                <ProfileSwitcher />
+              </div>
+            )}
             <span className="ikids-hero-kicker">
               <img src="/icons/kids-spark.svg" alt="" className="ikids-hero-kicker-icon" aria-hidden="true" />
               IATLAS Kids
@@ -534,6 +542,11 @@ export default function IATLASKidsLandingPage() {
             <h1 className="ikids-hero-title" id="ikids-hero-title">
               Resilience for Kids:<br />Play-Based Learning
             </h1>
+            {activeProfile && (
+              <p style={{ fontSize: '.9rem', fontWeight: 700, opacity: .85, marginBottom: '.5rem', color: '#fff' }}>
+                Viewing: {activeProfile.avatar} {activeProfile.name}'s Progress
+              </p>
+            )}
             <p className="ikids-hero-sub">
               Age-appropriate activities that teach the 6 dimensions of resilience through play,
               stories, games, and real-world challenges — from ages 5 to 18.

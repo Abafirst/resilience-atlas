@@ -422,6 +422,8 @@ app.use("/api/teams", require("./routes/teams-resources"));
 console.log("✅ Mounted route: /api/teams");
 app.use("/api/iatlas", require("./routes/iatlas-subscriptions"));
 console.log("✅ Mounted route: /api/iatlas");
+app.use("/api/iatlas/profiles", require("./routes/profiles"));
+console.log("✅ Mounted route: /api/iatlas/profiles");
 
 // ==============================
 // Root API info

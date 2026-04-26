@@ -187,3 +187,40 @@ export function hasProfessionalAccess() {
     IATLAS_TIERS.enterprise,
   ].includes(tier);
 }
+
+/**
+ * Returns the maximum number of child profiles allowed for the current tier.
+ *   free         → 0 (no IATLAS access)
+ *   individual   → 1
+ *   family+      → 5
+ */
+export function getMaxProfiles(tier) {
+  const TIER_LIMITS = {
+    free:         0,
+    individual:   1,
+    family:       5,
+    complete:     5,
+    practitioner: 5,
+    practice:     5,
+    enterprise:   5,
+  };
+  return TIER_LIMITS[tier] ?? 0;
+}
+
+/**
+ * Returns true if the current tier supports creating child profiles.
+ */
+export function canCreateProfiles() {
+  const tier = getIATLASTier();
+  return getMaxProfiles(tier) > 0;
+}
+
+/**
+ * Returns true if the user can add another child profile given the count they already have.
+ * @param {number} currentCount  Number of existing (non-archived) profiles.
+ */
+export function canAddAnotherProfile(currentCount) {
+  const tier = getIATLASTier();
+  const max  = getMaxProfiles(tier);
+  return max > 0 && currentCount < max;
+}
