@@ -915,7 +915,7 @@ export default function AtlasJourneyPage() {
               Complete your first assessment to map the first point on The Resilience Atlas™.
               Every retake adds a new data point to your longitudinal resilience journey.
             </p>
-            <a href="/quiz" style={s.emptyBtn}>Take the Assessment</a>
+            <a href="/quiz" style={{...s.emptyBtn}} title="For adults 18+">Take the Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
           </div>
         )}
 
@@ -1193,7 +1193,7 @@ export default function AtlasJourneyPage() {
                 <p style={s.retakeSub}>
                   Retake the assessment in 30 days to track how your resilience evolves.
                 </p>
-                <a href="/quiz" style={s.retakeBtn}>Retake Assessment</a>
+                <a href="/quiz" style={{...s.retakeBtn}} title="For adults 18+">Retake Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
               </div>
 
             </div>

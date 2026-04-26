@@ -283,8 +283,8 @@ export default function AssessmentPage() {
                 <span className="meta-chip">Personalized map</span>
                 <span className="meta-chip">No account required</span>
               </div>
-              <a className="btn-hero-primary" href="/quiz">
-                <span aria-hidden="true">&#9654;</span> Begin My Assessment
+              <a className="btn-hero-primary" href="/quiz" title="For adults 18+">
+                <span aria-hidden="true">&#9654;</span> Begin My Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
               </a>
             </div>
           </div>
@@ -409,7 +409,7 @@ export default function AssessmentPage() {
             <div className="cta-band-card">
               <h2>Ready to Begin Your Assessment?</h2>
               <p>Takes 10–15 minutes. No account required. Your resilience map, immediately.</p>
-              <a className="btn-cta" href="/quiz">Begin My Assessment &rarr;</a>
+              <a className="btn-cta" href="/quiz" title="For adults 18+">Begin My Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> &rarr;</a>
             </div>
           </div>
         </section>

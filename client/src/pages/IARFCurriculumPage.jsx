@@ -1275,9 +1275,9 @@ export default function IARFCurriculumPage() {
                   grounded in Applied Behavior Analysis and Acceptance &amp; Commitment Therapy.
                 </p>
                 <div className="iarf-hero-actions">
-                  <a href="/quiz" className="iarf-btn-primary">
+                  <a href="/quiz" className="iarf-btn-primary" title="For adults 18+">
                     <img src="/icons/compass.svg" alt="" width={16} height={16} aria-hidden="true" />
-                    Take the Free Assessment
+                    Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                   </a>
                   <a href="#iarf-overview" className="iarf-btn-secondary">
                     Learn more about IARF
@@ -1422,8 +1422,8 @@ export default function IARFCurriculumPage() {
                 <a href="#iarf-waitlist" className="iarf-btn-white">
                   🎉 Join the Waitlist
                 </a>
-                <a href="/quiz" className="iarf-btn-ghost">
-                  Take the Free Assessment →
+                <a href="/quiz" className="iarf-btn-ghost" title="For adults 18+">
+                  Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> →
                 </a>
               </div>
             </div>
@@ -1483,8 +1483,8 @@ export default function IARFCurriculumPage() {
                 profile — and see exactly which IARF skills are most relevant for you.
               </p>
               <div className="iarf-cta-actions">
-                <a href="/quiz" className="iarf-btn-primary">
-                  Take the Free Assessment
+                <a href="/quiz" className="iarf-btn-primary" title="For adults 18+">
+                  Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                 </a>
                 <a href="/research" className="iarf-btn-secondary">
                   Explore the Research

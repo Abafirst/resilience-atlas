@@ -643,7 +643,7 @@ export default function AboutPage() {
                   what strengths already anchor you, and where your emerging edge is ready to grow.
                 </p>
                 <div className="hero-links">
-                  <a className="btn-soft" href="/quiz">Explore Your Map</a>
+                  <a className="btn-soft" href="/quiz" title="For adults 18+">Explore Your Map <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
                   <a className="btn-outline-soft" href="/research">See the Research</a>
                 </div>
               </div>
@@ -747,7 +747,7 @@ export default function AboutPage() {
                 navigate what comes next.
               </p>
               <div className="cta-actions">
-                <a className="btn-soft" href="/quiz">Begin Navigation</a>
+                <a className="btn-soft" href="/quiz" title="For adults 18+">Begin Navigation <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
                 <a className="btn-outline-soft" href="/contact">Contact Me</a>
               </div>
             </div>

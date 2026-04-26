@@ -809,8 +809,8 @@ export default function TeamsLandingPage() {
         <div className="success-icon" aria-hidden="true"><img onError={handleIconLoadError} src="icons/checkmark.svg" alt="" className="icon icon-md" /></div>
         <h3>Thank you!</h3>
         <p>We have received your Enterprise inquiry and will be in touch within one business day.</p>
-        <a href="/quiz" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }}>
-          Take the Individual Assessment
+        <a href="/quiz" className="btn btn-primary" style={{ marginTop: '1rem', display: 'inline-block' }} title="For adults 18+">
+          Take the Individual Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
         </a>
       </div>
     </div>
@@ -1231,8 +1231,8 @@ export default function TeamsLandingPage() {
     <div className="final-cta soft-card">
       <h2>Start with an Individual Assessment</h2>
       <p>Not ready for a team rollout? Take the free individual assessment first and experience the Six Dimensions model yourself.</p>
-      <a className="btn-hero-primary" href="/quiz" style={{ display: 'inline-flex', margin: '0 auto' }}>
-        <span aria-hidden="true">&#9654;</span> Take the Free Assessment
+      <a className="btn-hero-primary" href="/quiz" style={{ display: 'inline-flex', margin: '0 auto' }} title="For adults 18+">
+        <span aria-hidden="true">&#9654;</span> Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
       </a>
     </div>
   </section>

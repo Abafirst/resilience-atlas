@@ -67,7 +67,7 @@ export default function InsightsSixDimensionsPage() {
         <div className="article-cta-box">
           <h3>Discover Your Six Dimensions</h3>
           <p>Take the free 10-minute assessment and receive your personalized resilience profile.</p>
-          <a href="/quiz" className="btn btn-primary">Take the Free Assessment</a>
+          <a href="/quiz" className="btn btn-primary" title="For adults 18+">Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
         </div>
       </article>
     </>
