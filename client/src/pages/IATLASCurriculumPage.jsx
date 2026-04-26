@@ -5,6 +5,9 @@ import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getIATLASSubscriptionStatus } from '../api/iatlas.js';
 import { IATLAS_TIER_KEY } from '../utils/iatlasGating.js';
 import { getAuth0CachedToken } from '../lib/apiFetch.js';
+import SpecialtyCard from '../components/IATLAS/SpecialtyCard.jsx';
+import SpecialtyComingSoonModal from '../components/IATLAS/SpecialtyComingSoonModal.jsx';
+import { IATLAS_SPECIALTIES } from '../data/iatlas/specialties.js';
 
 // ── Dimension data ─────────────────────────────────────────────────────────────
 const DIMENSIONS = [
@@ -1382,6 +1385,479 @@ const STYLES = `
   @media (max-width: 600px) {
     .iatlas-kids-banner-right { display: none; }
   }
+
+  /* ── Specialty Navigation ────────────────────────────────────────────────── */
+  .iatlas-specialty-nav {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+  }
+
+  .iatlas-specialty-nav-header {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .iatlas-specialty-nav-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.3rem;
+  }
+
+  .iatlas-specialty-nav-header p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .iatlas-specialty-nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .iatlas-specialty-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .iatlas-specialty-nav-btn:hover {
+    border-color: #4f46e5;
+    color: #4338ca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79,70,229,0.15);
+  }
+
+  .iatlas-specialty-nav-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .iatlas-specialty-nav-label {
+    white-space: nowrap;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-nav {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-color: #334155;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-nav-header h2 { color: #f1f5f9; }
+  [data-theme="dark"] .iatlas-specialty-nav-header p { color: #94a3b8; }
+  [data-theme="dark"] .iatlas-specialty-nav-btn { background: #1e293b; color: #cbd5e1; border-color: #475569; }
+  [data-theme="dark"] .iatlas-specialty-nav-btn:hover { border-color: #818cf8; color: #a5b4fc; }
+
+  @media (max-width: 640px) {
+    .iatlas-specialty-nav-buttons {
+      flex-direction: column;
+    }
+    .iatlas-specialty-nav-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  /* ── Specialties Coming Soon ─────────────────────────────────────────────── */
+  .iatlas-specialties-coming-soon {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 4rem 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid #dee2e6;
+    border-radius: 16px;
+  }
+
+  [data-theme="dark"] .iatlas-specialties-coming-soon {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-top-color: #334155;
+  }
+
+  .iatlas-specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto 0;
+  }
+
+  .iatlas-specialty-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-card {
+    background: #1e293b;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+
+  .iatlas-specialty-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    border-color: #4f46e5;
+  }
+
+  .iatlas-specialty-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .iatlas-specialty-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-title { color: #f1f5f9; }
+
+  .iatlas-specialty-desc {
+    font-size: .85rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-desc { color: #94a3b8; }
+
+  .iatlas-specialty-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  .iatlas-specialty-tag {
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: .72rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: .2rem .6rem;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-tag {
+    background: #312e81;
+    color: #a5b4fc;
+  }
+
+  .iatlas-specialty-pricing {
+    font-size: .78rem;
+    color: #94a3b8;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .iatlas-btn-specialty {
+    width: 100%;
+    padding: .75rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: auto;
+  }
+
+  .iatlas-btn-specialty:hover { opacity: .9; }
+
+  /* ── Specialty Modal ─────────────────────────────────────────────────────── */
+  .specialty-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,.72);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+  }
+
+  .specialty-modal-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem 1.75rem 1.75rem;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,.22);
+    position: relative;
+  }
+
+  [data-theme="dark"] .specialty-modal-card {
+    background: #1e293b;
+  }
+
+  .specialty-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    color: #94a3b8;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+
+  .specialty-modal-close:hover { background: #f1f5f9; color: #1e293b; }
+  [data-theme="dark"] .specialty-modal-close:hover { background: #334155; color: #f1f5f9; }
+
+  .specialty-modal-icon {
+    font-size: 2.75rem;
+    text-align: center;
+    margin-bottom: .75rem;
+  }
+
+  .specialty-modal-badge {
+    display: block;
+    text-align: center;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    background: #1e293b;
+    color: #f1f5f9;
+    border-radius: 999px;
+    padding: .25rem .75rem;
+    width: fit-content;
+    margin: 0 auto .75rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-badge { background: #334155; }
+
+  .specialty-modal-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    text-align: center;
+    margin: 0 0 .5rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-title { color: #f1f5f9; }
+
+  .specialty-modal-desc {
+    font-size: .88rem;
+    color: #475569;
+    text-align: center;
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-desc { color: #94a3b8; }
+
+  .specialty-modal-features {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-features { background: #0f172a; }
+
+  .specialty-modal-features-label {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 0 0 .5rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-features-label { color: #94a3b8; }
+
+  .specialty-modal-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+
+  .specialty-modal-feature-item {
+    font-size: .85rem;
+    color: #334155;
+    display: flex;
+    gap: .5rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-feature-item { color: #cbd5e1; }
+
+  .specialty-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+  }
+
+  .specialty-modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+
+  .specialty-modal-field label {
+    font-size: .82rem;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  [data-theme="dark"] .specialty-modal-field label { color: #cbd5e1; }
+
+  .specialty-modal-field input[type="text"],
+  .specialty-modal-field input[type="email"] {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: .55rem .75rem;
+    font-size: .9rem;
+    color: #0f172a;
+    background: #ffffff;
+    transition: border-color 0.15s;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  [data-theme="dark"] .specialty-modal-field input[type="text"],
+  [data-theme="dark"] .specialty-modal-field input[type="email"] {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+
+  .specialty-modal-field input:focus {
+    outline: none;
+    border-color: #4f46e5;
+  }
+
+  .specialty-modal-interest-label {
+    font-size: .82rem;
+    font-weight: 700;
+    color: #374151;
+    margin: 0 0 .4rem;
+  }
+
+  [data-theme="dark"] .specialty-modal-interest-label { color: #cbd5e1; }
+
+  .specialty-modal-interest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .4rem;
+  }
+
+  .specialty-modal-interest-item {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .85rem;
+    color: #374151;
+    cursor: pointer;
+  }
+
+  [data-theme="dark"] .specialty-modal-interest-item { color: #cbd5e1; }
+
+  .specialty-modal-msg-duplicate {
+    font-size: .85rem;
+    color: #854d0e;
+    background: #fef9c3;
+    border-radius: 8px;
+    padding: .6rem .9rem;
+    margin: 0;
+  }
+
+  .specialty-modal-msg-error {
+    font-size: .85rem;
+    color: #991b1b;
+    background: #fee2e2;
+    border-radius: 8px;
+    padding: .6rem .9rem;
+    margin: 0;
+  }
+
+  .specialty-modal-btn-submit {
+    width: 100%;
+    padding: .8rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: .95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .specialty-modal-btn-submit:disabled { opacity: .65; cursor: not-allowed; }
+  .specialty-modal-btn-submit:not(:disabled):hover { opacity: .9; }
+
+  .specialty-modal-success {
+    text-align: center;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  .specialty-modal-success-icon { font-size: 2.5rem; }
+
+  .specialty-modal-success-text {
+    font-size: .95rem;
+    color: #374151;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  [data-theme="dark"] .specialty-modal-success-text { color: #cbd5e1; }
+
+  .specialty-modal-btn-close {
+    padding: .65rem 1.75rem;
+    background: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .specialty-modal-btn-close:hover { background: #4338ca; }
+
+  @media (max-width: 600px) {
+    .iatlas-specialties-grid { grid-template-columns: 1fr; }
+    .specialty-modal-interest-grid { grid-template-columns: 1fr; }
+  }
 `;
 
 // ── Main page component ────────────────────────────────────────────────────────
@@ -1389,6 +1865,7 @@ export default function IATLASCurriculumPage() {
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistStatus, setWaitlistStatus] = useState('idle'); // idle | success | error
   const [upgradeSuccess, setUpgradeSuccess] = useState('');
+  const [activeSpecialty, setActiveSpecialty] = useState(null);
 
   // Sync dark-mode preference on mount
   useEffect(() => {
@@ -1531,6 +2008,31 @@ export default function IATLASCurriculumPage() {
                   <span className="iatlas-hero-badge-label">+ ACT</span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* ── Specialty Navigation ─────────────────────────────────────── */}
+          <section className="iatlas-specialty-nav" aria-label="Jump to specialty fields">
+            <div className="iatlas-specialty-nav-header">
+              <h2>Specialized Fields</h2>
+              <p>Jump to your professional specialty</p>
+            </div>
+            <div className="iatlas-specialty-nav-buttons">
+              {Object.values(IATLAS_SPECIALTIES).map((specialty) => (
+                <a
+                  key={specialty.id}
+                  href="#iatlas-specialties-title"
+                  className="iatlas-specialty-nav-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector('.iatlas-specialties-coming-soon')?.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => setActiveSpecialty(specialty), 400);
+                  }}
+                >
+                  <span className="iatlas-specialty-nav-icon">{specialty.icon}</span>
+                  <span className="iatlas-specialty-nav-label">{specialty.name}</span>
+                </a>
+              ))}
             </div>
           </section>
 
@@ -1792,8 +2294,39 @@ export default function IATLASCurriculumPage() {
             </div>
           </section>
 
+          {/* ── Specialized Fields Coming Soon ────────────────────────────── */}
+          <section aria-labelledby="iatlas-specialties-title" className="iatlas-specialties-coming-soon">
+            <div className="iatlas-section-header">
+              <span className="iatlas-section-kicker">Expanding IATLAS</span>
+              <h2 className="iatlas-section-title" id="iatlas-specialties-title">
+                More Specialized Fields Coming Soon
+              </h2>
+              <p className="iatlas-section-sub">
+                We're developing field-specific resilience curriculum for educators, therapists, and
+                specialists. Join the waitlist to be notified when your specialty launches.
+              </p>
+            </div>
+
+            <div className="iatlas-specialties-grid">
+              {Object.values(IATLAS_SPECIALTIES).map((specialty) => (
+                <SpecialtyCard
+                  key={specialty.id}
+                  specialty={specialty}
+                  onJoinWaitlist={() => setActiveSpecialty(specialty)}
+                />
+              ))}
+            </div>
+          </section>
+
         </div>
       </main>
+
+      {activeSpecialty && (
+        <SpecialtyComingSoonModal
+          specialty={activeSpecialty}
+          onClose={() => setActiveSpecialty(null)}
+        />
+      )}
     </>
   );
 }
