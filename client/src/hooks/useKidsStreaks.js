@@ -93,7 +93,7 @@ export default function useKidsStreaks() {
       addKidsStars(bonusStars);
     } else if (newCurrent === 7 || (newCurrent > 7 && current.current < 7)) {
       hitMilestone = 7;
-      bonusStars   = STAR_RULES.STREAK_3_DAY * 2; // 10 bonus for 7-day streak
+      bonusStars   = STAR_RULES.STREAK_7_DAY;
       addKidsStars(bonusStars);
     }
 

@@ -9,6 +9,7 @@ export const STAR_RULES = {
   PARTIAL_ACTIVITY:  1,   // Try an activity (partial)
   COMPLETE_DIMENSION: 10, // Complete all activities in one dimension for an age group
   STREAK_3_DAY:       5,  // 3-day activity streak bonus
+  STREAK_7_DAY:       10, // 7-day activity streak bonus
   PARENT_NOTE:        2,  // Parent adds a celebration note
 };
 

@@ -95,7 +95,7 @@ function playCelebrationSound() {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
     const ctx   = new AudioCtx();
-    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
     notes.forEach((freq, i) => {
       const osc  = ctx.createOscillator();
       const gain = ctx.createGain();

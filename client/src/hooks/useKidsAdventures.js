@@ -101,13 +101,12 @@ export default function useKidsAdventures(selectedAgeGroup = 'age-5-7') {
       const stepsCompleted = calcAdventureStepsCompleted(adventure, progress);
       const isComplete     = stepsCompleted >= adventure.totalSteps;
       const completedAt    = stored[adventure.id]?.completedAt || null;
-      const wasCompleted   = !!completedAt;
 
       return {
         ...adventure,
         stepsCompleted,
         isComplete,
-        completedAt: wasCompleted ? completedAt : (isComplete ? new Date().toISOString() : null),
+        completedAt,
         started:     stepsCompleted > 0,
       };
     });

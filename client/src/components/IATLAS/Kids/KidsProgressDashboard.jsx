@@ -392,8 +392,8 @@ export default function KidsProgressDashboard({ onParentZone }) {
       dimension:  activity.dimension,
       complete:   true,
     });
-    recordStreak();
-    const newlyUnlocked = checkBadges({ currentStreak: streakCurrent + 1 });
+    const { streakData: updatedStreak } = recordStreak();
+    const newlyUnlocked = checkBadges({ currentStreak: updatedStreak?.current ?? streakCurrent });
     setCompletionResult({ ...result, newBadge: newlyUnlocked[0] || null });
   }, [selectedAgeGroup, completeActivity, isCompleted, recordStreak, checkBadges, streakCurrent]);
 
