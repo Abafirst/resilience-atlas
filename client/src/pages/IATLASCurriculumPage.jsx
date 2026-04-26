@@ -1886,6 +1886,164 @@ const STYLES = `
     .iatlas-specialties-grid { grid-template-columns: 1fr; }
     .specialty-modal-interest-grid { grid-template-columns: 1fr; }
   }
+
+  /* ── Train the Facilitator Section ──────────────────────────────────────── */
+  .iatlas-ttf-banner {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    margin: 2rem 0;
+  }
+  .iatlas-ttf-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 80% 20%, rgba(110,231,183,.12) 0%, transparent 50%),
+      radial-gradient(circle at 15% 80%, rgba(79,70,229,.18) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .iatlas-ttf-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: .4rem 1rem;
+    font-size: .85rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .iatlas-ttf-title {
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin: 0 0 .75rem;
+    line-height: 1.2;
+    position: relative;
+  }
+  .iatlas-ttf-subtitle {
+    font-size: 1.15rem;
+    opacity: .9;
+    margin: 0 0 1.5rem;
+    font-weight: 600;
+    color: #6ee7b7;
+    position: relative;
+  }
+  .iatlas-ttf-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    opacity: .85;
+    max-width: 720px;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .iatlas-ttf-philosophy {
+    background: rgba(255,255,255,.1);
+    border-left: 4px solid #6ee7b7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    position: relative;
+  }
+  .iatlas-ttf-philosophy-icon { flex-shrink: 0; opacity: .8; }
+  .iatlas-ttf-philosophy-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0 0 .5rem;
+  }
+  .iatlas-ttf-philosophy-text {
+    font-size: .95rem;
+    line-height: 1.65;
+    margin: 0;
+    opacity: .9;
+  }
+  .iatlas-ttf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin: 2.5rem 0;
+    position: relative;
+  }
+  .iatlas-ttf-card {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+  .iatlas-ttf-card:hover {
+    background: rgba(255,255,255,.13);
+    transform: translateY(-2px);
+  }
+  .iatlas-ttf-card-icon {
+    filter: brightness(0) invert(1);
+    margin-bottom: 1rem;
+  }
+  .iatlas-ttf-card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    margin: 0 0 .5rem;
+  }
+  .iatlas-ttf-card-desc {
+    font-size: .875rem;
+    opacity: .85;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .iatlas-ttf-roles {
+    margin: 2.5rem 0;
+    position: relative;
+  }
+  .iatlas-ttf-roles-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin: 0 0 1.25rem;
+    text-align: center;
+  }
+  .iatlas-ttf-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .iatlas-ttf-role-card {
+    background: rgba(255,255,255,.08);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+  }
+  .iatlas-ttf-role-emoji { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+  .iatlas-ttf-role-name { font-size: .9rem; font-weight: 700; margin: 0 0 .25rem; }
+  .iatlas-ttf-role-benefit { font-size: .8rem; opacity: .8; margin: 0; line-height: 1.4; }
+  .iatlas-ttf-cta {
+    background: rgba(255,255,255,.1);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 2.5rem;
+    position: relative;
+  }
+  .iatlas-ttf-cta-text {
+    font-size: 1rem;
+    margin: 0 0 1.25rem;
+    line-height: 1.6;
+  }
+  @media (max-width: 700px) {
+    .iatlas-ttf-banner { padding: 2rem 1.25rem; }
+    .iatlas-ttf-title { font-size: 1.6rem; }
+    .iatlas-ttf-philosophy { flex-direction: column; gap: .75rem; }
+    .iatlas-ttf-grid { grid-template-columns: 1fr; }
+    .iatlas-ttf-roles-grid { grid-template-columns: 1fr; }
+  }
 `;
 
 // ── Main page component ────────────────────────────────────────────────────────
@@ -2019,6 +2177,9 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/compass.svg" alt="" width={16} height={16} aria-hidden="true" />
                     Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                   </a>
+                  <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary">
+                    🎓 Train the Facilitator
+                  </Link>
                   <a href="#iatlas-overview" className="iatlas-btn-secondary">
                     Learn more about IATLAS
                   </a>
@@ -2203,6 +2364,112 @@ export default function IATLASCurriculumPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ── Train the Facilitator Section ───────────────────────────────────── */}
+          <section aria-labelledby="iatlas-ttf-title" style={{ marginTop: '3.5rem' }}>
+            <div className="iatlas-ttf-banner" role="region" aria-label="Train the Facilitator program">
+              <div className="iatlas-ttf-badge">
+                <span className="iatlas-ttf-badge-icon" aria-hidden="true">🎓</span>
+                <span className="iatlas-ttf-badge-text">Coming Soon</span>
+              </div>
+
+              <h2 className="iatlas-ttf-title" id="iatlas-ttf-title">
+                Train the Facilitator Certification
+              </h2>
+
+              <p className="iatlas-ttf-subtitle">
+                Build your own resilience while learning to facilitate resilience in others
+              </p>
+
+              <p className="iatlas-ttf-description">
+                The IATLAS Train the Facilitator (TTF) program is a dual-track professional development
+                certification that equips clinicians, educators, therapists, coaches, and group leaders
+                to deliver evidence-based resilience protocols —{' '}
+                <strong>while strengthening their own dimensional resilience in the process</strong>.
+              </p>
+
+              <div className="iatlas-ttf-philosophy">
+                <div className="iatlas-ttf-philosophy-icon" aria-hidden="true">
+                  <img src="/icons/relational-connective.svg" alt="" width={40} height={40} />
+                </div>
+                <div>
+                  <h3 className="iatlas-ttf-philosophy-title">
+                    An All-Inclusive System for Everyone
+                  </h3>
+                  <p className="iatlas-ttf-philosophy-text">
+                    IATLAS is designed for <strong>universal resilience building</strong>. Whether you're
+                    a facilitator, clinician, teacher, parent, team member, or individual — you're using
+                    the same 6-dimensional framework to grow your own resilience. Facilitators don't just
+                    teach resilience; they <em>embody</em> it through continuous self-assessment,
+                    micropractices, and professional growth.
+                  </p>
+                </div>
+              </div>
+
+              <div className="iatlas-ttf-grid" role="list" aria-label="TTF program tracks">
+                {[
+                  {
+                    icon: '/icons/compass.svg',
+                    title: 'Personal Growth Track',
+                    desc: 'Complete your own dimensional assessment, engage in micropractices, and track your resilience journey across all 6 dimensions.',
+                  },
+                  {
+                    icon: '/icons/planning.svg',
+                    title: 'Professional Skills Track',
+                    desc: 'Master facilitation techniques, group dynamics, trauma-informed delivery, cultural responsiveness, and ABA/ACT protocol fidelity.',
+                  },
+                  {
+                    icon: '/icons/agentic-generative.svg',
+                    title: 'Supervised Practicum',
+                    desc: 'Deliver IATLAS protocols with live supervision, peer feedback, and competency-based assessments to ensure effective facilitation.',
+                  },
+                  {
+                    icon: '/icons/badges.svg',
+                    title: 'Ongoing Certification',
+                    desc: 'Earn your TTF credential and maintain it through continuing education, community of practice engagement, and annual re-assessment.',
+                  },
+                ].map((item, idx) => (
+                  <div key={idx} className="iatlas-ttf-card" role="listitem">
+                    <img src={item.icon} alt="" width={32} height={32} className="iatlas-ttf-card-icon" aria-hidden="true" />
+                    <h4 className="iatlas-ttf-card-title">{item.title}</h4>
+                    <p className="iatlas-ttf-card-desc">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="iatlas-ttf-roles">
+                <h3 className="iatlas-ttf-roles-title">Who Benefits from TTF?</h3>
+                <div className="iatlas-ttf-roles-grid">
+                  {[
+                    { emoji: '👩‍⚕️', role: 'Clinicians & Therapists', benefit: 'Self-care + client intervention skills' },
+                    { emoji: '👨‍🏫', role: 'Teachers & Educators', benefit: 'Personal wellness + classroom resilience' },
+                    { emoji: '👨‍👩‍👧', role: 'Parents & Caregivers', benefit: 'Self-regulation + parenting skills' },
+                    { emoji: '🏢', role: 'Team Leaders & Coaches', benefit: 'Leadership resilience + team development' },
+                    { emoji: '🎓', role: 'Trainers & Facilitators', benefit: 'Professional growth + training excellence' },
+                    { emoji: '🧑‍💼', role: 'HR & Wellbeing Professionals', benefit: 'Organizational resilience + employee support' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="iatlas-ttf-role-card">
+                      <span className="iatlas-ttf-role-emoji" aria-hidden="true">{item.emoji}</span>
+                      <div>
+                        <p className="iatlas-ttf-role-name">{item.role}</p>
+                        <p className="iatlas-ttf-role-benefit">{item.benefit}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="iatlas-ttf-cta">
+                <p className="iatlas-ttf-cta-text">
+                  <strong>Interested in becoming a certified IATLAS facilitator?</strong><br />
+                  Join the waitlist to be notified when the TTF program launches.
+                </p>
+                <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-primary">
+                  Learn More &amp; Join Waitlist →
+                </Link>
               </div>
             </div>
           </section>

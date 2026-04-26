@@ -84,6 +84,7 @@ import PracticeSettingsPage from './pages/PracticeSettingsPage.jsx';
 import ActivityLogsPage from './pages/ActivityLogsPage.jsx';
 import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
+import TrainTheFacilitatorPage from './pages/TrainTheFacilitatorPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -385,6 +386,7 @@ function AppShell() {
           <Route path="/iatlas/profiles" element={<ChildProfilesPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
+          <Route path="/iatlas/train-the-facilitator" element={<TrainTheFacilitatorPage />} />
           {/* Analytics Dashboard */}
           <Route path="/analytics" element={<AnalyticsDashboardPage />} />
           {/* RBAC / Practice Management */}
