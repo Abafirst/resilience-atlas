@@ -11,6 +11,8 @@ import {  KIDS_DIMENSION_ICON_MAP,
 import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 import VideoStories from '../components/VideoStories.jsx';
 import IATLASComingSoonModal from '../components/IATLAS/ComingSoonModal.jsx';
+import KidsProgressDashboard from '../components/IATLAS/Kids/KidsProgressDashboard.jsx';
+import ParentDashboard from '../components/IATLAS/Kids/ParentDashboard.jsx';
 
 const KIDS_CATEGORIES = [
   { id: 'all',        label: 'All',        icon: '/icons/compass.svg',             desc: 'Browse everything' },
@@ -19,6 +21,7 @@ const KIDS_CATEGORIES = [
   { id: 'games',      label: 'Games',      icon: '/icons/game.svg',                desc: 'Play interactive games' },
   { id: 'activities', label: 'Activities', icon: '/icons/movement.svg',            desc: 'Activities by age' },
   { id: 'skills',     label: 'Skills',     icon: '/icons/agentic-generative.svg',  desc: 'Explore resilience skills' },
+  { id: 'progress',   label: 'My Progress', icon: '/icons/badges.svg',             desc: 'Track your resilience journey' },
 ];
 
 const AGE_GROUPS = [
@@ -55,6 +58,7 @@ const CATEGORY_SECTION_MAP = {
   videos:     'kids-videos',
   games:      'kids-games',
   skills:     'kids-skills',
+  progress:   'kids-progress',
 };
 
 /* ── Richer modal content for each skill ── */
@@ -402,6 +406,7 @@ export default function KidsPage() {
   const [activeSkill, setActiveSkill] = useState(null);
   const [showGamesModal, setShowGamesModal] = useState(false);
   const [showActivitiesModal, setShowActivitiesModal] = useState(false);
+  const [showParentZone, setShowParentZone] = useState(false);
   const closeStory = useCallback(() => setActiveStory(null), []);
   const closeSkill = useCallback(() => setActiveSkill(null), []);
 
@@ -466,7 +471,17 @@ export default function KidsPage() {
           Resilience isn&rsquo;t about being tough. It&rsquo;s about understanding yourself, knowing your
           strengths, and having people who get it. Activities and stories for ages 5–18+.
         </p>
-        <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
+        <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '.5rem' }}>
+          <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
+          <button
+            className="btn-cta"
+            style={{ background: 'transparent', border: '2px solid currentColor', cursor: 'pointer' }}
+            onClick={() => handleCategoryChange('progress')}
+            aria-label="Go to My Progress dashboard"
+          >
+            My Progress
+          </button>
+        </div>
       </section>
 
       {/* ── Category Navigation ─────────────────────────────────────────── */}
@@ -704,6 +719,29 @@ export default function KidsPage() {
                 </button>
               </div>
             </div>
+          </section>
+        )}
+
+        {/* ── My Progress Dashboard ── */}
+        {show(activeCategory, 'progress') && (
+          <section
+            className="kids-scroll-anchor"
+            id="kids-progress"
+            aria-labelledby="progress-heading"
+            style={{ paddingTop: '1.5rem' }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem', padding: '0 1.25rem' }}>
+              <span className="section-label">Your Resilience Journey</span>
+              <h2 id="progress-heading" style={{ margin: '.5rem 0 .4rem' }}>My Progress</h2>
+              <p style={{ color: 'var(--slate-600)', maxWidth: '520px', margin: '0 auto' }}>
+                Track your stars, badges, streaks, and adventures as you build resilience.
+              </p>
+            </div>
+            {showParentZone ? (
+              <ParentDashboard onBack={() => setShowParentZone(false)} />
+            ) : (
+              <KidsProgressDashboard onParentZone={() => setShowParentZone(true)} />
+            )}
           </section>
         )}
 
