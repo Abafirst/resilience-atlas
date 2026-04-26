@@ -471,11 +471,10 @@ export default function KidsPage() {
           Resilience isn&rsquo;t about being tough. It&rsquo;s about understanding yourself, knowing your
           strengths, and having people who get it. Activities and stories for ages 5–18+.
         </p>
-        <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap', justifyContent: 'center', marginTop: '.5rem' }}>
+        <div className="kids-hero-buttons">
           <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
           <button
-            className="btn-cta"
-            style={{ background: 'transparent', border: '2px solid currentColor', cursor: 'pointer' }}
+            className="btn-cta-secondary"
             onClick={() => handleCategoryChange('progress')}
             aria-label="Go to My Progress dashboard"
           >

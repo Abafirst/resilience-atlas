@@ -443,7 +443,15 @@ export default function DimensionCurriculumPage() {
                   className={`dcp-tab${activeLevel === level ? ' dcp-tab--active' : ''}`}
                   onClick={() => setActiveLevel(level)}
                 >
-                  {lm.icon} {lm.label} ({count})
+                  <img
+                    src={lm.icon}
+                    alt=""
+                    aria-hidden="true"
+                    width={16}
+                    height={16}
+                    style={{ verticalAlign: 'middle', marginRight: 6 }}
+                  />
+                  {lm.label} ({count})
                 </button>
               );
             })}
@@ -452,7 +460,7 @@ export default function DimensionCurriculumPage() {
           {/* Level description */}
           {levelMeta && (
             <div className="dcp-level-desc" role="note">
-              <span aria-hidden="true">{levelMeta.icon}</span>
+              <img src={levelMeta.icon} alt="" aria-hidden="true" width={16} height={16} style={{ verticalAlign: 'middle' }} />
               <span><strong>{levelMeta.label}:</strong> {levelMeta.description}</span>
             </div>
           )}
