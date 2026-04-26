@@ -111,7 +111,7 @@ router.get('/', plansLimiter, authenticateJWT, async (req, res) => {
     const filter = { userId: userId.toString(), archived: false };
 
     if (clientIdentifier) {
-      filter.clientIdentifier = { $regex: escapeRegex(clientIdentifier), $options: 'i' };
+      filter.clientIdentifier = new RegExp(escapeRegex(clientIdentifier), 'i');
     }
     if (dimensionalFocus) {
       filter.dimensionalFocus = dimensionalFocus;
@@ -122,11 +122,11 @@ router.get('/', plansLimiter, authenticateJWT, async (req, res) => {
       if (to)   filter.sessionDate.$lte = new Date(to);
     }
     if (search) {
-      const safeSearch = escapeRegex(search);
+      const safePattern = new RegExp(escapeRegex(search), 'i');
       filter.$or = [
-        { clientIdentifier: { $regex: safeSearch, $options: 'i' } },
-        { sessionNotes:     { $regex: safeSearch, $options: 'i' } },
-        { clinicalNotes:    { $regex: safeSearch, $options: 'i' } },
+        { clientIdentifier: safePattern },
+        { sessionNotes:     safePattern },
+        { clinicalNotes:    safePattern },
       ];
     }
 

@@ -90,7 +90,7 @@ export default function SessionPlansPage() {
 
   // ── Handlers ─────────────────────────────────────────────────────────────────
 
-  const handleSave = (saved) => {
+  const handleSave = useCallback((saved) => {
     setPlans(prev => {
       const idx = prev.findIndex(p => p.sessionPlanId === saved.sessionPlanId);
       if (idx >= 0) {
@@ -102,9 +102,9 @@ export default function SessionPlansPage() {
     });
     setMode(MODE_LIST);
     setSelectedPlan(null);
-  };
+  }, []);
 
-  const handleDelete = async (sessionPlanId) => {
+  const handleDelete = useCallback(async (sessionPlanId) => {
     try {
       let token = '';
       try { token = await getAccessTokenSilently(); } catch (tokenErr) {
@@ -122,12 +122,12 @@ export default function SessionPlansPage() {
     } catch (err) {
       alert(err.message);
     }
-  };
+  }, [getAccessTokenSilently]);
 
-  const handleView = (plan) => { setSelectedPlan(plan); setMode(MODE_VIEW); };
-  const handleEdit = (plan) => { setSelectedPlan(plan); setMode(MODE_EDIT);  };
-  const handleNew  = ()     => { setSelectedPlan(null); setMode(MODE_CREATE); };
-  const handleBack = ()     => { setSelectedPlan(null); setMode(MODE_LIST);  };
+  const handleView = useCallback((plan) => { setSelectedPlan(plan); setMode(MODE_VIEW); }, []);
+  const handleEdit = useCallback((plan) => { setSelectedPlan(plan); setMode(MODE_EDIT);  }, []);
+  const handleNew  = useCallback(()     => { setSelectedPlan(null); setMode(MODE_CREATE); }, []);
+  const handleBack = useCallback(()     => { setSelectedPlan(null); setMode(MODE_LIST);  }, []);
 
   // ── Render ───────────────────────────────────────────────────────────────────
 

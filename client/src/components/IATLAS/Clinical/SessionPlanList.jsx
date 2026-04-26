@@ -246,9 +246,12 @@ export default function SessionPlanList({
                       : <span className="spl-na">—</span>}
                   </td>
                   <td className="spl-td-goals">
-                    {plan.sessionGoals?.filter(Boolean).length > 0
-                      ? <span className="spl-goal-count">{plan.sessionGoals.filter(Boolean).length} goal{plan.sessionGoals.filter(Boolean).length !== 1 ? 's' : ''}</span>
-                      : <span className="spl-na">—</span>}
+                    {(() => {
+                      const goalCount = plan.sessionGoals?.filter(Boolean).length ?? 0;
+                      return goalCount > 0
+                        ? <span className="spl-goal-count">{goalCount} goal{goalCount !== 1 ? 's' : ''}</span>
+                        : <span className="spl-na">—</span>;
+                    })()}
                   </td>
                   <td className="spl-td-actions">
                     <button
