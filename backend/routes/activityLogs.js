@@ -59,6 +59,10 @@ router.get('/', authenticateJWT, async (req, res) => {
     if (action && typeof action === 'string') filter.action = action;
     if (resourceType && typeof resourceType === 'string') filter.resourceType = resourceType;
     if (startDate || endDate) {
+      // Reject non-string date params to prevent NoSQL injection via query objects
+      if ((startDate && typeof startDate !== 'string') || (endDate && typeof endDate !== 'string')) {
+        return res.status(400).json({ error: 'Invalid date format.' });
+      }
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
       if ((start && isNaN(start.getTime())) || (end && isNaN(end.getTime()))) {
@@ -108,6 +112,9 @@ router.get('/export', authenticateJWT, async (req, res) => {
     const filter = { practiceId };
     // Fix the export date handling too
     if (startDate || endDate) {
+      if ((startDate && typeof startDate !== 'string') || (endDate && typeof endDate !== 'string')) {
+        return res.status(400).json({ error: 'Invalid date format.' });
+      }
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
       if ((start && isNaN(start.getTime())) || (end && isNaN(end.getTime()))) {

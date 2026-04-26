@@ -10,6 +10,9 @@ const practitionerInvitationSchema = new mongoose.Schema({
   acceptedAt: { type: Date },
   status: { type: String, enum: ['pending', 'accepted', 'expired', 'revoked'], default: 'pending' },
 }, { timestamps: true });
-// Prevent duplicate pending invitations for the same email within a practice
-practitionerInvitationSchema.index({ practiceId: 1, email: 1, status: 1 });
+// Partial unique index: only one pending invitation per email per practice
+practitionerInvitationSchema.index(
+  { practiceId: 1, email: 1 },
+  { unique: true, partialFilterExpression: { status: 'pending' } }
+);
 module.exports = mongoose.model('PractitionerInvitation', practitionerInvitationSchema);

@@ -138,15 +138,23 @@ router.patch('/:id', authenticateJWT, async (req, res) => {
     }
 
     const { name, subscriptionTier, settings } = req.body;
+    const VALID_TIERS = ['basic', 'standard', 'premium', 'enterprise'];
     const update = {};
     if (name) update.name = name.trim();
-    if (subscriptionTier) update.subscriptionTier = subscriptionTier;
-    // Only accept plain objects for settings to prevent NoSQL injection
+    if (subscriptionTier && VALID_TIERS.includes(subscriptionTier)) {
+      update.subscriptionTier = subscriptionTier;
+    }
+    // Deep-clone settings via JSON round-trip to strip prototype pollution;
+    // only accept plain objects (no arrays, no primitives).
     if (settings && typeof settings === 'object' && !Array.isArray(settings)) {
-      update.settings = settings;
+      try {
+        update.settings = JSON.parse(JSON.stringify(settings));
+      } catch (_) {
+        return res.status(400).json({ error: 'Invalid settings value.' });
+      }
     }
 
-    const practice = await Practice.findByIdAndUpdate(id, update, { new: true }).lean();
+    const practice = await Practice.findByIdAndUpdate(id, { $set: update }, { new: true }).lean();
     if (!practice) return res.status(404).json({ error: 'Practice not found.' });
 
     await logActivity(id, userId, 'update_practice_settings', 'practice', id, { updates: update }, req);
@@ -282,7 +290,7 @@ router.patch('/:id/practitioners/:targetUserId', authenticateJWT, async (req, re
 
     const pp = await PracticePractitioner.findOneAndUpdate(
       { practiceId: id, userId: targetUserId },
-      update,
+      { $set: update },
       { new: true }
     );
     if (!pp) return res.status(404).json({ error: 'Practitioner not found in this practice.' });

@@ -141,7 +141,7 @@ router.patch('/:id/access-level', authenticateJWT, async (req, res) => {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 
-    const updated = await CaseAssignment.findByIdAndUpdate(id, { accessLevel }, { new: true });
+    const updated = await CaseAssignment.findByIdAndUpdate(id, { $set: { accessLevel } }, { new: true });
 
     await logActivity(assignment.practiceId, userId, 'change_case_access_level', 'child', assignment.childProfileId, { accessLevel }, req);
 
