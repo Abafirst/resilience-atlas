@@ -10,6 +10,7 @@ import React, { useState, useCallback } from 'react';
 import useKidsProgress   from '../../../hooks/useKidsProgress.js';
 import useKidsBadges     from '../../../hooks/useKidsBadges.js';
 import useKidsStreaks     from '../../../hooks/useKidsStreaks.js';
+import { useProfiles }   from '../../../contexts/ProfileContext.jsx';
 
 import CertificatePrinter from './CertificatePrinter.jsx';
 import StreakFlame        from './StreakFlame.jsx';
@@ -416,7 +417,9 @@ function timeAgo(iso) {
 }
 
 export default function ParentDashboard({ onBack }) {
-  const { progress, totalStars, levelInfo, getParentNoteCount, refresh } = useKidsProgress();
+  // Use the active profile's progress (profile-namespaced storage keys).
+  const { activeProfile } = useProfiles();
+  const { progress, totalStars, levelInfo, getParentNoteCount, refresh, storageKeys } = useKidsProgress(activeProfile?.profileId);
   const { allBadges, earnedCount } = useKidsBadges();
   const { current: streakCurrent, longest: streakLongest } = useKidsStreaks();
 
@@ -425,7 +428,7 @@ export default function ParentDashboard({ onBack }) {
   const [showCerts,     setShowCerts]     = useState(false);
 
   // Parent notes
-  const notes = loadKidsJSON(KIDS_STORAGE_KEYS.PARENT_NOTES, []);
+  const notes = loadKidsJSON(storageKeys.PARENT_NOTES, []);
   const parentNoteCount = notes.length;
 
   // Recent activities (from progress)
@@ -451,7 +454,7 @@ export default function ParentDashboard({ onBack }) {
 
   // Earned certificate IDs
   const earnedCerts = [];
-  const adventureData = loadKidsJSON(KIDS_STORAGE_KEYS.ADVENTURES, {});
+  const adventureData = loadKidsJSON(storageKeys.ADVENTURES, {});
   if (Object.keys(adventureData).some(id => adventureData[id]?.completedAt)) {
     earnedCerts.push('adventure-complete');
   }
@@ -472,8 +475,8 @@ export default function ParentDashboard({ onBack }) {
       { text: trimmed, createdAt: new Date().toISOString() },
       ...notes,
     ];
-    saveKidsJSON(KIDS_STORAGE_KEYS.PARENT_NOTES, updatedNotes);
-    addKidsStars(STAR_RULES.PARENT_NOTE);
+    saveKidsJSON(storageKeys.PARENT_NOTES, updatedNotes);
+    addKidsStars(STAR_RULES.PARENT_NOTE, storageKeys);
     refresh();
     setNoteText('');
     setNoteSuccess(true);
@@ -511,7 +514,10 @@ export default function ParentDashboard({ onBack }) {
           )}
           <h2 className="pd-header-title">Parent Dashboard</h2>
           <p className="pd-header-sub">
-            Track your child's resilience journey, celebrate milestones, and print certificates.
+            {activeProfile
+              ? <>Viewing <strong>{activeProfile.avatar} {activeProfile.name}</strong>'s resilience journey.</>
+              : 'Track your child\'s resilience journey, celebrate milestones, and print certificates.'
+            }
           </p>
         </div>
 

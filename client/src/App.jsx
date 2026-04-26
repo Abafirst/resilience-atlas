@@ -77,6 +77,7 @@ import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
+import { ProfileProvider } from './contexts/ProfileContext.jsx';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
@@ -384,7 +385,9 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell />
+      <ProfileProvider>
+        <AppShell />
+      </ProfileProvider>
     </BrowserRouter>
   );
 }
