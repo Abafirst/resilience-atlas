@@ -4,7 +4,7 @@
  * Route: /iatlas/roadmap
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../SiteHeader.jsx';
 import DarkModeHint from '../DarkModeHint.jsx';
@@ -689,6 +689,11 @@ export default function ContentRoadmapPage() {
     ...Object.values(PIPELINE_STATS.kids),
     ...Object.values(PIPELINE_STATS.resources),
   ];
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+  }, []);
 
   const statColors = {
     'Adult Foundation': '#10b981',

@@ -4,7 +4,7 @@
  * Route: /iatlas/kids
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
@@ -503,6 +503,11 @@ export default function IATLASKidsLandingPage() {
   const totalActivities = countTotalActivities();
   const dimensions = Object.values(KIDS_ACTIVITIES_BY_DIMENSION);
   const { activeProfile, profiles } = useProfiles();
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'instant' : 'smooth' });
+  }, []);
 
   function getAgeGroupActivityCount(ageGroupId) {
     return dimensions.reduce((total, dim) => {
