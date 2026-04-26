@@ -572,7 +572,7 @@ const TOTAL_ACTIVITIES = Object.values(KIDS_ACTIVITIES).reduce(
 
 export default function FamilyDashboard() {
   const navigate = useNavigate();
-  const { profiles, loading: profilesLoading, error: profilesError, switchProfile } = useProfiles();
+  const { profiles, loading: profilesLoading, error: profilesError, errorCode: profilesErrorCode, switchProfile, refreshProfiles, loginWithRedirect } = useProfiles();
 
   const [showAddChild,    setShowAddChild]    = useState(false);
   const [activeTab,       setActiveTab]       = useState('overview');
@@ -750,7 +750,23 @@ export default function FamilyDashboard() {
       <>
         <style>{STYLES}</style>
         <div className="fd-error" role="alert">
-          Error loading profiles: {profilesError}
+          <p>Error loading profiles: {profilesError}</p>
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={refreshProfiles}
+              style={{ background: '#6366f1', color: '#fff', border: 'none', borderRadius: 8, padding: '0.5rem 1.25rem', fontWeight: 600, cursor: 'pointer' }}
+            >
+              Retry
+            </button>
+            {profilesErrorCode === 'auth' && (
+              <button
+                onClick={() => loginWithRedirect()}
+                style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 8, padding: '0.5rem 1.25rem', fontWeight: 600, cursor: 'pointer' }}
+              >
+                Log In Again
+              </button>
+            )}
+          </div>
         </div>
       </>
     );

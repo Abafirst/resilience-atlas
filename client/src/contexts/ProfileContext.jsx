@@ -8,11 +8,13 @@
  *   activeProfile     — full profile object (derived)
  *   loading           — true while fetching from the API
  *   error             — last API error message, or null
+ *   errorCode         — 'auth' when the error is authentication-related, otherwise null
  *
  *   switchProfile(profileId)          — set the active profile
  *   createProfile(data)               — POST a new profile
  *   updateProfile(profileId, data)    — PUT edits to an existing profile
  *   deleteProfile(profileId)          — DELETE (archive) a profile
+ *   loginWithRedirect()                — redirect the user to the Auth0 login page
  *   refreshProfiles()                 — re-fetch from the API
  */
 
@@ -45,7 +47,7 @@ export function useProfiles() {
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 export function ProfileProvider({ children }) {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, getAccessTokenSilently } = useAuth0();
 
   const [profiles,        setProfiles]        = useState([]);
   const [activeProfileId, setActiveProfileId] = useState(() => {
@@ -53,28 +55,72 @@ export function ProfileProvider({ children }) {
   });
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState(null);
+  const [errorCode, setErrorCode] = useState(null); // 'auth' | null
 
   // ── API helpers ─────────────────────────────────────────────────────────────
 
   const getAuthHeaders = useCallback(async () => {
-    try {
-      const token = await getAccessTokenSilently();
-      return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-    } catch {
-      return { 'Content-Type': 'application/json' };
+    if (!isAuthenticated) {
+      const err = new Error('You must be logged in to access profiles');
+      err.isAuthError = true;
+      throw err;
     }
-  }, [getAccessTokenSilently]);
+
+    try {
+      const token = await getAccessTokenSilently({
+        cacheMode: 'on', // Use cached token if available
+      });
+
+      return {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+    } catch (err) {
+      // Log the actual error for debugging
+      console.error('[ProfileContext] Auth token error:', err);
+
+      // Throw a tagged, user-friendly error
+      const toThrow = (() => {
+        if (err.error === 'login_required') {
+          return new Error('Please log in again to continue');
+        } else if (err.error === 'consent_required') {
+          return new Error('Additional permissions required');
+        } else {
+          return new Error('Authentication failed. Please refresh the page or log in again.');
+        }
+      })();
+      toThrow.isAuthError = true;
+      throw toThrow;
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   // ── Fetch profiles ──────────────────────────────────────────────────────────
 
   const refreshProfiles = useCallback(async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      setProfiles([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
+    setErrorCode(null);
+
     try {
       const headers = await getAuthHeaders();
       const res     = await fetch('/api/iatlas/profiles', { headers });
-      if (!res.ok) throw new Error(`Failed to load profiles (${res.status})`);
+
+      if (res.status === 401) {
+        setErrorCode('auth');
+        throw new Error('Your session has expired. Please log in again.');
+      }
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `Failed to load profiles (${res.status})`);
+      }
+
       const data = await res.json();
       setProfiles(data);
 
@@ -89,6 +135,8 @@ export function ProfileProvider({ children }) {
         }
       }
     } catch (err) {
+      console.error('[ProfileContext] Failed to refresh profiles:', err);
+      if (err.isAuthError) setErrorCode('auth');
       setError(err.message);
     } finally {
       setLoading(false);
@@ -180,13 +228,15 @@ export function ProfileProvider({ children }) {
     activeProfile,
     loading,
     error,
+    errorCode,
     switchProfile,
     createProfile,
     updateProfile,
     deleteProfile,
     refreshProfiles,
+    loginWithRedirect,
   }), [
-    profiles, activeProfile, loading, error,
+    profiles, activeProfile, loading, error, errorCode,
     switchProfile, createProfile, updateProfile, deleteProfile, refreshProfiles,
   ]);
 
