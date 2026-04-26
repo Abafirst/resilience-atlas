@@ -74,6 +74,7 @@ import DimensionCurriculumPage from './components/IATLAS/DimensionCurriculumPage
 import SkillModulePage from './components/IATLAS/SkillModulePage.jsx';
 import KidsAgeGroupPage from './components/IATLAS/Kids/KidsAgeGroupPage.jsx';
 import KidsDimensionActivities from './components/IATLAS/Kids/KidsDimensionActivities.jsx';
+import KidsActivityCatalog from './components/IATLAS/Kids/KidsActivityCatalog.jsx';
 import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx';
 import SessionPlansPage from './pages/SessionPlansPage.jsx';
@@ -370,6 +371,7 @@ function AppShell() {
           <Route path="/iatlas/dashboard" element={<IATLASDashboardPage />} />
           <Route path="/iatlas/family-dashboard" element={<FamilyDashboardPage />} />
           <Route path="/iatlas/kids" element={<IATLASKidsLandingPage />} />
+          <Route path="/iatlas/kids/catalog" element={<KidsActivityCatalog />} />
           <Route path="/iatlas/kids/:ageGroup" element={<KidsAgeGroupPage />} />
           <Route path="/iatlas/kids/:ageGroup/:dimension" element={<KidsDimensionActivities />} />
           <Route path="/iatlas/roadmap" element={<ContentRoadmapPage />} />

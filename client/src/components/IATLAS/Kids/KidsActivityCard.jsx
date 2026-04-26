@@ -239,9 +239,64 @@ const CARD_STYLES = `
     font-weight: 700;
     margin-right: .3rem;
   }
+
+  .kac-difficulty {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    padding: .18rem .5rem;
+    border-radius: 20px;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: capitalize;
+  }
+
+  .kac-difficulty--beginner     { background: #d1fae5; color: #065f46; }
+  .kac-difficulty--intermediate { background: #fef3c7; color: #78350f; }
+  .kac-difficulty--advanced     { background: #ede9fe; color: #5b21b6; }
+
+  .kac-complete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    padding: .5rem .9rem;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s, transform .12s, opacity .15s;
+    border: none;
+    margin-top: .25rem;
+  }
+
+  .kac-complete-btn--done {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .kac-complete-btn--todo {
+    background: #4f46e5;
+    color: #ffffff;
+  }
+
+  .kac-complete-btn--todo:hover {
+    background: #4338ca;
+    transform: scale(1.02);
+  }
+
+  .kac-complete-btn--todo:active {
+    transform: scale(.98);
+  }
+
+  .dark-mode .kac-complete-btn--done {
+    background: #064e3b;
+    color: #6ee7b7;
+  }
 `;
 
-export default function KidsActivityCard({ activity, accentColor }) {
+export default function KidsActivityCard({ activity, accentColor, onComplete, isCompleted }) {
   const [expanded, setExpanded] = useState(false);
 
   const typeInfo = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.activity;
@@ -249,6 +304,9 @@ export default function KidsActivityCard({ activity, accentColor }) {
     background: `${typeInfo.color}18`,
     color: typeInfo.color,
   };
+
+  const difficulty = activity.difficulty || 'beginner';
+  const completed  = !!isCompleted;
 
   return (
     <>
@@ -270,6 +328,9 @@ export default function KidsActivityCard({ activity, accentColor }) {
           <span className="kac-duration">
             <img src="/icons/streaks.svg" alt="" className="kac-duration-icon" aria-hidden="true" />
             {activity.duration}
+          </span>
+          <span className={`kac-difficulty kac-difficulty--${difficulty}`}>
+            {difficulty}
           </span>
         </div>
 
@@ -323,6 +384,19 @@ export default function KidsActivityCard({ activity, accentColor }) {
               </div>
             )}
           </div>
+        )}
+
+        {/* Mark complete */}
+        {onComplete && (
+          <button
+            className={`kac-complete-btn ${completed ? 'kac-complete-btn--done' : 'kac-complete-btn--todo'}`}
+            onClick={completed ? undefined : onComplete}
+            aria-label={completed ? `${activity.title} completed` : `Mark ${activity.title} as complete`}
+            aria-pressed={completed}
+            disabled={completed}
+          >
+            {completed ? '✓ Completed' : 'Mark Complete'}
+          </button>
         )}
       </div>
     </>
