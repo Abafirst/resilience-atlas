@@ -108,6 +108,8 @@ function normalizeScore(raw) {
 function RadarChart({ scores, size = 380, onDimensionClick }) {
   if (!scores || typeof scores !== 'object') return null;
 
+  const isClickable = typeof onDimensionClick === 'function';
+
   // Map canonical dimension order → normalized values
   const values = DIMENSIONS.map(name => {
     const normName = name.toLowerCase().replace(/[-_ ]/g, '');
@@ -174,6 +176,15 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
       style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}
     >
       <defs>
+        {/* Hover effects for interactive dimension labels */}
+        {isClickable && (
+          <style>{`
+            .dimension-label-group { cursor: pointer; }
+            .dimension-label-group:hover .dimension-label-text { fill: #4752e8; }
+            .dimension-label-group:hover .dimension-info-icon circle { fill: #4752e8; }
+          `}</style>
+        )}
+
         {/* Data polygon fill gradient */}
         <radialGradient id="rc-polyFill" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#0097A7" stopOpacity="0.22" />
@@ -450,7 +461,6 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
         const pt    = polarToCartesian(cx, cy, R_LABEL, a);
         const isDom = i === dominantIdx;
         const score = Math.round(values[i]);
-        const isClickable = typeof onDimensionClick === 'function';
 
         // Text anchor based on horizontal position
         let anchor = 'middle';
@@ -466,8 +476,16 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
                    : pt.x - hitW / 2;
         const hitY = pt.y - hitH / 2;
 
+        // Info icon x offset (to the right of text for start/middle, left for end)
+        const iconX = (
+          anchor === 'start'  ? pt.x + 34 :
+          anchor === 'end'    ? pt.x - 34 :
+          pt.x
+        );
+
         const labelGroup = (
-          <g key={`label-${i}`} opacity={isDom ? 1 : 0.75}>
+          <g key={`label-${i}`} opacity={isDom ? 1 : 0.85} className={isClickable ? 'dimension-label-group' : undefined}>
+            {isClickable && <title>{`Click to learn more about ${dim}`}</title>}
             <text
               x={pt.x.toFixed(2)}
               y={(pt.y - 5).toFixed(2)}
@@ -477,6 +495,7 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
               textAnchor={anchor}
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
+              className="dimension-label-text"
               style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel } : undefined}
             >
               {DIM_SHORT[i]}
@@ -494,20 +513,22 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
               {score}%
             </text>
             {isClickable && (
-              <text
-                x={anchor === 'start'  ? (pt.x + 34).toFixed(2)
-                 : anchor === 'end'    ? (pt.x - 34).toFixed(2)
-                 : pt.x.toFixed(2)}
-                y={(pt.y - 5).toFixed(2)}
-                fontSize="7"
-                fill={PAL.dimLabel}
-                textAnchor={anchor}
-                dominantBaseline="middle"
-                fontFamily="Inter,system-ui,sans-serif"
-                opacity="0.65"
+              <g
+                className="dimension-info-icon"
+                transform={`translate(${iconX.toFixed(2)},${(pt.y - 5).toFixed(2)})`}
               >
-                ⓘ
-              </text>
+                <circle r="5.5" fill="#667eea" opacity="0.85" />
+                <text
+                  fontSize="7"
+                  fill="white"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontFamily="Inter,system-ui,sans-serif"
+                  fontWeight="700"
+                >
+                  i
+                </text>
+              </g>
             )}
             {/* Transparent hit target for click/touch */}
             {isClickable && (

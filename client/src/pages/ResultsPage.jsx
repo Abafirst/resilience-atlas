@@ -2979,6 +2979,12 @@ export default function ResultsPage() {
       // Removing the animations preserves the final static rotation (needleDeg).
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
+      // Remove interactive UI elements so the downloaded image is clean.
+      svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
+      svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
+        el.style.textDecoration = 'none';
+      });
+
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
       const serializer = new XMLSerializer();
       const svgString = serializer.serializeToString(svgClone);
@@ -3446,8 +3452,11 @@ export default function ResultsPage() {
           <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
             <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
           </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, color: '#718096', marginBottom: 8 }}>
             This compass visualizes the balance of your resilience system across six core dimensions.
+          </p>
+          <p style={{ fontSize: 15, color: '#667eea', fontWeight: 600, marginBottom: 16, textAlign: 'center' }}>
+            👆 Click any dimension to learn what it means and discover personalized ways to strengthen it
           </p>
           <RadarChart
             scores={results.scores}
@@ -3455,9 +3464,6 @@ export default function ResultsPage() {
               setActiveDimModal(dim);
             }}
           />
-          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 12, marginBottom: 4, lineHeight: 1.5 }}>
-            <span aria-hidden="true">ⓘ</span> Click any dimension label to learn what it means and how to strengthen it.
-          </p>
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 6 }}>
               Your strongest resilience dimension is:{' '}
