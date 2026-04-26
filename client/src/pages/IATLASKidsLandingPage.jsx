@@ -716,6 +716,28 @@ export default function IATLASKidsLandingPage() {
                     </li>
                   ))}
                 </ul>
+                <div style={{ marginTop: '1rem' }}>
+                  <Link
+                    to="/iatlas/family-dashboard"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '.4rem',
+                      padding: '.55rem 1.25rem',
+                      borderRadius: 10,
+                      background: 'rgba(255,255,255,.2)',
+                      color: '#fff',
+                      fontWeight: 700,
+                      fontSize: '.85rem',
+                      textDecoration: 'none',
+                      border: '1.5px solid rgba(255,255,255,.35)',
+                      transition: 'background .15s',
+                    }}
+                    aria-label="Open Family Dashboard"
+                  >
+                    🏡 Family Dashboard
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
