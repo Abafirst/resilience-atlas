@@ -84,6 +84,13 @@ import PracticeSettingsPage from './pages/PracticeSettingsPage.jsx';
 import ActivityLogsPage from './pages/ActivityLogsPage.jsx';
 import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
+import TrainTheFacilitatorPage from './pages/TrainTheFacilitatorPage.jsx';
+import PracticeDashboardPage from './pages/PracticeDashboardPage.jsx';
+import PracticeClientsPage from './pages/PracticeClientsPage.jsx';
+import PracticeSchedulePage from './pages/PracticeSchedulePage.jsx';
+import PracticeBillingPage from './pages/PracticeBillingPage.jsx';
+import PracticeTeamPage from './pages/PracticeTeamPage.jsx';
+import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -392,6 +399,15 @@ function AppShell() {
           <Route path="/activity-logs" element={<ActivityLogsPage />} />
           <Route path="/invite/accept" element={<AcceptInvitationPage />} />
           <Route path="/access-denied" element={<AccessDeniedPage />} />
+          {/* Train the Facilitator */}
+          <Route path="/iatlas/train-the-facilitator" element={<TrainTheFacilitatorPage />} />
+          {/* Practice Management Interface */}
+          <Route path="/iatlas/practice/dashboard" element={<PracticeDashboardPage />} />
+          <Route path="/iatlas/practice/clients" element={<PracticeClientsPage />} />
+          <Route path="/iatlas/practice/schedule" element={<PracticeSchedulePage />} />
+          <Route path="/iatlas/practice/billing" element={<PracticeBillingPage />} />
+          <Route path="/iatlas/practice/team" element={<PracticeTeamPage />} />
+          <Route path="/iatlas/practice/analytics" element={<PracticeAnalyticsPage />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 
