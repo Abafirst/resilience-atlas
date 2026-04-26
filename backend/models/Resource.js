@@ -45,7 +45,7 @@ const ResourceSchema = new mongoose.Schema(
     // ── Categorization ───────────────────────────────────────────────────────
     category: {
       type:  String,
-      enum:  ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general'],
+      enum:  ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general', 'clinician', 'caregiver'],
       index: true,
       default: 'general',
     },

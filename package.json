@@ -12,7 +12,8 @@
     "dev-open": "fuser -k 3000/tcp 2>/dev/null; nodemon backend/server.js & sleep 3; powershell.exe start http://localhost:3000",
     "social:build": "node scripts/render-social.js",
     "generate-brand": "node scripts/generate-brand-assets.js",
-    "seed:resources": "node scripts/seed-resources.js"
+    "seed:resources": "node scripts/seed-resources.js",
+    "seed:clinician-caregiver": "node backend/scripts/seedClinicianCaregiverResources.js"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.16.0",
