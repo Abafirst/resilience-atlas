@@ -79,6 +79,7 @@ import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx';
 import SessionPlansPage from './pages/SessionPlansPage.jsx';
 import ChildProfilesPage from './pages/ChildProfilesPage.jsx';
+import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -380,6 +381,8 @@ function AppShell() {
           <Route path="/iatlas/profiles" element={<ChildProfilesPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
+          {/* Analytics Dashboard */}
+          <Route path="/analytics" element={<AnalyticsDashboardPage />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 
