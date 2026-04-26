@@ -884,7 +884,7 @@ export default function FamilyDashboard() {
                       onClick={() => handleChildClick(profile.profileId)}
                       role="button"
                       tabIndex={0}
-                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleChildClick(profile.profileId); }}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleChildClick(profile.profileId); } }}
                       aria-label={`View ${profile.name}'s profile`}
                     >
                       <div className="fd-child-card-header">
