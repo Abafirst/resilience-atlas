@@ -2979,19 +2979,17 @@ export default function ResultsPage() {
       // Removing the animations preserves the final static rotation (needleDeg).
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
-      // Remove interactive elements from the download clone so the exported
-      // image looks clean (no underlines, ⓘ icons, or transparent hit targets).
-      // Transparent hit-target rects have no visual effect but their presence
-      // can confuse renderers; dimension label text nodes with style underline
-      // would appear in the download copy which looks wrong for a static image.
-      svgClone.querySelectorAll('rect[fill="transparent"]').forEach(el => el.remove());
+      // Remove interactive UI elements so the downloaded image is clean.
+      // CSS classes (dimension-info-icon, dimension-label-text) are set in
+      // RadarChart.jsx on the ⓘ icon group and dimension name text elements.
+      svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
+      svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
+        el.style.textDecoration = 'none';
+      });
+      // Also clear any inline underline styles on other text nodes (belt and
+      // suspenders — covers any future changes to the SVG structure).
       svgClone.querySelectorAll('text').forEach(el => {
-        if (el.style) {
-          el.style.textDecoration = 'none';
-          el.style.cursor = 'default';
-        }
-        // Remove ⓘ info-icon text nodes (they contain the ⓘ character)
-        if (el.textContent && el.textContent.trim() === 'ⓘ') el.remove();
+        if (el.style && el.style.textDecoration) el.style.textDecoration = 'none';
       });
 
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
