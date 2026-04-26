@@ -300,7 +300,7 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
               label="Export Analytics (PDF)"
               variant="primary"
             />
-            <button className="rt-btn rt-btn-primary" onClick={handlePrintReport} aria-label="Open print report">
+            <button className="rt-btn rt-btn-primary" onClick={handlePrintReport} aria-label="Quick print report">
               <span aria-hidden="true">🖨</span> Quick Print
             </button>
             <button className="rt-btn" onClick={handlePreviewReport} aria-label="Preview report content">

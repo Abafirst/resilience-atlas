@@ -174,7 +174,7 @@ function buildActivityHTML(data, opts) {
     : '<div class="writing-line"></div><div class="writing-line"></div>';
 
   const goalHTML = learningGoal
-    ? `<div class="section"><h2>What You\'ll Learn</h2><p>${esc(learningGoal)}</p></div>`
+    ? `<div class="section"><h2>What You'll Learn</h2><p>${esc(learningGoal)}</p></div>`
     : description
       ? `<div class="section"><h2>About This Activity</h2><p>${esc(description)}</p></div>`
       : '';
@@ -185,7 +185,7 @@ function buildActivityHTML(data, opts) {
 
   const trackerHTML = showTracker ? `
     <div class="tracker">
-      <p class="tracker-title">\uD83D\uDCC5 Practice Tracker \u2014 Complete 3 times to master this skill!</p>
+      <p class="tracker-title">\uD83D\uDCC5 Practice Tracker \u2014 Complete all 5 days to master this skill!</p>
       <div class="tracker-row">
         ${[1,2,3,4,5].map(d => `<span class="check-item"><span class="check-box"></span> Day ${d}</span>`).join('')}
       </div>
@@ -405,8 +405,8 @@ function buildFamilyReportHTML(data, opts) {
               ${profile.ageGroup ? `<div style="font-size:9pt;color:#64748b;">${esc(profile.ageGroup)}</div>` : ''}
             </div>
             <div style="margin-left:auto;text-align:right;">
-              <div style="font-size:10pt;font-weight:700;color:#4f46e5;">Level ${esc(level && level.level || 1)}: ${esc(level && level.title || 'Beginner')}</div>
-              <div style="font-size:9pt;color:#64748b;">\u2B50 ${esc(stars)} stars</div>
+              <div style="font-size:10pt;font-weight:700;color:#4f46e5;">Level ${esc(level?.level || 1)}: ${esc(level?.title || 'Beginner')}</div>
+              <div style="font-size:9pt;color:#64748b;">\u2B50 ${esc(stars)} ${stars === 1 ? 'star' : 'stars'}</div>
             </div>
           </div>
           <div class="progress-row">
@@ -982,7 +982,6 @@ export default function PrintPreviewModal({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: MODAL_STYLES }} />
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         className="ppm-overlay"
         onKeyDown={handleKeyDown}
@@ -990,6 +989,7 @@ export default function PrintPreviewModal({
         role="dialog"
         aria-modal="true"
         aria-label={`Print preview: ${resourceLabel}`}
+        tabIndex={0}
       >
         <div className="ppm-dialog">
 
