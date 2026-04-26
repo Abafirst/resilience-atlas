@@ -7,7 +7,7 @@ export const IATLAS_SPECIALTIES = {
   teachers: {
     id: 'teachers',
     name: 'Teachers & Educators',
-    icon: '👩‍🏫',
+    icon: '/icons/planning.svg',
     description:
       'Classroom-ready resilience strategies, behavioral management tools, and student assessment frameworks designed for K-12 educators.',
     features: [
@@ -24,7 +24,7 @@ export const IATLAS_SPECIALTIES = {
   slp: {
     id: 'slp',
     name: 'Speech-Language Pathologists',
-    icon: '🗣️',
+    icon: '/icons/relational-connective.svg',
     description:
       'Communication-based resilience interventions, AAC integration strategies, and social communication protocols for SLPs.',
     features: [
@@ -41,7 +41,7 @@ export const IATLAS_SPECIALTIES = {
   ot: {
     id: 'ot',
     name: 'Occupational Therapists',
-    icon: '🧩',
+    icon: '/icons/somatic-regulative.svg',
     description:
       'Sensory regulation protocols, motor planning strategies, and environmental modifications for OTs building resilience through daily activities.',
     features: [
@@ -58,7 +58,7 @@ export const IATLAS_SPECIALTIES = {
   dailyLiving: {
     id: 'daily-living',
     name: 'Daily Living Skills',
-    icon: '🏠',
+    icon: '/icons/goal.svg',
     description:
       'Life skills curriculum, executive function training, and independence-building protocols for teaching resilience through everyday activities.',
     features: [
@@ -75,7 +75,7 @@ export const IATLAS_SPECIALTIES = {
   socialSkills: {
     id: 'social-skills',
     name: 'Social Skills',
-    icon: '🤝',
+    icon: '/icons/connection.svg',
     description:
       'Social competence curriculum, peer interaction protocols, and friendship-building activities for developing resilience through relationships.',
     features: [

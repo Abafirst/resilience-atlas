@@ -110,7 +110,9 @@ export default function SpecialtyComingSoonModal({ specialty, onClose }) {
           &#x2715;
         </button>
 
-        <div className="specialty-modal-icon" aria-hidden="true">{icon}</div>
+        <div className="specialty-modal-icon" aria-hidden="true">
+          <img src={icon} alt="" width={48} height={48} />
+        </div>
 
         <span className="specialty-modal-badge">Coming Soon</span>
 

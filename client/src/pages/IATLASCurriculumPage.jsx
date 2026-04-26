@@ -1444,8 +1444,14 @@ const STYLES = `
   }
 
   .iatlas-specialty-nav-icon {
-    font-size: 1.2rem;
-    line-height: 1;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  .iatlas-specialty-nav-btn:hover .iatlas-specialty-nav-icon {
+    opacity: 1;
   }
 
   .iatlas-specialty-nav-label {
@@ -1518,8 +1524,9 @@ const STYLES = `
   }
 
   .iatlas-specialty-icon {
-    font-size: 2.5rem;
-    line-height: 1;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
   }
 
   .iatlas-specialty-title {
@@ -1635,9 +1642,13 @@ const STYLES = `
   [data-theme="dark"] .specialty-modal-close:hover { background: #334155; color: #f1f5f9; }
 
   .specialty-modal-icon {
-    font-size: 2.75rem;
     text-align: center;
     margin-bottom: .75rem;
+  }
+
+  .specialty-modal-icon img {
+    width: 48px;
+    height: 48px;
   }
 
   .specialty-modal-badge {
@@ -2029,7 +2040,14 @@ export default function IATLASCurriculumPage() {
                     setTimeout(() => setActiveSpecialty(specialty), 400);
                   }}
                 >
-                  <span className="iatlas-specialty-nav-icon">{specialty.icon}</span>
+                  <img
+                    src={specialty.icon}
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="iatlas-specialty-nav-icon"
+                    aria-hidden="true"
+                  />
                   <span className="iatlas-specialty-nav-label">{specialty.name}</span>
                 </a>
               ))}
