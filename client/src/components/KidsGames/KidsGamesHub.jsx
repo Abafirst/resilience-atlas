@@ -11,8 +11,10 @@ import NavigatorChallenges from './NavigatorChallenges';
 import ArenaBattles from './ArenaBattles';
 import QuestLog from './QuestLog';
 import BadgeUnlockModal from './BadgeUnlockModal';
+import IATLASComingSoonModal from '../IATLAS/ComingSoonModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
+import { hasIATLASAccess, getIATLASTier } from '../../utils/iatlasGating';
 import '../../styles/kidsGames.css';
 
 const GAME_COMPONENTS = {
@@ -62,6 +64,7 @@ export default function KidsGamesHub() {
   const [modalBadge, setModalBadge]     = useState(null);   // badge currently shown in modal
   const [modalQueue, setModalQueue]     = useState([]);      // queue of badges to display sequentially
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
   const gameContainerRef                = useRef(null);
 
   // Ref mirrors earnedBadges and is updated immediately (before re-render) so
@@ -139,6 +142,11 @@ export default function KidsGamesHub() {
   }, [completedGames, handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
+    // Check if user has IATLAS access before launching a game.
+    if (!hasIATLASAccess()) {
+      setShowUnlockModal(true);
+      return;
+    }
     setActiveGame(gameId);
   }, []);
 
@@ -190,6 +198,13 @@ export default function KidsGamesHub() {
 
   return (
     <div className="kg-hub-wrapper">
+      {showUnlockModal && (
+        <IATLASComingSoonModal
+          title="Unlock IATLAS Kids Games"
+          message="These interactive resilience games are available with an IATLAS plan. Choose Individual ($19.99), Family ($39.99 — up to 5 kids), or Professional ($99.99 — clinicians, educators & caregivers) to get full access."
+          onClose={() => setShowUnlockModal(false)}
+        />
+      )}
       {modalBadge && (
         <BadgeUnlockModal
           badge={modalBadge}
