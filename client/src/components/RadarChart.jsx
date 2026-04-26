@@ -458,7 +458,13 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
         if (cosVal > 0.3)       anchor = 'start';
         else if (cosVal < -0.3) anchor = 'end';
 
-        // Hit-target: a transparent rect sized to cover the label area
+        // Hit-target: a transparent rect sized to cover the full label area.
+        // 64px wide × 30px tall provides a comfortable touch/click area that
+        // covers the dimension name, score, and ⓘ icon without overlapping
+        // adjacent labels. The ±2px adjustments extend the hit rect slightly
+        // beyond the text anchor for consistent edge coverage: for 'start'
+        // anchor the rect begins 2px before pt.x; for 'end' it ends 2px
+        // after pt.x. Middle-anchored labels are centered exactly on pt.x.
         const hitW = 64;
         const hitH = 30;
         const hitX = anchor === 'start'  ? pt.x - 2
@@ -466,13 +472,13 @@ function RadarChart({ scores, size = 380, onDimensionClick }) {
                    : pt.x - hitW / 2;
         const hitY = pt.y - hitH / 2;
 
-        // Background pill behind clickable labels — gives a subtle button feel
+        // Background pill behind clickable labels — gives a subtle button feel.
+        // pillX is always hitX - pillPad to extend the background an equal
+        // amount on the outer side for all anchor positions.
         const pillPad = 4;
         const pillW = hitW + pillPad * 2;
         const pillH = hitH + pillPad;
-        const pillX = anchor === 'start'  ? hitX - pillPad
-                    : anchor === 'end'    ? hitX - pillPad
-                    : hitX - pillPad;
+        const pillX = hitX - pillPad;
 
         const labelGroup = (
           <g key={`label-${i}`} opacity={isDom ? 1 : 0.82}>

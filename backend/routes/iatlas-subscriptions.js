@@ -74,10 +74,18 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
 
         // Get user info from database
         const User = require('../models/User');
-        const user = await User.findOne({ $or: [
-            { _id: mongoose.Types.ObjectId.isValid(userId) ? userId : null },
-            { email: req.user.email || '' },
-        ] }).lean();
+
+        // Build a flexible query: Auth0 sub-based userIds are not ObjectIds,
+        // so only include the _id condition when the value is a valid ObjectId.
+        // If neither email nor a valid ObjectId is available, the query will
+        // return null and the 404 response below will handle it gracefully.
+        const userQuery = req.user.email
+            ? { email: req.user.email }
+            : mongoose.Types.ObjectId.isValid(userId)
+                ? { _id: userId }
+                : null;
+
+        const user = await User.findOne(userQuery).lean();
 
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
@@ -98,7 +106,13 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
             });
         }
 
-        // Create Checkout Session
+        // Create Checkout Session.
+        // subscription_data.metadata propagates the IATLAS-specific identifiers
+        // (userId, tier, productType) to the subscription object itself. Without
+        // this, webhook handlers receive subscription events without any metadata
+        // and cannot distinguish IATLAS subscriptions from other subscription
+        // types — causing all IATLAS subscription lifecycle events to be silently
+        // ignored. The session-level metadata below is a belt-and-suspenders copy.
         const APP_URL = process.env.APP_URL || 'http://localhost:3000';
         const session = await stripe.checkout.sessions.create({
             customer: customerId,
@@ -116,6 +130,13 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
                 userId: userId.toString(),
                 tier,
                 productType: 'iatlas',
+            },
+            subscription_data: {
+                metadata: {
+                    userId: userId.toString(),
+                    tier,
+                    productType: 'iatlas',
+                },
             },
         });
 
