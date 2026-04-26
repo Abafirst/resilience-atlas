@@ -184,10 +184,10 @@ router.post('/', profilesLimiter, authenticateJWT, async (req, res) => {
     };
 
     if (parsedDOB)                     profileData.dateOfBirth  = parsedDOB;
-    const clinicalData    = sanitiseClinical(clinical);
-    const preferencesData = sanitisePreferences(preferences);
-    if (clinicalData)                  profileData.clinical     = clinicalData;
-    if (preferencesData)               profileData.preferences  = preferencesData;
+    const sanitisedClinical    = sanitiseClinical(clinical);
+    const sanitisedPreferences = sanitisePreferences(preferences);
+    if (sanitisedClinical)             profileData.clinical     = sanitisedClinical;
+    if (sanitisedPreferences)          profileData.preferences  = sanitisedPreferences;
 
     const profile = await ChildProfile.create(profileData);
 

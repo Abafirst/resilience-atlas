@@ -178,8 +178,12 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
     : null;
 
   const metaParts = [];
-  if (dob) metaParts.push(`Born ${dob}${age != null ? ` (${age} yrs)` : ''}`);
-  else if (profile.ageGroup) metaParts.push(AGE_LABELS[profile.ageGroup] || profile.ageGroup);
+  if (dob) {
+    const dobPart = age != null ? `Born ${dob} (${age} yrs)` : `Born ${dob}`;
+    metaParts.push(dobPart);
+  } else if (profile.ageGroup) {
+    metaParts.push(AGE_LABELS[profile.ageGroup] || profile.ageGroup);
+  }
   if (profile.gender) metaParts.push(GENDER_LABELS[profile.gender] || profile.gender);
   if (isActive) metaParts.push('● Active profile');
 

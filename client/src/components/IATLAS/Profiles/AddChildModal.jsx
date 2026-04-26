@@ -300,8 +300,7 @@ export default function AddChildModal({ onClose, onCreated, currentCount }) {
     setStep(3);
   }
 
-  async function handleStep3Submit(e) {
-    e.preventDefault();
+  async function submitProfile() {
     setError('');
     setSubmitting(true);
     try {
@@ -356,8 +355,13 @@ export default function AddChildModal({ onClose, onCreated, currentCount }) {
     }
   }
 
+  function handleStep3Submit(e) {
+    e.preventDefault();
+    submitProfile();
+  }
+
   function handleStep3Skip() {
-    handleStep3Submit({ preventDefault: () => {} });
+    submitProfile();
   }
 
   // ── Step progress indicator ───────────────────────────────────────────────
@@ -681,9 +685,9 @@ export default function AddChildModal({ onClose, onCreated, currentCount }) {
             /* ── SUCCESS ── */
             <div className="acm-success">
               <div className="acm-success-avatar">{createdProfile?.avatar || '🎉'}</div>
-              <h3 className="acm-success-title">{createdProfile?.name}'s profile is ready!</h3>
+              <h3 className="acm-success-title">{createdProfile?.name || 'Your child'}'s profile is ready!</h3>
               <p className="acm-success-sub">
-                You can now track {createdProfile?.name}'s progress, assign activities, and build personalised learning plans.
+                You can now track {createdProfile?.name || 'their'} progress, assign activities, and build personalised learning plans.
               </p>
               <div className="acm-success-actions">
                 <a href="/iatlas/kids" className="acm-success-btn" style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}>

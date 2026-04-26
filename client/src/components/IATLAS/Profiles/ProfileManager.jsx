@@ -111,17 +111,19 @@ export default function ProfileManager() {
     return <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>Loading profiles…</div>;
   }
 
+  function getFreshProfile(profileId) {
+    return profiles.find(p => p.profileId === profileId) || viewingProfile;
+  }
+
   // ── Detail view ──
   if (viewingProfile) {
-    // Always show the freshest version of the profile from context.
-    const freshProfile = profiles.find(p => p.profileId === viewingProfile.profileId) || viewingProfile;
     return (
       <ChildProfileDetail
-        profile={freshProfile}
+        profile={getFreshProfile(viewingProfile.profileId)}
         onBack={() => setViewingProfile(null)}
         onEdit={() => {
           refreshProfiles();
-          setViewingProfile(profiles.find(p => p.profileId === viewingProfile.profileId) || viewingProfile);
+          setViewingProfile(getFreshProfile(viewingProfile.profileId));
         }}
       />
     );
