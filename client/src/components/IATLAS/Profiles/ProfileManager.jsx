@@ -2,14 +2,16 @@
  * ProfileManager.jsx
  * Grid of child profiles with quick-stats.
  * Lets parents view, switch to, edit, or add profiles.
+ * Clicking a profile card navigates to the individual profile detail view.
  *
  * Props: (none — reads from ProfileContext)
  */
 
 import React, { useState } from 'react';
 import { useProfiles } from '../../../contexts/ProfileContext.jsx';
-import AddChildModal  from './AddChildModal.jsx';
-import EditProfileModal from './EditProfileModal.jsx';
+import AddChildModal     from './AddChildModal.jsx';
+import EditProfileModal  from './EditProfileModal.jsx';
+import ChildProfileDetail from './ChildProfileDetail.jsx';
 import {
   getIATLASTier,
   getMaxProfiles,
@@ -35,6 +37,7 @@ const STYLES = `
   background: #fff; border: 1.5px solid #e2e8f0; border-radius: 16px;
   padding: 1.25rem; display: flex; flex-direction: column; align-items: center;
   gap: .6rem; transition: box-shadow .15s, border-color .15s; position: relative;
+  cursor: pointer;
 }
 .pm-card:hover { box-shadow: 0 4px 20px rgba(99,102,241,.12); border-color: #c7d2fe; }
 .pm-card.active { border-color: #6366f1; box-shadow: 0 4px 20px rgba(99,102,241,.2); }
@@ -62,14 +65,22 @@ const STYLES = `
   color: #64748b; font-size: .83rem; cursor: pointer; transition: all .15s;
 }
 .pm-edit-btn:hover { background: #f1f5f9; color: #374151; }
+.pm-view-btn {
+  padding: .5rem .7rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;
+  color: #64748b; font-size: .83rem; cursor: pointer; transition: all .15s;
+}
+.pm-view-btn:hover { background: #f1f5f9; color: #374151; }
 .dark-mode .pm-switch-btn { background: #1e1b4b; color: #a5b4fc; }
 .dark-mode .pm-card.active .pm-switch-btn { background: #6366f1; color: #fff; }
 .dark-mode .pm-edit-btn { background: #0f172a; border-color: #334155; color: #94a3b8; }
 .dark-mode .pm-edit-btn:hover { background: #1e293b; color: #cbd5e1; }
+.dark-mode .pm-view-btn { background: #0f172a; border-color: #334155; color: #94a3b8; }
+.dark-mode .pm-view-btn:hover { background: #1e293b; color: #cbd5e1; }
 .pm-empty { text-align: center; padding: 2.5rem 1rem; color: #64748b; }
 .pm-empty-icon { font-size: 2.5rem; margin-bottom: .75rem; }
 .pm-empty-text { font-size: .92rem; }
 .pm-limit-note { font-size: .8rem; color: #94a3b8; text-align: center; margin-top: .5rem; }
+.pm-card-dob { font-size: .75rem; color: #94a3b8; }
 `;
 
 const AGE_LABELS = {
@@ -79,18 +90,43 @@ const AGE_LABELS = {
   '15-18': 'Ages 15–18',
 };
 
+function getAge(dateOfBirth) {
+  if (!dateOfBirth) return null;
+  const age = Math.floor((Date.now() - new Date(dateOfBirth)) / (365.25 * 24 * 3600 * 1000));
+  return isNaN(age) ? null : age;
+}
+
 export default function ProfileManager() {
-  const { profiles, activeProfileId, switchProfile, loading } = useProfiles();
+  const { profiles, activeProfileId, switchProfile, loading, refreshProfiles } = useProfiles();
   const tier        = getIATLASTier();
   const maxProfiles = getMaxProfiles(tier);
 
-  const [showAddModal,  setShowAddModal]  = useState(false);
-  const [editingProfile, setEditingProfile] = useState(null);
+  const [showAddModal,    setShowAddModal]    = useState(false);
+  const [editingProfile,  setEditingProfile]  = useState(null);
+  const [viewingProfile,  setViewingProfile]  = useState(null);
 
   const atLimit = profiles.length >= maxProfiles;
 
   if (loading) {
     return <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>Loading profiles…</div>;
+  }
+
+  function getFreshProfile(profileId) {
+    return profiles.find(p => p.profileId === profileId) || viewingProfile;
+  }
+
+  // ── Detail view ──
+  if (viewingProfile) {
+    return (
+      <ChildProfileDetail
+        profile={getFreshProfile(viewingProfile.profileId)}
+        onBack={() => setViewingProfile(null)}
+        onEdit={() => {
+          refreshProfiles();
+          setViewingProfile(getFreshProfile(viewingProfile.profileId));
+        }}
+      />
+    );
   }
 
   return (
@@ -118,23 +154,45 @@ export default function ProfileManager() {
           <div className="pm-grid">
             {profiles.map(p => {
               const isActive = p.profileId === activeProfileId;
+              const age = getAge(p.dateOfBirth);
               return (
-                <div key={p.profileId} className={`pm-card${isActive ? ' active' : ''}`}>
+                <div
+                  key={p.profileId}
+                  className={`pm-card${isActive ? ' active' : ''}`}
+                  onClick={() => setViewingProfile(p)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View ${p.name}'s profile`}
+                  onKeyDown={e => e.key === 'Enter' && setViewingProfile(p)}
+                >
                   {isActive && <span className="pm-card-badge">Active</span>}
                   <div className="pm-card-avatar">{p.avatar}</div>
                   <div className="pm-card-name">{p.name}</div>
-                  {p.ageGroup && <div className="pm-card-age">{AGE_LABELS[p.ageGroup] || p.ageGroup}</div>}
-                  <div className="pm-card-actions">
+                  {age != null
+                    ? <div className="pm-card-dob">{age} yrs old</div>
+                    : p.ageGroup && <div className="pm-card-age">{AGE_LABELS[p.ageGroup] || p.ageGroup}</div>
+                  }
+                  <div className="pm-card-actions" onClick={e => e.stopPropagation()}>
                     <button
                       className="pm-switch-btn"
                       onClick={() => switchProfile(p.profileId)}
+                      aria-label={isActive ? `${p.name} is the active profile` : `Switch to ${p.name}`}
                     >
                       {isActive ? '✓ Active' : 'Switch'}
+                    </button>
+                    <button
+                      className="pm-view-btn"
+                      onClick={() => setViewingProfile(p)}
+                      aria-label={`View ${p.name}'s full profile`}
+                      title="View profile"
+                    >
+                      👁
                     </button>
                     <button
                       className="pm-edit-btn"
                       onClick={() => setEditingProfile(p)}
                       aria-label={`Edit ${p.name}'s profile`}
+                      title="Edit profile"
                     >
                       ✏️
                     </button>

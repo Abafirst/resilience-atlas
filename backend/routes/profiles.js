@@ -80,8 +80,40 @@ function resolveUserId(req) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // POST /api/iatlas/profiles — Create child profile
-// Body: { name, ageGroup?, avatar? }
+// Body: { name, ageGroup?, avatar?, dateOfBirth?, gender?, clinical?, preferences? }
 // ─────────────────────────────────────────────────────────────────────────────
+
+const VALID_AGE_GROUPS   = ['5-7', '8-10', '11-14', '15-18'];
+const VALID_GENDERS      = ['male', 'female', 'non-binary', 'prefer-not-to-say', ''];
+const VALID_SUPPORT_LVLS = ['low', 'moderate', 'high', 'intensive', ''];
+
+/**
+ * Sanitise the optional clinical sub-object from the request body.
+ * Returns undefined when nothing useful was provided.
+ */
+function sanitiseClinical(raw) {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const out = {};
+  if (Array.isArray(raw.diagnoses))  out.diagnoses  = raw.diagnoses.map(String).slice(0, 20);
+  if (Array.isArray(raw.goals))      out.goals      = raw.goals.map(String).slice(0, 20);
+  if (typeof raw.strengths   === 'string') out.strengths   = raw.strengths.slice(0, 500);
+  if (typeof raw.challenges  === 'string') out.challenges  = raw.challenges.slice(0, 500);
+  if (VALID_SUPPORT_LVLS.includes(raw.supportLevel)) out.supportLevel = raw.supportLevel;
+  return Object.keys(out).length ? out : undefined;
+}
+
+/**
+ * Sanitise the optional preferences sub-object from the request body.
+ */
+function sanitisePreferences(raw) {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const out = {};
+  if (Array.isArray(raw.activities)) out.activities = raw.activities.map(String).slice(0, 20);
+  if (typeof raw.sensoryPreferences  === 'string') out.sensoryPreferences  = raw.sensoryPreferences.slice(0, 500);
+  if (typeof raw.communicationStyle  === 'string') out.communicationStyle  = raw.communicationStyle.slice(0, 500);
+  if (typeof raw.learningPreferences === 'string') out.learningPreferences = raw.learningPreferences.slice(0, 500);
+  return Object.keys(out).length ? out : undefined;
+}
 
 router.post('/', profilesLimiter, authenticateJWT, async (req, res) => {
   try {
@@ -90,15 +122,26 @@ router.post('/', profilesLimiter, authenticateJWT, async (req, res) => {
       return res.status(401).json({ error: 'User not authenticated.' });
     }
 
-    const { name, ageGroup, avatar } = req.body;
+    const { name, ageGroup, avatar, dateOfBirth, gender, clinical, preferences } = req.body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ error: 'Profile name is required.' });
     }
 
-    const VALID_AGE_GROUPS = ['5-7', '8-10', '11-14', '15-18'];
     if (ageGroup && !VALID_AGE_GROUPS.includes(ageGroup)) {
       return res.status(400).json({ error: 'Invalid age group.' });
+    }
+
+    if (gender !== undefined && !VALID_GENDERS.includes(gender)) {
+      return res.status(400).json({ error: 'Invalid gender value.' });
+    }
+
+    let parsedDOB;
+    if (dateOfBirth) {
+      parsedDOB = new Date(dateOfBirth);
+      if (isNaN(parsedDOB.getTime())) {
+        return res.status(400).json({ error: 'Invalid date of birth.' });
+      }
     }
 
     // Tier enforcement
@@ -129,15 +172,24 @@ router.post('/', profilesLimiter, authenticateJWT, async (req, res) => {
       });
     }
 
-    const profile = await ChildProfile.create({
-      profileId: crypto.randomUUID(),
-      userId:    userId.toString(),
-      name:      name.trim(),
-      ageGroup:  ageGroup || null,
-      avatar:    avatar   || '🧒',
-      progress:  {},
-      archived:  false,
-    });
+    const profileData = {
+      profileId:   crypto.randomUUID(),
+      userId:      userId.toString(),
+      name:        name.trim(),
+      ageGroup:    ageGroup  || null,
+      avatar:      avatar    || '🧒',
+      gender:      gender    || '',
+      progress:    {},
+      archived:    false,
+    };
+
+    if (parsedDOB)                     profileData.dateOfBirth  = parsedDOB;
+    const sanitisedClinical    = sanitiseClinical(clinical);
+    const sanitisedPreferences = sanitisePreferences(preferences);
+    if (sanitisedClinical)             profileData.clinical     = sanitisedClinical;
+    if (sanitisedPreferences)          profileData.preferences  = sanitisedPreferences;
+
+    const profile = await ChildProfile.create(profileData);
 
     logger.info(`[profiles] Created profile ${profile.profileId} for user ${userId}`);
     return res.status(201).json(sanitiseProfile(profile));
@@ -171,8 +223,8 @@ router.get('/', profilesLimiter, authenticateJWT, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PUT /api/iatlas/profiles/:profileId — Update name / avatar / ageGroup
-// Body: { name?, avatar?, ageGroup? }
+// PUT /api/iatlas/profiles/:profileId — Update name / avatar / ageGroup / clinical / preferences
+// Body: { name?, avatar?, ageGroup?, dateOfBirth?, gender?, clinical?, preferences? }
 // ─────────────────────────────────────────────────────────────────────────────
 
 router.put('/:profileId', profilesLimiter, authenticateJWT, async (req, res) => {
@@ -194,8 +246,7 @@ router.put('/:profileId', profilesLimiter, authenticateJWT, async (req, res) => 
       return res.status(404).json({ error: 'Profile not found.' });
     }
 
-    const { name, avatar, ageGroup } = req.body;
-    const VALID_AGE_GROUPS = ['5-7', '8-10', '11-14', '15-18'];
+    const { name, avatar, ageGroup, dateOfBirth, gender, clinical, preferences } = req.body;
 
     if (name !== undefined) {
       if (typeof name !== 'string' || !name.trim()) {
@@ -203,12 +254,39 @@ router.put('/:profileId', profilesLimiter, authenticateJWT, async (req, res) => 
       }
       profile.name = name.trim();
     }
-    if (avatar !== undefined)   profile.avatar   = avatar;
+    if (avatar   !== undefined) profile.avatar   = avatar;
     if (ageGroup !== undefined) {
-      if (!VALID_AGE_GROUPS.includes(ageGroup)) {
+      if (ageGroup && !VALID_AGE_GROUPS.includes(ageGroup)) {
         return res.status(400).json({ error: 'Invalid age group.' });
       }
-      profile.ageGroup = ageGroup;
+      profile.ageGroup = ageGroup || null;
+    }
+    if (gender !== undefined) {
+      if (!VALID_GENDERS.includes(gender)) {
+        return res.status(400).json({ error: 'Invalid gender value.' });
+      }
+      profile.gender = gender;
+    }
+    if (dateOfBirth !== undefined) {
+      if (dateOfBirth === null || dateOfBirth === '') {
+        profile.dateOfBirth = undefined;
+      } else {
+        const parsed = new Date(dateOfBirth);
+        if (isNaN(parsed.getTime())) {
+          return res.status(400).json({ error: 'Invalid date of birth.' });
+        }
+        profile.dateOfBirth = parsed;
+      }
+    }
+    if (clinical !== undefined) {
+      const sanitised = sanitiseClinical(clinical);
+      profile.clinical = sanitised || {};
+      profile.markModified('clinical');
+    }
+    if (preferences !== undefined) {
+      const sanitised = sanitisePreferences(preferences);
+      profile.preferences = sanitised || {};
+      profile.markModified('preferences');
     }
 
     await profile.save();
