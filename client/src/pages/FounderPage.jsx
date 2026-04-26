@@ -505,7 +505,7 @@ export default function FounderPage() {
       <section className="cta-band" aria-label="Explore the Resilience Atlas">
         <h2>Navigate the Framework Janeen Built</h2>
         <p>Explore your resilience map, grounded in 13 years of doctoral research and lived experience.</p>
-        <a className="btn-white" href="/quiz">Explore Your Map</a>
+        <a className="btn-white" href="/quiz" title="For adults 18+">Explore Your Map <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
         <a className="btn-outline" href="/research">Navigate the Research</a>
         <a className="btn-outline" href="/about">About the Atlas</a>
       </section>

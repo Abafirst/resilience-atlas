@@ -3289,8 +3289,8 @@ export default function ResultsPage() {
                       : 'Complete the free assessment to see your personalized resilience profile, or sign in to access your previous results.'
                   }
                 </p>
-                <a href="/quiz" style={s.primaryBtn}>
-                  {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'}
+                <a href="/quiz" style={{...s.primaryBtn}} title="For adults 18+">
+                  {isReturnFromPayment ? 'Re-take Assessment' : 'Start Free Assessment'} <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                 </a>
                 {!isReturnFromPayment && !isAuthenticated && (
                   <button

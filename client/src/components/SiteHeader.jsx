@@ -88,7 +88,7 @@ export default function SiteHeader({
   const items = navItems !== undefined ? navItems : DEFAULT_NAV_ITEMS;
 
   const defaultCta = (
-    <a className="btn btn-primary" href="/quiz">Take the Assessment</a>
+    <a className="btn btn-primary" href="/quiz" title="For adults 18+">Take the Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
   );
 
   const resolvedCta = ctaButton === undefined ? defaultCta : ctaButton;

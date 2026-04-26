@@ -470,7 +470,7 @@ export default function KidsPage() {
           strengths, and having people who get it. Activities and stories for ages 5–18+.
         </p>
         <div className="kids-hero-buttons">
-          <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
+          <a href="/quiz" className="btn-cta" title="For adults 18+">Discover Your Dimensions <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
           <button
             className="btn-cta-secondary"
             onClick={() => handleCategoryChange('progress')}

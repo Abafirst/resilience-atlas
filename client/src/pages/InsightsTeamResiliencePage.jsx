@@ -65,7 +65,7 @@ export default function InsightsTeamResiliencePage() {
           <h3>Ready to Map Your Team's Resilience?</h3>
           <p>Learn more about Resilience Atlas for teams, or start with an individual assessment.</p>
           <a href="/teams" className="btn btn-primary" style={{marginRight:'.75rem'}}>Team Access</a>
-          <a href="/quiz" className="btn btn-secondary">Individual Assessment</a>
+          <a href="/quiz" className="btn btn-secondary" title="For adults 18+">Individual Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
         </div>
       </article>
     </>

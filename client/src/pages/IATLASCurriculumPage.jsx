@@ -2000,9 +2000,9 @@ export default function IATLASCurriculumPage() {
                   grounded in Applied Behavior Analysis and Acceptance &amp; Commitment Therapy.
                 </p>
                 <div className="iatlas-hero-actions">
-                  <a href="/quiz" className="iatlas-btn-primary">
+                  <a href="/quiz" className="iatlas-btn-primary" title="For adults 18+">
                     <img src="/icons/compass.svg" alt="" width={16} height={16} aria-hidden="true" />
-                    Take the Free Assessment
+                    Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                   </a>
                   <a href="#iatlas-overview" className="iatlas-btn-secondary">
                     Learn more about IATLAS
@@ -2242,8 +2242,8 @@ export default function IATLASCurriculumPage() {
                 <a href="/pricing/iatlas" className="iatlas-btn-white">
                   Compare All IATLAS Plans
                 </a>
-                <a href="/quiz" className="iatlas-btn-ghost">
-                  Take the Free Assessment →
+                <a href="/quiz" className="iatlas-btn-ghost" title="For adults 18+">
+                  Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> →
                 </a>
               </div>
             </div>
@@ -2303,8 +2303,8 @@ export default function IATLASCurriculumPage() {
                 profile — and see exactly which IATLAS skills are most relevant for you.
               </p>
               <div className="iatlas-cta-actions">
-                <a href="/quiz" className="iatlas-btn-primary">
-                  Take the Free Assessment
+                <a href="/quiz" className="iatlas-btn-primary" title="For adults 18+">
+                  Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                 </a>
                 <a href="/research" className="iatlas-btn-secondary">
                   Explore the Research

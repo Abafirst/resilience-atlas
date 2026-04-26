@@ -217,8 +217,8 @@ export default function ResultsHistoryPage() {
               Sign In to View Your Journey
             </button>
             <br />
-            <a href="/quiz" className="results-history-quiz-link">
-              New here? Take the free assessment →
+            <a href="/quiz" className="results-history-quiz-link" title="For adults 18+">
+              New here? Take the free assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> →
             </a>
           </div>
         </main>

@@ -228,8 +228,8 @@ export default function AssessmentHub({ user, userEmail, onUpgrade, onLogout }) 
               <li><span style={styles.checkmark}>✓</span>Radar chart overview</li>
               <li><span style={styles.checkmark}>✓</span>Brief narrative snapshot</li>
             </ul>
-            <a href="/quiz" style={styles.btnFree}>
-              Start Free Assessment
+            <a href="/quiz" style={{...styles.btnFree}} title="For adults 18+">
+              Start Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
             </a>
           </div>
 

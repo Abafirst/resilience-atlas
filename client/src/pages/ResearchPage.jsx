@@ -281,8 +281,8 @@ export default function ResearchPage() {
                   <span className="dim-stat-label">Resilience exemplars studied</span>
                 </div>
               </div>
-              <a href="/quiz" className="dimensions-bridge-cta" aria-label="Take the assessment to discover your resilience dimensions">
-                Take the Assessment to Discover Yours <span aria-hidden="true">→</span>
+              <a href="/quiz" className="dimensions-bridge-cta" aria-label="Take the assessment to discover your resilience dimensions" title="For adults 18+">
+                Take the Assessment to Discover Yours <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> <span aria-hidden="true">→</span>
               </a>
             </div>
 
@@ -655,7 +655,7 @@ export default function ResearchPage() {
             </p>
           </div>
           <div className="credentials-cta">
-            <a href="/quiz" className="btn btn-primary">Take the Assessment</a>
+            <a href="/quiz" className="btn btn-primary" title="For adults 18+">Take the Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
             <a href="/founder" className="btn btn-light">Meet the Founder</a>
           </div>
         </section>

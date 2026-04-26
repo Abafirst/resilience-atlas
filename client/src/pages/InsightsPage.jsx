@@ -100,8 +100,8 @@ export default function InsightsPage() {
         <span className="hero-eyebrow">Knowledge Hub</span>
         <h1>Resilience Insights</h1>
         <p>Articles, research, and frameworks exploring the Six Dimensions of Resilience and how they shape your response to stress, adversity, and change.</p>
-        <a className="btn-hero-primary" href="/quiz" style={{display:'inline-flex',margin:'0 auto'}}>
-          <span aria-hidden="true">&#9654;</span> Take the Free Assessment
+        <a className="btn-hero-primary" href="/quiz" style={{display:'inline-flex',margin:'0 auto'}} title="For adults 18+">
+          <span aria-hidden="true">&#9654;</span> Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
         </a>
       </section>
 
@@ -159,8 +159,8 @@ export default function InsightsPage() {
             </div>
             <div className="article-card-body">
               <p>Of all six dimensions, Relational resilience is the one most supported by decades of research. Human beings are wired for co-regulation. Understanding your Relational score can transform how you navigate hard times.</p>
-              <a className="article-cta" href="/quiz">
-                Discover your score &#8594;
+              <a className="article-cta" href="/quiz" title="For adults 18+">
+                Discover your score <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> &#8594;
               </a>
             </div>
           </article>
@@ -172,8 +172,8 @@ export default function InsightsPage() {
             </div>
             <div className="article-card-body">
               <p>The Somatic dimension captures something that most resilience assessments miss entirely: how the body itself participates in recovery. Explore the science of physiological regulation and how to develop this crucial dimension.</p>
-              <a className="article-cta" href="/quiz">
-                Discover your score &#8594;
+              <a className="article-cta" href="/quiz" title="For adults 18+">
+                Discover your score <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> &#8594;
               </a>
             </div>
           </article>
@@ -185,8 +185,8 @@ export default function InsightsPage() {
             </div>
             <div className="article-card-body">
               <p>Agency &mdash; the belief that you can act and that your actions matter &mdash; is one of the most powerful predictors of resilient outcomes. Learn what drives high Agentic scores and how to cultivate this dimension.</p>
-              <a className="article-cta" href="/quiz">
-                Discover your score &#8594;
+              <a className="article-cta" href="/quiz" title="For adults 18+">
+                Discover your score <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> &#8594;
               </a>
             </div>
           </article>
@@ -198,8 +198,8 @@ export default function InsightsPage() {
         <div className="insights-cta-banner">
           <h2>Discover Your Resilience Profile</h2>
           <p>Take the free 10-minute assessment and receive your personalized Six Dimensions of Resilience map. No signup required to start.</p>
-          <a className="btn-hero-primary" href="/quiz" style={{display:'inline-flex',margin:'0 auto'}}>
-            <span aria-hidden="true">&#9654;</span> Take the Free Assessment
+          <a className="btn-hero-primary" href="/quiz" style={{display:'inline-flex',margin:'0 auto'}} title="For adults 18+">
+            <span aria-hidden="true">&#9654;</span> Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
           </a>
         </div>
       </section>

@@ -7,7 +7,7 @@ export default function SiteFooter() {
         <div className="footer-nav-group">
           <strong className="footer-nav-heading">Assessment</strong>
           <a href="/assessment">About the Assessment</a>
-          <a href="/quiz">Take the Quiz</a>
+          <a href="/quiz" title="For adults 18+">Take the Quiz <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
           <a href="/results">My Results</a>
         </div>
         <div className="footer-nav-group">

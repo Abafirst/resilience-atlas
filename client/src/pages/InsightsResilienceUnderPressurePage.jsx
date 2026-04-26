@@ -55,7 +55,7 @@ export default function InsightsResilienceUnderPressurePage() {
         <div className="article-cta-box">
           <h3>Map Your Resilience Under Pressure</h3>
           <p>Discover your Six Dimensions of Resilience profile with the free Resilience Atlas assessment.</p>
-          <a href="/quiz" className="btn btn-primary">Take the Free Assessment</a>
+          <a href="/quiz" className="btn btn-primary" title="For adults 18+">Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span></a>
         </div>
       </article>
     </>
