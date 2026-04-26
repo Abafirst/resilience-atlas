@@ -3433,6 +3433,31 @@ export default function ResultsPage() {
           </div>
         </div>
 
+        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
+        <section style={{
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: 16,
+          padding: '28px 20px 20px',
+          marginBottom: 24,
+          textAlign: 'center',
+          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+        }} aria-labelledby="radarHeading">
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
+            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
+          </div>
+          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
+            This compass visualizes the balance of your resilience system across six core dimensions.
+          </p>
+          <RadarChart scores={results.scores} />
+          {dominantType && (
+            <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
+              Your strongest resilience dimension is:{' '}
+              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
+            </p>
+          )}
+        </section>
+
         {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
         <div style={s.freeBriefReport} className="story-results-card" role="region" aria-label="Your Resilience Terrain">
           <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Terrain</div>
@@ -3615,31 +3640,6 @@ export default function ResultsPage() {
             </section>
           );
         })()}
-
-        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
-        <section style={{
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: 16,
-          padding: '28px 20px 20px',
-          marginBottom: 24,
-          textAlign: 'center',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-        }} aria-labelledby="radarHeading">
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
-            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
-          </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
-            This compass visualizes the balance of your resilience system across six core dimensions.
-          </p>
-          <RadarChart scores={results.scores} />
-          {dominantType && (
-            <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
-              Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
-            </p>
-          )}
-        </section>
 
         {/* ── Resilience Journey CTA (paid users) ──────────────────── */}
         {hasPremiumAccess && tierCheckComplete && (
