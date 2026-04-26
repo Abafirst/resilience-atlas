@@ -64,7 +64,7 @@ router.post('/assign', authenticateJWT, async (req, res) => {
     }
 
     const role = await getPractitionerRole(practiceId, userId);
-    if (!hasPermission(role, 'practitioners', 'invite')) {
+    if (!hasPermission(role, 'cases', 'assign')) {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 
@@ -102,7 +102,7 @@ router.delete('/:id/unassign', authenticateJWT, async (req, res) => {
     if (!assignment) return res.status(404).json({ error: 'Assignment not found.' });
 
     const role = await getPractitionerRole(assignment.practiceId, userId);
-    if (!hasPermission(role, 'practitioners', 'remove')) {
+    if (!hasPermission(role, 'cases', 'unassign')) {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 
@@ -137,7 +137,7 @@ router.patch('/:id/access-level', authenticateJWT, async (req, res) => {
     if (!assignment) return res.status(404).json({ error: 'Assignment not found.' });
 
     const role = await getPractitionerRole(assignment.practiceId, userId);
-    if (!hasPermission(role, 'practitioners', 'edit_roles')) {
+    if (!hasPermission(role, 'cases', 'edit_access')) {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 

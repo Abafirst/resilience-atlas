@@ -55,12 +55,18 @@ router.get('/', authenticateJWT, async (req, res) => {
 
     const filter = { practiceId };
     if (!canViewAll) filter.userId = userId;
-    if (action) filter.action = action;
-    if (resourceType) filter.resourceType = resourceType;
+    // Validate string params to prevent NoSQL injection via query objects
+    if (action && typeof action === 'string') filter.action = action;
+    if (resourceType && typeof resourceType === 'string') filter.resourceType = resourceType;
     if (startDate || endDate) {
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+      if ((start && isNaN(start.getTime())) || (end && isNaN(end.getTime()))) {
+        return res.status(400).json({ error: 'Invalid date format.' });
+      }
       filter.createdAt = {};
-      if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(endDate);
+      if (start) filter.createdAt.$gte = start;
+      if (end) filter.createdAt.$lte = end;
     }
 
     const parsedLimit = Math.min(parseInt(limit, 10) || 50, 100);
@@ -100,10 +106,16 @@ router.get('/export', authenticateJWT, async (req, res) => {
     }
 
     const filter = { practiceId };
+    // Fix the export date handling too
     if (startDate || endDate) {
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+      if ((start && isNaN(start.getTime())) || (end && isNaN(end.getTime()))) {
+        return res.status(400).json({ error: 'Invalid date format.' });
+      }
       filter.createdAt = {};
-      if (startDate) filter.createdAt.$gte = new Date(startDate);
-      if (endDate) filter.createdAt.$lte = new Date(endDate);
+      if (start) filter.createdAt.$gte = start;
+      if (end) filter.createdAt.$lte = end;
     }
 
     const logs = await ActivityLog.find(filter)

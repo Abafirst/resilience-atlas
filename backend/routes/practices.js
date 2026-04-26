@@ -141,7 +141,10 @@ router.patch('/:id', authenticateJWT, async (req, res) => {
     const update = {};
     if (name) update.name = name.trim();
     if (subscriptionTier) update.subscriptionTier = subscriptionTier;
-    if (settings) update.settings = settings;
+    // Only accept plain objects for settings to prevent NoSQL injection
+    if (settings && typeof settings === 'object' && !Array.isArray(settings)) {
+      update.settings = settings;
+    }
 
     const practice = await Practice.findByIdAndUpdate(id, update, { new: true }).lean();
     if (!practice) return res.status(404).json({ error: 'Practice not found.' });
@@ -217,7 +220,11 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
 
     const practice = await Practice.findById(id).lean();
     const inviter = await User.findById(userId).lean();
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000');
+    if (!baseUrl) {
+      console.error('[practices] BASE_URL env var is not set in production.');
+      return res.status(500).json({ error: 'Server configuration error.' });
+    }
     const inviteUrl = `${baseUrl}/invite/accept?token=${invitationToken}`;
 
     try {
@@ -263,6 +270,10 @@ router.patch('/:id/practitioners/:targetUserId', authenticateJWT, async (req, re
     const validRoles = ['admin', 'clinician', 'therapist', 'observer'];
     if (newRole && !validRoles.includes(newRole)) {
       return res.status(400).json({ error: 'Invalid role.' });
+    }
+    const validStatuses = ['pending', 'active', 'suspended', 'removed'];
+    if (status && !validStatuses.includes(status)) {
+      return res.status(400).json({ error: 'Invalid status.' });
     }
 
     const update = {};
