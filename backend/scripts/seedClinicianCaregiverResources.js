@@ -22,8 +22,6 @@ const path     = require('path');
 const mongoose = require('mongoose');
 const Resource = require(path.join(__dirname, '../models/Resource'));
 
-const { seedResources } = require(path.join(__dirname, '../lib/seedResources'));
-
 // ── Resource data ─────────────────────────────────────────────────────────────
 
 const resources = [

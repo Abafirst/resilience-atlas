@@ -33,7 +33,7 @@ const resources = require('./resourceSeedData');
 // ── Schema constraints mirrored from backend/models/Resource.js ───────────────
 
 const VALID_TYPES        = ['article', 'video', 'pdf', 'quiz', 'podcast', 'expert'];
-const VALID_CATEGORIES   = ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general'];
+const VALID_CATEGORIES   = ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general', 'clinician', 'caregiver'];
 const VALID_DIFFICULTIES = ['beginner', 'intermediate', 'advanced'];
 const VALID_DIMENSIONS   = [
   'Cognitive-Narrative',
