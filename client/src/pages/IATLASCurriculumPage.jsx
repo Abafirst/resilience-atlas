@@ -2004,15 +2004,15 @@ export default function IATLASCurriculumPage() {
               <div>
                 <span className="iatlas-kicker">
                   <img src="/icons/compass.svg" alt="" width={13} height={13} aria-hidden="true" />
-                  IATLAS Framework
+                  IATLAS Clinical Curriculum
                 </span>
                 <h1 className="iatlas-hero-title" id="iatlas-hero-title">
-                  Build Resilience Across<br />6 Dimensions
+                  A System for Skills, Not Scores
                 </h1>
                 <p className="iatlas-hero-sub">
-                  The Integrated Applied Teaching and Learning Adaptive System (IATLAS) translates your Resilience Atlas™ assessment
-                  into structured, science-based skill-building across six dimensions of human resilience —
-                  grounded in Applied Behavior Analysis and Acceptance &amp; Commitment Therapy.
+                  Your Resilience Atlas™ assessment reveals your profile. IATLAS gives you the skills to strengthen it.
+                  Evidence-based protocols integrating Applied Behavior Analysis (ABA) and Acceptance &amp; Commitment Therapy (ACT)
+                  across all six dimensions of resilience — not just what to measure, but how to grow.
                 </p>
                 <div className="iatlas-hero-actions">
                   <a href="/quiz" className="iatlas-btn-primary" title="For adults 18+">

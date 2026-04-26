@@ -271,7 +271,7 @@ export default function AssessmentPage() {
           <div className="assessment-wrap">
             <div className="assessment-hero-card soft-card">
               <span className="hero-eyebrow">The Resilience Atlas Assessment</span>
-              <h1 id="assessment-heading">72 Questions. One Map.</h1>
+              <h1 id="assessment-heading">72 Questions. One Map. Your Resilience Starts Here.</h1>
               <p>
                 In the next 15 minutes, you&rsquo;ll explore how you show up under pressure across six
                 key dimensions of resilience. This isn&rsquo;t pass/fail. It&rsquo;s a snapshot of how you currently
