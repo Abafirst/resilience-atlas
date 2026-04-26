@@ -21,9 +21,9 @@ export default function LandingPage() {
       <section className="hero">
         <div className="hero-inner story-wrap">
           <span className="hero-eyebrow">Over 20 years of professional experience and a lifetime of application</span>
-          <h1>Map Your Resilience</h1>
+          <h1>Map Your Resilience. Master Your Response.</h1>
           <p className="hero-subheadline">
-            Resilience is multi-dimensional&mdash;just like you. By mapping your resilience, you can see where you&rsquo;re most powerful and find new areas ready for growth. Use your results to celebrate your strongest dimension and nourish those still developing.
+            Discover your personalized profile across six dimensions of resilience.
           </p>
           <p className="hero-subheadline">
             To support your growth, you&rsquo;ll find actionable, research-based strategies from Applied Behavior Analysis (ABA) and Acceptance and Commitment Therapy (ACT)&mdash;empowering you to actively strengthen your resilience every day.
