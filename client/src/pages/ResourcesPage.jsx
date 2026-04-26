@@ -21,6 +21,8 @@ const CATEGORY_ICONS = {
   relationships: '/icons/connection.svg',
   career:        '/icons/goal.svg',
   general:       '/icons/growth.svg',
+  clinician:     '/icons/network.svg',
+  caregiver:     '/icons/connection.svg',
 };
 
 const TYPE_ICONS = {
@@ -282,7 +284,9 @@ export default function ResourcesPage() {
         { value: 'sleep',         label: 'Sleep',         icon: CATEGORY_ICONS.sleep         },
         { value: 'relationships', label: 'Relationships', icon: CATEGORY_ICONS.relationships },
         { value: 'career',        label: 'Career',        icon: CATEGORY_ICONS.career        },
-        { value: 'general',       label: 'General',       icon: CATEGORY_ICONS.general       },
+        { value: 'general',       label: 'General',        icon: CATEGORY_ICONS.general    },
+        { value: 'clinician',     label: 'For Clinicians', icon: CATEGORY_ICONS.clinician  },
+        { value: 'caregiver',     label: 'For Caregivers', icon: CATEGORY_ICONS.caregiver  },
       ].map(({ value, label, icon }) => (
         <button
           key={value}
