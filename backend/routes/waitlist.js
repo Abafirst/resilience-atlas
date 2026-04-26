@@ -13,7 +13,6 @@ const router    = express.Router();
 
 const Waitlist = require('../models/Waitlist');
 const logger   = require('../utils/logger');
-const { IATLAS_VALID_SPECIALTIES } = require('../data/iatlasSpecialties');
 
 const waitlistLimiter = rateLimit({
   windowMs: 60 * 1000,
@@ -46,7 +45,8 @@ router.post('/', waitlistLimiter, async (req, res) => {
     }
 
     // Specialties currently shown on the frontend + reserved values for future use
-    if (typeof specialty !== 'string' || !IATLAS_VALID_SPECIALTIES.includes(specialty)) {
+    const validSpecialties = ['teachers', 'slp', 'ot', 'daily-living', 'social-skills', 'clinicians', 'caregivers'];
+    if (typeof specialty !== 'string' || !validSpecialties.includes(specialty)) {
       return res.status(400).json({ error: 'A valid specialty is required.' });
     }
 

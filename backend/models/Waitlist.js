@@ -2,8 +2,6 @@
 
 const mongoose = require('mongoose');
 
-const { IATLAS_VALID_SPECIALTIES } = require('../data/iatlasSpecialties');
-
 const WaitlistSchema = new mongoose.Schema(
   {
     email: {
@@ -19,7 +17,7 @@ const WaitlistSchema = new mongoose.Schema(
     specialty: {
       type: String,
       required: true,
-      enum: IATLAS_VALID_SPECIALTIES,
+      enum: ['teachers', 'slp', 'ot', 'daily-living', 'social-skills', 'clinicians', 'caregivers'],
     },
     organization: {
       type: String,
