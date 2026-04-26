@@ -13,6 +13,7 @@ import QuestLog from './QuestLog';
 import BadgeUnlockModal from './BadgeUnlockModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
+import { hasIATLASAccess, getIATLASTier, IATLAS_TIER_CONFIG } from '../../utils/iatlasGating';
 import '../../styles/kidsGames.css';
 
 const GAME_COMPONENTS = {
@@ -62,6 +63,7 @@ export default function KidsGamesHub() {
   const [modalBadge, setModalBadge]     = useState(null);   // badge currently shown in modal
   const [modalQueue, setModalQueue]     = useState([]);      // queue of badges to display sequentially
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
+  const [showUnlockModal, setShowUnlockModal] = useState(false); // IATLAS paywall modal
   const gameContainerRef                = useRef(null);
 
   // Ref mirrors earnedBadges and is updated immediately (before re-render) so
@@ -139,6 +141,11 @@ export default function KidsGamesHub() {
   }, [completedGames, handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
+    // Check if user has a paid IATLAS subscription before launching a game
+    if (!hasIATLASAccess()) {
+      setShowUnlockModal(true);
+      return;
+    }
     setActiveGame(gameId);
   }, []);
 
@@ -190,6 +197,9 @@ export default function KidsGamesHub() {
 
   return (
     <div className="kg-hub-wrapper">
+      {showUnlockModal && (
+        <IATLASUnlockModal onClose={() => setShowUnlockModal(false)} />
+      )}
       {modalBadge && (
         <BadgeUnlockModal
           badge={modalBadge}
@@ -311,6 +321,162 @@ function BadgeToast({ badge }) {
       <div>
         <strong><img src="/icons/badge.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, verticalAlign: 'middle', marginRight: 4 }} />Badge Unlocked: {badge.label}!</strong>
         <p style={{ margin: 0, fontSize: '.82rem' }}>{badge.desc}</p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * IATLASUnlockModal — "Coming Soon" teaser paywall shown when a user
+ * without an IATLAS subscription tries to launch a kids game.
+ *
+ * Props:
+ *   onClose — callback to dismiss the modal
+ */
+function IATLASUnlockModal({ onClose }) {
+  const tiers = [
+    IATLAS_TIER_CONFIG.individual,
+    IATLAS_TIER_CONFIG.family,
+    IATLAS_TIER_CONFIG.professional,
+  ];
+
+  // Close on Escape key
+  useEffect(() => {
+    function handleKey(e) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="kg-modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Unlock IATLAS Kids Games"
+      onClick={onClose}
+      style={{ zIndex: 1300 }}
+    >
+      <div
+        className="kg-modal-card kg-unlock-modal"
+        onClick={e => e.stopPropagation()}
+        style={{ maxWidth: 520, width: '100%', padding: '2rem 1.75rem 1.5rem' }}
+      >
+        {/* Close button */}
+        <button
+          className="kg-unlock-modal-close"
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute', top: '.75rem', right: '.75rem',
+            background: '#f1f5f9', border: 'none', borderRadius: '50%',
+            width: '2rem', height: '2rem', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '.85rem', color: '#64748b', lineHeight: 1,
+          }}
+        >
+          ✕
+        </button>
+
+        {/* Coming-Soon badge */}
+        <span
+          aria-hidden="true"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '.3rem',
+            background: 'linear-gradient(135deg,#fef3c7,#fde68a)',
+            color: '#92400e', border: '1px solid #fbbf24',
+            borderRadius: '999px', padding: '.25rem .8rem',
+            fontSize: '.72rem', fontWeight: 700,
+            textTransform: 'uppercase', letterSpacing: '.04em',
+            marginBottom: '.6rem',
+          }}
+        >
+          🔒 Coming Soon
+        </span>
+
+        <h2 style={{ margin: '0 0 .4rem', fontSize: '1.35rem', fontWeight: 800, color: '#1e293b', lineHeight: 1.25 }}>
+          Unlock IATLAS Kids Games
+        </h2>
+        <p style={{ margin: '0 0 1.25rem', fontSize: '.9rem', color: '#64748b', lineHeight: 1.6 }}>
+          These interactive resilience games are part of the IATLAS curriculum. Choose a plan to get full access for your family, classroom, or practice.
+        </p>
+
+        {/* Pricing tiers */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.65rem', marginBottom: '1.25rem' }}>
+          {tiers.map(tier => (
+            <div
+              key={tier.name}
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: '.85rem',
+                background: tier.recommended ? '#f0f9ff' : '#f8fafc',
+                border: `1.5px solid ${tier.recommended ? tier.color : '#e2e8f0'}`,
+                borderRadius: '12px', padding: '.75rem 1rem',
+                position: 'relative',
+              }}
+            >
+              {tier.recommended && (
+                <span
+                  style={{
+                    position: 'absolute', top: '-10px', right: '12px',
+                    background: tier.color, color: '#fff',
+                    borderRadius: '999px', padding: '.15rem .65rem',
+                    fontSize: '.68rem', fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '.04em',
+                  }}
+                >
+                  Most Popular
+                </span>
+              )}
+              <span style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0 }} aria-hidden="true">
+                {tier.badge}
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '.5rem', flexWrap: 'wrap' }}>
+                  <span style={{ fontWeight: 700, fontSize: '.92rem', color: '#1e293b' }}>{tier.name}</span>
+                  <span style={{ fontWeight: 800, fontSize: '.95rem', color: tier.color, whiteSpace: 'nowrap' }}>{tier.price}</span>
+                </div>
+                <p style={{ margin: '.15rem 0 .4rem', fontSize: '.8rem', color: '#64748b' }}>{tier.description}</p>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: '.2rem .75rem' }}>
+                  {tier.features.map(f => (
+                    <li key={f} style={{ fontSize: '.75rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '.25rem' }}>
+                      <span style={{ color: tier.color, fontWeight: 700 }}>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <a
+          href="/pricing#iatlas"
+          className="kg-modal-close-btn"
+          style={{
+            display: 'block', width: '100%', background: 'linear-gradient(135deg,#667eea,#764ba2)',
+            border: 'none', color: '#fff', borderRadius: '10px',
+            padding: '.85rem 1.5rem', fontSize: '1rem', fontWeight: 700,
+            cursor: 'pointer', marginBottom: '.5rem', textAlign: 'center',
+            textDecoration: 'none', boxSizing: 'border-box',
+          }}
+        >
+          See All Plans &amp; Unlock Access
+        </a>
+        <button
+          onClick={onClose}
+          style={{
+            display: 'block', width: '100%', background: 'transparent',
+            border: 'none', color: '#9ca3af', fontSize: '.85rem',
+            cursor: 'pointer', padding: '.25rem', textDecoration: 'underline',
+          }}
+        >
+          Maybe later
+        </button>
+
+        <p style={{ margin: '.75rem 0 0', textAlign: 'center', fontSize: '.72rem', color: '#9ca3af' }}>
+          🔒 Secure checkout &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; Instant access
+        </p>
       </div>
     </div>
   );
