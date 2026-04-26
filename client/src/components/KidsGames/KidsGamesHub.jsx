@@ -14,7 +14,7 @@ import BadgeUnlockModal from './BadgeUnlockModal';
 import IATLASComingSoonModal from '../IATLAS/ComingSoonModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
-import { hasIATLASAccess, getIATLASTier } from '../../utils/iatlasGating';
+import { hasIATLASAccess, getIATLASTier, IATLAS_TIER_CONFIG } from '../../utils/iatlasGating';
 import '../../styles/kidsGames.css';
 
 const GAME_COMPONENTS = {
@@ -64,7 +64,7 @@ export default function KidsGamesHub() {
   const [modalBadge, setModalBadge]     = useState(null);   // badge currently shown in modal
   const [modalQueue, setModalQueue]     = useState([]);      // queue of badges to display sequentially
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
-  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const [showUnlockModal, setShowUnlockModal] = useState(false); // IATLAS paywall modal
   const gameContainerRef                = useRef(null);
 
   // Ref mirrors earnedBadges and is updated immediately (before re-render) so
@@ -142,7 +142,7 @@ export default function KidsGamesHub() {
   }, [completedGames, handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
-    // Check if user has IATLAS access before launching a game.
+    // Check if user has a paid IATLAS subscription before launching a game
     if (!hasIATLASAccess()) {
       setShowUnlockModal(true);
       return;
@@ -198,13 +198,6 @@ export default function KidsGamesHub() {
 
   return (
     <div className="kg-hub-wrapper">
-      {showUnlockModal && (
-        <IATLASComingSoonModal
-          title="Unlock IATLAS Kids Games"
-          message="These interactive resilience games are available with an IATLAS plan. Choose Individual ($19.99), Family ($39.99 — up to 5 kids), or Professional ($99.99 — clinicians, educators & caregivers) to get full access."
-          onClose={() => setShowUnlockModal(false)}
-        />
-      )}
       {modalBadge && (
         <BadgeUnlockModal
           badge={modalBadge}
@@ -214,6 +207,14 @@ export default function KidsGamesHub() {
         />
       )}
       {badgeToast && <BadgeToast badge={badgeToast} />}
+
+      {showUnlockModal && (
+        <IATLASComingSoonModal
+          title="Unlock IATLAS Kids Games"
+          message="These interactive resilience games are available with an IATLAS plan. Choose Individual ($19.99), Family ($39.99), or Complete ($99.99)."
+          onClose={() => setShowUnlockModal(false)}
+        />
+      )}
 
       {/* Hub header */}
       <div className="kg-hub-header">

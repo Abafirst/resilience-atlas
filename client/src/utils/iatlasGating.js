@@ -1,128 +1,102 @@
 /**
- * iatlasGating.js — IATLAS payment gating utilities.
+ * iatlasGating.js — Utility functions for IATLAS payment access control.
  *
- * Provides access-control helpers and pricing tier definitions for the
- * IATLAS kids games and curriculum content.
- *
- * Tier hierarchy (lowest → highest access):
- *   free → iatlas-individual → iatlas-family → iatlas-professional
+ * Supports three IATLAS-specific pricing tiers for individuals, families,
+ * and professionals (clinicians, educators, caregivers).
  */
 
-const IATLAS_TIER_KEY = 'iatlas_tier';
+export const IATLAS_TIER_KEY = 'iatlas_tier';
 
-/** IATLAS-specific pricing tiers */
 export const IATLAS_TIERS = {
-  free: {
-    name: 'Free',
-    price: 0,
-    priceLabel: 'Free',
-    billing: 'free',
-    audience: 'Everyone',
-    features: [
-      'Preview resilience content',
-      'Browse skills library',
-      'Read sample stories',
-    ],
-  },
-  'iatlas-individual': {
-    name: 'IATLAS Individual',
-    price: 1999, // $19.99
-    priceLabel: '$19.99',
-    billing: 'one-time',
-    audience: 'Individuals',
-    features: [
-      'All interactive kids games',
-      'Full badge & stars collection',
-      'Age-specific activity guides',
-      'Resilience stories & videos',
-      '1 child account',
-    ],
-  },
-  'iatlas-family': {
-    name: 'IATLAS Family',
-    price: 3999, // $39.99
-    priceLabel: '$39.99',
-    billing: 'one-time',
-    audience: 'Families',
-    highlighted: true,
-    features: [
-      'Everything in Individual',
-      'Up to 5 child accounts',
-      'Parent progress dashboard',
-      'Family resilience report',
-      'Priority support',
-    ],
-  },
-  'iatlas-professional': {
-    name: 'IATLAS Professional',
-    price: 9999, // $99.99
-    priceLabel: '$99.99',
-    billing: 'one-time',
-    audience: 'Clinicians, Educators & Caregivers',
-    features: [
-      'Everything in Family',
-      'Up to 30 child accounts',
-      'Curriculum facilitation guides',
-      'Progress tracking & reports',
-      'Professional certificate',
-      'Classroom & clinic tools',
-    ],
-  },
+  free:         'free',
+  individual:   'individual',
+  family:       'family',
+  professional: 'professional',
 };
 
-/** Tier order for access comparisons (higher = more access). */
-const IATLAS_TIER_ORDER = {
-  free:                  0,
-  'iatlas-individual':   1,
-  'iatlas-family':       2,
-  'iatlas-professional': 3,
+export const IATLAS_TIER_CONFIG = {
+  free: {
+    name: 'Free',
+    price: null,
+    description: 'Basic IATLAS access',
+    features: [],
+  },
+  individual: {
+    name: 'IATLAS Individual',
+    price: '$9.99/mo',
+    description: 'Full access for one person',
+    badge: '🌟',
+    color: '#4f46e5',
+    features: [
+      'All kids games & activities',
+      'IATLAS curriculum (all ages)',
+      'Progress tracking',
+      'Printable resources',
+    ],
+  },
+  family: {
+    name: 'IATLAS Family',
+    price: '$14.99/mo',
+    description: 'Full access for up to 6 family members',
+    badge: '👨‍👩‍👧‍👦',
+    color: '#0891b2',
+    recommended: true,
+    features: [
+      'Everything in Individual',
+      'Up to 6 family profiles',
+      'Shared progress dashboard',
+      'Family challenge activities',
+    ],
+  },
+  professional: {
+    name: 'IATLAS Professional',
+    price: '$24.99/mo',
+    description: 'For clinicians, educators & caregivers',
+    badge: '🎓',
+    color: '#059669',
+    features: [
+      'Everything in Family',
+      'Unlimited child/client profiles',
+      'Clinical & classroom facilitation guides',
+      'Progress & outcome reports',
+      'ABA protocol library',
+    ],
+  },
 };
 
 /**
- * Returns the current user's IATLAS tier from localStorage.
- * Falls back to 'free' if no tier is stored or the value is unrecognised.
+ * Get the current IATLAS tier from localStorage.
+ * Also returns individual-level access when the user holds atlas-premium or any Teams tier
+ * on the main Resilience Atlas plan.
  *
- * @returns {'free'|'iatlas-individual'|'iatlas-family'|'iatlas-professional'}
+ * @returns {string} One of the IATLAS_TIERS values
  */
 export function getIATLASTier() {
   try {
-    const stored = localStorage.getItem(IATLAS_TIER_KEY);
-    if (stored && Object.keys(IATLAS_TIERS).includes(stored)) return stored;
+    const iatlasTier = localStorage.getItem(IATLAS_TIER_KEY);
+    if (iatlasTier && Object.values(IATLAS_TIERS).includes(iatlasTier)) {
+      return iatlasTier;
+    }
+
+    // Grant individual-level IATLAS access to atlas-premium and Teams users
+    const resilienceTier = localStorage.getItem('resilience_tier') || '';
+    const premiumTiers = [
+      'atlas-premium',
+      'teams-starter', 'teams-pro', 'teams-enterprise',
+      'starter', 'pro', 'enterprise',
+    ];
+    if (premiumTiers.includes(resilienceTier)) {
+      return IATLAS_TIERS.individual;
+    }
   } catch {
-    // localStorage unavailable (e.g. SSR, private-mode restriction)
+    // localStorage unavailable — fall through to free
   }
-  return 'free';
+  return IATLAS_TIERS.free;
 }
 
 /**
- * Stores the user's IATLAS tier in localStorage.
- *
- * @param {'free'|'iatlas-individual'|'iatlas-family'|'iatlas-professional'} tier
- */
-export function setIATLASTier(tier) {
-  try {
-    localStorage.setItem(IATLAS_TIER_KEY, tier);
-  } catch {
-    // localStorage unavailable
-  }
-}
-
-/**
- * Returns true when the user holds any paid IATLAS tier
- * (i.e. iatlas-individual or above).
- *
- * @returns {boolean}
+ * Returns true if the user has any paid IATLAS access tier.
  */
 export function hasIATLASAccess() {
-  return (IATLAS_TIER_ORDER[getIATLASTier()] || 0) >= IATLAS_TIER_ORDER['iatlas-individual'];
-}
-
-/**
- * Returns true when the user's tier meets or exceeds the required tier.
- *
- * @param {'free'|'iatlas-individual'|'iatlas-family'|'iatlas-professional'} requiredTier
- * @returns {boolean}
- */
-export function hasIATLASAccessForTier(requiredTier) {
-  return (IATLAS_TIER_ORDER[getIATLASTier()] || 0) >= (IATLAS_TIER_ORDER[requiredTier] || 0);
+  return getIATLASTier() !== IATLAS_TIERS.free;
 }
