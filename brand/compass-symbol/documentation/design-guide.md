@@ -163,7 +163,7 @@ Each of the six arrows maps directly to a resilience dimension. Adjacent arrows 
 ## Design Principles
 
 ### Recognizability
-The symbol must remain legible and distinctive at 16 × 16 px. The six arrows are the primary recognisable element; structural lines (hexagon, radials) should be reduced or removed at small sizes.
+The symbol must remain legible and distinctive at 16 × 16 px. The six arrows are the primary recognizable element; structural lines (hexagon, radials) should be reduced or removed at small sizes.
 
 ### Accessibility
 - Minimum contrast ratio: 4.5:1 against white background for primary blue

@@ -378,7 +378,7 @@ describe('Email templates — buildTeamInvitationEmail', () => {
     expect(buildTeamInvitationEmail(vars).html).toContain('Grace');
   });
 
-  it('shows organisation name', () => {
+  it('shows organization name', () => {
     expect(buildTeamInvitationEmail(vars).html).toContain('Acme Corp');
   });
 

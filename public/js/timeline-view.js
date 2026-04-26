@@ -21,7 +21,7 @@
         consistent_high_performer: '⭐',
     };
 
-    var LEVEL_COLOURS = {
+    var LEVEL_COLORS = {
         high:   '#27ae60',
         medium: '#f39c12',
         low:    '#e74c3c',
@@ -52,8 +52,8 @@
         return 'low';
     }
 
-    function levelColour(score) {
-        return LEVEL_COLOURS[scoreLevel(score)] || '#4a9eca';
+    function levelColor(score) {
+        return LEVEL_COLORS[scoreLevel(score)] || '#4a9eca';
     }
 
     function growthArrow(delta) {
@@ -138,7 +138,7 @@
             var prev  = assessments[idx + 1] || null;
             var delta = prev ? (a.overall - prev.overall) : null;
             var isFirst = idx === assessments.length - 1;
-            var colour  = levelColour(a.overall);
+            var color  = levelColor(a.overall);
 
             var li = document.createElement('li');
             li.className = 'tl-item';
@@ -160,10 +160,10 @@
             }
 
             li.innerHTML =
-                '<div class="tl-dot" style="background:' + colour + ';" aria-hidden="true"></div>'
+                '<div class="tl-dot" style="background:' + color + ';" aria-hidden="true"></div>'
               + '<div class="tl-body">'
               +   '<div class="tl-header">'
-              +     '<span class="tl-score" style="color:' + colour + ';">' + a.overall + '%</span>'
+              +     '<span class="tl-score" style="color:' + color + ';">' + a.overall + '%</span>'
               +     (delta !== null ? growthArrow(delta) : '')
               +     milestoneHtml
               +   '</div>'
@@ -219,7 +219,7 @@
                 item.className = 'detail-score-item';
                 item.innerHTML =
                     '<div class="detail-score-label">' + capitalize(d) + '</div>'
-                  + '<div class="detail-score-value" style="color:' + levelColour(val) + ';">' + val + '%</div>'
+                  + '<div class="detail-score-value" style="color:' + levelColor(val) + ';">' + val + '%</div>'
                   + (delta !== null ? '<div class="detail-score-delta">' + growthArrow(delta) + '</div>' : '');
                 scoresEl.appendChild(item);
             });
@@ -255,7 +255,7 @@
         capitalize:          capitalize,
         formatDate:          formatDate,
         formatDateTime:      formatDateTime,
-        levelColour:         levelColour,
+        levelColor:         levelColor,
         growthArrow:         growthArrow,
         escapeHtml:          escapeHtml,
     };

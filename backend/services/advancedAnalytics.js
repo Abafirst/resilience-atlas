@@ -47,7 +47,7 @@ const THRESHOLDS = {
 
 const DEFAULT_RISK_THRESHOLD = 40;  // overall score below this → risk flag
 
-// ── Dimension key normalisation ───────────────────────────────────────────────
+// ── Dimension key normalization ───────────────────────────────────────────────
 
 const DIM_MAP = {
   relational:              'relational',
@@ -82,11 +82,11 @@ function extractPct(val) {
 }
 
 /**
- * Normalise a ResilienceResult document into a flat dimension map.
+ * Normalize a ResilienceResult document into a flat dimension map.
  * @param {Object} r – ResilienceResult lean document
  * @returns {Object} { relational, cognitive, somatic, emotional, spiritual, agentic, overall }
  */
-function normaliseDims(r) {
+function normalizeDims(r) {
   const out = { overall: r.overall || r.overall_score || null };
 
   // Prefer pre-computed dimension_scores when available
@@ -119,7 +119,7 @@ function normaliseDims(r) {
 /**
  * Compute dimension distribution — percentage of members in each score band.
  *
- * @param {Object[]} results – Array of normalised dimension maps
+ * @param {Object[]} results – Array of normalized dimension maps
  * @returns {Object} { relational: { high, medium, low }, … }
  */
 function computeDistribution(results) {
@@ -192,7 +192,7 @@ async function computeTrend(orgId) {
 /**
  * Identify result IDs and emails where overall score < threshold.
  *
- * @param {Object[]} results  – normalised dim maps with _id / email
+ * @param {Object[]} results  – normalized dim maps with _id / email
  * @param {number}   threshold – default 40
  * @returns {Object[]} Flagged individuals (anonymised by default)
  */
@@ -273,7 +273,7 @@ async function computeAdvancedAnalytics(org, options = {}) {
     _id: { $in: resultIds },
   }).lean();
 
-  const results = rawResults.map((r) => ({ ...normaliseDims(r), _id: r._id, email: r.email }));
+  const results = rawResults.map((r) => ({ ...normalizeDims(r), _id: r._id, email: r.email }));
 
   // Team averages
   const teamAverages = {};

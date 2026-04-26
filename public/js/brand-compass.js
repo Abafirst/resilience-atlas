@@ -117,8 +117,8 @@
   // Canvas is drawn at CW × CH logical pixels; CSS may scale the element.
   var CW = 380;
   var CH = 420;
-  var CX = CW / 2;          // centre x
-  var CY = CH / 2 - 10;     // centre y (slight upward offset for label space)
+  var CX = CW / 2;          // center x
+  var CY = CH / 2 - 10;     // center y (slight upward offset for label space)
 
   var R_OUTER  = 130;        // outer boundary ring radius
   var R_INNER  = 72;         // inner structural ring radius
@@ -243,7 +243,7 @@
     return d;
   }
 
-  // Normalise input scores to 0–100.
+  // Normalize input scores to 0–100.
   // Accepts:  number | { score } | { percentage } | { value }
   function normalizeScore(raw) {
     if (raw === null || raw === undefined) return 0;
@@ -361,7 +361,7 @@
     ctx.restore();
   }
 
-  // Axis lines from centre to each dimension (subtle spokes)
+  // Axis lines from center to each dimension (subtle spokes)
   function drawAxes(ctx, pal, alpha) {
     ctx.save();
     ctx.globalAlpha = alpha * 0.18;
@@ -605,7 +605,7 @@
     ctx.beginPath();
     ctx.moveTo(0, -lenFwd);     // forward tip
     ctx.lineTo(halfW, 0);       // right equator
-    ctx.lineTo(0, 5);           // slight notch at centre
+    ctx.lineTo(0, 5);           // slight notch at center
     ctx.lineTo(-halfW, 0);      // left equator
     ctx.closePath();
     var gradFwd = ctx.createLinearGradient(0, -lenFwd, 0, 5);
@@ -619,7 +619,7 @@
     ctx.beginPath();
     ctx.moveTo(0, lenBack);     // back tip
     ctx.lineTo(halfW, 0);       // right equator
-    ctx.lineTo(0, 5);           // slight notch at centre
+    ctx.lineTo(0, 5);           // slight notch at center
     ctx.lineTo(-halfW, 0);      // left equator
     ctx.closePath();
     var gradBack = ctx.createLinearGradient(0, 5, 0, lenBack);
@@ -738,7 +738,7 @@
     var isLight = detectBackground(canvas);
     var pal     = isLight ? LIGHT_PAL : DARK_PAL;
 
-    // Normalise scores
+    // Normalize scores
     scores = scores || {};
     var values = DIMENSIONS.map(function (name) {
       var normName = name.toLowerCase().replace(/[-_ ]/g, '');

@@ -347,10 +347,10 @@ export default function TeamPage() {
     const upgradeParam = params.get('upgrade');
     const sessionId = params.get('session_id');
 
-    if (upgradeParam === 'cancelled') {
+    if (upgradeParam === 'canceled') {
       setBanner({
         type: 'warning',
-        message: 'Your payment was cancelled. You can upgrade your team any time.',
+        message: 'Your payment was canceled. You can upgrade your team any time.',
       });
       window.history.replaceState({}, '', '/team');
       return;

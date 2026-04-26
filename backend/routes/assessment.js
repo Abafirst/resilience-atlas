@@ -57,7 +57,7 @@ function decodeHtmlEntities(str) {
 /**
  * Validate an email address without a ReDoS-prone regex.
  * Uses a length limit and split-based check rather than a complex regex.
- * @param {string} email — normalised (lowercase, trimmed) email
+ * @param {string} email — normalized (lowercase, trimmed) email
  * @returns {boolean}
  */
 function isValidEmail(email) {
@@ -365,7 +365,7 @@ router.post('/unlock-payment', async (req, res) => {
         return res.status(400).json({ error: 'Invalid tier. Must be atlas-starter or atlas-navigator.' });
     }
 
-    // Normalise email.
+    // Normalize email.
     const cleanEmail = decodeHtmlEntities(String(email))
         .replace(/"/g, '').replace(/'/g, '').trim().toLowerCase();
     if (!isValidEmail(cleanEmail)) {

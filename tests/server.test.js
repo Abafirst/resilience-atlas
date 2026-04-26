@@ -488,7 +488,7 @@ describe('GET /api/payments/tiers', () => {
     });
 });
 
-// ── CORS behaviour ────────────────────────────────────────────────────────────
+// ── CORS behavior ────────────────────────────────────────────────────────────
 
 describe('CORS middleware', () => {
   const ORIGIN_A = 'https://www.theresilienceatlas.com';

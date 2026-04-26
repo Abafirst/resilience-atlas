@@ -4,7 +4,7 @@
  * seedResources.js — Evidence-Based Resource Library Seed
  *
  * Seeds the Resource collection with curated, evidence-based resources
- * organised by the seven visible categories and multiple content types.
+ * organized by the seven visible categories and multiple content types.
  *
  * Focused on: ABA, ACT, Resilience Studies, Cross-Cultural Research,
  *             Psychology, Positive Psychology, Behavioral Science.

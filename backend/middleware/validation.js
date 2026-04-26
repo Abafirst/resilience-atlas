@@ -4,7 +4,7 @@ const { ValidationError } = require('../utils/errors');
 
 // ── Tiny XSS / injection sanitiser ───────────────────────────────────────────
 // Strips or encodes characters that are commonly exploited in reflected XSS,
-// HTML-injection, and basic SQL-injection attacks.  This is a defence-in-depth
+// HTML-injection, and basic SQL-injection attacks.  This is a defense-in-depth
 // layer; always use parameterised queries / an ODM like Mongoose as well.
 
 const HTML_ENTITY_MAP = {

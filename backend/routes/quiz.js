@@ -337,7 +337,7 @@ router.post('/email-report', emailReportLimiter, async (req, res) => {
             })
         );
 
-        // Compute the assessment hash from the original (non-normalised) scores so
+        // Compute the assessment hash from the original (non-normalized) scores so
         // the link matches the hash stored when the quiz was submitted.  This lets
         // the email CTA deep-link directly to the correct assessment.
         const assessmentHash = buildAssessmentHash(

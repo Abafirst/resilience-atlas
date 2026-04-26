@@ -75,7 +75,7 @@ function looksLikeEmail(s) {
   return dot > 0 && dot < domain.length - 1;     // dot with chars on both sides
 }
 
-/** Normalise an email address for consistent storage/lookup comparisons. */
+/** Normalize an email address for consistent storage/lookup comparisons. */
 function normalizeEmail(email) {
   return email.toLowerCase().trim();
 }

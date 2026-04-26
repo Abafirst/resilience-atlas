@@ -7,7 +7,7 @@
  * Renders tier comparison cards, locked-section overlays, and upgrade prompts.
  * Depends on payment-gating.js being loaded first (for PaymentGating.startCheckout).
  *
- * Pricing is fetched dynamically from /api/payments/tiers on initialisation.
+ * Pricing is fetched dynamically from /api/payments/tiers on initialization.
  * Cards display a loading placeholder until prices arrive, then update in place.
  */
 (function (window) {
@@ -110,7 +110,7 @@
         const btnPrefix   = isStarter  ? 'Get Starter Report' : 'Get My Deep Report';
         const btnLabel    = price !== '\u2026' ? `${btnPrefix} — ${price}` : btnPrefix;
         const description = isStarter
-            ? 'Get your personalised PDF summary with your overall score, top dimension highlights, and starter practices.'
+            ? 'Get your personalized PDF summary with your overall score, top dimension highlights, and starter practices.'
             : 'Download your complete Deep Resilience Report as a beautiful PDF. One-time purchase, yours to keep forever.';
 
         return `

@@ -58,7 +58,7 @@ export const cognitiveNarrativeModules = [
         {
           id: 'situation2',
           label: 'Situation 2 (factual description)',
-          placeholder: 'e.g., A friend cancelled our plans at the last minute',
+          placeholder: 'e.g., A friend canceled our plans at the last minute',
           type: 'textarea',
         },
         {

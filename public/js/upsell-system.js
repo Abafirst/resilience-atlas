@@ -45,7 +45,7 @@
             },
             'atlas-premium': {
                 headline:  'Take Your Resilience Journey Further',
-                subtext:   'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium licence.',
+                subtext:   'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium license.',
                 ctaLabel:  'Upgrade to Atlas Premium — $49.99',
                 offer:     null,
             },
@@ -94,7 +94,7 @@
         },
     };
 
-    // ── Value proposition catalogue ───────────────────────────────────────────
+    // ── Value proposition catalog ───────────────────────────────────────────
 
     const VALUE_PROPS = {
         'detailed_analytics':   { icon: '📊', text: 'Detailed analytics across all 6 resilience dimensions' },
@@ -103,7 +103,7 @@
         'ad_free':              { icon: '🚫', text: 'Completely ad-free experience throughout the app' },
         'pdf_download':         { icon: '📄', text: 'Beautiful downloadable PDF report you keep forever' },
         'unlimited_retakes':    { icon: '🔄', text: 'Unlimited reassessments to track your growth' },
-        'growth_roadmap':       { icon: '🗺️',  text: '30-day personalised growth roadmap' },
+        'growth_roadmap':       { icon: '🗺️',  text: '30-day personalized growth roadmap' },
         'benchmarking':         { icon: '📈', text: 'See how you rank against thousands of users' },
     };
 
@@ -216,7 +216,7 @@
      * Build and inject the upsell modal into the DOM.
      * @param {'atlas-navigator'|'atlas-premium'} targetTier
      * @param {string} trigger  — for analytics
-     * @param {string[]} [highlightProps]  — keys from VALUE_PROPS to emphasise
+     * @param {string[]} [highlightProps]  — keys from VALUE_PROPS to emphasize
      */
     function showModal(targetTier, trigger, highlightProps) {
         // Only show to free users (or atlas-navigator upgrading to atlas-premium).

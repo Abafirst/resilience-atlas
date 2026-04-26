@@ -59,7 +59,7 @@ export default function WorkshopAgenticPage() {
 
         <section className="section">
           <h2 className="section-title"><img src="/icons/story.svg" alt="" aria-hidden="true" width={18} height={18} />Overview</h2>
-          <p>Agentic-Generative resilience is the capacity for proactive action, self-efficacy, and the belief that one can make a meaningful difference. Teams with high agentic resilience take initiative, mobilise resources effectively, and empower each other to act.</p>
+          <p>Agentic-Generative resilience is the capacity for proactive action, self-efficacy, and the belief that one can make a meaningful difference. Teams with high agentic resilience take initiative, mobilize resources effectively, and empower each other to act.</p>
           <p>This guide provides a structured facilitation framework including discussion prompts, activities, and reflection questions. Adapt the timing and sequence to suit your team's needs.</p>
           <div className="tip-box">
             <p><strong>Facilitator note:</strong> Create a psychologically safe space before starting. Remind participants that sharing is always voluntary and that there are no right or wrong answers.</p>
@@ -67,7 +67,7 @@ export default function WorkshopAgenticPage() {
         </section>
 
         <section className="section">
-          <h2 className="section-title"><img src="/icons/dialogue.svg" alt="" aria-hidden="true" width={18} height={18} />Discussion Prompts</h2>
+          <h2 className="section-title"><img src="/icons/dialog.svg" alt="" aria-hidden="true" width={18} height={18} />Discussion Prompts</h2>
           <p>Choose 3–5 prompts that feel most relevant to your team. Allow 5–8 minutes per prompt for open discussion.</p>
           <ol>
             <li>Where do you feel most empowered to take initiative — and where do you hold back?</li>

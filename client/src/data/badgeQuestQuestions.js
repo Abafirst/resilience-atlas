@@ -1,6 +1,6 @@
 /**
  * Resilience Atlas — Badge Quest Questions
- * Multiple-choice question bank organised by age group.
+ * Multiple-choice question bank organized by age group.
  * Each question has one correct option and two or three incorrect options.
  */
 

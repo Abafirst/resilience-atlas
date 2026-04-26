@@ -77,7 +77,7 @@ const s = {
 export default function AdultGameHub({ tier: tierProp }) {
   const { user, isAuthenticated, isLoading: auth0Loading, getAccessTokenSilently } = useAuth0();
   const { progress, loading, tierBlocked, toasts, dismissToast } = useGamification();
-  // Initialise tier from the parent-provided prop immediately to avoid a
+  // Initialize tier from the parent-provided prop immediately to avoid a
   // "Loading…" flash on first render.  Falls back to localStorage for
   // standalone (non-dashboard) use where no tierProp is supplied.
   const [tier, setTier] = useState(() => {

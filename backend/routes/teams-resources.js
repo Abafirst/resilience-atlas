@@ -142,7 +142,7 @@ function extractUserIdFromToken(req) {
  * @param {string|null} userId     Authenticated user's MongoDB ObjectId (from JWT)
  */
 async function verifyTeamsAccess(sessionId, email, userId = null) {
-    // Normalise email once up front so all DB queries use the same value.
+    // Normalize email once up front so all DB queries use the same value.
     const emailNorm = email ? email.toLowerCase().trim() : null;
 
     // Primary: verify via authenticated userId (most secure)

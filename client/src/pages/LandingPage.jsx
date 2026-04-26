@@ -6,7 +6,7 @@ const DIMENSIONS = [
   { key: 'relational', icon: '/icons/relational-connective.svg', name: 'Relational-Connective', desc: 'Building and sustaining meaningful connections that buffer stress and foster belonging.' },
   { key: 'cognitive', icon: '/icons/cognitive-narrative.svg', name: 'Cognitive-Narrative', desc: 'Reframing adversity through story, growth mindset, and adaptive thinking patterns.' },
   { key: 'somatic', icon: '/icons/somatic-regulative.svg', name: 'Somatic-Regulative', desc: 'Using body awareness, breath, and movement to regulate the nervous system.' },
-  { key: 'emotional', icon: '/icons/emotional-adaptive.svg', name: 'Emotional-Adaptive', desc: 'Recognising, processing, and channelling emotions as a source of resilience.' },
+  { key: 'emotional', icon: '/icons/emotional-adaptive.svg', name: 'Emotional-Adaptive', desc: 'Recognizing, processing, and channeling emotions as a source of resilience.' },
   { key: 'spiritual', icon: '/icons/spiritual-reflective.svg', name: 'Spiritual-Reflective', desc: 'Drawing on meaning, values, and transcendent perspective during difficulty.' },
   { key: 'agentic', icon: '/icons/agentic-generative.svg', name: 'Agentic-Generative', desc: 'Harnessing purpose, initiative, and creative agency to author your own path.' },
 ];

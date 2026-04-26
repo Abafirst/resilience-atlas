@@ -311,7 +311,7 @@ router.post('/checkout', paymentsLimiter, async (req, res) => {
             phone_number_collection: { enabled: false },
             metadata: { tier, email: cleanEmail },
             success_url: `${appUrl}${resolveReturnPath(tier, returnPath)}?upgrade=success&session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${appUrl}${resolveReturnPath(tier, returnPath)}?upgrade=cancelled`,
+            cancel_url: `${appUrl}${resolveReturnPath(tier, returnPath)}?upgrade=canceled`,
         });
 
         // Record pending purchase so the webhook can update it later.

@@ -10,7 +10,7 @@ const branding = require('../config/branding');
 // image via `COPY . .` in the Dockerfile.
 const LOGO_PNG_PATH = path.resolve(__dirname, '../../client/public/assets/logo-256x256.png');
 
-// ── Colour palette ────────────────────────────────────────────────────────────
+// ── Color palette ────────────────────────────────────────────────────────────
 const COLORS = {
     primary: '#6366f1',
     primaryDark: '#4f46e5',
@@ -48,7 +48,7 @@ const LEVEL_BG = {
     emerging: '#fef2f2',
 };
 
-// Per-dimension brand colours and icons
+// Per-dimension brand colors and icons
 const DIM_CONFIG = {
     'Cognitive-Narrative':   { color: '#6366f1', bg: '#eff6ff', icon: 'C', short: 'Cognitive' },
     'Relational-Connective': { color: '#ec4899', bg: '#fdf2f8', icon: 'R', short: 'Relational' },
@@ -64,7 +64,7 @@ const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const CONTENT_WIDTH = PAGE_WIDTH - PAGE_MARGIN * 2;
 
-// ── Colour helpers ─────────────────────────────────────────────────────────────
+// ── Color helpers ─────────────────────────────────────────────────────────────
 function fc(doc, h) { doc.fillColor(h); }
 function sc(doc, h) { doc.strokeColor(h); }
 
@@ -113,7 +113,7 @@ function subHeader(doc, text, color) {
     doc.y += 4;
 }
 
-/** Draw a coloured progress bar. */
+/** Draw a colored progress bar. */
 function progressBar(doc, x, y, width, pct, color) {
     const barH = 9;
     const clampedPct = Math.max(0, Math.min(pct / 100, 1));
@@ -443,7 +443,7 @@ function buildDashboardPage(doc, report) {
     const legColW = (CONTENT_WIDTH - 12) / 2;
     const legStartY = doc.y;
     const legRowH = 34;
-    const legSwatchW = 10;        // width of the coloured swatch square
+    const legSwatchW = 10;        // width of the colored swatch square
     const legTextOffset = 14;     // horizontal gap between swatch left-edge and text
     const legTextW = legColW - legTextOffset - 2; // available width for text within one column
     const legDescOffsetY = 13;    // vertical gap from label top to description line
@@ -473,7 +473,7 @@ function buildDashboardPage(doc, report) {
     ensureSpace(doc, 48);
     infoBox(
         doc,
-        'Your coordinates have been plotted. The following pages explore each territory in detail \u2014 with personalised insights, life applications, and your daily navigation tools.',
+        'Your coordinates have been plotted. The following pages explore each territory in detail \u2014 with personalized insights, life applications, and your daily navigation tools.',
         COLORS.bgBlue,
         COLORS.primary,
         PAGE_MARGIN, doc.y, CONTENT_WIDTH
@@ -743,7 +743,7 @@ function buildStressResponsePage(doc, report) {
 
     if (sr.copingStrategies && sr.copingStrategies.length > 0) {
         ensureSpace(doc, 50);
-        subHeader(doc, 'YOUR PERSONALISED COPING STRATEGIES');
+        subHeader(doc, 'YOUR PERSONALIZED COPING STRATEGIES');
         for (const s of sr.copingStrategies.slice(0, 5)) { bullet(doc, s, 8); }
         doc.y += 8;
     }
@@ -1017,7 +1017,7 @@ function buildActionPlanPage2(doc, report) {
 /** Page 16 - Navigation Tools (Resources) */
 function buildResourcesPage(doc, report) {
     newPage(doc);
-    sectionHeader(doc, 'YOUR NAVIGATION TOOLKIT \u2014 PERSONALISED RESOURCES', COLORS.primary);
+    sectionHeader(doc, 'YOUR NAVIGATION TOOLKIT \u2014 PERSONALIZED RESOURCES', COLORS.primary);
 
     doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
         'These resources have been curated based on your growth-edge dimensions \u2014 the territories with the most potential on your map. One resource from each category, committed to for 30 days, creates significant change.',
@@ -1062,9 +1062,9 @@ function buildRelationshipPage(doc, report) {
     const appItems = [
         'Mindfulness Apps: Headspace, Calm, Insight Timer \u2014 for somatic and spiritual resilience',
         'Community: Search for resilience or growth communities on Meetup.com',
-        'Therapy & Coaching: A therapist or coach who specialises in your lowest dimension',
+        'Therapy & Coaching: A therapist or coach who specializes in your lowest dimension',
         'Podcasts: "The Good Life Project", "On Being", "The Huberman Lab"',
-        'Support Groups: Psychology Today therapist directory or your local community centre',
+        'Support Groups: Psychology Today therapist directory or your local community center',
     ];
     for (const item of appItems) { bullet(doc, item, 8); }
     doc.y += 8;
@@ -1135,7 +1135,7 @@ function buildBenchmarkingPage(doc, report, overall) {
     const sciencePoints = [
         'Neuroplasticity: The brain remains changeable throughout life. Resilience practices create measurable neural changes within weeks.',
         'Post-Traumatic Growth: Research by Tedeschi & Calhoun shows adversity, when processed well, can lead to profound positive change.',
-        'The 66-Day Habit: Studies suggest it takes an average of 66 days to form a new automatic behaviour \u2014 your 30-day plan is a powerful start.',
+        'The 66-Day Habit: Studies suggest it takes an average of 66 days to form a new automatic behavior \u2014 your 30-day plan is a powerful start.',
         'Social Contagion: Resilience is catching. Spending time with resilient people measurably increases your own capacity.',
         'Mindfulness & Regulation: Just 8 weeks of consistent mindfulness practice produces measurable changes in brain structure associated with stress regulation.',
     ];

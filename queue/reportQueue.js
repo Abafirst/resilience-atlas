@@ -39,7 +39,7 @@ function getReportQueue() {
             },
         });
     } catch (err) {
-        console.error('Failed to initialise report queue:', err.message);
+        console.error('Failed to initialize report queue:', err.message);
         reportQueue = null;
     }
 

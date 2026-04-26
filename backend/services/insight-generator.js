@@ -101,7 +101,7 @@ function generateObservations(dimAnalysis) {
     observations.push({
       type: 'balance',
       dimension: null,
-      observation: `There is a significant gap (${Math.round(spread)} points) between the team's strongest and weakest resilience dimensions. Consider levelling up lower-scoring areas to build a more balanced foundation.`,
+      observation: `There is a significant gap (${Math.round(spread)} points) between the team's strongest and weakest resilience dimensions. Consider leveling up lower-scoring areas to build a more balanced foundation.`,
       confidence: 85,
     });
   }
@@ -157,7 +157,7 @@ function generateRecommendations(dimAnalysis) {
         recs.push({
           title: 'Establish peer support accountability partnerships',
           action: 'Pair team members in 3-month mutual-support cohorts',
-          rationale: `High Relational strength (avg ${Math.round(dim.avg)}%) is the team's biggest asset — formalise it into structured peer support.`,
+          rationale: `High Relational strength (avg ${Math.round(dim.avg)}%) is the team's biggest asset — formalize it into structured peer support.`,
           timeline: '3-month rotating cohort program',
           expectedImpact: 'Strengthen team cohesion and mutual support',
           difficulty: 'medium',

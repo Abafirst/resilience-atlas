@@ -11,7 +11,7 @@
         Required server environment variables:
           AUTH0_DOMAIN    – e.g. dev-xxxx.us.auth0.com
           AUTH0_CLIENT_ID – the SPA client ID from the Auth0 dashboard
-     2. Initialises the Auth0 SPA JS SDK.
+     2. Initializes the Auth0 SPA JS SDK.
      3. Handles any redirect callback from Auth0 (when returning after login).
      4. If the user is not authenticated, redirects them to the Auth0
         Universal Login page.  The redirect_uri is set to the SPA /quiz route
@@ -75,7 +75,7 @@
       return;
     }
 
-    // ── 2. Initialise Auth0 SPA JS client ───────────────────────────────
+    // ── 2. Initialize Auth0 SPA JS client ───────────────────────────────
     // Use the SPA /quiz route as redirect_uri so Auth0 returns users to
     // the React SPA after login.  /quiz.html permanently redirects to /quiz,
     // so using /quiz here avoids a callback mismatch.
@@ -90,7 +90,7 @@
         },
       });
     } catch (err) {
-      console.error('[quiz-auth] Failed to initialise Auth0 client:', err);
+      console.error('[quiz-auth] Failed to initialize Auth0 client:', err);
       showError('Authentication service unavailable. Please refresh the page or contact support.');
       return;
     }

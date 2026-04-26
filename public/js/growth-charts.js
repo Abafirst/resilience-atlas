@@ -11,7 +11,7 @@
 
     var DIMS = ['emotional', 'mental', 'physical', 'social', 'spiritual', 'financial'];
 
-    var DIM_COLOURS = {
+    var DIM_COLORS = {
         emotional: 'rgba(231, 76, 60,  0.8)',
         mental:    'rgba(52,  152, 219, 0.8)',
         physical:  'rgba(46,  204, 113, 0.8)',
@@ -20,7 +20,7 @@
         financial: 'rgba(230, 126, 34,  0.8)',
     };
 
-    var OVERALL_COLOUR = 'rgba(74, 158, 202, 1)';
+    var OVERALL_COLOR = 'rgba(74, 158, 202, 1)';
 
     /** Map from canvas id → Chart instance (for destruction on re-render). */
     var _chartInstances = {};
@@ -61,7 +61,7 @@
                 datasets: [{
                     label: 'Overall Score',
                     data: data,
-                    borderColor:     OVERALL_COLOUR,
+                    borderColor:     OVERALL_COLOR,
                     backgroundColor: 'rgba(74, 158, 202, 0.15)',
                     borderWidth: 3,
                     pointRadius: 5,
@@ -106,7 +106,7 @@
 
         var labels  = [];
         var deltas  = [];
-        var colours = [];
+        var colors = [];
 
         DIMS.forEach(function (d) {
             var pts = trends[d];
@@ -114,7 +114,7 @@
             var delta = pts[pts.length - 1].score - pts[0].score;
             labels.push(capitalize(d));
             deltas.push(delta);
-            colours.push(delta >= 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)');
+            colors.push(delta >= 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)');
         });
 
         if (labels.length === 0) return;
@@ -126,7 +126,7 @@
                 datasets: [{
                     label: 'Score Change',
                     data: deltas,
-                    backgroundColor: colours,
+                    backgroundColor: colors,
                     borderRadius: 6,
                 }],
             },
@@ -173,9 +173,9 @@
         var datasets = [{
             label: 'Current',
             data: curData,
-            borderColor: OVERALL_COLOUR,
+            borderColor: OVERALL_COLOR,
             backgroundColor: 'rgba(74, 158, 202, 0.2)',
-            pointBackgroundColor: OVERALL_COLOUR,
+            pointBackgroundColor: OVERALL_COLOR,
             borderWidth: 2,
         }];
 
@@ -236,7 +236,7 @@
             return {
                 label: capitalize(d),
                 data: pts.map(function (p) { return p.score; }),
-                borderColor: DIM_COLOURS[d] || '#999',
+                borderColor: DIM_COLORS[d] || '#999',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
                 pointRadius: 3,

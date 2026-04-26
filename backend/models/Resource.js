@@ -42,7 +42,7 @@ const ResourceSchema = new mongoose.Schema(
       index:    true,
     },
 
-    // ── Categorisation ───────────────────────────────────────────────────────
+    // ── Categorization ───────────────────────────────────────────────────────
     category: {
       type:  String,
       enum:  ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general'],
@@ -117,7 +117,7 @@ const ResourceSchema = new mongoose.Schema(
     },
     authorName:  { type: String, trim: true },
 
-    // ── Engagement aggregates (denormalised for read perf) ────────────────────
+    // ── Engagement aggregates (denormalized for read perf) ────────────────────
     viewCount:      { type: Number, default: 0 },
     bookmarkCount:  { type: Number, default: 0 },
     completionCount:{ type: Number, default: 0 },
