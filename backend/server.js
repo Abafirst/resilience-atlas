@@ -428,6 +428,14 @@ app.use("/api/iatlas/waitlist", require("./routes/waitlist"));
 console.log("✅ Mounted route: /api/iatlas/waitlist");
 app.use("/api/iatlas/clinical/session-plans", require("./routes/sessionPlans"));
 console.log("✅ Mounted route: /api/iatlas/clinical/session-plans");
+app.use("/api/practices", require("./routes/practices"));
+console.log("✅ Mounted route: /api/practices");
+app.use("/api/practitioners", require("./routes/practiceInvitations"));
+console.log("✅ Mounted route: /api/practitioners");
+app.use("/api/cases", require("./routes/caseAssignments"));
+console.log("✅ Mounted route: /api/cases");
+app.use("/api/activity-logs", require("./routes/activityLogs"));
+console.log("✅ Mounted route: /api/activity-logs");
 
 // ==============================
 // Root API info

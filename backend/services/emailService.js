@@ -474,6 +474,59 @@ async function sendEmail(to, emailObj) {
   return _send(to, emailObj);
 }
 
+/**
+ * Send a practitioner invitation email for the IATLAS multi-practitioner feature.
+ *
+ * @param {Object} opts
+ * @param {string} opts.to
+ * @param {string} opts.inviterName
+ * @param {string} opts.practiceName
+ * @param {string} opts.role
+ * @param {string} opts.inviteUrl
+ * @param {Date}   opts.expiresAt
+ */
+async function sendPractitionerInvitation({ to, inviterName, practiceName, role, inviteUrl, expiresAt }) {
+  const roleLabels = {
+    admin: 'Administrator',
+    clinician: 'Clinician',
+    therapist: 'Therapist',
+    observer: 'Observer',
+  };
+  const roleLabel = roleLabels[role] || role;
+  const expiryStr = expiresAt
+    ? new Date(expiresAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    : '7 days';
+
+  const html = wrapEmail(`
+    <h2 style="color:#1a1a2e;font-size:24px;margin:0 0 16px;">You've Been Invited to Join a Practice</h2>
+    <p style="color:#4a4a68;font-size:16px;line-height:1.6;margin:0 0 16px;">
+      <strong>${inviterName}</strong> has invited you to join <strong>${practiceName}</strong>
+      as a <strong>${roleLabel}</strong> on the IATLAS platform.
+    </p>
+    <p style="color:#4a4a68;font-size:16px;line-height:1.6;margin:0 0 24px;">
+      Click the button below to accept the invitation and get started:
+    </p>
+    <div style="text-align:center;margin:32px 0;">
+      <a href="${inviteUrl}"
+         style="background:#6366f1;color:#fff;padding:14px 32px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none;display:inline-block;">
+        Accept Invitation
+      </a>
+    </div>
+    <p style="color:#9090a0;font-size:14px;line-height:1.5;margin:0 0 8px;">
+      This invitation expires on <strong>${expiryStr}</strong> and can only be used once.
+    </p>
+    <p style="color:#9090a0;font-size:14px;line-height:1.5;margin:0;">
+      If you didn't expect this invitation, you can safely ignore this email.
+    </p>
+  `);
+
+  return _send(to, {
+    subject: `You've been invited to join ${practiceName} on IATLAS`,
+    html,
+    text: `You've been invited to join ${practiceName} as a ${roleLabel}. Accept your invitation at: ${inviteUrl} (expires ${expiryStr}).`,
+  });
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -507,6 +560,9 @@ module.exports = {
 
   /* Generic send for custom emails */
   sendEmail,
+
+  /* Practitioner invitation (IATLAS multi-practitioner) */
+  sendPractitionerInvitation,
 
   /* Exposed for testing */
   capitalize,

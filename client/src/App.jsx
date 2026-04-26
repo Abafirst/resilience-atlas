@@ -80,6 +80,10 @@ import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx
 import SessionPlansPage from './pages/SessionPlansPage.jsx';
 import ChildProfilesPage from './pages/ChildProfilesPage.jsx';
 import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage.jsx';
+import PracticeSettingsPage from './pages/PracticeSettingsPage.jsx';
+import ActivityLogsPage from './pages/ActivityLogsPage.jsx';
+import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
+import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -383,6 +387,11 @@ function AppShell() {
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
           {/* Analytics Dashboard */}
           <Route path="/analytics" element={<AnalyticsDashboardPage />} />
+          {/* RBAC / Practice Management */}
+          <Route path="/practice-settings" element={<PracticeSettingsPage />} />
+          <Route path="/activity-logs" element={<ActivityLogsPage />} />
+          <Route path="/invite/accept" element={<AcceptInvitationPage />} />
+          <Route path="/access-denied" element={<AccessDeniedPage />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 
