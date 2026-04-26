@@ -168,7 +168,7 @@ export function ProfileProvider({ children }) {
   // ── Derived active profile ──────────────────────────────────────────────────
 
   const activeProfile = useMemo(
-    () => profiles.find(p => p.profileId === activeProfileId) || profiles[0] || null,
+    () => profiles.find(p => p.profileId === activeProfileId) || null,
     [profiles, activeProfileId]
   );
 
@@ -176,7 +176,7 @@ export function ProfileProvider({ children }) {
 
   const value = useMemo(() => ({
     profiles,
-    activeProfileId: activeProfile?.profileId || null,
+    activeProfileId: activeProfile?.profileId || activeProfileId,
     activeProfile,
     loading,
     error,

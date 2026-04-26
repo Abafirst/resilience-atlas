@@ -40,20 +40,19 @@ function getProfileStorageKeys(profileId) {
 }
 
 export default function useKidsProgress(profileId) {
-  const storageKeys = getProfileStorageKeys(profileId);
-
   const [progress,   setProgress]   = useState({});
   const [totalStars, setTotalStars] = useState(0);
-  const [levelInfo,  setLevelInfo]  = useState(() => getKidsLevelInfo(storageKeys));
+  const [levelInfo,  setLevelInfo]  = useState(() => getKidsLevelInfo(getProfileStorageKeys(profileId)));
   const [stats,      setStats]      = useState({});
 
   const refresh = useCallback(() => {
-    const prog = loadKidsProgress(storageKeys);
+    const keys = getProfileStorageKeys(profileId);
+    const prog = loadKidsProgress(keys);
     setProgress(prog);
-    setTotalStars(getTotalKidsStars(storageKeys));
-    setLevelInfo(getKidsLevelInfo(storageKeys));
-    setStats(getKidsStats(prog, storageKeys));
-  }, [storageKeys]);
+    setTotalStars(getTotalKidsStars(keys));
+    setLevelInfo(getKidsLevelInfo(keys));
+    setStats(getKidsStats(prog, keys));
+  }, [profileId]);
 
   useEffect(() => {
     refresh();
@@ -66,27 +65,30 @@ export default function useKidsProgress(profileId) {
    * @param {object} record - { activityId?, title?, ageGroup, dimension, complete?, selfRating? }
    */
   const completeActivity = useCallback((record) => {
-    const result = recordActivityCompletion(record, storageKeys);
+    const keys   = getProfileStorageKeys(profileId);
+    const result = recordActivityCompletion(record, keys);
     refresh();
     return result;
-  }, [refresh, storageKeys]);
+  }, [profileId, refresh]);
 
   /**
    * Check whether a specific activity has been completed.
    */
   const isCompleted = useCallback((activityId) => {
-    const prog = loadKidsProgress(storageKeys);
+    const keys = getProfileStorageKeys(profileId);
+    const prog = loadKidsProgress(keys);
     return !!prog[activityId];
-  }, [storageKeys]);
+  }, [profileId]);
 
   /**
    * Get dimension progress counts for a specific age group.
    * Returns { [dimensionKey]: count }
    */
   const getDimensionCounts = useCallback((ageGroup) => {
-    const counts = getDimensionProgressCounts(loadKidsProgress(storageKeys));
+    const keys   = getProfileStorageKeys(profileId);
+    const counts = getDimensionProgressCounts(loadKidsProgress(keys));
     return counts[ageGroup] || {};
-  }, [storageKeys]);
+  }, [profileId]);
 
   /**
    * Total activities available by dimension for the given age group.
@@ -100,9 +102,14 @@ export default function useKidsProgress(profileId) {
    * Load parent notes (for star bonus calculation).
    */
   const getParentNoteCount = useCallback(() => {
-    const notes = loadKidsJSON(storageKeys.PARENT_NOTES, []);
+    const keys  = getProfileStorageKeys(profileId);
+    const notes = loadKidsJSON(keys.PARENT_NOTES, []);
     return Array.isArray(notes) ? notes.length : 0;
-  }, [storageKeys]);
+  }, [profileId]);
+
+  // Expose the resolved storage keys so callers (e.g. ParentDashboard) can
+  // write directly to the correct namespace without having to re-derive them.
+  const storageKeys = getProfileStorageKeys(profileId);
 
   return {
     progress,
