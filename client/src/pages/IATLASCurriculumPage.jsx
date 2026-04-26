@@ -188,16 +188,16 @@ const DIMENSIONS = [
 ];
 
 // ── Gated content overlay component ──────────────────────────────────────────
-function GatedContent({ items, label = 'Coming Soon' }) {
+function GatedContent({ items, label = 'IATLAS Access Required' }) {
   return (
-    <div className="iatlas-gated-block" aria-label={`${label} — payment required`}>
+    <div className="iatlas-gated-block" aria-label={`${label} — IATLAS subscription required`}>
       <div className="iatlas-gated-header">
         <span className="iatlas-lock-icon" aria-hidden="true">
           <img src="/icons/lock.svg" alt="" width={18} height={18} />
         </span>
         <span className="iatlas-coming-soon-badge">{label}</span>
       </div>
-      <ul className="iatlas-gated-list" aria-label="Features coming soon">
+      <ul className="iatlas-gated-list" aria-label="Features included with IATLAS">
         {items.map((item, i) => (
           <li key={i} className="iatlas-gated-item">
             <span className="iatlas-check" aria-hidden="true">✓</span>
@@ -1521,7 +1521,7 @@ export default function IATLASCurriculumPage() {
               <p className="iatlas-section-sub">
                 Each dimension has its own curriculum, skill progression, and micropractices.
                 Descriptions and competency previews are free — full skill modules and interactive
-                activities will be available when the curriculum launches.
+                activities are available with any IATLAS plan.
               </p>
             </div>
 
@@ -1592,40 +1592,40 @@ export default function IATLASCurriculumPage() {
             </div>
           </section>
 
-          {/* ── Coming Soon Features ─────────────────────────────────────── */}
-          <section aria-labelledby="iatlas-cf-title">
-            <div className="iatlas-coming-features" role="region" aria-label="Coming soon features">
+          {/* ── IATLAS Pricing Tiers ─────────────────────────────────────── */}
+          <section aria-labelledby="iatlas-pricing-title">
+            <div className="iatlas-coming-features" role="region" aria-label="IATLAS pricing tiers">
               <span className="iatlas-cf-kicker">
                 <img src="/icons/compass.svg" alt="" width={14} height={14} aria-hidden="true" />
-                Launching Soon
+                IATLAS Plans — Available Now
               </span>
-              <h2 className="iatlas-cf-title" id="iatlas-cf-title">Coming Soon to IATLAS</h2>
+              <h2 className="iatlas-cf-title" id="iatlas-pricing-title">Choose Your IATLAS Plan</h2>
               <p className="iatlas-cf-sub">
-                We're building a full gamified learning experience for the IATLAS curriculum.
-                Here's what's on the way:
+                IATLAS is a separate product from Atlas Start and Atlas Navigator with its own pricing tiers.
+                Choose the plan that fits your needs.
               </p>
 
               <div className="iatlas-cf-grid" role="list">
                 {[
                   {
                     icon: '/icons/kids-trophy.svg',
-                    title: 'Gamified Learning',
-                    items: ['Earn XP for every practice', 'Level up: Explorer → Master', 'Unlock badges & achievements', 'Dimensional balance wheel'],
+                    title: 'Individual — $19.99/mo',
+                    items: ['All kids games & activities', 'IATLAS curriculum (all ages)', 'Progress tracking', '1 child profile'],
                   },
                   {
                     icon: '/icons/agentic-generative.svg',
-                    title: 'Practice Streaks',
-                    items: ['Daily micropractice streaks', 'Bronze → Diamond badges', 'Streak forgiveness (1 miss/mo)', '7, 30, 90, 365-day milestones'],
+                    title: 'Family — $39.99/mo',
+                    items: ['Everything in Individual', 'Up to 5 child profiles', 'Caregiver resources & parent guides', 'Shared progress dashboard'],
                   },
                   {
                     icon: '/icons/quest.svg',
-                    title: 'Quest System',
-                    items: ['30-Day Foundation Quest', '7-Day Sprint Challenges', '90-Day Epic Transformation', 'Dimensional Deep-Dives'],
+                    title: 'Complete — $99.99/mo',
+                    items: ['Everything in Family', 'Full curriculum access', 'Advanced analytics', 'Priority support'],
                   },
                   {
                     icon: '/icons/game-target.svg',
-                    title: 'Progress Dashboard',
-                    items: ['Animated radar chart', 'Before/after comparisons', 'Personalized skill recommendations', 'Celebration animations'],
+                    title: 'Professional — from $149/mo',
+                    items: ['Clinical assessments & session plans', 'Client resources & worksheets', 'ABA protocol library', 'Practitioner / Practice / Enterprise tiers'],
                   },
                 ].map((cf) => (
                   <div key={cf.title} className="iatlas-cf-card" role="listitem">
@@ -1644,8 +1644,8 @@ export default function IATLASCurriculumPage() {
               </div>
 
               <div className="iatlas-cf-cta">
-                <a href="#iatlas-waitlist" className="iatlas-btn-white">
-                  Join the Waitlist
+                <a href="/pricing/iatlas" className="iatlas-btn-white">
+                  Compare All IATLAS Plans
                 </a>
                 <a href="/quiz" className="iatlas-btn-ghost">
                   Take the Free Assessment →
@@ -1654,16 +1654,16 @@ export default function IATLASCurriculumPage() {
             </div>
           </section>
 
-          {/* ── Waitlist ─────────────────────────────────────────────────── */}
+          {/* ── Get Started ──────────────────────────────────────────────── */}
           <section id="iatlas-waitlist" aria-labelledby="iatlas-wl-title">
             <div className="iatlas-waitlist" role="complementary">
               <div>
                 <h2 className="iatlas-waitlist-title" id="iatlas-wl-title">
-                  Get Notified When IATLAS Launches
+                  Get Started with IATLAS Today
                 </h2>
                 <p className="iatlas-waitlist-sub">
-                  Be first to access the full curriculum, skill modules, and gamified learning experience.
-                  No spam — one email when it's ready.
+                  Enter your email to receive a personalized IATLAS plan recommendation
+                  based on your Resilience Atlas™ assessment results.
                 </p>
               </div>
               {waitlistStatus === 'success' ? (
@@ -1675,7 +1675,7 @@ export default function IATLASCurriculumPage() {
                 <form
                   className="iatlas-waitlist-form"
                   onSubmit={handleWaitlist}
-                  aria-label="IATLAS waitlist signup form"
+                  aria-label="IATLAS get started form"
                 >
                   <label htmlFor="iatlas-email" className="sr-only">Your email address</label>
                   <input
@@ -1690,7 +1690,7 @@ export default function IATLASCurriculumPage() {
                     autoComplete="email"
                   />
                   <button type="submit" className="iatlas-waitlist-submit">
-                    Notify Me
+                    Get Started
                   </button>
                 </form>
               )}
