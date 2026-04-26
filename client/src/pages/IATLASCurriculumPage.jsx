@@ -2468,7 +2468,7 @@ export default function IATLASCurriculumPage() {
                   Join the waitlist to be notified when the TTF program launches.
                 </p>
                 <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-primary">
-                  Learn More &amp; Join Waitlist →
+                  Learn More & Join Waitlist →
                 </Link>
               </div>
             </div>
