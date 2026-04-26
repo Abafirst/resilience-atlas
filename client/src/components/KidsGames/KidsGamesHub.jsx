@@ -11,10 +11,10 @@ import NavigatorChallenges from './NavigatorChallenges';
 import ArenaBattles from './ArenaBattles';
 import QuestLog from './QuestLog';
 import BadgeUnlockModal from './BadgeUnlockModal';
-import IATLASComingSoonModal from '../IATLAS/ComingSoonModal';
+import IATLASUnlockModal from '../IATLAS/IATLASUnlockModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
-import { hasIATLASAccess, getIATLASTier, IATLAS_TIER_CONFIG } from '../../utils/iatlasGating';
+import { hasKidsAccess, getIATLASTier, IATLAS_TIER_CONFIG } from '../../utils/iatlasGating';
 import '../../styles/kidsGames.css';
 
 const GAME_COMPONENTS = {
@@ -143,7 +143,7 @@ export default function KidsGamesHub() {
 
   const playGame = useCallback((gameId) => {
     // Check if user has a paid IATLAS subscription before launching a game
-    if (!hasIATLASAccess()) {
+    if (!hasKidsAccess()) {
       setShowUnlockModal(true);
       return;
     }
@@ -209,9 +209,8 @@ export default function KidsGamesHub() {
       {badgeToast && <BadgeToast badge={badgeToast} />}
 
       {showUnlockModal && (
-        <IATLASComingSoonModal
-          title="Unlock IATLAS Kids Games"
-          message="These interactive resilience games are available with an IATLAS plan. Choose Individual ($19.99), Family ($39.99), or Complete ($99.99)."
+        <IATLASUnlockModal
+          variant="kids"
           onClose={() => setShowUnlockModal(false)}
         />
       )}

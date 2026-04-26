@@ -10,7 +10,7 @@ import {  KIDS_DIMENSION_ICON_MAP,
 } from '../data/kidsActivities';
 import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 import VideoStories from '../components/VideoStories.jsx';
-import IATLASComingSoonModal from '../components/IATLAS/ComingSoonModal.jsx';
+import IATLASUnlockModal from '../components/IATLAS/IATLASUnlockModal.jsx';
 import KidsProgressDashboard from '../components/IATLAS/Kids/KidsProgressDashboard.jsx';
 import ParentDashboard from '../components/IATLAS/Kids/ParentDashboard.jsx';
 
@@ -446,16 +446,14 @@ export default function KidsPage() {
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
       {activeSkill && <SkillModal skill={activeSkill} onClose={closeSkill} onTryThis={handleTryThis} />}
       {showGamesModal && (
-        <IATLASComingSoonModal
-          title="Interactive Games Coming Soon!"
-          message="We're building fun, educational games to help kids discover their resilience dimensions. Join the waitlist to get early access when Atlas Navigator launches."
+        <IATLASUnlockModal
+          variant="kids"
           onClose={() => setShowGamesModal(false)}
         />
       )}
       {showActivitiesModal && (
-        <IATLASComingSoonModal
-          title="Age-Specific Activities Coming Soon!"
-          message="Age-specific activity guides are on their way! Get notified when Atlas Navigator launches so you're first to access them."
+        <IATLASUnlockModal
+          variant="kids"
           onClose={() => setShowActivitiesModal(false)}
         />
       )}
@@ -666,14 +664,14 @@ export default function KidsPage() {
                     Interactive Games
                   </p>
                   <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.25rem 0 1rem' }}>
-                    Coming soon with Atlas Navigator
+                    Available with IATLAS Individual ($19.99/mo) or higher
                   </p>
                   <button
                     onClick={() => setShowGamesModal(true)}
                     className="iatlas-btn-primary"
                     style={{ background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '10px', padding: '0.6rem 1.25rem', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                   >
-                    Learn More
+                    Get IATLAS Access
                   </button>
                 </div>
               </div>
@@ -709,12 +707,12 @@ export default function KidsPage() {
               <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }} aria-hidden="true">📚</div>
                 <p style={{ fontWeight: 700, color: '#1e293b', margin: '0 0 0.5rem' }}>Age-Specific Activities</p>
-                <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem' }}>Select an age group above to see activities — coming soon with Atlas Navigator.</p>
+                <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem' }}>Select an age group above to see activities — available with any IATLAS plan.</p>
                 <button
                   onClick={() => setShowActivitiesModal(true)}
                   style={{ background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '10px', padding: '0.65rem 1.4rem', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                 >
-                  Get Notified
+                  Get IATLAS Access
                 </button>
               </div>
             </div>
