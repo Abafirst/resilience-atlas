@@ -1745,3 +1745,44 @@ export function countTotalActivities() {
   });
   return total;
 }
+
+// ── Helper: derive difficulty from age group + activity type ─────────────────
+const CHALLENGE_TYPES = new Set(['challenge', 'application', 'reflection']);
+
+const AGE_BASE_DIFFICULTY = {
+  'ages-5-7':   'beginner',
+  'ages-8-10':  'beginner',
+  'ages-11-14': 'intermediate',
+  'ages-15-18': 'advanced',
+};
+
+export function getDifficultyForActivity(ageGroupId, activityType) {
+  const base = AGE_BASE_DIFFICULTY[ageGroupId] || 'beginner';
+  if (CHALLENGE_TYPES.has(activityType)) {
+    if (base === 'beginner')     return 'intermediate';
+    if (base === 'intermediate') return 'advanced';
+  }
+  return base;
+}
+
+// ── Helper: get all activities as a flat list with dimension/age metadata ─────
+export function getAllActivities() {
+  const results = [];
+  Object.entries(KIDS_ACTIVITIES_BY_DIMENSION).forEach(([dimKey, dimData]) => {
+    Object.entries(dimData.activities).forEach(([ageGroupId, acts]) => {
+      acts.forEach(activity => {
+        results.push({
+          ...activity,
+          dimensionKey:   dimKey,
+          dimensionTitle: dimData.dimensionTitle,
+          kidsName:       dimData.kidsName,
+          dimensionColor: dimData.color,
+          dimensionIcon:  dimData.icon,
+          ageGroupId,
+          difficulty:     getDifficultyForActivity(ageGroupId, activity.type),
+        });
+      });
+    });
+  });
+  return results;
+}

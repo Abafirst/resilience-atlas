@@ -652,6 +652,50 @@ export default function IATLASKidsLandingPage() {
             </div>
           </section>
 
+          {/* Browse All Activities CTA */}
+          <div style={{
+            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            borderRadius: 16,
+            padding: '1.75rem 2rem',
+            marginBottom: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            color: '#ffffff',
+          }} aria-label="Browse all activities">
+            <div>
+              <p style={{ margin: '0 0 .35rem', fontSize: '.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', opacity: .85 }}>
+                Activity Catalog
+              </p>
+              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+                Browse, search & filter all {totalActivities}+ activities
+              </p>
+              <p style={{ margin: '.25rem 0 0', fontSize: '.85rem', opacity: .85 }}>
+                Filter by age, dimension, difficulty, or activity type
+              </p>
+            </div>
+            <Link
+              to="/iatlas/kids/catalog"
+              style={{
+                background: 'rgba(255,255,255,.2)',
+                color: '#ffffff',
+                borderRadius: 10,
+                padding: '.65rem 1.35rem',
+                fontWeight: 700,
+                fontSize: '.9rem',
+                textDecoration: 'none',
+                border: '1px solid rgba(255,255,255,.3)',
+                whiteSpace: 'nowrap',
+                transition: 'background .15s',
+              }}
+              aria-label="Open activity catalog"
+            >
+              Open Catalog →
+            </Link>
+          </div>
+
           {/* Dimensions overview */}
           <section aria-labelledby="ikids-dims-title">
             <div className="ikids-section-header">
