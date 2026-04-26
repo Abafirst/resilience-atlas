@@ -2,7 +2,7 @@
  * Canonical Teams plan definitions.
  *
  * Single source of truth for plan names, prices, feature lists, and CTA
- * behaviour used by TeamsLandingPage.jsx and PricingTeamsPage.jsx.
+ * behavior used by TeamsLandingPage.jsx and PricingTeamsPage.jsx.
  *
  * key        – backend tier sent to /api/payments/checkout
  * cta        – 'checkout' (starter/pro) | 'contact' (enterprise)

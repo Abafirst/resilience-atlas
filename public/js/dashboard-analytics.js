@@ -325,7 +325,7 @@
       'When facing a setback, how do we reframe the situation constructively as a team?',
       'What assumptions do we hold about ourselves that might be limiting our potential?',
       'How do we build and share knowledge that helps us navigate uncertainty?',
-      'What does "growth mindset" actually look like in day-to-day team behaviour?',
+      'What does "growth mindset" actually look like in day-to-day team behavior?',
     ],
     somatic: [
       'How do we know when we\'re operating in stress response vs. grounded presence?',
@@ -387,7 +387,7 @@
     }).join('');
 
     container.innerHTML = sections ||
-      '<p class="text-muted text-sm">Complete an assessment to generate personalised prompts.</p>';
+      '<p class="text-muted text-sm">Complete an assessment to generate personalized prompts.</p>';
   }
 
   // ── Radar Chart (team overview) ──────────────────────────────────────────────

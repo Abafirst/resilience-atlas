@@ -87,7 +87,7 @@ path with `https://theresilienceatlas.com`, so requests go directly to
 production instead of relying on the Vite dev proxy.
 
 On the web (browser), the helper returns the path unchanged and the existing
-same-origin / Vite-proxy behaviour is preserved.
+same-origin / Vite-proxy behavior is preserved.
 
 ---
 

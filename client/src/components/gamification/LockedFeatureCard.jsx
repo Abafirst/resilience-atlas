@@ -4,9 +4,9 @@ import AndroidWebModal from '../AndroidWebModal.jsx';
 import { isCapacitorAndroid } from '../../utils/platform.js';
 
 /**
- * Converts a hex colour string to an `rgba(r, g, b, alpha)` value.
+ * Converts a hex color string to an `rgba(r, g, b, alpha)` value.
  * Handles both 3-digit (#abc) and 6-digit (#aabbcc) formats.
- * Returns a transparent fallback for unrecognised input.
+ * Returns a transparent fallback for unrecognized input.
  */
 function hexToRgba(hex, alpha) {
   const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec((hex || '').trim());
@@ -121,7 +121,7 @@ export default function LockedFeatureCard({
     }
   }
 
-  // Derive rgba colour values from the accent so the card is format-safe
+  // Derive rgba color values from the accent so the card is format-safe
   const bgTint      = hexToRgba(accentColor, 0.05);   // very subtle tint
   const borderTint  = hexToRgba(accentColor, 0.25);   // soft border
   const iconBg      = hexToRgba(accentColor, 0.14);   // icon box bg

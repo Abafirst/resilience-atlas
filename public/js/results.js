@@ -617,7 +617,7 @@ async function checkPriorReportAccess(email) {
   }
 }
 
-// ── Page initialisation ────────────────────────────────
+// ── Page initialization ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
 
   // Constants for inline generate → poll fallback.
@@ -878,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
               showAlert('pdfAlert', 'PDF download requires an Atlas Navigator or Atlas Premium purchase. Please select an option below.', 'error', 'lock');
               const upgradeEl = document.getElementById('upgradeCardsContainer');
               upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else if (err && err.message !== 'cancelled') {
+            } else if (err && err.message !== 'canceled') {
               showAlert('pdfAlert', err.message || 'Download failed!', 'error', 'error');
             }
           });
@@ -1054,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', () => {
           showAlert('emailAlert', 'Sending your full PDF report requires a Deep Report or Atlas Premium purchase.', 'error', 'lock');
           const upgradeEl = document.getElementById('upgradeCardsContainer');
           upgradeEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else if (e && e.message !== 'cancelled') {
+        } else if (e && e.message !== 'canceled') {
           showAlert('emailAlert', e.message || 'Failed to send report.', 'error', 'error');
         }
       }

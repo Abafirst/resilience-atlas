@@ -36,10 +36,10 @@ const organizationSchema = new mongoose.Schema(
       default: 'free',
     },
 
-    // Subscription lifecycle: "active" | "trial" | "cancelled"
+    // Subscription lifecycle: "active" | "trial" | "canceled"
     subscription_status: {
       type: String,
-      enum: ['active', 'trial', 'cancelled'],
+      enum: ['active', 'trial', 'canceled'],
       default: 'trial',
     },
 
@@ -121,7 +121,7 @@ const organizationSchema = new mongoose.Schema(
     // Current subscription status
     subscription_status: {
       type: String,
-      enum: ['active', 'cancelled', 'trialing'],
+      enum: ['active', 'canceled', 'trialing'],
       default: 'active',
     },
 

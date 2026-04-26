@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * congratulations.js — Personalised congratulations after completing the assessment.
+ * congratulations.js — Personalized congratulations after completing the assessment.
  *
  * Variables:
  *   firstName          {string}

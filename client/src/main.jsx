@@ -116,11 +116,11 @@ async function init() {
 
   // After Auth0 redirects back to the app, check whether the user has already
   // completed the quiz and navigate to the appropriate page:
-  //   - appState.returnTo is honoured when explicitly set (e.g. deep-link logins)
+  //   - appState.returnTo is honored when explicitly set (e.g. deep-link logins)
   //   - if the user has a completed quiz → /results
   //   - otherwise → / (assessment hub for new users)
   const onRedirectCallback = (appState, user) => {
-    // If a specific returnTo was encoded in appState, honour it (deep-link logins).
+    // If a specific returnTo was encoded in appState, honor it (deep-link logins).
     const explicitTarget = appState?.returnTo;
     // Also check sessionStorage as a belt-and-suspenders fallback (set by pages
     // that call loginWithRedirect, e.g. GamificationDashboard).
@@ -142,11 +142,11 @@ async function init() {
       returnTarget !== '/'
     ) {
       console.debug('[Auth0] onRedirectCallback explicit returnTo:', returnTarget);
-      // Use window.location.replace so that React Router initialises at the
+      // Use window.location.replace so that React Router initializes at the
       // correct path.  window.history.replaceState only changes the address
       // bar without firing a popstate event, so React Router v6 would never
       // re-render the matching route.  A full navigation (replace, not push)
-      // keeps the back-button behaviour clean.
+      // keeps the back-button behavior clean.
       console.log('[Auth0] Final navigation target:', returnTarget);
       window.location.replace(returnTarget);
       return;

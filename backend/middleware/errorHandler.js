@@ -5,12 +5,12 @@ const { AppError } = require('../utils/errors');
 const { captureException } = require('../config/sentry');
 
 /**
- * Normalise well-known non-AppError errors (e.g. Mongoose, JWT) into a shape
+ * Normalize well-known non-AppError errors (e.g. Mongoose, JWT) into a shape
  * the error-response formatter understands.
  *
  * Returns an object with { statusCode, code, message, userMessage, supportLink }.
  */
-function normaliseError(err) {
+function normalizeError(err) {
     // Already an operational AppError — use it as-is.
     if (err instanceof AppError) return err;
 
@@ -109,31 +109,31 @@ function normaliseError(err) {
  */
 // eslint-disable-next-line no-unused-vars
 function globalErrorHandler(err, req, res, next) {
-    const normalised = normaliseError(err);
+    const normalized = normalizeError(err);
 
     const requestId = req.id || null;
     const reqLogger = requestId ? logger.withRequestId(requestId) : logger;
 
     const logPayload = {
-        statusCode: normalised.statusCode,
-        code: normalised.code,
+        statusCode: normalized.statusCode,
+        code: normalized.code,
         path: req.originalUrl || req.path,
         method: req.method,
         ...(requestId ? { requestId } : {}),
         ...(req.user ? { userId: req.user.userId || req.user.id } : {}),
-        ...(!normalised.isOperational ? { stack: err.stack } : {}),
+        ...(!normalized.isOperational ? { stack: err.stack } : {}),
     };
 
-    if (!normalised.isOperational || normalised.statusCode >= 500) {
-        reqLogger.error(normalised.message, logPayload);
-    } else if (normalised.statusCode >= 400) {
-        reqLogger.warn(normalised.message, logPayload);
+    if (!normalized.isOperational || normalized.statusCode >= 500) {
+        reqLogger.error(normalized.message, logPayload);
+    } else if (normalized.statusCode >= 400) {
+        reqLogger.warn(normalized.message, logPayload);
     } else {
-        reqLogger.info(normalised.message, logPayload);
+        reqLogger.info(normalized.message, logPayload);
     }
 
     // Report unexpected errors to Sentry.
-    if (!normalised.isOperational || normalised.statusCode >= 500) {
+    if (!normalized.isOperational || normalized.statusCode >= 500) {
         captureException(err, {
             requestId,
             path: req.originalUrl || req.path,
@@ -145,19 +145,19 @@ function globalErrorHandler(err, req, res, next) {
     const isDev = (process.env.NODE_ENV || 'development') === 'development';
 
     const body = {
-        error: isDev ? normalised.message : (normalised.userMessage || normalised.message),
-        userMessage: normalised.userMessage,
-        code: normalised.code,
+        error: isDev ? normalized.message : (normalized.userMessage || normalized.message),
+        userMessage: normalized.userMessage,
+        code: normalized.code,
         ...(requestId ? { requestId } : {}),
-        ...(normalised.supportLink ? { supportLink: normalised.supportLink } : {}),
+        ...(normalized.supportLink ? { supportLink: normalized.supportLink } : {}),
         ...(isDev && err.stack ? { stack: err.stack } : {}),
         // Pass upgradeRequired through for payment-gated errors.
-        ...(normalised.upgradeRequired ? { upgradeRequired: true } : {}),
+        ...(normalized.upgradeRequired ? { upgradeRequired: true } : {}),
     };
 
     // Avoid sending a response if headers have already been sent.
     if (res.headersSent) return;
-    res.status(normalised.statusCode).json(body);
+    res.status(normalized.statusCode).json(body);
 }
 
-module.exports = { globalErrorHandler, normaliseError };
+module.exports = { globalErrorHandler, normalizeError };

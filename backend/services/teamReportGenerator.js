@@ -26,18 +26,18 @@ const DIMENSION_DESCRIPTIONS = {
   relational: 'the capacity to build and sustain meaningful connections during difficult times',
   cognitive:  'the ability to construct empowering narratives and reframe challenges constructively',
   somatic:    'physical self-regulation, body awareness, and somatic grounding under stress',
-  emotional:  'recognising, expressing, and regulating emotions with flexibility and self-compassion',
+  emotional:  'recognizing, expressing, and regulating emotions with flexibility and self-compassion',
   spiritual:  'a sense of meaning, purpose, and connection to values larger than oneself',
   agentic:    'proactive action-taking, self-efficacy, and the capacity to initiate positive change',
 };
 
 const DIMENSION_STRENGTHS_TEXT = {
   relational: 'Your team excels at maintaining and nurturing human connection — a significant resilience asset when navigating adversity together.',
-  cognitive:  'Team members demonstrate strong narrative flexibility, reframing setbacks as opportunities and maintaining constructive internal dialogue.',
+  cognitive:  'Team members demonstrate strong narrative flexibility, reframing setbacks as opportunities and maintaining constructive internal dialog.',
   somatic:    'The team shows solid somatic awareness, drawing on body-based practices to regulate stress and restore balance.',
   emotional:  'Emotional adaptability is a standout strength — your team handles emotional complexity with maturity and self-awareness.',
   spiritual:  'A strong sense of collective purpose gives your team resilience during uncertainty; members are anchored by shared values.',
-  agentic:    'High agency and initiative characterise this team — members take ownership of challenges and mobilise resources effectively.',
+  agentic:    'High agency and initiative characterize this team — members take ownership of challenges and mobilize resources effectively.',
 };
 
 const DIMENSION_GROWTH_TEXT = {

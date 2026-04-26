@@ -10,7 +10,7 @@ export const KIDS_VIDEO_STORIES = [
     title: 'Finding Your Strength',
     subtitle: 'Emotional-Adaptive · All Ages',
     description:
-      'Discover how recognising your feelings and leaning on the people around you can help you bounce back from even the hardest days.',
+      'Discover how recognizing your feelings and leaning on the people around you can help you bounce back from even the hardest days.',
     duration: '3:45',
     dimension: 'Emotional-Adaptive',
     ageGroup: 'age-5-7',

@@ -193,7 +193,7 @@ router.get('/:orgId/report', authenticateJWT, async (req, res) => {
  */
 router.get('/:orgId/members', authenticateJWT, async (req, res) => {
   try {
-    // Allow both admin and member access; behaviour differs per role
+    // Allow both admin and member access; behavior differs per role
     const { orgId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(orgId)) {

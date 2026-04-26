@@ -167,7 +167,7 @@ const PHILOSOPHICAL_QUOTES = [
     quoteText: 'What lies behind us and what lies before us are tiny matters compared to what lies within us.',
     quoteAuthor: 'Ralph Waldo Emerson',
     microPractice: 'Write down three inner strengths you have and name one concrete way you will draw on them today.',
-    reflectionQuestion: 'Which of your inner resources are you under-utilising right now?',
+    reflectionQuestion: 'Which of your inner resources are you under-utilizing right now?',
   },
   {
     id: 'ag-005',
@@ -602,7 +602,7 @@ const PHILOSOPHICAL_QUOTES = [
     quoteText: 'Your body hears everything your mind says. Stay positive.',
     quoteAuthor: 'Naomi Judd',
     microPractice: 'Notice the physical sensation associated with a positive memory. Spend 90 seconds anchoring that sensation in your body.',
-    reflectionQuestion: 'How does your internal dialogue physically affect how your body feels throughout the day?',
+    reflectionQuestion: 'How does your internal dialog physically affect how your body feels throughout the day?',
   },
   {
     id: 'sb-008',

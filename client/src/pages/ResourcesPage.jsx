@@ -27,7 +27,7 @@ const TYPE_ICONS = {
   article: '/icons/story.svg',
   video:   '/icons/growth.svg',
   pdf:     '/icons/writing.svg',
-  podcast: '/icons/dialogue.svg',
+  podcast: '/icons/dialog.svg',
   quiz:    '/icons/compass.svg',
   expert:  '/icons/network.svg',
 };
@@ -162,7 +162,7 @@ export default function ResourcesPage() {
     params.set('page',  String(page));
     params.set('limit', String(PAGE_LIMIT));
 
-    let cancelled = false;
+    let canceled = false;
     setLoading(true);
     setError(null);
 
@@ -172,19 +172,19 @@ export default function ResourcesPage() {
         return r.json();
       })
       .then(data => {
-        if (cancelled) return;
+        if (canceled) return;
         setResources(data.resources || []);
         setTotal(data.total   || 0);
         setPages(data.pages   || 1);
         setLoading(false);
       })
       .catch(() => {
-        if (cancelled) return;
+        if (canceled) return;
         setError('Failed to load resources. Please try again.');
         setLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => { canceled = true; };
   }, [query, type, category, difficulty, dimension, sort, page, retryCount]);
 
   // ── Filter helpers ──────────────────────────────────────────────────────────

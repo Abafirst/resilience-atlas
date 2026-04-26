@@ -18,7 +18,7 @@ rendered by React Router:
 | `/teams/facilitation` | `TeamsFacilitationPage.jsx` |
 | `/pricing-teams` | `PricingTeamsPage.jsx` |
 
-## Routing Behaviour
+## Routing Behavior
 
 In `backend/server.js`, explicit routes for `/teams` and `/teams/*` are
 registered **before** the `express.static(public)` middleware.  This guarantees
@@ -79,7 +79,7 @@ client/src/styles/
 Backend Teams API routes are mounted at `/api/teams` and remain unchanged:
 
 - `GET /api/teams/access` – verify purchase/tier access
-- `GET /api/teams/download/:resourceId` – stream PDF download for authorised users
+- `GET /api/teams/download/:resourceId` – stream PDF download for authorized users
 
 ## Tier Gating Rules
 

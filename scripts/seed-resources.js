@@ -12,7 +12,7 @@
  * Evidence labels:
  *   Peer-reviewed   – Peer-reviewed journal articles / meta-analyses
  *   Gov/Academic    – Government bodies (NIH/CDC/WHO/APA/NHS) or university sites
- *   Expert-informed – Practitioner organisations, expert-led programs
+ *   Expert-informed – Practitioner organizations, expert-led programs
  *
  * Focus areas: ABA, ACT, Resilience Studies, Cross-Cultural Resilience,
  *              Clinical & Positive Psychology.
@@ -141,7 +141,7 @@ const RESOURCES = [
   }),
   r({
     title:       'MyPlate Plan — USDA Interactive Nutrition Workbook',
-    description: 'Free interactive tool from the USDA that generates a personalised daily food plan based on age, sex, height, weight, and activity level.',
+    description: 'Free interactive tool from the USDA that generates a personalized daily food plan based on age, sex, height, weight, and activity level.',
     type:        'pdf',
     category:    'nutrition',
     difficulty:  'beginner',
@@ -202,13 +202,13 @@ const RESOURCES = [
 
   r({
     title:       'Physical Activity and Mental Health — WHO Fact Sheet',
-    description: 'World Health Organisation guidelines and evidence summary on how physical activity reduces depression, anxiety, and cognitive decline.',
+    description: 'World Health Organization guidelines and evidence summary on how physical activity reduces depression, anxiety, and cognitive decline.',
     type:        'article',
     category:    'exercise',
     difficulty:  'beginner',
     dimensions:  ['Somatic-Regulative', 'Agentic-Generative'],
     url:         'https://www.who.int/news-room/fact-sheets/detail/physical-activity',
-    authorName:  'World Health Organisation (WHO)',
+    authorName:  'World Health Organization (WHO)',
     sourceType:  'Gov/Academic',
     tags:        ['exercise', 'mental health', 'WHO'],
   }),
@@ -331,19 +331,19 @@ const RESOURCES = [
   }),
   r({
     title:       'American College of Sports Medicine (ACSM)',
-    description: "The world's largest sports medicine organisation providing evidence-based guidelines, certifications, and resources on exercise and health.",
+    description: "The world's largest sports medicine organization providing evidence-based guidelines, certifications, and resources on exercise and health.",
     type:        'expert',
     category:    'exercise',
     difficulty:  'beginner',
     dimensions:  ['Somatic-Regulative', 'Agentic-Generative'],
     url:         'https://www.acsm.org/',
     expertName:  'American College of Sports Medicine',
-    expertTitle: 'Professional Organisation — Exercise & Sports Medicine',
+    expertTitle: 'Professional Organization — Exercise & Sports Medicine',
     expertBio:   'ACSM sets the global standard for exercise science research, professional certifications, and public health recommendations on physical activity.',
     expertContactUrl: 'https://www.acsm.org/contact-us',
     authorName:  'American College of Sports Medicine',
     sourceType:  'Expert-informed',
-    tags:        ['exercise', 'expert organisation', 'ACSM'],
+    tags:        ['exercise', 'expert organization', 'ACSM'],
     timeCommitment: 5,
   }),
 
@@ -365,7 +365,7 @@ const RESOURCES = [
   }),
   r({
     title:       'Meditation and Mindfulness: Science and Practice — NIH Evidence Review',
-    description: 'NCCIH systematic evidence review summarising RCT-quality evidence on meditation for anxiety, depression, pain, and psychological resilience.',
+    description: 'NCCIH systematic evidence review summarizing RCT-quality evidence on meditation for anxiety, depression, pain, and psychological resilience.',
     type:        'article',
     category:    'meditation',
     difficulty:  'intermediate',
@@ -490,7 +490,7 @@ const RESOURCES = [
     dimensions:  ['Cognitive-Narrative', 'Emotional-Somatic', 'Agentic-Generative'],
     url:         'https://contextualscience.org/',
     expertName:  'Association for Contextual Behavioral Science (ACBS)',
-    expertTitle: 'International Professional Organisation — ACT / RFT',
+    expertTitle: 'International Professional Organization — ACT / RFT',
     expertBio:   'ACBS is the global home of Acceptance and Commitment Therapy (ACT) research and practice.',
     expertContactUrl: 'https://contextualscience.org/contact',
     authorName:  'ACBS',
@@ -638,19 +638,19 @@ const RESOURCES = [
   }),
   r({
     title:       'American Academy of Sleep Medicine — Sleep Education',
-    description: 'Premier sleep medicine organisation providing evidence-based clinical guidelines, patient resources, and sleep health public education.',
+    description: 'Premier sleep medicine organization providing evidence-based clinical guidelines, patient resources, and sleep health public education.',
     type:        'expert',
     category:    'sleep',
     difficulty:  'beginner',
     dimensions:  ['Somatic-Regulative'],
     url:         'https://sleepeducation.org/',
     expertName:  'American Academy of Sleep Medicine',
-    expertTitle: 'Professional Organisation — Sleep Medicine',
+    expertTitle: 'Professional Organization — Sleep Medicine',
     expertBio:   'AASM sets the clinical standards for diagnosis and treatment of sleep disorders and provides freely accessible patient education resources.',
     expertContactUrl: 'https://sleepeducation.org/contact/',
     authorName:  'AASM',
     sourceType:  'Expert-informed',
-    tags:        ['sleep', 'expert organisation', 'AASM'],
+    tags:        ['sleep', 'expert organization', 'AASM'],
     timeCommitment: 5,
   }),
 
@@ -790,7 +790,7 @@ const RESOURCES = [
   }),
   r({
     title:       'The Gottman Institute — Research & Resources',
-    description: "World's leading evidence-based relationship research organisation offering assessments, therapy resources, and skills rooted in 40+ years of couples research.",
+    description: "World's leading evidence-based relationship research organization offering assessments, therapy resources, and skills rooted in 40+ years of couples research.",
     type:        'expert',
     category:    'relationships',
     difficulty:  'beginner',
@@ -917,7 +917,7 @@ const RESOURCES = [
   }),
   r({
     title:       'WorkLife with Adam Grant — TED Podcast on Work Psychology',
-    description: 'Organisational psychologist Adam Grant (Wharton) explores evidence-based insights on meaning, motivation, resilience, and performance at work.',
+    description: 'Organizational psychologist Adam Grant (Wharton) explores evidence-based insights on meaning, motivation, resilience, and performance at work.',
     type:        'podcast',
     category:    'career',
     difficulty:  'beginner',
@@ -949,7 +949,7 @@ const RESOURCES = [
     dimensions:  ['Agentic-Generative'],
     url:         'https://www.apa.org/topics/work',
     expertName:  'American Psychological Association (APA)',
-    expertTitle: 'Professional Organisation — Psychology & Work',
+    expertTitle: 'Professional Organization — Psychology & Work',
     expertBio:   'The APA provides authoritative, evidence-based public education on occupational well-being, stress management, and career resilience.',
     expertContactUrl: 'https://www.apa.org/contact',
     authorName:  'APA',
@@ -1001,8 +1001,8 @@ const RESOURCES = [
     timeCommitment: 25,
   }),
   r({
-    title:       'Applied Behavior Analysis (ABA) and Behavioural Resilience — BACB Overview',
-    description: 'Overview of how ABA principles — reinforcement, shaping, and generalisation — support skill-building and adaptive behaviour in resilience contexts.',
+    title:       'Applied Behavior Analysis (ABA) and Behavioral Resilience — BACB Overview',
+    description: 'Overview of how ABA principles — reinforcement, shaping, and generalisation — support skill-building and adaptive behavior in resilience contexts.',
     type:        'article',
     category:    'general',
     difficulty:  'intermediate',
@@ -1010,7 +1010,7 @@ const RESOURCES = [
     url:         'https://www.bacb.com/aba/',
     authorName:  'Behavior Analyst Certification Board (BACB)',
     sourceType:  'Expert-informed',
-    tags:        ['ABA', 'resilience', 'behaviour analysis', 'general'],
+    tags:        ['ABA', 'resilience', 'behavior analysis', 'general'],
     timeCommitment: 12,
   }),
   r({
@@ -1102,8 +1102,8 @@ const RESOURCES = [
     dimensions:  ['Agentic-Generative', 'Relational-Social', 'Cognitive-Narrative'],
     url:         'https://www.apa.org/topics/resilience',
     expertName:  'American Psychological Association (APA)',
-    expertTitle: 'Professional Organisation — Psychology',
-    expertBio:   'The APA is the leading scientific and professional organisation of psychology in the US, providing authoritative evidence-based public education on resilience.',
+    expertTitle: 'Professional Organization — Psychology',
+    expertBio:   'The APA is the leading scientific and professional organization of psychology in the US, providing authoritative evidence-based public education on resilience.',
     expertContactUrl: 'https://www.apa.org/contact',
     authorName:  'APA',
     sourceType:  'Gov/Academic',

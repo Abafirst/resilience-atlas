@@ -45,8 +45,8 @@
   // Canvas dimensions (physical pixels – CSS scales the element)
   var CW = 360; // canvas width
   var CH = 400; // canvas height (extra 40 px for dominant-dimension label)
-  var CX = 180; // compass centre x
-  var CY = 185; // compass centre y (slight upward offset)
+  var CX = 180; // compass center x
+  var CY = 185; // compass center y (slight upward offset)
   var R  = 75; // max chart data radius
 
   // Derived radii (all relative to R)

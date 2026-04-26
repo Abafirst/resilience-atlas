@@ -49,14 +49,14 @@ function loadDomainMap() {
   try {
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-      // Normalise all keys to lowercase for case-insensitive matching.
-      const normalised = {};
+      // Normalize all keys to lowercase for case-insensitive matching.
+      const normalized = {};
       for (const [k, v] of Object.entries(parsed)) {
         if (typeof k === 'string' && typeof v === 'string' && k && v) {
-          normalised[k.toLowerCase().trim()] = v.trim();
+          normalized[k.toLowerCase().trim()] = v.trim();
         }
       }
-      return normalised;
+      return normalized;
     }
   } catch (err) {
     logger.warn('[sso] Failed to parse SSO_DOMAIN_MAP — falling back to no SSO domains:', err.message);

@@ -449,7 +449,7 @@ If the browser console shows `Auth0 token unavailable... Missing Refresh Token` 
 
 ### SPA-friendly `/login` and `/register` routes
 
-`GET /login` and `GET /register` are **SPA-friendly redirects** that send users to the React SPA at `/results-history` rather than generating a server-side Auth0 authorize URL. The old behaviour caused an Auth0 "Callback URL mismatch" error in production because the server used `http://localhost:3000/callback` as `redirect_uri`.
+`GET /login` and `GET /register` are **SPA-friendly redirects** that send users to the React SPA at `/results-history` rather than generating a server-side Auth0 authorize URL. The old behavior caused an Auth0 "Callback URL mismatch" error in production because the server used `http://localhost:3000/callback` as `redirect_uri`.
 
 With the new approach the browser handles Auth0 login via `loginWithRedirect()` which always uses `window.location.origin` (e.g. `https://theresilienceatlas.com`) as the callback URL, ensuring it always matches.
 
@@ -517,7 +517,7 @@ Remove the `DEBUG_STRIPE` variable (or set it to any value other than `true`) in
 
 ## 📚 Resource Library Seed
 
-The Resource Library at `/resources` is populated by a database seed script that inserts evidence-based content curated from peer-reviewed journals, government health agencies (NIH, CDC, APA, WHO), and recognised researchers in ABA, ACT, Resilience Studies, Cross-Cultural Psychology, and Positive Psychology.
+The Resource Library at `/resources` is populated by a database seed script that inserts evidence-based content curated from peer-reviewed journals, government health agencies (NIH, CDC, APA, WHO), and recognized researchers in ABA, ACT, Resilience Studies, Cross-Cultural Psychology, and Positive Psychology.
 
 ### Resource seed scripts (located in `backend/scripts/`)
 
@@ -596,7 +596,7 @@ Each resource `description` field includes a source label:
 |-------|---------|
 | `[Peer-reviewed]` | Published in an academic journal or reviewed conference proceedings |
 | `[Gov/Academic]` | Government health agency (NIH, CDC, APA, HHS) or accredited university |
-| `[Expert-informed]` | Recognised researcher, clinician, or practitioner with published credentials |
+| `[Expert-informed]` | Recognized researcher, clinician, or practitioner with published credentials |
 
 ### Coverage
 
@@ -606,7 +606,7 @@ Each resource `description` field includes a source label:
 
 ---
 
-## 📧 Email Link Behaviour (View Full Report)
+## 📧 Email Link Behavior (View Full Report)
 
 When a user receives a "View Full Report" email after completing the Resilience Atlas™ assessment, the CTA button links to:
 

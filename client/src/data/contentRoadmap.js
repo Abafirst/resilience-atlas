@@ -140,15 +140,15 @@ export const ROADMAP_PHASES = [
     title: 'Enrichment',
     subtitle: 'Premium Features',
     timeframe: 'Months 7–12',
-    goal: 'Advanced personalisation + specialised content',
+    goal: 'Advanced personalization + specialized content',
     color: '#d97706',
     colorLight: '#fef3c7',
     icon: '/icons/star.svg',
     status: 'planned',
     deliverables: [
       {
-        id: 'p3-personalised',
-        category: 'Personalised Pathways',
+        id: 'p3-personalized',
+        category: 'Personalized Pathways',
         icon: '/icons/compass.svg',
         items: [
           'Assessment-driven skill recommendations',
@@ -195,7 +195,7 @@ export const ROADMAP_PHASES = [
         current: 0,
       },
     ],
-    completionCriteria: 'IATLAS is a comprehensive, personalised, community-driven resilience ecosystem.',
+    completionCriteria: 'IATLAS is a comprehensive, personalized, community-driven resilience ecosystem.',
   },
 ];
 
@@ -208,7 +208,7 @@ export const QUALITY_CHECKLIST = [
   { id: 'age-appropriate',    label: 'Age-appropriate (for kids content)' },
   { id: 'accessibility',      label: 'Accessibility tested (screen reader, keyboard nav)' },
   { id: 'mobile-responsive',  label: 'Mobile-responsive' },
-  { id: 'visual-consistency', label: 'Visual consistency (brand icons, colours)' },
+  { id: 'visual-consistency', label: 'Visual consistency (brand icons, colors)' },
   { id: 'proofread',          label: 'Proofread (no typos, 8th-grade reading level)' },
 ];
 
@@ -221,7 +221,7 @@ export const DEVELOPMENT_WORKFLOW = [
     tasks: [
       'Review ABA/ACT literature',
       'Find evidence-based practices',
-      'Identify target behaviour/skill',
+      'Identify target behavior/skill',
     ],
   },
   {

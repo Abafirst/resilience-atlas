@@ -173,7 +173,7 @@ export const TEAMS_CONTENT = {
         'How might we use multiple perspectives more deliberately in our work?'
       ],
       variations: [
-        { size: 'Remote teams', note: 'Use a virtual whiteboard with labelled zones; use timers for rotation.' }
+        { size: 'Remote teams', note: 'Use a virtual whiteboard with labeled zones; use timers for rotation.' }
       ],
       printable: true
     },

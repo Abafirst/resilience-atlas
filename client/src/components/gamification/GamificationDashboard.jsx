@@ -346,7 +346,7 @@ export default function GamificationDashboard() {
   };
 
   useEffect(() => {
-    if (auth0Loading) return; // Wait for Auth0 to finish initialising
+    if (auth0Loading) return; // Wait for Auth0 to finish initializing
 
     let email = user?.email || '';
     if (!email) {

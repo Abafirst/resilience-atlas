@@ -766,7 +766,7 @@ export default function ContentRoadmapPage() {
               </span>
               <h2 className="crp-section-title" id="crp-phases-title">Strategic Development Phases</h2>
               <p className="crp-section-sub">
-                Each phase builds on the last — from MVP launch through full curriculum to advanced personalisation.
+                Each phase builds on the last — from MVP launch through full curriculum to advanced personalization.
               </p>
             </div>
 

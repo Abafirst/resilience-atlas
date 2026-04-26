@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { NAVIGATION_PATHWAYS } from '../../data/gamificationContent.js';
 import { playPathwayStartSound } from '../../utils/soundEffects.js';
 
-// ── Dimension colour config (mirrors NavigationMilestones) ────────────────────
+// ── Dimension color config (mirrors NavigationMilestones) ────────────────────
 const DIM_CONFIG = {
   'Agentic-Generative':    { color: '#f97316', light: '#fff7ed', border: 'rgba(249,115,22,0.25)',  label: 'Agentic' },
   'Relational-Connective': { color: '#ec4899', light: '#fdf2f8', border: 'rgba(236,72,153,0.25)',  label: 'Relational' },

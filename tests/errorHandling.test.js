@@ -56,7 +56,7 @@ const {
     ServiceUnavailableError,
 } = require('../backend/utils/errors');
 
-const { globalErrorHandler, normaliseError } = require('../backend/middleware/errorHandler');
+const { globalErrorHandler, normalizeError } = require('../backend/middleware/errorHandler');
 const {
     sanitise,
     escapeHtml,
@@ -164,62 +164,62 @@ describe('Custom Error Classes', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// normaliseError
+// normalizeError
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe('normaliseError', () => {
+describe('normalizeError', () => {
     test('passes through AppError as-is', () => {
         const err = new ValidationError('bad input');
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result).toBe(err);
     });
 
-    test('normalises Mongoose ValidationError', () => {
+    test('normalizes Mongoose ValidationError', () => {
         const err = { name: 'ValidationError', errors: { email: { message: 'invalid email' } } };
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(400);
         expect(result.code).toBe('VALIDATION_ERROR');
         expect(result.isOperational).toBe(true);
     });
 
-    test('normalises Mongoose CastError', () => {
+    test('normalizes Mongoose CastError', () => {
         const err = { name: 'CastError', path: 'userId', message: 'Cast failed' };
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(400);
         expect(result.code).toBe('VALIDATION_ERROR');
     });
 
-    test('normalises duplicate key error (code 11000)', () => {
+    test('normalizes duplicate key error (code 11000)', () => {
         const err = { code: 11000, keyValue: { email: 'test@test.com' } };
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(409);
         expect(result.code).toBe('CONFLICT');
     });
 
-    test('normalises JWT errors', () => {
+    test('normalizes JWT errors', () => {
         const err = { name: 'JsonWebTokenError', message: 'invalid signature' };
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(401);
         expect(result.code).toBe('AUTHENTICATION_ERROR');
     });
 
-    test('normalises payload too large error', () => {
+    test('normalizes payload too large error', () => {
         const err = { type: 'entity.too.large', message: 'too large' };
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(413);
         expect(result.code).toBe('PAYLOAD_TOO_LARGE');
     });
 
-    test('normalises malformed JSON SyntaxError', () => {
+    test('normalizes malformed JSON SyntaxError', () => {
         const err = Object.assign(new SyntaxError('Unexpected token'), { status: 400, body: true });
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(400);
         expect(result.code).toBe('INVALID_JSON');
     });
 
     test('returns 500 for unknown errors', () => {
         const err = new Error('something exploded');
-        const result = normaliseError(err);
+        const result = normalizeError(err);
         expect(result.statusCode).toBe(500);
         expect(result.code).toBe('INTERNAL_SERVER_ERROR');
     });

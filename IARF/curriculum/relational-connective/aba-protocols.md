@@ -144,7 +144,7 @@ To provide structured practice of social skills in a controlled, feedback-rich e
 ### Procedure
 1. **Set the scene**: Describe the social scenario clearly (who, where, what situation)
 2. **Assign roles**: Clinician plays relational partner; client plays themselves
-3. **Begin the role-play**: Use naturalistic dialogue and behavior
+3. **Begin the role-play**: Use naturalistic dialog and behavior
 4. **Stop and feedback at key moments**: Use a "freeze" signal to pause and discuss specific moments
 5. **Replay**: Return to start and replay with modification
 6. **Increase difficulty**: Progress to more challenging scenarios as simpler ones are mastered

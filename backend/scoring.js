@@ -11,7 +11,7 @@
  *   - Cognitive-Narrative   (Q61–Q72)
  *
  * Each answer is expected on a scale of 1–5 (1 = Never/Poor, 5 = Always/Excellent).
- * Category scores are normalised to a 0–100 percentage.
+ * Category scores are normalized to a 0–100 percentage.
  */
 
 // Map question indices (0-based) to resilience dimensions

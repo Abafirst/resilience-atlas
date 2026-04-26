@@ -378,7 +378,7 @@ export const QUEST_LOG_SERIES = [
         type: 'challenge',
         prompt: 'Complete Maya\'s Reach-Out Challenge this week:',
         challenges: [
-          { id: 'c1', label: 'Text someone you haven\'t talked to in a while', icon: '/icons/dialogue.svg' },
+          { id: 'c1', label: 'Text someone you haven\'t talked to in a while', icon: '/icons/dialog.svg' },
           { id: 'c2', label: 'Ask someone a deeper question than "How are you?"', icon: '/icons/reframe.svg' },
           { id: 'c3', label: 'Tell someone what you appreciate about them', icon: '/icons/connection.svg' },
           { id: 'c4', label: 'Ask for help with something — anything', icon: '/icons/relational-connective.svg' },
