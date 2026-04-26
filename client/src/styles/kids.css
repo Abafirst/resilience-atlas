@@ -706,7 +706,7 @@
   border: 1.5px solid transparent;
   border-radius: 14px;
   background: var(--slate-50, #f8fafc);
-  color: var(--slate-500, #64748b);
+  color: #475569;
   font-size: .8rem;
   font-weight: 600;
   cursor: pointer;
@@ -810,6 +810,38 @@
   background: #4338ca;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(79,70,229,.42);
+}
+
+/* Hero buttons container */
+.kids-hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* Secondary CTA - solid white style */
+.btn-cta-secondary {
+  display: inline-block;
+  background: #ffffff;
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+  padding: .875rem 1.75rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-cta-secondary:hover {
+  background: #f8f9fa;
+  border-color: #4338ca;
+  color: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
 }
 
 @media (max-width: 640px) {
