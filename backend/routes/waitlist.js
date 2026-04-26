@@ -44,6 +44,7 @@ router.post('/', waitlistLimiter, async (req, res) => {
       return res.status(400).json({ error: 'Please provide a valid email address.' });
     }
 
+    // Specialties currently shown on the frontend + reserved values for future use
     const validSpecialties = ['teachers', 'slp', 'ot', 'daily-living', 'social-skills', 'clinicians', 'caregivers'];
     if (typeof specialty !== 'string' || !validSpecialties.includes(specialty)) {
       return res.status(400).json({ error: 'A valid specialty is required.' });
