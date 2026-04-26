@@ -426,6 +426,8 @@ app.use("/api/iatlas/profiles", require("./routes/profiles"));
 console.log("✅ Mounted route: /api/iatlas/profiles");
 app.use("/api/iatlas/waitlist", require("./routes/waitlist"));
 console.log("✅ Mounted route: /api/iatlas/waitlist");
+app.use("/api/iatlas/clinical/session-plans", require("./routes/sessionPlans"));
+console.log("✅ Mounted route: /api/iatlas/clinical/session-plans");
 
 // ==============================
 // Root API info
