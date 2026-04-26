@@ -1386,6 +1386,92 @@ const STYLES = `
     .iatlas-kids-banner-right { display: none; }
   }
 
+  /* ── Specialty Navigation ────────────────────────────────────────────────── */
+  .iatlas-specialty-nav {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+  }
+
+  .iatlas-specialty-nav-header {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .iatlas-specialty-nav-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.3rem;
+  }
+
+  .iatlas-specialty-nav-header p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .iatlas-specialty-nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .iatlas-specialty-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    cursor: pointer;
+  }
+
+  .iatlas-specialty-nav-btn:hover {
+    border-color: #4f46e5;
+    color: #4338ca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79,70,229,0.15);
+  }
+
+  .iatlas-specialty-nav-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .iatlas-specialty-nav-label {
+    white-space: nowrap;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-nav {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-color: #334155;
+  }
+
+  [data-theme="dark"] .iatlas-specialty-nav-header h2 { color: #f1f5f9; }
+  [data-theme="dark"] .iatlas-specialty-nav-header p { color: #94a3b8; }
+  [data-theme="dark"] .iatlas-specialty-nav-btn { background: #1e293b; color: #cbd5e1; border-color: #475569; }
+  [data-theme="dark"] .iatlas-specialty-nav-btn:hover { border-color: #818cf8; color: #a5b4fc; }
+
+  @media (max-width: 640px) {
+    .iatlas-specialty-nav-buttons {
+      flex-direction: column;
+    }
+    .iatlas-specialty-nav-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
   /* ── Specialties Coming Soon ─────────────────────────────────────────────── */
   .iatlas-specialties-coming-soon {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1922,6 +2008,31 @@ export default function IATLASCurriculumPage() {
                   <span className="iatlas-hero-badge-label">+ ACT</span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* ── Specialty Navigation ─────────────────────────────────────── */}
+          <section className="iatlas-specialty-nav" aria-label="Jump to specialty fields">
+            <div className="iatlas-specialty-nav-header">
+              <h2>Specialized Fields</h2>
+              <p>Jump to your professional specialty</p>
+            </div>
+            <div className="iatlas-specialty-nav-buttons">
+              {Object.values(IATLAS_SPECIALTIES).map((specialty) => (
+                <a
+                  key={specialty.id}
+                  href="#iatlas-specialties-title"
+                  className="iatlas-specialty-nav-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector('.iatlas-specialties-coming-soon')?.scrollIntoView({ behavior: 'smooth' });
+                    setTimeout(() => setActiveSpecialty(specialty), 400);
+                  }}
+                >
+                  <span className="iatlas-specialty-nav-icon">{specialty.icon}</span>
+                  <span className="iatlas-specialty-nav-label">{specialty.name}</span>
+                </a>
+              ))}
             </div>
           </section>
 
