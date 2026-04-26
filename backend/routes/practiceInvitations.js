@@ -68,7 +68,7 @@ router.get('/invitations/:token', async (req, res) => {
     }
 
     if (new Date() > new Date(invitation.expiresAt)) {
-      await PractitionerInvitation.findByIdAndUpdate(invitation._id, { status: 'expired' });
+      await PractitionerInvitation.findByIdAndUpdate(invitation._id, { $set: { status: 'expired' } });
       return res.status(410).json({ error: 'Invitation has expired.' });
     }
 
@@ -158,7 +158,7 @@ router.delete('/invitations/:id', authenticateJWT, async (req, res) => {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 
-    await PractitionerInvitation.findByIdAndUpdate(id, { status: 'revoked' });
+    await PractitionerInvitation.findByIdAndUpdate(id, { $set: { status: 'revoked' } });
     await logActivity(invitation.practiceId, userId, 'revoke_invitation', 'practitioner', id, { email: invitation.email }, req);
 
     res.json({ message: 'Invitation revoked.' });

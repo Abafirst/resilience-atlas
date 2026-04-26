@@ -320,7 +320,7 @@ router.delete('/:id/practitioners/:targetUserId', authenticateJWT, async (req, r
 
     await PracticePractitioner.findOneAndUpdate(
       { practiceId: id, userId: targetUserId },
-      { status: 'removed' }
+      { $set: { status: 'removed' } }
     );
 
     await logActivity(id, userId, 'remove_practitioner', 'practitioner', targetUserId, {}, req);
