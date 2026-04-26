@@ -3464,9 +3464,6 @@ export default function ResultsPage() {
               setActiveDimModal(dim);
             }}
           />
-          <p style={{ fontSize: 12, color: '#94a3b8', marginTop: 12, marginBottom: 4, lineHeight: 1.5 }}>
-            <span aria-hidden="true">ⓘ</span> Click any dimension label for details and personalized tips.
-          </p>
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 6 }}>
               Your strongest resilience dimension is:{' '}
