@@ -3403,6 +3403,9 @@ export default function ResultsPage() {
             {isPaidTier(tier) && (
               <a href="/gamification" style={s.journeyNavLink} aria-label="Resilience Journey — your practices and progress"><img src="/icons/compass.svg" alt="" aria-hidden="true" style={{width:16,height:16,verticalAlign:"middle",marginRight:5}} />Resilience Journey</a>
             )}
+            {isPaidTier(tier) && (
+              <a href="/iatlas" style={s.journeyNavLink} aria-label="IATLAS Curriculum">IATLAS</a>
+            )}
             <a href="/quiz?retake=1" style={s.retakeBtn}>Retake Quiz</a>
           </nav>
         </div>
@@ -3478,12 +3481,14 @@ export default function ResultsPage() {
             <span aria-hidden="true" style={{ fontSize: 14, color: '#667eea' }}>👆</span>
             Click any dimension label to learn what it means and discover personalized ways to strengthen it
           </p>
-          <RadarChart
-            scores={results.scores}
-            onDimensionClick={(dim) => {
-              setActiveDimModal(dim);
-            }}
-          />
+          <div style={{ transform: 'translateY(-5px)' }}>
+            <RadarChart
+              scores={results.scores}
+              onDimensionClick={(dim) => {
+                setActiveDimModal(dim);
+              }}
+            />
+          </div>
           {dominantType && (
             <p style={{ fontSize: 13, color: '#718096', marginTop: 10 }}>
               Your strongest resilience dimension is:{' '}
@@ -4540,6 +4545,7 @@ export default function ResultsPage() {
               <ul style={s.quicklinksGroupLinks}>
                 <li><a href="/teams" style={s.quicklinkAnchor}>For Teams</a></li>
                 <li><a href="/kids.html" style={s.quicklinkAnchor}>For Kids</a></li>
+                <li><a href="/iatlas" style={s.quicklinkAnchor}>IATLAS Curriculum</a></li>
               </ul>
             </div>
             <div style={s.quicklinksGroup}>
