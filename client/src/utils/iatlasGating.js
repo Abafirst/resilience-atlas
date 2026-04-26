@@ -57,7 +57,6 @@ export const IATLAS_TIER_CONFIG = {
     recommended: true,
     features: [
       'Everything in Individual',
-      'Up to 5 child profiles',
       'Caregiver resources & parent guides',
       'Shared progress dashboard',
       'Family challenge activities',
