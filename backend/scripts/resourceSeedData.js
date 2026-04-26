@@ -4,7 +4,7 @@
  * resourceSeedData.js — Curated Resource Library Seed Data
  *
  * Evidence-based resources for the Resilience Atlas Resource Library,
- * organised across all seven visible categories and multiple content types.
+ * organized across all seven visible categories and multiple content types.
  *
  * Focus areas: ABA, ACT, Resilience Studies, Cross-Cultural Research,
  *              Psychology, Positive Psychology, Behavioral Science.
@@ -12,7 +12,7 @@
  * Source label conventions (in description field):
  *   [Peer-reviewed]   — academic journals / published research
  *   [Gov/Academic]    — government agencies / academic institutions
- *   [Expert-informed] — recognised practitioners / researchers / books
+ *   [Expert-informed] — recognized practitioners / researchers / books
  *
  * Each entry maps directly to the Resource mongoose schema in
  * backend/models/Resource.js.
@@ -46,7 +46,7 @@ module.exports = [
     category:    'nutrition',
     difficulty:  'intermediate',
     url:         'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6950146/',
-    description: 'Peer-reviewed review published in the NIH National Library of Medicine examining omega-3 supplementation in depression, anxiety, and PTSD. Summarises randomised controlled trials. [Peer-reviewed]',
+    description: 'Peer-reviewed review published in the NIH National Library of Medicine examining omega-3 supplementation in depression, anxiety, and PTSD. Summarizes randomised controlled trials. [Peer-reviewed]',
     excerpt:     'Systematic review of omega-3 research showing significant effects on mood and stress reactivity.',
     authorName:  'NIH National Library of Medicine',
     tags:        ['omega-3', 'nutrition', 'depression', 'research'],
@@ -113,8 +113,8 @@ module.exports = [
     category:    'nutrition',
     difficulty:  'beginner',
     url:         'https://www.myplate.gov/myplate-plan',
-    description: 'Interactive USDA MyPlate assessment that personalises dietary recommendations based on age, weight, and activity level. Based on the Dietary Guidelines for Americans. [Gov/Academic]',
-    excerpt:     'Get a personalised eating plan from the USDA evidence-based MyPlate tool.',
+    description: 'Interactive USDA MyPlate assessment that personalizes dietary recommendations based on age, weight, and activity level. Based on the Dietary Guidelines for Americans. [Gov/Academic]',
+    excerpt:     'Get a personalized eating plan from the USDA evidence-based MyPlate tool.',
     authorName:  'USDA MyPlate',
     tags:        ['quiz', 'usda', 'diet', 'self-assessment'],
     dimensions:  ['Agentic-Generative', 'Somatic-Regulative'],
@@ -170,10 +170,10 @@ module.exports = [
     url:         'https://www.johnjratey.com/spark',
     expertName:  'Dr. John J. Ratey',
     expertTitle: 'Associate Clinical Professor of Psychiatry, Harvard Medical School',
-    expertBio:   'Dr. John Ratey is a Harvard psychiatrist and internationally recognised authority on the brain-fitness connection. His book "Spark" synthesises decades of neuroscience research showing how aerobic exercise transforms the brain and builds stress resilience.',
+    expertBio:   'Dr. John Ratey is a Harvard psychiatrist and internationally recognized authority on the brain-fitness connection. His book "Spark" synthesises decades of neuroscience research showing how aerobic exercise transforms the brain and builds stress resilience.',
     expertContactUrl: 'https://www.johnjratey.com/',
     description: 'Harvard psychiatrist whose landmark synthesis of peer-reviewed neuroscience on exercise and brain function demonstrates how aerobic activity builds BDNF, reduces anxiety, and supports resilience. [Expert-informed]',
-    excerpt:     'Harvard psychiatrist reveals how exercise is the single best tool for optimising brain performance and resilience.',
+    excerpt:     'Harvard psychiatrist reveals how exercise is the single best tool for optimizing brain performance and resilience.',
     tags:        ['expert', 'harvard', 'exercise', 'neuroscience', 'brain'],
     dimensions:  ['Somatic-Regulative', 'Cognitive-Narrative', 'Agentic-Generative'],
     timeCommitment: 5,
@@ -254,7 +254,7 @@ module.exports = [
     category:    'exercise',
     difficulty:  'beginner',
     url:         'https://www.acefitness.org/resources/everyone/blog/fitness-calculators/',
-    description: 'American Council on Exercise (ACE) evidence-based fitness assessment tools including physical activity readiness, target heart rate, and BMI calculators to personalise exercise programmes. [Expert-informed]',
+    description: 'American Council on Exercise (ACE) evidence-based fitness assessment tools including physical activity readiness, target heart rate, and BMI calculators to personalize exercise programs. [Expert-informed]',
     excerpt:     'ACE fitness assessment tools to help you find the right exercise intensity and type for your health goals.',
     authorName:  'American Council on Exercise',
     tags:        ['quiz', 'fitness', 'ace', 'self-assessment'],
@@ -274,7 +274,7 @@ module.exports = [
     category:    'meditation',
     difficulty:  'beginner',
     url:         'https://www.apa.org/monitor/2019/10/cover-mindfulness-therapy',
-    description: 'APA Monitor feature reviewing 40+ years of MBSR research developed by Jon Kabat-Zinn at UMass. Summarises meta-analyses on mindfulness efficacy for stress, anxiety, depression, and chronic pain. [Gov/Academic]',
+    description: 'APA Monitor feature reviewing 40+ years of MBSR research developed by Jon Kabat-Zinn at UMass. Summarizes meta-analyses on mindfulness efficacy for stress, anxiety, depression, and chronic pain. [Gov/Academic]',
     excerpt:     'APA review of four decades of mindfulness-based stress reduction research and its proven benefits.',
     authorName:  'American Psychological Association',
     tags:        ['mindfulness', 'mbsr', 'apa', 'stress-reduction'],
@@ -799,7 +799,7 @@ module.exports = [
     expertBio:   'Dr. Martin Seligman pioneered positive psychology and developed the PERMA model of wellbeing (Positive emotion, Engagement, Relationships, Meaning, Achievement). Former president of the American Psychological Association, he has authored over 20 books and hundreds of peer-reviewed articles on resilience, optimism, and human flourishing.',
     expertContactUrl: 'https://ppc.sas.upenn.edu/',
     description: 'Father of Positive Psychology whose PERMA framework and learned optimism research form the backbone of evidence-based resilience interventions worldwide. [Expert-informed]',
-    excerpt:     'The father of positive psychology: his PERMA model and resilience research underpin most modern evidence-based wellbeing programmes.',
+    excerpt:     'The father of positive psychology: his PERMA model and resilience research underpin most modern evidence-based wellbeing programs.',
     tags:        ['expert', 'positive-psychology', 'perma', 'seligman'],
     dimensions:  ['Cognitive-Narrative', 'Agentic-Generative', 'Spiritual-Reflective', 'Relational-Social'],
     timeCommitment: 5,
@@ -880,7 +880,7 @@ module.exports = [
     category:    'general',
     difficulty:  'intermediate',
     url:         'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2846580/',
-    description: 'Peer-reviewed article in Behavior Analysis in Practice examining Applied Behavior Analysis (ABA) principles in resilience building. Covers reinforcement schedules, behavioural activation, and skill-building approaches to psychological resilience. [Peer-reviewed]',
+    description: 'Peer-reviewed article in Behavior Analysis in Practice examining Applied Behavior Analysis (ABA) principles in resilience building. Covers reinforcement schedules, behavioral activation, and skill-building approaches to psychological resilience. [Peer-reviewed]',
     excerpt:     'How Applied Behavior Analysis (ABA) principles provide evidence-based tools for building lasting psychological resilience.',
     authorName:  'NIH / Behavior Analysis in Practice',
     tags:        ['aba', 'behavior-analysis', 'resilience', 'peer-reviewed'],

@@ -137,7 +137,7 @@ async function uniqueSlug(base) {
 
 router.get('/categories', readLimiter, (req, res) => {
   res.json({
-    categories: ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general'],
+    categories: ['nutrition', 'exercise', 'meditation', 'sleep', 'relationships', 'career', 'general', 'clinician', 'caregiver'],
     types:      ['article', 'video', 'pdf', 'quiz', 'podcast', 'expert'],
     difficulties: ['beginner', 'intermediate', 'advanced'],
     dimensions: [

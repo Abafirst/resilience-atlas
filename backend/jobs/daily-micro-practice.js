@@ -4,7 +4,7 @@
  * daily-micro-practice.js
  *
  * Scheduled job that sends each user their Day N micro-practice email
- * from their 30-day personalised plan.
+ * from their 30-day personalized plan.
  *
  * Run daily via cron / system scheduler:
  *   node backend/jobs/daily-micro-practice.js

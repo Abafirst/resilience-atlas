@@ -5,10 +5,10 @@
  */
 
 const {
-  analyseProfiles,
+  analyzeProfiles,
   calculateGrowth,
   buildGrowthReport,
-  normaliseScores,
+  normalizeScores,
   DIMENSIONS,
   DIMENSION_LABELS,
 } = require('../backend/services/comparisonService');
@@ -19,11 +19,11 @@ const strongScores = { emotional: 80, mental: 85, physical: 75, social: 90, spir
 const weakScores   = { emotional: 30, mental: 35, physical: 25, social: 40, spiritual: 20, financial: 28 };
 const midScores    = { emotional: 55, mental: 60, physical: 50, social: 58, spiritual: 45, financial: 52 };
 
-// ── normaliseScores ───────────────────────────────────────────────────────────
+// ── normalizeScores ───────────────────────────────────────────────────────────
 
-describe('normaliseScores', () => {
+describe('normalizeScores', () => {
   test('returns plain numbers unchanged', () => {
-    const result = normaliseScores(strongScores);
+    const result = normalizeScores(strongScores);
     for (const dim of DIMENSIONS) {
       expect(result[dim]).toBe(strongScores[dim]);
     }
@@ -31,24 +31,24 @@ describe('normaliseScores', () => {
 
   test('extracts .percentage from object values', () => {
     const obj = { emotional: { percentage: 70, raw: 35, max: 50 }, mental: 60, physical: 50, social: 55, spiritual: 45, financial: 40 };
-    const result = normaliseScores(obj);
+    const result = normalizeScores(obj);
     expect(result.emotional).toBe(70);
     expect(result.mental).toBe(60);
   });
 
   test('defaults missing dimensions to 0', () => {
-    const result = normaliseScores({});
+    const result = normalizeScores({});
     for (const dim of DIMENSIONS) {
       expect(result[dim]).toBe(0);
     }
   });
 });
 
-// ── analyseProfiles ───────────────────────────────────────────────────────────
+// ── analyzeProfiles ───────────────────────────────────────────────────────────
 
-describe('analyseProfiles', () => {
+describe('analyzeProfiles', () => {
   test('returns object with expected keys', () => {
-    const result = analyseProfiles(strongScores, midScores);
+    const result = analyzeProfiles(strongScores, midScores);
     expect(result).toHaveProperty('synergies');
     expect(result).toHaveProperty('complementarities');
     expect(result).toHaveProperty('gaps');
@@ -57,7 +57,7 @@ describe('analyseProfiles', () => {
   });
 
   test('all values are arrays or numbers', () => {
-    const result = analyseProfiles(strongScores, midScores);
+    const result = analyzeProfiles(strongScores, midScores);
     expect(Array.isArray(result.synergies)).toBe(true);
     expect(Array.isArray(result.complementarities)).toBe(true);
     expect(Array.isArray(result.gaps)).toBe(true);
@@ -67,35 +67,35 @@ describe('analyseProfiles', () => {
 
   test('identifies synergies when both score >=70', () => {
     // Both have strong scores → synergies for shared dims >= 70
-    const result = analyseProfiles(strongScores, strongScores);
+    const result = analyzeProfiles(strongScores, strongScores);
     expect(result.synergies.length).toBeGreaterThan(0);
   });
 
   test('identifies gaps when both score <=45', () => {
-    const result = analyseProfiles(weakScores, weakScores);
+    const result = analyzeProfiles(weakScores, weakScores);
     expect(result.gaps.length).toBeGreaterThan(0);
   });
 
   test('identifies complementarities when one is high and other is not', () => {
     const high = { emotional: 80, mental: 80, physical: 80, social: 80, spiritual: 80, financial: 80 };
     const low  = { emotional: 30, mental: 30, physical: 30, social: 30, spiritual: 30, financial: 30 };
-    const result = analyseProfiles(high, low);
+    const result = analyzeProfiles(high, low);
     expect(result.complementarities.length).toBeGreaterThan(0);
   });
 
   test('teamScore is within 0–100', () => {
-    const result = analyseProfiles(strongScores, weakScores);
+    const result = analyzeProfiles(strongScores, weakScores);
     expect(result.teamScore).toBeGreaterThanOrEqual(0);
     expect(result.teamScore).toBeLessThanOrEqual(100);
   });
 
   test('provides at least one recommendation', () => {
-    const result = analyseProfiles(midScores, midScores);
+    const result = analyzeProfiles(midScores, midScores);
     expect(result.recommendations.length).toBeGreaterThan(0);
   });
 
   test('uses provided names in output strings', () => {
-    const result = analyseProfiles(strongScores, weakScores, 'Alice', 'Bob');
+    const result = analyzeProfiles(strongScores, weakScores, 'Alice', 'Bob');
     const allStrings = [
       ...result.synergies,
       ...result.complementarities,

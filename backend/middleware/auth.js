@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-// Lazily-initialised JWKS client so that unit tests that never set
+// Lazily-initialized JWKS client so that unit tests that never set
 // AUTH0_DOMAIN / AUTH0_AUDIENCE still work without a network call.
 let _jwksClient = null;
 
@@ -78,7 +78,7 @@ const authenticateJWT = (req, res, next) => {
     if (process.env.AUTH0_DOMAIN && process.env.AUTH0_AUDIENCE) {
         verifyAuth0Token(token)
             .then((decoded) => {
-                // Normalise the Auth0 payload so that req.user.userId / req.user.email
+                // Normalize the Auth0 payload so that req.user.userId / req.user.email
                 // are always available regardless of which token type was used.
                 req.user = {
                     userId: decoded.sub,

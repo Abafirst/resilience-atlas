@@ -31,8 +31,8 @@ console.log(`✅ Loaded ${QUESTIONS.length} questions from public/js/quiz.js\n`)
 
 // ── Tokenisation helpers ──────────────────────────────
 
-/** Normalise text: lowercase, strip punctuation, collapse whitespace */
-function normalise(text) {
+/** Normalize text: lowercase, strip punctuation, collapse whitespace */
+function normalize(text) {
   return text
     .toLowerCase()
     .replace(/[^\w\s]/g, ' ')
@@ -51,7 +51,7 @@ function tokenSet(text) {
     'their', 'after', 'during', 'without',
   ]);
   return new Set(
-    normalise(text)
+    normalize(text)
       .split(' ')
       .filter(w => w.length > 2 && !stopWords.has(w))
   );
@@ -71,7 +71,7 @@ function jaccardSimilarity(a, b) {
 
 /** Levenshtein edit distance */
 function levenshtein(a, b) {
-  const na = normalise(a), nb = normalise(b);
+  const na = normalize(a), nb = normalize(b);
   const la = na.length, lb = nb.length;
   const dp = Array.from({ length: la + 1 }, (_, i) =>
     Array.from({ length: lb + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
@@ -88,7 +88,7 @@ function levenshtein(a, b) {
 
 /** Edit-distance similarity (0–1) */
 function editSimilarity(a, b) {
-  const na = normalise(a), nb = normalise(b);
+  const na = normalize(a), nb = normalize(b);
   const maxLen = Math.max(na.length, nb.length);
   if (maxLen === 0) return 1;
   return 1 - levenshtein(na, nb) / maxLen;
@@ -103,7 +103,7 @@ function similarity(a, b) {
 }
 
 // ── Thresholds ────────────────────────────────────────
-const EXACT_THRESHOLD  = 1.00;   // identical (after normalisation)
+const EXACT_THRESHOLD  = 1.00;   // identical (after normalization)
 const NEAR_THRESHOLD   = 0.70;   // very close phrasing
 const SEMANTIC_THRESHOLD = 0.50; // same idea, different words
 

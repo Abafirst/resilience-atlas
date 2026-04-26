@@ -10,7 +10,7 @@
  *  - Session ID and variant assignment
  *  - A/B variant copy selection
  *  - Cool-down enforcement
- *  - Modal injection and dismiss behaviour
+ *  - Modal injection and dismiss behavior
  *  - Premium badge rendering
  *  - Feature lock overlay attachment
  *  - Promotional banner injection

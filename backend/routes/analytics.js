@@ -15,7 +15,7 @@ const Organization     = require('../models/Organization');
 const ResilienceResult = require('../models/ResilienceResult');
 const TeamResult       = require('../models/TeamResult');
 
-// ── Dimension key normalisation ───────────────────────────────────────────────
+// ── Dimension key normalization ───────────────────────────────────────────────
 
 /**
  * Map the varied dimension key names stored in ResilienceResult.scores

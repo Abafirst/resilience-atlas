@@ -20,8 +20,8 @@ Minimalist compass-inspired visual mark for The Resilience Atlas platform.
 | Secondary | `#0097A7` | Soft Teal |
 | Tertiary | `#6A4C93` | Muted Purple |
 | Neutral Dark | `#212121` | Near-Black |
-| Neutral Mid | `#757575` | Mid-Grey |
-| Neutral Light | `#E0E0E0` | Light Grey |
+| Neutral Mid | `#757575` | Mid-Gray |
+| Neutral Light | `#E0E0E0` | Light Gray |
 
 ## File Structure
 
@@ -125,7 +125,7 @@ Each master SVG (`viewBox="0 0 200 200"`, center `100 100`) contains:
 - All SVG files include `role="img"` and `aria-label="Resilience Atlas"`.
 - `<title>` element provides screen-reader text inside each SVG.
 - color contrast: `#1565C0` on white = **4.6 : 1** (AA compliant).
-- Symbol is recognisable without color (monochrome variant provided).
+- Symbol is recognizable without color (monochrome variant provided).
 
 ## Dark Mode
 

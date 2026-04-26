@@ -11,8 +11,10 @@ import NavigatorChallenges from './NavigatorChallenges';
 import ArenaBattles from './ArenaBattles';
 import QuestLog from './QuestLog';
 import BadgeUnlockModal from './BadgeUnlockModal';
+import IATLASUnlockModal from '../IATLAS/IATLASUnlockModal';
 import { GAME_CARDS } from '../../data/kidsGames';
 import { KIDS_BADGES, getBadgeById } from '../../data/kidsGameBadges';
+import { hasKidsAccess, getIATLASTier, IATLAS_TIER_CONFIG } from '../../utils/iatlasGating';
 import '../../styles/kidsGames.css';
 
 const GAME_COMPONENTS = {
@@ -62,6 +64,7 @@ export default function KidsGamesHub() {
   const [modalBadge, setModalBadge]     = useState(null);   // badge currently shown in modal
   const [modalQueue, setModalQueue]     = useState([]);      // queue of badges to display sequentially
   const [badgeToast, setBadgeToast]     = useState(null);    // legacy toast (kept for non-Builder games)
+  const [showUnlockModal, setShowUnlockModal] = useState(false); // IATLAS paywall modal
   const gameContainerRef                = useRef(null);
 
   // Ref mirrors earnedBadges and is updated immediately (before re-render) so
@@ -139,6 +142,11 @@ export default function KidsGamesHub() {
   }, [completedGames, handleEarnBadge]);
 
   const playGame = useCallback((gameId) => {
+    // Check if user has a paid IATLAS subscription before launching a game
+    if (!hasKidsAccess()) {
+      setShowUnlockModal(true);
+      return;
+    }
     setActiveGame(gameId);
   }, []);
 
@@ -199,6 +207,13 @@ export default function KidsGamesHub() {
         />
       )}
       {badgeToast && <BadgeToast badge={badgeToast} />}
+
+      {showUnlockModal && (
+        <IATLASUnlockModal
+          variant="kids"
+          onClose={() => setShowUnlockModal(false)}
+        />
+      )}
 
       {/* Hub header */}
       <div className="kg-hub-header">

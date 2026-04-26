@@ -10,6 +10,9 @@ import {  KIDS_DIMENSION_ICON_MAP,
 } from '../data/kidsActivities';
 import KidsGamesHub from '../components/KidsGames/KidsGamesHub';
 import VideoStories from '../components/VideoStories.jsx';
+import IATLASUnlockModal from '../components/IATLAS/IATLASUnlockModal.jsx';
+import KidsProgressDashboard from '../components/IATLAS/Kids/KidsProgressDashboard.jsx';
+import ParentDashboard from '../components/IATLAS/Kids/ParentDashboard.jsx';
 
 const KIDS_CATEGORIES = [
   { id: 'all',        label: 'All',        icon: '/icons/compass.svg',             desc: 'Browse everything' },
@@ -18,6 +21,7 @@ const KIDS_CATEGORIES = [
   { id: 'games',      label: 'Games',      icon: '/icons/game.svg',                desc: 'Play interactive games' },
   { id: 'activities', label: 'Activities', icon: '/icons/movement.svg',            desc: 'Activities by age' },
   { id: 'skills',     label: 'Skills',     icon: '/icons/agentic-generative.svg',  desc: 'Explore resilience skills' },
+  { id: 'progress',   label: 'My Progress', icon: '/icons/badges.svg',             desc: 'Track your resilience journey' },
 ];
 
 const AGE_GROUPS = [
@@ -54,6 +58,7 @@ const CATEGORY_SECTION_MAP = {
   videos:     'kids-videos',
   games:      'kids-games',
   skills:     'kids-skills',
+  progress:   'kids-progress',
 };
 
 /* ── Richer modal content for each skill ── */
@@ -399,6 +404,9 @@ export default function KidsPage() {
   const [activeStory, setActiveStory] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeSkill, setActiveSkill] = useState(null);
+  const [showGamesModal, setShowGamesModal] = useState(false);
+  const [showActivitiesModal, setShowActivitiesModal] = useState(false);
+  const [showParentZone, setShowParentZone] = useState(false);
   const closeStory = useCallback(() => setActiveStory(null), []);
   const closeSkill = useCallback(() => setActiveSkill(null), []);
 
@@ -437,6 +445,18 @@ export default function KidsPage() {
     <>
       {activeStory && <StoryModal story={activeStory} onClose={closeStory} />}
       {activeSkill && <SkillModal skill={activeSkill} onClose={closeSkill} onTryThis={handleTryThis} />}
+      {showGamesModal && (
+        <IATLASUnlockModal
+          variant="kids"
+          onClose={() => setShowGamesModal(false)}
+        />
+      )}
+      {showActivitiesModal && (
+        <IATLASUnlockModal
+          variant="kids"
+          onClose={() => setShowActivitiesModal(false)}
+        />
+      )}
 
       {/* ── Header ──────────────────────────────────────────────────────── */}
       <SiteHeader activePage="kids" />
@@ -449,7 +469,16 @@ export default function KidsPage() {
           Resilience isn&rsquo;t about being tough. It&rsquo;s about understanding yourself, knowing your
           strengths, and having people who get it. Activities and stories for ages 5–18+.
         </p>
-        <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
+        <div className="kids-hero-buttons">
+          <a href="/quiz" className="btn-cta">Discover Your Dimensions</a>
+          <button
+            className="btn-cta-secondary"
+            onClick={() => handleCategoryChange('progress')}
+            aria-label="Go to My Progress dashboard"
+          >
+            My Progress
+          </button>
+        </div>
       </section>
 
       {/* ── Category Navigation ─────────────────────────────────────────── */}
@@ -616,7 +645,37 @@ export default function KidsPage() {
                 Not lessons. Discovery. Games that help young people explore their resilience map, earn badges for what they learn, and find out their version is valid.
               </p>
             </div>
-            <KidsGamesHub />
+            <div style={{ position: 'relative' }}>
+              <div style={{ filter: 'blur(2px)', pointerEvents: 'none', userSelect: 'none' }} aria-hidden="true">
+                <KidsGamesHub />
+              </div>
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(255,255,255,0.8)',
+                borderRadius: '16px',
+              }}>
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }} aria-hidden="true">🎮</div>
+                  <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>
+                    Interactive Games
+                  </p>
+                  <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.25rem 0 1rem' }}>
+                    Available with IATLAS Individual ($19.99/mo) or higher
+                  </p>
+                  <button
+                    onClick={() => setShowGamesModal(true)}
+                    className="iatlas-btn-primary"
+                    style={{ background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '10px', padding: '0.6rem 1.25rem', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
+                  >
+                    Get IATLAS Access
+                  </button>
+                </div>
+              </div>
+            </div>
           </section>
         )}
 
@@ -638,56 +697,48 @@ export default function KidsPage() {
                     role="tab"
                     data-group={id}
                     aria-selected={selectedAge === id}
-                    onClick={() => setSelectedAge(id)}
+                    onClick={() => setShowActivitiesModal(true)}
                   >
                     {label}
                   </button>
                 ))}
               </div>
 
-              {AGE_GROUPS.filter(g => g.id !== 'age-18plus').map(({ id }) => (
-                <div
-                  key={id}
-                  id={id}
-                  className={selectedAge === id ? 'age-content active' : 'age-content'}
-                  hidden={selectedAge !== id}
+              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }} aria-hidden="true">📚</div>
+                <p style={{ fontWeight: 700, color: '#1e293b', margin: '0 0 0.5rem' }}>Age-Specific Activities</p>
+                <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem' }}>Select an age group above to see activities — available with any IATLAS plan.</p>
+                <button
+                  onClick={() => setShowActivitiesModal(true)}
+                  style={{ background: '#4f46e5', color: '#fff', border: 'none', borderRadius: '10px', padding: '0.65rem 1.4rem', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                 >
-                  <ul className="activity-list">
-                    {(KIDS_ACTIVITIES[id] || []).map(activity => (
-                      <li key={activity.title} className="activity-item">
-                        <div className="activity-item-title">
-                          {activity.icon && (
-                            <img src={activity.icon} alt="" aria-hidden="true" width="20" height="20" style={{ verticalAlign: 'middle', marginRight: '0.4em' }} />
-                          )}
-                          {activity.title}
-                        </div>
-                        {activity.subtype && (
-                          <div className="activity-item-subtype">{activity.subtype}</div>
-                        )}
-                        <div className="activity-item-desc">{activity.desc}</div>
-                        <div className="activity-item-meta">
-                          <span className="activity-meta-tag">{activity.time}</span>
-                          <span className={`activity-meta-tag ${activity.level}`}>{activity.level.charAt(0).toUpperCase() + activity.level.slice(1)}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-
-              {selectedAge === 'age-18plus' && (
-                <div className="age-18plus-panel">
-                  <div className="dimension-pills">
-                    {['Agentic', 'Relational', 'Spiritual', 'Emotional', 'Somatic', 'Cognitive'].map(d => (
-                      <span key={d} className="dim-pill">{d}</span>
-                    ))}
-                  </div>
-                  <h3>Ready for the Full Assessment?</h3>
-                  <p>Take the complete Resilience Atlas assessment and get your personalised report across all six dimensions.</p>
-                  <a href="/quiz" className="btn-cta">Take the Assessment</a>
-                </div>
-              )}
+                  Get IATLAS Access
+                </button>
+              </div>
             </div>
+          </section>
+        )}
+
+        {/* ── My Progress Dashboard ── */}
+        {show(activeCategory, 'progress') && (
+          <section
+            className="kids-scroll-anchor"
+            id="kids-progress"
+            aria-labelledby="progress-heading"
+            style={{ paddingTop: '1.5rem' }}
+          >
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem', padding: '0 1.25rem' }}>
+              <span className="section-label">Your Resilience Journey</span>
+              <h2 id="progress-heading" style={{ margin: '.5rem 0 .4rem' }}>My Progress</h2>
+              <p style={{ color: 'var(--slate-600)', maxWidth: '520px', margin: '0 auto' }}>
+                Track your stars, badges, streaks, and adventures as you build resilience.
+              </p>
+            </div>
+            {showParentZone ? (
+              <ParentDashboard onBack={() => setShowParentZone(false)} />
+            ) : (
+              <KidsProgressDashboard onParentZone={() => setShowParentZone(true)} />
+            )}
           </section>
         )}
 

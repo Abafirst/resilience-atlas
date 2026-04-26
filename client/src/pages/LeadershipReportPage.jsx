@@ -7,7 +7,7 @@ const REPORT_SECTIONS = [
   {
     icon: '/icons/leaderboards.svg',
     title: 'Team Overview',
-    description: 'Aggregated KPIs: team size, overall average resilience score, and primary strength distribution across your organisation.',
+    description: 'Aggregated KPIs: team size, overall average resilience score, and primary strength distribution across your organization.',
   },
   {
     icon: '/icons/network.svg',
@@ -46,7 +46,7 @@ export default function LeadershipReportPage() {
             <div className="page-header__brand">The Resilience Atlas™ for Teams</div>
             <h1 className="page-header__title">Leadership Resilience Report</h1>
             <p className="page-header__subtitle">
-              Aggregated team insights for organisational leaders — GDPR &amp; CCPA compliant.
+              Aggregated team insights for organizational leaders — GDPR &amp; CCPA compliant.
             </p>
           </div>
           <nav className="page-header__actions" aria-label="Report actions">
@@ -96,7 +96,7 @@ export default function LeadershipReportPage() {
             This report contains <strong>only aggregated, anonymous statistics</strong>. No individual
             names, scores, or responses are stored or displayed. It complies with{' '}
             <strong>GDPR</strong> and <strong>CCPA</strong> data-minimisation principles. Access is
-            restricted to verified organisation administrators.
+            restricted to verified organization administrators.
           </p>
         </footer>
 

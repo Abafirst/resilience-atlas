@@ -8,7 +8,7 @@
 
 const PDFDocument = require('pdfkit');
 
-// ─── Brand colours ──────────────────────────────────────────────────────────
+// ─── Brand colors ──────────────────────────────────────────────────────────
 const COLORS = {
     primary:   '#0f2942',
     accent:    '#4F46E5',
@@ -918,7 +918,7 @@ function generateSMARTGoalWorksheet(doc) {
 
     y = sectionHeading(doc, 'The SMART Framework', y, COLORS.dimension.action);
     smartItems.forEach((item) => {
-        // Coloured letter badge
+        // Colored letter badge
         doc.rect(CONTENT_X, y, 20, 20).fill(COLORS.dimension.action);
         doc.fillColor(COLORS.white).font(FONT_BOLD).fontSize(12)
            .text(item.letter, CONTENT_X, y + 3, { width: 20, align: 'center' });

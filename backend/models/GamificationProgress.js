@@ -81,6 +81,46 @@ const ReinforcementHistorySchema = new mongoose.Schema(
   { _id: false }
 );
 
+const DimensionalStreakSchema = new mongoose.Schema(
+  {
+    dimension:        { type: String, required: true, trim: true },
+    current:          { type: Number, default: 0 },
+    longest:          { type: Number, default: 0 },
+    lastPracticeDate: { type: Date,   default: null },
+    totalCount:       { type: Number, default: 0 },
+    // Streak recovery: track monthly forgiveness (1 miss allowed per month)
+    lastRecoveryMonth: { type: Number, default: null },
+    lastRecoveryYear:  { type: Number, default: null },
+  },
+  { _id: false }
+);
+
+const ActivityLogSchema = new mongoose.Schema(
+  {
+    type:        { type: String, required: true, trim: true },
+    dimension:   { type: String, default: null, trim: true },
+    skillId:     { type: String, default: null, trim: true },
+    xpEarned:    { type: Number, default: 0 },
+    timestamp:   { type: Date,   default: Date.now },
+    metadata:    { type: mongoose.Schema.Types.Mixed, default: {} },
+  },
+  { _id: false }
+);
+
+const QuestProgressSchema = new mongoose.Schema(
+  {
+    questId:     { type: String, required: true, trim: true },
+    startedAt:   { type: Date,   default: Date.now },
+    completedAt: { type: Date,   default: null },
+    currentDay:  { type: Number, default: 1 },
+    totalDays:   { type: Number, default: 30 },
+    stepsCompleted: { type: [String], default: [] },
+    xpMultiplierActive: { type: Boolean, default: false },
+    multiplierExpiresAt:{ type: Date, default: null },
+  },
+  { _id: false }
+);
+
 const StreakResetSchema = new mongoose.Schema(
   {
     resetAt:        { type: Date, default: Date.now },
@@ -133,6 +173,16 @@ const GamificationProgressSchema = new mongoose.Schema(
     choiceQuests:           { type: [ChoiceQuestSchema],           default: [] },
     reinforcementHistory:   { type: [ReinforcementHistorySchema],  default: [] },
     streakResets:           { type: [StreakResetSchema],           default: [] },
+
+    // ── Dimensional streaks (IARF per-dimension tracking) ────────────────────
+    dimensionalStreaks:      { type: [DimensionalStreakSchema],     default: [] },
+
+    // ── Activity log (IARF comprehensive tracking) ───────────────────────────
+    activityLog:             { type: [ActivityLogSchema],          default: [] },
+
+    // ── Quest tracking (IARF quests) ─────────────────────────────────────────
+    activeQuests:            { type: [QuestProgressSchema],        default: [] },
+    completedQuestIds:       { type: [String],                     default: [] },
 
     // ── Preferences ──────────────────────────────────────────────────────────
     leaderboardOptIn:      { type: Boolean, default: false },

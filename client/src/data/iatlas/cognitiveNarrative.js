@@ -1,0 +1,650 @@
+/**
+ * cognitiveNarrative.js
+ * Skill module definitions for the Cognitive-Interpretive (Cognitive-Narrative) dimension.
+ * Grounded in ACT defusion, cognitive reframing, and meaning-making.
+ */
+
+export const cognitiveNarrativeModules = [
+  // ── Foundation Level ────────────────────────────────────────────────────────
+  {
+    id: 'cognitive-thought-record',
+    dimension: 'cognitive-narrative',
+    level: 'foundation',
+    order: 1,
+    title: 'Thought Record Basics',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '10–15 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'thought-detective',
+      name: 'Thought Detective',
+      icon: '💭',
+      requirement: 'Complete a 3-column thought record for 2 situations',
+    },
+    learningObjective: 'Identify and log automatic thoughts in challenging situations',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Automatic thoughts arise quickly and often unconsciously, shaping how we feel and act. Learning to catch and record these thoughts creates a crucial gap between stimulus and response. This is the first step in cognitive flexibility — you cannot change what you cannot see. Both CBT and ACT begin with awareness of thought patterns.',
+    },
+    instructions: [
+      'Think of a recent situation that caused you distress or upset.',
+      'In Column 1, describe the situation factually (just the facts — what happened).',
+      'In Column 2, write the automatic thought that arose (the first thing your mind said).',
+      'In Column 3, record the emotion you felt and rate its intensity (0–100%).',
+      'Try this for 2 different situations.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'situation1',
+          label: 'Situation 1 (factual description)',
+          placeholder: 'e.g., My manager didn\'t respond to my email for 3 days',
+          type: 'textarea',
+        },
+        {
+          id: 'thought1',
+          label: 'Automatic thought in Situation 1',
+          placeholder: 'e.g., "She thinks my work is terrible" / "I\'m going to get fired"',
+          type: 'textarea',
+        },
+        {
+          id: 'emotion1',
+          label: 'Emotion & intensity in Situation 1',
+          placeholder: 'e.g., Anxiety (75%), dread (60%)',
+          type: 'text',
+        },
+        {
+          id: 'situation2',
+          label: 'Situation 2 (factual description)',
+          placeholder: 'e.g., A friend canceled our plans at the last minute',
+          type: 'textarea',
+        },
+        {
+          id: 'thought2',
+          label: 'Automatic thought in Situation 2',
+          placeholder: 'e.g., "She doesn\'t value my time" / "No one really wants to spend time with me"',
+          type: 'textarea',
+        },
+        {
+          id: 'emotion2',
+          label: 'Emotion & intensity in Situation 2',
+          placeholder: 'e.g., Hurt (80%), rejection (70%)',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Were you surprised by any of the automatic thoughts you caught?',
+      'What patterns do you notice across your thought records?',
+      'How did writing the thought down change your relationship to it?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'cognitive-defusion',
+    dimension: 'cognitive-narrative',
+    level: 'foundation',
+    order: 2,
+    title: 'ACT Defusion: "I\'m Having the Thought…"',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '10 minutes',
+    xpReward: 15,
+    badge: {
+      id: 'defusion-starter',
+      name: 'Defusion Starter',
+      icon: '🎭',
+      requirement: 'Practice defusion phrases for 3 different unhelpful thoughts',
+    },
+    learningObjective: 'Create psychological distance from unhelpful thoughts using ACT defusion',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Cognitive defusion is a cornerstone ACT technique. Rather than trying to change the content of thoughts, defusion changes your relationship to thoughts — from "I am my thoughts" to "I am having a thought." This simple shift reduces the power thoughts have over behavior and is supported by extensive research as highly effective for anxiety and unhelpful thinking patterns.',
+    },
+    instructions: [
+      'Identify an unhelpful thought you have frequently (e.g., "I\'m not good enough").',
+      'Notice how it feels when you say it as a fact: "I am not good enough."',
+      'Now add: "I\'m having the thought that I\'m not good enough."',
+      'Then add: "I notice I\'m having the thought that I\'m not good enough."',
+      'Try another version: "My mind is telling me I\'m not good enough."',
+      'Notice how the feeling changes as you create distance.',
+      'Practice this with 3 different unhelpful thoughts.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'thought1_raw',
+          label: 'Unhelpful thought #1 (as you normally experience it)',
+          placeholder: 'e.g., I\'m not good enough',
+          type: 'text',
+        },
+        {
+          id: 'thought1_defused',
+          label: 'Thought #1 defused ("I\'m having the thought that…")',
+          placeholder: 'e.g., I\'m having the thought that I\'m not good enough',
+          type: 'textarea',
+        },
+        {
+          id: 'thought1_shift',
+          label: 'What shifted in how this thought felt?',
+          placeholder: 'e.g., It felt smaller, less urgent, more like background noise',
+          type: 'textarea',
+        },
+        {
+          id: 'thought2_raw',
+          label: 'Unhelpful thought #2',
+          placeholder: 'e.g., Nobody likes me',
+          type: 'text',
+        },
+        {
+          id: 'thought2_defused',
+          label: 'Thought #2 defused',
+          placeholder: 'e.g., I notice my mind telling me nobody likes me',
+          type: 'textarea',
+        },
+        {
+          id: 'thought3_raw',
+          label: 'Unhelpful thought #3',
+          placeholder: 'e.g., I always mess things up',
+          type: 'text',
+        },
+        {
+          id: 'thought3_defused',
+          label: 'Thought #3 defused',
+          placeholder: 'e.g., My mind is offering me the story that I always mess things up',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Which defusion phrase felt most effective for creating distance?',
+      'Did defusion change whether the thought was "true" — or just how much power it had?',
+      'How might defusion help you act on your values even when difficult thoughts arise?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'cognitive-reframe',
+    dimension: 'cognitive-narrative',
+    level: 'foundation',
+    order: 3,
+    title: 'Reframe Challenge',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '15 minutes',
+    xpReward: 15,
+    badge: {
+      id: 'reframe-rookie',
+      name: 'Reframe Rookie',
+      icon: '🔄',
+      requirement: 'Generate 3 alternative interpretations for a challenging situation',
+    },
+    learningObjective: 'Generate multiple alternative interpretations of challenging situations',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Cognitive reframing doesn\'t deny reality — it opens the possibility that our first interpretation is not the only interpretation. Most situations are genuinely ambiguous, and our automatic interpretation is shaped by history, mood, and cognitive patterns. Building the habit of generating alternatives creates cognitive flexibility — one of the most protective factors for resilience.',
+    },
+    instructions: [
+      'Choose a challenging situation where you had a strong negative interpretation.',
+      'Write your automatic interpretation (how you saw it first).',
+      'Generate at least 3 alternative interpretations — as if you were advising a friend.',
+      'Rate how believable each alternative feels (0–100%).',
+      'Identify which interpretation is most useful for taking effective action.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'situation',
+          label: 'The challenging situation',
+          placeholder: 'e.g., I gave a presentation and several people left early',
+          type: 'textarea',
+        },
+        {
+          id: 'automatic_interpretation',
+          label: 'My automatic interpretation',
+          placeholder: 'e.g., I was boring and people didn\'t find my talk valuable',
+          type: 'textarea',
+        },
+        {
+          id: 'alt1',
+          label: 'Alternative interpretation #1',
+          placeholder: 'e.g., They had other commitments they needed to get to',
+          type: 'textarea',
+        },
+        {
+          id: 'alt1_believable',
+          label: 'How believable is alternative #1? (0–100%)',
+          placeholder: 'e.g., 60%',
+          type: 'text',
+        },
+        {
+          id: 'alt2',
+          label: 'Alternative interpretation #2',
+          placeholder: 'e.g., The content wasn\'t relevant to everyone — and that\'s normal',
+          type: 'textarea',
+        },
+        {
+          id: 'alt2_believable',
+          label: 'How believable is alternative #2? (0–100%)',
+          placeholder: 'e.g., 70%',
+          type: 'text',
+        },
+        {
+          id: 'alt3',
+          label: 'Alternative interpretation #3',
+          placeholder: 'e.g., Those who stayed were engaged — and that\'s what matters',
+          type: 'textarea',
+        },
+        {
+          id: 'alt3_believable',
+          label: 'How believable is alternative #3? (0–100%)',
+          placeholder: 'e.g., 75%',
+          type: 'text',
+        },
+        {
+          id: 'most_useful',
+          label: 'The most useful interpretation for taking action',
+          placeholder: 'e.g., Some topics aren\'t relevant to everyone; I\'ll tailor better next time',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Which alternative interpretation surprised you most?',
+      'Did any of the alternatives feel more accurate than your original interpretation?',
+      'How does this exercise change how you might approach the next challenge?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'cognitive-growth-mindset',
+    dimension: 'cognitive-narrative',
+    level: 'foundation',
+    order: 4,
+    title: 'Growth Mindset Statements',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '10–15 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'growth-thinker',
+      name: 'Growth Thinker',
+      icon: '🌱',
+      requirement: 'Convert 5 fixed-mindset statements to growth statements',
+    },
+    learningObjective: 'Shift from fixed explanatory style to growth-oriented language',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Carol Dweck\'s growth mindset research shows that believing abilities can be developed through effort changes behavior, persistence, and ultimately outcomes. Fixed mindset thinking ("I can\'t do math") creates learned helplessness; growth mindset thinking ("I haven\'t mastered this yet") preserves agency and motivation. Language literally shapes the neural pathways of belief.',
+    },
+    instructions: [
+      'Look at the fixed-mindset statements below.',
+      'For each, rewrite it with a growth-mindset framing using the word "yet" or "yet not" or "learning to…"',
+      'Add your own 2 fixed-mindset statements from your own thinking patterns.',
+      'Convert those as well.',
+      'Choose your most powerful growth statement to memorize.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'fixed1',
+          label: 'Fixed statement #1: "I\'m terrible at public speaking"',
+          placeholder: 'Rewrite as a growth statement…',
+          type: 'textarea',
+        },
+        {
+          id: 'fixed2',
+          label: 'Fixed statement #2: "I always give up when things get hard"',
+          placeholder: 'Rewrite as a growth statement…',
+          type: 'textarea',
+        },
+        {
+          id: 'fixed3',
+          label: 'Fixed statement #3: "I\'m not a creative person"',
+          placeholder: 'Rewrite as a growth statement…',
+          type: 'textarea',
+        },
+        {
+          id: 'own1',
+          label: 'My own fixed-mindset thought #1',
+          placeholder: 'Write a fixed thought you often have about yourself',
+          type: 'text',
+        },
+        {
+          id: 'own1_growth',
+          label: 'My growth reframe for thought #1',
+          placeholder: 'Reframe it with growth language',
+          type: 'textarea',
+        },
+        {
+          id: 'own2',
+          label: 'My own fixed-mindset thought #2',
+          placeholder: 'Another fixed thought about yourself',
+          type: 'text',
+        },
+        {
+          id: 'own2_growth',
+          label: 'My growth reframe for thought #2',
+          placeholder: 'Reframe it with growth language',
+          type: 'textarea',
+        },
+        {
+          id: 'power_statement',
+          label: 'My most powerful growth statement to memorize',
+          placeholder: 'The one statement that feels most transformative for me',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'Which fixed statement was hardest to reframe? What does that tell you?',
+      'How does your language about yourself change when you use growth framing?',
+      'Where in your life do you most need to apply growth mindset right now?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'cognitive-evidence-gathering',
+    dimension: 'cognitive-narrative',
+    level: 'foundation',
+    order: 5,
+    title: 'Evidence Gathering',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '15 minutes',
+    xpReward: 15,
+    badge: {
+      id: 'evidence-collector',
+      name: 'Evidence Collector',
+      icon: '🔬',
+      requirement: 'Test the accuracy of 2 negative predictions',
+    },
+    learningObjective: 'Test the accuracy of negative predictions by gathering real evidence',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Negative predictions often operate as facts, but they are hypotheses. The scientific method — gathering evidence for and against — is one of the most powerful tools for updating inaccurate beliefs. This technique, adapted from CBT, builds the habit of treating thoughts as theory rather than truth.',
+    },
+    instructions: [
+      'Identify a negative prediction you are making (e.g., "If I speak up in the meeting, they\'ll think I\'m stupid").',
+      'Rate your belief in this prediction (0–100%).',
+      'List all evidence FOR the prediction.',
+      'List all evidence AGAINST the prediction.',
+      'Re-rate your belief after reviewing the evidence.',
+      'Write a more balanced prediction based on the evidence.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'prediction1',
+          label: 'Negative prediction #1',
+          placeholder: 'e.g., If I apply for that job, I\'ll be rejected',
+          type: 'textarea',
+        },
+        {
+          id: 'belief_before1',
+          label: 'Belief strength before evidence (0–100%)',
+          placeholder: 'e.g., 85%',
+          type: 'text',
+        },
+        {
+          id: 'evidence_for1',
+          label: 'Evidence FOR this prediction',
+          placeholder: 'e.g., I was rejected from similar jobs before',
+          type: 'textarea',
+        },
+        {
+          id: 'evidence_against1',
+          label: 'Evidence AGAINST this prediction',
+          placeholder: 'e.g., My skills match the job description; I have 5 years relevant experience; the market is hiring',
+          type: 'textarea',
+        },
+        {
+          id: 'belief_after1',
+          label: 'Belief strength after evidence (0–100%)',
+          placeholder: 'e.g., 45%',
+          type: 'text',
+        },
+        {
+          id: 'balanced_prediction1',
+          label: 'A more balanced prediction',
+          placeholder: 'e.g., I might not get this specific job, but I have real qualifications and applying is worthwhile',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'How did your belief strength change after examining the evidence?',
+      'What evidence against your predictions are you usually ignoring?',
+      'How might you apply this technique to your biggest current worry?',
+    ],
+    resources: [],
+  },
+
+  // ── Building Level ───────────────────────────────────────────────────────────
+  {
+    id: 'cognitive-advanced-defusion',
+    dimension: 'cognitive-narrative',
+    level: 'building',
+    order: 6,
+    title: 'Advanced Defusion Techniques',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '20 minutes',
+    xpReward: 20,
+    badge: {
+      id: 'defusion-pro',
+      name: 'Defusion Pro',
+      icon: '🍂',
+      requirement: 'Practice the Leaves on a Stream exercise and record your experience',
+    },
+    learningObjective: 'Use metaphor and visualization for deeper cognitive flexibility',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Advanced defusion techniques use metaphor to create an observer perspective on thoughts. The "Leaves on a Stream" exercise (Hayes) creates visual distance from thoughts, allowing them to pass without engagement. Metaphor bypasses the verbal-analytical mind to create embodied, experiential change — particularly effective for persistent, sticky thought patterns.',
+    },
+    instructions: [
+      'Find a quiet spot. Close your eyes.',
+      'Imagine sitting beside a gently flowing stream.',
+      'Notice leaves floating on the water\'s surface.',
+      'As thoughts arise — any thoughts, worries, plans, judgments — place each one on a leaf.',
+      'Watch the leaf float downstream and disappear around the bend.',
+      'If you find yourself following a thought or getting stuck, gently notice: "I was hooked." Return to watching.',
+      'Continue for 10 minutes.',
+      'Record your experience below.',
+    ],
+    activity: {
+      type: 'reflection',
+      fields: [
+        {
+          id: 'thoughts_placed',
+          label: 'Types of thoughts I placed on leaves',
+          placeholder: 'e.g., Work worries, plans for tomorrow, self-criticism, random song lyrics',
+          type: 'textarea',
+        },
+        {
+          id: 'times_hooked',
+          label: 'Times I got "hooked" and followed a thought',
+          placeholder: 'e.g., 4 times — mainly on the work worry about the deadline',
+          type: 'text',
+        },
+        {
+          id: 'sticky_thought',
+          label: 'The stickiest thought — the one hardest to let float away',
+          placeholder: 'e.g., Worry about my health test results',
+          type: 'textarea',
+        },
+        {
+          id: 'observer_experience',
+          label: 'What it felt like to watch thoughts from the observer position',
+          placeholder: 'e.g., Strange — like I was bigger than my thoughts; more peaceful; less urgent',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What does it mean that you can observe your thoughts from the outside?',
+      'What is the "you" that watches the thoughts — if it\'s not the thoughts themselves?',
+      'How might this practice change how you handle your stickiest recurring thought?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'cognitive-meaning-journal',
+    dimension: 'cognitive-narrative',
+    level: 'building',
+    order: 7,
+    title: 'Meaning-Making Journal',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '20–25 minutes',
+    xpReward: 25,
+    badge: {
+      id: 'meaning-maker',
+      name: 'Meaning Maker',
+      icon: '📝',
+      requirement: 'Complete 3 structured meaning-making reflections on past adversity',
+    },
+    learningObjective: 'Construct adaptive narratives from past adversity to build meaning and resilience',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Post-traumatic growth research (Tedeschi & Calhoun) shows that many people find meaning and even positive growth following adversity — not despite the difficulty, but through the process of making sense of it. Meaning-making journaling helps transform painful experiences into sources of wisdom, strength, and purpose.',
+    },
+    instructions: [
+      'Choose a past difficult experience you\'ve sufficiently processed to reflect on (not an acute trauma).',
+      'Answer each journaling prompt below with 3–5 sentences.',
+      'Be honest — this is for you alone.',
+      'Notice what themes emerge across your reflections.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'experience',
+          label: 'The difficult experience I\'m reflecting on',
+          placeholder: 'Briefly describe it (you don\'t need much detail)',
+          type: 'textarea',
+        },
+        {
+          id: 'what_learned',
+          label: 'What did this experience teach me about myself?',
+          placeholder: 'e.g., I learned I am more resilient than I thought…',
+          type: 'textarea',
+        },
+        {
+          id: 'strengths_revealed',
+          label: 'What strengths did this experience reveal in me?',
+          placeholder: 'e.g., I discovered I can ask for help; I found out how much my friends care…',
+          type: 'textarea',
+        },
+        {
+          id: 'changed_priorities',
+          label: 'How did this experience change what I value or prioritize?',
+          placeholder: 'e.g., I now prioritize relationships over career advancement…',
+          type: 'textarea',
+        },
+        {
+          id: 'wisdom_gained',
+          label: 'What wisdom would I give to someone going through something similar?',
+          placeholder: 'e.g., Trust the process; the darkest part isn\'t permanent…',
+          type: 'textarea',
+        },
+        {
+          id: 'meaning_statement',
+          label: 'In one sentence, the meaning I make of this experience',
+          placeholder: 'e.g., This experience taught me that I belong to a community that shows up for me',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'How does having a meaning narrative change how you remember this experience?',
+      'What does this exercise reveal about your capacity for post-traumatic growth?',
+      'How can this meaning guide you in the next challenging chapter of your life?',
+    ],
+    resources: [],
+  },
+
+  // ── Mastery Level ────────────────────────────────────────────────────────────
+  {
+    id: 'cognitive-meta-awareness',
+    dimension: 'cognitive-narrative',
+    level: 'mastery',
+    order: 8,
+    title: 'Meta-Cognitive Awareness',
+    icon: '/icons/cognitive-narrative.svg',
+    duration: '30 minutes',
+    xpReward: 30,
+    badge: {
+      id: 'meta-mind-master',
+      name: 'Meta-Mind Master',
+      icon: '🧠',
+      requirement: 'Track your thought patterns for 5 days and identify 3 recurring themes',
+    },
+    learningObjective: 'Observe your own thinking patterns from an observer perspective without attachment',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Meta-cognition — thinking about thinking — is associated with superior emotional regulation, lower depression, and greater psychological flexibility. In ACT, the "observing self" is the part that can witness thoughts, feelings, and sensations without being defined by them. Developing meta-cognitive awareness creates the ultimate cognitive freedom: the ability to notice your mind without being governed by it.',
+    },
+    instructions: [
+      'For 5 days, keep a brief thought pattern log (below).',
+      'At the end of each day, spend 5 minutes reviewing your logs.',
+      'After 5 days, look for recurring thought themes or patterns.',
+      'Categorize your patterns: helpful, unhelpful, or neutral?',
+      'Write a compassionate observation letter to yourself about what you notice.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'pattern_log',
+          label: '5-day thought pattern summary',
+          placeholder: 'Summarize recurring thought themes across the 5 days (e.g., "Lots of self-criticism around productivity; frequent worry about relationships; helpful planning thoughts in the morning")',
+          type: 'textarea',
+        },
+        {
+          id: 'theme1',
+          label: 'Recurring theme #1',
+          placeholder: 'e.g., Self-criticism about performance',
+          type: 'text',
+        },
+        {
+          id: 'theme1_impact',
+          label: 'Impact of theme #1 on my behavior and wellbeing',
+          placeholder: 'e.g., Reduces confidence; makes me avoid challenges',
+          type: 'textarea',
+        },
+        {
+          id: 'theme2',
+          label: 'Recurring theme #2',
+          placeholder: 'e.g., Worry about the future',
+          type: 'text',
+        },
+        {
+          id: 'theme3',
+          label: 'Recurring theme #3',
+          placeholder: 'e.g., Gratitude and appreciation (helpful!)',
+          type: 'text',
+        },
+        {
+          id: 'observer_letter',
+          label: 'Compassionate observation letter to myself',
+          placeholder: 'Write a letter from your "observing self" to your "thinking self" — with understanding, not judgment',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What did you learn about your mind that you didn\'t know before?',
+      'Which thought pattern has the most impact on your quality of life?',
+      'What would change if you could hold your thought patterns lightly rather than literally?',
+    ],
+    resources: [],
+  },
+];

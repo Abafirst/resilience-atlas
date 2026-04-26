@@ -105,8 +105,10 @@ function normalizeScore(raw) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-function RadarChart({ scores, size = 380 }) {
+function RadarChart({ scores, size = 380, onDimensionClick }) {
   if (!scores || typeof scores !== 'object') return null;
+
+  const isClickable = typeof onDimensionClick === 'function';
 
   // Map canonical dimension order → normalized values
   const values = DIMENSIONS.map(name => {
@@ -174,6 +176,15 @@ function RadarChart({ scores, size = 380 }) {
       style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}
     >
       <defs>
+        {/* Hover effects for interactive dimension labels */}
+        {isClickable && (
+          <style>{`
+            .dimension-label-group { cursor: pointer; }
+            .dimension-label-group:hover .dimension-label-text { fill: #4752e8; }
+            .dimension-label-group:hover .dimension-info-icon circle { fill: #4752e8; }
+          `}</style>
+        )}
+
         {/* Data polygon fill gradient */}
         <radialGradient id="rc-polyFill" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#0097A7" stopOpacity="0.22" />
@@ -457,17 +468,64 @@ function RadarChart({ scores, size = 380 }) {
         if (cosVal > 0.3)       anchor = 'start';
         else if (cosVal < -0.3) anchor = 'end';
 
-        return (
-          <g key={`label-${i}`} opacity={isDom ? 1 : 0.75}>
+        // Hit-target: a transparent rect sized to cover the full label area.
+        // 64px wide × 30px tall provides a comfortable touch/click area that
+        // covers the dimension name, score, and ⓘ icon without overlapping
+        // adjacent labels. The ±2px adjustments extend the hit rect slightly
+        // beyond the text anchor for consistent edge coverage: for 'start'
+        // anchor the rect begins 2px before pt.x; for 'end' it ends 2px
+        // after pt.x. Middle-anchored labels are centered exactly on pt.x.
+        const hitW = 64;
+        const hitH = 30;
+        const hitX = anchor === 'start'  ? pt.x - 2
+                   : anchor === 'end'    ? pt.x - hitW + 2
+                   : pt.x - hitW / 2;
+        const hitY = pt.y - hitH / 2;
+
+        // Background pill behind clickable labels — gives a subtle button feel.
+        // pillX is always hitX - pillPad to extend the background an equal
+        // amount on the outer side for all anchor positions.
+        const pillPad = 4;
+        const pillW = hitW + pillPad * 2;
+        const pillH = hitH + pillPad;
+        const pillX = hitX - pillPad;
+
+        // Info icon x offset (to the right of text for start/middle, left for end)
+        const iconX = (
+          anchor === 'start'  ? pt.x + 34 :
+          anchor === 'end'    ? pt.x - 34 :
+          pt.x
+        );
+
+        const labelGroup = (
+          <g key={`label-${i}`} opacity={isDom ? 1 : 0.82} className={isClickable ? 'dimension-label-group' : undefined}>
+            {isClickable && <title>{`Click to learn more about ${dim}`}</title>}
+            {/* Subtle background pill to signal interactivity */}
+            {isClickable && (
+              <rect
+                x={(pillX).toFixed(2)}
+                y={(hitY - pillPad / 2).toFixed(2)}
+                width={pillW}
+                height={pillH}
+                rx="5"
+                ry="5"
+                fill="rgba(21,101,192,0.06)"
+                stroke="rgba(21,101,192,0.18)"
+                strokeWidth="0.75"
+                style={{ pointerEvents: 'none' }}
+              />
+            )}
             <text
               x={pt.x.toFixed(2)}
               y={(pt.y - 5).toFixed(2)}
               fontSize={isDom ? '9.5' : '8.5'}
-              fontWeight={isDom ? '700' : '500'}
+              fontWeight={isDom ? '700' : '600'}
               fill={isDom ? PAL.dimLabelDom : PAL.dimLabel}
               textAnchor={anchor}
               dominantBaseline="middle"
               fontFamily="Inter,system-ui,sans-serif"
+              className="dimension-label-text"
+              style={isClickable ? { textDecoration: 'underline', textDecorationColor: PAL.dimLabel, textUnderlineOffset: '2px' } : undefined}
             >
               {DIM_SHORT[i]}
             </text>
@@ -483,8 +541,46 @@ function RadarChart({ scores, size = 380 }) {
             >
               {score}%
             </text>
+            {/* ⓘ info icon — filled circle with white "i" for better visibility */}
+            {isClickable && (
+              <g
+                className="dimension-info-icon"
+                transform={`translate(${iconX.toFixed(2)},${(pt.y - 14).toFixed(2)})`}
+                style={{ pointerEvents: 'none' }}
+              >
+                <circle r="5.5" fill={PAL.dimLabel} opacity="0.85" />
+                <text
+                  fontSize="6.5"
+                  fill="#ffffff"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fontFamily="Inter,system-ui,sans-serif"
+                  fontWeight="700"
+                >
+                  i
+                </text>
+              </g>
+            )}
+            {/* Transparent hit target for click/touch */}
+            {isClickable && (
+              <rect
+                x={hitX.toFixed(2)}
+                y={hitY.toFixed(2)}
+                width={hitW}
+                height={hitH}
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Learn more about ${dim}`}
+                onClick={() => onDimensionClick(dim)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onDimensionClick(dim); } }}
+              />
+            )}
           </g>
         );
+
+        return labelGroup;
       })}
     </svg>
   );

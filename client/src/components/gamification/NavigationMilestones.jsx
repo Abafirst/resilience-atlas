@@ -1,7 +1,7 @@
 import React from 'react';
 import { NAVIGATION_MILESTONES } from '../../data/gamificationContent.js';
 
-// ── Dimension colour config ───────────────────────────────────────────────────
+// ── Dimension color config ───────────────────────────────────────────────────
 const DIM_CONFIG = {
   'Agentic-Generative':    { color: '#8b5cf6', light: '#f5f3ff', border: 'rgba(139,92,246,0.28)',  glow: 'rgba(139,92,246,0.35)', gradient: 'linear-gradient(135deg,#8b5cf6,#6366f1)',  label: 'Agentic' },
   'Relational-Connective': { color: '#14b8a6', light: '#f0fdfa', border: 'rgba(20,184,166,0.28)',  glow: 'rgba(20,184,166,0.35)', gradient: 'linear-gradient(135deg,#14b8a6,#22c55e)',  label: 'Relational' },
@@ -70,7 +70,7 @@ function hasAnyCompletedPractice(progress) {
 /**
  * NavigationMilestones — Atlas Starter feature.
  * Displays a card-based grid of achievement milestones with circular progress
- * rings, dimension-specific colours, and motivational copy.
+ * rings, dimension-specific colors, and motivational copy.
  *
  * Props:
  *   progress — GamificationProgress object (from useGamification hook), optional

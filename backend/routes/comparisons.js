@@ -21,9 +21,9 @@ const Comparison        = require('../models/Comparison');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
 const User              = require('../models/User');
 const {
-    analyseProfiles,
+    analyzeProfiles,
     buildGrowthReport,
-    normaliseScores,
+    normalizeScores,
 } = require('../services/comparisonService');
 const logger = require('../utils/logger');
 
@@ -55,7 +55,7 @@ function participantFromAssessment(assessment, displayName = 'Anonymous') {
         displayName,
         overall:       assessment.overall,
         dominantType:  assessment.dominantType,
-        scores:        normaliseScores(assessment.scores),
+        scores:        normalizeScores(assessment.scores),
         assessmentId:  assessment._id,
         assessmentDate: assessment.assessmentDate || assessment.createdAt,
     };
@@ -145,7 +145,7 @@ router.post('/', authenticateJWT, async (req, res) => {
         } else if (type === 'team') {
             // Compute team average from org members
             if (!currentUser || !currentUser.organization_id) {
-                return res.status(400).json({ error: 'Team comparisons require an organisation membership.' });
+                return res.status(400).json({ error: 'Team comparisons require an organization membership.' });
             }
 
             // Aggregate latest assessment per team member
@@ -168,7 +168,7 @@ router.post('/', authenticateJWT, async (req, res) => {
             let avgOverall = 0;
 
             for (const dim of DIMS) {
-                const vals = teamAssessments.map(a => normaliseScores(a.scores)[dim]);
+                const vals = teamAssessments.map(a => normalizeScores(a.scores)[dim]);
                 avgScores[dim] = Math.round(vals.reduce((s, v) => s + v, 0) / vals.length);
             }
             avgOverall = Math.round(
@@ -187,7 +187,7 @@ router.post('/', authenticateJWT, async (req, res) => {
         }
 
         // ── Compute analysis ─────────────────────────────────────────────────
-        const comparisonAnalysis = analyseProfiles(
+        const comparisonAnalysis = analyzeProfiles(
             user1.scores,
             user2.scores,
             user1.displayName,

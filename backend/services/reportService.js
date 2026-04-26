@@ -296,7 +296,7 @@ function generateExecutiveSummary(overall, dominantType, archetypeName, dimensio
         `a designation reflecting your dominant strengths in ${topDims.join(' and ')}.\n\n` +
         `Your primary resilience anchor is ${dominantLabel}, which shapes how you naturally ` +
         `approach challenges, process adversity, and draw on your inner resources. This report ` +
-        `provides a deep-dive into each of your six resilience dimensions, with personalised ` +
+        `provides a deep-dive into each of your six resilience dimensions, with personalized ` +
         `insights, actionable micro-practices, and a 30-day growth plan tailored to your ` +
         `unique profile.\n\n` +
         `This assessment is provided for personal growth and self-reflection. It is not a ` +

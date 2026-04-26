@@ -316,7 +316,7 @@ router.get('/compare', authenticateJWT, async (req, res) => {
             ? allAssessments.filter(a => new Date(a.assessmentDate) < fromNow)
             : [];
 
-        const summarise = (arr) => {
+        const summarize = (arr) => {
             if (arr.length === 0) return null;
             const avg = (key) => arr.reduce((s, a) => s + ((a.scores && a.scores[key]) || 0), 0) / arr.length;
             return {
@@ -330,8 +330,8 @@ router.get('/compare', authenticateJWT, async (req, res) => {
 
         res.status(200).json({
             period,
-            current:  summarise(inPeriod),
-            previous: summarise(prePeriod),
+            current:  summarize(inPeriod),
+            previous: summarize(prePeriod),
         });
     } catch (err) {
         logger.error('History compare error:', err);

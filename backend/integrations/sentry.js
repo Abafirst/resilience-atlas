@@ -30,7 +30,7 @@ if (process.env.SENTRY_DSN && !process.env.JEST_WORKER_ID) {
             replaysSessionSampleRate: 0.1,
             replaysOnErrorSampleRate: 1.0,
         });
-        console.log('✅ Sentry initialised');
+        console.log('✅ Sentry initialized');
     } catch (err) {
         console.warn('⚠️  Sentry SDK not installed — error tracking disabled:', err.message);
         Sentry = null;

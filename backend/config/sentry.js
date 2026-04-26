@@ -11,7 +11,7 @@
 const logger = require('../utils/logger');
 
 let Sentry = null;
-let sentryInitialised = false;
+let sentryInitialized = false;
 
 try {
     if (process.env.SENTRY_DSN) {
@@ -26,8 +26,8 @@ try {
             // Do not send events in the test environment.
             enabled: process.env.NODE_ENV !== 'test',
         });
-        sentryInitialised = true;
-        logger.info('✅ Sentry error tracking initialised');
+        sentryInitialized = true;
+        logger.info('✅ Sentry error tracking initialized');
     } else {
         logger.warn('⚠️  SENTRY_DSN not set — error tracking disabled');
     }
@@ -43,7 +43,7 @@ try {
  * @param {object} [ctx]   - Extra context (userId, requestId, path, …).
  */
 function captureException(error, ctx = {}) {
-    if (!sentryInitialised || !Sentry) return;
+    if (!sentryInitialized || !Sentry) return;
 
     Sentry.withScope((scope) => {
         if (ctx.userId) scope.setUser({ id: String(ctx.userId) });
@@ -60,7 +60,7 @@ function captureException(error, ctx = {}) {
  * Attach BEFORE routes so Sentry can capture request context automatically.
  */
 function requestHandler() {
-    if (!sentryInitialised || !Sentry) return (_req, _res, next) => next();
+    if (!sentryInitialized || !Sentry) return (_req, _res, next) => next();
     return Sentry.Handlers.requestHandler();
 }
 
@@ -69,8 +69,8 @@ function requestHandler() {
  * Attach AFTER all other error handlers.
  */
 function errorHandler() {
-    if (!sentryInitialised || !Sentry) return (err, _req, _res, next) => next(err);
+    if (!sentryInitialized || !Sentry) return (err, _req, _res, next) => next(err);
     return Sentry.Handlers.errorHandler();
 }
 
-module.exports = { captureException, requestHandler, errorHandler, isSentryEnabled: () => sentryInitialised };
+module.exports = { captureException, requestHandler, errorHandler, isSentryEnabled: () => sentryInitialized };

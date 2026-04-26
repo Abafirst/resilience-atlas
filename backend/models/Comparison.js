@@ -9,7 +9,7 @@ const crypto   = require('crypto');
  * Supports three comparison types:
  *  - 'individual' : two users side-by-side
  *  - 'growth'     : a single user's current vs. historical assessment
- *  - 'team'       : a user vs. their organisation's team average
+ *  - 'team'       : a user vs. their organization's team average
  */
 
 const scoresSchema = new mongoose.Schema(

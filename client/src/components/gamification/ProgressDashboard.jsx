@@ -1,6 +1,8 @@
 import React from 'react';
-import { ADULT_BADGES, DIMENSION_COLORS, SKILL_PATHWAYS } from '../../data/adultGames.js';
+import { ADULT_BADGES, IARF_SKILL_BADGES, DIMENSION_COLORS, SKILL_PATHWAYS } from '../../data/adultGames.js';
+import { computeXPLevel, getStreakBadgeTier } from '../../data/gamificationContent.js';
 import ReinforcementMenu from './ReinforcementMenu.jsx';
+import DimensionalBalanceWheel from './DimensionalBalanceWheel.jsx';
 
 const DIMENSIONS = ['Agentic-Generative','Relational-Connective','Emotional-Adaptive','Spiritual-Reflective','Somatic-Regulative','Cognitive-Narrative'];
 const DIM_ICONS = {
@@ -59,6 +61,28 @@ const s = {
   streakStat: { textAlign: 'center' },
   streakVal: { fontSize: 26, fontWeight: 800, color: '#7aafc8' },
   streakLabel: { fontSize: 11, color: '#718096' },
+  xpBar: {
+    width: '100%', height: 8, background: 'rgba(255,255,255,0.08)',
+    borderRadius: 4, overflow: 'hidden', marginTop: 8,
+  },
+  xpBarFill: (pct, color) => ({
+    height: '100%', width: `${pct}%`, borderRadius: 4,
+    background: color || '#4f46e5',
+    transition: 'width 0.8s ease',
+  }),
+  dimStreakRow: {
+    display: 'flex', gap: 8, flexWrap: 'wrap',
+  },
+  dimStreakCard: (accent) => ({
+    flex: '1 1 130px', minWidth: 110,
+    background: `${accent}08`,
+    border: `1px solid ${accent}22`,
+    borderRadius: 8, padding: '10px 12px',
+    textAlign: 'center',
+  }),
+  dimStreakVal: (accent) => ({ fontSize: 20, fontWeight: 800, color: accent }),
+  dimStreakLabel: { fontSize: 10, color: '#718096', marginTop: 2 },
+  dimStreakBadge: { fontSize: 10, marginTop: 2 },
 };
 
 export default function ProgressDashboard({ tier, progress, loading, tierBlocked }) {
@@ -94,17 +118,65 @@ export default function ProgressDashboard({ tier, progress, loading, tierBlocked
   const longestStreak      = progress.longestStreak || 0;
   const microQuestCount    = progress.microQuests?.length || 0;
   const pathwayEntries     = progress.skillPathways || [];
+  const dimensionalStreaks = progress.dimensionalStreaks || [];
+
+  // XP level computation
+  const xpLevel = computeXPLevel(totalPoints);
 
   function getLevelsDone(dim) {
     return pathwayEntries.filter(p => p.dimension === dim).length;
   }
 
+  function getDimStreak(dim) {
+    return dimensionalStreaks.find(d => d.dimension === dim) || { current: 0, longest: 0, totalCount: 0 };
+  }
+
   const isNavigator = tier === 'atlas-navigator';
 
-  const relevantBadges = ADULT_BADGES.filter(b => b.tier === 'starter' || (isNavigator && b.tier === 'navigator'));
+  // Combine ADULT_BADGES and IARF_SKILL_BADGES for display
+  const baseAdultBadges = ADULT_BADGES.filter(b => b.tier === 'starter' || (isNavigator && b.tier === 'navigator'));
+  const iarlBadges = (IARF_SKILL_BADGES || []).filter(b => b.tier === 'starter' || (isNavigator && b.tier === 'navigator'));
+  const relevantBadges = [...baseAdultBadges, ...iarlBadges];
 
   return (
     <div>
+      {/* XP Level Banner */}
+      <div style={{ ...s.section, background: `linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,41,59,0.8))`, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '20px 24px', marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 20 }}>{xpLevel.tierIcon}</span>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: xpLevel.tierColor }}>
+                  Level {xpLevel.level} — {xpLevel.tierName}
+                </div>
+                <div style={{ fontSize: 12, color: '#718096', marginTop: 2 }}>
+                  {xpLevel.xp.toLocaleString()} XP
+                  {xpLevel.nextLevelXP ? ` / ${xpLevel.nextLevelXP.toLocaleString()} XP to next level` : ' — Max level reached!'}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'center', padding: '4px 12px', background: 'rgba(255,255,255,0.04)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: '#e2e8f0' }}>{totalPoints * 10}</div>
+              <div style={{ fontSize: 10, color: '#718096' }}>Total XP</div>
+            </div>
+          </div>
+        </div>
+        {/* XP Progress Bar */}
+        {xpLevel.nextLevelXP && (
+          <div style={{ marginTop: 12 }}>
+            <div style={s.xpBar} role="progressbar" aria-valuenow={xpLevel.progressPct} aria-valuemin={0} aria-valuemax={100}>
+              <div style={s.xpBarFill(xpLevel.progressPct, xpLevel.tierColor)} />
+            </div>
+            <div style={{ fontSize: 10, color: '#6b7280', marginTop: 4, textAlign: 'right' }}>
+              {xpLevel.progressPct}% to Level {xpLevel.level + 1}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Stats Overview */}
       <div style={s.section}>
         <h3 style={s.sectionTitle}>Progress Overview</h3>
@@ -151,6 +223,51 @@ export default function ProgressDashboard({ tier, progress, loading, tierBlocked
         </div>
       )}
 
+      {/* Dimensional Streaks */}
+      {dimensionalStreaks.length > 0 && (
+        <div style={{ ...s.section, marginBottom: 24 }}>
+          <h3 style={s.sectionTitle}>🔥 Active Dimension Streaks</h3>
+          <div style={s.dimStreakRow}>
+            {DIMENSIONS.map(dim => {
+              const ds     = getDimStreak(dim);
+              const meta   = DIMENSION_COLORS[dim] || {};
+              const accent = meta.accent || '#818cf8';
+              const badgeTier = getStreakBadgeTier(ds.current);
+              if (!ds.current && !ds.longest) return null;
+              return (
+                <div key={dim} style={s.dimStreakCard(accent)}>
+                  <img src={DIM_ICONS[dim]} alt="" aria-hidden="true" width={18} height={18} />
+                  <div style={s.dimStreakVal(accent)} aria-label={`${dim} streak: ${ds.current} days`}>
+                    🔥 {ds.current}
+                  </div>
+                  <div style={s.dimStreakLabel}>{dim.split('-')[0]} streak</div>
+                  {badgeTier && (
+                    <div style={s.dimStreakBadge}>{badgeTier.label}</div>
+                  )}
+                  {ds.longest > 0 && (
+                    <div style={{ fontSize: 9, color: '#6b7280', marginTop: 2 }}>Best: {ds.longest}d</div>
+                  )}
+                </div>
+              );
+            }).filter(Boolean)}
+          </div>
+        </div>
+      )}
+
+      {/* Dimensional Balance Wheel */}
+      {isNavigator && (
+        <div style={{ ...s.section, marginBottom: 24 }}>
+          <DimensionalBalanceWheel
+            scores={Object.fromEntries(
+              DIMENSIONS.map(dim => {
+                const done = getLevelsDone(dim);
+                return [dim, Math.round((done / 3) * 100)];
+              })
+            )}
+          />
+        </div>
+      )}
+
       {/* Badges */}
       <div style={s.section}>
         <h3 style={s.sectionTitle}>Achievement Badges</h3>
@@ -158,9 +275,12 @@ export default function ProgressDashboard({ tier, progress, loading, tierBlocked
           {relevantBadges.map(badge => {
             const earned = earnedBadgeNames.has(badge.label);
             return (
-              <div key={badge.id} style={s.badgeCard(earned, badge.rarity)} title={earned ? badge.description : 'Not yet earned'}>
+              <div key={badge.id} style={s.badgeCard(earned, badge.rarity)} title={earned ? badge.description : `${badge.description || 'Not yet earned'}`}>
                 <div style={s.badgeIcon}>
-                  <img src={badge.icon} alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+                  {badge.emoji
+                    ? <span style={{ fontSize: 16 }}>{badge.emoji}</span>
+                    : <img src={badge.icon} alt="" aria-hidden="true" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+                  }
                 </div>
                 <div style={s.badgeLabel}>{badge.label}</div>
                 <div style={s.badgeRarity(badge.rarity)}>{badge.rarity}</div>

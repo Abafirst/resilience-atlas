@@ -11,7 +11,7 @@ const config: CapacitorConfig = {
     allowNavigation: ['theresilienceatlas.com'],
   },
   android: {
-    // Keep the default splash/status bar behaviour.
+    // Keep the default splash/status bar behavior.
     backgroundColor: '#1a1a2e',
     // Performance-oriented WebView defaults for Android devices.
     allowMixedContent: false,

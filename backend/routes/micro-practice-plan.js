@@ -3,7 +3,7 @@
 /**
  * backend/routes/micro-practice-plan.js
  *
- * Endpoints for the 30-day personalised micro-practice plan.
+ * Endpoints for the 30-day personalized micro-practice plan.
  *
  * GET  /api/micro-practice-plan?email=&assessmentHash=
  *   — Returns the existing plan (or 404 if none yet).
@@ -34,7 +34,7 @@ const planLimiter = rateLimit({
 
 router.use(planLimiter);
 
-// ── Practice catalogue (mirrors EVIDENCE_PRACTICES in ResultsPage) ───────────
+// ── Practice catalog (mirrors EVIDENCE_PRACTICES in ResultsPage) ───────────
 // Two practices per dimension — one low-effort "starter" and one slightly richer one.
 const PRACTICE_CATALOGUE = {
   'Cognitive-Narrative': [

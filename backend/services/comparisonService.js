@@ -31,7 +31,7 @@ const LOW_THRESHOLD    = 45;  // ≤ 45 → growth area
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Capitalise the first letter of a string.
+ * Capitalize the first letter of a string.
  * @param {string} str
  * @returns {string}
  */
@@ -40,13 +40,13 @@ function cap(str) {
 }
 
 /**
- * Normalise a scores object to plain percentages (0–100).
+ * Normalize a scores object to plain percentages (0–100).
  * Handles both {percentage, raw, max} objects and plain numbers.
  *
  * @param {Object} scores
  * @returns {Object} — { emotional, mental, physical, social, spiritual, financial }
  */
-function normaliseScores(scores) {
+function normalizeScores(scores) {
     const out = {};
     for (const dim of DIMENSIONS) {
         const val = scores[dim];
@@ -64,7 +64,7 @@ function normaliseScores(scores) {
 // ── Core analysis ─────────────────────────────────────────────────────────────
 
 /**
- * Analyse two score objects and return a comparisonAnalysis object.
+ * Analyze two score objects and return a comparisonAnalysis object.
  *
  * @param {Object} scores1  — { emotional, mental, … } (0–100)
  * @param {Object} scores2  — { emotional, mental, … } (0–100)
@@ -72,9 +72,9 @@ function normaliseScores(scores) {
  * @param {string} [name2='Colleague']
  * @returns {Object} comparisonAnalysis
  */
-function analyseProfiles(scores1, scores2, name1 = 'You', name2 = 'Colleague') {
-    const s1 = normaliseScores(scores1);
-    const s2 = normaliseScores(scores2);
+function analyzeProfiles(scores1, scores2, name1 = 'You', name2 = 'Colleague') {
+    const s1 = normalizeScores(scores1);
+    const s2 = normalizeScores(scores2);
 
     const synergies         = [];
     const complementarities = [];
@@ -142,8 +142,8 @@ function analyseProfiles(scores1, scores2, name1 = 'You', name2 = 'Colleague') {
  * @returns {Object} growth report
  */
 function calculateGrowth(currentScores, previousScores) {
-    const current  = normaliseScores(currentScores);
-    const previous = normaliseScores(previousScores);
+    const current  = normalizeScores(currentScores);
+    const previous = normalizeScores(previousScores);
 
     const dimensionTrends = {};
     let totalDelta = 0;
@@ -228,12 +228,12 @@ function buildGrowthReport(history) {
     const checkpoints = sorted.map((item, i) => ({
         date:    item.date,
         overall: item.overall,
-        scores:  normaliseScores(item.scores),
+        scores:  normalizeScores(item.scores),
         deltaFromPrev: i === 0 ? null : (() => {
             const prev = sorted[i - 1];
             const curr = item;
-            const prevNorm = normaliseScores(prev.scores);
-            const currNorm = normaliseScores(curr.scores);
+            const prevNorm = normalizeScores(prev.scores);
+            const currNorm = normalizeScores(curr.scores);
             return DIMENSIONS.reduce((acc, d) => {
                 acc[d] = currNorm[d] - prevNorm[d];
                 return acc;
@@ -245,10 +245,10 @@ function buildGrowthReport(history) {
 }
 
 module.exports = {
-    analyseProfiles,
+    analyzeProfiles,
     calculateGrowth,
     buildGrowthReport,
-    normaliseScores,
+    normalizeScores,
     DIMENSIONS,
     DIMENSION_LABELS,
 };

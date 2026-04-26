@@ -6,7 +6,7 @@
  * Usage:
  *   PdfProgress.start({ overall, dominantType, scores, email })
  *     .then(hash => { /* PDF is ready, download triggered automatically * / })
- *     .catch(err => { /* user cancelled or timeout * / });
+ *     .catch(err => { /* user canceled or timeout * / });
  *
  * The modal injects its own HTML/CSS the first time it is shown, so no
  * extra markup is required in the page.
@@ -312,7 +312,7 @@
     _cancelled = true;
     _cleanup();
     hideModal();
-    if (_reject) _reject(new Error('cancelled'));
+    if (_reject) _reject(new Error('canceled'));
   }
 
   // Stored params so retry can re-use them.

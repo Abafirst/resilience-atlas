@@ -102,7 +102,7 @@ const UPSELL_VARIANT_COPY = {
     },
     'atlas-premium': {
       headline: 'Take Your Resilience Journey Further',
-      subtext:  'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium licence.',
+      subtext:  'Track progress over time, compare results, and access unlimited reassessments with a lifetime Atlas Premium license.',
       ctaLabel: 'Upgrade to Atlas Premium — $49.99',
       offer:    null,
     },
@@ -151,7 +151,7 @@ const UPSELL_VARIANT_COPY = {
   },
 };
 
-// Value propositions catalogue
+// Value propositions catalog
 const UPSELL_VALUE_PROPS = {
   detailed_analytics:  { icon: '/icons/leaderboards.svg', text: 'Detailed analytics across all 6 resilience dimensions' },
   comparison:          { icon: '/icons/growth.svg', text: 'Side-by-side comparison with your previous assessments' },
@@ -597,7 +597,7 @@ function UpgradeCardsSection({ getPrice, onUpgrade, checkoutLoading }) {
   );
 }
 
-// ── Dimension accent colours (mirror results.js / scoring.js) ─────────────
+// ── Dimension accent colors (mirror results.js / scoring.js) ─────────────
 const DIM_COLORS = {
   'Cognitive-Narrative':   '#4F46E5',
   'Relational-Connective': '#059669',
@@ -678,7 +678,7 @@ const DIMENSION_NEXT_STEPS = {
   'Relational-Connective': [
     { icon: '/icons/connection.svg', title: 'Reach Out', desc: "Connect with one trusted person this week — share something real about how you're doing." },
     { icon: '/icons/network.svg', title: 'Strengthen Bonds', desc: 'Schedule a regular check-in with a colleague, friend, or family member to deepen connection.' },
-    { icon: '/icons/dialogue.svg', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
+    { icon: '/icons/dialog.svg', title: 'Vulnerable Conversation', desc: 'Practice asking for support in a low-stakes situation to build comfort with relying on others.' },
   ],
   'Spiritual-Reflective': [
     { icon: '/icons/mindfulness.svg', title: 'Values Reflection', desc: 'Spend 5 minutes writing about what gives your life meaning and how a recent challenge relates to your values.' },
@@ -2135,7 +2135,7 @@ function loadGamData() {
 // ── Main component ─────────────────────────────────────────────────────────
 export default function ResultsPage() {
   const params = new URLSearchParams(window.location.search);
-  const upgradeParam  = params.get('upgrade');   // 'success' | 'cancelled'
+  const upgradeParam  = params.get('upgrade');   // 'success' | 'canceled'
   const sessionId     = params.get('session_id');
   const hashParam     = params.get('hash');      // assessment hash from email CTA deep link
 
@@ -2316,7 +2316,7 @@ export default function ResultsPage() {
   useEffect(() => {
     if (!hashParam) return;
 
-    // Wait for Auth0 to finish initialising before deciding on auth state.
+    // Wait for Auth0 to finish initializing before deciding on auth state.
     if (auth0Loading) return;
 
     if (!isAuthenticated) {
@@ -2329,7 +2329,7 @@ export default function ResultsPage() {
     }
 
     // Authenticated — fetch assessment data from the server.
-    let cancelled = false;
+    let canceled = false;
     setHashLoading(true);
 
     (async () => {
@@ -2340,7 +2340,7 @@ export default function ResultsPage() {
           getAccessTokenSilently
         ).then(r => r.json());
 
-        if (cancelled) return;
+        if (canceled) return;
 
         if (data && data.overall !== undefined) {
           setResults(data);
@@ -2352,18 +2352,18 @@ export default function ResultsPage() {
           });
         }
       } catch (err) {
-        if (!cancelled) {
+        if (!canceled) {
           setBanner({
             type: 'error',
             message: 'Unable to load assessment. Please try again or re-take the quiz.',
           });
         }
       } finally {
-        if (!cancelled) setHashLoading(false);
+        if (!canceled) setHashLoading(false);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => { canceled = true; };
   }, [hashParam, auth0Loading, isAuthenticated]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Auto-load latest assessment when results is null and user has email ─
@@ -2375,18 +2375,18 @@ export default function ResultsPage() {
   useEffect(() => {
     if (hashParam) return;           // hash flow handles its own loading
     if (results) return;             // already have results — nothing to do
-    if (auth0Loading) return;        // wait for Auth0 to finish initialising
+    if (auth0Loading) return;        // wait for Auth0 to finish initializing
 
     const email = (isAuthenticated && auth0User?.email) || getStoredEmail();
     if (!email) return;              // no email — cannot fetch history
 
-    let cancelled = false;
+    let canceled = false;
     setLatestAssessmentLoading(true);
 
     apiFetch(`/api/assessment/history?email=${encodeURIComponent(email)}`, {}, getAccessTokenSilently)
       .then(r => r.json())
       .then(data => {
-        if (cancelled) return;
+        if (canceled) return;
         const list = Array.isArray(data.assessments) ? data.assessments : [];
         // Filter to items that have actual result data
         const valid = list.filter(a => a.overall !== undefined && a.dominantType);
@@ -2409,15 +2409,15 @@ export default function ResultsPage() {
         }
       })
       .catch(err => {
-        if (!cancelled) {
+        if (!canceled) {
           console.warn('[ResultsPage] Auto-fetch latest assessment failed:', err.message);
         }
       })
       .finally(() => {
-        if (!cancelled) setLatestAssessmentLoading(false);
+        if (!canceled) setLatestAssessmentLoading(false);
       });
 
-    return () => { cancelled = true; };
+    return () => { canceled = true; };
   }, [hashParam, results, auth0Loading, isAuthenticated, auth0User]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Confetti celebration — fire 600 ms after results load ─────────────
@@ -2433,7 +2433,7 @@ export default function ResultsPage() {
     };
   }, [results]);
 
-  // ── 30-day practice plan: initialise start date on first view ──────────
+  // ── 30-day practice plan: initialize start date on first view ──────────
   useEffect(() => {
     if (!results) return;
     try {
@@ -2541,8 +2541,8 @@ export default function ResultsPage() {
 
   // ── Handle return from Stripe checkout ────────────────────────────────
   useEffect(() => {
-    if (upgradeParam === 'cancelled') {
-      setBanner({ type: 'warning', message: 'Payment was cancelled. Your free results are still available below.' });
+    if (upgradeParam === 'canceled') {
+      setBanner({ type: 'warning', message: 'Payment was canceled. Your free results are still available below.' });
       // Clean query string without reloading
       window.history.replaceState({}, '', '/results');
       return;
@@ -2666,7 +2666,7 @@ export default function ResultsPage() {
   // state is populated before the access check runs.
   useEffect(() => {
     if (auth0Loading) {
-      // Auth0 is still initialising — hold off until we know the user's identity.
+      // Auth0 is still initializing — hold off until we know the user's identity.
       return;
     }
 
@@ -2979,6 +2979,19 @@ export default function ResultsPage() {
       // Removing the animations preserves the final static rotation (needleDeg).
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
+      // Remove interactive UI elements so the downloaded image is clean.
+      // CSS classes (dimension-info-icon, dimension-label-text) are set in
+      // RadarChart.jsx on the ⓘ icon group and dimension name text elements.
+      svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
+      svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
+        el.style.textDecoration = 'none';
+      });
+      // Also clear any inline underline styles on other text nodes (belt and
+      // suspenders — covers any future changes to the SVG structure).
+      svgClone.querySelectorAll('text').forEach(el => {
+        if (el.style && el.style.textDecoration) el.style.textDecoration = 'none';
+      });
+
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
       const serializer = new XMLSerializer();
       const svgString = serializer.serializeToString(svgClone);
@@ -3272,8 +3285,8 @@ export default function ResultsPage() {
                   {isReturnFromPayment
                     ? 'Thank you! Your payment was successful. Your results could not be found in this browser — please re-take the assessment to generate your PDF report.'
                     : isAuthenticated
-                      ? 'Complete the free assessment to see your personalised resilience profile.'
-                      : 'Complete the free assessment to see your personalised resilience profile, or sign in to access your previous results.'
+                      ? 'Complete the free assessment to see your personalized resilience profile.'
+                      : 'Complete the free assessment to see your personalized resilience profile, or sign in to access your previous results.'
                   }
                 </p>
                 <a href="/quiz" style={s.primaryBtn}>
@@ -3433,66 +3446,51 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* ── Free Brief Report (snapshot — visible to all users) ──────── */}
-        <div style={s.freeBriefReport} className="story-results-card" role="region" aria-label="Your Resilience Terrain">
-          <div style={s.fbrHeading}><BrandIcon name="chart" size={17} color="#667eea" /> Your Resilience Terrain</div>
-          {rankedDims.map(([dim, score]) => {
-            const pct   = Math.round(score.percentage);
-            const color = DIM_COLORS[dim] || '#667eea';
-            return (
-              <div key={dim} style={s.dimRow}>
-                <button
-                  type="button"
-                  style={{
-                    ...s.dimLabel,
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    textDecoration: 'underline dotted',
-                    textDecorationColor: color,
-                    textUnderlineOffset: 2,
-                    color: 'inherit',
-                    fontFamily: 'inherit',
-                    fontSize: 'inherit',
-                    fontWeight: 'inherit',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
-                  }}
-                  onClick={(e) => {
-                    dimModalTriggerRef.current = e.currentTarget;
-                    setActiveDimModal(dim);
-                  }}
-                  aria-label={`Learn more about ${dim} resilience dimension`}
-                  title={`Click to learn more about ${dim}`}
-                >
-                  {dim}
-                  <span style={{ fontSize: 10, color, opacity: 0.7, flexShrink: 0 }} aria-hidden="true">ⓘ</span>
-                </button>
-                <div style={s.dimBarWrap}
-                  role="progressbar"
-                  aria-valuenow={pct}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-label={`${dim} ${pct}%`}
-                >
-                  <div style={s.dimBarFill(color, pct)} />
-                </div>
-                <span style={s.dimPct}>{pct}%</span>
-              </div>
-            );
-          })}
-          {!hasPremiumAccess && (
-            <p style={s.fbrHint}>
-              Unlock your full map for personalised insights &amp; growth compass points.
+        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
+        <section style={{
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: 16,
+          padding: '28px 20px 20px',
+          marginBottom: 24,
+          textAlign: 'center',
+          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
+        }} aria-labelledby="radarHeading">
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
+            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
+          </div>
+          <p style={{ fontSize: 13, color: '#718096', marginBottom: 8 }}>
+            This compass visualizes the balance of your resilience system across six core dimensions.
+          </p>
+          <p style={{
+            fontSize: 12,
+            color: '#4a5568',
+            background: '#eef2ff',
+            border: '1px solid #c7d2fe',
+            borderRadius: 8,
+            padding: '7px 12px',
+            marginBottom: 14,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontWeight: 500,
+          }}>
+            <span aria-hidden="true" style={{ fontSize: 14, color: '#667eea' }}>👆</span>
+            Click any dimension label to learn what it means and discover personalized ways to strengthen it
+          </p>
+          <RadarChart
+            scores={results.scores}
+            onDimensionClick={(dim) => {
+              setActiveDimModal(dim);
+            }}
+          />
+          {dominantType && (
+            <p style={{ fontSize: 13, color: '#718096', marginTop: 10 }}>
+              Your strongest resilience dimension is:{' '}
+              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
             </p>
           )}
-          <p style={{ margin: '8px 0 0', fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>
-            <span aria-hidden="true">ⓘ</span> Click any dimension name to learn what it means and how to strengthen it.
-          </p>
-        </div>
+        </section>
 
         {/* ── Primary Resilience Mode ───────────────────────────────── */}
         {dominantType && (() => {
@@ -3615,31 +3613,6 @@ export default function ResultsPage() {
             </section>
           );
         })()}
-
-        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
-        <section style={{
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: 16,
-          padding: '28px 20px 20px',
-          marginBottom: 24,
-          textAlign: 'center',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-        }} aria-labelledby="radarHeading">
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
-            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
-          </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 16 }}>
-            This compass visualizes the balance of your resilience system across six core dimensions.
-          </p>
-          <RadarChart scores={results.scores} />
-          {dominantType && (
-            <p style={{ fontSize: 13, color: '#718096', marginTop: 14 }}>
-              Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
-            </p>
-          )}
-        </section>
 
         {/* ── Resilience Journey CTA (paid users) ──────────────────── */}
         {hasPremiumAccess && tierCheckComplete && (
@@ -3887,10 +3860,10 @@ export default function ResultsPage() {
               {isAtlasPremium
                 ? 'Your Atlas Premium access lets you download this report any time.'
                 : tier === 'atlas-starter'
-                  ? 'Your Atlas Starter report is ready. Download your personalised PDF report now.'
+                  ? 'Your Atlas Starter report is ready. Download your personalized PDF report now.'
                   : tier === 'atlas-navigator'
                     ? 'Your Atlas Navigator lifetime access lets you download a new report every 30 days.'
-                    : 'Your report is ready. Download your personalised PDF now.'
+                    : 'Your report is ready. Download your personalized PDF now.'
               }
             </p>
             {pdfError && (

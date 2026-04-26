@@ -1,0 +1,657 @@
+/**
+ * emotionalAdaptive.js
+ * Skill module definitions for the Emotional-Adaptive dimension.
+ * Grounded in ACT acceptance, emotion regulation, and self-compassion research.
+ */
+
+export const emotionalAdaptiveModules = [
+  // ── Foundation Level ────────────────────────────────────────────────────────
+  {
+    id: 'emotional-wheel',
+    dimension: 'emotional-adaptive',
+    level: 'foundation',
+    order: 1,
+    title: 'Emotion Wheel Exploration',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '10 minutes',
+    xpReward: 10,
+    badge: {
+      id: 'emotion-explorer',
+      name: 'Emotion Explorer',
+      icon: '🎨',
+      requirement: 'Identify and record 20 specific emotions across different categories',
+    },
+    learningObjective: 'Expand your emotional vocabulary to support more precise processing',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Emotional granularity — the ability to identify specific emotions with precision — is strongly associated with better emotional regulation, lower aggression, fewer avoidance behaviors, and greater well-being. Research by Lisa Feldman Barrett shows that a richer emotion vocabulary literally changes how the brain constructs emotional experiences. "I feel bad" is far less actionable than "I feel disappointed and slightly embarrassed."',
+    },
+    instructions: [
+      'Below is a partial list of emotions grouped by family.',
+      'Read through the list slowly, noticing which emotions feel familiar.',
+      'Identify 20 emotions you have experienced in the past month.',
+      'For each, write one recent situation where you felt it.',
+      'Reflect on which emotions you have the least vocabulary for.',
+    ],
+    activity: {
+      type: 'worksheet',
+      emotionCategories: {
+        joy: ['Joyful', 'Excited', 'Grateful', 'Content', 'Proud', 'Amused', 'Inspired', 'Hopeful', 'Playful', 'Serene'],
+        sadness: ['Sad', 'Disappointed', 'Grieving', 'Lonely', 'Regretful', 'Melancholic', 'Hopeless', 'Disconnected'],
+        anger: ['Angry', 'Frustrated', 'Irritable', 'Resentful', 'Envious', 'Disgusted', 'Outraged', 'Betrayed'],
+        fear: ['Anxious', 'Scared', 'Nervous', 'Overwhelmed', 'Dread', 'Panicked', 'Insecure', 'Vulnerable'],
+        surprise: ['Surprised', 'Shocked', 'Confused', 'Stunned', 'Amazed', 'Curious', 'Uncertain'],
+        love: ['Loving', 'Caring', 'Compassionate', 'Connected', 'Tender', 'Appreciative', 'Warm'],
+      },
+      fields: [
+        {
+          id: 'emotions_experienced',
+          label: '20 specific emotions I\'ve felt in the past month',
+          placeholder: 'List them with a brief situation for each: e.g., Disappointed (didn\'t get the promotion), Grateful (friend helped me move), Irritable (traffic made me late)...',
+          type: 'textarea',
+        },
+        {
+          id: 'least_vocabulary',
+          label: 'Emotion families where I have the least vocabulary',
+          placeholder: 'e.g., I know "sad" but not many specific sad emotions; I confuse fear and anxiety',
+          type: 'textarea',
+        },
+        {
+          id: 'most_frequent',
+          label: 'The 3 emotions I feel most frequently',
+          placeholder: 'e.g., Anxious, content, frustrated',
+          type: 'text',
+        },
+        {
+          id: 'least_comfortable',
+          label: 'The emotion family I am least comfortable with',
+          placeholder: 'e.g., Fear — I tend to call it anger instead',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'How did expanding your vocabulary change how you think about your emotional life?',
+      'Which emotion surprised you to see — one you hadn\'t named before?',
+      'What emotions feel hardest for you to allow or express? Why?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'emotional-name-to-tame',
+    dimension: 'emotional-adaptive',
+    level: 'foundation',
+    order: 2,
+    title: 'Name It to Tame It',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '5 minutes daily',
+    xpReward: 10,
+    badge: {
+      id: 'emotion-namer',
+      name: 'Emotion Namer',
+      icon: '🏷️',
+      requirement: 'Practice emotion naming for 5 consecutive days',
+    },
+    learningObjective: 'Use precise emotion labeling to reduce emotional intensity',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Neuroscientist Dan Siegel\'s "name it to tame it" principle is supported by fMRI research: labeling emotions activates the prefrontal cortex and reduces amygdala activation — literally calming the brain\'s threat response. This process, called affect labeling, is one of the simplest and most evidence-based emotional regulation techniques available.',
+    },
+    instructions: [
+      'Three times each day (morning, afternoon, evening), pause for 30 seconds.',
+      'Ask yourself: "What am I feeling right now?"',
+      'Name the emotion as specifically as possible (use the emotion wheel if needed).',
+      'Rate the intensity (1–10).',
+      'Note any body sensations that accompany the emotion.',
+      'Simply name it — you don\'t need to fix it.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'day1_morning',
+          label: 'Day 1 — Morning emotion + intensity',
+          placeholder: 'e.g., Mildly anxious (4/10) — stomach tight',
+          type: 'text',
+        },
+        {
+          id: 'day1_afternoon',
+          label: 'Day 1 — Afternoon emotion + intensity',
+          placeholder: 'e.g., Frustrated (6/10) — jaw clenched',
+          type: 'text',
+        },
+        {
+          id: 'day1_evening',
+          label: 'Day 1 — Evening emotion + intensity',
+          placeholder: 'e.g., Content (7/10) — chest relaxed',
+          type: 'text',
+        },
+        {
+          id: 'day2_morning',
+          label: 'Day 2 — Morning emotion + intensity',
+          placeholder: 'Emotion + intensity (1–10) + body sensation',
+          type: 'text',
+        },
+        {
+          id: 'day2_afternoon',
+          label: 'Day 2 — Afternoon emotion + intensity',
+          placeholder: 'Emotion + intensity (1–10) + body sensation',
+          type: 'text',
+        },
+        {
+          id: 'day2_evening',
+          label: 'Day 2 — Evening emotion + intensity',
+          placeholder: 'Emotion + intensity (1–10) + body sensation',
+          type: 'text',
+        },
+        {
+          id: 'patterns',
+          label: 'Patterns I notice across the 5 days',
+          placeholder: 'e.g., Consistently anxious in mornings; afternoons spike when I have difficult conversations',
+          type: 'textarea',
+        },
+        {
+          id: 'naming_effect',
+          label: 'Did naming emotions change their intensity? How?',
+          placeholder: 'e.g., Calling it "frustrated" rather than just feeling bad gave me distance from it',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What patterns did you notice in your emotional rhythms throughout the day?',
+      'Did naming emotions feel easy or awkward? What does that tell you?',
+      'How might this practice change how you handle emotional moments at work or home?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'emotional-rain',
+    dimension: 'emotional-adaptive',
+    level: 'foundation',
+    order: 3,
+    title: 'RAIN Practice',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '10–15 minutes',
+    xpReward: 15,
+    badge: {
+      id: 'rain-practitioner',
+      name: 'RAIN Practitioner',
+      icon: '🌧️',
+      requirement: 'Apply RAIN to a difficult emotion and record the full process',
+    },
+    learningObjective: 'Process difficult emotions through Recognize, Allow, Investigate, Nurture',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'RAIN, developed by Tara Brach and aligned with ACT acceptance principles, offers a structured way to meet difficult emotions without suppression or overwhelm. Research on acceptance-based strategies shows they reduce emotional intensity more effectively than avoidance or suppression — and without the rebound effect. RAIN creates the conditions for natural emotional resolution.',
+    },
+    instructions: [
+      'Bring to mind a difficult emotion you\'ve been experiencing.',
+      'R — RECOGNIZE: Pause and name what you\'re feeling. Say it silently: "This is anxiety."',
+      'A — ALLOW: Resist the urge to push it away. Let it be here, just for this moment. "I allow this feeling to be present."',
+      'I — INVESTIGATE: With gentle curiosity, notice where you feel it in your body. What does it feel like? What belief or need is it pointing to?',
+      'N — NURTURE: Offer yourself kindness. What do you need to hear? Place a hand on your heart and offer a kind phrase.',
+      'After completing RAIN, rest in awareness for a moment before recording.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'emotion',
+          label: 'The difficult emotion I\'m working with',
+          placeholder: 'e.g., Fear of failure, shame about a mistake, deep loneliness',
+          type: 'text',
+        },
+        {
+          id: 'recognize',
+          label: 'R — RECOGNIZE: What exactly am I feeling?',
+          placeholder: 'Name the emotion precisely. Is there more than one?',
+          type: 'textarea',
+        },
+        {
+          id: 'allow',
+          label: 'A — ALLOW: What is it like to simply let this emotion be here?',
+          placeholder: 'Describe the experience of allowing without pushing away',
+          type: 'textarea',
+        },
+        {
+          id: 'investigate',
+          label: 'I — INVESTIGATE: Where is this in my body? What belief or need is here?',
+          placeholder: 'Body location, quality of sensation, underlying belief or unmet need',
+          type: 'textarea',
+        },
+        {
+          id: 'nurture',
+          label: 'N — NURTURE: What kind words or gesture do I offer myself?',
+          placeholder: 'e.g., "This is hard and you\'re doing your best. You don\'t have to face this alone."',
+          type: 'textarea',
+        },
+        {
+          id: 'after_rain',
+          label: 'How did the emotion feel after completing RAIN?',
+          placeholder: 'e.g., Less overwhelming, more bearable, slightly transformed',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What surprised you about turning toward the emotion rather than away from it?',
+      'Which step — Recognize, Allow, Investigate, or Nurture — was hardest? Why?',
+      'How might RAIN help you in future difficult emotional moments?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'emotional-self-compassion',
+    dimension: 'emotional-adaptive',
+    level: 'foundation',
+    order: 4,
+    title: 'Self-Compassion Break',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '10 minutes',
+    xpReward: 15,
+    badge: {
+      id: 'self-compassion-starter',
+      name: 'Self-Compassion Starter',
+      icon: '💙',
+      requirement: 'Complete the 3-step self-compassion practice',
+    },
+    learningObjective: 'Respond to your own suffering with kindness rather than self-criticism',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Kristin Neff\'s self-compassion research is among the most replicated in positive psychology: self-compassion (treating yourself as you\'d treat a good friend) is associated with significantly lower depression, anxiety, and shame — and higher motivation, resilience, and emotional well-being. It does NOT reduce motivation or accountability; research shows the opposite.',
+    },
+    instructions: [
+      'Bring to mind a situation where you\'re suffering or being hard on yourself.',
+      'Step 1 — Mindfulness: Acknowledge the pain. Say to yourself: "This is a moment of suffering." (Common humanity: "Suffering is part of being human.")',
+      'Step 2 — Common Humanity: Remind yourself: "I am not alone in this. Other people feel this way too."',
+      'Step 3 — Self-Kindness: Place both hands over your heart. Ask: "What do I need to hear right now?" Offer yourself that message.',
+      'Take 3 breaths and write about the experience.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'struggle',
+          label: 'The situation where I\'m struggling or criticizing myself',
+          placeholder: 'Briefly describe what\'s happening',
+          type: 'textarea',
+        },
+        {
+          id: 'mindfulness',
+          label: 'Step 1 — Mindfulness: Acknowledging the pain',
+          placeholder: '"This is a moment of suffering" — what does it feel like to acknowledge this honestly?',
+          type: 'textarea',
+        },
+        {
+          id: 'common_humanity',
+          label: 'Step 2 — Common Humanity: You are not alone',
+          placeholder: 'Who else might be struggling with something similar right now? What does it feel like to not be alone in this?',
+          type: 'textarea',
+        },
+        {
+          id: 'kind_message',
+          label: 'Step 3 — Self-Kindness: The kind message I offer myself',
+          placeholder: '"May I be kind to myself. May I give myself the compassion I need. May I be patient with myself." — or write your own',
+          type: 'textarea',
+        },
+        {
+          id: 'inner_critic',
+          label: 'What my inner critic usually says vs. what the kind voice says',
+          placeholder: 'Inner critic: "You\'re so stupid." Kind voice: "You made a mistake. Mistakes are how we learn."',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What was it like to offer yourself kindness? Did it feel uncomfortable?',
+      'If your best friend were in this situation, what would you say to them?',
+      'How might more self-compassion change how you handle future struggles?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'emotional-tracker',
+    dimension: 'emotional-adaptive',
+    level: 'foundation',
+    order: 5,
+    title: 'Emotion Tracking Log',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '5 minutes daily for 7 days',
+    xpReward: 15,
+    badge: {
+      id: 'emotion-tracker',
+      name: 'Emotion Tracker',
+      icon: '📊',
+      requirement: 'Complete 7 consecutive days of emotion + trigger tracking',
+    },
+    learningObjective: 'Identify emotional patterns and triggers across a full week',
+    whyItMatters: {
+      framework: 'ABA',
+      rationale:
+        'In ABA, behavior change begins with careful observation of patterns: what triggers a behavior, what reinforces it, and what consequences follow. Applying this to emotions — tracking feelings alongside triggers and contexts — reveals patterns that are invisible in the moment. Understanding your emotional ABCs (Antecedents, Behaviors, Consequences) is the first step toward intentional emotion regulation.',
+    },
+    instructions: [
+      'Each evening, spend 5 minutes completing the emotion tracking entry below.',
+      'Record the most significant emotional moment of the day.',
+      'Note: what triggered it (A), what you felt and did (B), and what followed (C).',
+      'After 7 days, look for patterns.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'day1',
+          label: 'Day 1 — Emotion + Trigger + Response + Consequence',
+          placeholder: 'Emotion: anxious (7/10)\nTrigger: unexpected meeting request\nResponse: avoided eating, scrolled phone\nConsequence: more anxious, unproductive afternoon',
+          type: 'textarea',
+        },
+        {
+          id: 'day2',
+          label: 'Day 2',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'day3',
+          label: 'Day 3',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'day4',
+          label: 'Day 4',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'day5',
+          label: 'Day 5',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'day6',
+          label: 'Day 6',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'day7',
+          label: 'Day 7',
+          placeholder: 'Emotion + Trigger + Response + Consequence',
+          type: 'textarea',
+        },
+        {
+          id: 'patterns',
+          label: '7-day pattern summary — what I notice',
+          placeholder: 'e.g., Uncertainty triggers anxiety every time; mornings are hardest; validation from others lifts my mood quickly',
+          type: 'textarea',
+        },
+        {
+          id: 'top_trigger',
+          label: 'My most common emotional trigger',
+          placeholder: 'e.g., Feeling out of control / uncertainty',
+          type: 'text',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What emotional patterns surprised you most?',
+      'Which triggers are within your control? Which are not?',
+      'What is one pattern you want to change — and how might you begin?',
+    ],
+    resources: [],
+  },
+
+  // ── Building Level ───────────────────────────────────────────────────────────
+  {
+    id: 'emotional-willingness',
+    dimension: 'emotional-adaptive',
+    level: 'building',
+    order: 6,
+    title: 'Willingness Practice',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '20 minutes',
+    xpReward: 25,
+    badge: {
+      id: 'willingness-warrior',
+      name: 'Willingness Warrior',
+      icon: '🧘',
+      requirement: 'Complete 3 willingness experiments with uncomfortable emotions',
+    },
+    learningObjective: 'Gradually increase your capacity to sit with discomfort without avoidance',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'In ACT, emotional willingness — the choice to open up to difficult feelings without fighting them — is the antidote to experiential avoidance, which is one of the strongest predictors of psychological suffering. Willingness does not mean liking the feeling; it means choosing not to let avoidance of it control your life. Research shows graduated willingness practice increases emotional resilience dramatically.',
+    },
+    instructions: [
+      'Identify an emotion you typically avoid or suppress.',
+      'On a scale of 0–10, rate your current willingness to feel this emotion.',
+      'Use a graduated exposure approach: invite the emotion in gradually.',
+      'Start with a mild version (e.g., a 3/10 intensity situation).',
+      'Sit with the feeling for 3–5 minutes without trying to reduce or escape it.',
+      'Notice: did the emotion intensify, stay stable, or reduce on its own?',
+      'Record your experience and rate your willingness again.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'avoided_emotion',
+          label: 'The emotion I most avoid or suppress',
+          placeholder: 'e.g., Loneliness, shame, grief, fear',
+          type: 'text',
+        },
+        {
+          id: 'willingness_before',
+          label: 'My current willingness to feel this emotion (0–10)',
+          placeholder: 'e.g., 3',
+          type: 'text',
+        },
+        {
+          id: 'experiment1',
+          label: 'Willingness experiment 1 — mild situation',
+          placeholder: 'Describe the mild situation and what you noticed when you stayed with the feeling',
+          type: 'textarea',
+        },
+        {
+          id: 'experiment2',
+          label: 'Willingness experiment 2 — moderate situation',
+          placeholder: 'Describe the moderate situation and what you noticed',
+          type: 'textarea',
+        },
+        {
+          id: 'experiment3',
+          label: 'Willingness experiment 3 — stronger situation',
+          placeholder: 'Describe the stronger situation and what you noticed',
+          type: 'textarea',
+        },
+        {
+          id: 'willingness_after',
+          label: 'My willingness to feel this emotion after practice (0–10)',
+          placeholder: 'e.g., 6 — it didn\'t destroy me to feel it',
+          type: 'text',
+        },
+        {
+          id: 'key_insight',
+          label: 'Key insight from this willingness practice',
+          placeholder: 'What did you learn about the emotion, and about yourself?',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What happened to the emotion when you stopped fighting it?',
+      'What have you been missing out on because of avoidance of this emotion?',
+      'How does willingness change your sense of freedom in emotional life?',
+    ],
+    resources: [],
+  },
+  {
+    id: 'emotional-opposite-action',
+    dimension: 'emotional-adaptive',
+    level: 'building',
+    order: 7,
+    title: 'Opposite Action (DBT)',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '15–20 minutes',
+    xpReward: 20,
+    badge: {
+      id: 'opposite-action-pro',
+      name: 'Opposite Action Pro',
+      icon: '↔️',
+      requirement: 'Apply opposite action to 2 different emotion urges',
+    },
+    learningObjective: 'Act opposite to the urge of an unhelpful emotion to change emotional state',
+    whyItMatters: {
+      framework: 'Both',
+      rationale:
+        'Marsha Linehan\'s Opposite Action from Dialectical Behavior Therapy (DBT) is based on the principle that emotions are maintained by the behaviors they prompt. If you act opposite to the unhelpful urge of an emotion, the emotional state itself begins to shift. This is supported by behaviorist principles: behavior and emotion co-regulate each other.',
+    },
+    instructions: [
+      'Identify an emotion where your typical urge is unhelpful.',
+      'Check: is this emotion justified by the facts, or is it out of proportion?',
+      'If unjustified or disproportionate: identify the typical urge the emotion creates.',
+      'Identify the OPPOSITE action.',
+      'Do the opposite action fully and mindfully.',
+      'Notice what happens to the emotion.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'emotion1',
+          label: 'Emotion 1 (that prompts an unhelpful urge)',
+          placeholder: 'e.g., Social anxiety',
+          type: 'text',
+        },
+        {
+          id: 'urge1',
+          label: 'The typical urge this emotion creates',
+          placeholder: 'e.g., Urge to avoid the social situation entirely',
+          type: 'text',
+        },
+        {
+          id: 'opposite1',
+          label: 'The OPPOSITE action',
+          placeholder: 'e.g., Go to the event; engage with people; approach rather than avoid',
+          type: 'textarea',
+        },
+        {
+          id: 'result1',
+          label: 'What happened to the emotion after opposite action?',
+          placeholder: 'e.g., Initial spike then gradual drop; ended up enjoying myself',
+          type: 'textarea',
+        },
+        {
+          id: 'emotion2',
+          label: 'Emotion 2',
+          placeholder: 'e.g., Shame after making an error',
+          type: 'text',
+        },
+        {
+          id: 'urge2',
+          label: 'The typical urge',
+          placeholder: 'e.g., Hide the mistake; over-apologize; avoid the person',
+          type: 'text',
+        },
+        {
+          id: 'opposite2',
+          label: 'The OPPOSITE action',
+          placeholder: 'e.g., Acknowledge the mistake briefly and move forward; hold head up',
+          type: 'textarea',
+        },
+        {
+          id: 'result2',
+          label: 'What happened to the emotion?',
+          placeholder: 'e.g., Shame reduced significantly after I acknowledged it openly',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What surprised you about the emotion\'s response to opposite action?',
+      'Which emotions in your life most need opposite action?',
+      'How does this skill connect to values-aligned living?',
+    ],
+    resources: [],
+  },
+
+  // ── Mastery Level ────────────────────────────────────────────────────────────
+  {
+    id: 'emotional-flexibility',
+    dimension: 'emotional-adaptive',
+    level: 'mastery',
+    order: 8,
+    title: 'Emotional Flexibility',
+    icon: '/icons/emotional-adaptive.svg',
+    duration: '30 minutes',
+    xpReward: 30,
+    badge: {
+      id: 'emotion-surfer',
+      name: 'Emotion Surfer',
+      icon: '🏄',
+      requirement: 'Complete an emotion surfing exercise and design your emotional flexibility protocol',
+    },
+    learningObjective: 'Move fluidly between emotional states without suppression or overwhelm',
+    whyItMatters: {
+      framework: 'ACT',
+      rationale:
+        'Emotional flexibility — the capacity to experience a wide range of emotions, transition between states adaptively, and choose responses rather than react automatically — is the highest-order emotional skill. Research on psychological flexibility (ACT\'s core construct) shows it is one of the strongest predictors of mental health, resilience, and life satisfaction across cultures.',
+    },
+    instructions: [
+      'Emotion Surfing: Bring to mind a moderately difficult emotion.',
+      'Imagine it as a wave. Notice the rising, the peak, and the natural subsiding.',
+      'Your only job is to ride it — not fight it, not amplify it.',
+      'Notice: emotions are not static. They move.',
+      'After surfing, reflect on your overall emotional range and design your flexibility protocol.',
+    ],
+    activity: {
+      type: 'worksheet',
+      fields: [
+        {
+          id: 'surfed_emotion',
+          label: 'The emotion I surfed',
+          placeholder: 'e.g., Worry about an upcoming difficult conversation',
+          type: 'text',
+        },
+        {
+          id: 'wave_description',
+          label: 'Describe the "wave" — rising, peak, subsiding',
+          placeholder: 'e.g., Rose quickly (3 → 8 in 2 minutes), peaked for about 5 minutes, then gradually dropped to 3 over 10 minutes',
+          type: 'textarea',
+        },
+        {
+          id: 'what_i_noticed',
+          label: 'What I noticed about the emotion\'s natural movement',
+          placeholder: 'e.g., It didn\'t stay at peak. When I stopped fighting it, it softened on its own.',
+          type: 'textarea',
+        },
+        {
+          id: 'emotional_range',
+          label: 'My current emotional range (which emotions can I access freely?)',
+          placeholder: 'e.g., Joy, contentment, mild anxiety — I can access these. Grief, deep fear, and vulnerability feel blocked.',
+          type: 'textarea',
+        },
+        {
+          id: 'flexibility_protocol',
+          label: 'My Emotional Flexibility Protocol',
+          placeholder: 'Design your personal approach: how will you meet difficult emotions in the future? Include: your naming practice, a surfing/acceptance strategy, a self-compassion response, and a values check.',
+          type: 'textarea',
+        },
+      ],
+    },
+    reflectionPrompts: [
+      'What does it mean for your life that emotions are waves, not permanent states?',
+      'Which emotions have you treated as permanent that are actually waves?',
+      'How will you continue developing your emotional flexibility going forward?',
+    ],
+    resources: [],
+  },
+];

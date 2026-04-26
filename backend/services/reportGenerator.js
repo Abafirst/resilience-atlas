@@ -27,7 +27,7 @@ const DIMENSION_DESCRIPTIONS = {
     'Agentic-Generative':   'your capacity to take purposeful action, pursue goals, and generate possibilities even under pressure',
     'Relational-Connective':'your ability to build, nurture, and draw on meaningful relationships and community support',
     'Spiritual-Reflective': 'your sense of meaning, purpose, and connection to values larger than yourself',
-    'Emotional-Adaptive':   'your ability to recognise, regulate, and adaptively work with emotions under stress',
+    'Emotional-Adaptive':   'your ability to recognize, regulate, and adaptively work with emotions under stress',
     'Somatic-Regulative':   'your physical well-being, body awareness, and capacity to regulate stress through somatic practices',
     'Cognitive-Narrative':  'your cognitive flexibility and capacity to reframe challenges and construct meaningful narratives',
 };

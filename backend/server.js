@@ -36,7 +36,7 @@ const app = express();
 // ==============================
 // express-openid-connect (server-side OIDC session)
 // ==============================
-// Only initialise the server-side OIDC middleware when the required
+// Only initialize the server-side OIDC middleware when the required
 // environment variables are present.  When the variables are absent the
 // middleware would fall back to hardcoded placeholder values, producing a
 // baseURL/clientID mismatch that can intercept or corrupt the SPA auth
@@ -420,6 +420,8 @@ app.use("/api/resources", require("./routes/resources"));
 console.log("✅ Mounted route: /api/resources");
 app.use("/api/teams", require("./routes/teams-resources"));
 console.log("✅ Mounted route: /api/teams");
+app.use("/api/iatlas", require("./routes/iatlas-subscriptions"));
+console.log("✅ Mounted route: /api/iatlas");
 
 // ==============================
 // Root API info
@@ -474,7 +476,7 @@ app.get('/profile', pageLimiter, (req, res) => {
 // used by Auth0's loginWithRedirect() as the callback URL — which is
 // always correct in every environment.
 //
-// An optional same-origin ?returnTo= param is honoured so deep-links
+// An optional same-origin ?returnTo= param is honored so deep-links
 // like /login?returnTo=/results can land on a specific SPA page.
 // Only same-origin paths are accepted to prevent open-redirect vulnerabilities.
 const sanitiseReturnTo = require("./utils/sanitiseReturnTo");

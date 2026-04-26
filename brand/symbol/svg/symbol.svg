@@ -1,115 +1,125 @@
 <!--
   Resilience Atlas — Brand Symbol (Master / Full Color)
   =====================================================
-  viewBox  : 0 0 200 200
-  Colors   : #1565C0 (Deep Navy), #0097A7 (Soft Teal), #5C8FD6 (Light Navy)
+  viewBox  : 0 0 256 256
   Design   : Compass/radar mark — 6 resilience dimensions
-             Hexagonal grid · 6 data points · Compass needle · Center focal point
+             Concentric rings · 6 pastel data points · Center focal point
              Dimensions: Agentic, Relational, Spiritual, Emotional, Somatic, Cognitive
+  Colors   :
+    Agentic   (top, 12 o'clock)  #FFB89D  Pastel orange/peach  — action, drive, energy
+    Relational (2 o'clock)       #FFB3D9  Pastel pink/rose     — connection, love, relationships
+    Spiritual  (4 o'clock)       #FFE699  Pastel gold/yellow   — enlightenment, purpose, meaning
+    Emotional  (bottom, 6 o'cl.) #D4BBFF  Pastel purple/lav.  — depth, introspection, feelings
+    Somatic    (8 o'clock)       #B3E5C5  Pastel green/mint   — body, health, vitality
+    Cognitive  (10 o'clock)      #A8D8FF  Pastel blue/sky     — thought, intellect, mind
   Usage    : Primary branding, large displays, print
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img"
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img"
      aria-label="Resilience Atlas">
   <title>Resilience Atlas</title>
 
   <defs>
-    <!-- Radial gradient for the central focal point -->
+    <!-- Radial gradient for the central focal sphere -->
     <radialGradient id="ra-center-grad" cx="38%" cy="35%" r="65%">
-      <stop offset="0%"   stop-color="#5C8FD6"/>
-      <stop offset="100%" stop-color="#1565C0"/>
+      <stop offset="0%"   stop-color="#6BA8F5"/>
+      <stop offset="100%" stop-color="#2E5C8A"/>
     </radialGradient>
 
-    <!-- Linear gradient for the compass needle (north point) -->
-    <linearGradient id="ra-needle-grad" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%"   stop-color="#1565C0"/>
-      <stop offset="100%" stop-color="#5C8FD6"/>
+    <!-- Top needle gradient: lighter blue at tip (top), darker blue at base (center) -->
+    <linearGradient id="needleTopGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#4A6FA5"/>
+      <stop offset="100%" stop-color="#2E5C8A"/>
+    </linearGradient>
+
+    <!-- Bottom needle gradient: slightly darker gray at base (center), lighter gray at tip (bottom) -->
+    <linearGradient id="needleBottomGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#B0B8C0"/>
+      <stop offset="100%" stop-color="#D8DCE0"/>
     </linearGradient>
 
     <!-- Clip path keeps all content inside the outer circle -->
     <clipPath id="ra-clip">
-      <circle cx="100" cy="100" r="88"/>
+      <circle cx="128" cy="128" r="100"/>
     </clipPath>
   </defs>
 
-  <!-- ── 1. Outer circular boundary — the Atlas map ────────────────── -->
-  <circle cx="100" cy="100" r="88"
+  <!-- ── 1. Outer circular boundary ───────────────────────────────── -->
+  <circle cx="128" cy="128" r="100"
     fill="none"
-    stroke="#1565C0"
-    stroke-width="1.75"
-    opacity="0.75"
+    stroke="#4A90E2"
+    stroke-width="3"
+    opacity="0.85"
   />
 
-  <!-- ── 2. Radar hexagonal grid ───────────────────────────────────── -->
-  <!-- Outer hexagon (r=70): represents full resilience potential -->
-  <!-- Vertices at 0°,60°,120°,180°,240°,300° from top, clockwise -->
-  <polygon
-    points="100,30 160.6,65 160.6,135 100,170 39.4,135 39.4,65"
-    fill="none"
-    stroke="#0097A7"
-    stroke-width="0.75"
-    opacity="0.25"
-    clip-path="url(#ra-clip)"
-  />
-  <!-- Inner hexagon (r=40): represents baseline resilience -->
-  <polygon
-    points="100,60 134.6,80 134.6,120 100,140 65.4,120 65.4,80"
-    fill="none"
-    stroke="#0097A7"
-    stroke-width="0.5"
-    opacity="0.18"
-    clip-path="url(#ra-clip)"
-  />
+  <!-- ── 2. Concentric rings radiating from center ─────────────────── -->
+  <!-- Innermost ring (r=42) -->
+  <circle cx="128" cy="128" r="42"
+    fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.7"/>
+  <!-- Middle ring (r=58) -->
+  <circle cx="128" cy="128" r="58"
+    fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.6"/>
+  <!-- Outer ring (r=75) — near the dimension dots -->
+  <circle cx="128" cy="128" r="75"
+    fill="none" stroke="#C0D8F2" stroke-width="1.5" opacity="0.5"/>
 
-  <!-- ── 3. Six spokes — one per resilience dimension ──────────────── -->
-  <!-- Each spoke extends from center to the outer circle boundary -->
-  <!-- Agentic — 0° (North) -->
-  <line x1="100" y1="100" x2="100"   y2="12"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
+  <!-- ── 3. Radial lines (spokes) from center to outer boundary ─────── -->
+  <!-- Agentic — 0° (North/top) -->
+  <line x1="128" y1="128" x2="128"  y2="28"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Relational — 60° (NE) -->
-  <line x1="100" y1="100" x2="176.2" y2="56"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
+  <line x1="128" y1="128" x2="214.6" y2="78"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Spiritual — 120° (SE) -->
-  <line x1="100" y1="100" x2="176.2" y2="144"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
-  <!-- Emotional — 180° (South) -->
-  <line x1="100" y1="100" x2="100"   y2="188"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
+  <line x1="128" y1="128" x2="214.6" y2="178"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
+  <!-- Emotional — 180° (South/bottom) -->
+  <line x1="128" y1="128" x2="128"  y2="228"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Somatic — 240° (SW) -->
-  <line x1="100" y1="100" x2="23.8"  y2="144"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
+  <line x1="128" y1="128" x2="41.4" y2="178"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
   <!-- Cognitive — 300° (NW) -->
-  <line x1="100" y1="100" x2="23.8"  y2="56"
-    stroke="#1565C0" stroke-width="0.75" opacity="0.3" clip-path="url(#ra-clip)"/>
+  <line x1="128" y1="128" x2="41.4" y2="78"
+    stroke="#E8E8E8" stroke-width="1" clip-path="url(#ra-clip)"/>
 
-  <!-- ── 4. Six data points on outer hexagon vertices ──────────────── -->
-  <!-- One point per resilience dimension at r=70 from center -->
-  <circle cx="100"   cy="30"  r="3.5" fill="#5C8FD6" opacity="0.85"/>
-  <circle cx="160.6" cy="65"  r="3.5" fill="#5C8FD6" opacity="0.85"/>
-  <circle cx="160.6" cy="135" r="3.5" fill="#5C8FD6" opacity="0.85"/>
-  <circle cx="100"   cy="170" r="3.5" fill="#5C8FD6" opacity="0.85"/>
-  <circle cx="39.4"  cy="135" r="3.5" fill="#5C8FD6" opacity="0.85"/>
-  <circle cx="39.4"  cy="65"  r="3.5" fill="#5C8FD6" opacity="0.85"/>
-
-  <!-- ── 5. Compass needle (North/South) ───────────────────────────── -->
-  <!-- North needle — points up, primary direction, blue gradient -->
-  <polygon
-    points="100,36 103.5,97 100,91 96.5,97"
-    fill="url(#ra-needle-grad)"
-    opacity="0.9"
+  <!-- ── 4. Double-pointed diamond needle (compass pointer) ────────────── -->
+  <!-- Top diamond: tip at y=48 (elongated, proportional to new scale),      -->
+  <!--              widens at y=120, base meets center at y=128               -->
+  <polygon points="128,48 134,120 128,128 122,120"
+    fill="url(#needleTopGradient)"
+    stroke="#2E5C8A"
+    stroke-width="0.5"
+    opacity="0.95"
   />
-  <!-- South needle — counter-direction, neutral grey -->
-  <polygon
-    points="100,164 103.5,103 100,109 96.5,103"
-    fill="#90A4AE"
-    opacity="0.45"
+  <!-- Bottom diamond: base at y=128 (center), widens at y=136,              -->
+  <!--                 tip at y=208 (elongated, proportional to new scale)    -->
+  <polygon points="128,128 134,136 128,208 122,136"
+    fill="url(#needleBottomGradient)"
+    stroke="#A0A8B0"
+    stroke-width="0.5"
+    opacity="0.95"
   />
 
-  <!-- ── 6. Central focal point — the individual ───────────────────── -->
-  <circle cx="100" cy="100" r="8"
+  <!-- ── 5. Six dimension dots (hexagon arrangement, r=85 from center) ── -->
+  <!-- Agentic  (top, 0°)    — Pastel orange/peach -->
+  <circle cx="128"   cy="43"  r="5" fill="#FFB89D"/>
+  <!-- Relational (2 o'clock, 60°) — Pastel pink/rose -->
+  <circle cx="201"   cy="85"  r="5" fill="#FFB3D9"/>
+  <!-- Spiritual  (4 o'clock, 120°) — Pastel gold/yellow -->
+  <circle cx="201"   cy="171" r="5" fill="#FFE699"/>
+  <!-- Emotional  (bottom, 180°) — Pastel purple/lavender -->
+  <circle cx="128"   cy="213" r="5" fill="#D4BBFF"/>
+  <!-- Somatic    (8 o'clock, 240°) — Pastel green/mint -->
+  <circle cx="55"    cy="171" r="5" fill="#B3E5C5"/>
+  <!-- Cognitive  (10 o'clock, 300°) — Pastel blue/sky -->
+  <circle cx="55"    cy="85"  r="5" fill="#A8D8FF"/>
+
+  <!-- ── 6. Central focal sphere — the individual ──────────────────── -->
+  <circle cx="128" cy="128" r="10"
     fill="url(#ra-center-grad)"
   />
   <!-- Subtle specular highlight -->
-  <circle cx="97.2" cy="97.2" r="2.8"
+  <circle cx="125" cy="125" r="3"
     fill="white"
     opacity="0.3"
   />

@@ -170,4 +170,4 @@ The Resilience Atlas compass symbol should always appear alongside the logotype 
 
 ## Questions and Brand Requests
 
-For variations not covered here (co-branding, white-label adaptations, animated versions), consult the design team before creating new variants. Unauthorised color or structural modifications dilute brand consistency and compromise the symbol's semantic meaning.
+For variations not covered here (co-branding, white-label adaptations, animated versions), consult the design team before creating new variants. Unauthorized color or structural modifications dilute brand consistency and compromise the symbol's semantic meaning.

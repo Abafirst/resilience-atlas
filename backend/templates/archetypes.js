@@ -14,7 +14,7 @@
  *   - superpowers: what this archetype naturally excels at
  *   - blindSpots: common challenge areas for this archetype
  *   - stressResponse: how this archetype responds under pressure
- *   - copingStrategies: personalised coping approaches
+ *   - copingStrategies: personalized coping approaches
  *   - groundingTechniques: physical/somatic grounding approaches
  *   - teamRole: how this archetype typically shows up in teams
  *   - partnershipTips: relationship dynamics and recommendations
@@ -42,18 +42,18 @@ const ARCHETYPES = {
             'Helping others make sense of difficult experiences',
         ],
         blindSpots: [
-            'Can over-analyse rather than feel and process emotions',
+            'Can over-analyze rather than feel and process emotions',
             'May intellectualise pain rather than allowing full emotional processing',
             'Risk of analysis paralysis — thinking as a substitute for action',
             'May struggle when logic cannot resolve an emotionally complex situation',
         ],
         stressResponse:
             'Under pressure, The Thinker typically retreats into cognitive processing — ' +
-            'analysing, planning, strategising. This can be a powerful resilience asset when ' +
+            'analyzing, planning, strategising. This can be a powerful resilience asset when ' +
             'clear thinking is needed, but may lead to emotional bypassing when what\'s ' +
             'really needed is to feel and release.',
         copingStrategies: [
-            'Journaling to externalise and organise thoughts under stress',
+            'Journaling to externalise and organize thoughts under stress',
             'The "5 Whys" — drilling down to the root of what\'s really challenging you',
             'Seeking a trusted thinking partner to process challenges aloud',
             'Scheduled "thinking time" to contain rumination and prevent overthinking',
@@ -96,13 +96,13 @@ const ARCHETYPES = {
             'Sustaining meaningful relationships through adversity',
             'Deep empathy and emotional attunement',
             'Creating belonging and community',
-            'Mobilising support from others when needed',
+            'Mobilizing support from others when needed',
         ],
         blindSpots: [
             'May over-extend in service of others at the expense of self',
             'Risk of codependency or difficulty maintaining healthy boundaries',
-            'May struggle with decisions that require prioritising self over relationship',
-            'Isolation or disconnection during stress can feel particularly destabilising',
+            'May struggle with decisions that require prioritizing self over relationship',
+            'Isolation or disconnection during stress can feel particularly destabilizing',
         ],
         stressResponse:
             'Under pressure, The Connector typically seeks others — reaching out, ' +
@@ -113,11 +113,11 @@ const ARCHETYPES = {
             'Reaching out to a trusted person within 24 hours of a significant stressor',
             'Community or group activities that restore a sense of belonging',
             'Scheduled check-ins with close connections during extended difficult periods',
-            'The practice of also self-connecting — journaling, self-compassion, inner dialogue',
+            'The practice of also self-connecting — journaling, self-compassion, inner dialog',
             'Setting intentional limits on how much you take on for others during high-stress periods',
         ],
         groundingTechniques: [
-            'Heart-centred breathing — breathing into the heart space to activate relational safety',
+            'Heart-centered breathing — breathing into the heart space to activate relational safety',
             'Physical touch (hugs, hand-holding) as a regulation tool with trusted others',
             'Communal activities: cooking with others, shared meals, group movement',
             'Loving-kindness meditation for self and others',
@@ -126,11 +126,11 @@ const ARCHETYPES = {
             'In teams, The Connector is often the social glue and culture-keeper — the ' +
             'person who notices when someone is struggling, who builds bridges between ' +
             'individuals, and who creates the psychological safety that allows teams to ' +
-            'perform at their best. Watch for the tendency to prioritise harmony over ' +
+            'perform at their best. Watch for the tendency to prioritize harmony over ' +
             'necessary conflict or honest feedback.',
         partnershipTips: [
             'Your relational capacity is extraordinary — ensure it includes yourself as fully as it includes others',
-            'Practise asking for what you need rather than always attending to others\' needs first',
+            'Practice asking for what you need rather than always attending to others\' needs first',
             'Healthy boundaries are not barriers to connection — they are what make deep connection sustainable',
             'Partners who can match your depth of connection while also supporting your independence may be most nourishing',
         ],
@@ -224,12 +224,12 @@ const ARCHETYPES = {
         stressResponse:
             'Under pressure, The Feeler typically experiences a wave of emotional intensity ' +
             'before finding ground. The key is learning to stay present with emotion without ' +
-            'being destabilised — moving through the feeling rather than either suppressing ' +
+            'being destabilized — moving through the feeling rather than either suppressing ' +
             'it or drowning in it. This process, though intense, is ultimately the most ' +
             'genuine form of emotional healing.',
         copingStrategies: [
             'Emotional expression practices: journaling, art, music, movement, trusted conversation',
-            'The RAIN practice (Recognise, Allow, Investigate, Nurture) for difficult emotions',
+            'The RAIN practice (Recognize, Allow, Investigate, Nurture) for difficult emotions',
             'Scheduled emotional processing time rather than carrying feelings all day',
             'Self-compassion practices to reduce the suffering that comes from fighting difficult feelings',
             'Boundaries with emotional absorbers who consistently deplete your emotional reserves',
@@ -247,7 +247,7 @@ const ARCHETYPES = {
             'the tendency to absorb team stress or to avoid necessary direct conversations ' +
             'out of concern for others\' feelings.',
         partnershipTips: [
-            'Your emotional depth is a profound gift in close relationships — honour it rather than apologising for it',
+            'Your emotional depth is a profound gift in close relationships — honor it rather than apologising for it',
             'Develop discernment about which feelings belong to you and which you are absorbing from others',
             'Partners who can meet your emotional depth without being threatened or overwhelmed may be most nourishing',
             'Practice asking for what you need emotionally rather than hoping others will intuit it',
@@ -259,7 +259,7 @@ const ARCHETYPES = {
         primaryDimension: 'Spiritual-Reflective',
         emoji: '🌟',
         description:
-            'The Guide is the meaning-centred sage of resilience — someone who navigates ' +
+            'The Guide is the meaning-centered sage of resilience — someone who navigates ' +
             'adversity through a deep connection to purpose, values, and the larger arc of ' +
             'their life. Your resilience has a spiritual quality: you find sustenance in ' +
             'what is most meaningful, and this inner compass rarely wavers even when ' +
@@ -307,7 +307,7 @@ const ARCHETYPES = {
             'or to set unrealistically high standards for meaning and alignment.',
         partnershipTips: [
             'Your depth of purpose can be profoundly inspiring to partners who are searching for meaning',
-            'Practise being fully present with the practical dimensions of shared life, not just the profound ones',
+            'Practice being fully present with the practical dimensions of shared life, not just the profound ones',
             'Partners who share your reflective orientation may be most nourishing for sustained connection',
             'Remember that others may find meaning differently than you — diversity of purpose is also wisdom',
         ],
@@ -346,7 +346,7 @@ const ARCHETYPES = {
             'wish they had. The edge for this archetype is ensuring that somatic regulation ' +
             'is complemented by cognitive and emotional processing, not used as a substitute.',
         copingStrategies: [
-            'Physical movement as a primary stress release — prioritise it during high-pressure periods',
+            'Physical movement as a primary stress release — prioritize it during high-pressure periods',
             'The "regulate first, respond later" principle — regulate your nervous system before making important decisions',
             'Sleep as a non-negotiable recovery tool — protect it fiercely during adversity',
             'Breath-based techniques for immediate regulation in any context',
@@ -365,7 +365,7 @@ const ARCHETYPES = {
             'Watch for a tendency to undervalue or underparticipate in conversations that feel ' +
             'too abstract, emotional, or unrelated to practical action.',
         partnershipTips: [
-            'Your grounded physical presence can be enormously stabilising for partners who struggle with regulation',
+            'Your grounded physical presence can be enormously stabilizing for partners who struggle with regulation',
             'Ensure your partnership includes intellectual and emotional depth alongside physical connection',
             'Partners who value physical self-care and embody similar somatic awareness may be most naturally compatible',
             'Practice the art of sitting with emotional complexity without rushing to physical resolution',
@@ -382,7 +382,7 @@ const ARCHETYPES = {
             'having a single dominant trait. Your resilience is holistic: you adapt your ' +
             'approach to the demands of each situation, drawing on different capacities as ' +
             'needed.\n\n' +
-            'The Balanced\'s gift is versatility. You are unlikely to be destabilised in ' +
+            'The Balanced\'s gift is versatility. You are unlikely to be destabilized in ' +
             'any single dimension because your resilience foundation is broad. The growth ' +
             'edge for this archetype is depth — moving from broad competence to genuine ' +
             'mastery in the areas that matter most to you.',
