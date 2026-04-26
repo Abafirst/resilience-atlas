@@ -64,7 +64,9 @@ export default function SessionPlansPage() {
     setFetchError('');
     try {
       let token = '';
-      try { token = await getAccessTokenSilently(); } catch (_) {}
+      try { token = await getAccessTokenSilently(); } catch (tokenErr) {
+        console.warn('[SessionPlansPage] Could not get access token:', tokenErr?.message);
+      }
 
       const res = await fetch(apiUrl('/api/iatlas/clinical/session-plans'), {
         headers: { Authorization: `Bearer ${token}` },
@@ -105,7 +107,9 @@ export default function SessionPlansPage() {
   const handleDelete = async (sessionPlanId) => {
     try {
       let token = '';
-      try { token = await getAccessTokenSilently(); } catch (_) {}
+      try { token = await getAccessTokenSilently(); } catch (tokenErr) {
+        console.warn('[SessionPlansPage] Could not get access token for delete:', tokenErr?.message);
+      }
       const res = await fetch(
         apiUrl(`/api/iatlas/clinical/session-plans/${sessionPlanId}`),
         { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }

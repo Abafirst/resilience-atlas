@@ -76,6 +76,15 @@ function resolveUserId(req) {
   return req.user && (req.user.userId || req.user.sub);
 }
 
+/**
+ * Escape special regex characters from a user-supplied string so that it is
+ * treated as a plain literal match inside a MongoDB $regex query.
+ * This prevents ReDoS attacks from malicious input strings.
+ */
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function sanitisePlan(doc) {
   const obj = doc.toObject ? doc.toObject() : { ...doc };
   // eslint-disable-next-line no-unused-vars
@@ -102,7 +111,7 @@ router.get('/', plansLimiter, authenticateJWT, async (req, res) => {
     const filter = { userId: userId.toString(), archived: false };
 
     if (clientIdentifier) {
-      filter.clientIdentifier = { $regex: clientIdentifier, $options: 'i' };
+      filter.clientIdentifier = { $regex: escapeRegex(clientIdentifier), $options: 'i' };
     }
     if (dimensionalFocus) {
       filter.dimensionalFocus = dimensionalFocus;
@@ -113,10 +122,11 @@ router.get('/', plansLimiter, authenticateJWT, async (req, res) => {
       if (to)   filter.sessionDate.$lte = new Date(to);
     }
     if (search) {
+      const safeSearch = escapeRegex(search);
       filter.$or = [
-        { clientIdentifier: { $regex: search, $options: 'i' } },
-        { sessionNotes:     { $regex: search, $options: 'i' } },
-        { clinicalNotes:    { $regex: search, $options: 'i' } },
+        { clientIdentifier: { $regex: safeSearch, $options: 'i' } },
+        { sessionNotes:     { $regex: safeSearch, $options: 'i' } },
+        { clinicalNotes:    { $regex: safeSearch, $options: 'i' } },
       ];
     }
 

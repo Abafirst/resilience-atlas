@@ -79,7 +79,7 @@ const sessionPlanSchema = new mongoose.Schema(
       type:     String,
       required: true,
       trim:     true,
-      maxlength: 128,
+      maxLength: 128,
     },
 
     sessionDate:   { type: Date,   default: null },

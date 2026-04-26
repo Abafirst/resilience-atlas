@@ -133,7 +133,9 @@ export default function SessionPlanBuilder({ plan, onSave, onCancel, getTokenFn 
     try {
       let token = '';
       if (typeof getTokenFn === 'function') {
-        try { token = await getTokenFn(); } catch (_) {}
+        try { token = await getTokenFn(); } catch (tokenErr) {
+          console.warn('[SessionPlanBuilder] Could not get access token:', tokenErr?.message);
+        }
       }
 
       const payload = {
