@@ -12,6 +12,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProfiles } from '../../../contexts/ProfileContext.jsx';
 import AddChildModal from '../Profiles/AddChildModal.jsx';
+import PrintExportButton from '../PrintExportButton.jsx';
 import {
   loadKidsProgress,
   getTotalKidsStars,
@@ -844,6 +845,12 @@ export default function FamilyDashboard() {
             >
               📚 Protocol Library
             </Link>
+            <PrintExportButton
+              resourceType="family_report"
+              resourceData={{ summaryMetrics, profileData, rangeKey: 'all time' }}
+              label="Export Family Report"
+              variant="secondary"
+            />
           </div>
         </section>
 

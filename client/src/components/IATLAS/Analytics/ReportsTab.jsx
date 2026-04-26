@@ -8,7 +8,8 @@
  *  - Summary report with key metrics
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
+import PrintExportButton from '../PrintExportButton.jsx';
 import {
   loadProfileProgress,
   computeOverviewMetrics,
@@ -202,6 +203,17 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
 
   const metrics = computeOverviewMetrics(profiles, rangeKey);
 
+  // Build analytics export data for the PrintPreviewModal
+  const analyticsExportData = useMemo(() => {
+    const startDate = rangeToStartDate(rangeKey);
+    const profilesWithStats = profiles.map(p => {
+      const acts     = getActivitiesInRange(p.id, startDate);
+      const velocity = calculateLearningVelocity(p.id, rangeKey);
+      return { name: p.name, activityCount: acts.length, velocity };
+    });
+    return { metrics, profiles: profilesWithStats, rangeKey };
+  }, [profiles, rangeKey, metrics]);
+
   const handleExportCsv = useCallback(() => {
     const rows = buildCsvRows(profiles, rangeKey);
     if (rows.length <= 1) {
@@ -282,8 +294,14 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
             saved as a PDF using your browser's print dialog.
           </p>
           <div className="rt-btn-row">
+            <PrintExportButton
+              resourceType="progress_report"
+              resourceData={analyticsExportData}
+              label="Export Analytics (PDF)"
+              variant="primary"
+            />
             <button className="rt-btn rt-btn-primary" onClick={handlePrintReport} aria-label="Open print report">
-              <span aria-hidden="true">🖨</span> Open Print Report
+              <span aria-hidden="true">🖨</span> Quick Print
             </button>
             <button className="rt-btn" onClick={handlePreviewReport} aria-label="Preview report content">
               <span aria-hidden="true">👁</span> Preview Report

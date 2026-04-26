@@ -18,6 +18,7 @@ import DarkModeHint from '../components/DarkModeHint.jsx';
 import DimensionFilter from '../components/IATLAS/Clinical/DimensionFilter.jsx';
 import ProtocolCard from '../components/IATLAS/Clinical/ProtocolCard.jsx';
 import IATLASUnlockModal from '../components/IATLAS/IATLASUnlockModal.jsx';
+import PrintExportButton from '../components/IATLAS/PrintExportButton.jsx';
 import { ABA_PROTOCOLS } from '../data/abaProtocols.js';
 import { hasProfessionalAccess } from '../utils/iatlasGating.js';
 import '../components/IATLAS/Clinical/ProtocolLibrary.css';
@@ -124,6 +125,12 @@ export default function PractitionerProtocolLibrary() {
                   <span className="ppl-result-count" aria-live="polite">
                     {filteredProtocols.length} of {ABA_PROTOCOLS.length} protocols
                   </span>
+                  <PrintExportButton
+                    resourceType="bulk_protocols"
+                    resourceData={filteredProtocols}
+                    label={`Export ${filteredProtocols.length > 0 ? `${filteredProtocols.length} ` : ''}Protocol${filteredProtocols.length !== 1 ? 's' : ''}`}
+                    variant="secondary"
+                  />
                 </div>
 
                 <DimensionFilter

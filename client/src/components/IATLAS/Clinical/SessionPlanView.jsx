@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import PrintExportButton from '../PrintExportButton.jsx';
 
 const DIMENSION_LABELS = {
   'agentic-generative':    'Agentic-Generative',
@@ -82,6 +83,12 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
           </div>
           <div className="spv-header-actions">
             <button className="spv-btn spv-btn--secondary" onClick={onClose}>← Back</button>
+            <PrintExportButton
+              resourceType="session_plan"
+              resourceData={plan}
+              label="Print Plan"
+              variant="secondary"
+            />
             <button className="spv-btn spv-btn--primary" onClick={() => onEdit(plan)}>✏️ Edit</button>
           </div>
         </div>

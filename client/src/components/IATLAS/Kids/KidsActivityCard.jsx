@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { ACTIVITY_TYPES } from '../../../data/iatlas/kidsActivities.js';
+import PrintExportButton from '../PrintExportButton.jsx';
 
 const CARD_STYLES = `
   .kac-card {
@@ -398,6 +399,25 @@ export default function KidsActivityCard({ activity, accentColor, onComplete, is
             {completed ? '✓ Completed' : 'Mark Complete'}
           </button>
         )}
+
+        {/* Print activity */}
+        <PrintExportButton
+          resourceType="activity"
+          resourceData={{
+            title:    activity.title,
+            dimension: activity.dimension,
+            ageGroup:  activity.ageGroup,
+            duration:  activity.duration,
+            learningGoal: activity.learningGoal,
+            description:  activity.description,
+            materials:    activity.materials,
+            instructions: activity.instructions,
+            reflectionQuestions: activity.reflectionQuestions,
+            parentNote: activity.parentNote,
+          }}
+          label="Print Activity"
+          variant="ghost"
+        />
       </div>
     </>
   );
