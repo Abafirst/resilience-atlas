@@ -454,8 +454,7 @@ app.use("/api/clinical/clients", require("./routes/clinical/clients"));
 console.log("✅ Mounted route: /api/clinical/clients");
 app.use("/api/templates", require("./routes/templates"));
 console.log("✅ Mounted route: /api/templates");
-const { authenticateJWT: _authenticateJWT } = require("./middleware/auth");
-app.use("/api/activity-favorites", _authenticateJWT, require("./routes/activity-favorites"));
+app.use("/api/activity-favorites", require("./routes/activity-favorites"));
 console.log("✅ Mounted route: /api/activity-favorites");
 
 // ==============================

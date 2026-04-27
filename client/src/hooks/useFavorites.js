@@ -75,12 +75,13 @@ export default function useFavorites() {
   const toggleFavorite = useCallback(async (activityId) => {
     if (!isAuthenticated) return;
 
-    const wasFavorited = favoriteIds.includes(activityId);
-
-    // Optimistic update
-    setFavoriteIds(prev =>
-      wasFavorited ? prev.filter(id => id !== activityId) : [...prev, activityId]
-    );
+    // Capture current state via functional updater to avoid stale closure.
+    // We use a ref to communicate `wasFavorited` out of the updater.
+    let wasFavorited = false;
+    setFavoriteIds(prev => {
+      wasFavorited = prev.includes(activityId);
+      return wasFavorited ? prev.filter(id => id !== activityId) : [...prev, activityId];
+    });
 
     try {
       const token = await getToken();
@@ -103,7 +104,7 @@ export default function useFavorites() {
       );
       setError(err.message);
     }
-  }, [isAuthenticated, favoriteIds, getToken]);
+  }, [isAuthenticated, getToken]);
 
   const isFavorited = useCallback(
     (activityId) => favoriteIds.includes(activityId),

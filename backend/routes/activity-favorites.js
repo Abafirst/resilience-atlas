@@ -5,7 +5,7 @@
  * REST endpoints for user activity favorites (bookmarking).
  *
  * Mounted at: /api/activity-favorites
- * Auth:       authenticateJWT (applied in server.js before mounting)
+ * Auth:       authenticateJWT (applied via router.use inside this module)
  *
  * GET    /api/activity-favorites              – Get the current user's favorites
  * POST   /api/activity-favorites/:activityId  – Add an activity to favorites
@@ -16,8 +16,9 @@ const express   = require('express');
 const rateLimit = require('express-rate-limit');
 const router    = express.Router();
 
-const ActivityFavorites = require('../models/ActivityFavorites');
-const logger            = require('../utils/logger');
+const { authenticateJWT } = require('../middleware/auth');
+const ActivityFavorites   = require('../models/ActivityFavorites');
+const logger              = require('../utils/logger');
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 
@@ -30,6 +31,7 @@ const favoritesLimiter = rateLimit({
 });
 
 router.use(favoritesLimiter);
+router.use(authenticateJWT);
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

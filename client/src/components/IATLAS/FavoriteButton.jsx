@@ -9,7 +9,7 @@
  *   size        {'small'|'medium'|'large'} – Button size (default: 'medium')
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 
 const BTN_STYLES = `
   .fav-btn {

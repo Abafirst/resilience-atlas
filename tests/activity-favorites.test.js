@@ -263,7 +263,7 @@ describe('Activity Favorites API', () => {
       expect(res.status).toBe(401);
     });
 
-    test('returns 400 or 404 for a path-traversal activityId', async () => {
+    test('returns 404 for path-traversal attempts due to Express normalization', async () => {
       const res = await request(app)
         .post('/api/activity-favorites/../../etc/passwd')
         .set('Authorization', `Bearer ${authToken()}`);
