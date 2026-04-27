@@ -19,6 +19,7 @@ import {
   KIDS_STORAGE_KEYS,
   loadKidsJSON,
 } from '../utils/kidsProgressHelpers.js';
+import useProgressSync from './useProgressSync.js';
 
 /**
  * Return a set of storage keys namespaced to `profileId`.
@@ -45,6 +46,8 @@ export default function useKidsProgress(profileId) {
   const [levelInfo,  setLevelInfo]  = useState(() => getKidsLevelInfo(getProfileStorageKeys(profileId)));
   const [stats,      setStats]      = useState({});
 
+  const { syncProgress } = useProgressSync(profileId || null);
+
   const refresh = useCallback(() => {
     const keys = getProfileStorageKeys(profileId);
     const prog = loadKidsProgress(keys);
@@ -68,8 +71,9 @@ export default function useKidsProgress(profileId) {
     const keys   = getProfileStorageKeys(profileId);
     const result = recordActivityCompletion(record, keys);
     refresh();
+    syncProgress();
     return result;
-  }, [profileId, refresh]);
+  }, [profileId, refresh, syncProgress]);
 
   /**
    * Check whether a specific activity has been completed.

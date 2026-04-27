@@ -436,6 +436,8 @@ app.use("/api/cases", require("./routes/caseAssignments"));
 console.log("✅ Mounted route: /api/cases");
 app.use("/api/activity-logs", require("./routes/activityLogs"));
 console.log("✅ Mounted route: /api/activity-logs");
+app.use("/api/progress", require("./routes/progress"));
+console.log("✅ Mounted route: /api/progress");
 
 // ==============================
 // Root API info

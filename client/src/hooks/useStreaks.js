@@ -6,11 +6,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { loadStreaks, loadOverallStreak, updateOverallStreak, addActivityEntry } from '../utils/gamificationHelpers.js';
 import { getNewStreakMilestones, getNextStreakMilestone } from '../data/gamification/streakMilestones.js';
+import useProgressSync from './useProgressSync.js';
 
 export default function useStreaks() {
   const [overallStreak, setOverallStreak]       = useState({ current: 0, longest: 0, lastDate: null });
   const [dimensionStreaks, setDimensionStreaks]  = useState({});
   const [newMilestones, setNewMilestones]        = useState([]);
+
+  const { syncProgress } = useProgressSync();
 
   const refresh = useCallback(() => {
     setOverallStreak(loadOverallStreak());
@@ -37,8 +40,9 @@ export default function useStreaks() {
       }
     }
     setOverallStreak(updated);
+    syncProgress();
     return milestones;
-  }, []);
+  }, [syncProgress]);
 
   const clearNewMilestones = useCallback(() => setNewMilestones([]), []);
 

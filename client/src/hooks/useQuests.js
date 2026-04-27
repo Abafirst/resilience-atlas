@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ALL_QUESTS } from '../data/gamification/quests.js';
 import { loadJSON, saveJSON, addActivityEntry } from '../utils/gamificationHelpers.js';
+import useProgressSync from './useProgressSync.js';
 
 const QUESTS_KEY = 'iatlas_active_quests';
 /** Quests completed within this window (ms) are considered "just completed" and returned from updateQuestProgress */
@@ -22,6 +23,8 @@ function saveActiveQuests(quests) {
 export default function useQuests() {
   const [activeQuests, setActiveQuests]       = useState([]);
   const [completedQuests, setCompletedQuests] = useState([]);
+
+  const { syncProgress } = useProgressSync();
 
   const refresh = useCallback(() => {
     const all = loadActiveQuests();
@@ -50,7 +53,8 @@ export default function useQuests() {
     });
     saveActiveQuests(all);
     refresh();
-  }, [refresh]);
+    syncProgress();
+  }, [refresh, syncProgress]);
 
   const abandonQuest = useCallback((questId) => {
     const all = loadActiveQuests().map(q =>
@@ -58,7 +62,8 @@ export default function useQuests() {
     );
     saveActiveQuests(all);
     refresh();
-  }, [refresh]);
+    syncProgress();
+  }, [refresh, syncProgress]);
 
   const updateQuestProgress = useCallback((stats) => {
     const all = loadActiveQuests();
@@ -86,9 +91,10 @@ export default function useQuests() {
     if (changed) {
       saveActiveQuests(all);
       refresh();
+      syncProgress();
     }
     return all.filter(q => q.status === 'completed' && q.completedAt && new Date(q.completedAt) > new Date(Date.now() - RECENTLY_COMPLETED_THRESHOLD_MS));
-  }, [refresh]);
+  }, [refresh, syncProgress]);
 
   return { activeQuests, completedQuests, startQuest, abandonQuest, updateQuestProgress, refresh };
 }
