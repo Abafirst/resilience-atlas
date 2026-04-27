@@ -180,8 +180,11 @@ function mergeServerProgressIntoLocalStorage(serverProgress, childProfileId) {
       if (localQuests.length === 0 && serverProgress.quests?.length) {
         saveJSON(STORAGE_KEYS.QUESTS, serverProgress.quests);
       }
-    } catch (_) {
-      // Silently skip if localStorage is unavailable
+    } catch (err) {
+      // Silently skip if localStorage is unavailable (private mode, quota, etc.)
+      if (import.meta.env?.DEV) {
+        console.debug('[useProgressSync] mergeServerProgressIntoLocalStorage (adult) error:', err?.message);
+      }
     }
   } else {
     // ── Kids progress ───────────────────────────────────────────────────────
@@ -222,8 +225,11 @@ function mergeServerProgressIntoLocalStorage(serverProgress, childProfileId) {
           saveJSON(keys.ADVENTURES, serverProgress.kidsAdventures);
         }
       }
-    } catch (_) {
-      // Silently skip if localStorage is unavailable
+    } catch (err) {
+      // Silently skip if localStorage is unavailable (private mode, quota, etc.)
+      if (import.meta.env?.DEV) {
+        console.debug('[useProgressSync] mergeServerProgressIntoLocalStorage (kids) error:', err?.message);
+      }
     }
   }
 }
@@ -329,8 +335,11 @@ export function useProgressSync(childProfileId = null) {
             progressData:   item.progressData,
           }),
         });
-      } catch (_) {
+      } catch (err) {
         // Still offline — leave queue intact and stop
+        if (import.meta.env?.DEV) {
+          console.debug('[useProgressSync] drainQueue: still offline or sync failed:', err?.message);
+        }
         return;
       }
     }

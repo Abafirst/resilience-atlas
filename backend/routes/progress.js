@@ -195,7 +195,7 @@ router.post('/sync', async (req, res) => {
       ? existing
       : (childProfileId ? defaultKidsProgress(uid, childProfileId) : defaultAdultProgress(uid));
 
-    // Sanitise: strip MongoDB internals before merging
+    // Sanitize: strip MongoDB internals before merging
     const { _id, __v, createdAt, updatedAt, ...baseFields } = base;
 
     const mergedFields = mergeProgress(baseFields, progressData);
