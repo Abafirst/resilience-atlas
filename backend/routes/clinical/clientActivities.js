@@ -462,10 +462,14 @@ router.get(
       const clientId       = req.params.id;
       const practitionerId = resolveUserId(req);
 
+      // Cap at 2000 most-recent entries to bound memory and query time.
       const history = await ClientActivityHistory.find({
         practitionerId,
         clientProfileId: clientId,
-      }).lean();
+      })
+        .sort({ usedAt: -1 })
+        .limit(2000)
+        .lean();
 
       if (history.length === 0) {
         return res.json({
@@ -531,7 +535,12 @@ router.get(
         avg_effectiveness_rating: avgRating,
         most_frequently_used:     mostFreq,
         highest_rated:            highestRated,
-        category_breakdown:       [], // requires catalog lookup — omitted for performance
+        // category_breakdown is intentionally empty: computing it requires
+        // enriching each activityId with its categories from the IATLAS catalog.
+        // This lookup is deferred to avoid a potentially large N+1 fetch.
+        // Clients that need category percentages should cross-reference the
+        // most_frequently_used list with the catalog via the search API.
+        category_breakdown:       [],
         client_id: clientId,
       });
     } catch (err) {

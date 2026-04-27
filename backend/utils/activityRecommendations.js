@@ -51,6 +51,14 @@
  * @property {string}  used_at — ISO-8601 timestamp
  */
 
+// ── Scoring constants ─────────────────────────────────────────────────────────
+
+/** Points added per effectiveness-rating unit (1–5 → 3–15 pts). */
+const EFFECTIVENESS_MULTIPLIER = 3;
+
+/** Activities used within this many days receive a recency-variety penalty. */
+const RECENCY_PENALTY_DAYS = 7;
+
 /**
  * @typedef {Object} RecommendedActivity
  * @property {number}   relevance_score — 0–100
@@ -145,13 +153,13 @@ function calculateRelevanceScore(activity, client, favorites, history) {
     const rated = sorted.filter(h => h.effectiveness_rating != null && h.effectiveness_rating > 0);
     if (rated.length > 0) {
       avgEffectiveness = rated.reduce((sum, h) => sum + h.effectiveness_rating, 0) / rated.length;
-      score += avgEffectiveness * 3; // 3–15 pts for ratings 1–5
+      score += avgEffectiveness * EFFECTIVENESS_MULTIPLIER;
       reasons.push(`previously_effective_${avgEffectiveness.toFixed(1)}`);
     }
 
     // Recency penalty — encourage variety.
     const daysSince = (Date.now() - new Date(lastUsedAt).getTime()) / (1000 * 60 * 60 * 24);
-    if (daysSince < 7) {
+    if (daysSince < RECENCY_PENALTY_DAYS) {
       score -= 10;
       reasons.push('recently_used');
     }
