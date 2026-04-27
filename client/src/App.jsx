@@ -81,6 +81,7 @@ import KidsActivityCatalog from './components/IATLAS/Kids/KidsActivityCatalog.js
 import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx';
 import SessionPlansPage from './pages/SessionPlansPage.jsx';
+import ClientOutcomeReportPage from './pages/ClientOutcomeReportPage.jsx';
 import ChildProfilesPage from './pages/ChildProfilesPage.jsx';
 import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage.jsx';
 import PracticeSettingsPage from './pages/PracticeSettingsPage.jsx';
@@ -402,6 +403,7 @@ function AppShell() {
           <Route path="/iatlas/roadmap" element={<ContentRoadmapPage />} />
           <Route path="/iatlas/clinical/aba-protocols" element={<PractitionerProtocolLibrary />} />
           <Route path="/iatlas/clinical/session-plans" element={<SessionPlansPage />} />
+          <Route path="/iatlas/clinical/outcome-reports/:clientId" element={<ClientOutcomeReportPage />} />
           <Route path="/iatlas/profiles" element={<ChildProfilesPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
