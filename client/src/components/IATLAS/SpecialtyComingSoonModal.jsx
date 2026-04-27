@@ -122,7 +122,9 @@ export default function SpecialtyComingSoonModal({ specialty, onClose }) {
 
         {status === 'success' ? (
           <div className="specialty-modal-success" role="status" aria-live="polite">
-            <div className="specialty-modal-success-icon" aria-hidden="true">🎉</div>
+            <div className="specialty-modal-success-icon" aria-hidden="true">
+              <img src="/icons/success.svg" alt="" width={40} height={40} />
+            </div>
             <p className="specialty-modal-success-text">
               You're on the waitlist! We'll notify you as soon as <strong>{name}</strong> launches.
             </p>

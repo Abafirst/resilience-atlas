@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Building body -->
+  <rect x="10" y="18" width="44" height="40" rx="3" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <!-- Roof / top accent -->
+  <rect x="6" y="14" width="52" height="8" rx="2" fill="#4F46E5"/>
+  <!-- Windows row 1 -->
+  <rect x="16" y="28" width="8" height="8" rx="1.5" fill="#4F46E5"/>
+  <rect x="28" y="28" width="8" height="8" rx="1.5" fill="#4F46E5"/>
+  <rect x="40" y="28" width="8" height="8" rx="1.5" fill="#4F46E5"/>
+  <!-- Windows row 2 -->
+  <rect x="16" y="40" width="8" height="8" rx="1.5" fill="#818CF8"/>
+  <rect x="40" y="40" width="8" height="8" rx="1.5" fill="#818CF8"/>
+  <!-- Door -->
+  <rect x="26" y="44" width="12" height="14" rx="2" fill="#4F46E5"/>
+</svg>
