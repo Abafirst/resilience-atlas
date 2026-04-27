@@ -98,6 +98,7 @@ import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
 import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
 import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
 import SupportWidget from './components/Support/SupportWidget.jsx';
+import DevelopmentalRoadmapPage from './pages/DevelopmentalRoadmapPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -401,6 +402,7 @@ function AppShell() {
           <Route path="/iatlas/kids/:ageGroup" element={<KidsAgeGroupPage />} />
           <Route path="/iatlas/kids/:ageGroup/:dimension" element={<KidsDimensionActivities />} />
           <Route path="/iatlas/roadmap" element={<ContentRoadmapPage />} />
+          <Route path="/iatlas/developmental-roadmap" element={<DevelopmentalRoadmapPage />} />
           <Route path="/iatlas/clinical/aba-protocols" element={<PractitionerProtocolLibrary />} />
           <Route path="/iatlas/clinical/session-plans" element={<SessionPlansPage />} />
           <Route path="/iatlas/clinical/outcome-reports/:clientId" element={<ClientOutcomeReportPage />} />
