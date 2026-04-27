@@ -53,6 +53,30 @@ export async function getIATLASSubscriptionStatus(token) {
 }
 
 /**
+ * Submit a tier waitlist entry for a coming-soon IATLAS tier (practice or enterprise).
+ * Does not require authentication.
+ *
+ * @param {{ tier: string, email: string, name: string, organization?: string }} entry
+ * @returns {Promise<{ message: string, tier: string, alreadyJoined?: boolean }>}
+ */
+export async function submitWaitlistEntry({ tier, email, name, organization }) {
+    const response = await fetch(apiUrl('/api/iatlas/tier-waitlist'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tier, email, name, organization }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || 'Failed to join waitlist.');
+    }
+
+    return response.json();
+}
+
+/**
  * Cancel the IATLAS subscription at the end of the current billing period.
  *
  * @param {string} token - Bearer auth token

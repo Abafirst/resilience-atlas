@@ -19,6 +19,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createIATLASSubscription } from '../../api/iatlas.js';
 import { getAuth0CachedToken } from '../../lib/apiFetch.js';
+import { IATLAS_TIER_CONFIG } from '../../utils/iatlasGating.js';
+import WaitlistForm from './WaitlistForm.jsx';
 
 const MODAL_STYLES = `
   .iatlas-unlock-modal {
@@ -233,6 +235,159 @@ const MODAL_STYLES = `
     font-size: 0.82rem;
     margin-top: 0.5rem;
   }
+
+  .iatlas-coming-soon-chip {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    padding: 0.15em 0.45em;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  .dark-mode .iatlas-coming-soon-chip {
+    background: #451a03;
+    color: #fde68a;
+  }
+
+  .iatlas-unlock-waitlist-section {
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+    text-align: left;
+  }
+
+  .dark-mode .iatlas-unlock-waitlist-section {
+    border-top-color: #334155;
+  }
+
+  .iatlas-unlock-waitlist-toggle {
+    background: transparent;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .iatlas-unlock-waitlist-toggle:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+  }
+
+  .dark-mode .iatlas-unlock-waitlist-toggle {
+    color: #94a3b8;
+    border-color: #334155;
+  }
+
+  .iatlas-unlock-waitlist-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.35rem;
+  }
+
+  .dark-mode .iatlas-unlock-waitlist-title {
+    color: #f1f5f9;
+  }
+
+  .iatlas-unlock-waitlist-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 0 0 0.75rem;
+    line-height: 1.5;
+  }
+
+  .dark-mode .iatlas-unlock-waitlist-desc {
+    color: #94a3b8;
+  }
+
+  .iatlas-waitlist-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .iatlas-waitlist-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: left;
+  }
+
+  .iatlas-waitlist-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .dark-mode .iatlas-waitlist-field label {
+    color: #94a3b8;
+  }
+
+  .iatlas-waitlist-field input {
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: #ffffff;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+
+  .iatlas-waitlist-field input:focus {
+    border-color: #4f46e5;
+  }
+
+  .dark-mode .iatlas-waitlist-field input {
+    background: #0f172a;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+
+  .dark-mode .iatlas-waitlist-field input:focus {
+    border-color: #818cf8;
+  }
+
+  .iatlas-waitlist-error {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .iatlas-waitlist-form-success {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #166534;
+  }
+
+  .iatlas-waitlist-form-success p {
+    margin: 0;
+  }
+
+  .dark-mode .iatlas-waitlist-form-success {
+    background: #052e16;
+    border-color: #166534;
+    color: #bbf7d0;
+  }
 `;
 
 // Map each variant to the best default Stripe tier for the primary CTA
@@ -284,7 +439,7 @@ const VARIANT_CONFIG = {
     tiers: [
       { label: 'IATLAS Practitioner ($149/mo)', note: 'Individual practice', tier: 'practitioner' },
       { label: 'IATLAS Practice ($399/mo)', note: 'Group practice', tier: 'practice' },
-      { label: 'IATLAS Enterprise (Custom)', note: 'Organizations', tier: null },
+      { label: 'IATLAS Enterprise (Custom)', note: 'Organizations', tier: 'enterprise' },
     ],
     primaryLabel: 'Subscribe — Practitioner $149/mo',
     primaryTier: 'practitioner',
@@ -299,6 +454,12 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
   const config = VARIANT_CONFIG[variant] ?? VARIANT_CONFIG.kids;
   const [loading, setLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
+  const [showWaitlist, setShowWaitlist] = useState(false);
+
+  // Determine if any listed tiers are coming soon (for showing waitlist CTA)
+  const comingSoonTiers = config.tiers.filter(
+    (t) => t.tier && IATLAS_TIER_CONFIG[t.tier]?.comingSoon
+  );
 
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
@@ -390,6 +551,9 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
                 <span>
                   <strong>{tier.label}</strong>
                   {tier.note && <span style={{ color: '#64748b', fontWeight: 400 }}> — {tier.note}</span>}
+                  {tier.tier && IATLAS_TIER_CONFIG[tier.tier]?.comingSoon && (
+                    <span className="iatlas-coming-soon-chip" aria-label="Coming soon">Coming Soon</span>
+                  )}
                 </span>
               </div>
             ))}
@@ -431,6 +595,33 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
 
           {checkoutError && (
             <p className="iatlas-unlock-error" role="alert">{checkoutError}</p>
+          )}
+
+          {comingSoonTiers.length > 0 && (
+            <div className="iatlas-unlock-waitlist-section">
+              {showWaitlist ? (
+                <>
+                  <p className="iatlas-unlock-waitlist-title">
+                    Join the Waitlist
+                  </p>
+                  <p className="iatlas-unlock-waitlist-desc">
+                    {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).join(' & ')} {comingSoonTiers.length === 1 ? 'is' : 'are'} coming soon.
+                    Enter your details and we'll notify you at launch.
+                  </p>
+                  <WaitlistForm
+                    tier={comingSoonTiers[0].tier}
+                    onSuccess={() => setShowWaitlist(false)}
+                  />
+                </>
+              ) : (
+                <button
+                  className="iatlas-unlock-waitlist-toggle"
+                  onClick={() => setShowWaitlist(true)}
+                >
+                  Interested in {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).join(' / ')}? Join Waitlist →
+                </button>
+              )}
+            </div>
           )}
 
           <p className="iatlas-unlock-compare">
