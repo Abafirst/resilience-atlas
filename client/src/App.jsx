@@ -14,6 +14,7 @@ import './styles/teams-enhanced.css';
 import './styles/upsell.css';
 import './styles/icons.css';
 import './styles/soft-storytelling.css';
+import './styles/support.css';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
@@ -93,6 +94,9 @@ import PracticeSchedulePage from './pages/PracticeSchedulePage.jsx';
 import PracticeBillingPage from './pages/PracticeBillingPage.jsx';
 import PracticeTeamPage from './pages/PracticeTeamPage.jsx';
 import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
+import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
+import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
+import SupportWidget from './components/Support/SupportWidget.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -418,6 +422,9 @@ function AppShell() {
           <Route path="/iatlas/practice/billing" element={<PracticeBillingPage />} />
           <Route path="/iatlas/practice/team" element={<PracticeTeamPage />} />
           <Route path="/iatlas/practice/analytics" element={<PracticeAnalyticsPage />} />
+          {/* Support */}
+          <Route path="/support/tickets" element={<SupportTicketsPage />} />
+          <Route path="/support/tickets/:ticketId" element={<SupportTicketDetailPage />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 
@@ -426,6 +433,7 @@ function AppShell() {
         </Routes>
       </RequireProfileCompletion>
       {showFooter && <SiteFooter />}
+      <SupportWidget />
     </>
   );
 }

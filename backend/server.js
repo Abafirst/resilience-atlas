@@ -440,6 +440,8 @@ app.use("/api/activity-logs", require("./routes/activityLogs"));
 console.log("✅ Mounted route: /api/activity-logs");
 app.use("/api/progress", require("./routes/progress"));
 console.log("✅ Mounted route: /api/progress");
+app.use("/api/support", require("./routes/support"));
+console.log("✅ Mounted route: /api/support");
 
 // ==============================
 // Root API info
