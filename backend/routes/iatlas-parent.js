@@ -395,7 +395,8 @@ function buildProgressReportHTML(profile, progress) {
 <body>
   <h1>${name}&rsquo;s IATLAS Progress Report</h1>
   <p class="meta">
-    Generated on ${today}${ageGroup ? ' &bull; Age group: ' + escapeHtml(ageGroup) : ''} &bull; IATLAS&trade; Resilience Curriculum
+    Generated on ${today}${ageGroup ? ' &bull; Age group: ' + escapeHtml(ageGroup) : ''}
+    &bull; IATLAS&trade; Resilience Curriculum
   </p>
 
   <div class="stat-grid" role="region" aria-label="Summary statistics">

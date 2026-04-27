@@ -308,7 +308,7 @@ export default function ParentDashboardPage() {
   useEffect(() => {
     try {
       const t = localStorage.getItem('ra-theme');
-      if      (t === 'dark')  document.documentElement.setAttribute('data-theme', 'dark');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
       else if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
       else if (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)
         document.documentElement.setAttribute('data-theme', 'dark');
