@@ -102,10 +102,7 @@ function DirtyTrackingBuilder({ template, onSave, onCancel, getTokenFn, userTier
   }, [onSave, onDirtyChange]);
 
   return (
-    // Mark as a group to hold interactive elements; actual keyboard
-    // interactions come from the nested form and input elements.
     <div
-      role="group"
       onInput={handleInteraction}
       onChange={handleInteraction}
     >

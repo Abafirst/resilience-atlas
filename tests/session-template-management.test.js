@@ -675,7 +675,7 @@ describe('POST /api/templates/:id/duplicate', () => {
   });
 
   test('truncates duplicated name to 100 characters', async () => {
-    const longName = 'A'.repeat(98); // "Copy of " + 98 chars = 106 chars → truncated to 100
+    const longName = 'A'.repeat(98); // "Copy of " (8) + 98 chars = 106 chars → truncated to 100
     const original = makeTemplate({ _id: templateId, name: longName });
     const copy     = makeTemplate({ name: `Copy of ${longName}`.slice(0, 100), usageCount: 0 });
     mockFindById.mockResolvedValue(original);
