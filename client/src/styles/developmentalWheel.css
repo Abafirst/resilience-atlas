@@ -101,7 +101,9 @@
 .developmental-wheel-container {
   position: relative;
   width: 100%;
-  max-width: 640px; /* ~20% smaller than the previous 800px */
+  /* 768px gives the same rendered scale as the old 640px+1000-unit viewBox now that
+     the viewBox is 1200 units wide: 768/1200 ≈ 0.64 px/unit. */
+  max-width: 768px;
   margin: 2rem auto;
   padding: 0 1rem;
 }

@@ -5,15 +5,28 @@
  * Route: used by DevelopmentalRoadmapPage at /iatlas/developmental-roadmap
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { DEVELOPMENTAL_MILESTONES, DIMENSION_CONFIG } from '../../data/iatlas/developmentalRoadmap.js';
 
 export default function DevelopmentalWheel() {
   const [selectedSegment, setSelectedSegment] = useState(null); // { ageGroup, dimension }
   const [hoveredSegment, setHoveredSegment] = useState(null);
+  // Detect mobile to use short dimension names and avoid label overlap
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
   const svgRef = useRef(null);
 
-  // Expanded viewBox (1000×1000) gives labels ~90px of breathing room beyond the wheel edge
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const handler = (e) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  // Expanded viewBox (-100 0 1200 1000) gives labels ~140 SVG-units of breathing room on
+  // left and right sides, eliminating the "Regulative" / "Emotional" truncation.
   const centerX = 500;
   const centerY = 500;
   const baseRadius = 80;
@@ -31,8 +44,8 @@ export default function DevelopmentalWheel() {
   const RING_OPACITY_RANGE = 0.45;
 
   // External label geometry constants
-  const LABEL_LINE_OFFSET_HALF = 9;  // half of line-height for two-line labels
-  const LABEL_LINE_HEIGHT      = 18; // vertical distance between label lines
+  const LABEL_LINE_OFFSET_HALF = 10; // half of line-height for two-line labels
+  const LABEL_LINE_HEIGHT      = 20; // vertical distance between label lines
 
   // Generate SVG path for a wheel segment
   function generateSegmentPath(ring, angleStart, angleEnd) {
@@ -153,8 +166,9 @@ export default function DevelopmentalWheel() {
   // Render dimension labels outside the wheel with leader lines
   function renderDimensionLabels() {
     const lineStartR = outerRingRadius + 10;
-    const lineEndR   = outerRingRadius + 55;
-    const labelR     = outerRingRadius + 80;
+    // Leader line and label pushed further out so text clears the outer ring with room to spare
+    const lineEndR   = outerRingRadius + 70;
+    const labelR     = outerRingRadius + 100;
 
     return Object.entries(DIMENSION_CONFIG).flatMap(([key, config]) => {
       const svgAngle = config.angle - 90; // convert compass → SVG coordinate angle
@@ -172,11 +186,13 @@ export default function DevelopmentalWheel() {
       const tx = centerX + labelR * cosA;
       const ty = centerY + labelR * sinA;
 
-      // Text-anchor based on horizontal position
+      // Text-anchor: right hemisphere → start, left → end, top/bottom → middle
       const textAnchor = Math.abs(cosA) < 0.15 ? 'middle' : cosA >= 0 ? 'start' : 'end';
 
-      // Split "Word / Word" into two lines
-      const [line1, line2] = config.name.split(' / ');
+      // On mobile, use the short single-word name to avoid overlap on small viewports.
+      // On desktop, split "Word / Word" into two stacked lines.
+      const displayName = isMobile ? (config.shortName || config.name) : config.name;
+      const [line1, line2] = displayName.split(' / ');
 
       return [
         <line
@@ -192,7 +208,7 @@ export default function DevelopmentalWheel() {
           textAnchor={textAnchor}
           dominantBaseline="middle"
           fill={config.color}
-          fontSize={13}
+          fontSize={14}
           fontWeight="700"
           letterSpacing="0.03em"
         >
@@ -234,7 +250,7 @@ export default function DevelopmentalWheel() {
     <div className="developmental-wheel-container">
       <svg
         ref={svgRef}
-        viewBox="0 0 1000 1000"
+        viewBox="-100 0 1200 1000"
         className="developmental-wheel-svg"
         style={{ maxWidth: '100%', height: 'auto' }}
         aria-label="IATLAS Developmental Roadmap Wheel"
