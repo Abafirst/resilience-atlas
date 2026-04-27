@@ -434,6 +434,8 @@ app.use("/api/iatlas/clinical/outcome-reports", require("./routes/clinical-repor
 console.log("✅ Mounted route: /api/iatlas/clinical/outcome-reports");
 app.use("/api/iatlas/roadmap", require("./routes/iatlas-roadmap"));
 console.log("✅ Mounted route: /api/iatlas/roadmap");
+app.use("/api/iatlas/progress", require("./routes/iatlas-progress"));
+console.log("✅ Mounted route: /api/iatlas/progress");
 app.use("/api/practices", require("./routes/practices"));
 console.log("✅ Mounted route: /api/practices");
 app.use("/api/practitioners", require("./routes/practiceInvitations"));
