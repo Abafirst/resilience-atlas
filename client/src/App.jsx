@@ -97,6 +97,7 @@ import PracticeSchedulePage from './pages/PracticeSchedulePage.jsx';
 import PracticeBillingPage from './pages/PracticeBillingPage.jsx';
 import PracticeTeamPage from './pages/PracticeTeamPage.jsx';
 import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
+import OrgAnalyticsDashboardPage from './pages/OrgAnalyticsDashboardPage.jsx';
 import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
 import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
 import SupportWidget from './components/Support/SupportWidget.jsx';
@@ -428,6 +429,8 @@ function AppShell() {
           <Route path="/iatlas/practice/billing" element={<PracticeBillingPage />} />
           <Route path="/iatlas/practice/team" element={<PracticeTeamPage />} />
           <Route path="/iatlas/practice/analytics" element={<PracticeAnalyticsPage />} />
+          {/* Enterprise / Multi-Client Analytics Dashboard */}
+          <Route path="/iatlas/org/dashboard" element={<OrgAnalyticsDashboardPage />} />
           {/* Support */}
           <Route path="/support/tickets" element={<SupportTicketsPage />} />
           <Route path="/support/tickets/:ticketId" element={<SupportTicketDetailPage />} />

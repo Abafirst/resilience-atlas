@@ -194,5 +194,39 @@ Comprehensive outcome reporting system that generates professional PDF reports a
 
 ---
 
+## Task #23: Advanced Analytics & Insights
+
+### #23a — Multi-Client Dashboard ✅
+Enterprise-grade dashboard for organizational leaders, clinical directors, and administrators.
+Provides aggregate analytics across all clients, practitioners, and programs.
+
+**Implementation details:**
+
+- **Route:** `backend/routes/clinical/orgAnalytics.js` mounted at `/api/analytics/org`
+  - `GET /overview` — Top-level KPIs (active clients, sessions, dimension averages, completion/retention rates)
+  - `GET /practitioners` — Per-practitioner caseload and outcome metrics
+  - `GET /capacity` — Caseload utilisation and capacity planning data
+  - `GET /cohorts` — List saved cohort definitions
+  - `POST /cohorts` — Create a new cohort with filter criteria (age range, gender, diagnosis)
+  - `POST /export` — Queue an analytics export (executive summary, board report, grant report, CSV)
+
+- **Frontend page:** `client/src/pages/OrgAnalyticsDashboardPage.jsx`
+  - Route: `/iatlas/org/dashboard`
+  - Six interactive tabs:
+    1. **Overview** — KPI cards with sparklines, 6-dimension bar stack (baseline vs current), 6-month trend chart, real-time alerts
+    2. **Cohorts** — Cohort builder UI (age range, gender, diagnosis filters), saved cohort chips, side-by-side dimension comparison with statistical summary (mean, strongest, focus area)
+    3. **Dimension Trends** — Heat map of org dimension averages (strong/moderate/focus), 6-month timeline drill-down per dimension, baseline vs current comparison table
+    4. **Practitioners** — Sortable performance table (caseload, sessions, improvement, goals, doc rate, retention), specialization dimension bars for top performers
+    5. **Capacity** — Kanban-style columns (Available / Near Capacity / At Capacity), waitlist table with AI-powered match suggestions, capacity summary KPIs
+    6. **Export** — Report template gallery (executive summary, board report, grant report, raw CSV), delivery scheduler (weekly/monthly/quarterly), recipient manager
+
+- **Navigation:** Link added to Practice Dashboard quick actions (`🏢 Org Dashboard` button)
+
+**Access control:**
+- Requires Practitioner, Practice, or Enterprise tier (`requirePractitionerTier` middleware)
+- All routes enforce JWT authentication
+
+---
+
 ## Task #24 — Activity Search & Filter ✅ (PR #611)
 IATLAS activity catalog search with keyword, category, and age-group filtering.
