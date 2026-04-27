@@ -102,8 +102,13 @@ function DirtyTrackingBuilder({ template, onSave, onCancel, getTokenFn, userTier
   }, [onSave, onDirtyChange]);
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div onInput={handleInteraction} onChange={handleInteraction}>
+    // Mark as a group to hold interactive elements; actual keyboard
+    // interactions come from the nested form and input elements.
+    <div
+      role="group"
+      onInput={handleInteraction}
+      onChange={handleInteraction}
+    >
       <TemplateBuilder
         template={template}
         onSave={handleSave}

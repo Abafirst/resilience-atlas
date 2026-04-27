@@ -21,6 +21,7 @@
  */
 
 const mongoose = require('mongoose');
+const logger   = require('../utils/logger');
 
 const TIER_CLAIM_NS = 'https://theresilienceatlas.com/tier';
 
@@ -90,7 +91,7 @@ function checkTier(allowedTiers) {
       req.userTier = currentTier;
       next();
     } catch (err) {
-      console.error('[checkTier] error:', err);
+      logger.error('[checkTier] error:', err);
       res.status(500).json({ error: 'Internal server error.' });
     }
   };

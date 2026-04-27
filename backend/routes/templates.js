@@ -50,6 +50,10 @@ const writeLimiter = rateLimit({
   message: { error: 'Too many requests. Please try again in a moment.' },
 });
 
+// ── Constants ─────────────────────────────────────────────────────────────────
+
+const VALID_CATEGORIES = new Set(['intake', 'ongoing', 'closure', 'assessment', 'custom']);
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function resolveUserId(req) {
@@ -61,6 +65,28 @@ function resolveUserId(req) {
  */
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Sanitise a category query parameter.
+ * Returns the value only if it is a known category string; otherwise returns null.
+ * Prevents NoSQL injection where an attacker might pass an object (e.g. {$gt:""}).
+ */
+function sanitiseCategory(value) {
+  if (typeof value !== 'string') return null;
+  return VALID_CATEGORIES.has(value) ? value : null;
+}
+
+/**
+ * Sanitise a tags query parameter into an array of plain strings.
+ * Rejects any element that is not a non-empty string to prevent NoSQL injection.
+ */
+function sanitiseTags(value) {
+  if (!value) return [];
+  const raw = Array.isArray(value)
+    ? value
+    : String(value).split(',').map((t) => t.trim());
+  return raw.filter((t) => typeof t === 'string' && t.length > 0 && t.length <= 100);
 }
 
 /**
@@ -180,11 +206,11 @@ router.get(
 
       const filter = { therapistId: userId.toString() };
 
-      if (category) filter.category = category;
-      if (tags) {
-        const tagList = Array.isArray(tags) ? tags : tags.split(',').map((t) => t.trim());
-        if (tagList.length > 0) filter.tags = { $in: tagList };
-      }
+      const safeCategory = sanitiseCategory(category);
+      if (safeCategory) filter.category = safeCategory;
+
+      const safeTagList = sanitiseTags(tags);
+      if (safeTagList.length > 0) filter.tags = { $in: safeTagList };
 
       const parsedLimit = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
       const parsedSkip  = Math.max(parseInt(skip,  10) || 0, 0);
@@ -239,13 +265,12 @@ router.get(
         conditions.push({ name: safe });
         conditions.push({ tags: safe });
       }
-      if (category) {
-        filter.category = category;
+      const safeCategory = sanitiseCategory(category);
+      if (safeCategory) {
+        filter.category = safeCategory;
       }
-      if (tags) {
-        const tagList = Array.isArray(tags) ? tags : tags.split(',').map((t) => t.trim());
-        if (tagList.length > 0) filter.tags = { $in: tagList };
-      }
+      const safeTagList = sanitiseTags(tags);
+      if (safeTagList.length > 0) filter.tags = { $in: safeTagList };
       if (conditions.length > 0) {
         filter.$or = conditions;
       }
