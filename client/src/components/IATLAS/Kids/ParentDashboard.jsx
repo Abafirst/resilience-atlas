@@ -6,14 +6,17 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 
 import useKidsProgress   from '../../../hooks/useKidsProgress.js';
 import useKidsBadges     from '../../../hooks/useKidsBadges.js';
 import useKidsStreaks     from '../../../hooks/useKidsStreaks.js';
 import { useProfiles }   from '../../../contexts/ProfileContext.jsx';
 
-import CertificatePrinter from './CertificatePrinter.jsx';
-import StreakFlame        from './StreakFlame.jsx';
+import CertificatePrinter       from './CertificatePrinter.jsx';
+import StreakFlame               from './StreakFlame.jsx';
+import FamilyLeaderboard        from '../FamilyLeaderboard.jsx';
+import FamilyChallengePreview   from '../FamilyChallengePreview.jsx';
 
 import {
   loadKidsJSON,
@@ -726,6 +729,30 @@ export default function ParentDashboard({ onBack }) {
               <CertificatePrinter earnedCertificates={earnedCerts} />
             </div>
           )}
+        </div>
+
+        {/* Family Challenges section */}
+        <div className="pd-card" role="region" aria-label="Family Challenges">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.9rem' }}>
+            <h3 className="pd-section-title" style={{ margin: 0 }}>
+              👨‍👩‍👧 Family Challenges
+            </h3>
+            <Link
+              to="/iatlas/family/challenges"
+              style={{ fontSize: '.8rem', fontWeight: 700, color: '#6366f1', textDecoration: 'none' }}
+            >
+              View All →
+            </Link>
+          </div>
+          <p style={{ fontSize: '.82rem', color: '#64748b', margin: '0 0 .9rem' }}>
+            Collaborative activities for your whole family to build resilience together.
+          </p>
+          <FamilyChallengePreview />
+        </div>
+
+        {/* Family Leaderboard */}
+        <div className="pd-card" role="region" aria-label="Family leaderboard">
+          <FamilyLeaderboard />
         </div>
 
         {/* Tips for parents */}
