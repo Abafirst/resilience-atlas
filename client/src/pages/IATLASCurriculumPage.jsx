@@ -2265,10 +2265,6 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/compass.svg" alt="" width={16} height={16} aria-hidden="true" />
                     Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                   </a>
-                  <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary">
-                    <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
-                    Train the Facilitator
-                  </Link>
                   <a href="#iatlas-overview" className="iatlas-btn-secondary">
                     Learn more about IATLAS
                   </a>
@@ -2276,17 +2272,17 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/planning.svg" alt="" width={16} height={16} aria-hidden="true" />
                     View My Progress
                   </a>
+                  <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,158,11,.12)', borderColor: 'rgba(245,158,11,.35)', color: '#fbbf24' }}>
+                    <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
+                    Train the Facilitator
+                    <span style={{ fontSize: '.72em', opacity: .85, fontStyle: 'italic' }}>Coming Soon</span>
+                  </Link>
                   {isProfessional && (
                     <Link to="/iatlas/clinical/session-plans" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
                       <img src="/icons/clinical.svg" alt="" width={16} height={16} aria-hidden="true" />
                       Session Plans
                     </Link>
                   )}
-                  <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,158,11,.12)', borderColor: 'rgba(245,158,11,.35)', color: '#fbbf24' }}>
-                    <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
-                    Train the Facilitator
-                    <span style={{ fontSize: '.72em', opacity: .85, fontStyle: 'italic' }}>Coming Soon</span>
-                  </Link>
                 </div>
               </div>
               <div className="iatlas-hero-visual" aria-hidden="true">
