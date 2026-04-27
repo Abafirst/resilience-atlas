@@ -542,11 +542,14 @@ export default function IATLASKidsLandingPage() {
             )}
             <span className="ikids-hero-kicker">
               <img src="/icons/kids-spark.svg" alt="" className="ikids-hero-kicker-icon" aria-hidden="true" />
-              IATLAS Kids
+              <span title="Integrated Applied Teaching and Learning Adaptive System">IATLAS™</span> Kids
             </span>
             <h1 className="ikids-hero-title" id="ikids-hero-title">
               Resilience for Kids:<br />Play-Based Learning
             </h1>
+            <p className="ikids-hero-sub" style={{ fontStyle: 'italic', opacity: 0.85, marginBottom: '.5rem' }}>
+              Resilience-building activities from the <strong>IATLAS</strong> (Integrated Applied Teaching and Learning Adaptive System) curriculum
+            </p>
             {activeProfile && (
               <p style={{ fontSize: '.9rem', fontWeight: 700, opacity: .85, marginBottom: '.5rem', color: '#fff' }}>
                 Viewing: {activeProfile.avatar} {activeProfile.name}'s Progress
@@ -580,7 +583,7 @@ export default function IATLASKidsLandingPage() {
           <div className="ikids-intro" role="region" aria-label="About IATLAS Kids">
             <h2 className="ikids-intro-title">What is IATLAS Kids?</h2>
             <p className="ikids-intro-text">
-              IATLAS Kids brings the science of resilience into age-appropriate, play-based learning.
+              <strong>IATLAS</strong> (Integrated Applied Teaching and Learning Adaptive System) Kids brings the science of resilience into age-appropriate, play-based learning.
               Every activity is grounded in ABA and ACT research and designed to fit naturally into
               a child's day — at home, at school, or anywhere in between.
             </p>
