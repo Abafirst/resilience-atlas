@@ -827,10 +827,11 @@ const STYLES = `
   /* ── Coming Soon features section ───────────────────────────────────────── */
   .iatlas-coming-features {
     margin: 3rem 0;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #eef2ff 0%, #fdf4ff 100%);
+    border: 1.5px solid rgba(79,70,229,.2);
     border-radius: 28px;
     padding: clamp(1.75rem, 4vw, 2.75rem);
-    color: #f1f5f9;
+    color: #1e293b;
     position: relative;
     overflow: hidden;
   }
@@ -843,7 +844,7 @@ const STYLES = `
     width: 240px;
     height: 240px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(79,70,229,.22) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(79,70,229,.1) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -855,40 +856,56 @@ const STYLES = `
     width: 180px;
     height: 180px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(217,119,6,.18) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(217,119,6,.08) 0%, transparent 70%);
     pointer-events: none;
+  }
+
+  [data-theme="dark"] .iatlas-coming-features {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-color: rgba(165,180,252,.2);
+    color: #f1f5f9;
   }
 
   .iatlas-cf-kicker {
     display: inline-flex;
     align-items: center;
     gap: .4rem;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(79,70,229,.1);
+    border: 1px solid rgba(79,70,229,.25);
     border-radius: 999px;
     padding: .28rem .8rem;
     font-size: .68rem;
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #a5b4fc;
+    color: #4338ca;
     margin-bottom: .8rem;
+  }
+
+  [data-theme="dark"] .iatlas-cf-kicker {
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.2);
+    color: #a5b4fc;
   }
 
   .iatlas-cf-title {
     font-size: clamp(1.4rem, 3vw, 2rem);
     font-weight: 800;
     margin: 0 0 .5rem;
-    color: #f1f5f9;
+    color: #1e293b;
   }
+
+  [data-theme="dark"] .iatlas-cf-title { color: #f1f5f9; }
 
   .iatlas-cf-sub {
     font-size: .95rem;
-    color: #94a3b8;
+    color: #475569;
     max-width: 55ch;
     line-height: 1.65;
     margin: 0 0 1.75rem;
   }
+
+  [data-theme="dark"] .iatlas-cf-sub { color: #94a3b8; }
 
   .iatlas-cf-grid {
     display: grid;
@@ -898,10 +915,15 @@ const STYLES = `
   }
 
   .iatlas-cf-card {
-    background: rgba(255,255,255,.07);
-    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.7);
+    border: 1px solid rgba(79,70,229,.15);
     border-radius: 16px;
     padding: 1.1rem;
+  }
+
+  [data-theme="dark"] .iatlas-cf-card {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.12);
   }
 
   .iatlas-cf-card-icon {
@@ -915,9 +937,11 @@ const STYLES = `
   .iatlas-cf-card-title {
     font-size: .95rem;
     font-weight: 700;
-    color: #f1f5f9;
+    color: #1e293b;
     margin: 0 0 .35rem;
   }
+
+  [data-theme="dark"] .iatlas-cf-card-title { color: #f1f5f9; }
 
   .iatlas-cf-card-items {
     list-style: none;
@@ -930,21 +954,25 @@ const STYLES = `
 
   .iatlas-cf-card-item {
     font-size: .82rem;
-    color: #94a3b8;
+    color: #475569;
     display: flex;
     align-items: baseline;
     gap: .4rem;
     line-height: 1.45;
   }
 
+  [data-theme="dark"] .iatlas-cf-card-item { color: #94a3b8; }
+
   .iatlas-cf-card-link {
     display: inline-block;
     margin-top: .6rem;
     font-size: .8rem;
     font-weight: 700;
-    color: #6ee7b7;
+    color: #4338ca;
     text-decoration: none;
   }
+
+  [data-theme="dark"] .iatlas-cf-card-link { color: #6ee7b7; }
 
   .iatlas-cf-card-link:hover {
     text-decoration: underline;
@@ -1493,15 +1521,15 @@ const STYLES = `
 
   /* ── Specialties Coming Soon ─────────────────────────────────────────────── */
   .iatlas-specialties-coming-soon {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #ffffff;
     padding: 4rem 2rem;
     margin-top: 4rem;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #e2e8f0;
     border-radius: 16px;
   }
 
   [data-theme="dark"] .iatlas-specialties-coming-soon {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: #0f172a;
     border-top-color: #334155;
   }
 
@@ -1889,10 +1917,11 @@ const STYLES = `
 
   /* ── Train the Facilitator Section ──────────────────────────────────────── */
   .iatlas-ttf-banner {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border-radius: 24px;
+    background: linear-gradient(135deg, #eef2ff 0%, #fdf4ff 50%, #fff7ed 100%);
+    border: 1px solid rgba(79,70,229,.18);
+    border-radius: 28px;
     padding: 3rem 2.5rem;
-    color: #ffffff;
+    color: #1e293b;
     position: relative;
     overflow: hidden;
     margin: 2rem 0;
@@ -1901,50 +1930,71 @@ const STYLES = `
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(circle at 80% 20%, rgba(110,231,183,.12) 0%, transparent 50%),
-      radial-gradient(circle at 15% 80%, rgba(79,70,229,.18) 0%, transparent 50%);
+    background: radial-gradient(ellipse 70% 60% at 85% 50%, rgba(79,70,229,.07) 0%, transparent 70%);
     pointer-events: none;
   }
+
+  [data-theme="dark"] .iatlas-ttf-banner {
+    background: linear-gradient(135deg, #1e293b 0%, #2d1f4a 50%, #1c1a0e 100%);
+    border-color: rgba(165,180,252,.18);
+    color: #f1f5f9;
+  }
+
   .iatlas-ttf-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: rgba(255,255,255,.15);
-    backdrop-filter: blur(10px);
+    background: rgba(79,70,229,.12);
+    border: 1px solid rgba(79,70,229,.3);
     border-radius: 20px;
     padding: .4rem 1rem;
     font-size: .85rem;
     font-weight: 700;
+    color: #4338ca;
     margin-bottom: 1.5rem;
     position: relative;
   }
+
+  [data-theme="dark"] .iatlas-ttf-badge {
+    background: rgba(165,180,252,.15);
+    border-color: rgba(165,180,252,.3);
+    color: #a5b4fc;
+  }
+
   .iatlas-ttf-title {
     font-size: 2.25rem;
     font-weight: 900;
     margin: 0 0 .75rem;
     line-height: 1.2;
     position: relative;
+    color: #1e293b;
   }
+
+  [data-theme="dark"] .iatlas-ttf-title { color: #f1f5f9; }
+
   .iatlas-ttf-subtitle {
     font-size: 1.15rem;
-    opacity: .9;
     margin: 0 0 1.5rem;
     font-weight: 600;
-    color: #6ee7b7;
+    color: #059669;
     position: relative;
   }
+
+  [data-theme="dark"] .iatlas-ttf-subtitle { color: #6ee7b7; }
+
   .iatlas-ttf-description {
     font-size: 1rem;
     line-height: 1.7;
-    opacity: .85;
+    color: #475569;
     max-width: 720px;
     margin-bottom: 2rem;
     position: relative;
   }
+
+  [data-theme="dark"] .iatlas-ttf-description { color: #94a3b8; }
   .iatlas-ttf-philosophy {
-    background: rgba(255,255,255,.1);
-    border-left: 4px solid #6ee7b7;
+    background: rgba(79,70,229,.06);
+    border-left: 4px solid #059669;
     border-radius: 12px;
     padding: 1.5rem;
     margin: 2rem 0;
@@ -1953,18 +2003,25 @@ const STYLES = `
     align-items: flex-start;
     position: relative;
   }
-  .iatlas-ttf-philosophy-icon { flex-shrink: 0; opacity: .8; }
+  [data-theme="dark"] .iatlas-ttf-philosophy {
+    background: rgba(255,255,255,.07);
+    border-left-color: #6ee7b7;
+  }
+  .iatlas-ttf-philosophy-icon { flex-shrink: 0; }
   .iatlas-ttf-philosophy-title {
     font-size: 1.1rem;
     font-weight: 800;
     margin: 0 0 .5rem;
+    color: #1e293b;
   }
+  [data-theme="dark"] .iatlas-ttf-philosophy-title { color: #f1f5f9; }
   .iatlas-ttf-philosophy-text {
     font-size: .95rem;
     line-height: 1.65;
     margin: 0;
-    opacity: .9;
+    color: #475569;
   }
+  [data-theme="dark"] .iatlas-ttf-philosophy-text { color: #94a3b8; }
   .iatlas-ttf-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1973,31 +2030,45 @@ const STYLES = `
     position: relative;
   }
   .iatlas-ttf-card {
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.7);
+    border: 1px solid rgba(79,70,229,.15);
     border-radius: 16px;
     padding: 1.5rem;
     transition: all 0.2s ease;
   }
+  [data-theme="dark"] .iatlas-ttf-card {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.15);
+  }
   .iatlas-ttf-card:hover {
-    background: rgba(255,255,255,.13);
+    background: rgba(255,255,255,.9);
+    border-color: rgba(79,70,229,.3);
     transform: translateY(-2px);
   }
+  [data-theme="dark"] .iatlas-ttf-card:hover {
+    background: rgba(255,255,255,.13);
+    border-color: rgba(255,255,255,.3);
+  }
   .iatlas-ttf-card-icon {
-    filter: brightness(0) invert(1);
     margin-bottom: 1rem;
+  }
+  [data-theme="dark"] .iatlas-ttf-card-icon {
+    filter: brightness(0) invert(1);
   }
   .iatlas-ttf-card-title {
     font-size: 1rem;
     font-weight: 800;
     margin: 0 0 .5rem;
+    color: #1e293b;
   }
+  [data-theme="dark"] .iatlas-ttf-card-title { color: #f1f5f9; }
   .iatlas-ttf-card-desc {
     font-size: .875rem;
-    opacity: .85;
+    color: #475569;
     line-height: 1.6;
     margin: 0;
   }
+  [data-theme="dark"] .iatlas-ttf-card-desc { color: #94a3b8; }
   .iatlas-ttf-roles {
     margin: 2.5rem 0;
     position: relative;
@@ -2007,36 +2078,53 @@ const STYLES = `
     font-weight: 800;
     margin: 0 0 1.25rem;
     text-align: center;
+    color: #1e293b;
   }
+  [data-theme="dark"] .iatlas-ttf-roles-title { color: #f1f5f9; }
   .iatlas-ttf-roles-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
   }
   .iatlas-ttf-role-card {
-    background: rgba(255,255,255,.08);
+    background: rgba(255,255,255,.7);
+    border: 1px solid rgba(79,70,229,.12);
     border-radius: 12px;
     padding: 1rem;
     display: flex;
     gap: .75rem;
     align-items: center;
   }
-  .iatlas-ttf-role-emoji { font-size: 2rem; line-height: 1; flex-shrink: 0; }
-  .iatlas-ttf-role-name { font-size: .9rem; font-weight: 700; margin: 0 0 .25rem; }
-  .iatlas-ttf-role-benefit { font-size: .8rem; opacity: .8; margin: 0; line-height: 1.4; }
+  [data-theme="dark"] .iatlas-ttf-role-card {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.1);
+  }
+  .iatlas-ttf-role-icon { width: 2rem; height: 2rem; flex-shrink: 0; }
+  [data-theme="dark"] .iatlas-ttf-role-icon { filter: brightness(0) invert(1); }
+  .iatlas-ttf-role-name { font-size: .9rem; font-weight: 700; margin: 0 0 .25rem; color: #1e293b; }
+  [data-theme="dark"] .iatlas-ttf-role-name { color: #f1f5f9; }
+  .iatlas-ttf-role-benefit { font-size: .8rem; color: #64748b; margin: 0; line-height: 1.4; }
+  [data-theme="dark"] .iatlas-ttf-role-benefit { color: #94a3b8; }
   .iatlas-ttf-cta {
-    background: rgba(255,255,255,.1);
+    background: rgba(79,70,229,.06);
+    border: 1px solid rgba(79,70,229,.15);
     border-radius: 16px;
     padding: 2rem;
     text-align: center;
     margin-top: 2.5rem;
     position: relative;
   }
+  [data-theme="dark"] .iatlas-ttf-cta {
+    background: rgba(255,255,255,.08);
+    border-color: rgba(255,255,255,.12);
+  }
   .iatlas-ttf-cta-text {
     font-size: 1rem;
     margin: 0 0 1.25rem;
     line-height: 1.6;
+    color: #1e293b;
   }
+  [data-theme="dark"] .iatlas-ttf-cta-text { color: #f1f5f9; }
   @media (max-width: 700px) {
     .iatlas-ttf-banner { padding: 2rem 1.25rem; }
     .iatlas-ttf-title { font-size: 1.6rem; }
@@ -2082,7 +2170,7 @@ export default function IATLASCurriculumPage() {
       .then(({ tier, status }) => {
         if ((status === 'active' || status === 'trialing') && tier && tier !== 'free') {
           try { localStorage.setItem(IATLAS_TIER_KEY, tier); } catch (_) {}
-          setUpgradeSuccess(`🎉 Welcome! Your IATLAS ${tier.charAt(0).toUpperCase() + tier.slice(1)} subscription is now active.`);
+          setUpgradeSuccess(`Welcome! Your IATLAS ${tier.charAt(0).toUpperCase() + tier.slice(1)} subscription is now active.`);
         } else {
           setUpgradeSuccess('Subscription activated! Your access will be updated shortly.');
         }
@@ -2178,7 +2266,8 @@ export default function IATLASCurriculumPage() {
                     Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span>
                   </a>
                   <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary">
-                    🎓 Train the Facilitator
+                    <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
+                    Train the Facilitator
                   </Link>
                   <a href="#iatlas-overview" className="iatlas-btn-secondary">
                     Learn more about IATLAS
@@ -2189,11 +2278,13 @@ export default function IATLASCurriculumPage() {
                   </a>
                   {isProfessional && (
                     <Link to="/iatlas/clinical/session-plans" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-                      🩺 Session Plans
+                      <img src="/icons/clinical.svg" alt="" width={16} height={16} aria-hidden="true" />
+                      Session Plans
                     </Link>
                   )}
                   <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,158,11,.12)', borderColor: 'rgba(245,158,11,.35)', color: '#fbbf24' }}>
-                    🎓 Train the Facilitator
+                    <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
+                    Train the Facilitator
                     <span style={{ fontSize: '.72em', opacity: .85, fontStyle: 'italic' }}>Coming Soon</span>
                   </Link>
                 </div>
@@ -2243,41 +2334,42 @@ export default function IATLASCurriculumPage() {
           {/* ── Train the Facilitator Teaser ─────────────────────────── */}
           <section aria-labelledby="iatlas-ttf-title" style={{ margin: '2rem 0' }}>
             <div style={{
-              background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
-              borderRadius: 24,
+              background: 'linear-gradient(135deg, #eef2ff 0%, #fdf4ff 50%, #fff7ed 100%)',
+              border: '1px solid rgba(79,70,229,.18)',
+              borderRadius: 28,
               padding: 'clamp(1.75rem, 4vw, 2.5rem)',
-              color: '#f1f5f9',
+              color: '#1e293b',
               position: 'relative',
               overflow: 'hidden',
             }}>
-              {/* Decorative bg circles */}
-              <div style={{ position: 'absolute', top: -50, right: -50, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,158,11,.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              {/* Decorative bg radial */}
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 85% 50%, rgba(79,70,229,.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
               <div style={{ position: 'relative', zIndex: 1 }}>
                 {/* Coming Soon badge */}
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                  background: 'rgba(245,158,11,.2)', border: '1px solid rgba(245,158,11,.4)',
+                  background: 'rgba(79,70,229,.12)', border: '1px solid rgba(79,70,229,.3)',
                   borderRadius: 999, padding: '.28rem .8rem',
                   fontSize: '.68rem', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase',
-                  color: '#fbbf24', marginBottom: '.8rem',
+                  color: '#4338ca', marginBottom: '.8rem',
                 }}>
-                  🎓 Coming Soon — 2026
+                  <img src="/icons/certification.svg" alt="" width={14} height={14} aria-hidden="true" />
+                  Coming Soon — 2026
                 </span>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start' }}>
                   <div style={{ flex: '1 1 340px' }}>
-                    <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, margin: '0 0 .6rem', color: '#f1f5f9' }} id="iatlas-ttf-title">
+                    <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, margin: '0 0 .6rem', color: '#1e293b' }} id="iatlas-ttf-title">
                       Train the Facilitator
                     </h2>
-                    <p style={{ fontSize: '.95rem', color: '#94a3b8', lineHeight: 1.65, margin: '0 0 1.25rem', maxWidth: '55ch' }}>
+                    <p style={{ fontSize: '.95rem', color: '#475569', lineHeight: 1.65, margin: '0 0 1.25rem', maxWidth: '55ch' }}>
                       A professional certification program that trains clinicians, caregivers, educators,
                       Speech-Language Pathologists, Occupational Therapists, ABA therapists, teachers, and
                       families to deliver IATLAS with fidelity — while building their own six-dimensional
                       resilience along the way.
                     </p>
-                    <p style={{ fontSize: '.88rem', color: '#c7d2fe', lineHeight: 1.6, margin: '0 0 1.5rem', fontStyle: 'italic' }}>
+                    <p style={{ fontSize: '.88rem', color: '#4338ca', lineHeight: 1.6, margin: '0 0 1.5rem', fontStyle: 'italic' }}>
                       "You can't pour from an empty cup. IATLAS is a recursive, all-inclusive system — everyone
                       in the ecosystem grows together."
                     </p>
@@ -2286,9 +2378,10 @@ export default function IATLASCurriculumPage() {
                         to="/iatlas/train-the-facilitator"
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                          background: '#6366f1', color: '#fff', borderRadius: 10,
+                          background: '#4f46e5', color: '#fff', borderRadius: 10,
                           padding: '.65rem 1.4rem', fontWeight: 700, fontSize: '.9rem',
                           textDecoration: 'none', transition: 'background .15s',
+                          boxShadow: '0 4px 14px rgba(79,70,229,.3)',
                         }}
                       >
                         Learn More &amp; Join Waitlist →
@@ -2297,13 +2390,14 @@ export default function IATLASCurriculumPage() {
                         to="/iatlas/practice/dashboard"
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                          background: 'rgba(255,255,255,.1)', color: '#e2e8f0',
-                          border: '1.5px solid rgba(255,255,255,.2)', borderRadius: 10,
+                          background: 'rgba(255,255,255,.95)', color: '#334155',
+                          border: '1.5px solid #cbd5e1', borderRadius: 10,
                           padding: '.62rem 1.3rem', fontWeight: 600, fontSize: '.88rem',
                           textDecoration: 'none',
                         }}
                       >
-                        🏢 Practice Dashboard
+                        <img src="/icons/organization.svg" alt="" width={16} height={16} aria-hidden="true" />
+                        Practice Dashboard
                       </Link>
                     </div>
                   </div>
@@ -2315,19 +2409,19 @@ export default function IATLASCurriculumPage() {
                     </p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
                       {[
-                        { icon: '🩺', label: 'Clinicians & Therapists' },
-                        { icon: '🗣️', label: 'Speech-Language Pathologists' },
-                        { icon: '🤸', label: 'Occupational Therapists' },
-                        { icon: '👨‍🏫', label: 'Teachers & Educators' },
-                        { icon: '👨‍👩‍👧', label: 'Caregivers & Families' },
-                        { icon: '🧩', label: 'ABA Therapists' },
-                        { icon: '🤝', label: 'Social Skills Practitioners' },
+                        { icon: '/icons/clinical.svg', label: 'Clinicians & Therapists' },
+                        { icon: '/icons/speech.svg', label: 'Speech-Language Pathologists' },
+                        { icon: '/icons/movement.svg', label: 'Occupational Therapists' },
+                        { icon: '/icons/teacher.svg', label: 'Teachers & Educators' },
+                        { icon: '/icons/relational-connective.svg', label: 'Caregivers & Families' },
+                        { icon: '/icons/agentic-generative.svg', label: 'ABA Therapists' },
+                        { icon: '/icons/connection.svg', label: 'Social Skills Practitioners' },
                       ].map(w => (
                         <span key={w.label} style={{
                           display: 'flex', alignItems: 'center', gap: '.5rem',
-                          fontSize: '.83rem', color: '#cbd5e1',
+                          fontSize: '.83rem', color: '#475569',
                         }}>
-                          <span aria-hidden="true">{w.icon}</span>
+                          <img src={w.icon} alt="" width={18} height={18} aria-hidden="true" />
                           {w.label}
                         </span>
                       ))}
@@ -2474,7 +2568,7 @@ export default function IATLASCurriculumPage() {
           <section aria-labelledby="iatlas-ttf-title" style={{ marginTop: '3.5rem' }}>
             <div className="iatlas-ttf-banner" role="region" aria-label="Train the Facilitator program">
               <div className="iatlas-ttf-badge">
-                <span className="iatlas-ttf-badge-icon" aria-hidden="true">🎓</span>
+                <img src="/icons/certification.svg" alt="" width={18} height={18} className="iatlas-ttf-badge-icon" aria-hidden="true" />
                 <span className="iatlas-ttf-badge-text">Coming Soon</span>
               </div>
 
@@ -2546,15 +2640,15 @@ export default function IATLASCurriculumPage() {
                 <h3 className="iatlas-ttf-roles-title">Who Benefits from TTF?</h3>
                 <div className="iatlas-ttf-roles-grid">
                   {[
-                    { emoji: '👩‍⚕️', role: 'Clinicians & Therapists', benefit: 'Self-care + client intervention skills' },
-                    { emoji: '👨‍🏫', role: 'Teachers & Educators', benefit: 'Personal wellness + classroom resilience' },
-                    { emoji: '👨‍👩‍👧', role: 'Parents & Caregivers', benefit: 'Self-regulation + parenting skills' },
-                    { emoji: '🏢', role: 'Team Leaders & Coaches', benefit: 'Leadership resilience + team development' },
-                    { emoji: '🎓', role: 'Trainers & Facilitators', benefit: 'Professional growth + training excellence' },
-                    { emoji: '🧑‍💼', role: 'HR & Wellbeing Professionals', benefit: 'Organizational resilience + employee support' },
+                    { icon: '/icons/clinical.svg', role: 'Clinicians & Therapists', benefit: 'Self-care + client intervention skills' },
+                    { icon: '/icons/teacher.svg', role: 'Teachers & Educators', benefit: 'Personal wellness + classroom resilience' },
+                    { icon: '/icons/relational-connective.svg', role: 'Parents & Caregivers', benefit: 'Self-regulation + parenting skills' },
+                    { icon: '/icons/organization.svg', role: 'Team Leaders & Coaches', benefit: 'Leadership resilience + team development' },
+                    { icon: '/icons/certification.svg', role: 'Trainers & Facilitators', benefit: 'Professional growth + training excellence' },
+                    { icon: '/icons/professional.svg', role: 'HR & Wellbeing Professionals', benefit: 'Organizational resilience + employee support' },
                   ].map((item, idx) => (
                     <div key={idx} className="iatlas-ttf-role-card">
-                      <span className="iatlas-ttf-role-emoji" aria-hidden="true">{item.emoji}</span>
+                      <img src={item.icon} alt="" width={32} height={32} className="iatlas-ttf-role-icon" aria-hidden="true" />
                       <div>
                         <p className="iatlas-ttf-role-name">{item.role}</p>
                         <p className="iatlas-ttf-role-benefit">{item.benefit}</p>

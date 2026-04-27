@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Person head -->
+  <circle cx="32" cy="20" r="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <!-- Suit body -->
+  <path d="M14 56 Q14 42 32 40 Q50 42 50 56 Z" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Tie -->
+  <path d="M29 40 L32 44 L35 40 L33 48 L32 50 L31 48 Z" fill="#4F46E5"/>
+  <!-- Collar -->
+  <line x1="32" y1="40" x2="26" y2="36" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="32" y1="40" x2="38" y2="36" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+</svg>

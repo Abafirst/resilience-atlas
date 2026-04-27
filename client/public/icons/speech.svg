@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Speech bubble background -->
+  <path d="M10 12 Q10 8 14 8 L50 8 Q54 8 54 12 L54 36 Q54 40 50 40 L36 40 L28 52 L28 40 L14 40 Q10 40 10 36 Z" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Dots inside bubble -->
+  <circle cx="22" cy="24" r="3" fill="#4F46E5"/>
+  <circle cx="32" cy="24" r="3" fill="#4F46E5"/>
+  <circle cx="42" cy="24" r="3" fill="#4F46E5"/>
+</svg>

@@ -11,6 +11,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
+import DarkModeHint from '../components/DarkModeHint.jsx';
 
 const DIMENSIONS = [
   { key: 'agentic',   icon: '/icons/agentic-generative.svg',  label: 'Agentic-Generative',   color: '#4f46e5', bg: '#eef2ff',  desc: 'Lead with purpose & model goal-directed action for those you serve.' },
@@ -22,14 +23,14 @@ const DIMENSIONS = [
 ];
 
 const WHO_BENEFITS = [
-  { icon: '🩺', role: 'Clinicians & Therapists',        desc: 'ABA therapists, psychologists, LCSWs — build your own resilience while equipping clients.' },
-  { icon: '🗣️', role: 'Speech-Language Pathologists',   desc: 'Integrate resilience principles into communication-focused treatment.' },
-  { icon: '🤸', role: 'Occupational Therapists',        desc: 'Use sensory and somatic dimensions to support both clients and yourself.' },
-  { icon: '👨‍🏫', role: 'Teachers & Educators',           desc: 'Bring classroom-ready resilience tools to students of all ages.' },
-  { icon: '👨‍👩‍👧', role: 'Caregivers & Families',          desc: 'Parents, guardians, and siblings who support resilience-building at home.' },
-  { icon: '🏢', role: 'Practice Administrators',        desc: 'Lead a resilience-centered practice culture from the top down.' },
-  { icon: '👥', role: 'Group Facilitators',             desc: 'Run workshops, support groups, and teams using IATLAS protocols.' },
-  { icon: '🌱', role: 'Community Support Workers',      desc: 'Social workers, case managers, and community advocates.' },
+  { icon: '/icons/clinical.svg', role: 'Clinicians & Therapists',        desc: 'ABA therapists, psychologists, LCSWs — build your own resilience while equipping clients.' },
+  { icon: '/icons/speech.svg', role: 'Speech-Language Pathologists',   desc: 'Integrate resilience principles into communication-focused treatment.' },
+  { icon: '/icons/movement.svg', role: 'Occupational Therapists',        desc: 'Use sensory and somatic dimensions to support both clients and yourself.' },
+  { icon: '/icons/teacher.svg', role: 'Teachers & Educators',           desc: 'Bring classroom-ready resilience tools to students of all ages.' },
+  { icon: '/icons/relational-connective.svg', role: 'Caregivers & Families',          desc: 'Parents, guardians, and siblings who support resilience-building at home.' },
+  { icon: '/icons/organization.svg', role: 'Practice Administrators',        desc: 'Lead a resilience-centered practice culture from the top down.' },
+  { icon: '/icons/facilitation-team.svg', role: 'Group Facilitators',             desc: 'Run workshops, support groups, and teams using IATLAS protocols.' },
+  { icon: '/icons/connection.svg', role: 'Community Support Workers',      desc: 'Social workers, case managers, and community advocates.' },
 ];
 
 const TTF_MODULES = [
@@ -106,19 +107,6 @@ const TTF_MODULES = [
     ],
   },
 ];
-
-export default function TrainTheFacilitatorPage() {
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [waitlistStatus, setWaitlistStatus] = useState('idle');
-
-  function handleWaitlist(e) {
-    e.preventDefault();
-    setWaitlistStatus('success');
-    setWaitlistEmail('');
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import SiteHeader from '../components/SiteHeader.jsx';
-import DarkModeHint from '../components/DarkModeHint.jsx';
 
 // ── Page styles ────────────────────────────────────────────────────────────────
 const STYLES = `
@@ -409,7 +397,7 @@ const STYLES = `
   .ttf-role-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); transform: translateY(-2px); }
   [data-theme="dark"] .ttf-role-card { background: #1e293b; border-color: #334155; }
 
-  .ttf-role-emoji { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+  .ttf-role-icon { width: 2rem; height: 2rem; flex-shrink: 0; }
   .ttf-role-name { font-size: .9rem; font-weight: 700; margin: 0 0 .25rem; color: #0f172a; }
   [data-theme="dark"] .ttf-role-name { color: #f1f5f9; }
   .ttf-role-benefit { font-size: .8rem; color: #64748b; margin: 0; line-height: 1.4; }
@@ -437,7 +425,7 @@ const STYLES = `
   .ttf-track-card-professional {
     background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
   }
-  .ttf-track-card-icon { font-size: 2rem; margin-bottom: .75rem; display: block; }
+  .ttf-track-card-icon { width: 2rem; height: 2rem; margin-bottom: .75rem; display: block; filter: brightness(0) invert(1); }
   .ttf-track-card-title { font-size: 1.2rem; font-weight: 900; margin: 0 0 .5rem; }
   .ttf-track-card-desc { font-size: .9rem; opacity: .9; line-height: 1.65; margin: 0 0 1.25rem; }
   .ttf-track-card-items { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .4rem; }
@@ -747,14 +735,14 @@ const STYLES = `
 
 // ── Data ───────────────────────────────────────────────────────────────────────
 const ROLES = [
-  { emoji: '👩‍⚕️', role: 'Clinicians & Therapists', benefit: 'Self-care + client intervention skills', detail: 'Build your own dimensional resilience while mastering evidence-based protocols to deliver with clients' },
-  { emoji: '👨‍🏫', role: 'Teachers & Educators', benefit: 'Personal wellness + classroom resilience', detail: 'Reduce burnout, improve your own emotional regulation, and bring resilience skills directly into the classroom' },
-  { emoji: '👨‍👩‍👧', role: 'Parents & Caregivers', benefit: 'Self-regulation + parenting skills', detail: 'Grow your own resilience while learning to model and teach resilience skills to your children every day' },
-  { emoji: '🏢', role: 'Team Leaders & Coaches', benefit: 'Leadership resilience + team development', detail: 'Lead from a place of authentic resilience and build a collective culture of dimensional wellbeing on your team' },
-  { emoji: '🎓', role: 'Trainers & Facilitators', benefit: 'Professional growth + training excellence', detail: 'Deepen your own practice across all 6 dimensions while earning credentials to deliver IATLAS programs at scale' },
-  { emoji: '🧑‍💼', role: 'HR & Wellbeing Professionals', benefit: 'Organizational resilience + employee support', detail: 'Champion resilience-forward culture from the inside out, starting with your own dimensional growth' },
-  { emoji: '👦', role: 'Kids & Youth (5–18)', benefit: 'Age-appropriate skill building + emotional growth', detail: 'The same 6-dimensional framework, adapted for play-based and developmentally appropriate learning' },
-  { emoji: '👥', role: 'Teams & Organizations', benefit: 'Collective resilience + individual growth', detail: 'Align team culture around dimensional resilience through shared language, practices, and accountability' },
+  { icon: '/icons/clinical.svg', role: 'Clinicians & Therapists', benefit: 'Self-care + client intervention skills', detail: 'Build your own dimensional resilience while mastering evidence-based protocols to deliver with clients' },
+  { icon: '/icons/teacher.svg', role: 'Teachers & Educators', benefit: 'Personal wellness + classroom resilience', detail: 'Reduce burnout, improve your own emotional regulation, and bring resilience skills directly into the classroom' },
+  { icon: '/icons/relational-connective.svg', role: 'Parents & Caregivers', benefit: 'Self-regulation + parenting skills', detail: 'Grow your own resilience while learning to model and teach resilience skills to your children every day' },
+  { icon: '/icons/organization.svg', role: 'Team Leaders & Coaches', benefit: 'Leadership resilience + team development', detail: 'Lead from a place of authentic resilience and build a collective culture of dimensional wellbeing on your team' },
+  { icon: '/icons/certification.svg', role: 'Trainers & Facilitators', benefit: 'Professional growth + training excellence', detail: 'Deepen your own practice across all 6 dimensions while earning credentials to deliver IATLAS programs at scale' },
+  { icon: '/icons/professional.svg', role: 'HR & Wellbeing Professionals', benefit: 'Organizational resilience + employee support', detail: 'Champion resilience-forward culture from the inside out, starting with your own dimensional growth' },
+  { icon: '/icons/kids-spark.svg', role: 'Kids & Youth (5–18)', benefit: 'Age-appropriate skill building + emotional growth', detail: 'The same 6-dimensional framework, adapted for play-based and developmentally appropriate learning' },
+  { icon: '/icons/facilitation-team.svg', role: 'Teams & Organizations', benefit: 'Collective resilience + individual growth', detail: 'Align team culture around dimensional resilience through shared language, practices, and accountability' },
 ];
 
 const MODULES = [
@@ -1106,7 +1094,7 @@ export default function TrainTheFacilitatorPage() {
             border-radius: 16px; padding: 1.25rem;
           }
           .ttf-who-icon {
-            font-size: 1.75rem; margin-bottom: .5rem; display: block;
+            width: 2rem; height: 2rem; margin-bottom: .5rem; display: block;
           }
           .ttf-who-role {
             font-size: .93rem; font-weight: 700; color: #1e293b;
@@ -1201,66 +1189,7 @@ export default function TrainTheFacilitatorPage() {
         `}</style>
 
         {/* ── Hero ─────────────────────────────────────────────────── */}
-        <div className="ttf-hero">
-          <div className="ttf-hero-inner">
-            <div className="ttf-coming-badge">🎓 Coming Soon — 2026</div>
-            <h1 className="ttf-hero-title">Train the Facilitator</h1>
-            <p className="ttf-hero-sub">
-              A professional certification program for clinicians, caregivers, educators, and
-              service providers who want to deliver IATLAS with fidelity — while building their
-              own resilience along the way.
-            </p>
-            <div className="ttf-hero-actions">
-              <a href="#ttf-waitlist" className="ttf-btn-primary">
-                Join the Waitlist
-              </a>
-              <Link to="/iatlas" className="ttf-btn-secondary">
-                ← Back to IATLAS
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="ttf-wrap">
-
-          {/* ── Philosophy ───────────────────────────────────────────── */}
-          <div className="ttf-philosophy">
-            <p className="ttf-philosophy-kicker">Core Philosophy</p>
-            <h2 className="ttf-philosophy-title">Everyone Builds Resilience — Together</h2>
-            <p className="ttf-philosophy-text">
-              IATLAS is a recursive, all-inclusive system. The same six dimensions of resilience
-              that participants develop are also cultivated by facilitators, clinicians, caregivers,
-              families, and teams. You can't pour from an empty cup — when practitioners grow their
-              own resilience, they become more effective guides for everyone they serve.
-            </p>
-          </div>
-
-          {/* ── 6 Dimensions for Facilitators ────────────────────────── */}
-          <section aria-labelledby="ttf-dims-title">
-            <span className="ttf-section-kicker">Dual Growth Model</span>
-            <h2 className="ttf-section-title" id="ttf-dims-title">
-              6 Dimensions — For Facilitators Too
-            </h2>
-            <p className="ttf-section-sub">
-              TTF trains you to apply the same six IATLAS dimensions in your own professional and
-              personal life — so you can facilitate growth from lived experience, not just theory.
-            </p>
-            <div className="ttf-dims-grid">
-              {DIMENSIONS.map(dim => (
-                <div key={dim.key} className="ttf-dim-card">
-                  <div className="ttf-dim-header">
-                    <div className="ttf-dim-icon-wrap" style={{ background: dim.bg }}>
-                      <img src={dim.icon} alt="" width={22} height={22} aria-hidden="true" />
-                    </div>
-                    <span className="ttf-dim-label" style={{ color: dim.color }}>{dim.label}</span>
-                  </div>
-                  <p className="ttf-dim-desc">{dim.desc}</p>
-      <style dangerouslySetInnerHTML={{ __html: STYLES }} />
-      <a href="#ttf-main" className="ttf-skip">Skip to Train the Facilitator content</a>
-      <SiteHeader activePage="iatlas" />
       <DarkModeHint />
-
-      <main className="ttf-page" id="ttf-main">
         <div className="ttf-wrap">
 
           {/* ── Breadcrumb ─────────────────────────────────────────────────── */}
@@ -1274,7 +1203,7 @@ export default function TrainTheFacilitatorPage() {
           <section className="ttf-hero" aria-labelledby="ttf-hero-title">
             <div className="ttf-hero-content">
               <div className="ttf-hero-badge" aria-label="Program status: Coming Soon">
-                <span aria-hidden="true">🎓</span>
+                <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
                 <span>Coming Soon — Join the Waitlist</span>
               </div>
               <h1 className="ttf-hero-title" id="ttf-hero-title">
@@ -1289,7 +1218,8 @@ export default function TrainTheFacilitatorPage() {
               </p>
               <div className="ttf-hero-actions">
                 <a href="#ttf-waitlist" className="ttf-btn-primary">
-                  🎓 Join the Waitlist
+                  <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
+                  Join the Waitlist
                 </a>
                 <a href="#ttf-modules" className="ttf-btn-secondary">
                   Explore the Curriculum
@@ -1302,7 +1232,7 @@ export default function TrainTheFacilitatorPage() {
           <section aria-labelledby="ttf-philosophy-title" id="ttf-philosophy">
             <div className="ttf-philosophy">
               <div className="ttf-philosophy-kicker">
-                <span aria-hidden="true">♻️</span>
+                <img src="/icons/relational-connective.svg" alt="" width={16} height={16} aria-hidden="true" />
                 Core Philosophy
               </div>
               <h2 className="ttf-philosophy-title" id="ttf-philosophy-title">
@@ -1332,7 +1262,7 @@ export default function TrainTheFacilitatorPage() {
           <section aria-labelledby="ttf-roles-title" className="ttf-roles-section">
             <div className="ttf-section-header">
               <div className="ttf-section-kicker">
-                <span aria-hidden="true">🌐</span>
+                <img src="/icons/connection.svg" alt="" width={14} height={14} aria-hidden="true" />
                 Universal Resilience Building
               </div>
               <h2 className="ttf-section-title" id="ttf-roles-title">
@@ -1346,7 +1276,7 @@ export default function TrainTheFacilitatorPage() {
             <div className="ttf-roles-grid" role="list" aria-label="Roles that benefit from IATLAS">
               {ROLES.map((item, idx) => (
                 <div key={idx} className="ttf-role-card" role="listitem">
-                  <span className="ttf-role-emoji" aria-hidden="true">{item.emoji}</span>
+                  <img src={item.icon} alt="" width={32} height={32} className="ttf-role-icon" aria-hidden="true" />
                   <div>
                     <p className="ttf-role-name">{item.role}</p>
                     <p className="ttf-role-benefit">{item.benefit}</p>
@@ -1369,7 +1299,7 @@ export default function TrainTheFacilitatorPage() {
             <div className="ttf-who-grid">
               {WHO_BENEFITS.map(w => (
                 <div key={w.role} className="ttf-who-card">
-                  <span className="ttf-who-icon" aria-hidden="true">{w.icon}</span>
+                  <img src={w.icon} alt="" width={32} height={32} className="ttf-who-icon" aria-hidden="true" />
                   <p className="ttf-who-role">{w.role}</p>
                   <p className="ttf-who-desc">{w.desc}</p>
                 </div>
@@ -1400,11 +1330,18 @@ export default function TrainTheFacilitatorPage() {
                         <span className="ttf-module-bullet" aria-hidden="true">•</span>
                         {item}
                       </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* ── Dual-track ─────────────────────────────────────────────────── */}
           <section aria-labelledby="ttf-tracks-title" style={{ marginBottom: '2.5rem' }}>
             <div className="ttf-section-header">
               <div className="ttf-section-kicker">
-                <span aria-hidden="true">⚡</span>
+                <img src="/icons/agentic-generative.svg" alt="" width={14} height={14} aria-hidden="true" />
                 Dual-Track Approach
               </div>
               <h2 className="ttf-section-title" id="ttf-tracks-title">Two Tracks, One Integrated Journey</h2>
@@ -1415,7 +1352,7 @@ export default function TrainTheFacilitatorPage() {
             </div>
             <div className="ttf-dual-track">
               <div className="ttf-track-card ttf-track-card-personal" role="region" aria-label="Personal Growth Track">
-                <span className="ttf-track-card-icon" aria-hidden="true">🌱</span>
+                <img src="/icons/growth.svg" alt="" width={32} height={32} className="ttf-track-card-icon" aria-hidden="true" />
                 <h3 className="ttf-track-card-title">Personal Growth Track</h3>
                 <p className="ttf-track-card-desc">
                   Complete your own dimensional assessment, engage in daily micropractices, and track
@@ -1429,7 +1366,7 @@ export default function TrainTheFacilitatorPage() {
                 </ul>
               </div>
               <div className="ttf-track-card ttf-track-card-professional" role="region" aria-label="Professional Skills Track">
-                <span className="ttf-track-card-icon" aria-hidden="true">🎯</span>
+                <img src="/icons/agentic-generative.svg" alt="" width={32} height={32} className="ttf-track-card-icon" aria-hidden="true" />
                 <h3 className="ttf-track-card-title">Professional Skills Track</h3>
                 <p className="ttf-track-card-desc">
                   Master facilitation techniques, group dynamics, trauma-informed delivery, cultural
@@ -1449,7 +1386,7 @@ export default function TrainTheFacilitatorPage() {
           <section aria-labelledby="ttf-modules-title" id="ttf-modules">
             <div className="ttf-section-header">
               <div className="ttf-section-kicker">
-                <span aria-hidden="true">📚</span>
+                <img src="/icons/planning.svg" alt="" width={14} height={14} aria-hidden="true" />
                 Curriculum
               </div>
               <h2 className="ttf-section-title" id="ttf-modules-title">TTF Curriculum Modules</h2>
@@ -1492,13 +1429,13 @@ export default function TrainTheFacilitatorPage() {
               </p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.75rem' }}>
                 {[
-                  { label: '🏫 Teachers & Educators', color: '#eef2ff', text: '#4f46e5' },
-                  { label: '🗣️ Speech-Language Pathologists', color: '#e0f2fe', text: '#0891b2' },
-                  { label: '🤸 Occupational Therapists', color: '#d1fae5', text: '#059669' },
-                  { label: '🧩 Daily Living Skills', color: '#fef3c7', text: '#d97706' },
-                  { label: '🤝 Social Skills', color: '#fce7f3', text: '#db2777' },
-                  { label: '👨‍👩‍👧 Caregivers & Families', color: '#f5f3ff', text: '#7c3aed' },
-                  { label: '🩺 Clinicians', color: '#fff7ed', text: '#ea580c' },
+                  { label: 'Teachers & Educators', color: '#eef2ff', text: '#4f46e5' },
+                  { label: 'Speech-Language Pathologists', color: '#e0f2fe', text: '#0891b2' },
+                  { label: 'Occupational Therapists', color: '#d1fae5', text: '#059669' },
+                  { label: 'Daily Living Skills', color: '#fef3c7', text: '#d97706' },
+                  { label: 'Social Skills', color: '#fce7f3', text: '#db2777' },
+                  { label: 'Caregivers & Families', color: '#f5f3ff', text: '#7c3aed' },
+                  { label: 'Clinicians', color: '#fff7ed', text: '#ea580c' },
                 ].map(tag => (
                   <span key={tag.label} style={{
                     display: 'inline-flex', alignItems: 'center', gap: '.35rem',
@@ -1534,6 +1471,13 @@ export default function TrainTheFacilitatorPage() {
                   <label htmlFor="ttf-email" style={{ position: 'absolute', left: '-9999px' }}>
                     Your email address
                   </label>
+                  <input id="ttf-email" type="email" className="ttf-waitlist-input" placeholder="your@email.com" value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} required autoComplete="email" />
+                  <button type="submit" className="ttf-waitlist-submit">Join the Waitlist →</button>
+                </form>
+              )}
+            </div>
+          </section>
+
           {/* ── Certification pathway ──────────────────────────────────────── */}
           <section aria-labelledby="ttf-pathway-title" style={{ marginBottom: '2.5rem' }}>
             <div className="ttf-pathway">
@@ -1557,7 +1501,7 @@ export default function TrainTheFacilitatorPage() {
           <section aria-labelledby="ttf-pricing-title" style={{ marginBottom: '2.5rem' }}>
             <div className="ttf-section-header">
               <div className="ttf-section-kicker">
-                <span aria-hidden="true">💳</span>
+                <img src="/icons/goal.svg" alt="" width={14} height={14} aria-hidden="true" />
                 Investment
               </div>
               <h2 className="ttf-section-title" id="ttf-pricing-title">TTF Pricing</h2>
@@ -1603,7 +1547,7 @@ export default function TrainTheFacilitatorPage() {
               </p>
               {waitlistStatus === 'success' ? (
                 <div className="ttf-waitlist-success" role="status" aria-live="polite">
-                  <span aria-hidden="true">🎉</span>
+                  <img src="/icons/success.svg" alt="" width={20} height={20} aria-hidden="true" style={{ verticalAlign: 'middle', marginRight: '.4rem' }} />
                   You're on the list! We'll reach out when TTF launches.
                 </div>
               ) : (
@@ -1617,11 +1561,6 @@ export default function TrainTheFacilitatorPage() {
                     value={waitlistEmail}
                     onChange={e => setWaitlistEmail(e.target.value)}
                     required
-                    autoComplete="email"
-                  />
-                  <button type="submit" className="ttf-waitlist-submit">
-                    Join Waitlist
-                    aria-required="true"
                     autoComplete="email"
                   />
                   <button type="submit" className="ttf-waitlist-submit">
@@ -1663,7 +1602,7 @@ export default function TrainTheFacilitatorPage() {
           <section aria-labelledby="ttf-faq-title" className="ttf-faq">
             <div className="ttf-section-header">
               <div className="ttf-section-kicker">
-                <span aria-hidden="true">❓</span>
+                <img src="/icons/info.svg" alt="" width={14} height={14} aria-hidden="true" />
                 FAQ
               </div>
               <h2 className="ttf-section-title" id="ttf-faq-title">Frequently Asked Questions</h2>
@@ -1695,7 +1634,7 @@ export default function TrainTheFacilitatorPage() {
             <div className="ttf-testimonials">
               <h2 className="ttf-testimonials-title" id="ttf-testimonials-title">Facilitator Stories</h2>
               <p className="ttf-testimonials-placeholder">
-                Testimonials from certified IATLAS facilitators will appear here after the program launches. 🌟
+                Testimonials from certified IATLAS facilitators will appear here after the program launches.
               </p>
             </div>
           </section>

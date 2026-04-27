@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+  <!-- Blackboard -->
+  <rect x="8" y="8" width="48" height="34" rx="4" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2.5"/>
+  <!-- Writing on board -->
+  <line x1="16" y1="20" x2="36" y2="20" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <line x1="16" y1="27" x2="30" y2="27" stroke="#818CF8" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Board stand legs -->
+  <line x1="24" y1="42" x2="20" y2="56" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="40" y1="42" x2="44" y2="56" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Pencil/pointer -->
+  <line x1="44" y1="14" x2="48" y2="18" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="44" cy="14" r="2" fill="#4F46E5"/>
+</svg>
