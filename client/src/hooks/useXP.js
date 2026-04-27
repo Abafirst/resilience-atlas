@@ -7,11 +7,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { loadProgress, computeTotalXP, getXPSummary } from '../utils/gamificationHelpers.js';
 import { calculateLevel } from '../data/gamification/levels.js';
+import useProgressSync from './useProgressSync.js';
 
 export default function useXP() {
   const [totalXP, setTotalXP]       = useState(0);
   const [levelInfo, setLevelInfo]   = useState(() => calculateLevel(0));
   const [levelUp, setLevelUp]       = useState(null); // { from, to } when a level-up occurs
+
+  const { syncProgress } = useProgressSync();
 
   const refresh = useCallback(() => {
     const progress = loadProgress();
@@ -43,7 +46,8 @@ export default function useXP() {
     } else {
       refresh();
     }
-  }, [refresh]);
+    syncProgress();
+  }, [refresh, syncProgress]);
 
   const clearLevelUp = useCallback(() => setLevelUp(null), []);
 

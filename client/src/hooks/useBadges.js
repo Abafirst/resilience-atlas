@@ -8,10 +8,13 @@ import { ALL_BADGES } from '../data/gamification/badges.js';
 import { loadEarnedBadges, addActivityEntry, loadProgress } from '../utils/gamificationHelpers.js';
 import { checkAndUnlockBadges } from '../utils/badgeUnlockChecker.js';
 import { ALL_MODULES_BY_DIMENSION } from '../data/iatlas/index.js';
+import useProgressSync from './useProgressSync.js';
 
 export default function useBadges() {
   const [earnedBadges, setEarnedBadges] = useState([]);
   const [newBadges, setNewBadges]       = useState([]); // Badges just unlocked
+
+  const { syncProgress } = useProgressSync();
 
   const refresh = useCallback(() => {
     const earned = loadEarnedBadges();
@@ -36,9 +39,10 @@ export default function useBadges() {
       }
       setNewBadges(unlocked);
       refresh();
+      syncProgress();
     }
     return unlocked;
-  }, [refresh]);
+  }, [refresh, syncProgress]);
 
   const clearNewBadges = useCallback(() => setNewBadges([]), []);
 
