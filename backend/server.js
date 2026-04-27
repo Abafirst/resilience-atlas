@@ -456,6 +456,10 @@ app.use("/api/clinical/session-notes", require("./routes/clinical/sessionNotes")
 console.log("✅ Mounted route: /api/clinical/session-notes");
 app.use("/api/clinical/clients/:id", require("./routes/clinical/clientActivities"));
 console.log("✅ Mounted route: /api/clinical/clients/:id (activity selection)");
+app.use("/api/clinical/clients/:id", require("./routes/clinical/clientProgress"));
+console.log("✅ Mounted route: /api/clinical/clients/:id (progress tracking)");
+app.use("/api/clinical/dashboard", require("./routes/clinical/practitionerDashboard"));
+console.log("✅ Mounted route: /api/clinical/dashboard (practitioner dashboard)");
 app.use("/api/templates", require("./routes/templates"));
 console.log("✅ Mounted route: /api/templates");
 app.use("/api/activity-favorites", require("./routes/activity-favorites"));
