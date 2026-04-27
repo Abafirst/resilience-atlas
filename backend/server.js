@@ -452,6 +452,8 @@ app.use("/api/support", require("./routes/support"));
 console.log("✅ Mounted route: /api/support");
 app.use("/api/clinical/clients", require("./routes/clinical/clients"));
 console.log("✅ Mounted route: /api/clinical/clients");
+app.use("/api/templates", require("./routes/templates"));
+console.log("✅ Mounted route: /api/templates");
 
 // ==============================
 // Root API info
