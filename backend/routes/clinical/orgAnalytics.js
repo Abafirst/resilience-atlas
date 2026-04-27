@@ -72,7 +72,7 @@ function averageDimScores(snapshots) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /overview
-// Returns top-level KPIs and dimension averages for the organisation.
+// Returns top-level KPIs and dimension averages for the organization.
 // ─────────────────────────────────────────────────────────────────────────────
 
 router.get('/overview', ...commonChain, async (req, res) => {
@@ -120,7 +120,7 @@ router.get('/overview', ...commonChain, async (req, res) => {
       [d]: Math.round((avgDimensions[d] - baselineDimensions[d]) * 10) / 10,
     }), {});
 
-    // Programme completion rate (clients with at least one goal_achieved milestone)
+    // Program completion rate (clients with at least one goal_achieved milestone)
     const Milestone = (() => {
       try { return require('../../models/ClientMilestone'); } catch { return null; }
     })();
@@ -225,7 +225,7 @@ router.get('/practitioners', ...commonChain, async (req, res) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GET /capacity
-// Caseload utilisation and capacity planning data.
+// Caseload utilization and capacity planning data.
 // ─────────────────────────────────────────────────────────────────────────────
 
 router.get('/capacity', ...commonChain, async (req, res) => {
@@ -239,7 +239,9 @@ router.get('/capacity', ...commonChain, async (req, res) => {
 
     // Default max caseload (would normally come from practitioner_capacity table)
     const maxCaseload = 20;
-    const utilizationPct = Math.min(100, Math.round((activeClients / maxCaseload) * 100));
+    const utilizationPct = maxCaseload > 0
+      ? Math.min(100, Math.round((activeClients / maxCaseload) * 100))
+      : 0;
 
     return res.json({
       practitioners: [
