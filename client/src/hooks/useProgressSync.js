@@ -247,8 +247,11 @@ export function useProgressSync(childProfileId = null) {
   const getToken = useCallback(async () => {
     try {
       return await getAccessTokenSilently();
-    } catch (_) {
-      // Fallback to localStorage cached token (legacy)
+    } catch (err) {
+      // Fallback to localStorage cached token (legacy path / unauthenticated)
+      if (import.meta.env?.DEV) {
+        console.debug('[useProgressSync] getAccessTokenSilently failed, using cached token:', err?.message);
+      }
       return (
         (typeof localStorage !== 'undefined' && localStorage.getItem('token')) ||
         (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('token')) ||

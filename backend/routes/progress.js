@@ -39,7 +39,22 @@ router.use(authenticateJWT);
 
 /** Extract userId from the authenticated request. */
 function userId(req) {
-  return req.user?.userId || req.user?.sub || req.user?.id || null;
+  const raw = req.user?.userId || req.user?.sub || req.user?.id || null;
+  // userId comes from a verified JWT — enforce it is a non-empty string
+  return typeof raw === 'string' && raw.length > 0 ? raw : null;
+}
+
+/**
+ * Sanitize a childProfileId from request params/body.
+ * Accepts only non-empty strings of alphanumeric characters, hyphens and
+ * underscores (UUIDs, short IDs, etc.).  Returns null for any other value,
+ * including MongoDB operator objects like { $gt: '' }.
+ */
+function sanitizeProfileId(value) {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value !== 'string') return null;
+  // UUIDs and typical short IDs: alphanumeric + hyphen + underscore only
+  return /^[a-zA-Z0-9_-]{1,128}$/.test(value) ? value : null;
 }
 
 /** Default empty adult progress document (no DB document yet). */
@@ -125,7 +140,7 @@ function mergeProgress(existing, incoming) {
  */
 router.get('/', async (req, res) => {
   const uid            = userId(req);
-  const childProfileId = req.query.childProfileId || null;
+  const childProfileId = sanitizeProfileId(req.query.childProfileId);
 
   if (!uid) {
     return res.status(401).json({ error: 'User identity could not be determined.' });
@@ -165,7 +180,8 @@ router.post('/sync', async (req, res) => {
     return res.status(401).json({ error: 'User identity could not be determined.' });
   }
 
-  const { childProfileId = null, progressData } = req.body || {};
+  const { childProfileId: rawChildProfileId = null, progressData } = req.body || {};
+  const childProfileId = sanitizeProfileId(rawChildProfileId);
 
   if (!progressData || typeof progressData !== 'object') {
     return res.status(400).json({ error: 'progressData is required and must be an object.' });
@@ -214,7 +230,8 @@ router.delete('/reset', async (req, res) => {
     return res.status(401).json({ error: 'User identity could not be determined.' });
   }
 
-  const { childProfileId = null } = req.body || {};
+  const { childProfileId: rawChildProfileId = null } = req.body || {};
+  const childProfileId = sanitizeProfileId(rawChildProfileId);
 
   try {
     await UserProgress.deleteOne({ userId: uid, childProfileId });

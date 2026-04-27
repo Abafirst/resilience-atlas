@@ -174,10 +174,6 @@ function authToken(id = 'user001') {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
-function authTokenUserId(userId = 'user001') {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-}
-
 function authTokenAuth0(sub = 'auth0|user001') {
   return jwt.sign({ userId: sub, sub }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
