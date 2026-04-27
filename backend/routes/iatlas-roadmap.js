@@ -79,12 +79,6 @@ const DEVELOPMENTAL_MILESTONES = {
   },
 };
 
-// ── Helper: hex color → PDFKit rgb ───────────────────────────────────────────
-function hexToRgb(hex) {
-  const n = parseInt(hex.replace('#', ''), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
 // ── GET /api/iatlas/roadmap/printable.pdf ─────────────────────────────────────
 router.get('/printable.pdf', roadmapLimiter, (req, res) => {
   try {
@@ -117,14 +111,13 @@ router.get('/printable.pdf', roadmapLimiter, (req, res) => {
     doc
       .fontSize(10)
       .fillColor('#64748b')
-      .text('Resilience Skills Across Ages 5–18  ·  resilience-atlas.com/iatlas/developmental-roadmap', {
+      .text('Resilience Skills Across Ages 5–18  ·  IATLAS Kids Curriculum', {
         align: 'center',
       })
       .moveDown(1.5);
 
     // ── Age group sections ─────────────────────────────────────────────────
     Object.values(DEVELOPMENTAL_MILESTONES).forEach((milestone, idx) => {
-      const [r, g, b] = hexToRgb(milestone.color);
 
       // Section header
       doc
