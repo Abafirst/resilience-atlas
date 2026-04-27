@@ -83,8 +83,65 @@ Intelligent activity selection and recommendation system for practitioners.
 
 - **Tests:** `tests/client-activity-selection.test.js` (35 tests)
 
-### #22e — Progress Tracking Dashboard ⬜
-Practitioner view of client progress over time.
+### #22e — Progress Tracking Dashboard ✅
+Practitioner view of client progress over time with dimension analytics, milestone tracking, and aggregate dashboard insights.
+
+**Implementation details:**
+
+- **Models:**
+  - `backend/models/ClientProgressSnapshot.js` — Point-in-time resilience dimension score snapshots (manual or post-assessment)
+  - `backend/models/ClientMilestone.js` — Milestone achievements (goal_achieved, skill_mastered, behavior_improved, session_count, custom)
+  - `backend/models/PractitionerDashboardSettings.js` — Per-practitioner dashboard preferences (date range, favourite metrics, alert preferences)
+
+- **Utility functions:**
+  - `backend/utils/progressCalculations.js`
+    - `calculateOverallProgress(baseline, current)` — Average improvement across 6 dimensions
+    - `calculateProgressTrend(snapshots)` — `'improving'` / `'stable'` / `'declining'` based on score history
+    - `calculateOverallScore(dimensionScores)` — Mean of all 6 dimension values
+    - `calculateSessionFrequency(dates, rangeInDays)` — Sessions-per-week + consistency score
+    - `buildTimelineDataPoints(snapshots, granularity)` — Daily / weekly / monthly data series for charting
+    - `buildDimensionChanges(baseline, current)` — Per-dimension change objects
+    - `dateRangeToCutoff(range)` — Convert `'30_days'` etc. to a `Date` cutoff
+  - `backend/utils/clientAlerts.js`
+    - `noRecentSessionAlert` — Fires when last session > 14 days ago
+    - `decliningProgressAlert` — Fires when trend is `'declining'`
+    - `goalAtRiskAlerts` — Fires for active goals with no update in 30+ days
+    - `generateClientAlerts` — Aggregates all alert types for a single client
+
+- **Routes:**
+  - `backend/routes/clinical/clientProgress.js` mounted at `/api/clinical/clients/:id`
+    - `GET  /progress-overview`             — Comprehensive progress summary (sessions, activities, goals, milestones, dimensions)
+    - `GET  /progress-timeline`             — Time-series data points for charting (metric + granularity params)
+    - `POST /progress-snapshots`            — Create a dimension-score snapshot
+    - `GET  /progress-snapshots`            — List snapshots with trend analysis
+    - `POST /milestones`                    — Record a client milestone
+    - `GET  /milestones`                    — List milestones (newest first)
+    - `GET  /activity-effectiveness-trends` — Per-activity and category effectiveness analysis
+    - `GET  /session-frequency-analysis`    — Sessions per week/month + gap detection
+    - `GET  /goal-progress-report`          — Goal breakdown with at-risk flags
+  - `backend/routes/clinical/practitionerDashboard.js` mounted at `/api/clinical/dashboard`
+    - `GET   /alerts`          — Cross-client alerts (no_recent_session, declining_progress, goal_at_risk)
+    - `GET   /aggregate-stats` — Caseload-wide stats (active clients, sessions this month, avg progress, top activities)
+    - `GET   /settings`        — Retrieve practitioner dashboard preferences
+    - `PATCH /settings`        — Update dashboard preferences (date range, favourite metrics, alert prefs)
+
+**Progress tracking methodology:**
+- Snapshots record all 6 resilience dimension scores at a point in time
+- Trend analysis compares the mean overall score of the older half vs. newer half of snapshots; >5 point difference signals improving/declining
+- Activity effectiveness is rated 1–5 per session and averaged per activity over time
+- Alert thresholds: no session in 14+ days = high priority; declining trend = medium; goal stale 30+ days = low
+
+**Alert system logic:**
+- Alerts are generated on-demand (not persisted) by comparing current state against thresholds
+- `generateClientAlerts()` is pure (no DB access) and composable with any data source
+- Dashboard `/alerts` aggregates across all active clients for a practitioner
+
+**Access control:**
+- Requires Practitioner, Practice, or Enterprise subscription tier
+- All client-scoped routes verify `practitionerId` ownership before returning data
+- Dashboard routes scope queries to the authenticated practitioner's clients only
+
+**Tests:** `tests/progress-tracking.test.js` (59 tests covering utility functions, API routes, and access control)
 
 ### #22f — Client Outcome Reports ⬜
 Completion-based outcome reporting.
