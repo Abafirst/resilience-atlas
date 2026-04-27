@@ -228,5 +228,51 @@ Provides aggregate analytics across all clients, practitioners, and programs.
 
 ---
 
+### #23b — Predictive Analytics & ML-Powered Insights ✅
+AI-powered clinical decision support system for treatment planning, regression detection, and effectiveness prediction.
+
+**Implementation details:**
+
+- **Backend route:** `backend/routes/clinical/mlInsights.js` mounted at `/api/ml`
+  - `POST /predict-activity-effectiveness` — ranks activities by predicted improvement for a target dimension
+  - `POST /detect-regression-risk` — flags dimensions with declining trends or attendance concerns
+  - `GET  /recommend-session-frequency/:clientId` — evidence-based session cadence recommendation
+  - `POST /score-goal-probability` — probability a goal will be achieved by its target date
+  - `POST /generate-treatment-plan` — week-by-week AI treatment plan with forecasted outcomes
+  - `GET  /models/status` — engine health check and performance metrics
+  - `POST /models/retrain` — admin trigger for model retraining (min 100 data points required)
+  - `GET  /explain/:predictionId` — structured SHAP-style explanation for any stored prediction
+  - `POST /:predictionId/feedback` — practitioner helpful/not-helpful rating for model improvement
+
+- **ML Engine:** `backend/utils/mlEngine.js`
+  - Statistical/heuristic implementation (ready to swap for real XGBoost/LightGBM once deployed as a micro-service)
+  - Pure functions: `predictActivityEffectiveness`, `detectRegressionRisk`, `recommendSessionFrequency`, `scoreGoalProbability`, `generateTreatmentPlan`, `explainPrediction`
+  - Deterministic, fully unit-tested, no external I/O
+
+- **Database models:**
+  - `backend/models/MLPrediction.js` — stores every prediction with anonymised features, output, confidence, and practitioner feedback
+  - `backend/models/MLModelPerformance.js` — tracks accuracy metrics per model version for admin dashboards
+
+- **Frontend page:** `client/src/pages/PredictiveAnalyticsDashboardPage.jsx`
+  - Route: `/iatlas/ml/insights`
+  - Five interactive tabs:
+    1. **Activity Predictor** — AI-ranked activity list per dimension with confidence meters, hover explanations, and helpful/not-helpful feedback
+    2. **Regression Alerts** — flagged clients with declining trends or attendance risks; mark-reviewed workflow
+    3. **Session Frequency** — current vs. recommended cadence with evidence rationale
+    4. **Goal Probability** — probability ring, expected completion date, risk factors and suggestions
+    5. **Treatment Plans** — week-by-week plan generator with expandable week cards, activity suggestions, and forecasted dimension scores
+
+- **Navigation:** 🤖 AI Insights quick-action button added to Practice Dashboard
+
+**Privacy & ethics compliance:**
+- No PII stored in `inputFeatures` — only anonymised numeric feature vectors
+- All responses include `aiDisclaimer` field enforcing human-in-the-loop
+- `GET /explain/:predictionId` provides transparent explanations for every prediction
+- Practitioner feedback loop via `/feedback` endpoint for continuous improvement
+
+**Tests:** `tests/ml-insights.test.js` — 56 tests covering unit functions and all 9 API endpoints
+
+---
+
 ## Task #24 — Activity Search & Filter ✅ (PR #611)
 IATLAS activity catalog search with keyword, category, and age-group filtering.

@@ -271,6 +271,7 @@ export default function PracticeDashboardPage() {
               <Link to="/iatlas/practice/analytics" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>📊 Practice Report</Link>
               <Link to="/iatlas/practice/team" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>💬 Team Messages</Link>
               <Link to="/iatlas/org/dashboard" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#4f46e5' }}>🏢 Org Dashboard</Link>
+              <Link to="/iatlas/ml/insights" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#7c3aed' }}>🤖 AI Insights</Link>
             </div>
 
             {/* Two-column layout */}
