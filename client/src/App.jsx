@@ -95,6 +95,7 @@ import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
 import { ProfileProvider } from './contexts/ProfileContext.jsx';
+import { useIATLASTierSync } from './hooks/useIATLASTierSync.js';
 
 function AuthenticatedApp({ user, getAccessTokenSilently, logout }) {
   const [page, setPage] = useState('home');
@@ -308,6 +309,10 @@ function HomeRoute() {
 function AppShell() {
   const location = useLocation();
   const showFooter = !location.pathname.startsWith('/kids');
+
+  // Sync the IATLAS tier from the backend on every authenticated session start.
+  // This ensures localStorage reflects the server-verified subscription status.
+  useIATLASTierSync();
 
   return (
     <>

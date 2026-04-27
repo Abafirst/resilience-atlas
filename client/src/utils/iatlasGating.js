@@ -30,12 +30,15 @@ export const IATLAS_TIERS = {
 export const IATLAS_TIER_CONFIG = {
   free: {
     name: 'Free',
+    displayName: 'Free Access',
     price: null,
     description: 'Basic IATLAS access',
     features: [],
+    comingSoon: false,
   },
   individual: {
     name: 'IATLAS Individual',
+    displayName: 'Individual Plan',
     price: '$19.99/mo',
     description: '1 child profile',
     badge: '🌟',
@@ -47,9 +50,11 @@ export const IATLAS_TIER_CONFIG = {
       'Printable resources',
       '1 child profile',
     ],
+    comingSoon: false,
   },
   family: {
     name: 'IATLAS Family',
+    displayName: 'Family Plan',
     price: '$39.99/mo',
     description: 'Up to 5 child profiles',
     badge: '👨‍👩‍👧‍👦',
@@ -61,9 +66,11 @@ export const IATLAS_TIER_CONFIG = {
       'Shared progress dashboard',
       'Family challenge activities',
     ],
+    comingSoon: false,
   },
   complete: {
     name: 'IATLAS Complete',
+    displayName: 'Complete Plan',
     price: '$99.99/mo',
     description: 'Full curriculum access',
     badge: '🏆',
@@ -74,9 +81,11 @@ export const IATLAS_TIER_CONFIG = {
       'Advanced progress analytics',
       'Priority support',
     ],
+    comingSoon: false,
   },
   practitioner: {
     name: 'IATLAS Practitioner',
+    displayName: 'Practitioner Plan',
     price: '$149/mo',
     description: 'Individual practice',
     badge: '🩺',
@@ -88,9 +97,11 @@ export const IATLAS_TIER_CONFIG = {
       'Progress & outcome reports',
       'Individual practice',
     ],
+    comingSoon: false,
   },
   practice: {
     name: 'IATLAS Practice',
+    displayName: 'Practice Plan',
     price: '$399/mo',
     description: 'Group practice',
     badge: '🏥',
@@ -101,9 +112,11 @@ export const IATLAS_TIER_CONFIG = {
       'Group practice management',
       'Team progress dashboard',
     ],
+    comingSoon: true,
   },
   enterprise: {
     name: 'IATLAS Enterprise',
+    displayName: 'Enterprise Plan',
     price: 'Custom',
     description: 'Organizations',
     badge: '🏢',
@@ -114,6 +127,7 @@ export const IATLAS_TIER_CONFIG = {
       'Dedicated support',
       'Custom integrations',
     ],
+    comingSoon: true,
   },
 };
 
