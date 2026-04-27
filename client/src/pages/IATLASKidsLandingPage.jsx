@@ -701,7 +701,49 @@ export default function IATLASKidsLandingPage() {
             </Link>
           </div>
 
-          {/* Dimensions overview */}
+          {/* Developmental Roadmap CTA */}
+          <div style={{
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            borderRadius: 16,
+            padding: '1.75rem 2rem',
+            marginBottom: '2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            color: '#ffffff',
+          }} aria-label="View developmental roadmap">
+            <div>
+              <p style={{ margin: '0 0 .35rem', fontSize: '.78rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', opacity: .85 }}>
+                Developmental Roadmap
+              </p>
+              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
+                See the full skill journey from ages 5–18
+              </p>
+              <p style={{ margin: '.25rem 0 0', fontSize: '.85rem', opacity: .85 }}>
+                Age-appropriate milestones, key skills & activities for each dimension
+              </p>
+            </div>
+            <Link
+              to="/iatlas/developmental-roadmap"
+              style={{
+                background: 'rgba(255,255,255,.2)',
+                color: '#ffffff',
+                borderRadius: 10,
+                padding: '.65rem 1.35rem',
+                fontWeight: 700,
+                fontSize: '.9rem',
+                textDecoration: 'none',
+                border: '1px solid rgba(255,255,255,.3)',
+                whiteSpace: 'nowrap',
+                transition: 'background .15s',
+              }}
+              aria-label="Open developmental roadmap"
+            >
+              View Roadmap →
+            </Link>
+          </div>
           <section aria-labelledby="ikids-dims-title">
             <div className="ikids-section-header">
               <span className="ikids-section-kicker">
