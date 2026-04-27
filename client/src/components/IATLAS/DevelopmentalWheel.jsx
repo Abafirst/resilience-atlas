@@ -236,8 +236,8 @@ function SegmentDetailsPanel({ ageGroup, dimension, onClose }) {
 
       <h4>Key Skills:</h4>
       <ul className="skills-list">
-        {dimData.keySkills.map((skill, idx) => (
-          <li key={idx}>{skill}</li>
+        {dimData.keySkills.map((skill) => (
+          <li key={skill}>{skill}</li>
         ))}
       </ul>
 
@@ -257,7 +257,7 @@ function SegmentDetailsPanel({ ageGroup, dimension, onClose }) {
       </div>
 
       <a
-        href={`/iatlas/kids/activities?age=${ageGroup}&dimension=${dimension}`}
+        href={`/iatlas/kids/activities?${new URLSearchParams({ age: ageGroup, dimension }).toString()}`}
         className="btn-primary"
       >
         View Activities →

@@ -53,6 +53,7 @@ export default function DevelopmentalRoadmapPage() {
         <DevelopmentalWheel />
 
         <div className="drp-actions">
+          {/* Placeholder: backend endpoint /api/iatlas/roadmap/printable.pdf to be implemented */}
           <a
             href="/api/iatlas/roadmap/printable.pdf"
             target="_blank"
