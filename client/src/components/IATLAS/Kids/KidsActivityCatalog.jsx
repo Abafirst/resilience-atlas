@@ -10,7 +10,10 @@ import SiteHeader from '../../SiteHeader.jsx';
 import DarkModeHint from '../../DarkModeHint.jsx';
 import KidsActivityCard from './KidsActivityCard.jsx';
 import ActivityCompleteModal from './ActivityCompleteModal.jsx';
+import ActivitySearch from '../ActivitySearch.jsx';
+import FavoriteButton from '../FavoriteButton.jsx';
 import useKidsProgress from '../../../hooks/useKidsProgress.js';
+import useFavorites from '../../../hooks/useFavorites.js';
 import { makeActivityId } from '../../../utils/kidsProgressHelpers.js';
 import {
   KIDS_AGE_GROUPS,
@@ -345,54 +348,25 @@ const PAGE_STYLES = `
 const PAGE_SIZE = 18;
 
 export default function KidsActivityCatalog() {
-  const [search,     setSearch]     = useState('');
-  const [ageFilter,  setAgeFilter]  = useState('all');
-  const [dimFilter,  setDimFilter]  = useState('all');
-  const [diffFilter, setDiffFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [page,       setPage]       = useState(1);
+  const [page,          setPage]          = useState(1);
   const [completeModal, setCompleteModal] = useState(null);
+  const [filtered,      setFiltered]      = useState(null); // controlled by ActivitySearch
 
   const { completeActivity, isCompleted } = useKidsProgress();
+  const { favoriteIds, isFavorited, toggleFavorite } = useFavorites();
 
   const allActivities = useMemo(() => getAllActivities(), []);
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return allActivities.filter(act => {
-      const matchSearch = !q ||
-        act.title.toLowerCase().includes(q) ||
-        (act.learningGoal || '').toLowerCase().includes(q) ||
-        act.kidsName.toLowerCase().includes(q) ||
-        act.dimensionTitle.toLowerCase().includes(q);
-      const matchAge  = ageFilter  === 'all' || act.ageGroupId      === ageFilter;
-      const matchDim  = dimFilter  === 'all' || act.dimensionKey     === dimFilter;
-      const matchDiff = diffFilter === 'all' || act.difficulty       === diffFilter;
-      const matchType = typeFilter === 'all' || act.type             === typeFilter;
-      return matchSearch && matchAge && matchDim && matchDiff && matchType;
-    });
-  }, [allActivities, search, ageFilter, dimFilter, diffFilter, typeFilter]);
-
-  const totalPages   = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // ActivitySearch controls filtering; fall back to full list until initialized
+  const displayList  = filtered ?? allActivities;
+  const totalPages   = Math.max(1, Math.ceil(displayList.length / PAGE_SIZE));
   const currentPage  = Math.min(page, totalPages);
   const pageStart    = (currentPage - 1) * PAGE_SIZE;
-  const pageItems    = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageItems    = displayList.slice(pageStart, pageStart + PAGE_SIZE);
 
-  const resetFilters = useCallback(() => {
-    setSearch('');
-    setAgeFilter('all');
-    setDimFilter('all');
-    setDiffFilter('all');
-    setTypeFilter('all');
-    setPage(1);
-  }, []);
-
-  const hasFilters = search || ageFilter !== 'all' || dimFilter !== 'all' ||
-    diffFilter !== 'all' || typeFilter !== 'all';
-
-  // Reset to page 1 whenever filters change
-  const handleFilter = useCallback((setter) => (e) => {
-    setter(e.target.value);
+  // Reset to page 1 when the filtered list changes
+  const handleResults = useCallback((results) => {
+    setFiltered(results);
     setPage(1);
   }, []);
 
@@ -469,112 +443,15 @@ export default function KidsActivityCatalog() {
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="kac-filters" role="search" aria-label="Filter activities">
-            {/* Search */}
-            <div className="kac-filter-group kac-filter-search-wrap" style={{ flex: '2 1 260px' }}>
-              <label className="kac-filter-label" htmlFor="kac-search">Search</label>
-              <div style={{ position: 'relative' }}>
-                <svg className="kac-filter-search-icon" aria-hidden="true" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.75"/>
-                  <path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round"/>
-                </svg>
-                <input
-                  id="kac-search"
-                  className="kac-filter-input"
-                  type="search"
-                  placeholder="Search by title, goal, or dimension…"
-                  value={search}
-                  onChange={e => { setSearch(e.target.value); setPage(1); }}
-                  aria-label="Search activities"
-                />
-              </div>
-            </div>
-
-            {/* Age group */}
-            <div className="kac-filter-group">
-              <label className="kac-filter-label" htmlFor="kac-age-filter">Age Group</label>
-              <select
-                id="kac-age-filter"
-                className="kac-filter-select"
-                value={ageFilter}
-                onChange={handleFilter(setAgeFilter)}
-                aria-label="Filter by age group"
-              >
-                <option value="all">All ages</option>
-                {KIDS_AGE_GROUPS.map(ag => (
-                  <option key={ag.id} value={ag.id}>{ag.label}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Dimension */}
-            <div className="kac-filter-group">
-              <label className="kac-filter-label" htmlFor="kac-dim-filter">Dimension</label>
-              <select
-                id="kac-dim-filter"
-                className="kac-filter-select"
-                value={dimFilter}
-                onChange={handleFilter(setDimFilter)}
-                aria-label="Filter by dimension"
-              >
-                <option value="all">All dimensions</option>
-                {dimensions.map(dim => (
-                  <option key={dim.dimensionKey} value={dim.dimensionKey}>{dim.kidsName}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Difficulty */}
-            <div className="kac-filter-group">
-              <label className="kac-filter-label" htmlFor="kac-diff-filter">Difficulty</label>
-              <select
-                id="kac-diff-filter"
-                className="kac-filter-select"
-                value={diffFilter}
-                onChange={handleFilter(setDiffFilter)}
-                aria-label="Filter by difficulty"
-              >
-                <option value="all">All levels</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-
-            {/* Type */}
-            <div className="kac-filter-group">
-              <label className="kac-filter-label" htmlFor="kac-type-filter">Type</label>
-              <select
-                id="kac-type-filter"
-                className="kac-filter-select"
-                value={typeFilter}
-                onChange={handleFilter(setTypeFilter)}
-                aria-label="Filter by activity type"
-              >
-                <option value="all">All types</option>
-                {Object.entries(ACTIVITY_TYPES).map(([key, val]) => (
-                  <option key={key} value={key}>{val.label}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Clear */}
-            {hasFilters && (
-              <button className="kac-filter-clear" onClick={resetFilters} aria-label="Clear all filters">
-                Clear filters
-              </button>
-            )}
-          </div>
-
-          {/* Result count */}
-          <p className="kac-result-count" aria-live="polite" aria-atomic="true">
-            {filtered.length === total
-              ? `Showing all ${total} activities`
-              : `${filtered.length} of ${total} activities`
-            }
-            {filtered.length > PAGE_SIZE && ` · Page ${currentPage} of ${totalPages}`}
-          </p>
+          {/* Search & Filters (replaces previous inline filter bar) */}
+          <ActivitySearch
+            activities={allActivities}
+            ageGroups={KIDS_AGE_GROUPS}
+            dimensions={dimensions}
+            activityTypes={ACTIVITY_TYPES}
+            favoriteIds={favoriteIds}
+            onResults={handleResults}
+          />
 
           {/* Activity grid */}
           {pageItems.length > 0 ? (
@@ -583,7 +460,17 @@ export default function KidsActivityCatalog() {
                 const actId = makeActivityId(act.ageGroupId, act.title);
                 const done  = isCompleted(actId);
                 return (
-                  <div key={`${act.dimensionKey}-${act.ageGroupId}-${act.id}`} role="listitem">
+                  <div key={`${act.dimensionKey}-${act.ageGroupId}-${act.id}`} role="listitem"
+                    style={{ position: 'relative' }}>
+                    {/* Favorite button overlay */}
+                    <div style={{ position: 'absolute', top: '.6rem', right: '.6rem', zIndex: 2 }}>
+                      <FavoriteButton
+                        activityId={act.id}
+                        isFavorited={isFavorited(act.id)}
+                        onToggle={toggleFavorite}
+                        size="medium"
+                      />
+                    </div>
                     <KidsActivityCard
                       activity={act}
                       accentColor={act.dimensionColor}
