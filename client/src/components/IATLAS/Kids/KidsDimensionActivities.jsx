@@ -10,6 +10,8 @@ import SiteHeader from '../../SiteHeader.jsx';
 import DarkModeHint from '../../DarkModeHint.jsx';
 import KidsActivityCard from './KidsActivityCard.jsx';
 import ActivityCompleteModal from './ActivityCompleteModal.jsx';
+import BadgeUnlockModal from '../BadgeUnlockModal.jsx';
+import XPNotification from '../XPNotification.jsx';
 import useKidsProgress from '../../../hooks/useKidsProgress.js';
 import { makeActivityId } from '../../../utils/kidsProgressHelpers.js';
 import {
@@ -18,6 +20,31 @@ import {
   getActivitiesForDimension,
   getDifficultyForActivity,
 } from '../../../data/iatlas/kidsActivities.js';
+
+/** Fire-and-forget: sync completion to the IATLAS Progress API. */
+async function syncCompletionToAPI(activityId, dimension, ageGroup) {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return; // unauthenticated — skip silently
+    const res = await fetch('/api/iatlas/progress/complete-activity', {
+      method:  'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:  `Bearer ${token}`,
+      },
+      body: JSON.stringify({ activityId, dimension, ageGroup }),
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (_) {
+    // Non-critical — local progress is the source of truth for the UI
+    if (typeof console !== 'undefined') {
+      console.warn('[IATLAS] Failed to sync completion to API:', _);
+    }
+  }
+  return null;
+}
 
 const PAGE_STYLES = `
   .kda-page {
@@ -267,6 +294,8 @@ export default function KidsDimensionActivities() {
   const [search,     setSearch]     = useState('');
   const [difficulty, setDifficulty] = useState('all');
   const [completeModal, setCompleteModal] = useState(null); // { starsEarned, extraStars, dimComplete }
+  const [newBadges,     setNewBadges]     = useState([]);
+  const [xpNotification, setXPNotification] = useState(null); // { amount, reason }
 
   const ageGroup  = KIDS_AGE_GROUPS.find(ag => ag.id === ageGroupId);
   const dimData   = KIDS_ACTIVITIES_BY_DIMENSION[dimensionKey];
@@ -274,15 +303,27 @@ export default function KidsDimensionActivities() {
 
   const { completeActivity, isCompleted } = useKidsProgress();
 
-  const handleComplete = useCallback((activity) => {
+  const handleComplete = useCallback(async (activity) => {
+    const actId  = makeActivityId(ageGroupId, activity.title);
     const result = completeActivity({
-      activityId: makeActivityId(ageGroupId, activity.title),
+      activityId: actId,
       title:      activity.title,
       ageGroup:   ageGroupId,
       dimension:  dimensionKey,
       complete:   true,
     });
     setCompleteModal(result || { starsEarned: 3, extraStars: 0, dimComplete: false });
+
+    // Sync to the IATLAS Progress API and show badge / XP notifications
+    const apiResult = await syncCompletionToAPI(actId, dimensionKey, ageGroupId);
+    if (apiResult) {
+      if (apiResult.newBadges && apiResult.newBadges.length > 0) {
+        setNewBadges(apiResult.newBadges);
+      }
+      if (apiResult.xpEarned > 0) {
+        setXPNotification({ amount: apiResult.xpEarned, reason: 'Activity Completed!' });
+      }
+    }
   }, [ageGroupId, dimensionKey, completeActivity]);
 
   const activities = useMemo(() => {
@@ -321,6 +362,21 @@ export default function KidsDimensionActivities() {
           extraStars={completeModal.extraStars}
           dimComplete={completeModal.dimComplete}
           onClose={() => setCompleteModal(null)}
+        />
+      )}
+
+      {newBadges.length > 0 && (
+        <BadgeUnlockModal
+          badges={newBadges}
+          onClose={() => setNewBadges([])}
+        />
+      )}
+
+      {xpNotification && (
+        <XPNotification
+          amount={xpNotification.amount}
+          reason={xpNotification.reason}
+          onDismiss={() => setXPNotification(null)}
         />
       )}
 
