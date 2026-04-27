@@ -70,6 +70,7 @@ import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
 import IATLASCurriculumPage from './pages/IATLASCurriculumPage.jsx';
 import IATLASDashboardPage from './pages/IATLASDashboardPage.jsx';
 import FamilyDashboardPage from './pages/FamilyDashboardPage.jsx';
+import ParentDashboardPage from './pages/ParentDashboardPage.jsx';
 import FamilyChallengesPage from './pages/FamilyChallengesPage.jsx';
 import FamilyChallengeDetailPage from './pages/FamilyChallengeDetailPage.jsx';
 import IATLASKidsLandingPage from './pages/IATLASKidsLandingPage.jsx';
@@ -395,6 +396,7 @@ function AppShell() {
           <Route path="/iatlas" element={<IATLASCurriculumPage />} />
           <Route path="/iatlas/dashboard" element={<IATLASDashboardPage />} />
           <Route path="/iatlas/family-dashboard" element={<FamilyDashboardPage />} />
+          <Route path="/iatlas/parent-dashboard" element={<ParentDashboardPage />} />
           <Route path="/iatlas/family/challenges" element={<FamilyChallengesPage />} />
           <Route path="/iatlas/family/challenges/:challengeId" element={<FamilyChallengeDetailPage />} />
           <Route path="/iatlas/kids" element={<IATLASKidsLandingPage />} />

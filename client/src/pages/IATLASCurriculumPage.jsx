@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import { getIATLASSubscriptionStatus } from '../api/iatlas.js';
-import { IATLAS_TIER_KEY, hasProfessionalAccess } from '../utils/iatlasGating.js';
+import { IATLAS_TIER_KEY, hasProfessionalAccess, hasCaregiverAccess } from '../utils/iatlasGating.js';
 import { getAuth0CachedToken } from '../lib/apiFetch.js';
 import SpecialtyCard from '../components/IATLAS/SpecialtyCard.jsx';
 import SpecialtyComingSoonModal from '../components/IATLAS/SpecialtyComingSoonModal.jsx';
@@ -2543,6 +2543,19 @@ export default function IATLASCurriculumPage() {
                   <Link to="/iatlas/roadmap" className="iatlas-btn-secondary">
                     View Content Roadmap →
                   </Link>
+                  {hasCaregiverAccess() && (
+                    <Link
+                      to="/iatlas/parent-dashboard"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                        background: '#0891b2', color: '#fff',
+                        borderRadius: 10, padding: '.7rem 1.4rem',
+                        fontWeight: 600, textDecoration: 'none', fontSize: '.875rem',
+                      }}
+                    >
+                      👨‍👩‍👧‍👦 Parent Dashboard
+                    </Link>
+                  )}
                 </div>
               </div>
               <div className="iatlas-kids-banner-right" aria-hidden="true">
