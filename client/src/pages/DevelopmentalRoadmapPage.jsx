@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import DevelopmentalRoadmap from '../components/IATLAS/DevelopmentalRoadmap.jsx';
+import DevelopmentalWheel from '../components/IATLAS/DevelopmentalWheel.jsx';
+import '../styles/developmentalWheel.css';
 
 const PAGE_STYLES = `
   .drp-page {
@@ -154,6 +156,33 @@ const PAGE_STYLES = `
   .dark-mode .drp-btn-secondary:hover {
     background: #0f172a;
   }
+
+  /* ── Section divider ─────────────────────────────────────────────────────── */
+  .drp-section-divider {
+    margin: 3rem 0 2rem;
+    text-align: center;
+  }
+
+  .drp-section-divider h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: .5rem;
+  }
+
+  .dark-mode .drp-section-divider h2 {
+    color: #f1f5f9;
+  }
+
+  .drp-section-divider p {
+    font-size: .9rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .dark-mode .drp-section-divider p {
+    color: #94a3b8;
+  }
 `;
 
 export default function DevelopmentalRoadmapPage() {
@@ -194,14 +223,25 @@ export default function DevelopmentalRoadmapPage() {
             </p>
             <h1>Developmental Roadmap</h1>
             <p>
-              A visual guide to resilience-building skills across ages 5–18. Explore what's
-              developmentally appropriate at each stage, discover activities aligned with your
-              child's age, and see how skills progress through the full IATLAS curriculum.
+              A visual guide to resilience-building skills across ages 5–18. Use the interactive
+              circular wheel to explore how skills evolve across dimensions, or browse by age group
+              below to see detailed milestones, activities, and badges.
             </p>
             <p>
-              Click any age group to see dimension milestones, then expand a dimension to view
-              key skills, activities, and badges.
+              Click any segment on the wheel to view details, or select an age group below to see
+              dimension milestones, then expand a dimension to view key skills, activities, and badges.
             </p>
+          </div>
+
+          {/* Interactive Circular Wheel */}
+          <section aria-label="Interactive circular roadmap wheel">
+            <DevelopmentalWheel />
+          </section>
+
+          {/* Divider */}
+          <div className="drp-section-divider">
+            <h2>Explore by Age Group</h2>
+            <p>Select an age range to see detailed milestones, skills, and activities</p>
           </div>
 
           {/* Interactive Roadmap */}
