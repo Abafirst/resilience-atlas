@@ -84,7 +84,8 @@ export default function XPNotification({ amount = 0, reason = '', onDismiss, dur
   const leaveRef    = useRef(null);
   const onDismissRef = useRef(onDismiss);
 
-  // Keep the ref current without triggering the effect
+  // Sync the ref to the latest onDismiss on every render so the timer
+  // callback always calls the current version without being a timer dep.
   React.useEffect(() => {
     onDismissRef.current = onDismiss;
   });

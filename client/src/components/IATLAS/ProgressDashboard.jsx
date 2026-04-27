@@ -485,7 +485,7 @@ export default function ProgressDashboard({ childProfileId = null, className = '
                   <div className="ipd-badge-icon-wrap">
                     <img
                       src={`/icons/badges/${badge.badgeId}.svg`}
-                      alt={badge.milestone || badge.badgeId}
+                      alt={badge.milestone || badge.badgeId || 'Badge icon'}
                       className="ipd-badge-icon"
                     />
                   </div>

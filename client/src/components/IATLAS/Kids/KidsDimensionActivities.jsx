@@ -39,6 +39,9 @@ async function syncCompletionToAPI(activityId, dimension, ageGroup) {
     }
   } catch (_) {
     // Non-critical — local progress is the source of truth for the UI
+    if (typeof console !== 'undefined') {
+      console.warn('[IATLAS] Failed to sync completion to API:', _);
+    }
   }
   return null;
 }

@@ -265,13 +265,13 @@ router.post('/complete-activity', async (req, res) => {
 
     await progress.save();
 
-    const totalXPEarned = xpEarned + newBadges.reduce((sum, b) => sum + (b.xpReward || 0), 0);
+    const xpEarnedThisCompletion = xpEarned + newBadges.reduce((sum, b) => sum + (b.xpReward || 0), 0);
 
     return res.json({
       message:   'Activity completed!',
       progress,
       newBadges,
-      xpEarned:  totalXPEarned,
+      xpEarned:  xpEarnedThisCompletion,
     });
   } catch (err) {
     logger.error('[iatlas-progress/complete-activity] error:', err);
