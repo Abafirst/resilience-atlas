@@ -1,16 +1,15 @@
 /**
  * developmentalRoadmap.js
- * IATLAS Developmental Milestones data — used by the Circular Evolution Wheel.
- * Defines age-group milestones across all 6 resilience dimensions.
+ * IATLAS Developmental Milestones — age-appropriate skill descriptors for each dimension.
+ * Used by the interactive journey map and printable PDF roadmap.
  */
 
 export const DEVELOPMENTAL_MILESTONES = {
   'ages-5-7': {
-    label: 'Foundation (Ages 5-7)',
+    label: 'Foundation Trail (Ages 5-7)',
     ageRange: '5-7',
-    ring: 1, // Inner ring
     color: '#10b981', // Green
-    icon: '/icons/seedling.svg',
+    icon: '/icons/kids-spark.svg',
     overview: 'Building basic resilience skills through play, exploration, and simple challenges.',
     dimensions: {
       'agentic-generative': {
@@ -22,7 +21,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Expressing preferences ("I want to...")',
           'Completing simple tasks independently',
         ],
-        activitiesCount: 8,
+        activities: ['treasure-map', 'my-superpower', 'choice-adventure'],
         badges: ['first-try-badge', 'choice-maker-badge'],
       },
       'somatic-regulative': {
@@ -34,7 +33,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Recognizing energy levels (wiggly vs. calm)',
           'Basic coordination games',
         ],
-        activitiesCount: 8,
+        activities: ['balloon-breath', 'body-scan-adventure', 'wiggle-freeze'],
         badges: ['body-explorer-badge', 'calm-breathing-badge'],
       },
       'cognitive-narrative': {
@@ -46,7 +45,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Retelling simple stories',
           'Categorizing objects (colors, shapes)',
         ],
-        activitiesCount: 8,
+        activities: ['puzzle-hero', 'story-time-resilience', 'what-happens-next'],
         badges: ['puzzle-solver-badge', 'story-teller-badge'],
       },
       'relational-connective': {
@@ -58,7 +57,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           "Recognizing others' feelings (happy, sad)",
           'Playing cooperatively',
         ],
-        activitiesCount: 8,
+        activities: ['turn-taking-game', 'feelings-faces', 'teamwork-tower'],
         badges: ['sharing-star-badge', 'friend-maker-badge'],
       },
       'emotional-adaptive': {
@@ -70,7 +69,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Using simple calming strategies (hug, deep breath)',
           'Understanding "big feelings are okay"',
         ],
-        activitiesCount: 8,
+        activities: ['emotion-explorer', 'calm-down-corner', 'feelings-journal'],
         badges: ['feelings-detective-badge', 'calm-down-champion-badge'],
       },
       'spiritual-existential': {
@@ -82,17 +81,16 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Expressing gratitude ("Thank you")',
           'Simple mindfulness (listening to sounds)',
         ],
-        activitiesCount: 8,
+        activities: ['nature-walk', 'gratitude-jar', 'sound-safari'],
         badges: ['nature-explorer-badge', 'gratitude-buddy-badge'],
       },
     },
   },
   'ages-8-10': {
-    label: 'Building (Ages 8-10)',
+    label: 'Building Path (Ages 8-10)',
     ageRange: '8-10',
-    ring: 2, // Second ring
     color: '#3b82f6', // Blue
-    icon: '/icons/construction.svg',
+    icon: '/icons/strength.svg',
     overview: 'Developing more complex resilience skills with guided challenges and goal-setting.',
     dimensions: {
       'agentic-generative': {
@@ -104,7 +102,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Persisting when things are hard',
           'Celebrating effort and progress',
         ],
-        activitiesCount: 8,
+        activities: ['goal-ladder', 'step-by-step-hero', 'bounce-back-challenge'],
         badges: ['goal-setter-badge', 'persistence-champion-badge'],
       },
       'somatic-regulative': {
@@ -116,7 +114,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Grounding techniques (5-4-3-2-1)',
           'Simple progressive muscle relaxation',
         ],
-        activitiesCount: 8,
+        activities: ['box-breathing', 'body-signal-detective', 'grounding-game'],
         badges: ['breathwork-beginner-badge', 'grounding-guru-badge'],
       },
       'cognitive-narrative': {
@@ -128,7 +126,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Thinking flexibly (Plan B thinking)',
           'Understanding perspectives (others see differently)',
         ],
-        activitiesCount: 8,
+        activities: ['brainstorm-blitz', 'plan-b-adventure', 'perspective-puzzle'],
         badges: ['problem-solver-badge', 'flexible-thinker-badge'],
       },
       'relational-connective': {
@@ -140,7 +138,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Resolving small conflicts with words',
           'Showing empathy and kindness',
         ],
-        activitiesCount: 8,
+        activities: ['listening-challenge', 'team-quest', 'conflict-cool-down'],
         badges: ['team-player-badge', 'empathy-champion-badge'],
       },
       'emotional-adaptive': {
@@ -152,7 +150,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Understanding emotional triggers',
           'Self-soothing techniques (positive self-talk, safe space)',
         ],
-        activitiesCount: 8,
+        activities: ['emotion-toolbox', 'trigger-tracker', 'self-talk-coach'],
         badges: ['emotion-expert-badge', 'coping-toolbox-badge'],
       },
       'spiritual-existential': {
@@ -164,15 +162,14 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Finding where they belong (groups, hobbies)',
           'Simple meaning-making (why we help others)',
         ],
-        activitiesCount: 8,
+        activities: ['values-map', 'fairness-quest', 'belonging-badge'],
         badges: ['values-explorer-badge', 'fairness-champion-badge'],
       },
     },
   },
   'ages-11-14': {
-    label: 'Explorer (Ages 11-14)',
+    label: 'Explorer Trail (Ages 11-14)',
     ageRange: '11-14',
-    ring: 3, // Third ring
     color: '#8b5cf6', // Purple
     icon: '/icons/compass.svg',
     overview: 'Navigating independence, identity, and deeper emotional complexity with advanced strategies.',
@@ -186,7 +183,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Advocating for needs and boundaries',
           'Taking initiative without prompting',
         ],
-        activitiesCount: 8,
+        activities: ['decision-compass', 'long-game-goals', 'speak-up-challenge'],
         badges: ['independence-champion-badge', 'decision-maker-badge'],
       },
       'somatic-regulative': {
@@ -198,7 +195,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Advanced breathwork (coherent breathing, paced breathing)',
           'Managing stress proactively',
         ],
-        activitiesCount: 8,
+        activities: ['body-emotion-map', 'movement-reset', 'stress-audit'],
         badges: ['mind-body-master-badge', 'stress-navigator-badge'],
       },
       'cognitive-narrative': {
@@ -210,7 +207,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Metacognition (thinking about thinking)',
           'Planning multi-step projects',
         ],
-        activitiesCount: 8,
+        activities: ['reframe-challenge', 'meta-thinking-lab', 'project-architect'],
         badges: ['abstract-thinker-badge', 'reframing-pro-badge'],
       },
       'relational-connective': {
@@ -222,7 +219,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Assertive communication (I-statements)',
           'Repairing relationships after conflict',
         ],
-        activitiesCount: 8,
+        activities: ['boundary-builder', 'peer-pressure-playbook', 'repair-bridge'],
         badges: ['boundary-setter-badge', 'conflict-navigator-badge'],
       },
       'emotional-adaptive': {
@@ -234,7 +231,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Building emotional resilience',
           'Supporting others emotionally',
         ],
-        activitiesCount: 8,
+        activities: ['anxiety-toolkit', 'resilience-workout', 'peer-support-skills'],
         badges: ['stress-master-badge', 'resilience-builder-badge'],
       },
       'spiritual-existential': {
@@ -246,15 +243,14 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Finding meaning in challenges',
           'Connecting to something bigger (community, purpose)',
         ],
-        activitiesCount: 8,
+        activities: ['identity-map', 'meaning-maker', 'community-connector'],
         badges: ['identity-explorer-badge', 'meaning-maker-badge'],
       },
     },
   },
   'ages-15-18': {
-    label: 'Mastery (Ages 15-18)',
+    label: 'Mastery Summit (Ages 15-18)',
     ageRange: '15-18',
-    ring: 4, // Outer ring
     color: '#f59e0b', // Amber
     icon: '/icons/trophy.svg',
     overview: 'Mastering resilience skills for life transitions, leadership, and complex challenges.',
@@ -268,7 +264,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Self-authorship (defining own path)',
           'Mentoring younger peers',
         ],
-        activitiesCount: 8,
+        activities: ['lead-the-way', 'life-direction-compass', 'peer-mentor-challenge'],
         badges: ['leadership-badge', 'self-author-badge'],
       },
       'somatic-regulative': {
@@ -280,7 +276,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Using somatic awareness in high-stress situations',
           'Advanced mindfulness and meditation',
         ],
-        activitiesCount: 8,
+        activities: ['teach-to-breathe', 'custom-toolkit', 'high-stakes-calm'],
         badges: ['regulation-master-badge', 'mindfulness-teacher-badge'],
       },
       'cognitive-narrative': {
@@ -292,7 +288,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Creative problem-solving in ambiguous situations',
           'Critical analysis and evaluation',
         ],
-        activitiesCount: 8,
+        activities: ['systems-thinking-lab', 'strategic-planner', 'ambiguity-challenge'],
         badges: ['strategic-thinker-badge', 'systems-thinker-badge'],
       },
       'relational-connective': {
@@ -304,7 +300,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Advanced conflict resolution',
           'Navigating romantic relationships healthily',
         ],
-        activitiesCount: 8,
+        activities: ['relationship-audit', 'interdependence-balance', 'advanced-conflict-lab'],
         badges: ['relationship-master-badge', 'interdependence-badge'],
       },
       'emotional-adaptive': {
@@ -316,7 +312,7 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Managing chronic stress and uncertainty',
           'Post-traumatic growth mindset',
         ],
-        activitiesCount: 8,
+        activities: ['setback-comeback', 'crisis-support-skills', 'growth-mindset-deep'],
         badges: ['resilience-master-badge', 'crisis-supporter-badge'],
       },
       'spiritual-existential': {
@@ -328,55 +324,17 @@ export const DEVELOPMENTAL_MILESTONES = {
           'Exploring existential questions (meaning of life)',
           'Connecting personal values to action',
         ],
-        activitiesCount: 8,
+        activities: ['philosophy-builder', 'purpose-in-pain', 'values-in-action'],
         badges: ['philosopher-badge', 'purpose-finder-badge'],
       },
     },
   },
 };
 
-// Dimension metadata for the wheel
-export const DIMENSION_CONFIG = {
-  'agentic-generative': {
-    name: 'Agentic-Generative',
-    shortName: 'Agentic',
-    color: '#ef4444', // Red
-    angle: 0, // Top (12 o'clock)
-    icon: '/icons/agentic-generative.svg',
-  },
-  'somatic-regulative': {
-    name: 'Somatic-Regulative',
-    shortName: 'Somatic',
-    color: '#f59e0b', // Amber
-    angle: 60, // 2 o'clock
-    icon: '/icons/somatic-regulative.svg',
-  },
-  'cognitive-narrative': {
-    name: 'Cognitive-Interpretive',
-    shortName: 'Cognitive',
-    color: '#10b981', // Green
-    angle: 120, // 4 o'clock
-    icon: '/icons/cognitive-narrative.svg',
-  },
-  'relational-connective': {
-    name: 'Relational-Connective',
-    shortName: 'Relational',
-    color: '#3b82f6', // Blue
-    angle: 180, // 6 o'clock (bottom)
-    icon: '/icons/relational-connective.svg',
-  },
-  'emotional-adaptive': {
-    name: 'Emotional-Adaptive',
-    shortName: 'Emotional',
-    color: '#8b5cf6', // Purple
-    angle: 240, // 8 o'clock
-    icon: '/icons/emotional-adaptive.svg',
-  },
-  'spiritual-existential': {
-    name: 'Spiritual-Existential',
-    shortName: 'Spiritual',
-    color: '#ec4899', // Pink
-    angle: 300, // 10 o'clock
-    icon: '/icons/spiritual-existential.svg',
-  },
-};
+/** Returns the milestone entry that corresponds to a KIDS_AGE_GROUPS id. */
+export function getMilestoneForAgeGroup(ageGroupId) {
+  return DEVELOPMENTAL_MILESTONES[ageGroupId] ?? null;
+}
+
+/** Returns all age-group keys in progression order. */
+export const MILESTONE_AGE_KEYS = Object.keys(DEVELOPMENTAL_MILESTONES);
