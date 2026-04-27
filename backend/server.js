@@ -450,6 +450,8 @@ app.use("/api/progress", require("./routes/progress"));
 console.log("✅ Mounted route: /api/progress");
 app.use("/api/support", require("./routes/support"));
 console.log("✅ Mounted route: /api/support");
+app.use("/api/clinical/clients", require("./routes/clinical/clients"));
+console.log("✅ Mounted route: /api/clinical/clients");
 
 // ==============================
 // Root API info
