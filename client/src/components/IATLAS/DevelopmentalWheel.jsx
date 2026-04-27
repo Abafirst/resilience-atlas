@@ -13,7 +13,7 @@ export default function DevelopmentalWheel() {
   const [hoveredSegment, setHoveredSegment] = useState(null);
   // Detect mobile to use short dimension names and avoid label overlap
   const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth < 768
+    typeof window !== 'undefined' && window.innerWidth < 768
   );
   const svgRef = useRef(null);
 
@@ -191,7 +191,7 @@ export default function DevelopmentalWheel() {
 
       // On mobile, use the short single-word name to avoid overlap on small viewports.
       // On desktop, split "Word / Word" into two stacked lines.
-      const displayName = isMobile ? config.shortName : config.name;
+      const displayName = isMobile ? (config.shortName || config.name) : config.name;
       const [line1, line2] = displayName.split(' / ');
 
       return [
