@@ -752,12 +752,13 @@ const MODAL_STYLES = `
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.55);
-  z-index: 9000;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   animation: ppm-fade-in .15s ease;
+  pointer-events: auto;
 }
 @keyframes ppm-fade-in { from { opacity: 0; } to { opacity: 1; } }
 
@@ -995,7 +996,7 @@ export default function PrintPreviewModal({
 
           {/* Header */}
           <div className="ppm-header">
-            <h2 className="ppm-title">\uD83D\uDDA8 Print / Export — {resourceLabel}</h2>
+            <h2 className="ppm-title">🖨️ Print / Export — {resourceLabel}</h2>
             <button
               className="ppm-close"
               onClick={onClose}
@@ -1082,7 +1083,7 @@ export default function PrintPreviewModal({
               type="button"
               aria-label="Open print dialog"
             >
-              <span aria-hidden="true">\uD83D\uDDA8</span> Print / Save as PDF
+              <span aria-hidden="true">🖨️</span> Print / Save as PDF
             </button>
           </div>
 
