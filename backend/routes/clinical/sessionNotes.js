@@ -218,7 +218,9 @@ router.get(
         return res.status(403).json({ error: 'Access denied: client profile not found or not owned by you.' });
       }
 
-      // Use client._id from the database (not the raw user input) in the query filter.
+      // Use client._id from the database (not the raw user input) in the query
+      // filter to prevent tainted user-controlled data from flowing into the
+      // MongoDB query.
       const filter = {
         practitionerId,
         clientProfileId: client._id,
