@@ -18,7 +18,7 @@ export default function SiteFooter() {
         <div className="footer-nav-group">
           <strong className="footer-nav-heading">Programs</strong>
           <a href="/teams">For Teams</a>
-          <a href="/iatlas">IATLAS Curriculum</a>
+          <a href="/iatlas" title="IATLAS: Integrated Applied Teaching and Learning Adaptive System">IATLAS Curriculum</a>
           <a href="/resources">Resources</a>
           <a href="/gamification">Gamification</a>
           <a href="/kids">For Kids</a>
@@ -29,6 +29,15 @@ export default function SiteFooter() {
           <a href="/founder">Our Founder</a>
           <a href="/privacy">Privacy &amp; Data Control</a>
         </div>
+        <div className="footer-nav-group">
+          <strong className="footer-nav-heading">IATLAS&#8482;</strong>
+          <p style={{ fontSize: '0.82rem', color: 'inherit', margin: '0 0 0.5rem', lineHeight: 1.5 }}>
+            Integrated Applied Teaching and Learning Adaptive System
+          </p>
+          <a href="/iatlas">IATLAS Curriculum</a>
+          <a href="/iatlas/kids">IATLAS Kids</a>
+          <a href="/iatlas/train-the-facilitator">Train the Facilitator</a>
+        </div>
       </nav>
       <div className="footer-bottom">
         <p><strong>The Resilience Atlas&#8482; — Understand. Strengthen. Transform.</strong></p>
@@ -36,7 +45,13 @@ export default function SiteFooter() {
           <img src="/icons/story.svg" alt="" aria-hidden="true" className="footer-research-icon" />
           A research-based resilience assessment platform founded on published 2013 doctoral research.
         </p>
-        <p>&copy; {new Date().getFullYear()} The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+        <p>&copy; 2026 The Resilience Atlas&#8482; &mdash; a trademark of <strong>Janeen Molchany Ph.D., BCBA</strong>.</p>
+        <p>
+          <a href="https://theresilienceatlas.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
+            https://theresilienceatlas.com
+          </a>
+          {' '}| All Rights Reserved
+        </p>
         <p>For educational and self-reflection purposes only. Not a clinical assessment.</p>
       </div>
     </footer>

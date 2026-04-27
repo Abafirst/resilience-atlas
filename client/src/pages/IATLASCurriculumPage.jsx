@@ -2250,13 +2250,13 @@ export default function IATLASCurriculumPage() {
               <div>
                 <span className="iatlas-kicker">
                   <img src="/icons/compass.svg" alt="" width={13} height={13} aria-hidden="true" />
-                  IATLAS Clinical Curriculum
+                  <span title="Integrated Applied Teaching and Learning Adaptive System">IATLAS™</span> Clinical Curriculum
                 </span>
                 <h1 className="iatlas-hero-title" id="iatlas-hero-title">
                   A System for Skills, Not Scores
                 </h1>
                 <p className="iatlas-hero-sub">
-                  Your Resilience Atlas™ assessment reveals your profile. IATLAS gives you the skills to strengthen it.
+                  <strong>IATLAS</strong> (Integrated Applied Teaching and Learning Adaptive System) gives you the skills to strengthen your resilience profile.
                   Evidence-based protocols integrating Applied Behavior Analysis (ABA) and Acceptance &amp; Commitment Therapy (ACT)
                   across all six dimensions of resilience — not just what to measure, but how to grow.
                 </p>
@@ -2432,9 +2432,9 @@ export default function IATLASCurriculumPage() {
           <section id="iatlas-overview" aria-labelledby="iatlas-ov-title">
             <div className="iatlas-section-header" style={{ paddingBottom: '1rem' }}>
               <span className="iatlas-section-kicker">What is IATLAS?</span>
-              <h2 className="iatlas-section-title" id="iatlas-ov-title">A Science-Based Teaching and Learning System</h2>
+              <h2 className="iatlas-section-title" id="iatlas-ov-title">Integrated Applied Teaching and Learning Adaptive System</h2>
               <p className="iatlas-section-sub">
-                IATLAS is the practice-facing complement to the Resilience Atlas™. Where the Atlas
+                <strong>IATLAS</strong> — <em>Integrated Applied Teaching and Learning Adaptive System</em> — is the practice-facing complement to the Resilience Atlas™. Where the Atlas
                 measures and maps resilience, IATLAS provides the structured methodology for building it
                 through integrated teaching and learning.
               </p>
@@ -2687,7 +2687,7 @@ export default function IATLASCurriculumPage() {
                   {
                     icon: '/icons/kids-trophy.svg',
                     title: 'Individual — $19.99/mo',
-                    items: ['All kids games & activities', 'IATLAS curriculum (all ages)', 'Progress tracking', '1 child profile'],
+                    items: ['Full IATLAS™ curriculum (Integrated Applied Teaching and Learning Adaptive System)', 'All kids games & activities', 'Progress tracking', '1 child profile'],
                   },
                   {
                     icon: '/icons/agentic-generative.svg',
@@ -2702,7 +2702,7 @@ export default function IATLASCurriculumPage() {
                   {
                     icon: '/icons/game-target.svg',
                     title: 'Professional — from $149/mo',
-                    items: ['Clinical assessments & session plans', 'Client resources & worksheets', 'ABA protocol library', 'Practitioner / Practice / Enterprise tiers'],
+                    items: ['Full IATLAS™ clinical curriculum', 'IATLAS (Integrated Applied Teaching and Learning Adaptive System) for clinical practice', 'Client resources & worksheets', 'Practitioner / Practice / Enterprise tiers'],
                     link: '/iatlas/clinical/aba-protocols',
                     linkLabel: 'Browse Protocol Library →',
                   },

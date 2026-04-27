@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 const DEFAULT_NAV_ITEMS = [
   { href: '/', label: 'Home', key: 'home' },
   { href: '/assessment', label: 'Assessment', key: 'assessment' },
-  { href: '/iatlas', label: 'IATLAS Curriculum', key: 'iatlas' },
+  { href: '/iatlas', label: 'IATLAS Curriculum', key: 'iatlas', title: 'IATLAS: Integrated Applied Teaching and Learning Adaptive System' },
   { href: '/research', label: 'Research', key: 'research' },
   { href: '/resources', label: 'Resources', key: 'resources' },
   { href: '/teams', label: 'Teams', key: 'teams' },
@@ -127,6 +127,7 @@ export default function SiteHeader({
               key={item.key}
               href={item.href}
               className={`nav-link${activePage === item.key ? ' active' : ''}`}
+              title={item.title || undefined}
             >
               {item.label}
             </a>
