@@ -663,21 +663,7 @@ describe('POST /api/clinical/session-notes/:id/activities', () => {
   });
 
   test('adds activity to draft note', async () => {
-    const id   = new mongoose.Types.ObjectId();
-    const note = makeNote({ _id: id, activities: [] });
-    // Simulate push + save by making note.activities behave correctly
-    note.activities = {
-      push: jest.fn((item) => {
-        note.activities._data = [{ _id: new mongoose.Types.ObjectId(), ...item, toObject: () => item }];
-      }),
-      _data: [],
-    };
-    // Override length access
-    Object.defineProperty(note.activities, 'length', {
-      get: () => note.activities._data.length,
-    });
-    note.activities[note.activities._data.length] = undefined;
-    // Use a simpler note fixture
+    const id         = new mongoose.Types.ObjectId();
     const noteSimple = makeNote({ _id: id });
     noteSimple.activities = [];
     mockFindById.mockResolvedValue(noteSimple);
