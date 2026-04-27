@@ -143,8 +143,54 @@ Practitioner view of client progress over time with dimension analytics, milesto
 
 **Tests:** `tests/progress-tracking.test.js` (59 tests covering utility functions, API routes, and access control)
 
-### #22f — Client Outcome Reports ⬜
-Completion-based outcome reporting.
+### #22f — Client Outcome Reports ✅
+Comprehensive outcome reporting system that generates professional PDF reports at session milestones, showing client progress across all 6 resilience dimensions with before/after comparisons, goal achievement documentation, and session highlights.
+
+**Implementation details:**
+
+- **Model:** `backend/models/OutcomeReport.js`
+  - Stores generated report metadata (period, scores, goal counts, audit trail, email delivery log)
+  - `practitionerId`, `clientProfileId`, `reportType`, `periodStart/End`, `totalSessions`, `baselineScores`, `currentScores`, `goalsAchieved`, `goalsInProgress`, `isAnonymized`, `accessedBy[]`, `sentToEmails[]`, `generatedAt`
+  - Four report types: `insurance`, `family`, `school`, `summary`
+
+- **Utility functions:** `backend/utils/outcomeReportUtils.js`
+  - `computeBaselineScores(snapshots, n)` — average of first n snapshots
+  - `computeCurrentScores(snapshots, n)` — average of last n snapshots
+  - `buildDimensionProgress(baseline, current)` — per-dimension change objects with label, change, pctChange
+  - `countGoalsByStatus(goals)` — counts achieved / in-progress / total
+  - `topActivities(sessionNotes, limit)` — most-used activities ranked by usage count
+  - `isMilestoneTrigger(totalSessions)` — true at 10, 20, 50, 100 sessions
+  - `dimensionNarrative(dimProgress)` — auto-generated one-line summary per dimension
+  - `changeColour(change)` — `'green'` / `'yellow'` / `'red'` indicator
+
+- **Routes:** `backend/routes/clinical/outcomeReports.js` mounted at `/api/clinical/outcome-reports`
+  - `POST /generate` — Generate new outcome report PDF (streams PDF, persists metadata, sets `X-Report-Id` header)
+  - `GET /client/:clientId` — List all reports for a client (ownership-verified)
+  - `GET /:reportId` — Retrieve report metadata + HIPAA audit log entry
+  - `POST /:reportId/send` — Email report to recipient via SMTP (nodemailer)
+  - `POST /bulk-generate` — Generate reports for multiple clients in one request
+
+**Report content sections:**
+- Confidential header/footer watermarks
+- Client summary (name / anonymised ID, date range, total sessions, practitioner)
+- Dimension progress analysis: baseline → current per dimension with colour indicators (green/yellow/red) and auto-narrative
+- Goal achievement table: ✅ achieved, 🔄 in-progress, ⏸ other
+- Session highlights: top activities by usage, key milestones
+- Recommendations: focus areas based on lowest-change dimensions
+
+**PDF generation:** pdfkit (already a dependency); PDF streamed directly in the HTTP response.
+
+**Email delivery:** nodemailer with configurable SMTP (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`); gracefully falls back when SMTP is not configured.
+
+**HIPAA compliance:**
+- `accessedBy` array records every practitioner who retrieved a report
+- `sentToEmails` records every delivery
+- `isAnonymized` flag replaces client name with a short ID code
+- All routes enforce practitioner-tier access + ownership verification
+
+**Automated triggers:** `isMilestoneTrigger()` utility returns `true` at 10, 20, 50, and 100 sessions; callers (e.g. session-creation hooks) can invoke `/generate` when the count matches.
+
+**Tests:** `tests/outcome-reports.test.js`
 
 ---
 
