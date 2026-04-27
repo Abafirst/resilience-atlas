@@ -131,7 +131,7 @@ export default function SupportWidget() {
                 </svg>
                 <h3 className="support-widget-title">Get Support</h3>
                 {hasPrioritySupport && (
-                  <span className="support-priority-badge">
+                  <span className="support-widget-priority-badge">
                     <svg
                       viewBox="0 0 24 24"
                       fill="currentColor"
