@@ -605,7 +605,7 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
                     Join the Waitlist
                   </p>
                   <p className="iatlas-unlock-waitlist-desc">
-                    {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).join(' & ')} {comingSoonTiers.length === 1 ? 'is' : 'are'} coming soon.
+                    {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).filter(Boolean).join(' & ')} {comingSoonTiers.length === 1 ? 'is' : 'are'} coming soon.
                     Enter your details and we'll notify you at launch.
                   </p>
                   <WaitlistForm
@@ -618,7 +618,7 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
                   className="iatlas-unlock-waitlist-toggle"
                   onClick={() => setShowWaitlist(true)}
                 >
-                  Interested in {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).join(' / ')}? Join Waitlist →
+                  Interested in {comingSoonTiers.map((t) => IATLAS_TIER_CONFIG[t.tier]?.displayName).filter(Boolean).join(' / ')}? Join Waitlist →
                 </button>
               )}
             </div>

@@ -39,7 +39,7 @@ router.post('/', tierWaitlistLimiter, async (req, res) => {
     }
 
     if (typeof email !== 'string') {
-      return res.status(400).json({ error: 'A valid email address is required.' });
+      return res.status(400).json({ error: 'Email must be a string.' });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
