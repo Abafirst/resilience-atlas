@@ -270,6 +270,7 @@ export default function PracticeDashboardPage() {
               <Link to="/iatlas/practice/billing" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>💳 Generate Invoice</Link>
               <Link to="/iatlas/practice/analytics" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>📊 Practice Report</Link>
               <Link to="/iatlas/practice/team" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>💬 Team Messages</Link>
+              <Link to="/iatlas/org/dashboard" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#4f46e5' }}>🏢 Org Dashboard</Link>
             </div>
 
             {/* Two-column layout */}

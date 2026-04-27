@@ -462,6 +462,8 @@ app.use("/api/clinical/dashboard", require("./routes/clinical/practitionerDashbo
 console.log("✅ Mounted route: /api/clinical/dashboard (practitioner dashboard)");
 app.use("/api/clinical/outcome-reports", require("./routes/clinical/outcomeReports"));
 console.log("✅ Mounted route: /api/clinical/outcome-reports (outcome reports)");
+app.use("/api/analytics/org", require("./routes/clinical/orgAnalytics"));
+console.log("✅ Mounted route: /api/analytics/org (multi-client org analytics)");
 app.use("/api/templates", require("./routes/templates"));
 console.log("✅ Mounted route: /api/templates");
 app.use("/api/activity-favorites", require("./routes/activity-favorites"));
