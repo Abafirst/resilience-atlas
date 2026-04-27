@@ -48,8 +48,40 @@ SOAP-format session notes for practitioners to document client sessions.
 
 ---
 
-### #22d — Activity Selection by Client Profile ⬜
-Pending — leverage Task #24 search/filter infrastructure.
+### #22d — Activity Selection by Client Profile ✅
+
+Intelligent activity selection and recommendation system for practitioners.
+
+**Implementation details:**
+
+- **Models:**
+  - `backend/models/ClientActivityFavorites.js` — Per-client activity favourites (one doc per practitioner+client pair; embedded array)
+  - `backend/models/ClientActivityHistory.js` — Activity usage history with optional effectiveness ratings (1–5) and notes
+
+- **Recommendation algorithm:** `backend/utils/activityRecommendations.js`
+  - Scores activities 0–100 based on:
+    - **Age appropriateness** (+20, hard gate — activities outside age range are excluded)
+    - **Goal alignment** (+10 per matched goal, up to +30)
+    - **Sensory preference match** (+10 per match, up to +20)
+    - **Favourite boost** (+15)
+    - **Historical effectiveness** (+rating × 3, up to +15)
+    - **Recency penalty** (−10 when used < 7 days ago, to encourage variety)
+
+- **Routes:** `backend/routes/clinical/clientActivities.js` mounted at `/api/clinical/clients/:id`
+  - `GET  /recommended-activities`           — Smart ranked recommendations
+  - `GET  /activity-favorites`              — List client's favourited activities
+  - `POST /activity-favorites`              — Add activity to favourites
+  - `DELETE /activity-favorites/:activityId` — Remove from favourites
+  - `GET  /activity-history`               — List activity usage history
+  - `POST /activity-history`               — Record activity usage
+  - `PATCH /activity-history/:historyId`   — Update effectiveness rating / notes
+  - `GET  /activity-stats`                 — Aggregated usage statistics
+
+- **Effectiveness rating workflow:** Practitioners rate each activity 1–5 after a session via `PATCH /activity-history/:historyId`. Ratings feed back into future recommendations.
+
+- **Access control:** Requires Practitioner, Practice, or Enterprise tier; every route enforces client-profile ownership.
+
+- **Tests:** `tests/client-activity-selection.test.js` (35 tests)
 
 ### #22e — Progress Tracking Dashboard ⬜
 Practitioner view of client progress over time.

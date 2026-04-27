@@ -454,6 +454,8 @@ app.use("/api/clinical/clients", require("./routes/clinical/clients"));
 console.log("✅ Mounted route: /api/clinical/clients");
 app.use("/api/clinical/session-notes", require("./routes/clinical/sessionNotes"));
 console.log("✅ Mounted route: /api/clinical/session-notes");
+app.use("/api/clinical/clients/:id", require("./routes/clinical/clientActivities"));
+console.log("✅ Mounted route: /api/clinical/clients/:id (activity selection)");
 app.use("/api/templates", require("./routes/templates"));
 console.log("✅ Mounted route: /api/templates");
 app.use("/api/activity-favorites", require("./routes/activity-favorites"));
