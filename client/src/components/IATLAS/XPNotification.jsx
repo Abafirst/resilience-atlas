@@ -80,14 +80,20 @@ const STYLES = `
  */
 export default function XPNotification({ amount = 0, reason = '', onDismiss, duration = 3000 }) {
   const [leaving, setLeaving] = React.useState(false);
-  const timerRef = useRef(null);
-  const leaveRef = useRef(null);
+  const timerRef    = useRef(null);
+  const leaveRef    = useRef(null);
+  const onDismissRef = useRef(onDismiss);
+
+  // Keep the ref current without triggering the effect
+  React.useEffect(() => {
+    onDismissRef.current = onDismiss;
+  });
 
   useEffect(() => {
     timerRef.current = setTimeout(() => {
       setLeaving(true);
       leaveRef.current = setTimeout(() => {
-        if (onDismiss) onDismiss();
+        if (onDismissRef.current) onDismissRef.current();
       }, 320);
     }, duration);
 
@@ -95,7 +101,9 @@ export default function XPNotification({ amount = 0, reason = '', onDismiss, dur
       clearTimeout(timerRef.current);
       clearTimeout(leaveRef.current);
     };
-  }, [duration, onDismiss]);
+  // duration is the only value that should restart the timer
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration]);
 
   if (amount <= 0) return null;
 

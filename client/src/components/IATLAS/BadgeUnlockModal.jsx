@@ -94,11 +94,25 @@ function ConfettiCanvas() {
 
 // ── Celebration sound ─────────────────────────────────────────────────────────
 
-function playCelebrationSound() {
+let _sharedAudioCtx = null;
+
+function getAudioContext() {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx   = new AudioCtx();
+    if (!AudioCtx) return null;
+    if (!_sharedAudioCtx || _sharedAudioCtx.state === 'closed') {
+      _sharedAudioCtx = new AudioCtx();
+    }
+    return _sharedAudioCtx;
+  } catch (_) {
+    return null;
+  }
+}
+
+function playCelebrationSound() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const notes = [523.25, 659.25, 783.99, 1046.50];
     notes.forEach((freq, i) => {
       const osc  = ctx.createOscillator();

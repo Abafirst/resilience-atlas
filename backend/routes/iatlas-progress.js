@@ -162,11 +162,13 @@ router.post('/complete-activity', async (req, res) => {
 
   try {
     // ── Find or initialise progress document ─────────────────────────────────
-    let progress = await IATLASProgress.findOne({ userId, childProfileId });
-
-    if (!progress) {
-      progress = new IATLASProgress({ userId, childProfileId });
-    }
+    // Use findOneAndUpdate with upsert to avoid race conditions when two
+    // concurrent requests would both try to create the initial document.
+    let progress = await IATLASProgress.findOneAndUpdate(
+      { userId, childProfileId },
+      { $setOnInsert: { userId, childProfileId } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     // ── Prevent duplicate completions ─────────────────────────────────────────
     const alreadyCompleted = (progress.completedActivities || []).some(
