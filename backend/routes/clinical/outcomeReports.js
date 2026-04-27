@@ -654,7 +654,7 @@ router.post(
       });
 
       const emailSubject = subject ||
-        `Outcome Report for ${clientLabel} — ${new Date(report.generatedAt).toLocaleDateString('en-US')}`;
+        `Outcome Report for ${clientLabel} — ${formatDate(report.generatedAt)}`;
 
       const emailBody = message ||
         `Please find attached the latest outcome report for ${clientLabel}.\n\n` +
@@ -727,7 +727,8 @@ router.post(
 
       for (const clientProfileId of clientProfileIds) {
         try {
-          const clientProfile = await ClientProfile.findById(clientProfileId).lean();
+          const safeId = new mongoose.Types.ObjectId(clientProfileId);
+          const clientProfile = await ClientProfile.findById(safeId).lean();
           if (!clientProfile || clientProfile.practitionerId !== practitionerId) {
             results.push({ clientProfileId, success: false, error: 'Client profile not found.' });
             continue;
