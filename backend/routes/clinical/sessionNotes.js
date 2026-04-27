@@ -212,18 +212,16 @@ router.get(
         return res.status(400).json({ error: 'client_profile_id is required and must be a valid ID.' });
       }
 
-      // Cast to ObjectId to prevent query injection via user-supplied strings.
-      const clientProfileObjectId = new mongoose.Types.ObjectId(client_profile_id);
-
       // Verify ownership of the client profile before listing notes.
-      const client = await ClientProfile.findById(clientProfileObjectId).lean();
+      const client = await ClientProfile.findById(client_profile_id).lean();
       if (!client || client.practitionerId !== practitionerId) {
         return res.status(403).json({ error: 'Access denied: client profile not found or not owned by you.' });
       }
 
+      // Use client._id from the database (not the raw user input) in the query filter.
       const filter = {
         practitionerId,
-        clientProfileId: clientProfileObjectId,
+        clientProfileId: client._id,
         isDeleted:       false,
       };
 

@@ -151,13 +151,11 @@ function makeNote(overrides = {}) {
   };
   const merged = { ...base, ...overrides };
   merged.toSafeObject = () => {
-    // eslint-disable-next-line no-unused-vars
-    const { __v, toSafeObject, save, ...rest } = merged;
+    const { __v: _v, toSafeObject: _ts, toObject: _to, save: _s, ...rest } = merged;
     return rest;
   };
   merged.toObject = () => {
-    // eslint-disable-next-line no-unused-vars
-    const { __v, toSafeObject, toObject, save, ...rest } = merged;
+    const { __v: _v, toSafeObject: _ts, toObject: _to, save: _s, ...rest } = merged;
     return rest;
   };
   merged.save = mockSave.mockResolvedValue(merged);
