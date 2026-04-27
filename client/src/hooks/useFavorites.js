@@ -7,7 +7,7 @@
  * - Falls back gracefully when the user is not authenticated
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiUrl } from '../api/baseUrl.js';
 
@@ -18,15 +18,22 @@ export default function useFavorites() {
   const [isLoading,   setIsLoading]   = useState(false);
   const [error,       setError]       = useState(null);
 
+  // Stable ref so callbacks always call the latest getAccessTokenSilently
+  // without needing it in their dependency arrays.
+  const getAccessTokenRef = useRef(getAccessTokenSilently);
+  useEffect(() => {
+    getAccessTokenRef.current = getAccessTokenSilently;
+  }, [getAccessTokenSilently]);
+
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
-  async function getToken() {
+  const getToken = useCallback(async () => {
     try {
-      return await getAccessTokenSilently();
+      return await getAccessTokenRef.current();
     } catch {
       return null;
     }
-  }
+  }, []);
 
   // ── Load favorites on mount ──────────────────────────────────────────────────
 
@@ -61,8 +68,7 @@ export default function useFavorites() {
 
     loadFavorites();
     return () => { cancelled = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getToken]);
 
   // ── Toggle favorite ──────────────────────────────────────────────────────────
 
@@ -97,8 +103,7 @@ export default function useFavorites() {
       );
       setError(err.message);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, favoriteIds]);
+  }, [isAuthenticated, favoriteIds, getToken]);
 
   const isFavorited = useCallback(
     (activityId) => favoriteIds.includes(activityId),

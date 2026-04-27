@@ -72,19 +72,42 @@ jest.mock('../backend/models/ActivityFavorites', () => {
     lean: jest.fn().mockImplementation(async () => mockFavDoc),
   }));
 
+  // The POST handler now uses an aggregation pipeline update (array as second arg).
+  // This mock handles both the pipeline case (add) and the classic update ($pull)
+  // used by the DELETE handler.
   MockActivityFavorites.findOneAndUpdate = jest.fn().mockImplementation(
     async (_filter, update, _opts) => {
       if (!mockFavDoc) {
         mockFavDoc = { userId: 'user001', favorites: [] };
       }
-      // Handle $pull
+      // Aggregation pipeline update (Array) — used by POST to add a favorite
+      if (Array.isArray(update)) {
+        // Simulate: remove existing entry for activityId then push the new one.
+        // We find the $concatArrays instruction by inspecting the pipeline step.
+        const setPipeline = update[0]?.$set;
+        if (setPipeline && setPipeline.favorites) {
+          const concat = setPipeline.favorites.$concatArrays;
+          if (concat) {
+            const filterStage  = concat[0]?.$filter;
+            const newItems     = concat[1] || [];
+            if (filterStage) {
+              // The $ne condition tells us which activityId to exclude
+              const excludeId = filterStage.cond?.$ne?.[1];
+              if (excludeId) {
+                mockFavDoc.favorites = mockFavDoc.favorites.filter(
+                  f => f.activityId !== excludeId
+                );
+              }
+            }
+            newItems.forEach(item => mockFavDoc.favorites.push(item));
+          }
+        }
+        return { ...mockFavDoc };
+      }
+      // Classic update operators — used by DELETE ($pull)
       if (update.$pull && update.$pull.favorites) {
         const { activityId } = update.$pull.favorites;
         mockFavDoc.favorites = mockFavDoc.favorites.filter(f => f.activityId !== activityId);
-      }
-      // Handle $push
-      if (update.$push && update.$push.favorites) {
-        mockFavDoc.favorites.push(update.$push.favorites);
       }
       return { ...mockFavDoc };
     }
@@ -165,12 +188,29 @@ describe('Activity Favorites API', () => {
         if (!mockFavDoc) {
           mockFavDoc = { userId: 'user001', favorites: [] };
         }
+        // Aggregation pipeline (Array) — POST adds a favorite
+        if (Array.isArray(update)) {
+          const setPipeline = update[0]?.$set;
+          const concat = setPipeline?.favorites?.$concatArrays;
+          if (concat) {
+            const filterStage = concat[0]?.$filter;
+            const newItems    = concat[1] || [];
+            if (filterStage) {
+              const excludeId = filterStage.cond?.$ne?.[1];
+              if (excludeId) {
+                mockFavDoc.favorites = mockFavDoc.favorites.filter(
+                  f => f.activityId !== excludeId
+                );
+              }
+            }
+            newItems.forEach(item => mockFavDoc.favorites.push(item));
+          }
+          return { ...mockFavDoc };
+        }
+        // Classic update operators — DELETE uses $pull
         if (update.$pull && update.$pull.favorites) {
           const { activityId } = update.$pull.favorites;
           mockFavDoc.favorites = mockFavDoc.favorites.filter(f => f.activityId !== activityId);
-        }
-        if (update.$push && update.$push.favorites) {
-          mockFavDoc.favorites.push(update.$push.favorites);
         }
         return { ...mockFavDoc };
       }
@@ -251,7 +291,7 @@ describe('Activity Favorites API', () => {
       expect(res.body.success).toBe(true);
     });
 
-    test('rejects notes that exceed 500 characters by truncating them', async () => {
+    test('truncates notes that exceed 500 characters server-side', async () => {
       const longNotes = 'a'.repeat(600);
       const res = await request(app)
         .post('/api/activity-favorites/some-activity')

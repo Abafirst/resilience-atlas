@@ -335,7 +335,7 @@ export default function ActivitySearch({
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Initialise filter state from URL params
+  // Initialize filter state from URL params
   const [query,      setQuery]      = useState(searchParams.get('search') || '');
   const [ageFilter,  setAgeFilter]  = useState(searchParams.get('age')   || 'all');
   const [dimFilter,  setDimFilter]  = useState(searchParams.get('dim')   || 'all');
@@ -346,6 +346,9 @@ export default function ActivitySearch({
 
   // Debounce ref for search URL update
   const debounceRef = useRef(null);
+
+  // Clean up debounce timer on unmount
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   // ── URL sync ───────────────────────────────────────────────────────────────
 

@@ -82,30 +82,28 @@ router.post('/:activityId', async (req, res) => {
       ? req.body.notes.slice(0, 500)
       : '';
 
-    // Use $addToSet with a match on activityId to avoid duplicate entries.
-    // If a document for this user doesn't exist yet, upsert creates it.
-    // Because $addToSet compares entire sub-documents we first pull any
-    // existing entry for this activityId, then push the new one.
-    const result = await ActivityFavorites.findOneAndUpdate(
-      { userId },
-      {
-        $pull: { favorites: { activityId } },
-      },
-      { upsert: true, new: false }
-    );
-
-    // Now push the (re-)added favorite
+    // Atomic upsert: remove any existing entry for this activityId then add
+    // the fresh entry in a single findOneAndUpdate with an aggregation pipeline.
+    // Using a pipeline update allows $pull + $push semantics atomically.
     const updated = await ActivityFavorites.findOneAndUpdate(
       { userId },
-      {
-        $push: {
-          favorites: {
-            activityId,
-            savedAt: new Date(),
-            notes,
+      [
+        {
+          $set: {
+            favorites: {
+              $concatArrays: [
+                {
+                  $filter: {
+                    input: { $ifNull: ['$favorites', []] },
+                    cond:  { $ne: ['$$this.activityId', activityId] },
+                  },
+                },
+                [{ activityId, savedAt: new Date(), notes }],
+              ],
+            },
           },
         },
-      },
+      ],
       { upsert: true, new: true }
     );
 

@@ -9,13 +9,35 @@
  *   size        {'small'|'medium'|'large'} – Button size (default: 'medium')
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
-const SIZES = {
-  small:  { fontSize: '1rem',    padding: '.25rem' },
-  medium: { fontSize: '1.25rem', padding: '.35rem' },
-  large:  { fontSize: '1.5rem',  padding: '.45rem' },
-};
+const BTN_STYLES = `
+  .fav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .15s, opacity .15s;
+  }
+
+  .fav-btn--small  { font-size: 1rem;    padding: .25rem; }
+  .fav-btn--medium { font-size: 1.25rem; padding: .35rem; }
+  .fav-btn--large  { font-size: 1.5rem;  padding: .45rem; }
+
+  .fav-btn--unfavorited { opacity: 0.55; }
+  .fav-btn--favorited   { opacity: 1; }
+
+  .fav-btn:hover,
+  .fav-btn:focus-visible {
+    opacity: 1;
+    transform: scale(1.15);
+    outline: none;
+  }
+`;
 
 export default function FavoriteButton({
   activityId,
@@ -23,38 +45,24 @@ export default function FavoriteButton({
   onToggle,
   size = 'medium',
 }) {
-  const sz = SIZES[size] || SIZES.medium;
-
   function handleClick(e) {
     e.stopPropagation(); // prevent card expansion when inside a card
     if (onToggle) onToggle(activityId);
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-      aria-pressed={isFavorited}
-      title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-      style={{
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        padding: sz.padding,
-        fontSize: sz.fontSize,
-        lineHeight: 1,
-        borderRadius: '50%',
-        transition: 'transform .15s, opacity .15s',
-        opacity: isFavorited ? 1 : 0.55,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1.15)'; }}
-      onMouseLeave={e => { e.currentTarget.style.opacity = isFavorited ? '1' : '0.55'; e.currentTarget.style.transform = 'scale(1)'; }}
-    >
-      {isFavorited ? '❤️' : '🤍'}
-    </button>
+    <>
+      <style>{BTN_STYLES}</style>
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+        aria-pressed={isFavorited}
+        title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+        className={`fav-btn fav-btn--${size} ${isFavorited ? 'fav-btn--favorited' : 'fav-btn--unfavorited'}`}
+      >
+        {isFavorited ? '❤️' : '🤍'}
+      </button>
+    </>
   );
 }
