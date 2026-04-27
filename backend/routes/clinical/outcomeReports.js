@@ -80,8 +80,9 @@ async function assembleReportData({
   milestones,
   isAnonymized,
 }) {
-  const baselineScores = computeBaselineScores(snapshots);
-  const currentScores  = computeCurrentScores(snapshots);
+  // Baseline = average of the first 3 snapshots; current = average of the last 3.
+  const baselineScores    = computeBaselineScores(snapshots);
+  const currentScores     = computeCurrentScores(snapshots);
   const dimensionProgress = buildDimensionProgress(baselineScores, currentScores);
 
   const goalCounts = countGoalsByStatus(clientProfile.clinicalGoals || []);
@@ -736,15 +737,15 @@ router.post(
 
           const [snapshots, sessionNotes, milestones] = await Promise.all([
             ClientProgressSnapshot.find(
-              { practitionerId, clientProfileId: new mongoose.Types.ObjectId(clientProfileId) }
+              { practitionerId, clientProfileId: safeId }
             ).sort({ snapshotDate: 1 }).lean(),
 
             SessionNote.find(
-              { practitionerId, clientProfileId: new mongoose.Types.ObjectId(clientProfileId), isDeleted: false }
+              { practitionerId, clientProfileId: safeId, isDeleted: false }
             ).sort({ sessionDate: 1 }).lean(),
 
             ClientMilestone.find(
-              { practitionerId, clientProfileId: new mongoose.Types.ObjectId(clientProfileId) }
+              { practitionerId, clientProfileId: safeId }
             ).sort({ achievedDate: -1 }).lean(),
           ]);
 
@@ -758,7 +759,7 @@ router.post(
 
           const report = await OutcomeReport.create({
             practitionerId,
-            clientProfileId: new mongoose.Types.ObjectId(clientProfileId),
+            clientProfileId: safeId,
             reportType,
             periodStart:     reportData.periodStart,
             periodEnd:       reportData.periodEnd,
