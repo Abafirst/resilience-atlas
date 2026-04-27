@@ -101,26 +101,52 @@
 .developmental-wheel-container {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: 640px; /* ~20% smaller than the previous 800px */
   margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Entrance animation: wheel scales in from centre with a slight bounce */
+@keyframes wheel-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) rotate(-6deg);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.03) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 .developmental-wheel-svg {
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.14));
+  animation: wheel-enter 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: center center;
 }
 
 /* ── Segment interaction ─────────────────────────────────────────────────────── */
 .wheel-segment {
-  transition: fill-opacity 0.3s ease;
-}
-
-.wheel-segment:hover {
-  filter: brightness(1.1);
+  /* Hover/select transitions are handled via React inline styles.
+     CSS :focus ring still applies for keyboard navigation. */
 }
 
 .wheel-segment:focus {
   outline: 3px solid #4f46e5;
   outline-offset: 2px;
+}
+
+/* ── Dimension labels ────────────────────────────────────────────────────────── */
+.wheel-labels text {
+  font-family: inherit;
+  letter-spacing: 0.03em;
+}
+
+.wheel-labels line {
+  pointer-events: none;
 }
 
 /* ── Details panel ───────────────────────────────────────────────────────────── */
@@ -362,5 +388,20 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Slightly smaller wheel on mobile; simplified entrance animation */
+  .developmental-wheel-container {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+
+  .developmental-wheel-svg {
+    animation: wheel-enter-mobile 0.7s ease-out both;
+  }
+
+  @keyframes wheel-enter-mobile {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
   }
 }
