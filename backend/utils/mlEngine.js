@@ -53,6 +53,12 @@ const DECLINING_SLOPE_THRESHOLD = -0.3;
 /** Engine version exposed in all prediction records. */
 const ENGINE_VERSION = '1.0.0';
 
+/** Baseline score below this value is considered "low" — creates high growth potential. */
+const LOW_BASELINE_THRESHOLD = 40;
+
+/** Progress rate below this value (pts/session) is considered "slow" — triggers frequency increase suggestion. */
+const SLOW_PROGRESS_THRESHOLD = 0.5;
+
 // ── Statistical helpers ────────────────────────────────────────────────────────
 
 /**
@@ -190,7 +196,7 @@ function predictActivityEffectiveness(client, baselineScores, activities, histor
 
     // ── Explanation ────────────────────────────────────────────────────────
     const parts = [];
-    if (currentScore < 40)  parts.push(`low baseline in ${DIMENSION_LABELS[targetDimension]} creates high growth potential`);
+    if (currentScore < LOW_BASELINE_THRESHOLD)  parts.push(`low baseline in ${DIMENSION_LABELS[targetDimension]} creates high growth potential`);
     if (avgRating != null)   parts.push(`historically rated ${avgRating.toFixed(1)}/5 for this client`);
     if (aligned)             parts.push(`directly targets ${DIMENSION_LABELS[targetDimension]}`);
     if (!ageOk)              parts.push('age range mismatch reduces effectiveness');
@@ -319,13 +325,13 @@ function recommendSessionFrequency(snapshots, currentFreqPerWeek, maxPerMonth = 
   const totalImprovement = overallScores[overallScores.length - 1] - overallScores[0];
   const ratePerSession   = totalImprovement / (overallScores.length - 1);
 
-  // If progress is slow (< 0.5 pt / session) and we have headroom, suggest
+  // If progress is slow (below SLOW_PROGRESS_THRESHOLD pt / session) and we have headroom, suggest
   // increasing frequency.
   let recommended = freq;
   let rationale;
   let confidence = 55;
 
-  if (ratePerSession < 0.5 && freq < maxPerW) {
+  if (ratePerSession < SLOW_PROGRESS_THRESHOLD && freq < maxPerW) {
     recommended = Math.min(freq + 1, maxPerW);
     rationale   = `Progress rate is ${ratePerSession.toFixed(2)} pts/session — increasing to ${recommended}×/week is expected to accelerate outcomes.`;
     confidence  = 65;

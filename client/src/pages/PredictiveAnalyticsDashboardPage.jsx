@@ -344,7 +344,7 @@ function RegressionAlertsTab({ selectedClient }) {
           onClick={handleDetect}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Analysing…' : '🔍 Detect Regression Risks'}
+          {loading ? '⏳ Analyzing…' : '🔍 Detect Regression Risks'}
         </button>
       </div>
 
@@ -428,7 +428,7 @@ function SessionFrequencyTab({ selectedClient }) {
           onClick={handleRecommend}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Analysing…' : '📊 Get Frequency Recommendation'}
+          {loading ? '⏳ Analyzing…' : '📊 Get Frequency Recommendation'}
         </button>
       </div>
 

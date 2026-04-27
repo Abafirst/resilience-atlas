@@ -43,6 +43,20 @@ const logger   = require('../../utils/logger');
 
 const router = express.Router();
 
+// ── Route constants ───────────────────────────────────────────────────────────
+
+/** Approximate number of sessions expected per month (used for missed-session estimation). */
+const EXPECTED_SESSIONS_PER_MONTH = 4 * 4; // 4 weeks × 4 expected sessions/week
+
+/** Number of weeks in a 90-day lookback window. */
+const WEEKS_IN_90_DAYS = 13;
+
+/** Assumed default sessions per week when calculating attendance from notes count. */
+const DEFAULT_SESSIONS_PER_WEEK = 1;
+
+/** Minimum number of ML prediction records required to trigger a retrain. */
+const MIN_RETRAIN_DATA_SIZE = 100;
+
 // ── Rate limiter ──────────────────────────────────────────────────────────────
 
 const mlLimiter = rateLimit({
@@ -310,7 +324,7 @@ router.post('/detect-regression-risk', ...commonChain, async (req, res) => {
 
     // Missed sessions in last 30 days.
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const scheduledCount = 4 * 4; // rough estimate: 4 sessions/month expected
+    const scheduledCount = EXPECTED_SESSIONS_PER_MONTH;
     const actualCount    = await SessionNote.countDocuments({ clientProfileId: clientId, sessionDate: { $gte: thirtyDaysAgo },
     });
     const missedSessions = Math.max(0, Math.min(scheduledCount, scheduledCount - actualCount));
@@ -366,7 +380,7 @@ router.get('/recommend-session-frequency/:clientId', ...commonChain, async (req,
     const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
     const sessionCount  = await SessionNote.countDocuments({ clientProfileId: clientId, sessionDate: { $gte: ninetyDaysAgo },
     });
-    const currentFreqPerWeek = Math.round((sessionCount / 13) * 10) / 10 || 1; // 90d ≈ 13 weeks
+    const currentFreqPerWeek = Math.round((sessionCount / WEEKS_IN_90_DAYS) * 10) / 10 || DEFAULT_SESSIONS_PER_WEEK;
 
     const allSnapshots = await ClientProgressSnapshot.find({ clientProfileId: clientId })
       .sort({ snapshotDate: 1 })
@@ -431,8 +445,8 @@ router.post('/score-goal-probability', ...commonChain, async (req, res) => {
     // Attendance rate from last 90 days.
     const ninetyDaysAgo   = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
     const attendedCount   = await SessionNote.countDocuments({ clientProfileId: clientId, sessionDate: { $gte: ninetyDaysAgo } });
-    const attendanceRate  = Math.min(1, attendedCount / Math.max(1, 13 * 1)); // assume 1x/week
-    const freqPerWeek     = Math.round((attendedCount / 13) * 10) / 10 || 1;
+    const attendanceRate  = Math.min(1, attendedCount / Math.max(1, WEEKS_IN_90_DAYS * DEFAULT_SESSIONS_PER_WEEK));
+    const freqPerWeek     = Math.round((attendedCount / WEEKS_IN_90_DAYS) * 10) / 10 || DEFAULT_SESSIONS_PER_WEEK;
     const clientAge       = client.dateOfBirth
       ? Math.floor((Date.now() - new Date(client.dateOfBirth).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
       : 10;
@@ -645,10 +659,10 @@ router.post('/models/retrain', ...commonChain, async (req, res) => {
     // Count available training data.
     const predictionCount = await MLPrediction.countDocuments();
 
-    if (predictionCount < 100) {
+    if (predictionCount < MIN_RETRAIN_DATA_SIZE) {
       return res.status(422).json({
         error:   'Insufficient data for retraining.',
-        message: `At least 100 prediction records are required (currently: ${predictionCount}).`,
+        message: `At least ${MIN_RETRAIN_DATA_SIZE} prediction records are required (currently: ${predictionCount}).`,
         status:  'skipped',
       });
     }
