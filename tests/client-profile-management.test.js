@@ -157,7 +157,7 @@ function makeClient(overrides = {}) {
   const merged = { ...base, ...overrides };
   merged.toSafeObject = () => {
     // eslint-disable-next-line no-unused-vars
-    const { __v, toSafeObject, save: _save, ...rest } = merged;
+    const { __v, toSafeObject, save, ...rest } = merged;
     return rest;
   };
   merged.save = mockSave.mockResolvedValue(merged);

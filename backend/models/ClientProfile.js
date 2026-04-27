@@ -273,9 +273,6 @@ clientProfileSchema.pre('save', function preSave(next) {
   }
 
   // Encrypt sensitive fields when a key is configured.
-  if (this.isModified('clientIdentifier')) {
-    this._decryptedClientIdentifier = this.clientIdentifier; // keep decrypted copy for response
-  }
   if (this.isModified('ongoingNotes') && this.ongoingNotes) {
     this.ongoingNotes = encrypt(this.ongoingNotes);
   }
