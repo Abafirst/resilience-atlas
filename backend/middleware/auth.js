@@ -226,4 +226,41 @@ const requireOrgMember = async (req, res, next) => {
     }
 };
 
-module.exports = { authenticateJWT, optionalJWT, requireOrgAdmin, requireOrgMember };
+/**
+ * Middleware: restrict access to Practitioner, Practice, and Enterprise tiers.
+ *
+ * Queries the iatlas_subscriptions collection for an active or trialing
+ * subscription.  Must be used AFTER authenticateJWT so req.user is populated.
+ */
+const requirePractitionerTier = async (req, res, next) => {
+    const PROFESSIONAL_TIERS = new Set(['practitioner', 'practice', 'enterprise']);
+    try {
+        const userId = req.user && (req.user.userId || req.user.sub);
+        if (!userId) {
+            return res.status(401).json({ error: 'User not authenticated.' });
+        }
+
+        const db = mongoose.connection.db;
+        const tier = db
+            ? (await db.collection('iatlas_subscriptions').findOne({
+                  userId: userId.toString(),
+                  status: { $in: ['active', 'trialing'] },
+              }))?.tier || 'free'
+            : 'free';
+
+        if (!PROFESSIONAL_TIERS.has(tier)) {
+            return res.status(403).json({
+                error:   'Practitioner tier required.',
+                code:    'PROFESSIONAL_TIER_REQUIRED',
+                upgrade: true,
+            });
+        }
+
+        next();
+    } catch (err) {
+        console.error('[auth] requirePractitionerTier error:', err);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+module.exports = { authenticateJWT, optionalJWT, requireOrgAdmin, requireOrgMember, requirePractitionerTier };
