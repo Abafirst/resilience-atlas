@@ -4,10 +4,54 @@
  * Used by the interactive journey map and printable PDF roadmap.
  */
 
+/**
+ * Per-dimension configuration for the interactive circular Evolution Wheel.
+ * Keys must match the dimension keys used inside DEVELOPMENTAL_MILESTONES.
+ */
+export const DIMENSION_CONFIG = {
+  'agentic-generative': {
+    name: 'Agentic / Generative',
+    shortName: 'Agentic',
+    color: '#f59e0b',
+    angle: 30,
+  },
+  'somatic-regulative': {
+    name: 'Somatic / Regulative',
+    shortName: 'Somatic',
+    color: '#10b981',
+    angle: 90,
+  },
+  'cognitive-narrative': {
+    name: 'Cognitive / Narrative',
+    shortName: 'Cognitive',
+    color: '#3b82f6',
+    angle: 150,
+  },
+  'relational-connective': {
+    name: 'Relational / Connective',
+    shortName: 'Relational',
+    color: '#ec4899',
+    angle: 210,
+  },
+  'emotional-adaptive': {
+    name: 'Emotional / Adaptive',
+    shortName: 'Emotional',
+    color: '#8b5cf6',
+    angle: 270,
+  },
+  'spiritual-existential': {
+    name: 'Spiritual / Existential',
+    shortName: 'Spiritual',
+    color: '#06b6d4',
+    angle: 330,
+  },
+};
+
 export const DEVELOPMENTAL_MILESTONES = {
   'ages-5-7': {
     label: 'Foundation Trail (Ages 5-7)',
     ageRange: '5-7',
+    ring: 1,
     color: '#10b981', // Green
     icon: '/icons/kids-spark.svg',
     overview: 'Building basic resilience skills through play, exploration, and simple challenges.',
@@ -89,6 +133,7 @@ export const DEVELOPMENTAL_MILESTONES = {
   'ages-8-10': {
     label: 'Building Path (Ages 8-10)',
     ageRange: '8-10',
+    ring: 2,
     color: '#3b82f6', // Blue
     icon: '/icons/strength.svg',
     overview: 'Developing more complex resilience skills with guided challenges and goal-setting.',
@@ -170,6 +215,7 @@ export const DEVELOPMENTAL_MILESTONES = {
   'ages-11-14': {
     label: 'Explorer Trail (Ages 11-14)',
     ageRange: '11-14',
+    ring: 3,
     color: '#8b5cf6', // Purple
     icon: '/icons/compass.svg',
     overview: 'Navigating independence, identity, and deeper emotional complexity with advanced strategies.',
@@ -251,6 +297,7 @@ export const DEVELOPMENTAL_MILESTONES = {
   'ages-15-18': {
     label: 'Mastery Summit (Ages 15-18)',
     ageRange: '15-18',
+    ring: 4,
     color: '#f59e0b', // Amber
     icon: '/icons/trophy.svg',
     overview: 'Mastering resilience skills for life transitions, leadership, and complex challenges.',

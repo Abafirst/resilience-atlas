@@ -242,7 +242,7 @@ function SegmentDetailsPanel({ ageGroup, dimension, onClose }) {
       </ul>
 
       <div className="activities-info">
-        <strong>{dimData.activitiesCount} activities</strong> available in this segment
+        <strong>{dimData.activities?.length || 0} activities</strong> available in this segment
       </div>
 
       <div className="badges-info">
