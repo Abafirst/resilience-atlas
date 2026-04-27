@@ -99,7 +99,6 @@ import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
 import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
 import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
 import SupportWidget from './components/Support/SupportWidget.jsx';
-import DevelopmentalRoadmapPage from './pages/DevelopmentalRoadmapPage.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
