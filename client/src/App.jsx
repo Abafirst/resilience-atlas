@@ -1,4 +1,5 @@
 import './styles/styles.css';
+import './styles/adultSkillsWheel.css';
 import './styles/affirmations.css';
 import './styles/dashboard.css';
 import './styles/evidence-practices.css';
