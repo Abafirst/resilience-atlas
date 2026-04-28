@@ -466,7 +466,14 @@ export default function FamilyChallengeDetailPage() {
             <div className="fcd-hero-body">
               <div className="fcd-meta-row">
                 <span className="fcd-dim-badge" style={{ background: color }}>
-                  {icon} {challenge.dimension.replace(/-/g, ' ')}
+                  <img
+                    src={icon}
+                    alt=""
+                    aria-hidden="true"
+                    className="icon icon-xs"
+                    style={{ verticalAlign: 'middle', marginRight: '0.35rem' }}
+                  />
+                  {challenge.dimension.replace(/-/g, ' ')}
                 </span>
                 <span className="fcd-diff-badge" style={{ background: diff.color }}>
                   {diff.label}
