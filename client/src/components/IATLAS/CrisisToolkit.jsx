@@ -161,7 +161,7 @@ function ActivityCard({ activity, accentColor }) {
         </div>
       </div>
 
-      <button className="ct-expand-btn" onClick={() => setExpanded(e => !e)} type="button">
+      <button className="ct-expand-btn" onClick={() => setExpanded(prev => !prev)} type="button">
         {expanded ? '▲ Hide Details' : '▼ Show Instructions'}
       </button>
 

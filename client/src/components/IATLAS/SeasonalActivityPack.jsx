@@ -158,7 +158,7 @@ function ActivityCard({ activity }) {
 
       {activity.instructions && (
         <>
-          <button className="sap-expand-btn" onClick={() => setExpanded(e => !e)} type="button">
+          <button className="sap-expand-btn" onClick={() => setExpanded(prev => !prev)} type="button">
             {expanded ? '▲ Hide Instructions' : '▼ Show Instructions'}
           </button>
           {expanded && (
