@@ -15,9 +15,11 @@
  * require practitioner review before application (human-in-the-loop).
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import * as mlService from '../services/mlService.js';
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
@@ -48,76 +50,7 @@ const TABS = [
   { key: 'plan',       icon: '🧠', label: 'Treatment Plans' },
 ];
 
-// ── Mock client data (replaced by real API call in production) ─────────────
 
-const MOCK_CLIENTS = [
-  { id: 'client_001', name: 'Sarah M.',  age: 9,  diagnosis: 'ADHD + Anxiety' },
-  { id: 'client_002', name: 'Jake T.',   age: 12, diagnosis: 'ASD' },
-  { id: 'client_003', name: 'Emma K.',   age: 7,  diagnosis: 'Sensory Processing' },
-  { id: 'client_004', name: 'Liam R.',   age: 15, diagnosis: 'Depression' },
-];
-
-// ── Mock prediction data ───────────────────────────────────────────────────
-
-const MOCK_ACTIVITY_PREDICTIONS = [
-  { activityId: 'act_1', activityTitle: 'Breathing Exercises',    predictedImprovement: 2.3, confidence: 87, explanation: 'Low baseline + strong historical effectiveness for similar clients' },
-  { activityId: 'act_2', activityTitle: 'Gratitude Journal',       predictedImprovement: 1.8, confidence: 72, explanation: 'Directly targets Emotional-Adaptive dimension' },
-  { activityId: 'act_3', activityTitle: 'Body Scan Meditation',    predictedImprovement: 1.4, confidence: 65, explanation: 'Age appropriate; somatic alignment' },
-  { activityId: 'act_4', activityTitle: 'Social Role Play',        predictedImprovement: 0.9, confidence: 48, explanation: 'Limited data for this client — prediction based on profile only' },
-  { activityId: 'act_5', activityTitle: 'Emotion Identification Cards', predictedImprovement: 0.5, confidence: 41, explanation: 'Low confidence — less than 2 prior uses' },
-];
-
-const MOCK_RISKS = [
-  { dimension: 'emotionalAdaptive', type: 'sudden_drop', severity: 'high',   message: 'Emotional-Adaptive dropped 2.3 points below historical average' },
-  { dimension: 'somaticRegulative', type: 'declining_trend', severity: 'medium', message: 'Somatic-Regulative declining for 3 consecutive sessions' },
-  { type: 'attendance', severity: 'high', message: 'Client missed 3 sessions in the last 30 days' },
-];
-
-const MOCK_FREQ = {
-  currentFrequency: 1,
-  recommendedFrequency: 2,
-  rationale: 'Progress rate is 0.42 pts/session — increasing to 2×/week is expected to accelerate outcomes.',
-  expectedImprovementDelta: '+25% faster progress',
-  confidenceScore: 65,
-};
-
-const MOCK_GOAL_PROB = {
-  probability: 68,
-  expectedCompletionDate: '2026-06-12',
-  weeksToCompletion: 10,
-  riskFactors: [
-    'Target date may be ambitious — similar goals typically take 10–12 weeks',
-    'Attendance rate below 70% slows progress',
-  ],
-  suggestions: [
-    'Extend target to 2026-06-26 → ~80% probability',
-    'Increase to 2× sessions/week → ~76% probability (current target)',
-  ],
-};
-
-const MOCK_PLAN = {
-  totalWeeks: 12,
-  successProbability: 82,
-  forecastedScores: {
-    emotionalAdaptive:    55, somaticRegulative:    62,
-    agenticGenerative:    70, cognitiveNarrative:   75,
-    relationalConnective: 65, spiritualExistential: 50,
-  },
-  weeks: [
-    { week: 1, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.6, suggestedActivities: [{ activityTitle: 'Breathing Exercises' }, { activityTitle: 'Emotion Cards' }, { activityTitle: 'Calming Strategies' }] },
-    { week: 2, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.6, suggestedActivities: [{ activityTitle: 'Breathing Exercises' }, { activityTitle: 'Gratitude Journal' }, { activityTitle: 'Mindfulness' }] },
-    { week: 3, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Emotion Regulation' }, { activityTitle: 'Feelings Journal' }, { activityTitle: 'Coping Cards' }] },
-    { week: 4, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Body Scan' }, { activityTitle: 'Progressive Relaxation' }, { activityTitle: 'Movement Break' }] },
-    { week: 5, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Grounding Exercises' }, { activityTitle: 'Sensory Integration' }, { activityTitle: 'Deep Pressure' }] },
-    { week: 6, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Yoga Sequence' }, { activityTitle: 'Body Awareness' }, { activityTitle: 'Coordination Games' }] },
-    { week: 7, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Social Role Play' }, { activityTitle: 'Friendship Skills' }, { activityTitle: 'Peer Interaction' }] },
-    { week: 8, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Perspective Taking' }, { activityTitle: 'Empathy Cards' }, { activityTitle: 'Group Activity' }] },
-    { week: 9, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Community Map' }, { activityTitle: 'Team Challenge' }, { activityTitle: 'Connection Circle' }] },
-    { week: 10, focusDimensionLabel: 'Cognitive-Narrative',  expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Story Reframing' }, { activityTitle: 'Strength Journal' }, { activityTitle: 'Problem Solving' }] },
-    { week: 11, focusDimensionLabel: 'Cognitive-Narrative',  expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Flexible Thinking' }, { activityTitle: 'Growth Mindset' }, { activityTitle: 'Narrative Therapy' }] },
-    { week: 12, focusDimensionLabel: 'Integration & Review',  expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Real-World Practice' }, { activityTitle: 'Maintenance Plan' }, { activityTitle: 'Goal Review' }] },
-  ],
-};
 
 // ── Mini UI components ────────────────────────────────────────────────────────
 
@@ -193,26 +126,45 @@ function ProbabilityRing({ probability }) {
 
 // ── Tab: Activity Predictor ──────────────────────────────────────────────────
 
-function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
-  const [loading, setLoading]   = useState(false);
-  const [results, setResults]   = useState(null);
-  const [error, setError]       = useState(null);
-  const [feedback, setFeedback] = useState({});
+function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, getTokenFn }) {
+  const [loading, setLoading]         = useState(false);
+  const [results, setResults]         = useState(null);
+  const [error, setError]             = useState(null);
+  const [errorExtra, setErrorExtra]   = useState(null);
+  const [feedback, setFeedback]       = useState({});
+  const [feedbackMsg, setFeedbackMsg] = useState({});
+  const [predictionId, setPredictionId] = useState(null);
 
   const handlePredict = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
+    setErrorExtra(null);
     try {
-      // Use mock data — replace with real API call when backend is connected
-      await new Promise(r => setTimeout(r, 800));
-      setResults(MOCK_ACTIVITY_PREDICTIONS);
-    } catch {
-      setError('Failed to load predictions. Please try again.');
+      const data = await mlService.predictActivityEffectiveness(
+        selectedClient, selectedDim, undefined, getTokenFn
+      );
+      setResults(data.predictions || []);
+      setPredictionId(data.predictionId || null);
+    } catch (err) {
+      const e = mlService.handleMLError(err);
+      setError(e.message);
+      setErrorExtra(e);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim]);
+  }, [selectedClient, selectedDim, getTokenFn]);
+
+  const handleFeedback = useCallback(async (activityId, rating) => {
+    setFeedback(f => ({ ...f, [activityId]: rating }));
+    if (!predictionId) return;
+    try {
+      await mlService.submitFeedback(predictionId, rating, getTokenFn);
+      setFeedbackMsg(m => ({ ...m, [activityId]: rating === 'helpful' ? '✅ Logged' : '📝 Logged' }));
+    } catch {
+      setFeedbackMsg(m => ({ ...m, [activityId]: '⚠️ Could not save' }));
+    }
+  }, [predictionId, getTokenFn]);
 
   return (
     <div>
@@ -242,7 +194,25 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
         </button>
       </div>
 
-      {error && <div style={styles.errorBox}>{error}</div>}
+      {error && (
+        <div style={styles.errorBox}>
+          {error}
+          {errorExtra?.upgradeButton && (
+            <div style={{ marginTop: '.5rem' }}>
+              <a
+                href="/pricing"
+                style={{
+                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
+                  background: '#4f46e5', color: '#fff', fontWeight: 700,
+                  fontSize: '.82rem', textDecoration: 'none',
+                }}
+              >
+                Upgrade to Practitioner
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -282,16 +252,16 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
                   <>
                     <button
                       style={{ ...styles.btnSm, background: '#d1fae5', color: '#065f46' }}
-                      onClick={() => setFeedback(f => ({ ...f, [r.activityId]: 'helpful' }))}
+                      onClick={() => handleFeedback(r.activityId, 'helpful')}
                     >👍 Helpful</button>
                     <button
                       style={{ ...styles.btnSm, background: '#fee2e2', color: '#991b1b' }}
-                      onClick={() => setFeedback(f => ({ ...f, [r.activityId]: 'not_helpful' }))}
+                      onClick={() => handleFeedback(r.activityId, 'not_helpful')}
                     >👎 Not Helpful</button>
                   </>
                 ) : (
                   <span style={{ fontSize: '.75rem', color: '#6b7280' }}>
-                    {feedback[r.activityId] === 'helpful' ? '✅ Logged' : '📝 Logged'}
+                    {feedbackMsg[r.activityId] || (feedback[r.activityId] === 'helpful' ? '✅ Logged' : '📝 Logged')}
                   </span>
                 )}
               </div>
@@ -312,21 +282,29 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
 
 // ── Tab: Regression Alerts ───────────────────────────────────────────────────
 
-function RegressionAlertsTab({ selectedClient }) {
+function RegressionAlertsTab({ selectedClient, getTokenFn }) {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
+  const [error, setError]     = useState(null);
+  const [errorExtra, setErrorExtra] = useState(null);
   const [reviewed, setReviewed] = useState({});
 
   const handleDetect = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setErrorExtra(null);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResults(MOCK_RISKS);
+      const data = await mlService.detectRegressionRisk(selectedClient, getTokenFn);
+      setResults(data.risks || []);
+    } catch (err) {
+      const e = mlService.handleMLError(err);
+      setError(e.message);
+      setErrorExtra(e);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient]);
+  }, [selectedClient, getTokenFn]);
 
   const dimLabel = key => DIMENSIONS.find(d => d.key === key)?.label || key;
 
@@ -347,6 +325,26 @@ function RegressionAlertsTab({ selectedClient }) {
           {loading ? '⏳ Analyzing…' : '🔍 Detect Regression Risks'}
         </button>
       </div>
+
+      {error && (
+        <div style={styles.errorBox}>
+          {error}
+          {errorExtra?.upgradeButton && (
+            <div style={{ marginTop: '.5rem' }}>
+              <a
+                href="/pricing"
+                style={{
+                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
+                  background: '#4f46e5', color: '#fff', fontWeight: 700,
+                  fontSize: '.82rem', textDecoration: 'none',
+                }}
+              >
+                Upgrade to Practitioner
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -399,20 +397,28 @@ function RegressionAlertsTab({ selectedClient }) {
 
 // ── Tab: Session Frequency ────────────────────────────────────────────────────
 
-function SessionFrequencyTab({ selectedClient }) {
+function SessionFrequencyTab({ selectedClient, getTokenFn }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult]   = useState(null);
+  const [error, setError]     = useState(null);
+  const [errorExtra, setErrorExtra] = useState(null);
 
   const handleRecommend = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setErrorExtra(null);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResult(MOCK_FREQ);
+      const data = await mlService.recommendSessionFrequency(selectedClient, undefined, getTokenFn);
+      setResult(data);
+    } catch (err) {
+      const e = mlService.handleMLError(err);
+      setError(e.message);
+      setErrorExtra(e);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient]);
+  }, [selectedClient, getTokenFn]);
 
   return (
     <div>
@@ -431,6 +437,26 @@ function SessionFrequencyTab({ selectedClient }) {
           {loading ? '⏳ Analyzing…' : '📊 Get Frequency Recommendation'}
         </button>
       </div>
+
+      {error && (
+        <div style={styles.errorBox}>
+          {error}
+          {errorExtra?.upgradeButton && (
+            <div style={{ marginTop: '.5rem' }}>
+              <a
+                href="/pricing"
+                style={{
+                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
+                  background: '#4f46e5', color: '#fff', fontWeight: 700,
+                  fontSize: '.82rem', textDecoration: 'none',
+                }}
+              >
+                Upgrade to Practitioner
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {result && (
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -478,21 +504,33 @@ function SessionFrequencyTab({ selectedClient }) {
 
 // ── Tab: Goal Probability ─────────────────────────────────────────────────────
 
-function GoalProbabilityTab({ selectedClient, selectedDim }) {
+function GoalProbabilityTab({ selectedClient, selectedDim, getTokenFn }) {
   const [loading, setLoading]     = useState(false);
   const [result, setResult]       = useState(null);
+  const [error, setError]         = useState(null);
+  const [errorExtra, setErrorExtra] = useState(null);
   const [targetScore, setTarget]  = useState(75);
 
   const handleScore = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setErrorExtra(null);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResult(MOCK_GOAL_PROB);
+      const goal = {
+        dimension:   selectedDim,
+        targetScore: Math.min(100, Math.max(0, targetScore)),
+      };
+      const data = await mlService.scoreGoalProbability(selectedClient, goal, getTokenFn);
+      setResult(data);
+    } catch (err) {
+      const e = mlService.handleMLError(err);
+      setError(e.message);
+      setErrorExtra(e);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim, targetScore]);
+  }, [selectedClient, selectedDim, targetScore, getTokenFn]);
 
   return (
     <div>
@@ -520,6 +558,26 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
           </button>
         </div>
       </div>
+
+      {error && (
+        <div style={styles.errorBox}>
+          {error}
+          {errorExtra?.upgradeButton && (
+            <div style={{ marginTop: '.5rem' }}>
+              <a
+                href="/pricing"
+                style={{
+                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
+                  background: '#4f46e5', color: '#fff', fontWeight: 700,
+                  fontSize: '.82rem', textDecoration: 'none',
+                }}
+              >
+                Upgrade to Practitioner
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {result && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -574,22 +632,32 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
 // ── Tab: Treatment Plan ───────────────────────────────────────────────────────
 
-function TreatmentPlanTab({ selectedClient, selectedDim }) {
+function TreatmentPlanTab({ selectedClient, selectedDim, getTokenFn }) {
   const [loading, setLoading]   = useState(false);
   const [plan, setPlan]         = useState(null);
+  const [error, setError]       = useState(null);
+  const [errorExtra, setErrorExtra] = useState(null);
   const [totalWeeks, setWeeks]  = useState(12);
   const [expanded, setExpanded] = useState({});
 
   const handleGenerate = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setErrorExtra(null);
     try {
-      await new Promise(r => setTimeout(r, 1000));
-      setPlan(MOCK_PLAN);
+      const data = await mlService.generateTreatmentPlan(
+        selectedClient, undefined, totalWeeks, undefined, getTokenFn
+      );
+      setPlan(data);
+    } catch (err) {
+      const e = mlService.handleMLError(err);
+      setError(e.message);
+      setErrorExtra(e);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim, totalWeeks]);
+  }, [selectedClient, selectedDim, totalWeeks, getTokenFn]);
 
   const PHASE_COLORS = ['#eef2ff', '#fce7f3', '#d1fae5', '#fef3c7', '#e0f2fe', '#ede9fe'];
 
@@ -620,6 +688,26 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
           {loading ? '⏳ Generating…' : '🧠 Generate Treatment Plan'}
         </button>
       </div>
+
+      {error && (
+        <div style={styles.errorBox}>
+          {error}
+          {errorExtra?.upgradeButton && (
+            <div style={{ marginTop: '.5rem' }}>
+              <a
+                href="/pricing"
+                style={{
+                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
+                  background: '#4f46e5', color: '#fff', fontWeight: 700,
+                  fontSize: '.82rem', textDecoration: 'none',
+                }}
+              >
+                Upgrade to Practitioner
+              </a>
+            </div>
+          )}
+        </div>
+      )}
 
       {plan && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
@@ -793,23 +881,55 @@ const styles = {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function PredictiveAnalyticsDashboardPage() {
-  const [activeTab,    setActiveTab]    = useState('activity');
-  const [selectedClient, setClient]    = useState(MOCK_CLIENTS[0]?.id || '');
-  const [selectedDim,  setSelectedDim] = useState('emotionalAdaptive');
-  const [modelStatus,  setModelStatus] = useState(null);
+  const { getAccessTokenSilently } = useAuth0();
 
-  // Load model status on mount (mock)
-  React.useEffect(() => {
-    setTimeout(() => {
-      setModelStatus({
-        engineVersion: '1.0.0',
-        status: 'operational',
-        totalPredictionsMade: 234,
-      });
-    }, 500);
-  }, []);
+  const [activeTab,      setActiveTab]    = useState('activity');
+  const [selectedClient, setClient]       = useState('');
+  const [selectedDim,    setSelectedDim]  = useState('emotionalAdaptive');
+  const [modelStatus,    setModelStatus]  = useState(null);
+  const [clients,        setClients]      = useState([]);
+  const [clientsLoading, setClientsLoading] = useState(true);
 
-  const selectedClientName = MOCK_CLIENTS.find(c => c.id === selectedClient)?.name || '—';
+  // ── Load real client list on mount ──────────────────────────────────────────
+  useEffect(() => {
+    let cancelled = false;
+    async function loadClients() {
+      try {
+        const data = await mlService.fetchClients(getAccessTokenSilently);
+        if (cancelled) return;
+        const list = data.clients || [];
+        setClients(list);
+        if (list.length > 0) setClient(list[0]._id);
+      } catch {
+        // Non-fatal — leave the selector empty; individual tabs will show errors.
+      } finally {
+        if (!cancelled) setClientsLoading(false);
+      }
+    }
+    loadClients();
+    return () => { cancelled = true; };
+  }, [getAccessTokenSilently]);
+
+  // ── Load real model status on mount ─────────────────────────────────────────
+  useEffect(() => {
+    let cancelled = false;
+    async function loadModelStatus() {
+      try {
+        const data = await mlService.getModelStatus(getAccessTokenSilently);
+        if (!cancelled) setModelStatus(data);
+      } catch {
+        // Non-fatal — header badge simply won't appear.
+      }
+    }
+    loadModelStatus();
+    return () => { cancelled = true; };
+  }, [getAccessTokenSilently]);
+
+  const selectedClientName = (() => {
+    const c = clients.find(cl => cl._id === selectedClient);
+    if (!c) return '—';
+    return c.clientIdentifier || `${c.firstName || ''} ${c.lastName || ''}`.trim() || '—';
+  })();
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9' }}>
@@ -866,17 +986,29 @@ export default function PredictiveAnalyticsDashboardPage() {
           display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
         }}>
           <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151' }}>👤 Active Client:</span>
-          <select
-            style={{ ...styles.select, minWidth: 200 }}
-            value={selectedClient}
-            onChange={e => setClient(e.target.value)}
-          >
-            {MOCK_CLIENTS.map(c => (
-              <option key={c.id} value={c.id}>
-                {c.name} · {c.age}y · {c.diagnosis}
-              </option>
-            ))}
-          </select>
+          {clientsLoading ? (
+            <span style={{ fontSize: '.83rem', color: '#9ca3af' }}>Loading clients…</span>
+          ) : (
+            <select
+              style={{ ...styles.select, minWidth: 200 }}
+              value={selectedClient}
+              onChange={e => setClient(e.target.value)}
+            >
+              {clients.length === 0 && (
+                <option value="">No clients found</option>
+              )}
+              {clients.map(c => {
+                const label = c.clientIdentifier || `${c.firstName || ''} ${c.lastName || ''}`.trim() || c._id;
+                const dob   = c.dateOfBirth ? new Date(c.dateOfBirth) : null;
+                const age   = dob ? Math.floor((Date.now() - dob) / (365.25 * 24 * 3600 * 1000)) : null;
+                return (
+                  <option key={c._id} value={c._id}>
+                    {label}{age != null ? ` · ${age}y` : ''}
+                  </option>
+                );
+              })}
+            </select>
+          )}
           <span style={{ fontSize: '.82rem', color: '#9ca3af' }}>
             Predictions are calculated for <strong style={{ color: '#374151' }}>{selectedClientName}</strong>
           </span>
@@ -918,19 +1050,34 @@ export default function PredictiveAnalyticsDashboardPage() {
               selectedClient={selectedClient}
               selectedDim={selectedDim}
               setSelectedDim={setSelectedDim}
+              getTokenFn={getAccessTokenSilently}
             />
           )}
           {activeTab === 'regression' && (
-            <RegressionAlertsTab selectedClient={selectedClient} />
+            <RegressionAlertsTab
+              selectedClient={selectedClient}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'frequency' && (
-            <SessionFrequencyTab selectedClient={selectedClient} />
+            <SessionFrequencyTab
+              selectedClient={selectedClient}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'goal' && (
-            <GoalProbabilityTab selectedClient={selectedClient} selectedDim={selectedDim} />
+            <GoalProbabilityTab
+              selectedClient={selectedClient}
+              selectedDim={selectedDim}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'plan' && (
-            <TreatmentPlanTab selectedClient={selectedClient} selectedDim={selectedDim} />
+            <TreatmentPlanTab
+              selectedClient={selectedClient}
+              selectedDim={selectedDim}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
         </div>
 

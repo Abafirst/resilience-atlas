@@ -274,5 +274,33 @@ AI-powered clinical decision support system for treatment planning, regression d
 
 ---
 
+### #23c — Research Export Tools 📑 ✅
+Clinical research and evidence-based practice data export system with IRB-compliant anonymization.
+
+**For:** Researchers and evidence-based practitioners needing de-identified datasets for academic studies, grant reporting, and continuous quality improvement.
+
+**Implementation details:**
+
+- **Backend route:** `backend/routes/clinical/researchExport.js` mounted at `/api/research`
+  - `GET  /aggregate-stats` — population-level cohort statistics (mean, stdDev, min, max per dimension; age-group distribution)
+  - `POST /csv` — de-identified CSV export with configurable dimension fields, age-group bucketing, and snapshot count control
+  - `POST /longitudinal` — repeated-measures longitudinal dataset (one row per snapshot per client, with change-from-baseline columns)
+
+- **Frontend page:** `client/src/pages/ResearchExportPage.jsx`
+  - Route: `/iatlas/research/export`
+  - Three tabs:
+    1. **Cohort Statistics** — live aggregate stats with JSON download
+    2. **CSV Export** — configurable dimension selection, snapshot count, age-group toggle
+    3. **Longitudinal Dataset** — date-range filter, minimum-snapshot threshold, CSV/JSON download with preview
+
+- **Privacy / IRB compliance:**
+  - Direct identifiers stripped: `clientIdentifier`, `guardianContact`, `intakeNotes`, `medicalConsiderations`
+  - Dates of birth replaced with age-group buckets (0-4, 5-9, 10-14, …, 65+)
+  - Client ObjectIds replaced with sequential pseudonymous research IDs (R001, R002, …)
+  - `irbStatement` field included in all responses for audit trail
+  - All export endpoints are rate-limited and require practitioner JWT
+
+---
+
 ## Task #24 — Activity Search & Filter ✅ (PR #611)
 IATLAS activity catalog search with keyword, category, and age-group filtering.

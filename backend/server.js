@@ -470,6 +470,8 @@ app.use("/api/activity-favorites", require("./routes/activity-favorites"));
 console.log("✅ Mounted route: /api/activity-favorites");
 app.use("/api/ml", require("./routes/clinical/mlInsights"));
 console.log("✅ Mounted route: /api/ml (ML-powered predictive analytics)");
+app.use("/api/research", require("./routes/clinical/researchExport"));
+console.log("✅ Mounted route: /api/research (Research Export Tools)");
 
 // ==============================
 // Root API info
