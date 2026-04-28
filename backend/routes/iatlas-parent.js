@@ -430,7 +430,7 @@ function buildProgressReportHTML(profile, progress) {
   </ul>
 
   <footer class="footer">
-    <strong>IATLAS&trade;</strong> &mdash; Integrated Applied Teaching and Learning Adaptive System<br>
+    <strong>IATLAS&trade;</strong> &mdash; Integrated Applied Teaching and Learning Analysis System<br>
     Progress tracking focuses on skills practised, not performance scores.<br>
     &copy; ${year} The Resilience Atlas&trade; &bull; theresilienceatlas.com
   </footer>

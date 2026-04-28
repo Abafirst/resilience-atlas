@@ -735,7 +735,7 @@ export default function ContentRoadmapPage() {
               IATLAS Content Roadmap
             </h1>
             <p className="crp-hero-sub">
-              An interactive visual guide to the <strong>IATLAS</strong> (Integrated Applied Teaching and Learning Adaptive System) curriculum —
+              An interactive visual guide to the <strong>IATLAS</strong> (Integrated Applied Teaching and Learning Analysis System) curriculum —
               strategic 3-phase rollout plan for building out the full ecosystem across ages 5–18.
               Adult skills, kids activities, gamification, and resources.
             </p>
