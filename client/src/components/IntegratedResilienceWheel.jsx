@@ -251,10 +251,9 @@ export default function IntegratedResilienceWheel({
   const needleAngle = dimAngle(dominantIdx);
   const needleDeg   = (needleAngle * 180) / Math.PI + 90;
 
-  // Data polygon points
-  const dataPoints = DIMENSIONS.map((_, i) => {
-    const r = (values[i] / 100) * OUTER_RING_R;
-    return polarToCartesian(CX, CY, r, dimAngle(i));
+  // Fixed 100% hexagon points (shape no longer changes with scores)
+  const hexagonPoints = DIMENSIONS.map((_, i) => {
+    return polarToCartesian(CX, CY, OUTER_RING_R, dimAngle(i));
   });
 
   const isClickable = typeof onDimensionClick === 'function';
@@ -292,7 +291,7 @@ export default function IntegratedResilienceWheel({
           </radialGradient>
         ))}
 
-        {/* Score polygon fill gradient */}
+        {/* Score polygon fill gradient — kept for backwards compatibility */}
         <radialGradient id="irw-polyFill" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#0097A7" stopOpacity="0.22" />
           <stop offset="100%" stopColor="#0097A7" stopOpacity="0.06" />
@@ -555,31 +554,41 @@ export default function IntegratedResilienceWheel({
   function renderPolygon() {
     return (
       <>
-        <polygon
-          points={pointsStr(dataPoints)}
-          fill="url(#irw-polyFill)"
-          stroke={PAL.polygonStroke}
-          strokeWidth="2"
-          strokeLinejoin="round"
-          pointerEvents="none"
-        >
-          <animate attributeName="opacity" from="0" to="1" dur="0.8s" fill="freeze" />
-        </polygon>
+        {/* Color-coded hexagon edges */}
+        {hexagonPoints.map((pt, i) => {
+          const nextPt = hexagonPoints[(i + 1) % 6];
+          const dim = DIMENSIONS[i];
+          return (
+            <line
+              key={`irw-edge-${i}`}
+              x1={pt.x.toFixed(2)}
+              y1={pt.y.toFixed(2)}
+              x2={nextPt.x.toFixed(2)}
+              y2={nextPt.y.toFixed(2)}
+              stroke={DIMENSION_COLOR[dim]}
+              strokeWidth="3"
+              strokeLinecap="round"
+              pointerEvents="none"
+            />
+          );
+        })}
 
-        {/* Nodes at each data point */}
-        {dataPoints.map((pt, i) => {
+        {/* Color-coded vertex nodes */}
+        {hexagonPoints.map((pt, i) => {
+          const dim = DIMENSIONS[i];
           const isDom = i === dominantIdx;
           return (
             <circle
               key={`irw-node-${i}`}
               cx={pt.x.toFixed(2)}
               cy={pt.y.toFixed(2)}
-              r={isDom ? 7 : 5}
-              fill={isDom ? PAL.polygonStroke : PAL.nodeFill}
-              stroke={PAL.nodeStroke}
-              strokeWidth="1.5"
-              opacity={isDom ? 1 : 0.75}
+              r={isDom ? 10 : 7}
+              fill={DIMENSION_COLOR[dim]}
+              stroke="#FFFFFF"
+              strokeWidth={isDom ? 2.5 : 2}
+              opacity={isDom ? 1 : 0.90}
               pointerEvents="none"
+              filter={isDom ? `drop-shadow(0 0 8px ${DIMENSION_COLOR[dim]})` : 'none'}
             />
           );
         })}
