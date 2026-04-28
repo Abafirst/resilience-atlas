@@ -2,7 +2,7 @@
 
 const path = require('path');
 const PDFDocument = require('pdfkit');
-const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
+const { DIMENSION_CONTENT } = require('../templates/dimensionContent');
 const branding = require('../config/branding');
 const { getSkillLevelLabel, getSkillLevelIcon, getSkillLevelDescription } = require('../utils/skillLevels');
 
@@ -328,28 +328,47 @@ function buildJourneyMapPage(doc, report) {
     const topDim = report.dominantType || 'N/A';
     const rankedDims = Object.entries(report.dimensionAnalysis || {})
         .sort((a, b) => a[1].percentage - b[1].percentage);
-    const bottomDim = rankedDims.length > 0 ? rankedDims[0][0].split('-')[0] : 'N/A';
-    const level = getLevel(overallNum).toUpperCase();
+    const bottomDimEntry = rankedDims.length > 0 ? rankedDims[0] : null;
+    const bottomSkillLabel = bottomDimEntry
+        ? getSkillLevelLabel(Number(bottomDimEntry[1].percentage || 0))
+        : 'N/A';
+    const archetypeValue = report.profileArchetype
+        ? report.profileArchetype.replace(/^The /, '')
+        : getSkillLevelLabel(overallNum);
 
     const tileW = (CONTENT_WIDTH - 12) / 4;
     const tileY = doc.y + 4;
     const landscapeLevel = getSkillLevelLabel(overallNum);
     statTile(doc, 'Resilience Foundation', landscapeLevel, PAGE_MARGIN, tileY, tileW - 3);
     statTile(doc, 'Anchor Dimension', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1), tileY, tileW - 3);
-    statTile(doc, 'Growth Frontier', bottomDim, PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
-    statTile(doc, 'Your Archetype', getSkillLevelIcon(overallNum), PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
+    statTile(doc, 'Growth Frontier', bottomSkillLabel, PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
+    statTile(doc, 'Your Archetype', archetypeValue, PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
     doc.y = tileY + 58;
 
-    // Dimension summary list
+    // Dimension skill table — clean two-column layout with absolute positioning
     ensureSpace(doc, 40);
     subHeader(doc, 'WAYPOINTS ON YOUR RESILIENCE MAP');
     doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
-        'Six territories of resilience form your complete inner landscape. Each holds unique strengths and growth frontiers \u2014 together they define your resilience identity and navigation approach to life\'s challenges.',
+        'Six territories of resilience form your complete inner landscape. Each holds unique strengths and growth edges \u2014 together they define your resilience identity and navigation approach to life\'s challenges.',
         PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
     );
     fillColor(doc, COLORS.text);
-    doc.y += 10;
-    ensureSpace(doc, 40);
+    doc.y += 12;
+
+    // Table header
+    ensureSpace(doc, 20);
+    const tableHeaderY = doc.y;
+    const colDimW = 200;
+    const colLevelW = 115;
+    const colBarX = PAGE_MARGIN + colDimW + colLevelW + 10;
+    const colBarW = CONTENT_WIDTH - colDimW - colLevelW - 15;
+    fillColor(doc, COLORS.textMid);
+    doc.fontSize(8).font('Helvetica-Bold').text('DIMENSION', PAGE_MARGIN, tableHeaderY, { width: colDimW, lineBreak: false });
+    doc.fontSize(8).font('Helvetica-Bold').text('SKILL LEVEL', PAGE_MARGIN + colDimW + 5, tableHeaderY, { width: colLevelW, lineBreak: false });
+    strokeColor(doc, COLORS.border);
+    doc.moveTo(PAGE_MARGIN, tableHeaderY + 12).lineTo(PAGE_WIDTH - PAGE_MARGIN, tableHeaderY + 12).stroke();
+    strokeColor(doc, COLORS.border);
+    doc.y = tableHeaderY + 18;
 
     const dims = Object.entries(report.dimensionAnalysis || {});
     for (const [dim, analysis] of dims) {
@@ -357,21 +376,18 @@ function buildJourneyMapPage(doc, report) {
         const cfg = DIM_CONFIG[dim] || { color: COLORS.primary };
         const levelColor = LEVEL_COLORS[analysis.level] || COLORS.primary;
         const pct = Number(analysis.percentage || 0);
+        const skillLabel = getSkillLevelLabel(pct);
+        const rowY = doc.y;
 
         fillColor(doc, cfg.color);
-        doc.fontSize(9).font('Helvetica-Bold').text(dim, PAGE_MARGIN, doc.y, {
-            continued: true, width: 200, lineBreak: false,
-        });
+        doc.fontSize(9).font('Helvetica-Bold').text(dim, PAGE_MARGIN, rowY, { width: colDimW, lineBreak: false });
+
         fillColor(doc, levelColor);
-        const skillLabel = getSkillLevelLabel(pct);
-        const skillIcon = getSkillLevelIcon(pct);
-        doc.fontSize(9).font('Helvetica-Bold').text('  ' + skillIcon + ' ' + skillLabel + '  ', { continued: true, lineBreak: false });
-        fillColor(doc, COLORS.textLight);
-        doc.fontSize(9).font('Helvetica').text('', {
-            width: 100, lineBreak: false,
-        });
-        progressBar(doc, PAGE_MARGIN + 320, doc.y - 10, CONTENT_WIDTH - 325, pct, cfg.color);
-        doc.y += 4;
+        doc.fontSize(9).font('Helvetica-Bold').text(skillLabel, PAGE_MARGIN + colDimW + 5, rowY, { width: colLevelW, lineBreak: false });
+
+        progressBar(doc, colBarX, rowY + 2, colBarW, pct, cfg.color);
+
+        doc.y = rowY + 16;
         fillColor(doc, COLORS.text);
     }
 }
