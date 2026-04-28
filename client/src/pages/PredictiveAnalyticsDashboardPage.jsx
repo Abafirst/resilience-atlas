@@ -15,9 +15,19 @@
  * require practitioner review before application (human-in-the-loop).
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
+import {
+  fetchClients,
+  predictActivityEffectiveness,
+  detectRegressionRisk,
+  recommendSessionFrequency,
+  scoreGoalProbability,
+  generateTreatmentPlan,
+  getModelStatus,
+  submitFeedback,
+} from '../services/mlService.js';
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
@@ -48,77 +58,6 @@ const TABS = [
   { key: 'plan',       icon: '🧠', label: 'Treatment Plans' },
 ];
 
-// ── Mock client data (replaced by real API call in production) ─────────────
-
-const MOCK_CLIENTS = [
-  { id: 'client_001', name: 'Sarah M.',  age: 9,  diagnosis: 'ADHD + Anxiety' },
-  { id: 'client_002', name: 'Jake T.',   age: 12, diagnosis: 'ASD' },
-  { id: 'client_003', name: 'Emma K.',   age: 7,  diagnosis: 'Sensory Processing' },
-  { id: 'client_004', name: 'Liam R.',   age: 15, diagnosis: 'Depression' },
-];
-
-// ── Mock prediction data ───────────────────────────────────────────────────
-
-const MOCK_ACTIVITY_PREDICTIONS = [
-  { activityId: 'act_1', activityTitle: 'Breathing Exercises',    predictedImprovement: 2.3, confidence: 87, explanation: 'Low baseline + strong historical effectiveness for similar clients' },
-  { activityId: 'act_2', activityTitle: 'Gratitude Journal',       predictedImprovement: 1.8, confidence: 72, explanation: 'Directly targets Emotional-Adaptive dimension' },
-  { activityId: 'act_3', activityTitle: 'Body Scan Meditation',    predictedImprovement: 1.4, confidence: 65, explanation: 'Age appropriate; somatic alignment' },
-  { activityId: 'act_4', activityTitle: 'Social Role Play',        predictedImprovement: 0.9, confidence: 48, explanation: 'Limited data for this client — prediction based on profile only' },
-  { activityId: 'act_5', activityTitle: 'Emotion Identification Cards', predictedImprovement: 0.5, confidence: 41, explanation: 'Low confidence — less than 2 prior uses' },
-];
-
-const MOCK_RISKS = [
-  { dimension: 'emotionalAdaptive', type: 'sudden_drop', severity: 'high',   message: 'Emotional-Adaptive dropped 2.3 points below historical average' },
-  { dimension: 'somaticRegulative', type: 'declining_trend', severity: 'medium', message: 'Somatic-Regulative declining for 3 consecutive sessions' },
-  { type: 'attendance', severity: 'high', message: 'Client missed 3 sessions in the last 30 days' },
-];
-
-const MOCK_FREQ = {
-  currentFrequency: 1,
-  recommendedFrequency: 2,
-  rationale: 'Progress rate is 0.42 pts/session — increasing to 2×/week is expected to accelerate outcomes.',
-  expectedImprovementDelta: '+25% faster progress',
-  confidenceScore: 65,
-};
-
-const MOCK_GOAL_PROB = {
-  probability: 68,
-  expectedCompletionDate: '2026-06-12',
-  weeksToCompletion: 10,
-  riskFactors: [
-    'Target date may be ambitious — similar goals typically take 10–12 weeks',
-    'Attendance rate below 70% slows progress',
-  ],
-  suggestions: [
-    'Extend target to 2026-06-26 → ~80% probability',
-    'Increase to 2× sessions/week → ~76% probability (current target)',
-  ],
-};
-
-const MOCK_PLAN = {
-  totalWeeks: 12,
-  successProbability: 82,
-  forecastedScores: {
-    emotionalAdaptive:    55, somaticRegulative:    62,
-    agenticGenerative:    70, cognitiveNarrative:   75,
-    relationalConnective: 65, spiritualExistential: 50,
-  },
-  weeks: [
-    { week: 1, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.6, suggestedActivities: [{ activityTitle: 'Breathing Exercises' }, { activityTitle: 'Emotion Cards' }, { activityTitle: 'Calming Strategies' }] },
-    { week: 2, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.6, suggestedActivities: [{ activityTitle: 'Breathing Exercises' }, { activityTitle: 'Gratitude Journal' }, { activityTitle: 'Mindfulness' }] },
-    { week: 3, focusDimensionLabel: 'Emotional-Adaptive',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Emotion Regulation' }, { activityTitle: 'Feelings Journal' }, { activityTitle: 'Coping Cards' }] },
-    { week: 4, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Body Scan' }, { activityTitle: 'Progressive Relaxation' }, { activityTitle: 'Movement Break' }] },
-    { week: 5, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.5, suggestedActivities: [{ activityTitle: 'Grounding Exercises' }, { activityTitle: 'Sensory Integration' }, { activityTitle: 'Deep Pressure' }] },
-    { week: 6, focusDimensionLabel: 'Somatic-Regulative',    expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Yoga Sequence' }, { activityTitle: 'Body Awareness' }, { activityTitle: 'Coordination Games' }] },
-    { week: 7, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Social Role Play' }, { activityTitle: 'Friendship Skills' }, { activityTitle: 'Peer Interaction' }] },
-    { week: 8, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Perspective Taking' }, { activityTitle: 'Empathy Cards' }, { activityTitle: 'Group Activity' }] },
-    { week: 9, focusDimensionLabel: 'Relational-Connective', expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Community Map' }, { activityTitle: 'Team Challenge' }, { activityTitle: 'Connection Circle' }] },
-    { week: 10, focusDimensionLabel: 'Cognitive-Narrative',  expectedWeeklyGain: 0.4, suggestedActivities: [{ activityTitle: 'Story Reframing' }, { activityTitle: 'Strength Journal' }, { activityTitle: 'Problem Solving' }] },
-    { week: 11, focusDimensionLabel: 'Cognitive-Narrative',  expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Flexible Thinking' }, { activityTitle: 'Growth Mindset' }, { activityTitle: 'Narrative Therapy' }] },
-    { week: 12, focusDimensionLabel: 'Integration & Review',  expectedWeeklyGain: 0.3, suggestedActivities: [{ activityTitle: 'Real-World Practice' }, { activityTitle: 'Maintenance Plan' }, { activityTitle: 'Goal Review' }] },
-  ],
-};
-
 // ── Mini UI components ────────────────────────────────────────────────────────
 
 const AI_DISCLAIMER = 'AI recommendations are decision-support tools. All clinical decisions require practitioner review and approval.';
@@ -132,6 +71,31 @@ function DisclaimerBanner() {
     }}>
       <span style={{ fontSize: '1rem' }}>🔬</span>
       <span><strong>Human-in-the-Loop:</strong> {AI_DISCLAIMER}</span>
+    </div>
+  );
+}
+
+function TierUpgradeBanner({ message }) {
+  return (
+    <div style={{
+      background: '#f5f3ff', border: '1px solid #c4b5fd', borderRadius: 10,
+      padding: '.9rem 1rem', marginBottom: '1rem',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
+      flexWrap: 'wrap',
+    }}>
+      <span style={{ fontSize: '.88rem', color: '#5b21b6', fontWeight: 600 }}>
+        🔒 {message}
+      </span>
+      <a
+        href="/pricing"
+        style={{
+          background: '#7c3aed', color: '#fff', borderRadius: 8,
+          padding: '.4rem .9rem', fontSize: '.82rem', fontWeight: 700,
+          textDecoration: 'none', whiteSpace: 'nowrap',
+        }}
+      >
+        Upgrade Plan →
+      </a>
     </div>
   );
 }
@@ -194,25 +158,46 @@ function ProbabilityRing({ probability }) {
 // ── Tab: Activity Predictor ──────────────────────────────────────────────────
 
 function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
-  const [loading, setLoading]   = useState(false);
-  const [results, setResults]   = useState(null);
-  const [error, setError]       = useState(null);
-  const [feedback, setFeedback] = useState({});
+  const [loading, setLoading]                 = useState(false);
+  const [results, setResults]                 = useState(null);
+  const [predictionId, setPredictionId]       = useState(null);
+  const [error, setError]                     = useState(null);
+  const [isTierError, setIsTierError]         = useState(false);
+  const [feedbackGiven, setFeedbackGiven]     = useState(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   const handlePredict = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
+    setIsTierError(false);
+    setResults(null);
+    setPredictionId(null);
+    setFeedbackGiven(null);
     try {
-      // Use mock data — replace with real API call when backend is connected
-      await new Promise(r => setTimeout(r, 800));
-      setResults(MOCK_ACTIVITY_PREDICTIONS);
-    } catch {
-      setError('Failed to load predictions. Please try again.');
+      const data = await predictActivityEffectiveness(selectedClient, selectedDim);
+      setResults(data.predictions || []);
+      setPredictionId(data.predictionId || null);
+    } catch (err) {
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
   }, [selectedClient, selectedDim]);
+
+  const handleFeedback = useCallback(async (value) => {
+    if (!predictionId || feedbackGiven || feedbackLoading) return;
+    setFeedbackLoading(true);
+    try {
+      await submitFeedback(predictionId, value);
+      setFeedbackGiven(value);
+    } catch {
+      // Non-critical — feedback failure is silent
+    } finally {
+      setFeedbackLoading(false);
+    }
+  }, [predictionId, feedbackGiven, feedbackLoading]);
 
   return (
     <div>
@@ -242,7 +227,8 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
         </button>
       </div>
 
-      {error && <div style={styles.errorBox}>{error}</div>}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -278,20 +264,22 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.35rem', alignItems: 'flex-end' }}>
-                {!feedback[r.activityId] ? (
+                {!feedbackGiven ? (
                   <>
                     <button
                       style={{ ...styles.btnSm, background: '#d1fae5', color: '#065f46' }}
-                      onClick={() => setFeedback(f => ({ ...f, [r.activityId]: 'helpful' }))}
+                      onClick={() => handleFeedback('helpful')}
+                      disabled={feedbackLoading}
                     >👍 Helpful</button>
                     <button
                       style={{ ...styles.btnSm, background: '#fee2e2', color: '#991b1b' }}
-                      onClick={() => setFeedback(f => ({ ...f, [r.activityId]: 'not_helpful' }))}
+                      onClick={() => handleFeedback('not_helpful')}
+                      disabled={feedbackLoading}
                     >👎 Not Helpful</button>
                   </>
                 ) : (
                   <span style={{ fontSize: '.75rem', color: '#6b7280' }}>
-                    {feedback[r.activityId] === 'helpful' ? '✅ Logged' : '📝 Logged'}
+                    {feedbackGiven === 'helpful' ? '✅ Logged' : '📝 Logged'}
                   </span>
                 )}
               </div>
@@ -313,16 +301,23 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
 // ── Tab: Regression Alerts ───────────────────────────────────────────────────
 
 function RegressionAlertsTab({ selectedClient }) {
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
-  const [reviewed, setReviewed] = useState({});
+  const [loading, setLoading]         = useState(false);
+  const [results, setResults]         = useState(null);
+  const [reviewed, setReviewed]       = useState({});
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleDetect = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setIsTierError(false);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResults(MOCK_RISKS);
+      const data = await detectRegressionRisk(selectedClient);
+      setResults(data.risks || []);
+    } catch (err) {
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -347,6 +342,9 @@ function RegressionAlertsTab({ selectedClient }) {
           {loading ? '⏳ Analyzing…' : '🔍 Detect Regression Risks'}
         </button>
       </div>
+
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -400,15 +398,22 @@ function RegressionAlertsTab({ selectedClient }) {
 // ── Tab: Session Frequency ────────────────────────────────────────────────────
 
 function SessionFrequencyTab({ selectedClient }) {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult]   = useState(null);
+  const [loading, setLoading]         = useState(false);
+  const [result, setResult]           = useState(null);
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleRecommend = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setIsTierError(false);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResult(MOCK_FREQ);
+      const data = await recommendSessionFrequency(selectedClient);
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -431,6 +436,9 @@ function SessionFrequencyTab({ selectedClient }) {
           {loading ? '⏳ Analyzing…' : '📊 Get Frequency Recommendation'}
         </button>
       </div>
+
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {result && (
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -479,16 +487,26 @@ function SessionFrequencyTab({ selectedClient }) {
 // ── Tab: Goal Probability ─────────────────────────────────────────────────────
 
 function GoalProbabilityTab({ selectedClient, selectedDim }) {
-  const [loading, setLoading]     = useState(false);
-  const [result, setResult]       = useState(null);
-  const [targetScore, setTarget]  = useState(75);
+  const [loading, setLoading]         = useState(false);
+  const [result, setResult]           = useState(null);
+  const [targetScore, setTarget]      = useState(75);
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleScore = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setIsTierError(false);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      setResult(MOCK_GOAL_PROB);
+      const data = await scoreGoalProbability(selectedClient, {
+        dimension:   selectedDim,
+        targetScore: targetScore,
+      });
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -520,6 +538,9 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
           </button>
         </div>
       </div>
+
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {result && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -575,21 +596,33 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 // ── Tab: Treatment Plan ───────────────────────────────────────────────────────
 
 function TreatmentPlanTab({ selectedClient, selectedDim }) {
-  const [loading, setLoading]   = useState(false);
-  const [plan, setPlan]         = useState(null);
-  const [totalWeeks, setWeeks]  = useState(12);
-  const [expanded, setExpanded] = useState({});
+  const [loading, setLoading]           = useState(false);
+  const [plan, setPlan]                 = useState(null);
+  const [totalWeeks, setWeeks]          = useState(12);
+  const [targetScore, setTargetScore]   = useState(75);
+  const [expanded, setExpanded]         = useState({});
+  const [error, setError]               = useState(null);
+  const [isTierError, setIsTierError]   = useState(false);
 
   const handleGenerate = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
+    setError(null);
+    setIsTierError(false);
     try {
-      await new Promise(r => setTimeout(r, 1000));
-      setPlan(MOCK_PLAN);
+      const data = await generateTreatmentPlan(
+        selectedClient,
+        [{ dimension: selectedDim, targetScore }],
+        totalWeeks,
+      );
+      setPlan(data);
+    } catch (err) {
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim, totalWeeks]);
+  }, [selectedClient, selectedDim, totalWeeks, targetScore]);
 
   const PHASE_COLORS = ['#eef2ff', '#fce7f3', '#d1fae5', '#fef3c7', '#e0f2fe', '#ede9fe'];
 
@@ -612,6 +645,13 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
             <option key={w} value={w}>{w} weeks</option>
           ))}
         </select>
+        <label style={styles.label}>Target Score</label>
+        <input
+          type="number" min={0} max={100}
+          style={{ ...styles.select, width: 80 }}
+          value={targetScore}
+          onChange={e => setTargetScore(Number(e.target.value))}
+        />
         <button
           style={{ ...styles.btn, ...styles.btnPrimary, marginLeft: 'auto' }}
           onClick={handleGenerate}
@@ -620,6 +660,9 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
           {loading ? '⏳ Generating…' : '🧠 Generate Treatment Plan'}
         </button>
       </div>
+
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {plan && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
@@ -793,23 +836,47 @@ const styles = {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function PredictiveAnalyticsDashboardPage() {
-  const [activeTab,    setActiveTab]    = useState('activity');
-  const [selectedClient, setClient]    = useState(MOCK_CLIENTS[0]?.id || '');
-  const [selectedDim,  setSelectedDim] = useState('emotionalAdaptive');
-  const [modelStatus,  setModelStatus] = useState(null);
+  const [activeTab,      setActiveTab]      = useState('activity');
+  const [selectedClient, setClient]         = useState('');
+  const [selectedDim,    setSelectedDim]    = useState('emotionalAdaptive');
+  const [modelStatus,    setModelStatus]    = useState(null);
+  const [clients,        setClients]        = useState([]);
+  const [clientsLoading, setClientsLoading] = useState(true);
+  const [pageError,      setPageError]      = useState(null);
 
-  // Load model status on mount (mock)
-  React.useEffect(() => {
-    setTimeout(() => {
-      setModelStatus({
-        engineVersion: '1.0.0',
-        status: 'operational',
-        totalPredictionsMade: 234,
-      });
-    }, 500);
+  // Load client list and model status from real API on mount
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      const [clientsResult, statusResult] = await Promise.allSettled([
+        fetchClients(),
+        getModelStatus(),
+      ]);
+
+      if (cancelled) return;
+
+      if (clientsResult.status === 'fulfilled') {
+        const list = clientsResult.value;
+        setClients(list);
+        if (list.length > 0) setClient(list[0]._id);
+      } else {
+        const err = clientsResult.reason;
+        setPageError({ message: err.message, isTierUpgrade: !!err.isTierUpgrade });
+      }
+
+      if (statusResult.status === 'fulfilled') {
+        setModelStatus(statusResult.value);
+      }
+
+      setClientsLoading(false);
+    }
+
+    init();
+    return () => { cancelled = true; };
   }, []);
 
-  const selectedClientName = MOCK_CLIENTS.find(c => c.id === selectedClient)?.name || '—';
+  const selectedClientName = clients.find(c => c._id === selectedClient)?.clientIdentifier || '—';
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9' }}>
@@ -866,20 +933,37 @@ export default function PredictiveAnalyticsDashboardPage() {
           display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
         }}>
           <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151' }}>👤 Active Client:</span>
-          <select
-            style={{ ...styles.select, minWidth: 200 }}
-            value={selectedClient}
-            onChange={e => setClient(e.target.value)}
-          >
-            {MOCK_CLIENTS.map(c => (
-              <option key={c.id} value={c.id}>
-                {c.name} · {c.age}y · {c.diagnosis}
-              </option>
-            ))}
-          </select>
-          <span style={{ fontSize: '.82rem', color: '#9ca3af' }}>
-            Predictions are calculated for <strong style={{ color: '#374151' }}>{selectedClientName}</strong>
-          </span>
+          {clientsLoading ? (
+            <span style={{ fontSize: '.85rem', color: '#9ca3af' }}>Loading clients…</span>
+          ) : pageError ? (
+            <div style={{ flex: 1 }}>
+              {pageError.isTierUpgrade
+                ? <TierUpgradeBanner message={pageError.message} />
+                : <div style={styles.errorBox}>{pageError.message}</div>
+              }
+            </div>
+          ) : clients.length === 0 ? (
+            <span style={{ fontSize: '.85rem', color: '#9ca3af' }}>
+              No clients found. Add a client to get started.
+            </span>
+          ) : (
+            <>
+              <select
+                style={{ ...styles.select, minWidth: 200 }}
+                value={selectedClient}
+                onChange={e => setClient(e.target.value)}
+              >
+                {clients.map(c => (
+                  <option key={c._id} value={c._id}>
+                    {c.clientIdentifier}{c.ageGroup ? ` · ${c.ageGroup}` : ''}
+                  </option>
+                ))}
+              </select>
+              <span style={{ fontSize: '.82rem', color: '#9ca3af' }}>
+                Predictions are calculated for <strong style={{ color: '#374151' }}>{selectedClientName}</strong>
+              </span>
+            </>
+          )}
         </div>
 
         {/* Disclaimer */}
