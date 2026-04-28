@@ -115,7 +115,7 @@ export default function CaregiverLearningPage() {
             </p>
             <h1 className="clp-hero-title">Caregiver Learning</h1>
             <p className="clp-hero-desc">
-              Evidence-based parent guides to help you support your child&rsquo;s resilience journey.
+              Evidence-based parent guides to help you support your child's resilience journey.
               Each guide is grounded in research and designed for busy families.
             </p>
           </div>

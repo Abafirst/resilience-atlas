@@ -17,6 +17,8 @@ import {
   isFamilyChallengeCompleted,
   saveFamilyChallengeCompletion,
 } from '../hooks/useFamilyProgress.js';
+import SafeIcon from '../components/common/SafeIcon.jsx';
+import { DIMENSION_FALLBACK_EMOJIS } from '../data/iatlas/iatlasConstants.js';
 
 const DIMENSION_COLORS = {
   'agentic-generative':    '#6366f1',
@@ -395,36 +397,6 @@ const PAGE_STYLES = `
     color: #94a3b8;
   }
 `;
-
-const DIMENSION_FALLBACK_EMOJIS = {
-  'agentic-generative':    '🚀',
-  'somatic-regulative':    '🌿',
-  'cognitive-narrative':   '🧠',
-  'relational-connective': '🤝',
-  'emotional-adaptive':    '💛',
-  'spiritual-existential': '✨',
-};
-
-function SafeIcon({ src, fallbackEmoji = '📌', alt = '', style = {}, className = '' }) {
-  const [failed, setFailed] = React.useState(false);
-  if (failed) {
-    return (
-      <span aria-hidden="true" style={{ fontSize: style.width || 14, lineHeight: 1, ...style }}>
-        {fallbackEmoji}
-      </span>
-    );
-  }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      aria-hidden={!alt || undefined}
-      className={className}
-      style={style}
-      onError={() => setFailed(true)}
-    />
-  );
-}
 
 export default function FamilyChallengeDetailPage() {
   const { challengeId } = useParams();

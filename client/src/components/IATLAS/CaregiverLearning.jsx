@@ -29,6 +29,7 @@ import {
   getCompletedModuleIds,
   getBookmarkedModuleIds,
 } from '../../data/iatlas/caregiverCurriculum.js';
+import SafeIcon from '../common/SafeIcon.jsx';
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 
@@ -762,25 +763,6 @@ function renderContent(text) {
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-function FallbackIcon({ emoji, size = 16 }) {
-  return <span aria-hidden="true" style={{ fontSize: size, lineHeight: 1 }}>{emoji}</span>;
-}
-
-function SafeIcon({ src, fallbackEmoji = '📌', alt = '', className = '', style = {} }) {
-  const [failed, setFailed] = React.useState(false);
-  if (failed) return <FallbackIcon emoji={fallbackEmoji} size={style.width || 16} />;
-  return (
-    <img
-      src={src}
-      alt={alt}
-      aria-hidden={!alt || undefined}
-      className={className}
-      style={style}
-      onError={() => setFailed(true)}
-    />
-  );
-}
 
 function CategoryCard({ category, onClick, locked }) {
   const completedCount = getModulesByCategory(category.id)
