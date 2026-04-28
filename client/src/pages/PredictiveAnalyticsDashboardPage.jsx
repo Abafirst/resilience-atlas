@@ -187,17 +187,6 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
     }
   }, [selectedClient, selectedDim, getTokenFn]);
 
-  const handleFeedback = useCallback(async (activityId, rating) => {
-    setFeedback(f => ({ ...f, [activityId]: rating }));
-    if (!predictionId) return;
-    try {
-      await mlService.submitFeedback(predictionId, rating, getTokenFn);
-      setFeedbackMsg(m => ({ ...m, [activityId]: rating === 'helpful' ? '✅ Logged' : '📝 Logged' }));
-    } catch {
-      setFeedbackMsg(m => ({ ...m, [activityId]: '⚠️ Could not save' }));
-    }
-  }, [predictionId, getTokenFn]);
-
   const handleFeedback = useCallback(async (value) => {
     if (!predictionId || feedbackGiven || feedbackLoading) return;
     setFeedbackLoading(true);
