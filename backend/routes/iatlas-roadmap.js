@@ -7,6 +7,7 @@
  *   GET /api/iatlas/roadmap/printable.pdf
  *       — Generate and stream a printable PDF overview of the
  *         IATLAS Developmental Roadmap (ages 5–18).
+ *         Requires an active IATLAS subscription (Individual tier or higher).
  */
 
 const express     = require('express');
@@ -14,6 +15,8 @@ const router      = express.Router();
 const PDFDocument = require('pdfkit');
 const rateLimit   = require('express-rate-limit');
 const logger      = require('../utils/logger');
+const { authenticateJWT } = require('../middleware/auth');
+const checkTier   = require('../middleware/checkTier');
 
 // ── Rate limiter ──────────────────────────────────────────────────────────────
 const roadmapLimiter = rateLimit({
@@ -79,8 +82,11 @@ const DEVELOPMENTAL_MILESTONES = {
   },
 };
 
+// ── Tiers that have access to Kids content (mirrors client hasKidsAccess()) ──
+const KIDS_TIERS = ['individual', 'family', 'complete', 'practitioner', 'practice', 'enterprise'];
+
 // ── GET /api/iatlas/roadmap/printable.pdf ─────────────────────────────────────
-router.get('/printable.pdf', roadmapLimiter, (req, res) => {
+router.get('/printable.pdf', roadmapLimiter, authenticateJWT, checkTier(KIDS_TIERS), (req, res) => {
   try {
     const doc = new PDFDocument({
       margin: 40,

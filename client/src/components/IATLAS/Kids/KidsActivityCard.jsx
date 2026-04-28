@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { ACTIVITY_TYPES } from '../../../data/iatlas/kidsActivities.js';
 import PrintExportButton from '../PrintExportButton.jsx';
 import PrintableActivitySheet from './PrintableActivitySheet.jsx';
+import IATLASUnlockModal from '../IATLASUnlockModal.jsx';
+import { hasKidsAccess } from '../../../utils/iatlasGating.js';
 
 const CARD_STYLES = `
   .kac-card {
@@ -299,8 +301,11 @@ const CARD_STYLES = `
 `;
 
 export default function KidsActivityCard({ activity, accentColor, onComplete, isCompleted }) {
-  const [expanded,      setExpanded]      = useState(false);
-  const [showWorksheet, setShowWorksheet] = useState(false);
+  const [expanded,         setExpanded]         = useState(false);
+  const [showWorksheet,    setShowWorksheet]    = useState(false);
+  const [showUnlockModal,  setShowUnlockModal]  = useState(false);
+
+  const hasAccess = hasKidsAccess();
 
   const typeInfo = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.activity;
   const badgeStyle = {
@@ -403,38 +408,67 @@ export default function KidsActivityCard({ activity, accentColor, onComplete, is
         )}
 
         {/* Print activity */}
-        <PrintExportButton
-          resourceType="activity"
-          resourceData={{
-            title:    activity.title,
-            dimension: activity.dimension,
-            ageGroup:  activity.ageGroup,
-            duration:  activity.duration,
-            learningGoal: activity.learningGoal,
-            description:  activity.description,
-            materials:    activity.materials,
-            instructions: activity.instructions,
-            reflectionQuestions: activity.reflectionQuestions,
-            parentNote: activity.parentNote,
-          }}
-          label="Print Activity"
-          variant="ghost"
-        />
+        {hasAccess ? (
+          <PrintExportButton
+            resourceType="activity"
+            resourceData={{
+              title:    activity.title,
+              dimension: activity.dimension,
+              ageGroup:  activity.ageGroup,
+              duration:  activity.duration,
+              learningGoal: activity.learningGoal,
+              description:  activity.description,
+              materials:    activity.materials,
+              instructions: activity.instructions,
+              reflectionQuestions: activity.reflectionQuestions,
+              parentNote: activity.parentNote,
+            }}
+            label="Print Activity"
+            variant="ghost"
+          />
+        ) : (
+          <button
+            type="button"
+            className="peb-btn peb-btn--ghost"
+            onClick={() => setShowUnlockModal(true)}
+            aria-label="Unlock to print activity — IATLAS subscription required"
+          >
+            <img src="/icons/lock.svg" alt="Locked" aria-hidden="true" className="icon icon-sm" />
+            Unlock to Print
+          </button>
+        )}
 
         {/* Print worksheet */}
         <button
           type="button"
           className="kac-expand-btn"
-          onClick={() => setShowWorksheet(true)}
+          onClick={() => {
+            if (!hasAccess) { setShowUnlockModal(true); return; }
+            setShowWorksheet(true);
+          }}
           style={{ marginTop: '.25rem' }}
+          aria-label={hasAccess ? `Print ${activity.title} worksheet` : 'Unlock to print worksheet — IATLAS subscription required'}
         >
-          <img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Print Worksheet
+          <img
+            src={hasAccess ? '/icons/print.svg' : '/icons/lock.svg'}
+            alt=""
+            aria-hidden="true"
+            className="icon icon-sm"
+          />
+          {hasAccess ? 'Print Worksheet' : 'Unlock to Print Worksheet'}
         </button>
 
         {showWorksheet && (
           <PrintableActivitySheet
             activity={activity}
             onClose={() => setShowWorksheet(false)}
+          />
+        )}
+
+        {showUnlockModal && (
+          <IATLASUnlockModal
+            variant="kids"
+            onClose={() => setShowUnlockModal(false)}
           />
         )}
       </div>
