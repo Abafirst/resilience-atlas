@@ -635,6 +635,42 @@ main { flex: 1; }
 
 .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+/* -- Hero Logo -------------------------------------- */
+.hero-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  animation: hero-logo-fade-in 0.8s ease-out;
+}
+
+.hero-logo-image {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease;
+}
+
+.hero-logo-image:hover,
+.hero-logo-image:focus {
+  transform: scale(1.05);
+}
+
+@keyframes hero-logo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-theme="dark"] .hero-logo-image {
+  filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.1));
+}
+
 /* -- Cards ------------------------------------------ */
 .card{
   background: #fff;
@@ -1220,6 +1256,23 @@ main { flex: 1; }
 .hidden { display: none !important; }
 
 /* -- Responsive ------------------------------------- */
+@media (max-width: 768px) {
+  .hero-logo-image {
+    width: 90px;
+    height: 90px;
+  }
+  .hero-logo {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-logo-image {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 @media (max-width: 640px) {
   .hero { padding: 3rem 1.25rem 2.5rem; }
   .hero-actions { flex-direction: column; align-items: center; }
