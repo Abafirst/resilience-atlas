@@ -8,7 +8,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-The IATLAS (Integrated Applied Teaching and Learning Adaptive System) curriculum gamification system is designed to drive engagement, skill acquisition, and measurable progress using a combination of behavioral (ABA) reinforcement principles and intrinsic motivation (ACT values). This document provides a comprehensive overview of all gamification features, design principles, and implementation guidance.
+The IATLAS (Integrated Applied Teaching and Learning Analysis System) curriculum gamification system is designed to drive engagement, skill acquisition, and measurable progress using a combination of behavioral (ABA) reinforcement principles and intrinsic motivation (ACT values). This document provides a comprehensive overview of all gamification features, design principles, and implementation guidance.
 
 ---
 

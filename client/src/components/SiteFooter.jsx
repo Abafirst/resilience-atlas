@@ -18,7 +18,7 @@ export default function SiteFooter() {
         <div className="footer-nav-group">
           <strong className="footer-nav-heading">Programs</strong>
           <a href="/teams">For Teams</a>
-          <a href="/iatlas" title="IATLAS: Integrated Applied Teaching and Learning Adaptive System">IATLAS Curriculum</a>
+          <a href="/iatlas" title="IATLAS: Integrated Applied Teaching and Learning Analysis System">IATLAS Curriculum</a>
           <a href="/resources">Resources</a>
           <a href="/gamification">Gamification</a>
           <a href="/kids">For Kids</a>
@@ -32,7 +32,7 @@ export default function SiteFooter() {
         <div className="footer-nav-group">
           <strong className="footer-nav-heading">IATLAS&#8482;</strong>
           <p style={{ fontSize: '0.82rem', color: 'inherit', margin: '0 0 0.5rem', lineHeight: 1.5 }}>
-            Integrated Applied Teaching and Learning Adaptive System
+            Integrated Applied Teaching and Learning Analysis System
           </p>
           <a href="/iatlas">IATLAS Curriculum</a>
           <a href="/iatlas/kids">IATLAS Kids</a>

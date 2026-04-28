@@ -1,4 +1,4 @@
-# Integrated Applied Teaching and Learning Adaptive System (IATLAS)
+# Integrated Applied Teaching and Learning Analysis System (IATLAS)
 
 > **A structured, science-based framework** for developing and delivering resilience interventions grounded in Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT).
 
@@ -6,7 +6,7 @@
 
 ## 🎯 Purpose & Overview
 
-The **Integrated Applied Teaching and Learning Adaptive System (IATLAS)** is the practice-facing complement to the Resilience Atlas™ assessment platform. Where the Atlas measures and maps resilience, IATLAS provides the structured methodology for building it — translating assessment data into targeted, measurable interventions across six dimensions of human resilience.
+The **Integrated Applied Teaching and Learning Analysis System (IATLAS)** is the practice-facing complement to the Resilience Atlas™ assessment platform. Where the Atlas measures and maps resilience, IATLAS provides the structured methodology for building it — translating assessment data into targeted, measurable interventions across six dimensions of human resilience.
 
 IATLAS bridges three domains:
 - **Applied Behavior Analysis (ABA)** — data-driven, functional, evidence-based behavior change

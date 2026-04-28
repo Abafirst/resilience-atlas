@@ -13,7 +13,7 @@ last_updated: 2026-04-25
 
 ## Overview
 
-This document catalogs and summarizes the research literature underpinning the Integrated Applied Teaching and Learning Adaptive System. It is organized by theoretical domain and is intended as a living document — updated as new research is incorporated.
+This document catalogs and summarizes the research literature underpinning the Integrated Applied Teaching and Learning Analysis System. It is organized by theoretical domain and is intended as a living document — updated as new research is incorporated.
 
 **Domains covered:**
 1. Resilience Science
