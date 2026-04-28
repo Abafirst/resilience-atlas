@@ -254,14 +254,11 @@ export default function DevelopmentalRoadmapPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="drp-btn-pdf"
-            >
-              📄 Download Printable Roadmap (PDF)
+            ><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download Printable Roadmap (PDF)
             </a>
-            <Link to="/iatlas/kids/catalog" className="drp-btn-secondary">
-              🎯 Browse Activity Catalog
+            <Link to="/iatlas/kids/catalog" className="drp-btn-secondary"><img src="/icons/goal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Browse Activity Catalog
             </Link>
-            <Link to="/iatlas/kids" className="drp-btn-secondary">
-              👦 Back to Kids Curriculum
+            <Link to="/iatlas/kids" className="drp-btn-secondary"><img src="/icons/kids-spark.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Back to Kids Curriculum
             </Link>
           </div>
 

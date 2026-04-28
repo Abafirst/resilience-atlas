@@ -156,14 +156,14 @@ export default function IATLASVideoLibrary() {
         <SiteHeader />
 
         <div className="vlib-hero">
-          <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}>🎥</div>
+          <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </div>
           <h1 className="vlib-hero-title">IATLAS Video Library</h1>
           <p className="vlib-hero-sub">
             Watch practitioners demonstrate IATLAS activities. Each video shows step-by-step instructions,
             age adaptations, and facilitation tips.
           </p>
           <span className="vlib-hero-badge">
-            <span>📹</span>
+            <span><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
             {availableCount > 0
               ? `${availableCount} of ${totalCount} videos available`
               : `${totalCount} videos in production`}
@@ -175,7 +175,7 @@ export default function IATLASVideoLibrary() {
           {/* Waitlist banner — shown only when no videos are live yet */}
           {availableCount === 0 && (
             <div className="vlib-waitlist-banner">
-              <div style={{ fontSize: '2rem' }}>🎬</div>
+              <div style={{ fontSize: '2rem' }}><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </div>
               <p className="vlib-csb-title">Activity Demonstration Videos Are Coming!</p>
               <p className="vlib-csb-sub">
                 Our production team is recording high-quality demonstration videos for every IATLAS
@@ -184,8 +184,7 @@ export default function IATLASVideoLibrary() {
               </p>
 
               {waitlistState === 'success' ? (
-                <p style={{ color: '#6ee7b7', fontWeight: 700, marginTop: '1rem' }}>
-                  ✅ You're on the list! We'll email you when videos launch.
+                <p style={{ color: '#6ee7b7', fontWeight: 700, marginTop: '1rem' }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> You're on the list! We'll email you when videos launch.
                 </p>
               ) : (
                 <form
@@ -291,7 +290,7 @@ export default function IATLASVideoLibrary() {
           </div>
 
           <div className="vlib-guidelines">
-            <p className="vlib-gl-title">📋 Video Production Specifications</p>
+            <p className="vlib-gl-title"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Video Production Specifications</p>
             <ul className="vlib-gl-list">
               <li>Length: 2–5 minutes per video</li>
               <li>Format: MP4, 1080p, 16:9 aspect ratio</li>

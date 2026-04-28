@@ -28,12 +28,12 @@ const DIMENSION_COLORS = {
 };
 
 const DIMENSION_ICONS = {
-  'agentic-generative':    '🚀',
-  'somatic-regulative':    '🌿',
-  'cognitive-narrative':   '🧠',
-  'relational-connective': '🤝',
-  'emotional-adaptive':    '💛',
-  'spiritual-existential': '✨',
+  'agentic-generative':    '/icons/agentic-generative.svg',
+  'somatic-regulative':    '/icons/growth.svg',
+  'cognitive-narrative':   '/icons/cognitive-narrative.svg',
+  'relational-connective': '/icons/relational-connective.svg',
+  'emotional-adaptive':    '/icons/emotional-adaptive.svg',
+  'spiritual-existential': '/icons/emotional-adaptive.svg',
 };
 
 const DIFFICULTY_LABELS = {
@@ -415,7 +415,7 @@ export default function FamilyChallengeDetailPage() {
         <main className="fcd-page">
           <div className="fcd-wrap">
             <div className="fcd-not-found">
-              <p style={{ fontSize: '3rem' }}>🤷</p>
+              <p style={{ fontSize: '3rem' }}><img src="/icons/info.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </p>
               <p>Challenge not found.</p>
               <Link to="/iatlas/family/challenges" className="fcd-back-link">
                 ‹ Back to Family Challenges
@@ -428,7 +428,7 @@ export default function FamilyChallengeDetailPage() {
   }
 
   const color = DIMENSION_COLORS[challenge.dimension] || '#6366f1';
-  const icon  = DIMENSION_ICONS[challenge.dimension]  || '🌐';
+  const icon  = DIMENSION_ICONS[challenge.dimension]  || '<img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" />';
   const diff  = DIFFICULTY_LABELS[challenge.difficulty] || DIFFICULTY_LABELS.foundation;
 
   function handleComplete() {
@@ -480,11 +480,11 @@ export default function FamilyChallengeDetailPage() {
               <div className="fcd-details-row">
                 <div className="fcd-detail">
                   <span className="fcd-detail-label">Duration</span>
-                  <span className="fcd-detail-value">⏱ {challenge.duration}</span>
+                  <span className="fcd-detail-value"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.duration}</span>
                 </div>
                 <div className="fcd-detail">
                   <span className="fcd-detail-label">Participants</span>
-                  <span className="fcd-detail-value">👨‍👩‍👧 {challenge.participants}</span>
+                  <span className="fcd-detail-value"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.participants}</span>
                 </div>
                 <div className="fcd-detail">
                   <span className="fcd-detail-label">Age Range</span>
@@ -504,8 +504,7 @@ export default function FamilyChallengeDetailPage() {
 
           {/* Instructions */}
           <section className="fcd-section" aria-labelledby="instructions-heading">
-            <h2 className="fcd-section-title" id="instructions-heading">
-              📋 How to Complete This Challenge
+            <h2 className="fcd-section-title" id="instructions-heading"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> How to Complete This Challenge
             </h2>
             <ol className="fcd-instructions">
               {challenge.instructions.map((step, i) => (
@@ -520,8 +519,7 @@ export default function FamilyChallengeDetailPage() {
           {/* Parent note */}
           {challenge.parentNote && (
             <section className="fcd-section" aria-labelledby="parent-note-heading">
-              <h2 className="fcd-section-title" id="parent-note-heading">
-                💡 Parent / Caregiver Note
+              <h2 className="fcd-section-title" id="parent-note-heading"><img src="/icons/reflection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Parent / Caregiver Note
               </h2>
               <p className="fcd-parent-note">{challenge.parentNote}</p>
             </section>
@@ -530,8 +528,7 @@ export default function FamilyChallengeDetailPage() {
           {/* Materials */}
           {challenge.materials && challenge.materials.length > 0 && (
             <section className="fcd-section" aria-labelledby="materials-heading">
-              <h2 className="fcd-section-title" id="materials-heading">
-                🛒 Materials Needed
+              <h2 className="fcd-section-title" id="materials-heading"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Materials Needed
               </h2>
               <ul className="fcd-materials-list">
                 {challenge.materials.map((item) => (
@@ -543,8 +540,7 @@ export default function FamilyChallengeDetailPage() {
 
           {/* Rewards */}
           <section className="fcd-section" aria-labelledby="rewards-heading">
-            <h2 className="fcd-section-title" id="rewards-heading">
-              🏆 Rewards
+            <h2 className="fcd-section-title" id="rewards-heading"><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Rewards
             </h2>
             <div className="fcd-rewards-row">
               <div>
@@ -552,8 +548,7 @@ export default function FamilyChallengeDetailPage() {
                 <span className="fcd-reward-xp-label">Family XP</span>
               </div>
               {challenge.badgesUnlocked?.map((badge) => (
-                <span key={badge} className="fcd-reward-badge">
-                  🎖 {badge.replace(/-/g, ' ')}
+                <span key={badge} className="fcd-reward-badge"><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {badge.replace(/-/g, ' ')}
                 </span>
               ))}
             </div>
@@ -562,7 +557,7 @@ export default function FamilyChallengeDetailPage() {
           {/* Complete / success */}
           {justCompleted ? (
             <div className="fcd-complete-success" role="alert">
-              <h3>🎉 Challenge Complete!</h3>
+              <h3><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Challenge Complete!</h3>
               <p>
                 Amazing work! You've earned <strong>+{challenge.xpReward} Family XP</strong> and
                 unlocked the <strong>{challenge.badgesUnlocked?.[0]?.replace(/-/g, ' ')}</strong> badge.
@@ -581,7 +576,7 @@ export default function FamilyChallengeDetailPage() {
               disabled={completed}
               aria-label={completed ? 'Challenge already marked as complete' : 'Mark challenge as complete'}
             >
-              {completed ? '✓ Completed' : '✅ Mark as Complete'}
+              {completed ? '✓ Completed' : 'Mark as Complete'}
             </button>
           )}
 

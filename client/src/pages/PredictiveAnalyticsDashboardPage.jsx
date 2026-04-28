@@ -33,11 +33,11 @@ import {
 // ── Navigation ────────────────────────────────────────────────────────────────
 
 const NAV = [
-  { to: '/iatlas/ml/insights',          label: '🤖 AI Insights',     key: 'ml' },
-  { to: '/iatlas/practice/dashboard',   label: '🏠 Practice',        key: 'practice' },
-  { to: '/iatlas/practice/clients',     label: '👥 Clients',         key: 'clients' },
-  { to: '/iatlas/practice/analytics',   label: '📈 Analytics',       key: 'analytics' },
-  { to: '/iatlas/org/dashboard',        label: '🏢 Org Dashboard',   key: 'org' },
+  { to: '/iatlas/ml/insights',          label: 'AI Insights',     key: 'ml' },
+  { to: '/iatlas/practice/dashboard',   label: 'Practice',        key: 'practice' },
+  { to: '/iatlas/practice/clients',     label: 'Clients',         key: 'clients' },
+  { to: '/iatlas/practice/analytics',   label: 'Analytics',       key: 'analytics' },
+  { to: '/iatlas/org/dashboard',        label: 'Org Dashboard',   key: 'org' },
 ];
 
 // ── Dimensions ────────────────────────────────────────────────────────────────
@@ -52,11 +52,11 @@ const DIMENSIONS = [
 ];
 
 const TABS = [
-  { key: 'activity',   icon: '🎯', label: 'Activity Predictor' },
-  { key: 'regression', icon: '⚠️', label: 'Regression Alerts' },
-  { key: 'frequency',  icon: '📅', label: 'Session Frequency' },
-  { key: 'goal',       icon: '🎲', label: 'Goal Probability' },
-  { key: 'plan',       icon: '🧠', label: 'Treatment Plans' },
+  { key: 'activity',   icon: '/icons/goal.svg', label: 'Activity Predictor' },
+  { key: 'regression', icon: '/icons/warning.svg', label: 'Regression Alerts' },
+  { key: 'frequency',  icon: '/icons/planning.svg', label: 'Session Frequency' },
+  { key: 'goal',       icon: '/icons/game.svg', label: 'Goal Probability' },
+  { key: 'plan',       icon: '/icons/cognitive-narrative.svg', label: 'Treatment Plans' },
 ];
 
 // ── Mini UI components ────────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ function DisclaimerBanner() {
       padding: '.65rem 1rem', marginBottom: '1.25rem',
       display: 'flex', alignItems: 'center', gap: '.6rem', fontSize: '.82rem', color: '#92400e',
     }}>
-      <span style={{ fontSize: '1rem' }}>🔬</span>
+      <span style={{ fontSize: '1rem' }}><img src="/icons/clinical.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
       <span><strong>Human-in-the-Loop:</strong> {AI_DISCLAIMER}</span>
     </div>
   );
@@ -84,8 +84,7 @@ function TierUpgradeBanner({ message }) {
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
       flexWrap: 'wrap',
     }}>
-      <span style={{ fontSize: '.88rem', color: '#5b21b6', fontWeight: 600 }}>
-        🔒 {message}
+      <span style={{ fontSize: '.88rem', color: '#5b21b6', fontWeight: 600 }}><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {message}
       </span>
       <a
         href="/pricing"
@@ -104,7 +103,7 @@ function TierUpgradeBanner({ message }) {
 function ConfidenceMeter({ value }) {
   const color = value >= 70 ? '#059669' : value >= 50 ? '#d97706' : '#dc2626';
   const bg    = value >= 70 ? '#d1fae5' : value >= 50 ? '#fef3c7' : '#fee2e2';
-  const icon  = value >= 70 ? '🟢' : value >= 50 ? '🟡' : '🔴';
+  const icon  = value >= 70 ? '<img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" />' : value >= 50 ? '<img src="/icons/emotional-adaptive.svg" alt="" aria-hidden="true" className="icon icon-sm" />' : '/icons/warning.svg';
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: '.3rem',
@@ -118,9 +117,9 @@ function ConfidenceMeter({ value }) {
 
 function SeverityBadge({ severity }) {
   const map = {
-    high:   { bg: '#fee2e2', color: '#991b1b', icon: '🔴', label: 'High' },
-    medium: { bg: '#fef3c7', color: '#92400e', icon: '🟡', label: 'Medium' },
-    low:    { bg: '#d1fae5', color: '#065f46', icon: '🟢', label: 'Low' },
+    high:   { bg: '#fee2e2', color: '#991b1b', icon: '/icons/warning.svg', label: 'High' },
+    medium: { bg: '#fef3c7', color: '#92400e', icon: '/icons/emotional-adaptive.svg', label: 'Medium' },
+    low:    { bg: '#d1fae5', color: '#065f46', icon: '/icons/success.svg', label: 'Low' },
   };
   const s = map[severity] || map.low;
   return (
@@ -202,7 +201,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>🎯 Activity Effectiveness Predictor</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/goal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Activity Effectiveness Predictor</h3>
       <p style={styles.sectionDesc}>
         The AI ranks activities by predicted score improvement for the selected client and dimension,
         using historical effectiveness data and client profile features.
@@ -224,7 +223,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
           onClick={handlePredict}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Predicting…' : '🔮 Predict Effectiveness'}
+          {loading ? 'Predicting…' : 'Predict Effectiveness'}
         </button>
       </div>
 
@@ -245,7 +244,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
                 fontSize: '.9rem', fontWeight: 800, color: i === 0 ? '#92400e' : '#6b7280',
                 flexShrink: 0,
               }}>
-                {i === 0 ? '⭐' : i + 1}
+                {i === 0 ? '<img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" />' : i + 1}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.35rem' }}>
@@ -260,8 +259,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
                   </strong>
                   {' '}predicted improvement
                 </div>
-                <div style={{ fontSize: '.78rem', color: '#6b7280' }}>
-                  💡 {r.explanation}
+                <div style={{ fontSize: '.78rem', color: '#6b7280' }}><img src="/icons/reflection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {r.explanation}
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.35rem', alignItems: 'flex-end' }}>
@@ -271,16 +269,16 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
                       style={{ ...styles.btnSm, background: '#d1fae5', color: '#065f46' }}
                       onClick={() => handleFeedback('helpful')}
                       disabled={feedbackLoading}
-                    >👍 Helpful</button>
+                    ><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Helpful</button>
                     <button
                       style={{ ...styles.btnSm, background: '#fee2e2', color: '#991b1b' }}
                       onClick={() => handleFeedback('not_helpful')}
                       disabled={feedbackLoading}
-                    >👎 Not Helpful</button>
+                    ><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Not Helpful</button>
                   </>
                 ) : (
                   <span style={{ fontSize: '.75rem', color: '#6b7280' }}>
-                    {feedbackGiven === 'helpful' ? '✅ Logged' : '📝 Logged'}
+                    {feedbackGiven === 'helpful' ? 'Logged' : 'Logged'}
                   </span>
                 )}
               </div>
@@ -291,7 +289,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
 
       {!results && !loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>🎯</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/goal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Select a client and dimension, then click <strong>Predict Effectiveness</strong> to see AI-ranked activity recommendations.</p>
         </div>
       )}
@@ -328,7 +326,7 @@ function RegressionAlertsTab({ selectedClient }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>⚠️ Early Regression Detection</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Early Regression Detection</h3>
       <p style={styles.sectionDesc}>
         The AI monitors dimension score trends and attendance patterns to flag clients at risk of
         regression before it becomes clinically significant.
@@ -340,7 +338,7 @@ function RegressionAlertsTab({ selectedClient }) {
           onClick={handleDetect}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Analyzing…' : '🔍 Detect Regression Risks'}
+          {loading ? 'Analyzing…' : 'Detect Regression Risks'}
         </button>
       </div>
 
@@ -351,7 +349,7 @@ function RegressionAlertsTab({ selectedClient }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
           {results.length === 0 ? (
             <div style={{ ...styles.emptyState, background: '#d1fae5', border: '1px solid #a7f3d0' }}>
-              <span style={{ fontSize: '1.5rem' }}>✅</span>
+              <span style={{ fontSize: '1.5rem' }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
               <p style={{ color: '#065f46' }}>No regression risks detected for this client.</p>
             </div>
           ) : results.map((r, i) => !reviewed[i] && (
@@ -375,7 +373,7 @@ function RegressionAlertsTab({ selectedClient }) {
               <div style={{ display: 'flex', gap: '.5rem' }}>
                 <button
                   style={{ ...styles.btnSm, background: '#e0f2fe', color: '#0369a1' }}
-                >📋 View Client</button>
+                ><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> View Client</button>
                 <button
                   style={{ ...styles.btnSm, background: '#f1f5f9', color: '#374151' }}
                   onClick={() => setReviewed(rv => ({ ...rv, [i]: true }))}
@@ -388,7 +386,7 @@ function RegressionAlertsTab({ selectedClient }) {
 
       {!results && !loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>⚠️</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Run regression detection to identify clients at risk based on recent session and scoring trends.</p>
         </div>
       )}
@@ -422,7 +420,7 @@ function SessionFrequencyTab({ selectedClient }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>📅 Optimal Session Frequency</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Optimal Session Frequency</h3>
       <p style={styles.sectionDesc}>
         Analyses historical progress rate to recommend the most effective session cadence
         while respecting scheduling and budget constraints.
@@ -434,7 +432,7 @@ function SessionFrequencyTab({ selectedClient }) {
           onClick={handleRecommend}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Analyzing…' : '📊 Get Frequency Recommendation'}
+          {loading ? 'Analyzing…' : 'Get Frequency Recommendation'}
         </button>
       </div>
 
@@ -477,7 +475,7 @@ function SessionFrequencyTab({ selectedClient }) {
 
       {!result && !loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>📅</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Analyse progress data to get an evidence-based session frequency recommendation.</p>
         </div>
       )}
@@ -515,7 +513,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>🎲 Goal Achievement Probability</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/game.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Goal Achievement Probability</h3>
       <p style={styles.sectionDesc}>
         When setting a treatment goal, the AI calculates the probability it will be achieved by the target date
         based on current progress rates, attendance, and session frequency.
@@ -535,7 +533,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
             onClick={handleScore}
             disabled={loading || !selectedClient}
           >
-            {loading ? '⏳ Scoring…' : '🎲 Score Goal Probability'}
+            {loading ? 'Scoring…' : 'Score Goal Probability'}
           </button>
         </div>
       </div>
@@ -562,8 +560,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
           {result.riskFactors.length > 0 && (
             <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '1rem' }}>
-              <span style={{ fontWeight: 700, fontSize: '.88rem', color: '#9a3412', display: 'block', marginBottom: '.5rem' }}>
-                ⚠️ Risk Factors
+              <span style={{ fontWeight: 700, fontSize: '.88rem', color: '#9a3412', display: 'block', marginBottom: '.5rem' }}><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Risk Factors
               </span>
               <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#9a3412', fontSize: '.83rem' }}>
                 {result.riskFactors.map((f, i) => <li key={i}>{f}</li>)}
@@ -573,8 +570,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
           {result.suggestions.length > 0 && (
             <div style={{ background: '#f0fdf4', border: '1px solid #a7f3d0', borderRadius: 10, padding: '1rem' }}>
-              <span style={{ fontWeight: 700, fontSize: '.88rem', color: '#065f46', display: 'block', marginBottom: '.5rem' }}>
-                💡 Suggestions to Improve Odds
+              <span style={{ fontWeight: 700, fontSize: '.88rem', color: '#065f46', display: 'block', marginBottom: '.5rem' }}><img src="/icons/reflection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Suggestions to Improve Odds
               </span>
               <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#065f46', fontSize: '.83rem' }}>
                 {result.suggestions.map((s, i) => <li key={i}>{s}</li>)}
@@ -586,7 +582,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
       {!result && !loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>🎲</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/game.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Enter a goal target score and click <strong>Score Goal Probability</strong> to see the AI prediction.</p>
         </div>
       )}
@@ -629,7 +625,7 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>🧠 AI Treatment Plan Generator</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/cognitive-narrative.svg" alt="" aria-hidden="true" className="icon icon-sm" /> AI Treatment Plan Generator</h3>
       <p style={styles.sectionDesc}>
         Generates a week-by-week treatment plan that prioritises the most-deficient dimensions,
         selects activities with the highest predicted effectiveness, and forecasts expected outcomes.
@@ -658,7 +654,7 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
           onClick={handleGenerate}
           disabled={loading || !selectedClient}
         >
-          {loading ? '⏳ Generating…' : '🧠 Generate Treatment Plan'}
+          {loading ? 'Generating…' : 'Generate Treatment Plan'}
         </button>
       </div>
 
@@ -745,8 +741,7 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
 
           {/* Forecasted scores */}
           <div style={{ background: '#f8fafc', borderRadius: 10, padding: '1rem', border: '1px solid #e2e8f0' }}>
-            <h4 style={{ fontSize: '.88rem', fontWeight: 700, color: '#374151', margin: '0 0 .75rem' }}>
-              📊 Forecasted Final Scores
+            <h4 style={{ fontSize: '.88rem', fontWeight: 700, color: '#374151', margin: '0 0 .75rem' }}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Forecasted Final Scores
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem' }}>
               {DIMENSIONS.map(d => {
@@ -770,7 +765,7 @@ function TreatmentPlanTab({ selectedClient, selectedDim }) {
 
       {!plan && !loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>🧠</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/cognitive-narrative.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Select a client, set the plan duration, and click <strong>Generate Treatment Plan</strong> to create an AI-powered week-by-week treatment roadmap.</p>
         </div>
       )}
@@ -915,8 +910,7 @@ export default function PredictiveAnalyticsDashboardPage() {
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.75rem' }}>
             <div>
-              <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#111827', margin: 0 }}>
-                🤖 Predictive Analytics &amp; ML Insights
+              <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#111827', margin: 0 }}><img src="/icons/agentic-generative.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Predictive Analytics &amp; ML Insights
               </h1>
               <p style={{ fontSize: '.85rem', color: '#6b7280', margin: '.3rem 0 0' }}>
                 AI-powered clinical decision support — treatment planning, regression alerts, and effectiveness predictions
@@ -926,8 +920,7 @@ export default function PredictiveAnalyticsDashboardPage() {
               <div style={{
                 background: '#d1fae5', border: '1px solid #a7f3d0', borderRadius: 8,
                 padding: '.4rem .85rem', fontSize: '.78rem', color: '#065f46', fontWeight: 600,
-              }}>
-                ✅ Engine v{modelStatus.engineVersion} · {modelStatus.totalPredictionsMade} predictions made
+              }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Engine v{modelStatus.engineVersion} · {modelStatus.totalPredictionsMade} predictions made
               </div>
             )}
           </div>
@@ -939,7 +932,7 @@ export default function PredictiveAnalyticsDashboardPage() {
           padding: '1rem 1.25rem', marginBottom: '1.25rem',
           display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
         }}>
-          <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151' }}>👤 Active Client:</span>
+          <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151' }}><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Active Client:</span>
           {clientsLoading ? (
             <span style={{ fontSize: '.85rem', color: '#9ca3af' }}>Loading clients…</span>
           ) : pageError ? (
@@ -1045,20 +1038,18 @@ export default function PredictiveAnalyticsDashboardPage() {
           marginTop: '1.5rem', background: '#f8fafc', border: '1px solid #e2e8f0',
           borderRadius: 10, padding: '1rem 1.25rem',
         }}>
-          <h4 style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151', margin: '0 0 .6rem' }}>
-            🔬 Model Health &amp; Transparency
+          <h4 style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151', margin: '0 0 .6rem' }}><img src="/icons/clinical.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Model Health &amp; Transparency
           </h4>
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', fontSize: '.8rem', color: '#6b7280' }}>
             <span>Engine: <strong style={{ color: '#374151' }}>v{modelStatus?.engineVersion || '1.0.0'}</strong></span>
-            <span>Status: <strong style={{ color: '#059669' }}>✅ Operational</strong></span>
+            <span>Status: <strong style={{ color: '#059669' }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Operational</strong></span>
             <span>Approach: <strong style={{ color: '#374151' }}>Statistical heuristic (evidence-based)</strong></span>
             <span>Privacy: <strong style={{ color: '#374151' }}>No PII in model inputs</strong></span>
             <Link
               to="/iatlas/ml/insights"
               style={{ color: '#4f46e5', fontWeight: 600, textDecoration: 'none' }}
               onClick={() => setActiveTab('activity')}
-            >
-              📊 View full model status →
+            ><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> View full model status →
             </Link>
           </div>
         </div>

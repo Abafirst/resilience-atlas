@@ -158,8 +158,7 @@ export default function SessionPlansPage() {
         {/* ── Header ── */}
         <div className="spp-header">
           <div>
-            <h1 className="spp-title">
-              🩺 Session Plans
+            <h1 className="spp-title"><img src="/icons/clinical.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Session Plans
             </h1>
             <p className="spp-subtitle">
               Create, manage, and track clinical session plans for your clients.

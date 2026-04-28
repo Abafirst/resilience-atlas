@@ -19,12 +19,12 @@ const VALID_DIMENSIONS = [
 ];
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: '👥 Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: '📅 Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: '💳 Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: '💬 Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: '📊 Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
 ];
 
 const MOCK_METRICS = [
@@ -56,9 +56,9 @@ const STATUS_STYLES = {
 };
 
 const ALERTS = [
-  { icon: '⚠️', text: 'Owen Park — IEP review due in 3 days', type: 'warning' },
-  { icon: '📋', text: '3 session notes pending documentation', type: 'info' },
-  { icon: '💳', text: 'Johnson family — payment overdue 14 days', type: 'urgent' },
+  { icon: '/icons/warning.svg', text: 'Owen Park — IEP review due in 3 days', type: 'warning' },
+  { icon: '/icons/journal.svg', text: '3 session notes pending documentation', type: 'info' },
+  { icon: '/icons/certification.svg', text: 'Johnson family — payment overdue 14 days', type: 'urgent' },
 ];
 
 export default function PracticeDashboardPage() {
@@ -229,7 +229,7 @@ export default function PracticeDashboardPage() {
               </Link>
             ))}
             <div className="pm-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Practice Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -245,8 +245,7 @@ export default function PracticeDashboardPage() {
                 <button className="pm-btn pm-btn-outline" onClick={() => setShowAddClient(true)}>
                   + Add Client
                 </button>
-                <Link to="/iatlas/practice/schedule" className="pm-btn">
-                  📅 Schedule Session
+                <Link to="/iatlas/practice/schedule" className="pm-btn"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Schedule Session
                 </Link>
               </div>
             </div>
@@ -276,19 +275,19 @@ export default function PracticeDashboardPage() {
 
             {/* Quick actions */}
             <div className="pm-quick-actions">
-              <Link to="/iatlas/practice/clients" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>👥 View All Clients</Link>
-              <Link to="/iatlas/practice/billing" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>💳 Generate Invoice</Link>
-              <Link to="/iatlas/practice/analytics" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>📊 Practice Report</Link>
-              <Link to="/iatlas/practice/team" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}>💬 Team Messages</Link>
-              <Link to="/iatlas/org/dashboard" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#4f46e5' }}>🏢 Org Dashboard</Link>
-              <Link to="/iatlas/ml/insights" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#7c3aed' }}>🤖 AI Insights</Link>
+              <Link to="/iatlas/practice/clients" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> View All Clients</Link>
+              <Link to="/iatlas/practice/billing" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}><img src="/icons/certification.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Generate Invoice</Link>
+              <Link to="/iatlas/practice/analytics" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Report</Link>
+              <Link to="/iatlas/practice/team" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb' }}><img src="/icons/dialog.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Team Messages</Link>
+              <Link to="/iatlas/org/dashboard" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#4f46e5' }}><img src="/icons/organization.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Org Dashboard</Link>
+              <Link to="/iatlas/ml/insights" className="pm-btn pm-btn-outline" style={{ border: '1.5px solid #e5e7eb', color: '#7c3aed' }}><img src="/icons/agentic-generative.svg" alt="" aria-hidden="true" className="icon icon-sm" /> AI Insights</Link>
             </div>
 
             {/* Two-column layout */}
             <div className="pm-two-col">
               {/* Today's sessions */}
               <div className="pm-card">
-                <h2 className="pm-card-title">📅 Today's Sessions</h2>
+                <h2 className="pm-card-title"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Today's Sessions</h2>
                 {MOCK_SESSIONS_TODAY.map((s, i) => {
                   const st = STATUS_STYLES[s.status];
                   return (
@@ -310,7 +309,7 @@ export default function PracticeDashboardPage() {
 
               {/* Caseload */}
               <div className="pm-card">
-                <h2 className="pm-card-title">👥 Caseload Distribution</h2>
+                <h2 className="pm-card-title"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Caseload Distribution</h2>
                 {MOCK_CASELOAD.map((p, i) => (
                   <div key={i} className="pm-caseload-row">
                     <div className="pm-caseload-meta">
@@ -347,7 +346,7 @@ export default function PracticeDashboardPage() {
               color: '#94a3b8', fontSize: '.88rem', lineHeight: 1.65,
               display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
             }}>
-              <span style={{ fontSize: '1.5rem' }} aria-hidden="true">ℹ️</span>
+              <img src="/icons/info.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <div>
                 <p style={{ color: '#f1f5f9', fontWeight: 700, margin: '0 0 .2rem', fontSize: '.95rem' }}>
                   Practice Hub — Live Mode
@@ -509,7 +508,7 @@ function AddClientModal({ onClose }) {
 
         {success ? (
           <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}>✅</div>
+            <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </div>
             <p style={{ fontWeight: 700, color: '#059669', margin: 0 }}>Client profile created!</p>
             <p style={{ fontSize: '.85rem', color: '#6b7280', marginTop: '.35rem' }}>
               Redirecting to the dashboard…

@@ -328,8 +328,8 @@ function ChallengeCard({ challenge, onClick, locked }) {
         <p className="fcp-card-desc">{challenge.description}</p>
 
         <div className="fcp-card-meta">
-          <span>⏱ {challenge.duration}</span>
-          <span>👨‍👩‍👧 {challenge.participants}</span>
+          <span><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.duration}</span>
+          <span><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.participants}</span>
         </div>
 
         <div className="fcp-card-footer">
@@ -340,7 +340,7 @@ function ChallengeCard({ challenge, onClick, locked }) {
             {diff.label}
           </span>
           {locked
-            ? <span className="fcp-card-lock">🔒 Family tier</span>
+            ? <span className="fcp-card-lock"><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family tier</span>
             : <span className="fcp-card-xp">+{challenge.xpReward} XP</span>
           }
         </div>
@@ -387,7 +387,7 @@ export default function FamilyChallengesPage() {
 
           {/* Hero */}
           <div className="fcp-hero" role="banner">
-            <p className="fcp-hero-label">👨‍👩‍👧‍👦 Family Tier · Collaborative Activities</p>
+            <p className="fcp-hero-label"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family Tier · Collaborative Activities</p>
             <h1 className="fcp-hero-title">Family Challenges</h1>
             <p className="fcp-hero-desc">
               Collaborative activities designed for parents and children to build resilience
@@ -442,7 +442,7 @@ export default function FamilyChallengesPage() {
             </div>
           ) : (
             <div className="fcp-empty">
-              <span className="fcp-empty-icon" aria-hidden="true">🎯</span>
+              <img src="/icons/goal.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <p>No challenges found for this dimension.</p>
             </div>
           )}

@@ -9,29 +9,29 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: '👥 Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: '📅 Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: '💳 Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: '💬 Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: '📊 Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
 ];
 
 const MOCK_ANNOUNCEMENTS = [
   {
     id: 1,
     author: 'Practice Admin',
-    avatar: '👩‍💼',
+    avatar: '/icons/professional.svg',,
     date: '2026-04-21',
-    text: '🎉 Congratulations to Dr. Chen on completing the IATLAS Train the Facilitator certification! She is now our first certified TTF practitioner.',
+    text: 'Congratulations to Dr. Chen on completing the IATLAS Train the Facilitator certification! She is now our first certified TTF practitioner.',
     type: 'celebration',
   },
   {
     id: 2,
     author: 'Practice Admin',
-    avatar: '👩‍💼',
+    avatar: '/icons/professional.svg',,
     date: '2026-04-19',
-    text: '📋 Reminder: All session documentation must be completed within 24 hours. We\'re currently at 82% compliance — let\'s get to 100%!',
+    text: 'Reminder: All session documentation must be completed within 24 hours. We\'re currently at 82% compliance — let\'s get to 100%!',
     type: 'info',
   },
 ];
@@ -84,7 +84,7 @@ const MOCK_MESSAGES = [
     id: 1,
     threadId: 1,
     author: 'Dr. Chen',
-    avatar: '👩‍⚕️',
+    avatar: '/icons/professional.svg',,
     time: '9:42 AM',
     text: 'Hi team — I\'m noticing Amir is showing increased emotional dysregulation during transitions. I think we need to coordinate our approach across ABA and SLP sessions.',
   },
@@ -92,7 +92,7 @@ const MOCK_MESSAGES = [
     id: 2,
     threadId: 1,
     author: 'M. Williams',
-    avatar: '👨‍⚕️',
+    avatar: '/icons/professional.svg',,
     time: '10:15 AM',
     text: 'Agreed. In ABA sessions I\'ve been using a visual transition schedule — happy to share the materials. We could align the language we use across both services.',
   },
@@ -100,7 +100,7 @@ const MOCK_MESSAGES = [
     id: 3,
     threadId: 1,
     author: 'Practice Admin',
-    avatar: '👩‍💼',
+    avatar: '/icons/professional.svg',,
     time: '11:30 AM',
     text: 'Let\'s schedule a 15-min case consult this week. @Dr.Chen @M.Williams — are you both free Thursday at 2pm?',
   },
@@ -108,7 +108,7 @@ const MOCK_MESSAGES = [
     id: 4,
     threadId: 1,
     author: 'Dr. Chen',
-    avatar: '👩‍⚕️',
+    avatar: '/icons/professional.svg',,
     time: '11:45 AM',
     text: 'Thursday at 2pm works for me! I\'ll pull together a quick dimensional snapshot of Amir\'s emotional regulation scores to share.',
   },
@@ -300,7 +300,7 @@ export default function PracticeTeamPage() {
               </Link>
             ))}
             <div className="pm-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Practice Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -327,7 +327,7 @@ export default function PracticeTeamPage() {
                   aria-selected={activeSection === s}
                   onClick={() => setActiveSection(s)}
                 >
-                  {s === 'announcements' ? '📢 Announcements' : s === 'threads' ? '💬 Discussions' : '✅ Tasks'}
+                  {s === 'announcements' ? 'Announcements' : s === 'threads' ? 'Discussions' : 'Tasks'}
                 </button>
               ))}
             </div>
@@ -366,12 +366,12 @@ export default function PracticeTeamPage() {
                         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelectedThread(t.id); }}
                         aria-selected={selectedThread === t.id}
                       >
-                        <p className="thread-title">{t.resolved ? '✅ ' : ''}{t.title}</p>
+                        <p className="thread-title">{t.resolved ? ' ' : ''}{t.title}</p>
                         <p className="thread-meta">
                           By {t.createdBy} · {t.messages} messages · {t.lastMsg}
                         </p>
                         {t.client && (
-                          <p className="thread-meta" style={{ marginTop: '.15rem' }}>👥 {t.client}</p>
+                          <p className="thread-meta" style={{ marginTop: '.15rem' }}><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {t.client}</p>
                         )}
                         <div className="thread-tags">
                           {t.tags.map(tag => (
@@ -389,7 +389,7 @@ export default function PracticeTeamPage() {
                         <div className="chat-header">
                           <p className="chat-header-title">{thread.title}</p>
                           <p className="chat-header-meta">
-                            {thread.client ? `👥 ${thread.client} · ` : ''}
+                            {thread.client ? `${thread.client} · ` : ''}
                             {thread.messages} messages
                           </p>
                         </div>
@@ -471,7 +471,7 @@ export default function PracticeTeamPage() {
               display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
               marginTop: '1.5rem',
             }}>
-              <span style={{ fontSize: '1.25rem' }} aria-hidden="true">🚧</span>
+              <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <p style={{ margin: 0 }}>
                 <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Real-time messaging — Coming 2026.</span>{' '}
                 Live notifications, file attachments, @mentions, and integrated case consultation

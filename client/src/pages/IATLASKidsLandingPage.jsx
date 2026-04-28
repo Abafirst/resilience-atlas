@@ -828,8 +828,7 @@ export default function IATLASKidsLandingPage() {
                       transition: 'background .15s',
                     }}
                     aria-label="Open Family Dashboard"
-                  >
-                    🏡 Family Dashboard
+                  ><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family Dashboard
                   </Link>
                 </div>
               </div>
