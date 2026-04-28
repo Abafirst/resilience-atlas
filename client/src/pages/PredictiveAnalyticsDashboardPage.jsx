@@ -15,7 +15,7 @@
  * require practitioner review before application (human-in-the-loop).
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import {
@@ -500,8 +500,8 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
     setIsTierError(false);
     try {
       const data = await scoreGoalProbability(selectedClient, {
-        dimension:   selectedDim,
-        targetScore: targetScore,
+        dimension: selectedDim,
+        targetScore,
       });
       setResult(data);
     } catch (err) {
@@ -859,7 +859,10 @@ export default function PredictiveAnalyticsDashboardPage() {
       if (clientsResult.status === 'fulfilled') {
         const list = clientsResult.value;
         setClients(list);
-        if (list.length > 0) setClient(list[0]._id);
+        if (list.length > 0) {
+          const firstId = list[0]._id?.toString() || list[0].id || '';
+          setClient(firstId);
+        }
       } else {
         const err = clientsResult.reason;
         setPageError({ message: err.message, isTierUpgrade: !!err.isTierUpgrade });
@@ -876,7 +879,10 @@ export default function PredictiveAnalyticsDashboardPage() {
     return () => { cancelled = true; };
   }, []);
 
-  const selectedClientName = clients.find(c => c._id === selectedClient)?.clientIdentifier || '—';
+  const selectedClientName = useMemo(
+    () => clients.find(c => (c._id?.toString() || c.id) === selectedClient)?.clientIdentifier || '—',
+    [clients, selectedClient],
+  );
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9' }}>
@@ -954,7 +960,7 @@ export default function PredictiveAnalyticsDashboardPage() {
                 onChange={e => setClient(e.target.value)}
               >
                 {clients.map(c => (
-                  <option key={c._id} value={c._id}>
+                  <option key={c._id || c.id} value={c._id?.toString() || c.id || ''}>
                     {c.clientIdentifier}{c.ageGroup ? ` · ${c.ageGroup}` : ''}
                   </option>
                 ))}
