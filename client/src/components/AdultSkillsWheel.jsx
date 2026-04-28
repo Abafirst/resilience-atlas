@@ -10,6 +10,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getSkillLevel } from '../utils/skillLevelMapping.js';
 import '../styles/adultSkillsWheel.css';
 
@@ -80,6 +81,7 @@ export default function AdultSkillsWheel({
   interactive = true,
   showLabels = true,
 }) {
+  const navigate = useNavigate();
   const [hoveredDim, setHoveredDim]   = useState(null);
   const [tooltip,    setTooltip]      = useState(null);
   const [isMobile,   setIsMobile]     = useState(
@@ -219,7 +221,7 @@ export default function AdultSkillsWheel({
                 : skillInfo.level === 'Building'
                   ? 'intermediate'
                   : 'foundation';
-              window.location.href = `/iatlas/curriculum/${encodeURIComponent(dimSlug)}?level=${levelSlug}`;
+              navigate(`/iatlas/curriculum/${encodeURIComponent(dimSlug)}?level=${levelSlug}`);
             }}
             onKeyDown={(e) => {
               if (!interactive) return;
@@ -231,7 +233,7 @@ export default function AdultSkillsWheel({
                   : skillInfo.level === 'Building'
                     ? 'intermediate'
                     : 'foundation';
-                window.location.href = `/iatlas/curriculum/${encodeURIComponent(dimSlug)}?level=${levelSlug}`;
+                navigate(`/iatlas/curriculum/${encodeURIComponent(dimSlug)}?level=${levelSlug}`);
               }
             }}
           />
@@ -247,8 +249,8 @@ export default function AdultSkillsWheel({
     const lineStartR         = outerRingRadius + 10;
     const lineEndR           = outerRingRadius + 65;
     const labelR             = outerRingRadius + 90;
-    const LABEL_LINE_OFFSET  = 10;  // half line-height shift for two-line labels
     const LABEL_LINE_HEIGHT  = 20;
+    const LABEL_LINE_OFFSET  = LABEL_LINE_HEIGHT / 2; // upward shift for first line of a two-line label
 
     return Object.entries(DIMENSION_CONFIG).flatMap(([key, cfg]) => {
       const score     = toPercent(dimensionScores[key]);
