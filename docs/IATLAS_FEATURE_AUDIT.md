@@ -19,7 +19,7 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 | Tier | Advertised Features | ✅ Built | 🟡 Partial | ❌ Missing | Completion |
 |------|--------------------|---------:|----------:|----------:|----------:|
 | Individual | 5 | 4 | 1 | 0 | ~85% |
-| Family | 4 (+Individual) | 4 | 1 | 0 | ~90% ✅ **SELLABLE** |
+| Family | 4 (+Individual) | 5 | 0 | 0 | ✅ **100% — SELLABLE** |
 | Complete | 4 (+Family) | 1 | 1 | 2 | ~30% |
 | Practitioner | 5 | 1 | 2 | 2 | ~25% |
 | Practice | 4 (+Practitioner) | 0 | 0 | 4 | ~0% |
@@ -36,14 +36,19 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 7. ✅ **Printable activity worksheets** — `PrintableActivitySheet.jsx` + `print.css` + "Print Worksheet" button in `KidsActivityCard`
 8. ✅ **"Coming Soon" labels accurate** — `iatlasGating.js` updated; `family.comingSoon: false`
 
+### Sprint 2 Completed (April 2026) — Family Tier Polish
+
+1. ✅ **Caregiver Learning curriculum** — 15 evidence-based parent guides across all 6 resilience dimensions + cross-cutting topics; `CaregiverLearningPage.jsx` with filterable catalog, `CaregiverGuideViewer.jsx` with reading progress and "Mark as Read" (localStorage); gated with `hasCaregiverAccess()`
+2. ✅ **Family Challenges UI polish** — dimension icon rendering fixed across all 3 pages (`FamilyChallengesPage.jsx`, `FamilyChallengeDetailPage.jsx`, `FamilyChallengePreview.jsx`); `DIMENSION_ICONS` corrected (somatic uses `somatic-regulative.svg`; spiritual-existential uses `spiritual-reflective.svg`); dimension badge added to `ChallengeCard`
+3. ✅ **Parent Dashboard → Caregiver Learning link** — `ParentDashboardPage.jsx` now includes a Caregiver Learning card that navigates to `/iatlas/caregiver-learning`
+
 ### Remaining Priority Gaps
 
 1. 🔴 **Critical:** Practice & Enterprise tier features — entirely absent
 2. 🟠 **High:** Advanced progress analytics (Complete tier) — not built
 3. 🟠 **High:** ABA protocol library UI (Practitioner) — content exists in IARF; no UI
 4. 🟠 **High:** Clinical assessments & session plans (Practitioner) — not built
-5. 🟡 **Medium:** Family challenge activities — not built
-6. 🟡 **Medium:** Progress backend persistence (`/api/iatlas/progress`) — localStorage only
+5. 🟡 **Medium:** Progress backend persistence (`/api/iatlas/progress`) — localStorage only
 
 ### Infrastructure Summary
 
@@ -84,11 +89,11 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 |---|---------|--------|----------|---------------|----------|
 | 1 | Everything in Individual | ✅ Fully Built | All Individual features now complete — see above | — | — |
 | 2 | Up to 5 child profiles | ✅ Fully Built | `backend/models/ChildProfile.js` — full Mongoose model; `backend/routes/profiles.js` — CRUD at `/api/iatlas/profiles` with tier enforcement (family → max 5); `ProfileContext.jsx` + `AddChildProfileModal.jsx` + `ProfileSwitcher.jsx`; `useKidsProgress.js` keys namespaced by `profileId` | — | — |
-| 3 | Caregiver resources & parent guides | 🟡 Partial | `backend/scripts/seedClinicianCaregiverResources.js` — 6 caregiver resources seeded; `client/src/components/IATLAS/Kids/ParentDashboard.jsx` exists (shows child progress) | Parent guides as structured curriculum (separate from generic resources) are not built; no dedicated "Caregiver Learning" section | 🟡 Medium |
+| 3 | Caregiver resources & parent guides | ✅ Fully Built | `client/src/data/iatlas/caregiverGuides.js` — 15 structured guides across all 6 dimensions + cross-cutting; `CaregiverLearningPage.jsx` — filterable catalog at `/iatlas/caregiver-learning`; `CaregiverGuideViewer.jsx` — full reading view with "Mark as Read" (localStorage); gated with `hasCaregiverAccess()`; linked from `ParentDashboardPage.jsx` | — | — |
 | 4 | Shared progress dashboard | ✅ Fully Built | `client/src/components/IATLAS/Kids/SharedFamilyDashboard.jsx` — grid of all child profile cards showing XP, streak, age group, and "View Progress" links; click to switch active profile | — | — |
-| 5 | Family challenge activities | ❌ Not Started | `kidsActivities.js` has `parentNote` fields; no family-challenge data type or UI | Need a "Family Challenges" content type, data entries, and a dedicated page/component | 🟡 Medium |
+| 5 | Family challenge activities | ✅ Fully Built | `client/src/data/iatlas/familyChallenges.js` — 18 challenges across 6 dimensions; `FamilyChallengesPage.jsx` — browsable catalog with dimension filter and badges; `FamilyChallengeDetailPage.jsx` — full detail view; `FamilyChallengePreview.jsx` — preview in Parent Dashboard; icon rendering fixed | — | — |
 
-**Overall Family Tier:** ~90% complete. Multi-child profiles and shared dashboard are fully built. Family tier is now **sellable**. Remaining gap (family challenge activities) is medium-priority and does not block sales.
+**Overall Family Tier:** ✅ **100% complete — SELLABLE NOW.** All five advertised features are fully built.
 
 ---
 

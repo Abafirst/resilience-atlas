@@ -20,11 +20,11 @@ const DIMENSION_COLORS = {
 
 const DIMENSION_ICONS = {
   'agentic-generative':    '/icons/agentic-generative.svg',
-  'somatic-regulative':    '/icons/growth.svg',
+  'somatic-regulative':    '/icons/somatic-regulative.svg',
   'cognitive-narrative':   '/icons/cognitive-narrative.svg',
   'relational-connective': '/icons/relational-connective.svg',
   'emotional-adaptive':    '/icons/emotional-adaptive.svg',
-  'spiritual-existential': '/icons/emotional-adaptive.svg',
+  'spiritual-existential': '/icons/spiritual-reflective.svg',
 };
 
 const STYLES = `

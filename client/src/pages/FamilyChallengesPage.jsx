@@ -28,6 +28,15 @@ const DIMENSION_COLORS = {
   'spiritual-existential': '#8b5cf6',
 };
 
+const DIMENSION_ICONS = {
+  'agentic-generative':    '/icons/agentic-generative.svg',
+  'somatic-regulative':    '/icons/somatic-regulative.svg',
+  'cognitive-narrative':   '/icons/cognitive-narrative.svg',
+  'relational-connective': '/icons/relational-connective.svg',
+  'emotional-adaptive':    '/icons/emotional-adaptive.svg',
+  'spiritual-existential': '/icons/spiritual-reflective.svg',
+};
+
 const DIFFICULTY_LABELS = {
   foundation: { label: 'Foundation', color: '#10b981' },
   building:   { label: 'Building',   color: '#f59e0b' },
@@ -268,6 +277,19 @@ const PAGE_STYLES = `
     padding-top: .5rem;
   }
 
+  .fcp-card-dim-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .68rem;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: .15rem .5rem;
+    color: #ffffff;
+    text-transform: capitalize;
+    width: fit-content;
+  }
+
   .fcp-card-diff {
     font-size: .7rem;
     font-weight: 700;
@@ -308,6 +330,7 @@ function ChallengeCard({ challenge, onClick, locked }) {
   const done  = isFamilyChallengeCompleted(challenge.id);
   const color = DIMENSION_COLORS[challenge.dimension] || '#6366f1';
   const diff  = DIFFICULTY_LABELS[challenge.difficulty] || DIFFICULTY_LABELS.foundation;
+  const icon  = DIMENSION_ICONS[challenge.dimension]  || '/icons/compass.svg';
 
   return (
     <div
@@ -324,6 +347,20 @@ function ChallengeCard({ challenge, onClick, locked }) {
           <h3 className="fcp-card-title">{challenge.title}</h3>
           {done && <span className="fcp-card-done">✓ Done</span>}
         </div>
+
+        <span
+          className="fcp-card-dim-badge"
+          style={{ background: color }}
+        >
+          <img
+            src={icon}
+            alt=""
+            aria-hidden="true"
+            className="icon icon-sm"
+            style={{ filter: 'brightness(0) invert(1)', width: '12px', height: '12px', verticalAlign: 'middle' }}
+          />
+          {' '}{challenge.dimension.replace(/-/g, ' ')}
+        </span>
 
         <p className="fcp-card-desc">{challenge.description}</p>
 
