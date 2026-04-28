@@ -170,16 +170,25 @@ function generateSectorPath(ring, dimIndex) {
   const ie = p2c(innerR, angleEnd);
   const os = p2c(outerR, angleStart);
   const oe = p2c(outerR, angleEnd);
-  const la = angleEnd - angleStart > 180 ? 1 : 0;
+  const largeArcFlag = angleEnd - angleStart > 180 ? 1 : 0;
 
   return [
     `M ${is.x.toFixed(2)} ${is.y.toFixed(2)}`,
     `L ${os.x.toFixed(2)} ${os.y.toFixed(2)}`,
-    `A ${outerR} ${outerR} 0 ${la} 1 ${oe.x.toFixed(2)} ${oe.y.toFixed(2)}`,
+    `A ${outerR} ${outerR} 0 ${largeArcFlag} 1 ${oe.x.toFixed(2)} ${oe.y.toFixed(2)}`,
     `L ${ie.x.toFixed(2)} ${ie.y.toFixed(2)}`,
-    `A ${innerR} ${innerR} 0 ${la} 0 ${is.x.toFixed(2)} ${is.y.toFixed(2)}`,
+    `A ${innerR} ${innerR} 0 ${largeArcFlag} 0 ${is.x.toFixed(2)} ${is.y.toFixed(2)}`,
     'Z',
   ].join(' ');
+}
+
+// ── Helpers shared within the component scope ─────────────────────────────────
+
+/** Maps a skill level string to the curriculum URL slug. */
+function skillLevelToSlug(level) {
+  if (level === 'Mastery')  return 'advanced';
+  if (level === 'Building') return 'intermediate';
+  return 'foundation';
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -250,20 +259,19 @@ export default function IntegratedResilienceWheel({
 
   const isClickable = typeof onDimensionClick === 'function';
 
+  /** Updates tooltip position from a mouse event (for enter/move handlers). */
+  function updateTooltip(e, dim, skillInfo, score) {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (rect) {
+      setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top, dim, skillInfo, score: Math.round(score) });
+    }
+  }
+
   // ── SVG <defs> ─────────────────────────────────────────────────────────────
   function renderDefs() {
     const gradInnerOffset = `${Math.round((BASE_RADIUS / OUTER_RING_R) * 100)}%`;
     return (
       <defs>
-        {/* Interaction styles for dimension labels */}
-        {isClickable && (
-          <style>{`
-            .irw-label-group { cursor: pointer; }
-            .irw-label-group:hover .irw-label-text { fill: #4752e8; }
-            .irw-label-group:hover .irw-info-icon circle { fill: #4752e8; }
-          `}</style>
-        )}
-
         {/* Drop shadow for skill rings */}
         <filter id="irw-shadow" x="-15%" y="-15%" width="130%" height="130%">
           <feDropShadow dx="0" dy="8" stdDeviation="14" floodColor="rgba(0,0,0,0.18)" />
@@ -328,9 +336,7 @@ export default function IntegratedResilienceWheel({
         const segFilter = isHov ? 'brightness(1.18) saturate(1.12)' : 'none';
         const path      = generateSectorPath(ring, dimIndex);
 
-        const levelSlug = skillInfo.level === 'Mastery'   ? 'advanced'
-                        : skillInfo.level === 'Building'  ? 'intermediate'
-                        : 'foundation';
+        const levelSlug = skillLevelToSlug(skillInfo.level);
 
         segments.push(
           <path
@@ -352,17 +358,11 @@ export default function IntegratedResilienceWheel({
             onMouseEnter={(e) => {
               if (!interactive) return;
               setHoveredDim(dim);
-              const rect = containerRef.current?.getBoundingClientRect();
-              if (rect) {
-                setTooltip({ x: e.clientX - rect.left, y: e.clientY - rect.top, dim, skillInfo, score: Math.round(score) });
-              }
+              updateTooltip(e, dim, skillInfo, score);
             }}
             onMouseMove={(e) => {
               if (!interactive) return;
-              const rect = containerRef.current?.getBoundingClientRect();
-              if (rect) {
-                setTooltip(prev => prev ? { ...prev, x: e.clientX - rect.left, y: e.clientY - rect.top } : null);
-              }
+              updateTooltip(e, dim, skillInfo, score);
             }}
             onMouseLeave={() => {
               setHoveredDim(null);
@@ -698,10 +698,7 @@ export default function IntegratedResilienceWheel({
         if (isClickable) {
           onDimensionClick(dim);
         } else if (interactive) {
-          const levelSlug = skillInfo.level === 'Mastery'   ? 'advanced'
-                          : skillInfo.level === 'Building'  ? 'intermediate'
-                          : 'foundation';
-          navigate(`/iatlas/curriculum/${encodeURIComponent(dim.toLowerCase())}?level=${levelSlug}`);
+          navigate(`/iatlas/curriculum/${encodeURIComponent(dim.toLowerCase())}?level=${skillLevelToSlug(skillInfo.level)}`);
         }
       };
 
