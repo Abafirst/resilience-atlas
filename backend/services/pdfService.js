@@ -65,6 +65,15 @@ const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const CONTENT_WIDTH = PAGE_WIDTH - PAGE_MARGIN * 2;
 
+// ── PDF-safe text helper ──────────────────────────────────────────────────────
+// PDFKit uses built-in Helvetica/Times fonts (WinAnsi / Latin-1 only).
+// Multi-byte Unicode characters such as emoji (🌟 🌱 ⚡) render as garbled
+// characters (e.g. "Ø") when passed to doc.text().  This helper strips any
+// character above U+00FF before handing text to PDFKit.
+function pdfSafe(text) {
+    return String(text).replace(/[^\u0000-\u00FF]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 // ── Color helpers ─────────────────────────────────────────────────────────────
 function fc(doc, h) { doc.fillColor(h); }
 function sc(doc, h) { doc.strokeColor(h); }
@@ -438,7 +447,7 @@ function buildDashboardPage(doc, report) {
         const skillLabel = getSkillLevelLabel(pct);
         const skillIcon = getSkillLevelIcon(pct);
         fillColor(doc, COLORS.text);
-        doc.fontSize(9).font('Helvetica-Bold').text(skillIcon + ' ' + skillLabel, barX + barW + 6, rowY + 10, {
+        doc.fontSize(9).font('Helvetica-Bold').text(pdfSafe(skillIcon + ' ' + skillLabel), barX + barW + 6, rowY + 10, {
             width: 60, lineBreak: true,
         });
 
@@ -474,7 +483,7 @@ function buildDashboardPage(doc, report) {
         doc.roundedRect(x, y + 2, legSwatchW, legSwatchW, 2).fill();
         // Label on its own line — explicit width prevents overflow into adjacent column
         fillColor(doc, COLORS.text);
-        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].icon + ' ' + levels[i].label, x + legTextOffset, y, {
+        doc.fontSize(8).font('Helvetica-Bold').text(pdfSafe(levels[i].icon + ' ' + levels[i].label), x + legTextOffset, y, {
             width: legTextW,
             lineBreak: false,
         });
@@ -517,7 +526,7 @@ function buildDimensionPage(doc, dimName, analysis) {
     const skillLabel = getSkillLevelLabel(pct);
     const skillIcon = getSkillLevelIcon(pct);
     doc.fontSize(14).font('Helvetica-Bold').text(
-        skillIcon + ' ' + skillLabel, PAGE_MARGIN + CONTENT_WIDTH * 0.65, 10,
+        pdfSafe(skillIcon + ' ' + skillLabel), PAGE_MARGIN + CONTENT_WIDTH * 0.65, 10,
         { width: CONTENT_WIDTH * 0.35, align: 'right', lineBreak: false }
     );
 
@@ -723,7 +732,7 @@ function buildStrengthIntegrationPage(doc, report) {
         const gridSkillIcon = getSkillLevelIcon(Number(analysis.percentage || 0));
         const gridSkillLabel = getSkillLevelLabel(Number(analysis.percentage || 0));
         doc.fontSize(9).font('Helvetica-Bold').text(
-            gridSkillIcon + ' ' + gridSkillLabel, x + 6, y + 20,
+            pdfSafe(gridSkillIcon + ' ' + gridSkillLabel), x + 6, y + 20,
             { width: dimColW - 12, align: 'right', lineBreak: false }
         );
         fillColor(doc, COLORS.text);
@@ -1141,7 +1150,7 @@ function buildBenchmarkingPage(doc, report, overall) {
         const benchSkillIcon = getSkillLevelIcon(Number(analysis.percentage || 0));
         const benchSkillLabel = getSkillLevelLabel(Number(analysis.percentage || 0));
         doc.fontSize(9).font('Helvetica-Bold').text(
-            benchSkillIcon + ' ' + benchSkillLabel, x + 6, y + 20,
+            pdfSafe(benchSkillIcon + ' ' + benchSkillLabel), x + 6, y + 20,
             { width: gridColW - 12, align: 'right', lineBreak: false }
         );
         fillColor(doc, COLORS.text);

@@ -827,6 +827,7 @@ export default function IntegratedResilienceWheel({
       style={{ position: 'relative' }}
     >
       <svg
+        id="resilience-radar-chart"
         viewBox="-100 0 1200 1000"
         className="irw-svg"
         style={{ maxWidth: '100%', height: 'auto' }}
