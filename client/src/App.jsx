@@ -102,6 +102,12 @@ import PredictiveAnalyticsDashboardPage from './pages/PredictiveAnalyticsDashboa
 import ResearchExportPage from './pages/ResearchExportPage.jsx';
 import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
 import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
+import MiniAssessment from './components/IATLAS/MiniAssessment.jsx';
+import MiniAssessmentHistory from './components/IATLAS/MiniAssessmentHistory.jsx';
+import ParentOutcomeForm from './components/IATLAS/ParentOutcomeForm.jsx';
+import SeasonalActivityPack from './components/IATLAS/SeasonalActivityPack.jsx';
+import CrisisToolkit from './components/IATLAS/CrisisToolkit.jsx';
+import IATLASVideoLibrary from './pages/IATLASVideoLibrary.jsx';
 import SupportWidget from './components/Support/SupportWidget.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
@@ -440,6 +446,13 @@ function AppShell() {
           {/* Support */}
           <Route path="/support/tickets" element={<SupportTicketsPage />} />
           <Route path="/support/tickets/:ticketId" element={<SupportTicketDetailPage />} />
+          {/* IATLAS Enhanced Content */}
+          <Route path="/iatlas/mini-assessments" element={<MiniAssessment />} />
+          <Route path="/iatlas/mini-assessments/history" element={<MiniAssessmentHistory />} />
+          <Route path="/iatlas/parent-outcomes" element={<ParentOutcomeForm />} />
+          <Route path="/iatlas/seasonal-activities" element={<SeasonalActivityPack />} />
+          <Route path="/iatlas/crisis-toolkit" element={<CrisisToolkit />} />
+          <Route path="/iatlas/video-library" element={<IATLASVideoLibrary />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 

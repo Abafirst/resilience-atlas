@@ -304,3 +304,70 @@ Clinical research and evidence-based practice data export system with IRB-compli
 
 ## Task #24 — Activity Search & Filter ✅ (PR #611)
 IATLAS activity catalog search with keyword, category, and age-group filtering.
+
+---
+
+## Task #25 — IATLAS Enhanced Content Library & Mini Assessments ✅
+
+Expanded the IATLAS activity catalog with assessment tools, seasonal content, crisis resources, and video infrastructure.
+
+### #25a — Mini Check-In Assessments
+- **File:** `client/src/data/iatlas/miniAssessments.js`
+- 6 mini assessments (one per dimension) with 3 questions each (Likert 1–5)
+- Parent and practitioner versions with appropriate language
+- Scoring algorithm (3–15 points) with Low/Medium/High interpretation bands
+- Recommended activities based on score
+- **Component:** `client/src/components/IATLAS/MiniAssessment.jsx`
+- **Component:** `client/src/components/IATLAS/MiniAssessmentHistory.jsx`
+- **Route:** `/iatlas/mini-assessments`
+- **Backend:** `backend/models/MiniAssessment.js`, `backend/routes/iatlas-mini-assessments.js`
+  - `POST /api/iatlas/mini-assessments` — Save result
+  - `GET  /api/iatlas/mini-assessments` — Get history
+  - `GET  /api/iatlas/mini-assessments/:id` — Get single result
+
+### #25b — Parent-Reported Outcome (PRO) Forms
+- **File:** `client/src/data/iatlas/parentOutcomeForms.js`
+- Weekly parent check-in form (multiselect wins/challenges, dimension ratings, observations)
+- Monthly progress summary (full retrospective with overall + per-dimension ratings)
+- **Component:** `client/src/components/IATLAS/ParentOutcomeForm.jsx`
+- **Route:** `/iatlas/parent-outcomes`
+- **Backend:** `backend/models/ParentOutcome.js`, `backend/routes/iatlas-parent-outcomes.js`
+  - `POST  /api/iatlas/parent-outcomes` — Submit check-in
+  - `GET   /api/iatlas/parent-outcomes` — Get history
+  - `GET   /api/iatlas/parent-outcomes/:id` — Get single submission
+  - `PATCH /api/iatlas/parent-outcomes/:id/review` — Practitioner review + notes
+
+### #25c — Seasonal & Holiday Activity Packs
+- **File:** `client/src/data/iatlas/seasonalActivities.js`
+- 4 seasonal packs: Spring (6 activities), Summer (6), Fall (6), Winter (6)
+- 6 holiday packs: Gratitude, Light & Hope, New Year, Spring Renewal, Community & Service, Achievement
+- **Component:** `client/src/components/IATLAS/SeasonalActivityPack.jsx`
+- **Route:** `/iatlas/seasonal-activities`
+
+### #25d — Crisis Intervention Toolkit
+- **File:** `client/src/data/iatlas/crisisActivities.js`
+- SOS activities for 4 crisis types: Panic (4), Anger (3), Grief (3), Overwhelm (3)
+- When-to-seek-help guide with emergency resources
+- Safety planning template
+- **Component:** `client/src/components/IATLAS/CrisisToolkit.jsx`
+- **Route:** `/iatlas/crisis-toolkit`
+
+### #25e — Video Demonstration Infrastructure
+- **Component:** `client/src/components/IATLAS/ActivityVideoPlayer.jsx` — Player with "Coming Soon" placeholder
+- **Page:** `client/src/pages/IATLASVideoLibrary.jsx` — Full video library
+- **Route:** `/iatlas/video-library`
+- **Docs:** `docs/IATLAS_VIDEO_GUIDELINES.md`
+
+### #25f — Cultural Adaptations Guide
+- **File:** `IARF/docs/practitioner-resources/cultural-adaptations.md`
+- Cultural humility principles
+- Language adaptation strategies
+- Material substitution tables
+- Activity adaptation examples
+- Religious/spiritual adaptations
+
+### Documentation
+- `docs/IATLAS_CONTENT_ROADMAP.md`
+- `docs/IATLAS_MINI_ASSESSMENTS.md`
+- `docs/IATLAS_PARENT_OUTCOMES.md`
+- `docs/IATLAS_VIDEO_GUIDELINES.md`
