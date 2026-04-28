@@ -5,7 +5,7 @@
  * Features:
  *   - De-identified data exports for research
  *   - Aggregate statistics across cohorts
- *   - CSV / Excel export with configurable fields
+ *   - CSV export with configurable fields
  *   - Statistical analysis ready formats
  *   - IRB-compliant data anonymization
  *   - Longitudinal study dataset generation

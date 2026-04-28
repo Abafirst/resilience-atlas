@@ -6,9 +6,9 @@
  * Base path: /api/research
  *
  * Endpoints:
- *   GET  /api/research/exports/aggregate-stats     — aggregate cohort statistics
- *   POST /api/research/exports/csv                 — de-identified CSV export
- *   POST /api/research/exports/longitudinal        — longitudinal dataset (one row per snapshot)
+ *   GET  /api/research/aggregate-stats  — aggregate cohort statistics
+ *   POST /api/research/csv              — de-identified CSV export
+ *   POST /api/research/longitudinal     — longitudinal dataset (one row per snapshot)
  *
  * Privacy / IRB compliance:
  *   - All exports strip direct identifiers (clientIdentifier, guardianContact, intakeNotes)

@@ -95,9 +95,7 @@ describe('GET /api/research/aggregate-stats', () => {
   });
 
   it('returns aggregate stats for clients with snapshots', async () => {
-    const fakeClientId = require('mongoose').Types?.ObjectId?.createFromHexString
-      ? 'aaaaaaaaaaaaaaaaaaaaaaaa'
-      : 'aaaaaaaaaaaaaaaaaaaaaaaa';
+    const fakeClientId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 
     mockFindClientProfiles.mockResolvedValue([
       { _id: { toString: () => fakeClientId }, practitionerId: 'practitioner_test', dateOfBirth: new Date('2015-01-01'), isActive: true },
