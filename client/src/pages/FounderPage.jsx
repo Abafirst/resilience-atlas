@@ -241,6 +241,37 @@ const styles = `
     }
     .cta-band .btn-outline:hover { border-color: #fff; }
 
+    .perspective-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    .perspective-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+      border: 1px solid #fbbf24;
+      border-radius: 12px;
+      padding: 1.75rem;
+      text-align: center;
+    }
+    .perspective-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 0.75rem;
+    }
+    .perspective-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #92400e;
+      margin: 0 0 0.6rem;
+    }
+    .perspective-card p {
+      font-size: 0.88rem;
+      color: #b45309;
+      margin: 0;
+      line-height: 1.65;
+    }
+
     @media (max-width: 640px) {
       .founder-creds-hero { gap: .4rem; }
     }
@@ -389,6 +420,9 @@ const styles = `
     [data-theme="dark"] .population-card { background: #ffffff; border-color: #e2e8f0; }
     [data-theme="dark"] .population-card h4 { color: #1e40af; }
     [data-theme="dark"] .population-card p { color: #1d4ed8; }
+    [data-theme="dark"] .perspective-card { background: #ffffff; border-color: #fbbf24; }
+    [data-theme="dark"] .perspective-card h4 { color: #92400e; }
+    [data-theme="dark"] .perspective-card p { color: #b45309; }
     [data-theme="dark"] .dimension-row,
     [data-theme="dark"] .integration-card {
       background: #ffffff;
@@ -424,6 +458,9 @@ const styles = `
       :root:not([data-theme="light"]) .population-card { background: #ffffff; border-color: #e2e8f0; }
       :root:not([data-theme="light"]) .population-card h4 { color: #1e40af; }
       :root:not([data-theme="light"]) .population-card p { color: #1d4ed8; }
+      :root:not([data-theme="light"]) .perspective-card { background: #ffffff; border-color: #fbbf24; }
+      :root:not([data-theme="light"]) .perspective-card h4 { color: #92400e; }
+      :root:not([data-theme="light"]) .perspective-card p { color: #b45309; }
       :root:not([data-theme="light"]) .dimension-row,
       :root:not([data-theme="light"]) .integration-card { background: #ffffff; border-color: #e2e8f0; }
       :root:not([data-theme="light"]) .dim-content h4,
@@ -468,6 +505,8 @@ export default function FounderPage() {
           <span className="cred-badge" role="listitem">Ph.D.</span>
           <span className="cred-badge" role="listitem">BCBA</span>
           <span className="cred-badge" role="listitem">Foster Care Alumna</span>
+          <span className="cred-badge" role="listitem">Neurodivergent Family</span>
+          <span className="cred-badge" role="listitem">Autistic Teen Parent</span>
           <span className="cred-badge" role="listitem">Published Researcher</span>
           <span className="cred-badge" role="listitem">Author</span>
         </div>
@@ -569,6 +608,67 @@ export default function FounderPage() {
               exercise. It is an instrument designed by someone who has sat across the table from people
               in genuine need — and who knows that effective tools must be evidence-based, accessible,
               and genuinely useful.
+            </p>
+          </section>
+
+          {/* The Triple Perspective */}
+          <section className="founder-section" aria-labelledby="triple-perspective-heading">
+            <h2 id="triple-perspective-heading">The Triple Perspective: Professional, Family Member, Parent</h2>
+            <p>
+              Janeen's approach to Applied Behavior Analysis is shaped by a rare combination of perspectives
+              that most practitioners don't have — and that most families wish their practitioners understood.
+            </p>
+
+            <div className="perspective-grid">
+              <div className="perspective-card">
+                <div className="perspective-icon">
+                  <img src="/icons/clinical.svg" alt="" className="icon icon-lg" />
+                </div>
+                <h4>As a Professional</h4>
+                <p>
+                  Board Certified Behavior Analyst (BCBA) with 20+ years of clinical practice. She knows
+                  the science, the assessment protocols, the intervention design, and the ethics that govern
+                  evidence-based behavioral practice.
+                </p>
+              </div>
+
+              <div className="perspective-card">
+                <div className="perspective-icon">
+                  <img src="/icons/relational-connective.svg" alt="" className="icon icon-lg" />
+                </div>
+                <h4>As a Family Member</h4>
+                <p>
+                  Janeen comes from a neurodivergent family. She didn't just study neurodivergence in a
+                  clinical setting — she grew up with it, lived with it, and understands from the inside
+                  what it means to navigate a world that wasn't designed for you.
+                </p>
+              </div>
+
+              <div className="perspective-card">
+                <div className="perspective-icon">
+                  <img src="/icons/kids-spark.svg" alt="" className="icon icon-lg" />
+                </div>
+                <h4>As a Parent</h4>
+                <p>
+                  She is the parent of an autistic teen who receives ABA services. That means she knows what
+                  it's like to sit on the other side of the table — the questions parents ask, the fears they
+                  carry, the hope they hold, and the trust they place in practitioners.
+                </p>
+              </div>
+            </div>
+
+            <div className="pullquote" style={{marginTop: '1.75rem'}}>
+              <p>
+                "I've been the BCBA writing the treatment plan. I've been the family member navigating systems
+                that don't always understand us. And I've been the parent sitting across from a clinician,
+                hoping they really see my child. That triple perspective shapes everything I build — because
+                I know what works, what doesn't, and what families actually need."
+              </p>
+            </div>
+
+            <p style={{marginTop: '1.5rem'}}>
+              This is why IATLAS integrates ABA with such care: it's not just clinically sound — it's designed
+              by someone who understands the science <em>and</em> the lived reality of the families it serves.
             </p>
           </section>
 
@@ -829,6 +929,13 @@ export default function FounderPage() {
               The answer, the research consistently shows, is yes — and <strong>The Resilience Atlas&#8482;</strong> is
               here to help you understand exactly how.
             </p>
+            <div className="pullquote" style={{marginTop: '1.5rem'}}>
+              <p>
+                "I've been the BCBA, the family member, and the parent. That triple perspective — across
+                professional practice, lived neurodivergent experience, and raising an autistic teen — shapes
+                everything I build. I know what works, what doesn't, and what families actually need."
+              </p>
+            </div>
           </section>
 
           {/* Speaking & Media */}
