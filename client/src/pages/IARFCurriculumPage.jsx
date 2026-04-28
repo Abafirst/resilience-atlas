@@ -1311,7 +1311,7 @@ export default function IARFCurriculumPage() {
             <div className="iarf-overview" role="list">
               {[
                 { icon: '📐', bg: '#eef2ff', title: 'Evidence-Based', desc: 'Grounded in Applied Behavior Analysis (ABA) and Acceptance & Commitment Therapy (ACT) — two of the most rigorously validated approaches in behavioral science.' },
-                { icon: '🎯', bg: '#fef3c7', title: 'Assessment-Driven', desc: 'Built directly on your Resilience Atlas™ dimensional profile. Every skill module targets your real growth edges, not generic advice.' },
+                { icon: '🎯', bg: '#fef3c7', title: 'Assessment-Driven', desc: 'Built directly on your Resilience Atlas™ dimensional profile. Every skill module targets your real growth frontiers, not generic advice.' },
                 { icon: '🔄', bg: '#d1fae5', title: 'Four-Phase Cycle', desc: 'Assess → Analyze → Intervene → Monitor. A structured, data-informed process that ensures measurable, lasting resilience growth.' },
                 { icon: '🌱', bg: '#fce7f3', title: 'Values-Aligned', desc: 'Every practice and skill is anchored to what matters most to you. Resilience built on intrinsic motivation, not external pressure.' },
               ].map((c) => (
@@ -1335,7 +1335,7 @@ export default function IARFCurriculumPage() {
             <div className="iarf-method" role="list">
               {[
                 { step: 1, icon: '🗺️', title: 'Assess', desc: 'Start with a comprehensive Resilience Atlas™ assessment across all six dimensions to establish your baseline profile.' },
-                { step: 2, icon: '🔬', title: 'Analyze', desc: 'ABA-informed analysis of your dimensional strengths, growth edges, and the barriers and patterns shaping your resilience.' },
+                { step: 2, icon: '🔬', title: 'Analyze', desc: 'ABA-informed analysis of your dimensional strengths, growth frontiers, and the barriers and patterns shaping your resilience.' },
                 { step: 3, icon: '🛠️', title: 'Intervene', desc: 'Engage targeted, individualized skill modules and micropractices across each dimension, integrating ABA and ACT strategies.' },
                 { step: 4, icon: '📊', title: 'Monitor', desc: 'Continuous progress tracking and data collection to measure growth, guide decisions, and celebrate meaningful milestones.' },
               ].map((m) => (

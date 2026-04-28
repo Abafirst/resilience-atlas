@@ -244,7 +244,7 @@ const DIMENSION_CONTENT = {
             work:
                 'In professional settings, this dimension drives collaboration, psychological safety, and the kind of team trust that unlocks peak performance. Leaders here create environments where people feel genuinely seen and valued.',
             personalGrowth:
-                'Your growth edge is often turning this relational intelligence toward yourself — building self-compassion, inner connection, and the ability to be with your own experience as generously as you are with others.',
+                'Your growth frontier is often turning this relational intelligence toward yourself — building self-compassion, inner connection, and the ability to be with your own experience as generously as you are with others.',
         },
 
         benchmark: {
@@ -574,7 +574,7 @@ const DIMENSION_CONTENT = {
             'and meaning-making.',
 
         weeklyProgression: [
-            'Week 1 — Values Audit: Write down your top 5 personal values. Then assess: on a scale of 1-10, how much does your daily life reflect each value? The gap is your growth edge.',
+            'Week 1 — Values Audit: Write down your top 5 personal values. Then assess: on a scale of 1-10, how much does your daily life reflect each value? The gap is your growth frontier.',
             'Week 2 — Stillness: Commit to 10 minutes of intentional stillness each day — meditation, mindful walking, or simply sitting without a device. Reflection requires space.',
             'Week 3 — Legacy Letter: Write a one-page letter from your future self, looking back on a life well-lived. What did you create? How did you show up? This exercise clarifies what matters most.',
             'Week 4 — Community: Connect with a community, cause, or practice that expresses your values — volunteer work, a spiritual community, a creative collective. Purpose is amplified in relationship.',

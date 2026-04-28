@@ -1110,7 +1110,7 @@ const VISUAL_CONTENT = {
                 items: [
                     'Scores 7-10: Team strength — leverage these in your work and support others through them',
                     'Scores 4-6: Developing — areas with potential; focus facilitation here',
-                    'Scores 1-3: Growth edge — prioritize structured activities and practice here',
+                    'Scores 1-3: Growth frontier — prioritize structured activities and practice here',
                 ],
             },
             {

@@ -878,7 +878,7 @@ export default function TeamsLandingPage() {
           <span className="tac-badge tac-badge--group">4–20 people</span>
           <span className="tac-badge tac-badge--dim">All Dimensions</span>
         </div>
-        <p className="tac-desc">Each team member shares which of the Six Dimensions feels strongest and which is a current growth edge. The group identifies patterns and creates a collective resilience profile together.</p>
+        <p className="tac-desc">Each team member shares which of the Six Dimensions feels strongest and which is a current growth frontier. The group identifies patterns and creates a collective resilience profile together.</p>
         <button className="tac-toggle" onClick={handleFacilitationGuideClick} aria-expanded="false" aria-label="View Facilitation Guide (Premium feature)"><img onError={handleIconLoadError} src="icons/lock.svg" alt="" aria-hidden="true" width={14} height={14} style={{ verticalAlign: "middle", marginRight: 5 }} /> View Facilitation Guide</button>
         <div className="tac-panel" hidden>
           <strong>How to run it:</strong>
@@ -886,7 +886,7 @@ export default function TeamsLandingPage() {
             <li>Each person picks their strongest and weakest dimension from the Six Dimensions wheel (5 min alone).</li>
             <li>In pairs, share your choices and the reason why (10 min).</li>
             <li>Pairs share back to the group — facilitator captures themes on a whiteboard (15 min).</li>
-            <li>Discuss: What does our collective strength look like? Where are our shared growth edges? (15 min).</li>
+            <li>Discuss: What does our collective strength look like? Where are our shared growth frontiers? (15 min).</li>
             <li>Each person names one action they'll take to strengthen their growth dimension this month (10 min).</li>
           </ol>
           <p style={{ margin: '.75rem 0 0' }}><strong>Materials:</strong> Six Dimensions wheel diagram, sticky notes, whiteboard or shared doc.</p>

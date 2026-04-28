@@ -111,7 +111,7 @@ const UPSELL_VARIANT_COPY = {
   variant_a: {
     'atlas-navigator': {
       headline: "You're in the Top 20% — Unlock What's Holding You Back",
-      subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
+      subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth frontiers with expert strategies for every dimension.',
       ctaLabel: 'Unlock My Deep Report ($49.99)',
       offer:    null,
     },

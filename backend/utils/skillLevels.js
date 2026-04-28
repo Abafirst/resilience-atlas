@@ -13,7 +13,7 @@
  *   - FOUNDATION (< 40%): Skills are at the earliest stage of development.
  *
  * These thresholds align with the three-tier competency model used throughout
- * the IATLAS curriculum and correspond to "anchor", "building", and "growth edge"
+ * the IATLAS curriculum and correspond to "anchor", "building", and "growth frontier"
  * terminology used across all user-facing reports.
  */
 
@@ -40,7 +40,7 @@ const SKILL_LEVELS = {
         shortLabel: 'Foundation',
         icon: '⚡',
         color: '#f97316',
-        description: 'Your growth edge. Fertile ground for development.',
+        description: 'Your growth frontier. Fertile ground for development.',
     },
 };
 
