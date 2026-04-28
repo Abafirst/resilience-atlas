@@ -51,7 +51,7 @@ const COMMON_DIAGNOSES = [
 
 const COMMON_GOALS = [
   'Improve social skills', 'Build emotional regulation', 'Develop communication skills',
-  'Strengthen academic skills', 'Increase independence', 'Reduce challenging behaviour',
+  'Strengthen academic skills', 'Increase independence', 'Reduce challenging behavior',
   'Build self-confidence', 'Improve motor skills',
 ];
 

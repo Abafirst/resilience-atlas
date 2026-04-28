@@ -90,7 +90,7 @@ export const FAMILY_CHALLENGES = [
       'Head outside for a walk in a park, neighborhood, or backyard',
       'Every 5 minutes the parent calls a "body check" — everyone names one sensation they feel (e.g., "my feet are warm", "my shoulders are relaxed")',
       'Notice and name 3 things you can see, 2 you can hear, 1 you can smell',
-      'After returning home, each person draws or writes their favourite sensation from the walk',
+      'After returning home, each person draws or writes their favorite sensation from the walk',
     ],
     parentNote:
       'Grounding in the physical world helps regulate the nervous system. Encourage curiosity over "correctness" — there are no wrong answers in a body scan.',
@@ -181,7 +181,7 @@ export const FAMILY_CHALLENGES = [
     duration: '7 days',
     participants: 'whole family',
     instructions: [
-      'At the start of each day, the family plans one act of kindness together (e.g., bake for a neighbour, write a thank-you card, pick up litter)',
+      'At the start of each day, the family plans one act of kindness together (e.g., bake for a neighbor, write a thank-you card, pick up litter)',
       'Everyone participates in the act',
       'In the evening, each person shares how the act felt',
       'Track acts on a "kindness chart" — aim for 7 by the end of the week',
@@ -229,9 +229,9 @@ export const FAMILY_CHALLENGES = [
     participants: 'whole family',
     instructions: [
       'Lay out a large sheet of paper (poster board works great)',
-      'Draw a simple body outline in the centre',
+      'Draw a simple body outline in the center',
       'Each family member marks where they feel different emotions in the body (e.g., "anger in my chest", "joy in my belly")',
-      'Use different colours for different emotions',
+      'Use different colors for different emotions',
       'Display the finished map somewhere visible and reference it during emotional moments',
     ],
     parentNote:

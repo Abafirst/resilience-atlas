@@ -16,14 +16,14 @@ const CATEGORIES = ['intake', 'ongoing', 'closure', 'assessment', 'custom'];
 const PRACTITIONER_TIERS = new Set(['practitioner', 'practice', 'enterprise']);
 
 function CategoryBadge({ category }) {
-  const colours = {
+  const colors = {
     intake:     { bg: '#dbeafe', color: '#1d4ed8' },
     ongoing:    { bg: '#d1fae5', color: '#065f46' },
     closure:    { bg: '#ede9fe', color: '#5b21b6' },
     assessment: { bg: '#fef3c7', color: '#92400e' },
     custom:     { bg: '#f3f4f6', color: '#374151' },
   };
-  const style = colours[category] || colours.custom;
+  const style = colors[category] || colors.custom;
   return (
     <span style={{ ...badgeStyle, background: style.bg, color: style.color }}>
       {category}

@@ -83,8 +83,8 @@ export const CRISIS_ACTIVITIES = {
         },
       },
       {
-        id: 'crisis-safe-place-visualisation',
-        title: 'Safe Place Visualisation',
+        id: 'crisis-safe-place-visualization',
+        title: 'Safe Place Visualization',
         duration: '5 min',
         intensity: 'mild-moderate',
         ageGroups: ['ages-8-10', 'ages-11-14', 'ages-15-18'],
@@ -101,7 +101,7 @@ export const CRISIS_ACTIVITIES = {
         parentNote: 'Help your child build their safe place during a calm time so it\'s ready when needed.',
         whenToUse: 'Panic, overwhelming worry, nighttime anxiety, before stressful events.',
         adaptations: {
-          younger: 'Guide younger children through this verbally with a "magic carpet" or "favourite place" theme.',
+          younger: 'Guide younger children through this verbally with a "magic carpet" or "favorite place" theme.',
         },
       },
     ],
