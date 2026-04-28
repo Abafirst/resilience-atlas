@@ -1,0 +1,166 @@
+/* ── Integrated Resilience Wheel ─────────────────────────────────────────── */
+
+.irw-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  position: relative;
+}
+
+.irw-svg {
+  max-width: 100%;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+}
+
+.dark-mode .irw-svg {
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
+}
+
+/* Skill ring segments */
+.irw-wheel-segment {
+  cursor: pointer;
+  transition: fill-opacity 0.2s ease, filter 0.2s ease, stroke-width 0.2s ease;
+}
+
+.irw-wheel-segment:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 4px;
+}
+
+.irw-wheel-segment:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Interactive label groups */
+.irw-label-group {
+  cursor: pointer;
+}
+
+.irw-label-group:hover .irw-label-text {
+  fill: #4752e8;
+}
+
+.irw-label-group:hover .irw-info-icon circle {
+  fill: #4752e8;
+}
+
+/* Tooltip */
+.irw-tooltip {
+  position: absolute;
+  background: rgba(15, 23, 42, 0.95);
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  pointer-events: none;
+  z-index: 1000;
+  max-width: 260px;
+  line-height: 1.5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  white-space: normal;
+}
+
+.irw-tooltip-title {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.irw-tooltip-score {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
+}
+
+.irw-tooltip-desc {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+/* Section wrapper (used in ResultsPage) */
+.irw-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  margin: 1.5rem 0;
+  border: 1px solid #e2e8f0;
+}
+
+.dark-mode .irw-section {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #334155;
+}
+
+.irw-section-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.irw-section-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.6rem;
+}
+
+.dark-mode .irw-section-header h2 {
+  color: #f1f5f9;
+}
+
+.irw-section-header p {
+  font-size: 0.9rem;
+  color: #64748b;
+  max-width: 580px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.dark-mode .irw-section-header p {
+  color: #94a3b8;
+}
+
+/* Legend */
+.irw-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.75rem;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.irw-legend-icon {
+  margin-right: 0.35rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .irw-svg {
+    max-width: 92vw;
+  }
+
+  .irw-section {
+    padding: 1.75rem 1rem;
+  }
+
+  .irw-legend {
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: center;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .irw-wheel-segment {
+    transition: none;
+  }
+}

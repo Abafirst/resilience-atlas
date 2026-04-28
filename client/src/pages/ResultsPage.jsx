@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
-import RadarChart from '../components/RadarChart.jsx';
-import AdultSkillsWheel from '../components/AdultSkillsWheel.jsx';
+import IntegratedResilienceWheel from '../components/IntegratedResilienceWheel.jsx';
 import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
@@ -3449,74 +3448,41 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
-        <section style={{
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: 16,
-          padding: '28px 20px 20px',
-          marginBottom: 24,
-          textAlign: 'center',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-        }} aria-labelledby="radarHeading">
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
-            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
-          </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 8 }}>
-            This compass visualizes the balance of your resilience system across six core dimensions.
-          </p>
-          <p style={{
-            fontSize: 12,
-            color: '#4a5568',
-            background: '#eef2ff',
-            border: '1px solid #c7d2fe',
-            borderRadius: 8,
-            padding: '7px 12px',
-            marginBottom: 14,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            fontWeight: 500,
-          }}>
-            <span aria-hidden="true" style={{ fontSize: 14, color: '#667eea' }}>👆</span>
-            Click any dimension label to learn what it means and discover personalized ways to strengthen it
-          </p>
-          <div style={{ transform: 'translateY(-5px)' }}>
-            <RadarChart
+        {/* ── Integrated Resilience Wheel ───────────────────────────── */}
+        {results && results.scores && (
+          <section className="irw-section" aria-labelledby="irwHeading">
+            <div className="irw-section-header">
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="irwHeading">
+                <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass &amp; Skills Landscape
+              </div>
+              <p>
+                Your score is shown as a hexagonal overlay. The color-coded rings show your current skill
+                proficiency (Foundation → Building → Mastery) for each dimension. The needle points to your
+                strongest dimension. Click any label or segment to explore skill-building resources.
+              </p>
+            </div>
+            <IntegratedResilienceWheel
               scores={results.scores}
+              interactive={true}
+              showLabels={true}
+              showSkillRings={true}
+              showScorePolygon={true}
+              showNeedle={true}
               onDimensionClick={(dim) => {
                 setActiveDimModal(dim);
               }}
             />
-          </div>
-          {dominantType && (
-            <p style={{ fontSize: 13, color: '#718096', marginTop: 10 }}>
-              Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
-            </p>
-          )}
-        </section>
-
-        {/* ── Skills-Based Visualization ────────────────────────────── */}
-        {results && results.scores && (
-          <section className="results-skills-section" aria-labelledby="skillsWheelHeading">
-            <div className="skills-section-header">
-              <h2 id="skillsWheelHeading">Your Resilience Skills Landscape</h2>
-              <p>
-                This wheel shows your current skill proficiency across six dimensions.
-                Click any segment to explore skill-building modules in that area.
+            <div className="irw-legend" aria-label="Skills wheel legend">
+              <span><span className="irw-legend-icon">🌟</span> Developed (Mastery)</span>
+              <span><span className="irw-legend-icon">🌱</span> Building</span>
+              <span><span className="irw-legend-icon">⚡</span> Foundation</span>
+            </div>
+            {dominantType && (
+              <p style={{ fontSize: 13, color: '#718096', marginTop: 10, textAlign: 'center' }}>
+                Your strongest resilience dimension is:{' '}
+                <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
               </p>
-            </div>
-            <AdultSkillsWheel
-              dimensionScores={results.scores}
-              interactive={true}
-              showLabels={true}
-            />
-            <div className="skills-wheel-legend" aria-label="Skills wheel legend">
-              <span><span className="legend-icon">🌟</span> Developed (Mastery)</span>
-              <span><span className="legend-icon">🌱</span> Building</span>
-              <span><span className="legend-icon">⚡</span> Foundation</span>
-            </div>
+            )}
           </section>
         )}
 
