@@ -4,6 +4,7 @@ const path = require('path');
 const PDFDocument = require('pdfkit');
 const { DIMENSION_CONTENT, getLevel } = require('../templates/dimensionContent');
 const branding = require('../config/branding');
+const { getSkillLevelLabel, getSkillLevelIcon, getSkillLevelDescription } = require('../utils/skillLevels');
 
 // Use the static brand logo file directly for PDF cover rendering.
 // The logo lives in client/public/assets/ and is copied to the container
@@ -332,10 +333,10 @@ function buildJourneyMapPage(doc, report) {
 
     const tileW = (CONTENT_WIDTH - 12) / 4;
     const tileY = doc.y + 4;
-    statTile(doc, 'Overall Score', overallNum + '%', PAGE_MARGIN, tileY, tileW - 3);
-    statTile(doc, 'Level', level, PAGE_MARGIN + tileW + 1, tileY, tileW - 3);
-    statTile(doc, 'Top Strength', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
-    statTile(doc, 'Growth Area', bottomDim, PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
+    const landscapeLevel = getSkillLevelLabel(overallNum);
+    statTile(doc, 'Resilience Foundation', landscapeLevel, PAGE_MARGIN, tileY, tileW - 3);
+    statTile(doc, 'Anchor Dimension', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
+    statTile(doc, 'Growth Edge', bottomDim, PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
     doc.y = tileY + 58;
 
     // Dimension summary list
@@ -361,9 +362,11 @@ function buildJourneyMapPage(doc, report) {
             continued: true, width: 200, lineBreak: false,
         });
         fillColor(doc, levelColor);
-        doc.fontSize(9).font('Helvetica-Bold').text('  ' + pct.toFixed(0) + '%  ', { continued: true, lineBreak: false });
+        const skillLabel = getSkillLevelLabel(pct);
+        const skillIcon = getSkillLevelIcon(pct);
+        doc.fontSize(9).font('Helvetica-Bold').text('  ' + skillIcon + ' ' + skillLabel + '  ', { continued: true, lineBreak: false });
         fillColor(doc, COLORS.textLight);
-        doc.fontSize(9).font('Helvetica').text('(' + (analysis.level || '').toUpperCase() + ')', {
+        doc.fontSize(9).font('Helvetica').text('', {
             width: 100, lineBreak: false,
         });
         progressBar(doc, PAGE_MARGIN + 320, doc.y - 10, CONTENT_WIDTH - 325, pct, cfg.color);
@@ -415,29 +418,26 @@ function buildDashboardPage(doc, report) {
 
         progressBar(doc, barX, rowY + 14, barW, pct, cfg.color);
 
+        const skillLabel = getSkillLevelLabel(pct);
+        const skillIcon = getSkillLevelIcon(pct);
         fillColor(doc, COLORS.text);
-        doc.fontSize(13).font('Helvetica-Bold').text(pct.toFixed(0) + '%', barX + barW + 6, rowY + 8, {
-            width: 44, lineBreak: false,
-        });
-        fillColor(doc, levelColor);
-        doc.fontSize(7).font('Helvetica-Bold').text((analysis.level || '').toUpperCase(), barX + barW + 6, rowY + 24, {
-            width: 44, lineBreak: false,
+        doc.fontSize(9).font('Helvetica-Bold').text(skillIcon + ' ' + skillLabel, barX + barW + 6, rowY + 10, {
+            width: 60, lineBreak: true,
         });
 
         fillColor(doc, COLORS.text);
         doc.y = rowY + barRowH + 10;
     }
 
-    // Score Legend – add clear vertical gap so it doesn't crowd the last bar.
+    // Skill Level Legend – add clear vertical gap so it doesn't crowd the last bar.
     ensureSpace(doc, 80);
     doc.y += 16;
-    sectionHeader(doc, 'SCORE LEGEND', COLORS.textMid);
+    sectionHeader(doc, 'SKILL LEVEL GUIDE', COLORS.textMid);
 
     const levels = [
-        { key: 'strong', label: 'Strong (80-100%)', desc: 'Well-developed \u2014 leverage and share' },
-        { key: 'solid', label: 'Solid (65-79%)', desc: 'Growing well \u2014 lean in and continue' },
-        { key: 'developing', label: 'Developing (50-64%)', desc: 'Active growth zone \u2014 consistent practice pays' },
-        { key: 'emerging', label: 'Emerging (0-49%)', desc: 'Highest growth opportunity' },
+        { icon: '🌟', label: 'Developed Skill', desc: 'Your anchor \u2014 naturally drawn on under pressure' },
+        { icon: '🌱', label: 'Building Skill', desc: 'Actively strengthening \u2014 consistent practice is showing' },
+        { icon: '⚡', label: 'Foundational Skill', desc: 'Your growth edge \u2014 fertile ground for development' },
     ];
 
     const legColW = (CONTENT_WIDTH - 12) / 2;
@@ -447,16 +447,17 @@ function buildDashboardPage(doc, report) {
     const legTextOffset = 14;     // horizontal gap between swatch left-edge and text
     const legTextW = legColW - legTextOffset - 2; // available width for text within one column
     const legDescOffsetY = 13;    // vertical gap from label top to description line
+    const SKILL_LEVEL_COLORS = ['#10b981', '#3b82f6', '#f97316'];
     for (let i = 0; i < levels.length; i++) {
         const col = i % 2;
         const row = Math.floor(i / 2);
         const x = PAGE_MARGIN + col * (legColW + 12);
         const y = legStartY + row * legRowH;
-        fillColor(doc, LEVEL_COLORS[levels[i].key]);
+        fillColor(doc, SKILL_LEVEL_COLORS[i] || COLORS.primary);
         doc.roundedRect(x, y + 2, legSwatchW, legSwatchW, 2).fill();
         // Label on its own line — explicit width prevents overflow into adjacent column
         fillColor(doc, COLORS.text);
-        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].label, x + legTextOffset, y, {
+        doc.fontSize(8).font('Helvetica-Bold').text(levels[i].icon + ' ' + levels[i].label, x + legTextOffset, y, {
             width: legTextW,
             lineBreak: false,
         });
@@ -496,8 +497,10 @@ function buildDimensionPage(doc, dimName, analysis) {
     doc.fontSize(18).font('Helvetica-Bold').text(
         dimName, PAGE_MARGIN, 12, { width: CONTENT_WIDTH * 0.65, lineBreak: false }
     );
-    doc.fontSize(26).font('Helvetica-Bold').text(
-        pct.toFixed(0) + '%', PAGE_MARGIN + CONTENT_WIDTH * 0.65, 10,
+    const skillLabel = getSkillLevelLabel(pct);
+    const skillIcon = getSkillLevelIcon(pct);
+    doc.fontSize(14).font('Helvetica-Bold').text(
+        skillIcon + ' ' + skillLabel, PAGE_MARGIN + CONTENT_WIDTH * 0.65, 10,
         { width: CONTENT_WIDTH * 0.35, align: 'right', lineBreak: false }
     );
 
@@ -700,8 +703,10 @@ function buildStrengthIntegrationPage(doc, report) {
         doc.fontSize(8).font('Helvetica-Bold').text(
             dim.split('-')[0], x + 6, y + 6, { width: dimColW - 12, lineBreak: false }
         );
-        doc.fontSize(17).font('Helvetica-Bold').text(
-            Number(analysis.percentage || 0).toFixed(0) + '%', x + 6, y + 18,
+        const gridSkillIcon = getSkillLevelIcon(Number(analysis.percentage || 0));
+        const gridSkillLabel = getSkillLevelLabel(Number(analysis.percentage || 0));
+        doc.fontSize(9).font('Helvetica-Bold').text(
+            gridSkillIcon + ' ' + gridSkillLabel, x + 6, y + 20,
             { width: dimColW - 12, align: 'right', lineBreak: false }
         );
         fillColor(doc, COLORS.text);
@@ -1085,12 +1090,12 @@ function buildBenchmarkingPage(doc, report, overall) {
     const overallNum = Number(overall || 0);
     const populationMeans = Object.values(DIMENSION_CONTENT).map((c) => c.benchmark.populationMean);
     const avgMean = Math.round(populationMeans.reduce((a, b) => a + b, 0) / populationMeans.length);
-    const above = overallNum > avgMean;
+    const overallSkillLabel = getSkillLevelLabel(overallNum);
 
     infoBox(
         doc,
-        'Population Context: Your overall score of ' + overallNum + '% places you ' + (above ? 'above' : 'near or below') +
-        ' the population average of approximately ' + avgMean + '%. This score reflects your current state \u2014 not your ceiling. ' +
+        'Population Context: Your overall resilience reflects ' + overallSkillLabel + ' capacity. ' +
+        'This reflects your current state \u2014 not your ceiling. ' +
         'Resilience is trainable, and research consistently shows meaningful improvement with deliberate practice over 30-90 days.',
         COLORS.bgBlue, COLORS.primary, PAGE_MARGIN, doc.y, CONTENT_WIDTH
     );
@@ -1116,14 +1121,11 @@ function buildBenchmarkingPage(doc, report, overall) {
         doc.fontSize(8).font('Helvetica-Bold').text(dim.split('-')[0], x + 6, y + 6, {
             width: gridColW - 12, lineBreak: false,
         });
-        doc.fontSize(17).font('Helvetica-Bold').text(
-            Number(analysis.percentage || 0).toFixed(0) + '%', x + 6, y + 18,
+        const benchSkillIcon = getSkillLevelIcon(Number(analysis.percentage || 0));
+        const benchSkillLabel = getSkillLevelLabel(Number(analysis.percentage || 0));
+        doc.fontSize(9).font('Helvetica-Bold').text(
+            benchSkillIcon + ' ' + benchSkillLabel, x + 6, y + 20,
             { width: gridColW - 12, align: 'right', lineBreak: false }
-        );
-        fillColor(doc, '#c7d2fe');
-        doc.fontSize(7).font('Helvetica').text(
-            '~' + (analysis.benchmark ? analysis.benchmark.percentile : 50) + 'th %ile',
-            x + 6, y + 34, { width: gridColW - 12, lineBreak: false }
         );
         fillColor(doc, COLORS.text);
     }
