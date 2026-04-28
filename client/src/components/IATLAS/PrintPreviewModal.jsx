@@ -996,7 +996,7 @@ export default function PrintPreviewModal({
 
           {/* Header */}
           <div className="ppm-header">
-            <h2 className="ppm-title">🖨️ Print / Export — {resourceLabel}</h2>
+            <h2 className="ppm-title"><img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Print / Export — {resourceLabel}</h2>
             <button
               className="ppm-close"
               onClick={onClose}
@@ -1083,7 +1083,7 @@ export default function PrintPreviewModal({
               type="button"
               aria-label="Open print dialog"
             >
-              <span aria-hidden="true">🖨️</span> Print / Save as PDF
+              <img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Print / Save as PDF
             </button>
           </div>
 

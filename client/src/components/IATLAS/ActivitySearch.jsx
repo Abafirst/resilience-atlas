@@ -450,7 +450,7 @@ export default function ActivitySearch({
     const tp = activityTypes[typeFilter];
     chips.push({ key: 'type', label: tp ? tp.label : typeFilter });
   }
-  if (favFilter)            chips.push({ key: 'favs', label: '❤️ Favorites only' });
+  if (favFilter)            chips.push({ key: 'favs', label: 'Favorites only' });
 
   const hasFilters = chips.length > 0;
 
@@ -549,7 +549,7 @@ export default function ActivitySearch({
             aria-pressed={favFilter}
             aria-label={favFilter ? 'Showing favorites only — click to show all' : 'Show favorites only'}
           >
-            {favFilter ? '❤️' : '🤍'} Favorites
+            <img src="/icons/connection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Favorites
           </button>
         </div>
 

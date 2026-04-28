@@ -170,12 +170,12 @@ export default function ActivityVideoPlayer({
           {!videoUrl ? (
             // Placeholder — video not yet available
             <div className="avp-placeholder" role="img" aria-label={`Video coming soon for ${title}`}>
-              <div className="avp-placeholder-icon" aria-hidden="true">🎥</div>
+              <div className="avp-placeholder-icon" aria-hidden="true"><img src="/icons/video.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
               <p className="avp-placeholder-title">Video Coming Soon</p>
               <p className="avp-placeholder-sub">
                 A demonstration video for <strong>{title}</strong> is being produced and will be available soon.
               </p>
-              <span className="avp-placeholder-badge">📹 In Production</span>
+              <span className="avp-placeholder-badge">In Production</span>
             </div>
           ) : !playing ? (
             // Thumbnail + play button

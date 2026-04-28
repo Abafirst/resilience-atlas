@@ -360,7 +360,7 @@ export default function BadgeUnlockModal({ badges = [], onClose }) {
 
           <button className="bum-close-btn" onClick={onClose} aria-label="Close">&#x2715;</button>
 
-          <p className="bum-kicker">🏆 Badge Unlocked!</p>
+          <p className="bum-kicker"><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Badge Unlocked!</p>
           <h2 className="bum-title">You earned a badge!</h2>
 
           <div className="bum-badge-icon-wrap" role="img" aria-label={badge.name || badge.badgeId}>
@@ -380,7 +380,7 @@ export default function BadgeUnlockModal({ badges = [], onClose }) {
 
           {badge.xpReward > 0 && (
             <div className="bum-xp-pill" aria-label={`${badge.xpReward} XP earned`}>
-              ⭐ +{badge.xpReward} XP
+              <img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" /> +{badge.xpReward} XP
             </div>
           )}
 

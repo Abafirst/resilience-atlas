@@ -344,7 +344,7 @@ export default function ParentOutcomeForm({ formType: initialType = 'weekly', ch
         <style>{STYLES}</style>
         <div className="pof-container">
           <div className="pof-success">
-            <div className="pof-success-icon">✅</div>
+            <div className="pof-success-icon"><img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
             <p className="pof-success-title">Thank you for checking in!</p>
             <p className="pof-success-sub">Your {formType} update has been saved. Your practitioner will review it before your next session.</p>
             <button className="pof-success-again" onClick={handleReset}>Submit Another</button>
@@ -368,7 +368,7 @@ export default function ParentOutcomeForm({ formType: initialType = 'weekly', ch
                 className={`pof-type-btn${formType === t ? ' active' : ''}`}
                 onClick={() => { setFormType(t); handleReset(); setSubmitted(false); }}
               >
-                {t === 'weekly' ? '📅 Weekly Check-In' : '📊 Monthly Summary'}
+                {t === 'weekly' ? 'Weekly Check-In' : 'Monthly Summary'}
               </button>
             ))}
           </div>

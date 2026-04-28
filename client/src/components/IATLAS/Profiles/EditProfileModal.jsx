@@ -14,9 +14,12 @@ import React, { useState } from 'react';
 import { useProfiles } from '../../../contexts/ProfileContext.jsx';
 
 const AVATAR_OPTIONS = [
-  '🧒', '👧', '👦', '🧒🏻', '👧🏼', '🧑🏽', '👦🏾', '👧🏿',
-  '🦁', '🐶', '🐱', '🦊', '🐼', '🐨', '🦄', '🌟',
-  '🚀', '🎨', '⚽', '🎮', '🌈', '🦋', '🌸', '🎵',
+  '/icons/kids-spark.svg', '/icons/star.svg', '/icons/compass.svg',
+  '/icons/game-shield.svg', '/icons/trophy.svg', '/icons/game-mountain.svg',
+  '/icons/growth.svg', '/icons/strength.svg', '/icons/quest.svg',
+  '/icons/game-scroll.svg', '/icons/connection.svg', '/icons/game-diamond.svg',
+  '/icons/star-burst.svg', '/icons/game-map.svg', '/icons/game-target.svg',
+  '/icons/emotion.svg', '/icons/reflection.svg', '/icons/mindfulness.svg',
 ];
 
 const AGE_GROUPS = [
@@ -177,7 +180,7 @@ export default function EditProfileModal({ profile, onClose, onUpdated, onDelete
   // Basic
   const [name,        setName]        = useState(profile.name);
   const [ageGroup,    setAgeGroup]    = useState(profile.ageGroup || '');
-  const [avatar,      setAvatar]      = useState(profile.avatar || '🧒');
+  const [avatar,      setAvatar]      = useState(profile.avatar || '/icons/kids-spark.svg');
   const [gender,      setGender]      = useState(profile.gender || '');
   const [dateOfBirth, setDateOfBirth] = useState(
     profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : ''
@@ -272,9 +275,9 @@ export default function EditProfileModal({ profile, onClose, onUpdated, onDelete
           {/* Tab navigation */}
           <div className="epm-tabs" role="tablist" aria-label="Profile sections">
             {[
-              { id: 'basic',       label: '📋 Basic'      },
-              { id: 'clinical',    label: '🏥 Clinical'   },
-              { id: 'preferences', label: '🎯 Preferences' },
+              { id: 'basic',       label: 'Basic'       },
+              { id: 'clinical',    label: 'Clinical'    },
+              { id: 'preferences', label: 'Preferences' },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -365,7 +368,7 @@ export default function EditProfileModal({ profile, onClose, onUpdated, onDelete
                       aria-label={`Avatar ${em}`}
                       aria-pressed={avatar === em}
                     >
-                      {em}
+                      <img src={em} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </button>
                   ))}
                 </div>
@@ -517,7 +520,7 @@ export default function EditProfileModal({ profile, onClose, onUpdated, onDelete
                 className="epm-delete"
                 onClick={() => setConfirmDelete(true)}
               >
-                🗑 Delete
+                Delete
               </button>
             </div>
           </form>

@@ -652,8 +652,8 @@ export default function FamilyDashboard() {
         notifs.push({
           id:   `first-${profile.profileId}`,
           type: 'success',
-          icon: '🎉',
-          text: `${profile.avatar} ${profile.name} completed their first activity! Great start!`,
+          icon: '/icons/star-burst.svg',
+          text: `${profile.name} completed their first activity! Great start!`,
         });
       }
       // Streak-like: active this week
@@ -661,8 +661,8 @@ export default function FamilyDashboard() {
         notifs.push({
           id:   `active-${profile.profileId}`,
           type: 'success',
-          icon: '🔥',
-          text: `${profile.avatar} ${profile.name} has completed ${thisWeek} activities this week. Keep it up!`,
+          icon: '/icons/fire.svg',
+          text: `${profile.name} has completed ${thisWeek} activities this week. Keep it up!`,
         });
       }
       // Level milestone
@@ -670,8 +670,8 @@ export default function FamilyDashboard() {
         notifs.push({
           id:   `level-${profile.profileId}-${level.level}`,
           type: 'info',
-          icon: '⭐',
-          text: `${profile.avatar} ${profile.name} reached Level ${level.level}: ${level.title}!`,
+          icon: '/icons/star.svg',
+          text: `${profile.name} reached Level ${level.level}: ${level.title}!`,
         });
       }
     });
@@ -680,7 +680,7 @@ export default function FamilyDashboard() {
       notifs.push({
         id:   'no-profiles',
         type: 'info',
-        icon: '👋',
+        icon: '/icons/network.svg',
         text: "Welcome! Add your first child profile to get started with the family dashboard.",
       });
     }
@@ -689,7 +689,7 @@ export default function FamilyDashboard() {
     notifs.push({
       id:   'weekly-reminder',
       type: 'warn',
-      icon: '📅',
+      icon: '/icons/journal.svg',
       text: 'Reminder: schedule 2–3 resilience activities per week for best results.',
     });
 
@@ -715,7 +715,7 @@ export default function FamilyDashboard() {
         events.push({
           id:     `act-${r.activityId}-${profile.profileId}`,
           title:  r.activityId?.split('/')[1]?.replace(/-/g, ' ') || 'Activity',
-          child:  `${profile.avatar} ${profile.name}`,
+          child:  profile.name,
           date:   r.completedAt,
           status: 'completed',
           color,
@@ -781,7 +781,7 @@ export default function FamilyDashboard() {
         {/* ── Page Header ── */}
         <header className="fd-page-header">
           <h1 className="fd-page-title">
-            🏡 Family Dashboard
+            <img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family Dashboard
           </h1>
           <p className="fd-page-sub">
             Manage all children's resilience journeys in one place.
@@ -836,14 +836,14 @@ export default function FamilyDashboard() {
               className="fd-action-btn fd-action-btn-tertiary"
               aria-label="Create a session plan"
             >
-              📋 Session Plan
+              Session Plan
             </Link>
             <Link
               to="/iatlas/clinical/aba-protocols"
               className="fd-action-btn fd-action-btn-ghost"
               aria-label="View protocol library"
             >
-              📚 Protocol Library
+              Protocol Library
             </Link>
             <PrintExportButton
               resourceType="family_report"
@@ -887,7 +887,7 @@ export default function FamilyDashboard() {
               </h2>
               {profiles.length === 0 ? (
                 <div className="fd-empty">
-                  <span className="fd-empty-icon" aria-hidden="true">👶</span>
+                  <span className="fd-empty-icon" aria-hidden="true"><img src="/icons/kids-spark.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                   No child profiles yet.
                   <br />
                   <button
@@ -911,7 +911,7 @@ export default function FamilyDashboard() {
                       aria-label={`View ${profile.name}'s profile`}
                     >
                       <div className="fd-child-card-header">
-                        <span className="fd-child-avatar" aria-hidden="true">{profile.avatar || '🧒'}</span>
+                        <span className="fd-child-avatar" aria-hidden="true"><img src={profile.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                         <div>
                           <p className="fd-child-name">{profile.name}</p>
                           {profile.ageGroup && (
@@ -920,9 +920,9 @@ export default function FamilyDashboard() {
                         </div>
                       </div>
                       <div className="fd-child-stats">
-                        <span className="fd-child-stat">✅ {totalCompleted} done</span>
-                        <span className="fd-child-stat">⭐ {stars} stars</span>
-                        <span className="fd-child-stat">🏆 Lv {level.level}</span>
+                        <span className="fd-child-stat"><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {totalCompleted} done</span>
+                        <span className="fd-child-stat"><img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {stars} stars</span>
+                        <span className="fd-child-stat"><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Lv {level.level}</span>
                       </div>
                       <div
                         className="fd-child-progress-bar-wrap"
@@ -953,7 +953,7 @@ export default function FamilyDashboard() {
                 <div className="fd-feed">
                   {allActivities.slice(0, 5).map((r) => (
                     <div key={`${r.activityId}-${r.profileId}`} className="fd-feed-item">
-                      <span className="fd-feed-avatar" aria-hidden="true">{r.profileAvatar || '🧒'}</span>
+                      <span className="fd-feed-avatar" aria-hidden="true"><img src={r.profileAvatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                       <img
                         src={DIM_ICON_MAP[r.dimension] || '/icons/compass.svg'}
                         alt=""
@@ -1051,7 +1051,7 @@ export default function FamilyDashboard() {
                       onClick={() => setFeedFilter(profile.profileId)}
                       style={feedFilter === profile.profileId ? { background: color, borderColor: color } : {}}
                     >
-                      {profile.avatar} {profile.name}
+                      {profile.name}
                     </button>
                   ))}
                 </div>
@@ -1071,14 +1071,14 @@ export default function FamilyDashboard() {
 
               {allActivities.length === 0 ? (
                 <div className="fd-empty">
-                  <span className="fd-empty-icon" aria-hidden="true">🎯</span>
+                  <span className="fd-empty-icon" aria-hidden="true"><img src="/icons/goal.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                   No activities found. Try selecting "All Children" or start some activities!
                 </div>
               ) : (
                 <div className="fd-feed">
                   {allActivities.map((r) => (
                     <div key={`${r.activityId}-${r.profileId}-${r.completedAt}`} className="fd-feed-item">
-                      <span className="fd-feed-avatar" aria-hidden="true">{r.profileAvatar || '🧒'}</span>
+                      <span className="fd-feed-avatar" aria-hidden="true"><img src={r.profileAvatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                       <img
                         src={DIM_ICON_MAP[r.dimension] || '/icons/compass.svg'}
                         alt=""
@@ -1090,7 +1090,7 @@ export default function FamilyDashboard() {
                         {' — '}
                         <span style={{ textTransform: 'capitalize' }}>{r.dimension?.replace(/-/g, ' ')}</span>
                         {r.ageGroup && ` — ${AGE_GROUP_LABELS[r.ageGroup] || r.ageGroup}`}
-                        {r.starsEarned ? ` (+${r.starsEarned}⭐)` : ''}
+                        {r.starsEarned ? ` (+${r.starsEarned} ★)` : ''}
                         <span
                           className="fd-feed-chip"
                           style={{ background: r.profileColor }}
@@ -1123,7 +1123,7 @@ export default function FamilyDashboard() {
 
               {calendarEvents.length === 0 ? (
                 <div className="fd-empty">
-                  <span className="fd-empty-icon" aria-hidden="true">📅</span>
+                  <span className="fd-empty-icon" aria-hidden="true"><img src="/icons/journal.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                   No activity history yet.
                 </div>
               ) : (
@@ -1152,7 +1152,7 @@ export default function FamilyDashboard() {
               <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1.5px solid #f1f5f9' }}>
                 <p style={{ fontSize: '.82rem', color: '#64748b', marginBottom: '.65rem' }}>Manage clinical sessions:</p>
                 <Link to="/iatlas/clinical/session-plans" className="fd-action-btn fd-action-btn-tertiary" style={{ display: 'inline-flex', textDecoration: 'none' }}>
-                  📋 View Session Plans
+                  View Session Plans
                 </Link>
               </div>
             </div>
@@ -1165,7 +1165,7 @@ export default function FamilyDashboard() {
             {profileData.length === 0 ? (
               <div className="fd-card">
                 <div className="fd-empty">
-                  <span className="fd-empty-icon" aria-hidden="true">📊</span>
+                  <span className="fd-empty-icon" aria-hidden="true"><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                   Add children to see their progress analytics.
                 </div>
               </div>
@@ -1186,7 +1186,7 @@ export default function FamilyDashboard() {
                     aria-label={`${profile.name}'s progress`}
                   >
                     <h2 className="fd-section-title">
-                      <span aria-hidden="true">{profile.avatar || '🧒'}</span>
+                      <span aria-hidden="true"><img src={profile.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                       {profile.name}
                     </h2>
 
@@ -1272,7 +1272,7 @@ export default function FamilyDashboard() {
                 <div className="fd-notif-list">
                   {notifications.map(notif => (
                     <div key={notif.id} className={`fd-notif-item fd-notif-${notif.type}`} role="alert">
-                      <span className="fd-notif-icon" aria-hidden="true">{notif.icon}</span>
+                      <span className="fd-notif-icon" aria-hidden="true"><img src={notif.icon} alt="" aria-hidden="true" className="icon icon-sm" /></span>
                       <span className="fd-notif-text">{notif.text}</span>
                       <button
                         onClick={() => dismissNotif(notif.id)}

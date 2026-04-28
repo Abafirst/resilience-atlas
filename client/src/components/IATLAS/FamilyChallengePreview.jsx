@@ -19,12 +19,12 @@ const DIMENSION_COLORS = {
 };
 
 const DIMENSION_ICONS = {
-  'agentic-generative':    '🚀',
-  'somatic-regulative':    '🌿',
-  'cognitive-narrative':   '🧠',
-  'relational-connective': '🤝',
-  'emotional-adaptive':    '💛',
-  'spiritual-existential': '✨',
+  'agentic-generative':    '/icons/agentic-generative.svg',
+  'somatic-regulative':    '/icons/growth.svg',
+  'cognitive-narrative':   '/icons/cognitive-narrative.svg',
+  'relational-connective': '/icons/relational-connective.svg',
+  'emotional-adaptive':    '/icons/emotional-adaptive.svg',
+  'spiritual-existential': '/icons/emotional-adaptive.svg',
 };
 
 const STYLES = `
@@ -127,7 +127,7 @@ export default function FamilyChallengePreview() {
         {preview.map((challenge) => {
           const done  = isFamilyChallengeCompleted(challenge.id);
           const color = DIMENSION_COLORS[challenge.dimension] || '#6366f1';
-          const icon  = DIMENSION_ICONS[challenge.dimension]  || '🌐';
+          const icon  = DIMENSION_ICONS[challenge.dimension]  || '/icons/compass.svg';
 
           return (
             <Link
@@ -141,7 +141,7 @@ export default function FamilyChallengePreview() {
                   className="fcp-dim-badge"
                   style={{ background: color }}
                 >
-                  {icon} {challenge.dimension.replace(/-/g, ' ')}
+                  <img src={icon} alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.dimension.replace(/-/g, ' ')}
                 </span>
                 {done && <span className="fcp-done-badge">✓ Done</span>}
               </div>
@@ -151,7 +151,7 @@ export default function FamilyChallengePreview() {
 
               <div className="fcp-meta">
                 <span>⏱ {challenge.duration}</span>
-                <span>👨‍👩‍👧 {challenge.participants}</span>
+                <span>{challenge.participants}</span>
               </div>
               <span className="fcp-xp">+{challenge.xpReward} XP</span>
             </Link>

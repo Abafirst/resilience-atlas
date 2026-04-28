@@ -152,7 +152,7 @@ export default function FamilyLeaderboard() {
       <style>{STYLES}</style>
       <div className="fl-root">
         <h3 className="fl-title">
-          <span aria-hidden="true">⭐</span>
+          <img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" />
           Family Resilience Score
         </h3>
 
@@ -182,7 +182,7 @@ export default function FamilyLeaderboard() {
               <div key={member.profileId} className="fl-member-row">
                 <div className="fl-member-info">
                   <span className="fl-member-avatar" aria-hidden="true">
-                    {member.avatar || '🧒'}
+                    <img src={member.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </span>
                   <span className="fl-member-name">{member.name}</span>
                 </div>

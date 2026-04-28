@@ -445,7 +445,7 @@ export default function DevelopmentalRoadmap({ selectedAge = null }) {
                   <div className="dr-badges-row" aria-label="Badges to earn">
                     {dim.badges.map(badgeId => (
                       <span key={badgeId} className="dr-badge-chip">
-                        🏅 {badgeId.replace(/-badge$/, '').replace(/-/g, ' ')}
+                        <img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {badgeId.replace(/-badge$/, '').replace(/-/g, ' ')}
                       </span>
                     ))}
                   </div>

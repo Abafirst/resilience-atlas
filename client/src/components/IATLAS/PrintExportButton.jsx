@@ -103,7 +103,7 @@ export default function PrintExportButton({
         aria-label={`${label} — opens print preview`}
         type="button"
       >
-        <span aria-hidden="true">🖨</span>
+        <img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" />
         {label}
       </button>
 

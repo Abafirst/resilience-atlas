@@ -23,8 +23,12 @@ const AGE_GROUPS = [
 ];
 
 const AVATAR_OPTIONS = [
-  '🧒', '👧', '👦', '🧒🏻', '👧🏼', '🧑🏽',
-  '🦁', '🐶', '🐱', '🦊', '🐼', '🌟',
+  '/icons/kids-spark.svg', '/icons/star.svg', '/icons/compass.svg',
+  '/icons/game-shield.svg', '/icons/trophy.svg', '/icons/game-mountain.svg',
+  '/icons/growth.svg', '/icons/strength.svg', '/icons/quest.svg',
+  '/icons/game-scroll.svg', '/icons/connection.svg', '/icons/game-diamond.svg',
+  '/icons/star-burst.svg', '/icons/game-map.svg', '/icons/game-target.svg',
+  '/icons/emotion.svg', '/icons/reflection.svg', '/icons/mindfulness.svg',
 ];
 
 const STYLES = `
@@ -112,7 +116,7 @@ export default function AddChildProfileModal({ onClose }) {
 
   const [name,     setName]     = useState('');
   const [ageGroup, setAgeGroup] = useState('5-7');
-  const [avatar,   setAvatar]   = useState('🧒');
+  const [avatar,   setAvatar]   = useState('/icons/kids-spark.svg');
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState('');
 
@@ -217,7 +221,7 @@ export default function AddChildProfileModal({ onClose }) {
                     aria-checked={avatar === av}
                     title={av}
                   >
-                    {av}
+                    <img src={av} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                   </button>
                 ))}
               </div>
