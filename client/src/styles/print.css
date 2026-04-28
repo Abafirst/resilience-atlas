@@ -1,0 +1,168 @@
+/**
+ * print.css — Global print stylesheet for IATLAS printable resources.
+ *
+ * Applied when the user triggers window.print() or saves as PDF from any
+ * IATLAS page that imports this stylesheet.
+ */
+
+@media print {
+  /* ── Hide interactive / navigation chrome ──────────────────────────────── */
+  .no-print,
+  nav,
+  header,
+  footer,
+  .site-header,
+  .site-footer,
+  .sidebar,
+  .modal-overlay,
+  .toast,
+  .tooltip,
+  button:not(.print-only),
+  .kps-root,
+  .sfd-add-btn,
+  .peb-btn,
+  .kac-expand-btn,
+  .kac-complete-btn {
+    display: none !important;
+  }
+
+  /* ── Show print-only elements ───────────────────────────────────────────── */
+  .print-only {
+    display: block !important;
+  }
+
+  /* ── Page setup ─────────────────────────────────────────────────────────── */
+  @page {
+    size: letter;
+    margin: 0.75in;
+  }
+
+  /* ── Base reset ─────────────────────────────────────────────────────────── */
+  *,
+  *::before,
+  *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    background: #fff !important;
+    color: #000 !important;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  /* ── Layout ─────────────────────────────────────────────────────────────── */
+  .print-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* ── Typography ─────────────────────────────────────────────────────────── */
+  h1 { font-size: 20pt; page-break-after: avoid; }
+  h2 { font-size: 15pt; page-break-after: avoid; }
+  h3 { font-size: 13pt; page-break-after: avoid; }
+  h4 { font-size: 11pt; page-break-after: avoid; }
+
+  p, li { orphans: 3; widows: 3; }
+
+  /* ── Links ──────────────────────────────────────────────────────────────── */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    color: #555;
+  }
+
+  /* Don't print hrefs for navigation / icon links */
+  a[href^='#']::after,
+  a[href^='javascript:']::after,
+  .no-print-href::after {
+    content: '';
+  }
+
+  /* ── Cards / sections ───────────────────────────────────────────────────── */
+  .print-section {
+    page-break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── IATLAS worksheet header ────────────────────────────────────────────── */
+  .print-worksheet-header {
+    border-bottom: 3px solid #4f46e5;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .print-worksheet-header h1 {
+    margin: 0 0 4px;
+    color: #0f172a;
+  }
+
+  .print-worksheet-header .print-meta {
+    font-size: 9pt;
+    color: #555;
+  }
+
+  /* ── Material tags ──────────────────────────────────────────────────────── */
+  .print-tag {
+    display: inline-block;
+    padding: 1pt 6pt;
+    border: 1px solid #888;
+    border-radius: 4px;
+    margin: 1pt 2pt;
+    font-size: 9pt;
+  }
+
+  /* ── Steps list ─────────────────────────────────────────────────────────── */
+  .print-steps {
+    list-style: decimal;
+    padding-left: 1.5rem;
+  }
+
+  .print-steps li {
+    margin-bottom: 6pt;
+    font-size: 10.5pt;
+  }
+
+  /* ── Parent note callout ────────────────────────────────────────────────── */
+  .print-parent-note {
+    border-left: 4px solid #f59e0b;
+    padding: 6pt 10pt;
+    margin-top: 12pt;
+    background: #fffbeb;
+    font-size: 9.5pt;
+    color: #78350f;
+    page-break-inside: avoid;
+  }
+
+  /* ── Reflection section ─────────────────────────────────────────────────── */
+  .print-reflection {
+    margin-top: 16pt;
+    page-break-inside: avoid;
+  }
+
+  .print-reflection-line {
+    border-bottom: 1px solid #ccc;
+    height: 20pt;
+    margin: 6pt 0;
+  }
+
+  /* ── Footer branding ────────────────────────────────────────────────────── */
+  .print-footer {
+    margin-top: 2rem;
+    font-size: 8pt;
+    color: #888;
+    border-top: 1px solid #ddd;
+    padding-top: 4pt;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+}

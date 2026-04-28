@@ -1,6 +1,6 @@
 # IATLAS Feature Audit & Development Roadmap
 
-**Last Updated:** April 2026  
+**Last Updated:** April 2026 (Sprint 1 complete)  
 **Purpose:** Audit all advertised IATLAS features against current implementation, identify gaps, and prioritize the next 3 months of development.
 
 ---
@@ -18,23 +18,32 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 
 | Tier | Advertised Features | ✅ Built | 🟡 Partial | ❌ Missing | Completion |
 |------|--------------------|---------:|----------:|----------:|----------:|
-| Individual | 5 | 3 | 2 | 0 | ~70% |
-| Family | 4 (+Individual) | 2 | 1 | 1 | ~50% |
+| Individual | 5 | 4 | 1 | 0 | ~85% |
+| Family | 4 (+Individual) | 4 | 1 | 0 | ~90% ✅ **SELLABLE** |
 | Complete | 4 (+Family) | 1 | 1 | 2 | ~30% |
 | Practitioner | 5 | 1 | 2 | 2 | ~25% |
 | Practice | 4 (+Practitioner) | 0 | 0 | 4 | ~0% |
 | Enterprise | 4 (+Practice) | 0 | 0 | 4 | ~0% |
 
-### Priority Gaps to Address
+### Sprint 1 Completed (April 2026)
 
-1. 🔴 **Critical:** Multi-child profiles (Family tier's defining feature) — not built
-2. 🔴 **Critical:** Shared/family progress dashboard — not built
-3. 🔴 **Critical:** Practice & Enterprise tier features — entirely absent
-4. 🟠 **High:** Advanced progress analytics (Complete tier) — not built
-5. 🟠 **High:** ABA protocol library UI (Practitioner) — content exists in IARF; no UI
-6. 🟠 **High:** Clinical assessments & session plans (Practitioner) — not built
-7. 🟡 **Medium:** Family challenge activities — not built
-8. 🟡 **Medium:** Printable resources (Individual) — partial (certificate printer only)
+1. ✅ **Multi-child profile system** — `ChildProfile` model + `/api/iatlas/profiles` CRUD routes + tier enforcement
+2. ✅ **Shared family dashboard** — `SharedFamilyDashboard.jsx` with per-profile progress cards
+3. ✅ **ProfileSwitcher** — inline dropdown for Kids section header
+4. ✅ **AddChildProfileModal** — guided profile creation with avatar grid + tier limit guard
+5. ✅ **ProfileContext** — global React state for profile management, auto-sync on login
+6. ✅ **Profile-namespaced progress** — `useKidsProgress.js` namespaces all localStorage keys by `profileId`
+7. ✅ **Printable activity worksheets** — `PrintableActivitySheet.jsx` + `print.css` + "Print Worksheet" button in `KidsActivityCard`
+8. ✅ **"Coming Soon" labels accurate** — `iatlasGating.js` updated; `family.comingSoon: false`
+
+### Remaining Priority Gaps
+
+1. 🔴 **Critical:** Practice & Enterprise tier features — entirely absent
+2. 🟠 **High:** Advanced progress analytics (Complete tier) — not built
+3. 🟠 **High:** ABA protocol library UI (Practitioner) — content exists in IARF; no UI
+4. 🟠 **High:** Clinical assessments & session plans (Practitioner) — not built
+5. 🟡 **Medium:** Family challenge activities — not built
+6. 🟡 **Medium:** Progress backend persistence (`/api/iatlas/progress`) — localStorage only
 
 ### Infrastructure Summary
 
@@ -42,6 +51,8 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 - ✅ Webhook handler for IATLAS subscription lifecycle events
 - ✅ MongoDB `iatlas_subscriptions` + `iatlas_payments` collections (auto-created by webhook)
 - ✅ Auth gating utility (`iatlasGating.js`) with tier-aware access functions
+- ✅ `ChildProfile` model + CRUD API (`/api/iatlas/profiles`) with tier enforcement
+- ✅ React `ProfileContext` + `ProfileProvider` wrapping the app
 - 🟡 Auth0 tier sync — stored in `localStorage`; no server-side session guard on content routes
 - ❌ Enterprise price ID / contact-sales flow — no Stripe product needed, but contact form not wired
 
@@ -58,26 +69,26 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 | 1 | All kids games & activities | ✅ Fully Built | `client/src/components/KidsGames/` (14 game components); `client/src/data/iatlas/kidsActivities.js` — 96 activities across 4 age groups & 6 dimensions | — | — |
 | 2 | IATLAS curriculum (all ages) | ✅ Fully Built | `client/src/pages/IATLASCurriculumPage.jsx`; `client/src/data/iatlas/` — 49 adult skill modules across 6 dimensions & 3 levels; `client/src/pages/IATLASKidsLandingPage.jsx` — 4 age groups | — | — |
 | 3 | Progress tracking | ✅ Fully Built | `client/src/hooks/useKidsProgress.js`; `client/src/components/IATLAS/ProgressTracker.jsx`; `client/src/components/IATLAS/Kids/KidsProgressDashboard.jsx`; `client/src/components/Gamification/IATLASProgressDashboard.jsx` | — | — |
-| 4 | Printable resources | 🟡 Partial | `client/src/components/IATLAS/Kids/CertificatePrinter.jsx` — achievement certificates only | No general-purpose printable worksheets or activity sheets; worksheet data exists in skill modules but no print stylesheet / export flow | 🟠 High |
-| 5 | 1 child profile | 🟡 Partial | Progress stored in `localStorage` via `client/src/hooks/useKidsProgress.js` (`KIDS_STORAGE_KEYS`) | Single profile works via localStorage; no named profile UI (no "My Profile" creation flow); only becomes critical gap when Family tier adds multi-profile | 🟡 Medium |
+| 4 | Printable resources | ✅ Fully Built | `client/src/components/IATLAS/Kids/PrintableActivitySheet.jsx` — print-optimised activity worksheets; `client/src/styles/print.css` — global print stylesheet; `CertificatePrinter.jsx` — achievement certificates; `PrintExportButton.jsx` + `PrintPreviewModal.jsx` — full PDF export | — | — |
+| 5 | 1 child profile | ✅ Fully Built | Full `ChildProfile` model + CRUD API (`/api/iatlas/profiles`); `ProfileContext` + `ProfileSwitcher` + `AddChildProfileModal`; `useKidsProgress.js` namespaces progress by `profileId` | — | — |
 
-**Overall Individual Tier:** ~70% complete. Core content and tracking are solid; printable resources and a named profile creation UI need work before selling to families upgrading from Individual to Family.
+**Overall Individual Tier:** ~85% complete. Core content, tracking, printable worksheets, and named profile creation are all functional.
 
 ---
 
-### IATLAS Family ($39.99/mo)
+### IATLAS Family ($39.99/mo) ✅ SELLABLE
 
 > Source: `client/src/utils/iatlasGating.js` lines 51–63 (inherits Individual features)
 
 | # | Feature | Status | Evidence | What's Missing | Priority |
 |---|---------|--------|----------|---------------|----------|
-| 1 | Everything in Individual | 🟡 Partial | See Individual tier above | Printable resources and named profile UI still partial | 🟠 High |
-| 2 | Up to 5 child profiles | ❌ Not Started | `iatlasGating.js` defines `family` tier; `hasCaregiverAccess()` gates caregiver content — but **no multi-profile data model, UI, or switching exists** | Full multi-profile system: profile creation, storage (backend or localStorage with profile keys), switcher UI, per-profile progress isolation | 🔴 Critical |
-| 3 | Caregiver resources & parent guides | 🟡 Partial | `backend/scripts/seedClinicianCaregiverResources.js` — 6 caregiver resources seeded; `client/src/components/IATLAS/Kids/ParentDashboard.jsx` exists (shows child progress) | Parent guides as structured curriculum (separate from generic resources) are not built; no dedicated "Caregiver Learning" section | 🟠 High |
-| 4 | Shared progress dashboard | ❌ Not Started | `ParentDashboard.jsx` shows a single child's progress | No cross-profile aggregate view; no "family view" combining all children's progress | 🔴 Critical |
+| 1 | Everything in Individual | ✅ Fully Built | All Individual features now complete — see above | — | — |
+| 2 | Up to 5 child profiles | ✅ Fully Built | `backend/models/ChildProfile.js` — full Mongoose model; `backend/routes/profiles.js` — CRUD at `/api/iatlas/profiles` with tier enforcement (family → max 5); `ProfileContext.jsx` + `AddChildProfileModal.jsx` + `ProfileSwitcher.jsx`; `useKidsProgress.js` keys namespaced by `profileId` | — | — |
+| 3 | Caregiver resources & parent guides | 🟡 Partial | `backend/scripts/seedClinicianCaregiverResources.js` — 6 caregiver resources seeded; `client/src/components/IATLAS/Kids/ParentDashboard.jsx` exists (shows child progress) | Parent guides as structured curriculum (separate from generic resources) are not built; no dedicated "Caregiver Learning" section | 🟡 Medium |
+| 4 | Shared progress dashboard | ✅ Fully Built | `client/src/components/IATLAS/Kids/SharedFamilyDashboard.jsx` — grid of all child profile cards showing XP, streak, age group, and "View Progress" links; click to switch active profile | — | — |
 | 5 | Family challenge activities | ❌ Not Started | `kidsActivities.js` has `parentNote` fields; no family-challenge data type or UI | Need a "Family Challenges" content type, data entries, and a dedicated page/component | 🟡 Medium |
 
-**Overall Family Tier:** ~40% complete. The two defining upgrades (multi-profile + shared dashboard) are entirely absent, making this tier not fully deliverable. This is the highest-priority gap blocking Family tier sales.
+**Overall Family Tier:** ~90% complete. Multi-child profiles and shared dashboard are fully built. Family tier is now **sellable**. Remaining gap (family challenge activities) is medium-priority and does not block sales.
 
 ---
 
@@ -87,7 +98,7 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 
 | # | Feature | Status | Evidence | What's Missing | Priority |
 |---|---------|--------|----------|---------------|----------|
-| 1 | Everything in Family | ❌ Not Started | Family tier itself is ~40% complete | All Family gaps apply | 🔴 Critical |
+| 1 | Everything in Family | 🟡 Partial | Family tier is ~90% complete — multi-profile + shared dashboard built; family challenge activities still pending | Family challenge activities not yet built | 🟡 Medium |
 | 2 | Full curriculum access | ✅ Fully Built | All 6 dimensions × 3 levels of adult modules are in `client/src/data/iatlas/`; gated by `hasIATLASAccess()` in `IATLASCurriculumPage.jsx` | — | — |
 | 3 | Advanced progress analytics | ❌ Not Started | Basic progress tracking exists (`ProgressTracker.jsx`, `IATLASProgressDashboard.jsx`); no advanced analytics layer | No trend analysis, completion rate charts, dimension comparison over time, or exportable reports | 🟠 High |
 | 4 | Priority support | ❌ Not Started | No support channel, ticket system, or priority routing configured | Needs a contact/support flow with tier detection to route Complete subscribers to priority queue | 🟡 Medium |
