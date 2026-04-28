@@ -1,6 +1,6 @@
 /**
  * ResearchExportPage.jsx
- * Task #23c: Research Export Tools 📑
+ * Task #23c: Research Export Tools <img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" />
  *
  * Features:
  *   - De-identified data exports for research
@@ -22,11 +22,11 @@ import { apiFetch } from '../lib/apiFetch.js';
 // ── Navigation ─────────────────────────────────────────────────────────────────
 
 const NAV = [
-  { to: '/iatlas/ml/insights',          label: '🤖 AI Insights',     key: 'ml' },
-  { to: '/iatlas/practice/dashboard',   label: '🏠 Practice',        key: 'practice' },
-  { to: '/iatlas/practice/clients',     label: '👥 Clients',         key: 'clients' },
-  { to: '/iatlas/practice/analytics',   label: '📈 Analytics',       key: 'analytics' },
-  { to: '/iatlas/research/export',      label: '📑 Research Export', key: 'research' },
+  { to: '/iatlas/ml/insights',          label: 'AI Insights',     key: 'ml' },
+  { to: '/iatlas/practice/dashboard',   label: 'Practice',        key: 'practice' },
+  { to: '/iatlas/practice/clients',     label: 'Clients',         key: 'clients' },
+  { to: '/iatlas/practice/analytics',   label: 'Analytics',       key: 'analytics' },
+  { to: '/iatlas/research/export',      label: 'Research Export', key: 'research' },
 ];
 
 // ── Constants ──────────────────────────────────────────────────────────────────
@@ -50,9 +50,9 @@ const DIMENSION_LABELS = {
 };
 
 const TABS = [
-  { key: 'aggregate',    icon: '📊', label: 'Cohort Statistics' },
-  { key: 'csv',          icon: '📄', label: 'CSV Export' },
-  { key: 'longitudinal', icon: '📈', label: 'Longitudinal Dataset' },
+  { key: 'aggregate',    icon: '/icons/org-leaderboards.svg', label: 'Cohort Statistics' },
+  { key: 'csv',          icon: '/icons/journal.svg', label: 'CSV Export' },
+  { key: 'longitudinal', icon: '/icons/leaderboards.svg', label: 'Longitudinal Dataset' },
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -158,21 +158,20 @@ function AggregateStatsTab({ getTokenFn }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>📊 Cohort Aggregate Statistics</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Cohort Aggregate Statistics</h3>
       <p style={styles.sectionDesc}>
         Population-level statistics across all active clients. No individual-level data is shown —
         only aggregate means, standard deviations, and distributions suitable for IRB reporting.
       </p>
 
-      <div style={styles.irbBox}>
-        🔒 <strong>IRB Compliant:</strong> All data is aggregated. No individual client identifiers, names, or dates of birth are included.
+      <div style={styles.irbBox}><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> <strong>IRB Compliant:</strong> All data is aggregated. No individual client identifiers, names, or dates of birth are included.
       </div>
 
       {error && <div style={styles.errorBox}>{error}</div>}
 
       {loading && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>📊</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Loading cohort statistics…</p>
         </div>
       )}
@@ -268,8 +267,7 @@ function AggregateStatsTab({ getTokenFn }) {
             </div>
           )}
 
-          <div style={styles.infoBox}>
-            ℹ️ {data.irbNote || 'Data is aggregated and de-identified.'}
+          <div style={styles.infoBox}><img src="/icons/info.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {data.irbNote || 'Data is aggregated and de-identified.'}
           </div>
 
           <div style={styles.controlRow}>
@@ -277,8 +275,7 @@ function AggregateStatsTab({ getTokenFn }) {
               style={{ ...styles.btn, ...styles.btnPrimary }}
               onClick={handleFetch}
               disabled={loading}
-            >
-              🔄 Refresh Statistics
+            ><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Refresh Statistics
             </button>
             <button
               style={{ ...styles.btn, ...styles.btnSuccess }}
@@ -287,7 +284,7 @@ function AggregateStatsTab({ getTokenFn }) {
                 downloadBlob(json, 'cohort-aggregate-stats.json', 'application/json');
               }}
             >
-              ⬇️ Download JSON
+              <img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download JSON
             </button>
           </div>
         </div>
@@ -295,7 +292,7 @@ function AggregateStatsTab({ getTokenFn }) {
 
       {!data && !loading && !error && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>📊</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>No data available. Add clients and record progress snapshots to generate cohort statistics.</p>
         </div>
       )}
@@ -354,7 +351,7 @@ function CsvExportTab({ getTokenFn }) {
 
       const filename = `research-export-${new Date().toISOString().slice(0, 10)}.csv`;
       downloadBlob(data.csv, filename);
-      setSuccess(`✅ Exported ${data.rowCount} rows for ${data.clientCount} clients.`);
+      setSuccess(`Exported ${data.rowCount} rows for ${data.clientCount} clients.`);
     } catch (err) {
       setError(err.message || 'Export failed. Please try again.');
     } finally {
@@ -364,14 +361,13 @@ function CsvExportTab({ getTokenFn }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>📄 De-Identified CSV Export</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> De-Identified CSV Export</h3>
       <p style={styles.sectionDesc}>
         Generate a CSV file of client dimension scores with all direct identifiers removed.
         Suitable for submission to IRB and use with statistical tools (R, SPSS, STATA, Python).
       </p>
 
-      <div style={styles.irbBox}>
-        🔒 <strong>IRB-Compliant Anonymization:</strong> Client names and contact details are removed.
+      <div style={styles.irbBox}><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> <strong>IRB-Compliant Anonymization:</strong> Client names and contact details are removed.
         Dates of birth are replaced with age-group buckets. Client IDs are replaced with pseudonymous research codes (R001, R002, …).
       </div>
 
@@ -433,7 +429,7 @@ function CsvExportTab({ getTokenFn }) {
           onClick={handleExport}
           disabled={loading || selectedFields.size === 0}
         >
-          {loading ? '⏳ Generating…' : '⬇️ Download CSV'}
+          {loading ? 'Generating…' : '<img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download CSV'}
         </button>
       </div>
 
@@ -477,7 +473,7 @@ function LongitudinalTab({ getTokenFn }) {
 
       const data = await res.json();
       setDataset(data);
-      setSuccess(`✅ ${data.rowCount} observations for ${data.clientCount} clients.`);
+      setSuccess(`${data.rowCount} observations for ${data.clientCount} clients.`);
     } catch (err) {
       setError(err.message || 'Failed to generate longitudinal dataset.');
     } finally {
@@ -498,15 +494,14 @@ function LongitudinalTab({ getTokenFn }) {
 
   return (
     <div>
-      <h3 style={styles.sectionTitle}>📈 Longitudinal Study Dataset</h3>
+      <h3 style={styles.sectionTitle}><img src="/icons/leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Longitudinal Study Dataset</h3>
       <p style={styles.sectionDesc}>
         Generate a repeated-measures dataset with one row per (client, assessment-wave) — ideal for
         mixed-effects models, growth curve analysis, and IRB-submitted longitudinal studies.
         Includes change-from-baseline columns for each dimension.
       </p>
 
-      <div style={styles.irbBox}>
-        🔒 <strong>IRB-Compliant:</strong> All direct identifiers stripped. Change-from-baseline columns included for
+      <div style={styles.irbBox}><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> <strong>IRB-Compliant:</strong> All direct identifiers stripped. Change-from-baseline columns included for
         within-subject analysis without exposing individual baselines in isolation.
       </div>
 
@@ -547,7 +542,7 @@ function LongitudinalTab({ getTokenFn }) {
           onClick={handleGenerate}
           disabled={loading}
         >
-          {loading ? '⏳ Generating…' : '🔬 Generate Dataset'}
+          {loading ? 'Generating…' : 'Generate Dataset'}
         </button>
       </div>
 
@@ -603,13 +598,13 @@ function LongitudinalTab({ getTokenFn }) {
               style={{ ...styles.btn, ...styles.btnSuccess }}
               onClick={handleDownloadCsv}
             >
-              ⬇️ Download CSV
+              <img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download CSV
             </button>
             <button
               style={{ ...styles.btn, background: '#0891b2', color: '#fff' }}
               onClick={handleDownloadJson}
             >
-              ⬇️ Download JSON
+              <img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download JSON
             </button>
           </div>
 
@@ -621,7 +616,7 @@ function LongitudinalTab({ getTokenFn }) {
 
       {!dataset && !loading && !error && (
         <div style={styles.emptyState}>
-          <span style={{ fontSize: '2rem' }}>📈</span>
+          <span style={{ fontSize: '2rem' }}><img src="/icons/leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
           <p>Set filters and click <strong>Generate Dataset</strong> to create a longitudinal study dataset for your client cohort.</p>
         </div>
       )}
@@ -663,8 +658,7 @@ export default function ResearchExportPage() {
       <div style={{ maxWidth: 960, margin: '0 auto', padding: '1.5rem 1rem' }}>
         {/* Page header */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#111827', margin: 0 }}>
-            📑 Research Export Tools
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#111827', margin: 0 }}><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Research Export Tools
           </h1>
           <p style={{ fontSize: '.85rem', color: '#6b7280', margin: '.3rem 0 0' }}>
             Clinical research and evidence-based practice — de-identified, IRB-compliant data exports
@@ -677,7 +671,7 @@ export default function ResearchExportPage() {
           padding: '.75rem 1.1rem', marginBottom: '1.25rem',
           display: 'flex', alignItems: 'flex-start', gap: '.75rem', fontSize: '.82rem', color: '#92400e',
         }}>
-          <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>⚖️</span>
+          <span style={{ fontSize: '1.2rem', flexShrink: 0 }}><img src="/icons/clinical.svg" alt="" aria-hidden="true" className="icon icon-sm" /></span>
           <div>
             <strong>IRB & Privacy Compliance:</strong> All exports from this tool are de-identified in
             accordance with the HIPAA Safe Harbor method. Direct identifiers (names, contact details, dates of birth)
@@ -724,16 +718,15 @@ export default function ResearchExportPage() {
           marginTop: '1.5rem', background: '#f8fafc', border: '1px solid #e2e8f0',
           borderRadius: 10, padding: '1rem 1.25rem',
         }}>
-          <h4 style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151', margin: '0 0 .6rem' }}>
-            📑 Task #23c — Research Export Features
+          <h4 style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151', margin: '0 0 .6rem' }}><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Task #23c — Research Export Features
           </h4>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem 2rem', fontSize: '.8rem', color: '#6b7280' }}>
-            <span>✅ De-identified data exports for research</span>
-            <span>✅ Aggregate statistics across cohorts</span>
-            <span>✅ CSV export with configurable fields</span>
-            <span>✅ Statistical analysis ready formats</span>
-            <span>✅ IRB-compliant data anonymization</span>
-            <span>✅ Longitudinal study dataset generation</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> De-identified data exports for research</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Aggregate statistics across cohorts</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> CSV export with configurable fields</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Statistical analysis ready formats</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> IRB-compliant data anonymization</span>
+            <span><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Longitudinal study dataset generation</span>
           </div>
         </div>
       </div>

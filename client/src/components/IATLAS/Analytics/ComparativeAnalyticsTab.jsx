@@ -178,7 +178,7 @@ export default function ComparativeAnalyticsTab({ profiles = [], rangeKey = '30d
       {/* Summary cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
         <MetricCard
-          icon="👥"
+          icon="/icons/network.svg"
           title="Children Compared"
           value={hasSampleMode ? 3 : profiles.length}
           subtitle="active child profiles"
@@ -186,7 +186,7 @@ export default function ComparativeAnalyticsTab({ profiles = [], rangeKey = '30d
           tooltip="Number of children included in this comparative analysis."
         />
         <MetricCard
-          icon="📊"
+          icon="/icons/org-leaderboards.svg"
           title="Domains Analyzed"
           value={6}
           subtitle="resilience dimensions"

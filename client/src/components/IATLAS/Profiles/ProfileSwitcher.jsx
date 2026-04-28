@@ -112,7 +112,7 @@ export default function ProfileSwitcher() {
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          <span className="ps-trigger-avatar">{activeProfile?.avatar || '🧒'}</span>
+          <span className="ps-trigger-avatar"><img src={activeProfile?.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
           <span className="ps-trigger-name">{activeProfile?.name || 'Select Profile'}</span>
           <span className="ps-trigger-caret" aria-hidden="true">▼</span>
         </button>
@@ -133,7 +133,7 @@ export default function ProfileSwitcher() {
                     tabIndex={0}
                     onKeyDown={e => e.key === 'Enter' && handleSwitch(p.profileId)}
                   >
-                    <span className="ps-row-avatar">{p.avatar}</span>
+                    <span className="ps-row-avatar"><img src={p.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
                     <div className="ps-row-info">
                       <div className="ps-row-name">{p.name}</div>
                       {p.ageGroup && <div className="ps-row-age">{AGE_LABELS[p.ageGroup] || p.ageGroup}</div>}

@@ -735,7 +735,7 @@ export default function ParentDashboard({ onBack }) {
         <div className="pd-card" role="region" aria-label="Family Challenges">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.9rem' }}>
             <h3 className="pd-section-title" style={{ margin: 0 }}>
-              👨‍👩‍👧 Family Challenges
+              <img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family Challenges
             </h3>
             <Link
               to="/iatlas/family/challenges"

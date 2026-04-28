@@ -659,7 +659,7 @@ export default function KidsPage() {
                 borderRadius: '16px',
               }}>
                 <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }} aria-hidden="true">🎮</div>
+                  <img src="/icons/game.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                   <p style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>
                     Interactive Games
                   </p>
@@ -705,7 +705,7 @@ export default function KidsPage() {
               </div>
 
               <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }} aria-hidden="true">📚</div>
+                <img src="/icons/journal.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                 <p style={{ fontWeight: 700, color: '#1e293b', margin: '0 0 0.5rem' }}>Age-Specific Activities</p>
                 <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem' }}>Select an age group above to see activities — available with any IATLAS plan.</p>
                 <button

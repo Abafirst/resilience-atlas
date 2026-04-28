@@ -89,7 +89,7 @@ export default function ProfileSwitcher() {
           >
             {profiles.map((p) => (
               <option key={p.profileId} value={p.profileId}>
-                {p.avatar ? `${p.avatar} ` : ''}{p.name}
+                {p.name}
                 {p.ageGroup ? ` · ${AGE_LABELS[p.ageGroup] || p.ageGroup}` : ''}
               </option>
             ))}

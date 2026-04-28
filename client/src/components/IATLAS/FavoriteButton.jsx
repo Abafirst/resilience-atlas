@@ -61,7 +61,7 @@ export default function FavoriteButton({
         title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
         className={`fav-btn fav-btn--${size} ${isFavorited ? 'fav-btn--favorited' : 'fav-btn--unfavorited'}`}
       >
-        {isFavorited ? '❤️' : '🤍'}
+        <img src="/icons/connection.svg" alt="" aria-hidden="true" className="icon icon-sm" />
       </button>
     </>
   );

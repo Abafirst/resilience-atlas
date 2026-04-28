@@ -100,7 +100,7 @@ export default function ChildProfilesPage() {
           </nav>
 
           <div className="cp-hero">
-            <div className="cp-hero-emoji">👶</div>
+            <div className="cp-hero-emoji"><img src="/icons/kids-spark.svg" aria-hidden="true" className="icon icon-sm" alt="" /></div>
             <h1 className="cp-hero-title">Child Profiles</h1>
             <p className="cp-hero-sub">
               Create and manage profiles for each child in your family.

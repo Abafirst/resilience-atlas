@@ -177,11 +177,11 @@ export default function SessionPlanBuilder({ plan, onSave, onCancel, getTokenFn 
   // ── Tabs ──────────────────────────────────────────────────────────────────────
 
   const TABS = [
-    { id: 'overview',   label: '📋 Overview' },
-    { id: 'activities', label: '🎯 Activities' },
-    { id: 'data',       label: '📊 Data' },
-    { id: 'progress',   label: '📈 Progress' },
-    { id: 'notes',      label: '📝 Notes' },
+    { id: 'overview',   label: 'Overview' },
+    { id: 'activities', label: 'Activities' },
+    { id: 'data',       label: 'Data' },
+    { id: 'progress',   label: 'Progress' },
+    { id: 'notes',      label: 'Notes' },
   ];
 
   return (

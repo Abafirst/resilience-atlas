@@ -9,12 +9,12 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: '👥 Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: '📅 Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: '💳 Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: '💬 Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: '📊 Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
 ];
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -218,7 +218,7 @@ export default function PracticeSchedulePage() {
               </Link>
             ))}
             <div className="pm-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Practice Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -321,7 +321,7 @@ export default function PracticeSchedulePage() {
               color: '#94a3b8', fontSize: '.85rem',
               display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
             }}>
-              <span style={{ fontSize: '1.25rem' }} aria-hidden="true">🚧</span>
+              <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <p style={{ margin: 0 }}>
                 <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Drag-and-drop scheduling — Coming 2026.</span>{' '}
                 Real-time availability checking, recurring sessions, automated family reminders,

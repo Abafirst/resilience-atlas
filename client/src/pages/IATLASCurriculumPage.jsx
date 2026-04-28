@@ -2537,8 +2537,7 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/kids-spark.svg" alt="" width={15} height={15} aria-hidden="true" style={{ filter: 'brightness(0) invert(1)' }} />
                     Explore Kids Curriculum
                   </Link>
-                  <Link to="/iatlas/developmental-roadmap" className="iatlas-btn-secondary">
-                    🗺️ Developmental Roadmap →
+                  <Link to="/iatlas/developmental-roadmap" className="iatlas-btn-secondary"><img src="/icons/game-map.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Developmental Roadmap →
                   </Link>
                   <Link to="/iatlas/roadmap" className="iatlas-btn-secondary">
                     View Content Roadmap →
@@ -2552,8 +2551,7 @@ export default function IATLASCurriculumPage() {
                         borderRadius: 10, padding: '.7rem 1.4rem',
                         fontWeight: 600, textDecoration: 'none', fontSize: '.875rem',
                       }}
-                    >
-                      👨‍👩‍👧‍👦 Parent Dashboard
+                    ><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Parent Dashboard
                     </Link>
                   )}
                 </div>

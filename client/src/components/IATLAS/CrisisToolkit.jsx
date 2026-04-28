@@ -134,10 +134,10 @@ const STYLES = `
 `;
 
 const TYPE_ICONS = {
-  panic:    '😰',
-  anger:    '😤',
-  grief:    '💔',
-  overwhelm:'😵',
+  panic:    '/icons/breathing.svg',
+  anger:    '/icons/emotion.svg',
+  grief:    '/icons/connection.svg',
+  overwhelm:'/icons/mindfulness.svg',
 };
 
 function ActivityCard({ activity, accentColor }) {
@@ -146,7 +146,7 @@ function ActivityCard({ activity, accentColor }) {
   return (
     <div className="ct-act-card">
       <div className="ct-act-header">
-        <span className="ct-act-icon">{TYPE_ICONS[activity.crisisType] || '🆘'}</span>
+        <span className="ct-act-icon"><img src={TYPE_ICONS[activity.crisisType] || '/icons/warning.svg'} alt="" aria-hidden="true" className="icon icon-sm" /></span>
         <div>
           <p className="ct-act-title">{activity.title}</p>
           <div className="ct-act-meta-row">
@@ -176,17 +176,17 @@ function ActivityCard({ activity, accentColor }) {
           <div className="ct-notes">
             {activity.parentNote && (
               <div className="ct-note">
-                <span className="ct-note-label">👨‍👩‍👧 Parent Note: </span>{activity.parentNote}
+                <span className="ct-note-label">Parent Note: </span>{activity.parentNote}
               </div>
             )}
             {activity.scienceNote && (
               <div className="ct-note">
-                <span className="ct-note-label">🧠 Science: </span>{activity.scienceNote}
+                <span className="ct-note-label">Science: </span>{activity.scienceNote}
               </div>
             )}
             {activity.whenToUse && (
               <div className="ct-note">
-                <span className="ct-note-label">✅ When to Use: </span>{activity.whenToUse}
+                <span className="ct-note-label">When to Use: </span>{activity.whenToUse}
               </div>
             )}
           </div>
@@ -205,12 +205,12 @@ export default function CrisisToolkit() {
       <style>{STYLES}</style>
       <div className="ct-page">
         <div className="ct-disclaimer">
-          <strong>⚠️ Important Safety Notice</strong>
+          <strong><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Important Safety Notice</strong>
           {CRISIS_DISCLAIMER}
         </div>
 
         <div className="ct-header">
-          <h1 className="ct-title">🆘 Crisis Toolkit</h1>
+          <h1 className="ct-title"><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Crisis Toolkit</h1>
           <p className="ct-subtitle">Quick-access activities for acute stress moments. Select the type of distress below.</p>
         </div>
 
@@ -224,7 +224,7 @@ export default function CrisisToolkit() {
               style={activeType === type ? { background: data.color, borderColor: data.color } : {}}
               onClick={() => setActiveType(type)}
             >
-              {TYPE_ICONS[type]} {data.label}
+              <img src={TYPE_ICONS[type]} alt="" aria-hidden="true" className="icon icon-sm" /> {data.label}
             </button>
           ))}
         </div>
@@ -247,7 +247,7 @@ export default function CrisisToolkit() {
         )}
 
         <div className="ct-seek-help">
-          <p className="ct-seek-title">🚨 {WHEN_TO_SEEK_HELP.title}</p>
+          <p className="ct-seek-title"><img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {WHEN_TO_SEEK_HELP.title}</p>
           <ul className="ct-seek-signs">
             {WHEN_TO_SEEK_HELP.urgentSigns.map((sign, i) => <li key={i}>{sign}</li>)}
           </ul>

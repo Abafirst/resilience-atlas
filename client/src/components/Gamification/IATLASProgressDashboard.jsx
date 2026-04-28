@@ -354,8 +354,7 @@ export default function IATLASProgressDashboard() {
           <button className="ipd-btn ipd-btn-secondary" onClick={scrollToQuestBoard}>
             Start a Quest
           </button>
-          <Link to="/iatlas/clinical/aba-protocols" className="ipd-btn ipd-btn-secondary">
-            🩺 ABA Protocol Library
+          <Link to="/iatlas/clinical/aba-protocols" className="ipd-btn ipd-btn-secondary"><img src="/icons/clinical.svg" alt="" aria-hidden="true" className="icon icon-sm" /> ABA Protocol Library
           </Link>
         </div>
       </div>

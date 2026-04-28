@@ -210,7 +210,7 @@ export default function IATLASComingSoonModal({ title, message, onClose }) {
             &#x2715;
           </button>
 
-          <div className="iatlas-coming-icon" aria-hidden="true">🔒</div>
+          <div className="iatlas-coming-icon" aria-hidden="true"><img src="/icons/lock.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
 
           <span className="iatlas-coming-badge">Coming Soon</span>
 

@@ -3,28 +3,38 @@
  * Overview tab for the Analytics Dashboard.
  *
  * Shows:
- *  - Key metric cards (families, children, activities, stars)
- *  - Active vs completed protocols (pie chart)
- *  - Weekly engagement trend (line chart)
+ *  - Key metric cards (total XP, activities, badges, streak)
+ *  - Dimension completion counts (bar chart)
+ *  - XP trend (line chart)
  *  - Recent milestones (timeline)
+ *
+ * Data source: prefers the server-side `/api/iatlas/analytics/overview`
+ * endpoint when an Auth0 token is available, falls back to localStorage.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
-  LineChart, Line, PieChart, Pie, Cell,
+  LineChart, Line, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import MetricCard from './MetricCard.jsx';
 import ChartCard from './ChartCard.jsx';
+import { getAuth0CachedToken } from '../../../lib/apiFetch.js';
 import {
   computeOverviewMetrics,
   buildOverallEngagementSeries,
-  buildProtocolCompletionData,
   generateSampleEngagementData,
   formatShortDate,
 } from '../../../utils/analyticsHelpers.js';
 
-const COLORS = ['#10b981', '#6366f1', '#e2e8f0'];
+const DIM_SHORT = {
+  'agentic-generative':    'Agentic',
+  'somatic-regulative':    'Somatic',
+  'cognitive-narrative':   'Cognitive',
+  'relational-connective': 'Relational',
+  'emotional-adaptive':    'Emotional',
+  'spiritual-existential': 'Spiritual',
+};
 
 // ── Recent milestones timeline ────────────────────────────────────────────────
 
@@ -65,7 +75,7 @@ const TIMELINE_STYLES = `
 }
 `;
 
-function buildMilestones(profiles, rangeKey) {
+function buildMilestones(profiles) {
   const milestones = [];
   for (const profile of profiles) {
     try {
@@ -100,36 +110,88 @@ function timeAgo(date) {
   return formatShortDate(date);
 }
 
+// ── API fetch helper ──────────────────────────────────────────────────────────
+
+async function fetchOverview(rangeKey, childProfileId) {
+  const token = getAuth0CachedToken();
+  if (!token) return null;
+
+  const params = new URLSearchParams({ rangeKey });
+  if (childProfileId && childProfileId !== 'all') {
+    params.set('childProfileId', childProfileId);
+  }
+
+  try {
+    const res = await fetch(`/api/iatlas/analytics/overview?${params}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.overview || null;
+  } catch {
+    return null;
+  }
+}
+
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }) {
+export default function OverviewTab({ profiles = [], selectedProfileId = 'all', rangeKey = '30d', loading }) {
+  const [serverOverview, setServerOverview] = useState(null);
+  const [fetchingServer, setFetchingServer] = useState(false);
+
+  // Fetch server-side overview whenever rangeKey or selectedProfileId changes
+  useEffect(() => {
+    let cancelled = false;
+    setFetchingServer(true);
+    fetchOverview(rangeKey, selectedProfileId).then(data => {
+      if (!cancelled) {
+        setServerOverview(data);
+        setFetchingServer(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [rangeKey, selectedProfileId]);
+
   const hasSampleMode = profiles.length === 0;
 
-  const metrics = useMemo(
+  // Prefer server data; fall back to local computation
+  const localMetrics = useMemo(
     () => computeOverviewMetrics(profiles, rangeKey),
     [profiles, rangeKey],
   );
 
-  const engagementData = useMemo(() => {
-    if (hasSampleMode) return generateSampleEngagementData(8);
-    return buildOverallEngagementSeries(profiles, rangeKey);
-  }, [profiles, rangeKey, hasSampleMode]);
+  const totalXP         = serverOverview?.totalXP          ?? localMetrics.totalXP       ?? 0;
+  const totalActivities = serverOverview?.totalActivities   ?? localMetrics.totalActivities ?? 0;
+  const totalBadges     = serverOverview?.totalBadges       ?? localMetrics.totalBadges    ?? 0;
+  const currentStreak   = serverOverview?.currentStreak     ?? localMetrics.currentStreak  ?? 0;
 
-  const protocolData = useMemo(
-    () => hasSampleMode
-      ? [
-          { name: 'Completed (★★★)', value: 12, color: '#10b981' },
-          { name: 'In Progress',     value: 8,  color: '#6366f1' },
-          { name: 'Not Started',     value: 5,  color: '#e2e8f0' },
-        ]
-      : buildProtocolCompletionData(profiles),
+  // XP trend: server-provided array or fall back to local engagement series
+  const xpTrendData = useMemo(() => {
+    if (serverOverview?.xpTrend?.length) {
+      return serverOverview.xpTrend.map(entry => ({
+        week: entry.date.slice(5), // 'MM-DD'
+        XP:   entry.xp,
+      }));
+    }
+    if (hasSampleMode) return generateSampleEngagementData(8).map(d => ({ ...d, XP: d.Activities * 25 }));
+    return buildOverallEngagementSeries(profiles, rangeKey).map(d => ({ ...d, XP: (d.Activities || 0) * 25 }));
+  }, [serverOverview, profiles, rangeKey, hasSampleMode]);
+
+  // Dimension completion chart data
+  const dimensionData = useMemo(() => {
+    const dp = serverOverview?.dimensionProgress ?? localMetrics.dimensionProgress ?? {};
+    return Object.entries(DIM_SHORT).map(([key, label]) => ({
+      name:  label,
+      Count: dp[key] || 0,
+    }));
+  }, [serverOverview, localMetrics]);
+
+  const milestones = useMemo(
+    () => hasSampleMode ? [] : buildMilestones(profiles),
     [profiles, hasSampleMode],
   );
 
-  const milestones = useMemo(
-    () => hasSampleMode ? [] : buildMilestones(profiles, rangeKey),
-    [profiles, rangeKey, hasSampleMode],
-  );
+  const isLoading = loading || fetchingServer;
 
   return (
     <>
@@ -141,7 +203,7 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
           padding: '.6rem 1rem', marginBottom: '1.25rem',
           fontSize: '.85rem', color: '#92400e', display: 'flex', alignItems: 'center', gap: '.5rem',
         }} role="status">
-          <span aria-hidden="true">📊</span>
+          <img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" />
           Showing sample data — add child profiles to see real analytics.
         </div>
       )}
@@ -149,36 +211,36 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
       {/* Metric cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(190px,1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <MetricCard
-          icon="👨‍👩‍👧‍👦"
-          title="Total Families"
-          value={hasSampleMode ? 4 : metrics.totalFamilies}
-          subtitle="tracked in IATLAS"
+          icon="/icons/strength.svg"
+          title="Total XP"
+          value={hasSampleMode ? 1250 : totalXP}
+          subtitle="experience points earned"
           color="#6366f1"
-          tooltip="Total number of child profiles registered across all families."
+          tooltip="Total XP accumulated across all activities and badges."
         />
         <MetricCard
-          icon="👶"
-          title="Active Children"
-          value={hasSampleMode ? 3 : metrics.activeChildren}
-          subtitle={`in the last ${rangeKey === '7d' ? '7 days' : rangeKey === '30d' ? '30 days' : rangeKey === '90d' ? '90 days' : 'year'}`}
-          color="#10b981"
-          tooltip="Children who completed at least one activity in the selected date range."
-        />
-        <MetricCard
-          icon="✅"
+          icon="/icons/success.svg"
           title="Activities Completed"
-          value={hasSampleMode ? 47 : metrics.totalActivities}
+          value={hasSampleMode ? 47 : totalActivities}
           subtitle="across all children"
-          color="#3b82f6"
-          tooltip="Total activities completed by all children in the selected date range."
+          color="#10b981"
+          tooltip="Total activities completed by all children."
         />
         <MetricCard
-          icon="⭐"
-          title="Total Stars Earned"
-          value={hasSampleMode ? 112 : metrics.totalStars}
-          subtitle="from completed activities"
+          icon="/icons/trophy.svg"
+          title="Badges Earned"
+          value={hasSampleMode ? 8 : totalBadges}
+          subtitle="milestone badges unlocked"
           color="#f59e0b"
-          tooltip="Total star ratings accumulated from all completed activities."
+          tooltip="Total badge milestones unlocked."
+        />
+        <MetricCard
+          icon="/icons/fire.svg"
+          title="Current Streak"
+          value={hasSampleMode ? 5 : currentStreak}
+          subtitle="consecutive active days"
+          color="#ef4444"
+          tooltip="Longest current daily activity streak."
         />
       </div>
 
@@ -186,12 +248,12 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
 
         <ChartCard
-          title="Weekly Engagement Trend"
-          subtitle="Activities completed per week"
-          loading={loading}
+          title="XP Trend"
+          subtitle={`XP earned over the last ${rangeKey}`}
+          loading={isLoading}
         >
           <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={engagementData} margin={{ top: 5, right: 16, bottom: 5, left: -10 }}>
+            <LineChart data={xpTrendData} margin={{ top: 5, right: 16, bottom: 5, left: -10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
               <XAxis dataKey="week" tick={{ fontSize: 11 }} />
               <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
@@ -202,7 +264,7 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
               <Legend />
               <Line
                 type="monotone"
-                dataKey="Activities"
+                dataKey="XP"
                 stroke="#6366f1"
                 strokeWidth={2.5}
                 dot={{ r: 4, fill: '#6366f1' }}
@@ -213,32 +275,20 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
         </ChartCard>
 
         <ChartCard
-          title="Protocol Status"
-          subtitle="Activity completion breakdown"
-          loading={loading}
+          title="Dimension Progress"
+          subtitle="Activities completed per dimension"
+          loading={isLoading}
         >
           <ResponsiveContainer width="100%" height={240}>
-            <PieChart>
-              <Pie
-                data={protocolData}
-                cx="50%"
-                cy="50%"
-                outerRadius={85}
-                innerRadius={48}
-                paddingAngle={3}
-                dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                labelLine={false}
-              >
-                {protocolData.map((entry, i) => (
-                  <Cell key={`cell-${i}`} fill={entry.color || COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
+            <BarChart data={dimensionData} margin={{ top: 5, right: 16, bottom: 5, left: -10 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+              <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
               <Tooltip
                 contentStyle={{ borderRadius: 8, fontSize: '.85rem', border: '1px solid #e2e8f0' }}
               />
-              <Legend />
-            </PieChart>
+              <Bar dataKey="Count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
@@ -247,7 +297,7 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
       <ChartCard
         title="Recent Milestones"
         subtitle="Latest activities completed by children"
-        loading={loading}
+        loading={isLoading}
         minHeight="120px"
       >
         <div className="ov-timeline" role="list" aria-label="Recent milestones">
@@ -255,7 +305,7 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
             <p className="ov-empty">
               {hasSampleMode
                 ? 'Add child profiles and complete activities to see milestones here.'
-                : 'No activities completed in this date range yet.'}
+                : 'No recent milestones found.'}
             </p>
           ) : (
             milestones.map((m, i) => (
@@ -265,7 +315,13 @@ export default function OverviewTab({ profiles = [], rangeKey = '30d', loading }
                 <span className="ov-milestone-text">
                   <strong>{m.child}</strong> completed&nbsp;
                   <em>{m.label}</em>
-                  {m.stars > 0 && <span aria-label={`${m.stars} stars`}> {'⭐'.repeat(m.stars)}</span>}
+                  {m.stars > 0 && (
+                    <span aria-label={`${m.stars} stars`}>
+                      {' '}{Array.from({ length: m.stars }, (_, i) => (
+                        <img key={i} src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
+                      ))}
+                    </span>
+                  )}
                 </span>
               </div>
             ))

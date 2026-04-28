@@ -21,11 +21,11 @@ import SiteHeader from '../components/SiteHeader.jsx';
 // ── Navigation ────────────────────────────────────────────────────────────────
 
 const ORG_NAV = [
-  { to: '/iatlas/org/dashboard',                label: '📊 Org Dashboard',   key: 'org-dashboard' },
-  { to: '/iatlas/practice/dashboard',           label: '🏠 Practice',        key: 'practice' },
-  { to: '/iatlas/practice/clients',             label: '👥 Clients',         key: 'clients' },
-  { to: '/iatlas/practice/analytics',           label: '📈 Practice Analytics', key: 'analytics' },
-  { to: '/iatlas/practice/team',                label: '💬 Team',            key: 'team' },
+  { to: '/iatlas/org/dashboard',                label: 'Org Dashboard',   key: 'org-dashboard' },
+  { to: '/iatlas/practice/dashboard',           label: 'Practice',        key: 'practice' },
+  { to: '/iatlas/practice/clients',             label: 'Clients',         key: 'clients' },
+  { to: '/iatlas/practice/analytics',           label: 'Practice Analytics', key: 'analytics' },
+  { to: '/iatlas/practice/team',                label: 'Team',            key: 'team' },
 ];
 
 // ── Dimensions ────────────────────────────────────────────────────────────────
@@ -42,12 +42,12 @@ const DIMENSIONS = [
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
 const MOCK_KPIS = [
-  { label: 'Active Clients',       value: '247',    sub: '↑ 12 from last month',  color: '#4f46e5', trend: 'up',   icon: '👥' },
-  { label: 'Sessions (This Month)', value: '1,823', sub: '↑ 234 vs last month',   color: '#059669', trend: 'up',   icon: '📅' },
-  { label: 'Avg Improvement',      value: '+18.5%', sub: '↑ 3.2% from last month', color: '#db2777', trend: 'up',  icon: '📈' },
-  { label: 'Active Practitioners', value: '14',     sub: '93% utilization rate',  color: '#d97706', trend: 'stable', icon: '👩‍⚕️' },
-  { label: 'Program Completion',   value: '72%',    sub: 'Clients who met goals', color: '#0891b2', trend: 'up',   icon: '🎯' },
-  { label: 'Retention Rate (90d)', value: '88%',    sub: 'Still active after 90d', color: '#7c3aed', trend: 'down', icon: '🔄' },
+  { label: 'Active Clients',       value: '247',    sub: '↑ 12 from last month',  color: '#4f46e5', trend: 'up',   icon: '/icons/network.svg' },
+  { label: 'Sessions (This Month)', value: '1,823', sub: '↑ 234 vs last month',   color: '#059669', trend: 'up',   icon: '/icons/planning.svg' },
+  { label: 'Avg Improvement',      value: '+18.5%', sub: '↑ 3.2% from last month', color: '#db2777', trend: 'up',  icon: '/icons/leaderboards.svg' },
+  { label: 'Active Practitioners', value: '14',     sub: '93% utilization rate',  color: '#d97706', trend: 'stable', icon: '/icons/professional.svg' },
+  { label: 'Program Completion',   value: '72%',    sub: 'Clients who met goals', color: '#0891b2', trend: 'up',   icon: '/icons/goal.svg' },
+  { label: 'Retention Rate (90d)', value: '88%',    sub: 'Still active after 90d', color: '#7c3aed', trend: 'down', icon: '/icons/compass.svg' },
 ];
 
 const MOCK_ORG_DIMS = {
@@ -118,10 +118,10 @@ const MOCK_WAITLIST = [
 ];
 
 const REPORT_TEMPLATES = [
-  { id: 'executive', icon: '📋', name: 'Executive Summary', desc: '1-page monthly snapshot for leadership', format: 'PDF' },
-  { id: 'board',     icon: '📊', name: 'Board Report',      desc: 'Quarterly outcomes for board review',   format: 'PDF' },
-  { id: 'grant',     icon: '🏛️',  name: 'Grant Report',      desc: 'Custom template for funders & grants',  format: 'PDF' },
-  { id: 'csv',       icon: '📑', name: 'Raw Data Export',   desc: 'Full cohort data for external analysis', format: 'CSV' },
+  { id: 'executive', icon: '/icons/journal.svg', name: 'Executive Summary', desc: '1-page monthly snapshot for leadership', format: 'PDF' },
+  { id: 'board',     icon: '/icons/org-leaderboards.svg', name: 'Board Report',      desc: 'Quarterly outcomes for board review',   format: 'PDF' },
+  { id: 'grant',     icon: '/icons/organization.svg',  name: 'Grant Report',      desc: 'Custom template for funders & grants',  format: 'PDF' },
+  { id: 'csv',       icon: '/icons/journal.svg', name: 'Raw Data Export',   desc: 'Full cohort data for external analysis', format: 'CSV' },
 ];
 
 // ── Mini components ───────────────────────────────────────────────────────────
@@ -185,10 +185,10 @@ function SparkLine({ data, color = '#6366f1' }) {
 
 function AlertBadge({ type }) {
   const styles = {
-    warning: { icon: '⚠️', bg: '#fef3c7', border: '#fde68a', color: '#92400e' },
-    info:    { icon: 'ℹ️', bg: '#e0f2fe', border: '#bae6fd', color: '#075985' },
-    success: { icon: '✅', bg: '#d1fae5', border: '#a7f3d0', color: '#065f46' },
-    error:   { icon: '🚨', bg: '#fee2e2', border: '#fecaca', color: '#991b1b' },
+    warning: { icon: '/icons/warning.svg', bg: '#fef3c7', border: '#fde68a', color: '#92400e' },
+    info:    { icon: '/icons/info.svg', bg: '#e0f2fe', border: '#bae6fd', color: '#075985' },
+    success: { icon: '/icons/success.svg', bg: '#d1fae5', border: '#a7f3d0', color: '#065f46' },
+    error:   { icon: '/icons/warning.svg', bg: '#fee2e2', border: '#fecaca', color: '#991b1b' },
   };
   const s = styles[type] || styles.info;
   return (
@@ -243,7 +243,7 @@ function OverviewTab() {
       <div className="oad-two-col" style={{ marginBottom: '1.5rem' }}>
         {/* 6-D Radar (bar representation) */}
         <div className="oad-card">
-          <h2 className="oad-card-title">📡 6-Dimension Organization Average</h2>
+          <h2 className="oad-card-title"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> 6-Dimension Organization Average</h2>
           <DimStack dims={MOCK_ORG_DIMS} baseline={MOCK_BASELINE_DIMS} showBaseline />
           <p style={{ fontSize: '.75rem', color: '#9ca3af', margin: '.85rem 0 0' }}>
             Bars show current score. Gray layer = baseline. Delta shown in green/red.
@@ -252,7 +252,7 @@ function OverviewTab() {
 
         {/* Monthly overall trend */}
         <div className="oad-card">
-          <h2 className="oad-card-title">📈 Overall Score — 6-Month Trend</h2>
+          <h2 className="oad-card-title"><img src="/icons/leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Overall Score — 6-Month Trend</h2>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: '.5rem', height: 110, marginTop: '.5rem' }}>
             {MOCK_MONTHLY_TREND.map((m, i) => {
               const pct = ((m.overall - 50) / 50) * 100;
@@ -277,7 +277,7 @@ function OverviewTab() {
 
       {/* Alerts */}
       <div className="oad-card">
-        <h2 className="oad-card-title">🔔 Recent Alerts</h2>
+        <h2 className="oad-card-title"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Recent Alerts</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.65rem' }}>
           {MOCK_ALERTS.map((a, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '.75rem', padding: '.65rem .75rem', borderRadius: 10, background: '#f8fafc', border: '1px solid #f1f5f9' }}>
@@ -312,7 +312,7 @@ function CohortsTab() {
       {/* Cohort selector */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.85rem', flexWrap: 'wrap', gap: '.5rem' }}>
-          <h2 className="oad-card-title" style={{ margin: 0 }}>🧩 Saved Cohorts</h2>
+          <h2 className="oad-card-title" style={{ margin: 0 }}><img src="/icons/game.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Saved Cohorts</h2>
           <button
             className="oad-btn"
             onClick={() => setShowBuilder(v => !v)}
@@ -376,8 +376,7 @@ function CohortsTab() {
             </div>
             <div style={{ display: 'flex', gap: '.6rem', marginTop: '.85rem', justifyContent: 'flex-end' }}>
               <button className="oad-btn" style={{ background: '#059669' }}
-                onClick={() => { alert(`Cohort "${newCohortName || 'Unnamed'}" would be created via API.`); setShowBuilder(false); }}>
-                💾 Save Cohort
+                onClick={() => { alert(`Cohort "${newCohortName || 'Unnamed'}" would be created via API.`); setShowBuilder(false); }}><img src="/icons/certification.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Save Cohort
               </button>
             </div>
           </div>
@@ -407,8 +406,7 @@ function CohortsTab() {
       {/* Side-by-side comparison */}
       {visibleCohorts.length > 0 && (
         <div>
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', margin: '0 0 .85rem' }}>
-            📊 Side-by-Side Dimension Comparison
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', margin: '0 0 .85rem' }}><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Side-by-Side Dimension Comparison
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${visibleCohorts.length}, 1fr)`, gap: '1rem' }}>
             {visibleCohorts.map(c => (
@@ -462,7 +460,7 @@ function DimensionTrendsTab() {
     <div>
       {/* Org-wide average heat map */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
-        <h2 className="oad-card-title">🔥 Dimension Heat Map — Organization Average</h2>
+        <h2 className="oad-card-title"><img src="/icons/fire.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Dimension Heat Map — Organization Average</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '.75rem', marginTop: '.5rem' }}>
           {DIMENSIONS.map(d => {
             const score = MOCK_ORG_DIMS[d.key] || 0;
@@ -492,7 +490,7 @@ function DimensionTrendsTab() {
       {/* Timeline drill-down */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '.5rem' }}>
-          <h2 className="oad-card-title" style={{ margin: 0 }}>📅 6-Month Dimension Timeline</h2>
+          <h2 className="oad-card-title" style={{ margin: 0 }}><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> 6-Month Dimension Timeline</h2>
           <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap' }}>
             {DIMENSIONS.map(d => (
               <button key={d.key}
@@ -530,7 +528,7 @@ function DimensionTrendsTab() {
 
       {/* All dimensions side by side — latest vs baseline */}
       <div className="oad-card">
-        <h2 className="oad-card-title">⬆️ Baseline vs. Current — All Dimensions</h2>
+        <h2 className="oad-card-title"><img src="/icons/leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Baseline vs. Current — All Dimensions</h2>
         <div style={{ overflowX: 'auto' }}>
           <table className="oad-table" aria-label="Dimension progress comparison">
             <thead>
@@ -615,7 +613,7 @@ function PractitionersTab() {
 
       {/* Performance table */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
-        <h2 className="oad-card-title">📋 Practitioner Performance — April 2026</h2>
+        <h2 className="oad-card-title"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practitioner Performance — April 2026</h2>
         <div style={{ overflowX: 'auto' }}>
           <table className="oad-table" aria-label="Practitioner performance">
             <thead>
@@ -637,7 +635,7 @@ function PractitionersTab() {
                 return (
                   <tr key={p.name} style={{ background: i === 0 ? '#fafffe' : undefined }}>
                     <td style={{ fontWeight: 600 }}>
-                      {i === 0 && <span style={{ marginRight: '.3rem' }}>🏆</span>}
+                      {i === 0 && <span style={{ marginRight: '.3rem' }}><img src="/icons/trophy.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>}
                       {p.name}
                     </td>
                     <td>
@@ -647,7 +645,7 @@ function PractitionersTab() {
                     </td>
                     <td>
                       <span style={{ color: atCap ? '#dc2626' : '#374151', fontWeight: 700 }}>
-                        {p.clients}/{p.max} {atCap && '⚠️'}
+                        {p.clients}/{p.max} {atCap && '<img src="/icons/warning.svg" alt="" aria-hidden="true" className="icon icon-sm" />'}
                       </span>
                     </td>
                     <td>{p.sessions30d}</td>
@@ -665,7 +663,7 @@ function PractitionersTab() {
 
       {/* Specialization radar — top 4 */}
       <div className="oad-card">
-        <h2 className="oad-card-title">🌱 Practitioner Dimension Strengths (Top 4)</h2>
+        <h2 className="oad-card-title"><img src="/icons/growth.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practitioner Dimension Strengths (Top 4)</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem', marginTop: '.5rem' }}>
           {sorted.slice(0, 4).map(p => {
             const mockDims = DIMENSIONS.reduce((acc, d, i) => {
@@ -719,14 +717,14 @@ function CapacityTab() {
     <div>
       {/* Capacity grid */}
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        <CapCol title="✅ Available"      color="#059669" bg="#d1fae5" items={available}    />
-        <CapCol title="⚡ Near Capacity"  color="#d97706" bg="#fef3c7" items={nearCapacity} />
-        <CapCol title="🚫 At Capacity"   color="#dc2626" bg="#fee2e2" items={atCapacity}   />
+        <CapCol title="Available"      color="#059669" bg="#d1fae5" items={available}    />
+        <CapCol title="Near Capacity"  color="#d97706" bg="#fef3c7" items={nearCapacity} />
+        <CapCol title="At Capacity"   color="#dc2626" bg="#fee2e2" items={atCapacity}   />
       </div>
 
       {/* Waitlist */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
-        <h2 className="oad-card-title">📋 Waitlist ({MOCK_WAITLIST.length} clients)</h2>
+        <h2 className="oad-card-title"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Waitlist ({MOCK_WAITLIST.length} clients)</h2>
         <div style={{ overflowX: 'auto' }}>
           <table className="oad-table" aria-label="Client waitlist">
             <thead>
@@ -748,8 +746,7 @@ function CapacityTab() {
                     <td style={{ color: '#9ca3af' }}>{new Date(w.waitingSince).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
                     <td>
                       {match ? (
-                        <span style={{ color: '#059669', fontWeight: 600, fontSize: '.82rem' }}>
-                          💡 {match.name}
+                        <span style={{ color: '#059669', fontWeight: 600, fontSize: '.82rem' }}><img src="/icons/reflection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {match.name}
                         </span>
                       ) : <span style={{ color: '#9ca3af', fontSize: '.82rem' }}>No slot available</span>}
                     </td>
@@ -763,7 +760,7 @@ function CapacityTab() {
 
       {/* Capacity summary */}
       <div className="oad-card">
-        <h2 className="oad-card-title">📊 Organization Capacity Summary</h2>
+        <h2 className="oad-card-title"><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Organization Capacity Summary</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
           {[
             { label: 'Total Slots',        value: MOCK_PRACTITIONERS.reduce((s, p) => s + p.max, 0),     color: '#4f46e5' },
@@ -800,7 +797,7 @@ function ExportTab() {
   };
 
   const handleExport = () => {
-    setExportMsg(`✅ ${REPORT_TEMPLATES.find(t => t.id === selectedTemplate)?.name} queued for generation. Download link will be emailed to recipients.`);
+    setExportMsg(`${REPORT_TEMPLATES.find(t => t.id === selectedTemplate)?.name} queued for generation. Download link will be emailed to recipients.`);
     setTimeout(() => setExportMsg(''), 5000);
   };
 
@@ -808,7 +805,7 @@ function ExportTab() {
     <div>
       {/* Template gallery */}
       <div className="oad-card" style={{ marginBottom: '1.25rem' }}>
-        <h2 className="oad-card-title">📁 Report Templates</h2>
+        <h2 className="oad-card-title"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Report Templates</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '1rem', marginTop: '.5rem' }}>
           {REPORT_TEMPLATES.map(t => (
             <button
@@ -839,7 +836,7 @@ function ExportTab() {
       {/* Delivery settings */}
       <div className="oad-two-col" style={{ marginBottom: '1.25rem' }}>
         <div className="oad-card">
-          <h2 className="oad-card-title">⏰ Scheduled Delivery</h2>
+          <h2 className="oad-card-title"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Scheduled Delivery</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
             <div>
               <label className="oad-field-label">Frequency</label>
@@ -857,7 +854,7 @@ function ExportTab() {
         </div>
 
         <div className="oad-card">
-          <h2 className="oad-card-title">📧 Recipients</h2>
+          <h2 className="oad-card-title"><img src="/icons/dialog.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Recipients</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem', marginBottom: '.75rem' }}>
             {recipients.map(r => (
               <div key={r} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc', borderRadius: 8, padding: '.4rem .75rem', border: '1px solid #e5e7eb' }}>
@@ -888,11 +885,9 @@ function ExportTab() {
       {/* Generate button */}
       <div className="oad-card">
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <button className="oad-btn" style={{ background: '#059669', fontSize: '.92rem', padding: '.75rem 1.5rem' }} onClick={handleExport}>
-            📥 Generate &amp; Download Now
+          <button className="oad-btn" style={{ background: '#059669', fontSize: '.92rem', padding: '.75rem 1.5rem' }} onClick={handleExport}><img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Generate &amp; Download Now
           </button>
-          <button className="oad-btn" style={{ background: '#4f46e5', fontSize: '.92rem', padding: '.75rem 1.5rem' }}>
-            📅 Save Schedule
+          <button className="oad-btn" style={{ background: '#4f46e5', fontSize: '.92rem', padding: '.75rem 1.5rem' }}><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Save Schedule
           </button>
           {exportMsg && (
             <p style={{ margin: 0, fontSize: '.85rem', color: '#059669', fontWeight: 600 }}>{exportMsg}</p>
@@ -910,12 +905,12 @@ export default function OrgAnalyticsDashboardPage() {
   const [dateRange, setDateRange] = useState('this-month');
 
   const TABS = [
-    { key: 'overview',   label: '📊 Overview' },
-    { key: 'cohorts',    label: '🧩 Cohorts' },
-    { key: 'trends',     label: '📈 Dimension Trends' },
-    { key: 'practitioners', label: '👩‍⚕️ Practitioners' },
-    { key: 'capacity',   label: '🗂️ Capacity' },
-    { key: 'export',     label: '📥 Export' },
+    { key: 'overview',   label: 'Overview' },
+    { key: 'cohorts',    label: 'Cohorts' },
+    { key: 'trends',     label: 'Dimension Trends' },
+    { key: 'practitioners', label: 'Practitioners' },
+    { key: 'capacity',   label: '️ Capacity' },
+    { key: 'export',     label: 'Export' },
   ];
 
   return (
@@ -1032,7 +1027,7 @@ export default function OrgAnalyticsDashboardPage() {
               </Link>
             ))}
             <div className="oad-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -1041,7 +1036,7 @@ export default function OrgAnalyticsDashboardPage() {
           <div className="oad-content">
             <div className="oad-page-header">
               <div>
-                <h1 className="oad-page-title">📊 Organization Dashboard</h1>
+                <h1 className="oad-page-title"><img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Organization Dashboard</h1>
                 <p className="oad-page-sub">Enterprise analytics · 247 active clients · 14 practitioners</p>
               </div>
               <div style={{ display: 'flex', gap: '.65rem', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -1058,7 +1053,7 @@ export default function OrgAnalyticsDashboardPage() {
                   <option value="this-year">This Year</option>
                   <option value="custom">Custom Range…</option>
                 </select>
-                <button className="oad-btn" onClick={() => setActiveTab('export')}>📥 Export</button>
+                <button className="oad-btn" onClick={() => setActiveTab('export')}><img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Export</button>
               </div>
             </div>
 

@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: '👥 Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: '📅 Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: '💳 Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: '💬 Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: '📊 Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
 ];
 
 const DIMENSIONS = [
@@ -206,7 +206,7 @@ export default function PracticeAnalyticsPage() {
               </Link>
             ))}
             <div className="pm-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Practice Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -218,18 +218,17 @@ export default function PracticeAnalyticsPage() {
                 <h1 className="pm-page-title">Practice Analytics</h1>
                 <p className="pm-page-sub">April 2026 · Practice-wide insights</p>
               </div>
-              <button className="pm-btn" style={{ background: '#059669' }}>
-                📥 Export Report
+              <button className="pm-btn" style={{ background: '#059669' }}><img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Export Report
               </button>
             </div>
 
             {/* Tabs */}
             <div className="an-tabs" role="tablist">
               {[
-                { key: 'outcomes',     label: '📈 Client Outcomes' },
-                { key: 'practitioners',label: '👩‍⚕️ Practitioners' },
-                { key: 'revenue',      label: '💰 Revenue' },
-                { key: 'resilience',   label: '🌱 Practitioner Resilience' },
+                { key: 'outcomes',     label: 'Client Outcomes' },
+                { key: 'practitioners',label: 'Practitioners' },
+                { key: 'revenue',      label: 'Revenue' },
+                { key: 'resilience',   label: 'Practitioner Resilience' },
               ].map(t => (
                 <button
                   key={t.key}
@@ -374,7 +373,7 @@ export default function PracticeAnalyticsPage() {
                   color: '#fff', marginBottom: '1.5rem',
                   display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
                 }}>
-                  <span style={{ fontSize: '1.5rem' }} aria-hidden="true">🌱</span>
+                  <img src="/icons/growth.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: '1rem' }}>
                       Practice-Wide Resilience Philosophy
@@ -418,7 +417,7 @@ export default function PracticeAnalyticsPage() {
                   display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
                   marginTop: '1.5rem',
                 }}>
-                  <span style={{ fontSize: '1.25rem' }} aria-hidden="true">🚧</span>
+                  <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                   <p style={{ margin: 0 }}>
                     <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Practitioner wellness dashboard — Coming 2026.</span>{' '}
                     Live dimensional tracking for practitioners, burnout early-warning alerts,

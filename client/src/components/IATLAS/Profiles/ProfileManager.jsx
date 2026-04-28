@@ -147,7 +147,7 @@ export default function ProfileManager() {
 
         {profiles.length === 0 ? (
           <div className="pm-empty">
-            <div className="pm-empty-icon">👶</div>
+            <div className="pm-empty-icon"><img src="/icons/kids-spark.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
             <p className="pm-empty-text">No child profiles yet.<br />Create one to start tracking progress!</p>
           </div>
         ) : (
@@ -166,7 +166,7 @@ export default function ProfileManager() {
                   onKeyDown={e => e.key === 'Enter' && setViewingProfile(p)}
                 >
                   {isActive && <span className="pm-card-badge">Active</span>}
-                  <div className="pm-card-avatar">{p.avatar}</div>
+                  <div className="pm-card-avatar"><img src={p.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
                   <div className="pm-card-name">{p.name}</div>
                   {age != null
                     ? <div className="pm-card-dob">{age} yrs old</div>
@@ -186,7 +186,7 @@ export default function ProfileManager() {
                       aria-label={`View ${p.name}'s full profile`}
                       title="View profile"
                     >
-                      👁
+                      <img src="/icons/info.svg" alt="View" aria-hidden="true" className="icon icon-sm" />
                     </button>
                     <button
                       className="pm-edit-btn"
@@ -194,7 +194,7 @@ export default function ProfileManager() {
                       aria-label={`Edit ${p.name}'s profile`}
                       title="Edit profile"
                     >
-                      ✏️
+                      <img src="/icons/writing.svg" alt="Edit" aria-hidden="true" className="icon icon-sm" />
                     </button>
                   </div>
                 </div>

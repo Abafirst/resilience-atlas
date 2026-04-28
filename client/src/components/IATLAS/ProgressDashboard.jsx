@@ -397,28 +397,28 @@ export default function ProgressDashboard({ childProfileId = null, className = '
         {/* ── Overview stats ──────────────────────────────────────────────── */}
         <div className="ipd-overview" role="region" aria-label="Progress overview">
           <div className="ipd-stat-card">
-            <span className="ipd-stat-icon" aria-hidden="true">⭐</span>
+            <img src="/icons/star.svg" alt="" aria-hidden="true" className="ipd-stat-icon icon icon-sm" />
             <div className="ipd-stat-value" aria-label={`${progress.totalXP} total XP`}>
               {progress.totalXP}
             </div>
             <div className="ipd-stat-label">Total XP</div>
           </div>
           <div className="ipd-stat-card">
-            <span className="ipd-stat-icon" aria-hidden="true">🔥</span>
+            <img src="/icons/fire.svg" alt="" aria-hidden="true" className="ipd-stat-icon icon icon-sm" />
             <div className="ipd-stat-value" aria-label={`${progress.currentStreak} day streak`}>
               {progress.currentStreak}
             </div>
             <div className="ipd-stat-label">Day Streak</div>
           </div>
           <div className="ipd-stat-card">
-            <span className="ipd-stat-icon" aria-hidden="true">✅</span>
+            <img src="/icons/success.svg" alt="" aria-hidden="true" className="ipd-stat-icon icon icon-sm" />
             <div className="ipd-stat-value" aria-label={`${totalActivities} activities completed`}>
               {totalActivities}
             </div>
             <div className="ipd-stat-label">Activities Done</div>
           </div>
           <div className="ipd-stat-card">
-            <span className="ipd-stat-icon" aria-hidden="true">🏆</span>
+            <img src="/icons/trophy.svg" alt="" aria-hidden="true" className="ipd-stat-icon icon icon-sm" />
             <div className="ipd-stat-value" aria-label={`${totalBadges} badges unlocked`}>
               {totalBadges}
             </div>
@@ -458,7 +458,7 @@ export default function ProgressDashboard({ childProfileId = null, className = '
 
         {/* ── Streak detail ────────────────────────────────────────────────── */}
         <div className="ipd-card" role="region" aria-label="Streak details">
-          <h3 className="ipd-section-title">🔥 Streak</h3>
+          <h3 className="ipd-section-title"><img src="/icons/fire.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Streak</h3>
           <div className="ipd-streak-row">
             <div className="ipd-streak-stat">
               <span className="ipd-streak-value">{progress.currentStreak}</span>

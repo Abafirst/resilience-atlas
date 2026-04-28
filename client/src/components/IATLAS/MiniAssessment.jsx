@@ -336,7 +336,7 @@ export default function MiniAssessment({ dimensionKey = 'emotional-adaptive', on
                   className={`ma-version-btn${version === v ? ' active' : ''}`}
                   onClick={() => { setVersion(v); setResponses({}); }}
                 >
-                  {v === 'parent' ? '👨‍👩‍👧 Parent' : '🩺 Practitioner'}
+                  {v === 'parent' ? 'Parent' : 'Practitioner'}
                 </button>
               ))}
             </div>
@@ -408,7 +408,7 @@ export default function MiniAssessment({ dimensionKey = 'emotional-adaptive', on
                 onClick={handleSaveToServer}
                 disabled={saving}
               >
-                {saving ? 'Saving…' : '💾 Save Result'}
+                {saving ? 'Saving…' : <><img src="/icons/certification.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Save Result</>}
               </button>
             )}
 

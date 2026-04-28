@@ -49,7 +49,7 @@ export default function WaitlistForm({ tier, onSuccess }) {
   if (status === 'success') {
     return (
       <div className="iatlas-waitlist-form-success" role="status" aria-live="polite">
-        <span aria-hidden="true">✅</span>
+        <img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" />
         <p>You're on the waitlist! We'll notify you when this tier launches.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export default function WaitlistForm({ tier, onSuccess }) {
   if (status === 'duplicate') {
     return (
       <div className="iatlas-waitlist-form-success" role="status" aria-live="polite">
-        <span aria-hidden="true">✅</span>
+        <img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" />
         <p>You're already on the waitlist for this tier. We'll be in touch!</p>
       </div>
     );

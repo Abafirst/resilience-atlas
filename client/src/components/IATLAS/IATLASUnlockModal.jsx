@@ -399,7 +399,7 @@ const VARIANT_DEFAULT_TIER = {
 
 const VARIANT_CONFIG = {
   kids: {
-    icon: '🎮',
+    icon: '/icons/game.svg',
     iconBg: '#fef3c7',
     title: 'Unlock Kids Resilience Games',
     desc: 'These interactive games teach emotional regulation, stress management, and resilience skills through play.',
@@ -415,7 +415,7 @@ const VARIANT_CONFIG = {
     secondaryLabel: 'Maybe Later',
   },
   caregiver: {
-    icon: '👨‍👩‍👧',
+    icon: '/icons/network.svg',
     iconBg: '#d1fae5',
     title: 'Caregiver Resources',
     desc: 'Parent guides, family activities, and progress tracking tools to support your child\'s resilience journey.',
@@ -431,7 +431,7 @@ const VARIANT_CONFIG = {
     secondaryHref: '/pricing/iatlas',
   },
   professional: {
-    icon: '🩺',
+    icon: '/icons/clinical.svg',
     iconBg: '#d1fae5',
     title: 'Professional Practice Materials',
     desc: 'Clinical assessments, session plans, and client resources for mental health practitioners.',
@@ -534,7 +534,7 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
             aria-hidden="true"
             style={{ background: config.iconBg }}
           >
-            {config.icon}
+            <img src={config.icon} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
 
           <h2 className="iatlas-unlock-title" id="iatlas-unlock-modal-title">

@@ -1,7 +1,8 @@
 /**
  * IATLASVideoLibrary.jsx
  * Video library page for IATLAS activity demonstrations.
- * Shows placeholder messaging for all videos while they are in production.
+ * Shows video cards — those without a recorded URL show a "Content in Production"
+ * placeholder with a waitlist sign-up form.
  */
 
 import React, { useState } from 'react';
@@ -94,7 +95,8 @@ const STYLES = `
   .vlib-card-title { font-size: .92rem; font-weight: 700; color: #0f172a; margin: 0 0 .25rem; }
   .dark-mode .vlib-card-title { color: #f1f5f9; }
 
-  .vlib-coming-soon-banner {
+  .vlib-coming-soon-banner,
+  .vlib-waitlist-banner {
     background: linear-gradient(135deg, #1e293b, #0f172a);
     border-radius: 14px;
     padding: 2.5rem 1.5rem;
@@ -123,8 +125,29 @@ const STYLES = `
 export default function IATLASVideoLibrary() {
   const [filter, setFilter] = useState('all');
   const [selected, setSelected] = useState(null);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistState, setWaitlistState] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
 
   const filtered = filter === 'all' ? DEMO_VIDEOS : DEMO_VIDEOS.filter(v => v.dimension === filter);
+
+  const availableCount = DEMO_VIDEOS.filter(v => v.videoUrl).length;
+  const totalCount     = DEMO_VIDEOS.length;
+
+  async function handleWaitlistSubmit(e) {
+    e.preventDefault();
+    if (!waitlistEmail.trim()) return;
+    setWaitlistState('submitting');
+    try {
+      const res = await fetch('/api/iatlas/waitlist', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: waitlistEmail.trim(), source: 'video_library' }),
+      });
+      setWaitlistState(res.ok ? 'success' : 'error');
+    } catch {
+      setWaitlistState('error');
+    }
+  }
 
   return (
     <>
@@ -133,26 +156,73 @@ export default function IATLASVideoLibrary() {
         <SiteHeader />
 
         <div className="vlib-hero">
-          <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}>🎥</div>
+          <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </div>
           <h1 className="vlib-hero-title">IATLAS Video Library</h1>
           <p className="vlib-hero-sub">
             Watch practitioners demonstrate IATLAS activities. Each video shows step-by-step instructions,
             age adaptations, and facilitation tips.
           </p>
           <span className="vlib-hero-badge">
-            <span>📹</span> Videos in Production — Coming Soon
+            <span><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </span>
+            {availableCount > 0
+              ? `${availableCount} of ${totalCount} videos available`
+              : `${totalCount} videos in production`}
           </span>
         </div>
 
         <div className="vlib-body">
-          <div className="vlib-coming-soon-banner">
-            <div style={{ fontSize: '2rem' }}>🎬</div>
-            <p className="vlib-csb-title">Activity Demonstration Videos Are Coming!</p>
-            <p className="vlib-csb-sub">
-              Our production team is creating high-quality demonstration videos for every IATLAS activity.
-              Videos will include closed captions, age-group variations, and facilitation guidance.
-            </p>
-          </div>
+
+          {/* Waitlist banner — shown only when no videos are live yet */}
+          {availableCount === 0 && (
+            <div className="vlib-waitlist-banner">
+              <div style={{ fontSize: '2rem' }}><img src="/icons/video.svg" alt="" aria-hidden="true" className="icon icon-sm" /> </div>
+              <p className="vlib-csb-title">Activity Demonstration Videos Are Coming!</p>
+              <p className="vlib-csb-sub">
+                Our production team is recording high-quality demonstration videos for every IATLAS
+                activity — with closed captions, age-group variations, and facilitation guidance.
+                Be the first to know when they go live.
+              </p>
+
+              {waitlistState === 'success' ? (
+                <p style={{ color: '#6ee7b7', fontWeight: 700, marginTop: '1rem' }}><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> You're on the list! We'll email you when videos launch.
+                </p>
+              ) : (
+                <form
+                  onSubmit={handleWaitlistSubmit}
+                  style={{ display: 'flex', gap: '.5rem', marginTop: '1.25rem', flexWrap: 'wrap', justifyContent: 'center' }}
+                >
+                  <input
+                    type="email"
+                    value={waitlistEmail}
+                    onChange={e => setWaitlistEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    style={{
+                      padding: '.55rem 1rem', borderRadius: 8, border: '1.5px solid rgba(255,255,255,.25)',
+                      background: 'rgba(255,255,255,.1)', color: '#f1f5f9', fontSize: '.88rem',
+                      outline: 'none', minWidth: 220,
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={waitlistState === 'submitting'}
+                    style={{
+                      padding: '.55rem 1.25rem', borderRadius: 8,
+                      background: '#6366f1', color: '#fff',
+                      border: 'none', fontWeight: 700, fontSize: '.88rem', cursor: 'pointer',
+                    }}
+                  >
+                    {waitlistState === 'submitting' ? 'Joining…' : 'Notify Me'}
+                  </button>
+                  {waitlistState === 'error' && (
+                    <p style={{ width: '100%', color: '#fca5a5', fontSize: '.8rem', margin: '.25rem 0 0', textAlign: 'center' }}>
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
+                </form>
+              )}
+            </div>
+          )}
 
           <div className="vlib-filters" role="group" aria-label="Filter by dimension">
             {DIM_FILTERS.map(f => (
@@ -205,13 +275,22 @@ export default function IATLASVideoLibrary() {
                 />
                 <div className="vlib-card-body">
                   <p className="vlib-card-title">{video.title}</p>
+                  {!video.videoUrl && (
+                    <span style={{
+                      display: 'inline-block', fontSize: '.7rem', fontWeight: 700,
+                      background: '#fef3c7', color: '#92400e',
+                      padding: '.15rem .5rem', borderRadius: 20, marginTop: '.25rem',
+                    }}>
+                      In Production
+                    </span>
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
           <div className="vlib-guidelines">
-            <p className="vlib-gl-title">📋 Video Production Guidelines</p>
+            <p className="vlib-gl-title"><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Video Production Specifications</p>
             <ul className="vlib-gl-list">
               <li>Length: 2–5 minutes per video</li>
               <li>Format: MP4, 1080p, 16:9 aspect ratio</li>

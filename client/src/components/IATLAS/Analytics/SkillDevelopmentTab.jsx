@@ -200,7 +200,7 @@ export default function SkillDevelopmentTab({ profiles = [], selectedProfileId =
       {/* Learning velocity */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
         <MetricCard
-          icon="⚡"
+          icon="/icons/strength.svg"
           title="Learning Velocity"
           value={velocity}
           subtitle="activities / week"
@@ -208,7 +208,7 @@ export default function SkillDevelopmentTab({ profiles = [], selectedProfileId =
           tooltip="Average number of activities completed per week in the selected range."
         />
         <MetricCard
-          icon="🧠"
+          icon="/icons/cognitive-narrative.svg"
           title="Active Domains"
           value={hasSampleMode ? 5 : dimBreakdown.length}
           subtitle="of 6 resilience domains"
@@ -216,7 +216,7 @@ export default function SkillDevelopmentTab({ profiles = [], selectedProfileId =
           tooltip="Number of resilience domains with at least one completed activity."
         />
         <MetricCard
-          icon="🏅"
+          icon="/icons/trophy.svg"
           title="Velocity Insight"
           value={velocityLevel.charAt(0).toUpperCase() + velocityLevel.slice(1)}
           subtitle={VELOCITY_DESCRIPTIONS[velocityLevel]}

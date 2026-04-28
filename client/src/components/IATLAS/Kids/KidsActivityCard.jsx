@@ -428,7 +428,7 @@ export default function KidsActivityCard({ activity, accentColor, onComplete, is
           onClick={() => setShowWorksheet(true)}
           style={{ marginTop: '.25rem' }}
         >
-          🖨 Print Worksheet
+          <img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Print Worksheet
         </button>
 
         {showWorksheet && (

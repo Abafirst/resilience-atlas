@@ -19,12 +19,12 @@ import { apiUrl } from '../api/baseUrl.js';
 // ── Dimension meta ────────────────────────────────────────────────────────────
 
 const DIMENSION_META = {
-  'agentic-generative':    { title: 'Agentic-Generative',    emoji: '🎯', color: '#4f46e5' },
-  'somatic-regulative':    { title: 'Somatic-Regulative',    emoji: '🧘', color: '#059669' },
-  'cognitive-narrative':   { title: 'Cognitive-Narrative',   emoji: '🧠', color: '#0284c7' },
-  'relational-connective': { title: 'Relational-Connective', emoji: '🤝', color: '#d97706' },
-  'emotional-adaptive':    { title: 'Emotional-Adaptive',    emoji: '💚', color: '#db2777' },
-  'spiritual-existential': { title: 'Spiritual-Existential', emoji: '✨', color: '#7c3aed' },
+  'agentic-generative':    { title: 'Agentic-Generative',    emoji: '/icons/goal.svg', color: '#4f46e5' },
+  'somatic-regulative':    { title: 'Somatic-Regulative',    emoji: '/icons/mindfulness.svg', color: '#059669' },
+  'cognitive-narrative':   { title: 'Cognitive-Narrative',   emoji: '/icons/cognitive-narrative.svg', color: '#0284c7' },
+  'relational-connective': { title: 'Relational-Connective', emoji: '/icons/relational-connective.svg', color: '#d97706' },
+  'emotional-adaptive':    { title: 'Emotional-Adaptive',    emoji: '/icons/connection.svg', color: '#db2777' },
+  'spiritual-existential': { title: 'Spiritual-Existential', emoji: '/icons/emotional-adaptive.svg', color: '#7c3aed' },
 };
 
 const DIMENSION_KEYS = Object.keys(DIMENSION_META);
@@ -441,10 +441,10 @@ export default function ParentDashboardPage() {
           {/* Hero */}
           <div className="ppd-hero" role="banner">
             <div className="ppd-tier-badge" aria-label={`Current tier: ${tierConfig.displayName || tier}`}>
-              <span aria-hidden="true">{tierConfig.badge || '👨‍👩‍👧‍👦'}</span>
+              <span aria-hidden="true">{tierConfig.badge || '<img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" />'}</span>
               {tierConfig.displayName || 'Family Plan'}
             </div>
-            <div className="ppd-hero-emoji" aria-hidden="true">👨‍👩‍👧‍👦</div>
+            <img src="/icons/network.svg" aria-hidden="true" className="icon icon-sm" alt="" />
             <h1 className="ppd-hero-title">Parent Dashboard</h1>
             <p className="ppd-hero-sub">
               Track your children's IATLAS resilience journey — completions, badges, and suggested next steps.
@@ -454,14 +454,13 @@ export default function ParentDashboardPage() {
           {/* ── Tier gate ────────────────────────────────────────────────── */}
           {!hasAccess && (
             <div className="ppd-upgrade" role="region" aria-label="Upgrade required">
-              <div className="ppd-upgrade-emoji" aria-hidden="true">🔒</div>
+              <img src="/icons/lock.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <h2 className="ppd-upgrade-title">Family Tier Required</h2>
               <p className="ppd-upgrade-sub">
                 The Parent Dashboard is available on the IATLAS Family plan ($39.99/mo) and above.
                 Upgrade to track all your children's resilience progress in one place.
               </p>
-              <Link to="/iatlas" className="ppd-upgrade-btn">
-                👨‍👩‍👧‍👦 Upgrade to Family Plan
+              <Link to="/iatlas" className="ppd-upgrade-btn"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Upgrade to Family Plan
               </Link>
             </div>
           )}
@@ -491,7 +490,7 @@ export default function ParentDashboardPage() {
           {/* ── No children state ─────────────────────────────────────────── */}
           {hasAccess && !loading && !error && children.length === 0 && (
             <div className="ppd-no-children">
-              <div className="ppd-no-children-emoji" aria-hidden="true">🧒</div>
+              <img src="/icons/kids-spark.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <h2 className="ppd-no-children-title">No child profiles yet</h2>
               <p className="ppd-no-children-sub">
                 Add a child profile to start tracking their IATLAS resilience journey.
@@ -523,7 +522,7 @@ export default function ParentDashboardPage() {
                     aria-pressed={child.childId === selectedId}
                     aria-label={`View ${child.name}'s progress`}
                   >
-                    <span className="ppd-tab-avatar" aria-hidden="true">{child.avatar || '🧒'}</span>
+                    <span className="ppd-tab-avatar" aria-hidden="true">{child.avatar || '<img src="/icons/kids-spark.svg" alt="" aria-hidden="true" className="icon icon-sm" />'}</span>
                     {child.name}
                   </button>
                 ))}
@@ -565,7 +564,7 @@ export default function ParentDashboardPage() {
                   {/* Dimension progress */}
                   <div className="ppd-card" role="region" aria-label={`${selectedChild.name}'s dimension progress`}>
                     <h2 className="ppd-card-title">
-                      <span aria-hidden="true">🧭</span> Dimension Progress
+                      <img src="/icons/compass.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Dimension Progress
                     </h2>
                     <div className="ppd-dim-list">
                       {DIMENSION_KEYS.map((key) => {
@@ -594,7 +593,7 @@ export default function ParentDashboardPage() {
                   {/* Badges */}
                   <div className="ppd-card" role="region" aria-label={`${selectedChild.name}'s badges`}>
                     <h2 className="ppd-card-title">
-                      <span aria-hidden="true">🏅</span> Badges Earned
+                      <img src="/icons/trophy.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Badges Earned
                     </h2>
                     {badgesCount === 0 ? (
                       <p className="ppd-empty-msg">No badges earned yet — keep exploring!</p>
@@ -602,7 +601,7 @@ export default function ParentDashboardPage() {
                       <div className="ppd-badge-grid" role="list">
                         {(progress?.unlockedBadges || []).map((b, i) => (
                           <div key={`${b.badgeId}-${i}`} className="ppd-badge" role="listitem">
-                            <div className="ppd-badge-icon" aria-hidden="true">🏅</div>
+                            <img src="/icons/trophy.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                             <p className="ppd-badge-name">{b.badgeId || 'Badge'}</p>
                             {b.unlockedAt && (
                               <p className="ppd-badge-date">
@@ -618,7 +617,7 @@ export default function ParentDashboardPage() {
                   {/* Activity timeline */}
                   <div className="ppd-card" role="region" aria-label={`${selectedChild.name}'s recent activity`}>
                     <h2 className="ppd-card-title">
-                      <span aria-hidden="true">📅</span> Recent Activity
+                      <img src="/icons/planning.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Recent Activity
                     </h2>
                     {recentActivities.length === 0 ? (
                       <p className="ppd-empty-msg">No activities completed yet.</p>
@@ -644,7 +643,7 @@ export default function ParentDashboardPage() {
                   {/* Suggested next activities */}
                   <div className="ppd-card" role="region" aria-label={`Suggested activities for ${selectedChild.name}`}>
                     <h2 className="ppd-card-title">
-                      <span aria-hidden="true">💡</span> Suggested Next Activities
+                      <img src="/icons/reflection.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Suggested Next Activities
                     </h2>
                     {suggestLoading ? (
                       <p className="ppd-empty-msg">Loading suggestions&hellip;</p>
@@ -678,7 +677,7 @@ export default function ParentDashboardPage() {
                   {/* Print report */}
                   <div className="ppd-card" role="region" aria-label="Print progress report">
                     <h2 className="ppd-card-title">
-                      <span aria-hidden="true">🖨️</span> Progress Report
+                      <img src="/icons/print.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Progress Report
                     </h2>
                     <p style={{ margin: '0 0 1rem', fontSize: '.875rem', color: '#64748b' }}>
                       Generate a printable progress summary for {selectedChild.name}.
@@ -688,8 +687,7 @@ export default function ParentDashboardPage() {
                       className="ppd-print-btn"
                       onClick={handlePrintReport}
                       aria-label={`Print progress report for ${selectedChild.name}`}
-                    >
-                      🖨️ Open Print Report
+                    ><img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Open Print Report
                     </button>
                   </div>
                 </>

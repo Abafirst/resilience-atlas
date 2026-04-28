@@ -145,7 +145,7 @@ export default function SharedFamilyDashboard() {
 
         {profiles.length === 0 ? (
           <div className="sfd-empty">
-            <div className="sfd-empty-icon">👨‍👩‍👧‍👦</div>
+            <div className="sfd-empty-icon"><img src="/icons/network.svg" alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
             <p className="sfd-empty-msg">
               No child profiles yet. Create one to get started!
             </p>
@@ -171,7 +171,7 @@ export default function SharedFamilyDashboard() {
                   onKeyDown={(e) => e.key === 'Enter' && handleCardClick(profile.profileId)}
                   aria-label={`Switch to ${profile.name}'s profile`}
                 >
-                  <div className="sfd-avatar">{profile.avatar || '🧒'}</div>
+                  <div className="sfd-avatar"><img src={profile.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
                   <h3 className="sfd-name">{profile.name}</h3>
                   {profile.ageGroup && (
                     <p className="sfd-age">
@@ -179,8 +179,8 @@ export default function SharedFamilyDashboard() {
                     </p>
                   )}
                   <div className="sfd-quick-stats">
-                    <span>⭐ {xp} XP</span>
-                    <span>🔥 {streak} day{streak !== 1 ? 's' : ''}</span>
+                    <span><img src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {xp} XP</span>
+                    <span><img src="/icons/fire.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {streak} day{streak !== 1 ? 's' : ''}</span>
                   </div>
                   {profile.ageGroup && (
                     <Link

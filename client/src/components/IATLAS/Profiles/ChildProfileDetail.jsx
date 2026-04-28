@@ -155,7 +155,7 @@ function Section({ icon, title, children }) {
   return (
     <div className="cpd-section">
       <h3 className="cpd-section-title">
-        <span aria-hidden="true">{icon}</span>
+        {icon && <img src={icon} alt="" aria-hidden="true" className="icon icon-sm" />}
         {title}
       </h3>
       {children}
@@ -207,7 +207,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
 
         {/* ── Hero ── */}
         <div className="cpd-hero">
-          <div className="cpd-hero-avatar" aria-hidden="true">{profile.avatar || '🧒'}</div>
+          <div className="cpd-hero-avatar" aria-hidden="true"><img src={profile.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></div>
           <div className="cpd-hero-info">
             <h2 className="cpd-hero-name">{profile.name}</h2>
             {metaParts.length > 0 && (
@@ -219,12 +219,12 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
             onClick={() => setShowEditModal(true)}
             aria-label={`Edit ${profile.name}'s profile`}
           >
-            ✏️ Edit
+            <img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Edit
           </button>
         </div>
 
         {/* ── Progress stats ── */}
-        <Section icon="📊" title="Progress Overview">
+        <Section icon="/icons/org-leaderboards.svg" title="Progress Overview">
           <div className="cpd-progress-row">
             <div className="cpd-stat-badge">
               <span className="cpd-stat-value">{level}</span>
@@ -246,7 +246,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
         </Section>
 
         {/* ── Basic info ── */}
-        <Section icon="📋" title="Basic Information">
+        <Section icon="/icons/journal.svg" title="Basic Information">
           <div className="cpd-info-grid">
             <InfoItem label="Date of Birth" value={dob} />
             <InfoItem label="Age" value={age != null ? `${age} years old` : null} />
@@ -256,7 +256,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
         </Section>
 
         {/* ── Clinical details ── */}
-        <Section icon="🏥" title="Clinical Details">
+        <Section icon="/icons/clinical.svg" title="Clinical Details">
           {(!profile.clinical ||
             (!profile.clinical.diagnoses?.length &&
              !profile.clinical.goals?.length &&
@@ -311,7 +311,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
         </Section>
 
         {/* ── Preferences ── */}
-        <Section icon="🎯" title="Preferences">
+        <Section icon="/icons/goal.svg" title="Preferences">
           {(!profile.preferences ||
             (!profile.preferences.activities?.length &&
              !profile.preferences.sensoryPreferences &&
@@ -355,7 +355,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
         {/* ── Quick actions ── */}
         <div className="cpd-actions">
           <a href="/iatlas/kids" className="cpd-action-btn">
-            🎯 Start Activities
+            Start Activities
           </a>
           {!isActive && (
             <button
@@ -369,7 +369,7 @@ export default function ChildProfileDetail({ profile, onEdit, onBack }) {
             className="cpd-action-btn-sec"
             onClick={() => setShowEditModal(true)}
           >
-            ✏️ Edit Profile
+            <img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Edit Profile
           </button>
         </div>
       </div>

@@ -194,8 +194,8 @@ export default function PrintableActivitySheet({ activity, onClose }) {
             <p className="pas-branding">IATLAS™ Activity Worksheet</p>
             <h2 className="pas-title" id="pas-title">{activity.title}</h2>
             <div className="pas-meta">
-              {ageLabel  && <span className="pas-badge">🧒 {ageLabel}</span>}
-              {dimLabel  && <span className="pas-badge">🌀 {dimLabel}</span>}
+              {ageLabel  && <span className="pas-badge">{ageLabel}</span>}
+              {dimLabel  && <span className="pas-badge">{dimLabel}</span>}
               {activity.duration && <span className="pas-badge">⏱ {activity.duration}</span>}
               {activity.difficulty && (
                 <span className="pas-badge" style={{ textTransform: 'capitalize' }}>
@@ -279,7 +279,7 @@ export default function PrintableActivitySheet({ activity, onClose }) {
               className="pas-btn pas-btn-print"
               onClick={handlePrint}
             >
-              🖨 Print Worksheet
+              <img src="/icons/print.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Print Worksheet
             </button>
           </div>
 

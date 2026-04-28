@@ -153,7 +153,7 @@ function ActivityCard({ activity }) {
       </div>
 
       {activity.seasonalConnection && (
-        <p className="sap-seasonal-note">🍃 {activity.seasonalConnection}</p>
+        <p className="sap-seasonal-note"><img src="/icons/growth.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {activity.seasonalConnection}</p>
       )}
 
       {activity.instructions && (
@@ -201,7 +201,7 @@ export default function SeasonalActivityPack() {
                 setSelected(first);
               }}
             >
-              {t === 'seasonal' ? '🌿 Seasonal Packs' : '🎉 Holiday Packs'}
+              {t === 'seasonal' ? 'Seasonal Packs' : 'Holiday Packs'}
             </button>
           ))}
         </div>
@@ -231,7 +231,7 @@ export default function SeasonalActivityPack() {
               {current.description || current.theme}
               {current.culturalAdaptationNote && (
                 <span style={{ display: 'block', marginTop: '.35rem', fontStyle: 'italic' }}>
-                  💡 {current.culturalAdaptationNote}
+                  <img src="/icons/reflection.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {current.culturalAdaptationNote}
                 </span>
               )}
             </p>

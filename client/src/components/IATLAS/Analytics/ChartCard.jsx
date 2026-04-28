@@ -123,7 +123,7 @@ export default function ChartCard({ title, subtitle, children, loading, error, o
             <div className="cc-skeleton" style={{ flex: 1, minHeight }} aria-label="Loading chart data" aria-busy="true" />
           ) : error ? (
             <div className="cc-error" role="alert">
-              <span className="cc-error-icon" aria-hidden="true">⚠️</span>
+              <span className="cc-error-icon" aria-hidden="true"><img src="/icons/warning.svg" alt="" aria-hidden="true" style={{ width: '1.75rem', height: '1.75rem', objectFit: 'contain' }} /></span>
               <span>{error}</span>
             </div>
           ) : (

@@ -9,12 +9,12 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: '👥 Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: '📅 Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: '💳 Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: '💬 Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: '📊 Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
 ];
 
 const MOCK_BILLING = [
@@ -182,7 +182,7 @@ export default function PracticeBillingPage() {
               </Link>
             ))}
             <div className="pm-sidebar-footer">
-              <Link to="/practice-settings">⚙️ Practice Settings</Link><br />
+              <Link to="/practice-settings"><img src="/icons/compass.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Practice Settings</Link><br />
               <Link to="/iatlas" style={{ marginTop: '.4rem', display: 'block' }}>← IATLAS Home</Link>
             </div>
           </nav>
@@ -195,8 +195,7 @@ export default function PracticeBillingPage() {
                 <p className="pm-page-sub">{records.length} billing records · April 2026</p>
               </div>
               <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
-                <button className="pm-btn" style={{ background: '#059669' }} onClick={() => {}}>
-                  📤 Export CSV
+                <button className="pm-btn" style={{ background: '#059669' }} onClick={() => {}}><img src="/icons/writing.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Export CSV
                 </button>
                 <button className="pm-btn" onClick={() => setShowCreateModal(true)}>
                   + New Record
@@ -319,7 +318,7 @@ export default function PracticeBillingPage() {
               color: '#94a3b8', fontSize: '.85rem',
               display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
             }}>
-              <span style={{ fontSize: '1.25rem' }} aria-hidden="true">🚧</span>
+              <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
               <p style={{ margin: 0 }}>
                 <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Full billing integration — Coming 2026.</span>{' '}
                 Automatic invoice generation from completed sessions, insurance claim submission,
