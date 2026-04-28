@@ -2937,17 +2937,16 @@ export default function ResultsPage() {
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
       // Remove interactive UI elements so the downloaded image is clean.
-      // CSS classes (irw-info-icon, irw-label-text) are set in
-      // IntegratedResilienceWheel.jsx on the ⓘ icon group and label text elements.
-      // Also handle legacy RadarChart classes for backwards compatibility.
+      // All removable text elements are tagged with data-label-type in
+      // IntegratedResilienceWheel.jsx (ring-level, dimension-name,
+      // score-percentage, skill-level, info-icon, background-pill).
+      svgClone.querySelectorAll('[data-label-type]').forEach(el => el.remove());
+
+      // Fallback: remove any remaining text elements not covered by data-label-type
+      // (legacy RadarChart classes and any other text nodes).
       svgClone.querySelectorAll('.irw-info-icon, .dimension-info-icon').forEach(el => el.remove());
-      svgClone.querySelectorAll('.irw-label-text, .dimension-label-text').forEach(el => {
-        el.style.textDecoration = 'none';
-      });
-      // Also clear any inline underline styles on other text nodes (belt and
-      // suspenders — covers any future changes to the SVG structure).
       svgClone.querySelectorAll('text').forEach(el => {
-        if (el.style && el.style.textDecoration) el.style.textDecoration = 'none';
+        el.remove();
       });
 
       // Serialize to a data URL (avoids blob: URLs that CSP img-src may block)
