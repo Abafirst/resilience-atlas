@@ -2955,7 +2955,7 @@ export default function ResultsPage() {
       // Find the exact SVG element displayed on the page by its unique ID
       const svg =
         document.getElementById('resilience-radar-chart') ||
-        document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
+        document.querySelector('svg[aria-label="Integrated resilience wheel showing skill proficiency levels and developmental roadmap"]');
 
       if (!svg) {
         alert('Radar chart not found. Please wait for the chart to load.');
@@ -2980,10 +2980,11 @@ export default function ResultsPage() {
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
       // Remove interactive UI elements so the downloaded image is clean.
-      // CSS classes (dimension-info-icon, dimension-label-text) are set in
-      // RadarChart.jsx on the ⓘ icon group and dimension name text elements.
-      svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
-      svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
+      // CSS classes (irw-info-icon, irw-label-text) are set in
+      // IntegratedResilienceWheel.jsx on the ⓘ icon group and label text elements.
+      // Also handle legacy RadarChart classes for backwards compatibility.
+      svgClone.querySelectorAll('.irw-info-icon, .dimension-info-icon').forEach(el => el.remove());
+      svgClone.querySelectorAll('.irw-label-text, .dimension-label-text').forEach(el => {
         el.style.textDecoration = 'none';
       });
       // Also clear any inline underline styles on other text nodes (belt and
