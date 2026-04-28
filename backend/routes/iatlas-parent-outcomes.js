@@ -79,7 +79,7 @@ router.post('/', async (req, res) => {
 
   try {
     const doc = await ParentOutcome.create({
-      parentUserId:   userId,
+      parentUserId:   String(userId),
       childProfileId,
       formType,
       period:         period ? String(period).trim().slice(0, 20) : null,
@@ -120,7 +120,7 @@ router.get('/', async (req, res) => {
   const limitRaw       = parseInt(req.query.limit, 10);
   const limit          = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 100) : 50;
 
-  const filter = { parentUserId: userId };
+  const filter = { parentUserId: String(userId) };
   if (childProfileId) filter.childProfileId = childProfileId;
   if (formType && ['weekly', 'monthly'].includes(formType)) filter.formType = formType;
 
@@ -152,7 +152,7 @@ router.get('/:id', async (req, res) => {
   }
 
   try {
-    const doc = await ParentOutcome.findOne({ _id: id, parentUserId: userId }).lean();
+    const doc = await ParentOutcome.findOne({ _id: id, parentUserId: String(userId) }).lean();
     if (!doc) {
       return res.status(404).json({ error: 'Parent check-in not found.' });
     }

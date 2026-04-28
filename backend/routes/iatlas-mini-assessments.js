@@ -109,7 +109,7 @@ router.post('/', async (req, res) => {
 
   try {
     const doc = await MiniAssessment.create({
-      userId,
+      userId:         String(userId),
       clientProfileId,
       dimension,
       versionUsed,
@@ -140,7 +140,8 @@ router.get('/', async (req, res) => {
   const limitRaw        = parseInt(req.query.limit, 10);
   const limit           = Number.isFinite(limitRaw) && limitRaw > 0 ? Math.min(limitRaw, 100) : 50;
 
-  const filter = { userId, clientProfileId };
+  const filter = { userId: String(userId) };
+  if (clientProfileId) filter.clientProfileId = clientProfileId;
   if (dimension && VALID_DIMENSIONS.has(dimension)) {
     filter.dimension = dimension;
   }
@@ -173,7 +174,7 @@ router.get('/:id', async (req, res) => {
   }
 
   try {
-    const doc = await MiniAssessment.findOne({ _id: id, userId }).lean();
+    const doc = await MiniAssessment.findOne({ _id: id, userId: String(userId) }).lean();
     if (!doc) {
       return res.status(404).json({ error: 'Mini assessment not found.' });
     }
