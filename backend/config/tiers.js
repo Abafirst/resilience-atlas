@@ -159,3 +159,109 @@ const PREMIUM_TIERS = [
 ];
 
 module.exports = { TIER_CONFIG, PLAN_ALIASES, PREMIUM_TIERS };
+
+// ── IATLAS product tier configuration ────────────────────────────────────────
+//
+// IATLAS is a separate product line from Atlas (assessment/teams).
+// Stripe price IDs are read from environment variables to avoid hard-coding
+// secrets; set them in .env / Railway environment settings.
+//
+//   STRIPE_IATLAS_INDIVIDUAL_PRICE_ID
+//   STRIPE_IATLAS_FAMILY_PRICE_ID
+//   STRIPE_IATLAS_COMPLETE_PRICE_ID
+//   STRIPE_IATLAS_PRACTITIONER_PRICE_ID
+//   STRIPE_IATLAS_PRACTICE_PRICE_ID
+//
+// Enterprise is negotiated offline — no Stripe price ID is needed.
+
+const IATLAS_TIER_CONFIG = {
+  individual: {
+    name:         'IATLAS Individual',
+    price:        1999,   // $19.99/mo in cents
+    billing:      'monthly',
+    stripePriceId: process.env.STRIPE_IATLAS_INDIVIDUAL_PRICE_ID || null,
+    maxProfiles:  1,
+    features: [
+      'All kids games & activities',
+      'IATLAS curriculum (all ages)',
+      'Progress tracking',
+      'Printable resources',
+      '1 child profile',
+    ],
+  },
+  family: {
+    name:         'IATLAS Family',
+    price:        3999,   // $39.99/mo in cents
+    billing:      'monthly',
+    stripePriceId: process.env.STRIPE_IATLAS_FAMILY_PRICE_ID || null,
+    maxProfiles:  5,
+    recommended:  true,
+    features: [
+      'Everything in Individual',
+      'Caregiver resources & parent guides',
+      'Shared progress dashboard',
+      'Family challenge activities',
+    ],
+  },
+  complete: {
+    name:         'IATLAS Complete',
+    price:        9999,   // $99.99/mo in cents
+    billing:      'monthly',
+    stripePriceId: process.env.STRIPE_IATLAS_COMPLETE_PRICE_ID || null,
+    maxProfiles:  5,
+    features: [
+      'Everything in Family',
+      'Full curriculum access',
+      'Advanced progress analytics',
+      'Priority support',
+    ],
+  },
+  practitioner: {
+    name:         'IATLAS Practitioner',
+    price:        14900,  // $149/mo in cents
+    billing:      'monthly',
+    stripePriceId: process.env.STRIPE_IATLAS_PRACTITIONER_PRICE_ID || null,
+    maxProfiles:  5,
+    features: [
+      'Clinical assessments & session plans',
+      'Client resources & worksheets',
+      'ABA protocol library',
+      'Progress & outcome reports',
+      'Individual practice',
+    ],
+  },
+  practice: {
+    name:         'IATLAS Practice',
+    price:        39900,  // $399/mo in cents
+    billing:      'monthly',
+    stripePriceId: process.env.STRIPE_IATLAS_PRACTICE_PRICE_ID || null,
+    maxProfiles:  5,
+    features: [
+      'Everything in Practitioner',
+      'Multi-practitioner access',
+      'Group practice management',
+      'Team progress dashboard',
+    ],
+  },
+  enterprise: {
+    name:         'IATLAS Enterprise',
+    price:        null,   // Custom — negotiated offline
+    billing:      'custom',
+    stripePriceId: null,
+    maxProfiles:  Infinity,
+    features: [
+      'Everything in Practice',
+      'Custom onboarding',
+      'Dedicated support',
+      'Custom integrations',
+    ],
+  },
+};
+
+const IATLAS_PRIORITY_TIERS = ['complete', 'practitioner', 'practice', 'enterprise'];
+
+const IATLAS_PROFESSIONAL_TIERS = ['practitioner', 'practice', 'enterprise'];
+
+module.exports.IATLAS_TIER_CONFIG     = IATLAS_TIER_CONFIG;
+module.exports.IATLAS_PRIORITY_TIERS  = IATLAS_PRIORITY_TIERS;
+module.exports.IATLAS_PROFESSIONAL_TIERS = IATLAS_PROFESSIONAL_TIERS;

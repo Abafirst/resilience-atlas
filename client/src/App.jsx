@@ -16,7 +16,7 @@ import './styles/icons.css';
 import './styles/soft-storytelling.css';
 import './styles/support.css';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import SiteFooter from './components/SiteFooter.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -81,34 +81,36 @@ import KidsDimensionActivities from './components/IATLAS/Kids/KidsDimensionActiv
 import KidsActivityCatalog from './components/IATLAS/Kids/KidsActivityCatalog.jsx';
 import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import DevelopmentalRoadmapPage from './pages/DevelopmentalRoadmapPage.jsx';
-import PractitionerProtocolLibrary from './pages/PractitionerProtocolLibrary.jsx';
-import SessionPlansPage from './pages/SessionPlansPage.jsx';
-import ClientOutcomeReportPage from './pages/ClientOutcomeReportPage.jsx';
-import ChildProfilesPage from './pages/ChildProfilesPage.jsx';
-import AnalyticsDashboardPage from './pages/AnalyticsDashboardPage.jsx';
-import PracticeSettingsPage from './pages/PracticeSettingsPage.jsx';
-import ActivityLogsPage from './pages/ActivityLogsPage.jsx';
 import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
-import TrainTheFacilitatorPage from './pages/TrainTheFacilitatorPage.jsx';
-import PracticeDashboardPage from './pages/PracticeDashboardPage.jsx';
-import PracticeClientsPage from './pages/PracticeClientsPage.jsx';
-import PracticeSchedulePage from './pages/PracticeSchedulePage.jsx';
-import PracticeBillingPage from './pages/PracticeBillingPage.jsx';
-import PracticeTeamPage from './pages/PracticeTeamPage.jsx';
-import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
-import OrgAnalyticsDashboardPage from './pages/OrgAnalyticsDashboardPage.jsx';
-import PredictiveAnalyticsDashboardPage from './pages/PredictiveAnalyticsDashboardPage.jsx';
-import ResearchExportPage from './pages/ResearchExportPage.jsx';
-import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
-import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
+
+// Heavy pages — code-split to reduce initial bundle size
+const PractitionerProtocolLibrary      = lazy(() => import('./pages/PractitionerProtocolLibrary.jsx'));
+const SessionPlansPage                 = lazy(() => import('./pages/SessionPlansPage.jsx'));
+const ClientOutcomeReportPage          = lazy(() => import('./pages/ClientOutcomeReportPage.jsx'));
+const ChildProfilesPage                = lazy(() => import('./pages/ChildProfilesPage.jsx'));
+const AnalyticsDashboardPage           = lazy(() => import('./pages/AnalyticsDashboardPage.jsx'));
+const PracticeSettingsPage             = lazy(() => import('./pages/PracticeSettingsPage.jsx'));
+const ActivityLogsPage                 = lazy(() => import('./pages/ActivityLogsPage.jsx'));
+const TrainTheFacilitatorPage          = lazy(() => import('./pages/TrainTheFacilitatorPage.jsx'));
+const PracticeDashboardPage            = lazy(() => import('./pages/PracticeDashboardPage.jsx'));
+const PracticeClientsPage              = lazy(() => import('./pages/PracticeClientsPage.jsx'));
+const PracticeSchedulePage             = lazy(() => import('./pages/PracticeSchedulePage.jsx'));
+const PracticeBillingPage              = lazy(() => import('./pages/PracticeBillingPage.jsx'));
+const PracticeTeamPage                 = lazy(() => import('./pages/PracticeTeamPage.jsx'));
+const PracticeAnalyticsPage            = lazy(() => import('./pages/PracticeAnalyticsPage.jsx'));
+const OrgAnalyticsDashboardPage        = lazy(() => import('./pages/OrgAnalyticsDashboardPage.jsx'));
+const PredictiveAnalyticsDashboardPage = lazy(() => import('./pages/PredictiveAnalyticsDashboardPage.jsx'));
+const ResearchExportPage               = lazy(() => import('./pages/ResearchExportPage.jsx'));
+const SupportTicketsPage               = lazy(() => import('./pages/SupportTicketsPage.jsx'));
+const SupportTicketDetailPage          = lazy(() => import('./pages/SupportTicketDetailPage.jsx'));
+const IATLASVideoLibrary               = lazy(() => import('./pages/IATLASVideoLibrary.jsx'));
+import SupportWidget from './components/Support/SupportWidget.jsx';
 import MiniAssessment from './components/IATLAS/MiniAssessment.jsx';
 import MiniAssessmentHistory from './components/IATLAS/MiniAssessmentHistory.jsx';
 import ParentOutcomeForm from './components/IATLAS/ParentOutcomeForm.jsx';
 import SeasonalActivityPack from './components/IATLAS/SeasonalActivityPack.jsx';
 import CrisisToolkit from './components/IATLAS/CrisisToolkit.jsx';
-import IATLASVideoLibrary from './pages/IATLASVideoLibrary.jsx';
-import SupportWidget from './components/Support/SupportWidget.jsx';
 import { apiUrl } from './api/baseUrl.js';
 import AndroidWebModal from './components/AndroidWebModal.jsx';
 import { isCapacitorAndroid } from './utils/platform.js';
@@ -335,6 +337,7 @@ function AppShell() {
   return (
     <>
       <RequireProfileCompletion>
+        <Suspense fallback={<div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', fontSize: '.9rem' }}>Loading…</div>}>
         <Routes>
           {/* Public informational pages */}
           <Route path="/about" element={<AboutPage />} />
@@ -459,6 +462,7 @@ function AppShell() {
           {/* Default auth-gated home route */}
           <Route path="/*" element={<HomeRoute />} />
         </Routes>
+        </Suspense>
       </RequireProfileCompletion>
       {showFooter && <SiteFooter />}
       <SupportWidget />

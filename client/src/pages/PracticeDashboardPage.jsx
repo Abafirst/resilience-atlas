@@ -7,6 +7,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
+import apiFetch, { getAuth0CachedToken } from '../lib/apiFetch.js';
+
+const VALID_DIMENSIONS = [
+  { value: 'emotional-adaptive',    label: 'Emotional-Adaptive' },
+  { value: 'agentic-generative',    label: 'Agentic-Generative' },
+  { value: 'somatic-regulative',    label: 'Somatic-Regulative' },
+  { value: 'cognitive-narrative',   label: 'Cognitive-Narrative' },
+  { value: 'relational-connective', label: 'Relational-Connective' },
+  { value: 'spiritual-existential', label: 'Spiritual-Existential' },
+];
 
 const PRACTICE_NAV = [
   { to: '/iatlas/practice/dashboard',  label: '🏠 Dashboard',  key: 'dashboard' },
@@ -330,66 +340,363 @@ export default function PracticeDashboardPage() {
               </div>
             </div>
 
-            {/* Coming Soon notice */}
+            {/* Live data notice */}
             <div style={{
               background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
               borderRadius: 16, padding: '1.5rem',
               color: '#94a3b8', fontSize: '.88rem', lineHeight: 1.65,
               display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap',
             }}>
-              <span style={{ fontSize: '1.5rem' }} aria-hidden="true">🚧</span>
+              <span style={{ fontSize: '1.5rem' }} aria-hidden="true">ℹ️</span>
               <div>
                 <p style={{ color: '#f1f5f9', fontWeight: 700, margin: '0 0 .2rem', fontSize: '.95rem' }}>
-                  Full Practice Management — Coming 2026
+                  Practice Hub — Live Mode
                 </p>
                 <p style={{ margin: 0 }}>
-                  Live data sync, drag-and-drop scheduling, real billing integration, and team
-                  communication are actively in development. This dashboard shows a preview of
-                  what's coming.{' '}
-                  <a href="#" style={{ color: '#a5b4fc', fontWeight: 600 }}>Join the waitlist →</a>
+                  Metrics above reflect mock data. As you add clients and log sessions the
+                  dashboard will populate with live data.{' '}
+                  <Link to="/iatlas/practice/clients" style={{ color: '#a5b4fc', fontWeight: 600 }}>
+                    Manage clients →
+                  </Link>
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Add Client Modal placeholder */}
+        {/* Add Client Modal */}
         {showAddClient && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="add-client-title"
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,.5)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000,
-            }}
-            onClick={e => { if (e.target === e.currentTarget) setShowAddClient(false); }}
-          >
-            <div style={{
-              background: '#fff', borderRadius: 16, padding: '2rem',
-              width: '100%', maxWidth: 480, margin: '0 1rem',
-            }}>
-              <h2 id="add-client-title" style={{ margin: '0 0 .5rem', fontSize: '1.2rem', fontWeight: 700 }}>
-                Add New Client
-              </h2>
-              <p style={{ color: '#64748b', fontSize: '.88rem', marginBottom: '1.5rem' }}>
-                Full client intake form coming soon. Visit the Clients page to manage your caseload.
-              </p>
-              <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'flex-end' }}>
-                <button
-                  onClick={() => setShowAddClient(false)}
-                  style={{ background: '#f1f5f9', border: 'none', borderRadius: 8, padding: '.6rem 1.2rem', cursor: 'pointer', fontWeight: 600 }}
-                >
-                  Close
-                </button>
-                <Link to="/iatlas/practice/clients" className="pm-btn" style={{ textDecoration: 'none' }}>
-                  Go to Clients →
-                </Link>
-              </div>
-            </div>
-          </div>
+          <AddClientModal onClose={() => setShowAddClient(false)} />
         )}
       </main>
     </>
+  );
+}
+
+// ── Add Client Intake Modal ───────────────────────────────────────────────────
+
+const EMPTY_FORM = {
+  clientIdentifier:      '',
+  dateOfBirth:           '',
+  pronouns:              '',
+  targetDimensions:      [],
+  clinicalGoals:         '',
+  guardianContactName:   '',
+  guardianContactPhone:  '',
+  guardianContactEmail:  '',
+  intakeNotes:           '',
+  firstSessionDate:      '',
+};
+
+function AddClientModal({ onClose }) {
+  const [form,        setForm]        = useState(EMPTY_FORM);
+  const [submitting,  setSubmitting]  = useState(false);
+  const [error,       setError]       = useState(null);
+  const [success,     setSuccess]     = useState(false);
+
+  function setField(field, value) {
+    setForm(prev => ({ ...prev, [field]: value }));
+  }
+
+  function toggleDimension(dim) {
+    setForm(prev => {
+      const already = prev.targetDimensions.includes(dim);
+      return {
+        ...prev,
+        targetDimensions: already
+          ? prev.targetDimensions.filter(d => d !== dim)
+          : [...prev.targetDimensions, dim],
+      };
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(null);
+
+    if (!form.clientIdentifier.trim()) {
+      return setError('Client identifier is required.');
+    }
+    if (!form.dateOfBirth) {
+      return setError('Date of birth is required.');
+    }
+    if (form.targetDimensions.length === 0) {
+      return setError('Select at least one target dimension.');
+    }
+
+    const payload = {
+      clientIdentifier:      form.clientIdentifier.trim(),
+      dateOfBirth:           form.dateOfBirth,
+      pronouns:              form.pronouns.trim(),
+      targetDimensions:      form.targetDimensions,
+      clinicalGoals:         form.clinicalGoals
+        ? form.clinicalGoals.split('\n').map(g => g.trim()).filter(Boolean)
+        : [],
+      guardianContact:
+        form.guardianContactName.trim()
+          ? {
+              name:  form.guardianContactName.trim(),
+              phone: form.guardianContactPhone.trim(),
+              email: form.guardianContactEmail.trim(),
+            }
+          : null,
+      intakeNotes:     form.intakeNotes.trim(),
+      firstSessionDate: form.firstSessionDate || null,
+    };
+
+    setSubmitting(true);
+    try {
+      const token = getAuth0CachedToken();
+      const res = await apiFetch(
+        '/api/clinical/clients',
+        {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload),
+        },
+        () => Promise.resolve(token),
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Failed to create client.');
+      setSuccess(true);
+      setTimeout(onClose, 2000);
+    } catch (err) {
+      setError(err.message || 'An unexpected error occurred.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const inputStyle = {
+    width: '100%', padding: '.55rem .75rem',
+    border: '1.5px solid #e2e8f0', borderRadius: 8,
+    fontSize: '.88rem', outline: 'none', boxSizing: 'border-box',
+  };
+  const labelStyle = {
+    display: 'block', fontSize: '.78rem', fontWeight: 600,
+    color: '#374151', marginBottom: '.3rem',
+  };
+  const fieldStyle = { marginBottom: '1rem' };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="aci-title"
+      style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)',
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+        zIndex: 1000, overflowY: 'auto', padding: '2rem 1rem',
+      }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div style={{
+        background: '#fff', borderRadius: 16,
+        width: '100%', maxWidth: 560, padding: '2rem',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+          <h2 id="aci-title" style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>
+            New Client Intake
+          </h2>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.3rem', color: '#64748b', padding: 0, lineHeight: 1 }}
+          >
+            ×
+          </button>
+        </div>
+
+        {success ? (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '.5rem' }}>✅</div>
+            <p style={{ fontWeight: 700, color: '#059669', margin: 0 }}>Client profile created!</p>
+            <p style={{ fontSize: '.85rem', color: '#6b7280', marginTop: '.35rem' }}>
+              Redirecting to the dashboard…
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate>
+            {/* Client identifier */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-id">
+                Client Identifier <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <input
+                id="aci-id"
+                type="text"
+                style={inputStyle}
+                value={form.clientIdentifier}
+                onChange={e => setField('clientIdentifier', e.target.value)}
+                placeholder="e.g. First name or initials (not full legal name)"
+                maxLength={50}
+                required
+              />
+              <p style={{ fontSize: '.73rem', color: '#9ca3af', margin: '.25rem 0 0' }}>
+                Use a pseudonym or initials to protect client privacy.
+              </p>
+            </div>
+
+            {/* Date of birth */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-dob">
+                Date of Birth <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <input
+                id="aci-dob"
+                type="date"
+                style={inputStyle}
+                value={form.dateOfBirth}
+                onChange={e => setField('dateOfBirth', e.target.value)}
+                max={new Date().toISOString().split('T')[0]}
+                required
+              />
+            </div>
+
+            {/* Pronouns */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-pronouns">Pronouns</label>
+              <input
+                id="aci-pronouns"
+                type="text"
+                style={inputStyle}
+                value={form.pronouns}
+                onChange={e => setField('pronouns', e.target.value)}
+                placeholder="e.g. she/her, he/him, they/them"
+                maxLength={30}
+              />
+            </div>
+
+            {/* Target dimensions */}
+            <div style={fieldStyle}>
+              <label style={labelStyle}>
+                Target Dimensions <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem' }}>
+                {VALID_DIMENSIONS.map(dim => {
+                  const selected = form.targetDimensions.includes(dim.value);
+                  return (
+                    <button
+                      key={dim.value}
+                      type="button"
+                      onClick={() => toggleDimension(dim.value)}
+                      style={{
+                        padding: '.3rem .75rem',
+                        borderRadius: 20,
+                        border: `1.5px solid ${selected ? '#6366f1' : '#e2e8f0'}`,
+                        background: selected ? '#eef2ff' : '#fff',
+                        color: selected ? '#4f46e5' : '#374151',
+                        fontSize: '.78rem', fontWeight: 600, cursor: 'pointer',
+                      }}
+                    >
+                      {dim.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Clinical goals */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-goals">Clinical Goals</label>
+              <textarea
+                id="aci-goals"
+                style={{ ...inputStyle, resize: 'vertical' }}
+                value={form.clinicalGoals}
+                onChange={e => setField('clinicalGoals', e.target.value)}
+                placeholder="One goal per line…"
+                rows={3}
+                maxLength={2000}
+              />
+            </div>
+
+            {/* Guardian contact */}
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={labelStyle}>Guardian / Caregiver Contact</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem' }}>
+                <input
+                  type="text"
+                  style={inputStyle}
+                  value={form.guardianContactName}
+                  onChange={e => setField('guardianContactName', e.target.value)}
+                  placeholder="Name"
+                  maxLength={100}
+                />
+                <input
+                  type="tel"
+                  style={inputStyle}
+                  value={form.guardianContactPhone}
+                  onChange={e => setField('guardianContactPhone', e.target.value)}
+                  placeholder="Phone"
+                  maxLength={30}
+                />
+              </div>
+              <input
+                type="email"
+                style={{ ...inputStyle, marginTop: '.5rem' }}
+                value={form.guardianContactEmail}
+                onChange={e => setField('guardianContactEmail', e.target.value)}
+                placeholder="Email"
+                maxLength={254}
+              />
+            </div>
+
+            {/* First session date */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-first-session">First Session Date</label>
+              <input
+                id="aci-first-session"
+                type="date"
+                style={inputStyle}
+                value={form.firstSessionDate}
+                onChange={e => setField('firstSessionDate', e.target.value)}
+              />
+            </div>
+
+            {/* Intake notes */}
+            <div style={fieldStyle}>
+              <label style={labelStyle} htmlFor="aci-notes">Intake Notes</label>
+              <textarea
+                id="aci-notes"
+                style={{ ...inputStyle, resize: 'vertical' }}
+                value={form.intakeNotes}
+                onChange={e => setField('intakeNotes', e.target.value)}
+                placeholder="Background, referral source, initial observations…"
+                rows={3}
+                maxLength={3000}
+              />
+            </div>
+
+            {error && (
+              <p role="alert" style={{ color: '#dc2626', fontSize: '.83rem', marginBottom: '.75rem', background: '#fef2f2', padding: '.5rem .75rem', borderRadius: 8 }}>
+                {error}
+              </p>
+            )}
+
+            <div style={{ display: 'flex', gap: '.75rem', justifyContent: 'flex-end' }}>
+              <button
+                type="button"
+                onClick={onClose}
+                style={{ background: '#f1f5f9', border: 'none', borderRadius: 8, padding: '.6rem 1.2rem', cursor: 'pointer', fontWeight: 600, fontSize: '.88rem' }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={submitting}
+                style={{
+                  background: submitting ? '#818cf8' : '#6366f1',
+                  color: '#fff', border: 'none', borderRadius: 8,
+                  padding: '.6rem 1.4rem', cursor: submitting ? 'not-allowed' : 'pointer',
+                  fontWeight: 700, fontSize: '.88rem',
+                }}
+              >
+                {submitting ? 'Creating…' : 'Create Client'}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
   );
 }
