@@ -674,6 +674,29 @@ export default function ParentDashboardPage() {
                     )}
                   </div>
 
+                  {/* Caregiver Learning */}
+                  <div className="ppd-card" role="region" aria-label="Caregiver Learning">
+                    <h2 className="ppd-card-title">
+                      <img src="/icons/story.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Caregiver Learning
+                    </h2>
+                    <p style={{ margin: '0 0 1rem', fontSize: '.875rem', color: '#64748b' }}>
+                      15 evidence-based parent guides to help you support {selectedChild.name}'s resilience journey —
+                      covering all 6 dimensions, from co-regulation to growth mindset.
+                    </p>
+                    <Link
+                      to="/iatlas/caregiver-learning"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                        background: '#0891b2', color: '#fff', borderRadius: 10,
+                        padding: '.6rem 1.2rem', fontWeight: 700, textDecoration: 'none',
+                        fontSize: '.875rem',
+                      }}
+                    >
+                      <img src="/icons/story.svg" alt="" aria-hidden="true" className="icon icon-sm" style={{ filter: 'brightness(0) invert(1)' }} />
+                      Open Caregiver Learning
+                    </Link>
+                  </div>
+
                   {/* Print report */}
                   <div className="ppd-card" role="region" aria-label="Print progress report">
                     <h2 className="ppd-card-title">
