@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
-import RadarChart from '../components/RadarChart.jsx';
-import AdultSkillsWheel from '../components/AdultSkillsWheel.jsx';
+import IntegratedResilienceWheel from '../components/IntegratedResilienceWheel.jsx';
 import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
@@ -2956,7 +2955,7 @@ export default function ResultsPage() {
       // Find the exact SVG element displayed on the page by its unique ID
       const svg =
         document.getElementById('resilience-radar-chart') ||
-        document.querySelector('svg[aria-label="Resilience dimension radar chart"]');
+        document.querySelector('svg[aria-label="Integrated resilience wheel showing skill proficiency levels and developmental roadmap"]');
 
       if (!svg) {
         alert('Radar chart not found. Please wait for the chart to load.');
@@ -2981,10 +2980,11 @@ export default function ResultsPage() {
       svgClone.querySelectorAll('animateTransform, animate, animateMotion').forEach(el => el.remove());
 
       // Remove interactive UI elements so the downloaded image is clean.
-      // CSS classes (dimension-info-icon, dimension-label-text) are set in
-      // RadarChart.jsx on the ⓘ icon group and dimension name text elements.
-      svgClone.querySelectorAll('.dimension-info-icon').forEach(el => el.remove());
-      svgClone.querySelectorAll('.dimension-label-text').forEach(el => {
+      // CSS classes (irw-info-icon, irw-label-text) are set in
+      // IntegratedResilienceWheel.jsx on the ⓘ icon group and label text elements.
+      // Also handle legacy RadarChart classes for backwards compatibility.
+      svgClone.querySelectorAll('.irw-info-icon, .dimension-info-icon').forEach(el => el.remove());
+      svgClone.querySelectorAll('.irw-label-text, .dimension-label-text').forEach(el => {
         el.style.textDecoration = 'none';
       });
       // Also clear any inline underline styles on other text nodes (belt and
@@ -3449,73 +3449,29 @@ export default function ResultsPage() {
           </div>
         </div>
 
-        {/* ── Resilience Compass (BrandCompass chart) ──────────────── */}
-        <section style={{
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: 16,
-          padding: '28px 20px 20px',
-          marginBottom: 24,
-          textAlign: 'center',
-          boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-        }} aria-labelledby="radarHeading">
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="radarHeading">
-            <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass
-          </div>
-          <p style={{ fontSize: 13, color: '#718096', marginBottom: 8 }}>
-            This compass visualizes the balance of your resilience system across six core dimensions.
-          </p>
-          <p style={{
-            fontSize: 12,
-            color: '#4a5568',
-            background: '#eef2ff',
-            border: '1px solid #c7d2fe',
-            borderRadius: 8,
-            padding: '7px 12px',
-            marginBottom: 14,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            fontWeight: 500,
-          }}>
-            <span aria-hidden="true" style={{ fontSize: 14, color: '#667eea' }}>👆</span>
-            Click any dimension label to learn what it means and discover personalized ways to strengthen it
-          </p>
-          <div style={{ transform: 'translateY(-5px)' }}>
-            <RadarChart
+        {/* ── Integrated Resilience Wheel ───────────────────────────── */}
+        {results && results.scores && (
+          <section className="results-integrated-section" aria-labelledby="integratedWheelHeading">
+            <div className="integrated-section-header">
+              <h2 id="integratedWheelHeading">Your Resilience Landscape</h2>
+              <p>
+                This wheel shows your current skill proficiency across six resilience dimensions.
+                The needle points to your strongest area. Click any segment to explore skill-building
+                modules, or click a dimension label to learn more.
+              </p>
+            </div>
+            <IntegratedResilienceWheel
               scores={results.scores}
+              interactive={true}
+              showLabels={true}
               onDimensionClick={(dim) => {
                 setActiveDimModal(dim);
               }}
             />
-          </div>
-          {dominantType && (
-            <p style={{ fontSize: 13, color: '#718096', marginTop: 10 }}>
-              Your strongest resilience dimension is:{' '}
-              <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
-            </p>
-          )}
-        </section>
-
-        {/* ── Skills-Based Visualization ────────────────────────────── */}
-        {results && results.scores && (
-          <section className="results-skills-section" aria-labelledby="skillsWheelHeading">
-            <div className="skills-section-header">
-              <h2 id="skillsWheelHeading">Your Resilience Skills Landscape</h2>
-              <p>
-                This wheel shows your current skill proficiency across six dimensions.
-                Click any segment to explore skill-building modules in that area.
-              </p>
-            </div>
-            <AdultSkillsWheel
-              dimensionScores={results.scores}
-              interactive={true}
-              showLabels={true}
-            />
-            <div className="skills-wheel-legend" aria-label="Skills wheel legend">
-              <span><span className="legend-icon">🌟</span> Developed (Mastery)</span>
-              <span><span className="legend-icon">🌱</span> Building</span>
-              <span><span className="legend-icon">⚡</span> Foundation</span>
+            <div className="irw-legend" aria-label="Skills wheel legend">
+              <span><span className="irw-legend-icon">🌟</span> Developed (Mastery)</span>
+              <span><span className="irw-legend-icon">🌱</span> Building</span>
+              <span><span className="irw-legend-icon">⚡</span> Foundation</span>
             </div>
           </section>
         )}
