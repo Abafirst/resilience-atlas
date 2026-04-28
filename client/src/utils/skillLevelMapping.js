@@ -33,7 +33,7 @@ export function getSkillLevel(score) {
     ring: 1,
     label: 'Foundational Skill',
     icon: '⚡',
-    description: 'Your growth edge. Fertile ground for development.',
+    description: 'Your growth frontier. Fertile ground for development.',
   };
 }
 
@@ -53,7 +53,7 @@ export function getSkillBadgeClass(level) {
  *   { 'Dimension-Name': { percentage: 0-100 } | number }
  *
  * @param {Object} scores
- * @returns {{ primary, secondary, growthEdge, all }}
+ * @returns {{ primary, secondary, growthFrontier, all }}
  */
 export function buildSkillsProfile(scores) {
   const entries = Object.entries(scores).map(([dim, scoreObj]) => {
@@ -66,7 +66,7 @@ export function buildSkillsProfile(scores) {
   return {
     primary: sorted[0],
     secondary: sorted.slice(1, sorted.length - 1),
-    growthEdge: sorted[sorted.length - 1],
+    growthFrontier: sorted[sorted.length - 1],
     all: entries,
   };
 }

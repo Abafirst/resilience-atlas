@@ -110,7 +110,7 @@ const UPSELL_VARIANT_COPY = {
   variant_a: {
     'atlas-navigator': {
       headline: "You're in the Top 20% — Unlock What's Holding You Back",
-      subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth edges with expert strategies for every dimension.',
+      subtext:  'Your free report shows your strengths. The Deep Report reveals your hidden growth frontiers with expert strategies for every dimension.',
       ctaLabel: 'Unlock My Deep Report ($49.99)',
       offer:    null,
     },
@@ -3451,19 +3451,24 @@ export default function ResultsPage() {
 
         {/* ── Integrated Resilience Wheel ───────────────────────────── */}
         {results && results.scores && (
-          <section className="results-integrated-section" aria-labelledby="integratedWheelHeading">
-            <div className="integrated-section-header">
-              <h2 id="integratedWheelHeading">Your Resilience Landscape</h2>
+          <section className="irw-section" aria-labelledby="irwHeading">
+            <div className="irw-section-header">
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#2d3748', marginBottom: 4, letterSpacing: 0.3, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }} id="irwHeading">
+                <BrandIcon name="compass" size={17} color="#667eea" /> Your Resilience Compass &amp; Skills Landscape
+              </div>
               <p>
-                This wheel shows your current skill proficiency across six resilience dimensions.
-                The needle points to your strongest area. Click any segment to explore skill-building
-                modules, or click a dimension label to learn more.
+                Your score is shown as a hexagonal overlay. The color-coded rings show your current skill
+                proficiency (Foundation → Building → Mastery) for each dimension. The needle points to your
+                strongest dimension. Click any label or segment to explore skill-building resources.
               </p>
             </div>
             <IntegratedResilienceWheel
               scores={results.scores}
               interactive={true}
               showLabels={true}
+              showSkillRings={true}
+              showScorePolygon={true}
+              showNeedle={true}
               onDimensionClick={(dim) => {
                 setActiveDimModal(dim);
               }}
@@ -3473,6 +3478,12 @@ export default function ResultsPage() {
               <span><span className="irw-legend-icon">🌱</span> Building</span>
               <span><span className="irw-legend-icon">⚡</span> Foundation</span>
             </div>
+            {dominantType && (
+              <p style={{ fontSize: 13, color: '#718096', marginTop: 10, textAlign: 'center' }}>
+                Your strongest resilience dimension is:{' '}
+                <strong style={{ color: DIM_COLORS[dominantType] || '#667eea' }}>{dominantType}</strong>
+              </p>
+            )}
           </section>
         )}
 

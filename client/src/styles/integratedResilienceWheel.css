@@ -16,27 +16,38 @@
 }
 
 .dark-mode .irw-svg {
-  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.4));
 }
 
-/* ── Skill ring segments ──────────────────────────────────────────────────── */
-
-.irw-segment {
+/* Skill ring segments */
+.irw-wheel-segment {
   cursor: pointer;
   transition: fill-opacity 0.2s ease, filter 0.2s ease, stroke-width 0.2s ease;
 }
 
-.irw-segment:focus {
+.irw-wheel-segment:focus {
   outline: 2px solid #4f46e5;
   outline-offset: 4px;
 }
 
-.irw-segment:focus:not(:focus-visible) {
+.irw-wheel-segment:focus:not(:focus-visible) {
   outline: none;
 }
 
-/* ── Tooltip ─────────────────────────────────────────────────────────────── */
+/* Interactive label groups */
+.irw-label-group {
+  cursor: pointer;
+}
 
+.irw-label-group:hover .irw-label-text {
+  fill: #4752e8;
+}
+
+.irw-label-group:hover .irw-info-icon circle {
+  fill: #4752e8;
+}
+
+/* Tooltip */
 .irw-tooltip {
   position: absolute;
   background: rgba(15, 23, 42, 0.95);
@@ -46,7 +57,7 @@
   font-size: 0.875rem;
   pointer-events: none;
   z-index: 1000;
-  max-width: 240px;
+  max-width: 260px;
   line-height: 1.5;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   white-space: normal;
@@ -54,11 +65,18 @@
 
 .irw-tooltip-title {
   font-weight: 700;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
   display: flex;
   align-items: center;
   gap: 0.4rem;
   font-size: 0.9rem;
+}
+
+.irw-tooltip-score {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
 }
 
 .irw-tooltip-desc {
@@ -66,9 +84,8 @@
   opacity: 0.9;
 }
 
-/* ── Section wrapper (used in ResultsPage) ───────────────────────────────── */
-
-.results-integrated-section {
+/* Section wrapper (used in ResultsPage) */
+.irw-section {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   border-radius: 20px;
   padding: 2.5rem 2rem;
@@ -76,41 +93,40 @@
   border: 1px solid #e2e8f0;
 }
 
-.dark-mode .results-integrated-section {
+.dark-mode .irw-section {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-color: #334155;
 }
 
-.integrated-section-header {
+.irw-section-header {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.integrated-section-header h2 {
+.irw-section-header h2 {
   font-size: 1.4rem;
   font-weight: 700;
   color: #1e293b;
   margin: 0 0 0.6rem;
 }
 
-.dark-mode .integrated-section-header h2 {
+.dark-mode .irw-section-header h2 {
   color: #f1f5f9;
 }
 
-.integrated-section-header p {
+.irw-section-header p {
   font-size: 0.9rem;
   color: #64748b;
-  max-width: 560px;
+  max-width: 580px;
   margin: 0 auto;
   line-height: 1.6;
 }
 
-.dark-mode .integrated-section-header p {
+.dark-mode .irw-section-header p {
   color: #94a3b8;
 }
 
-/* ── Legend ──────────────────────────────────────────────────────────────── */
-
+/* Legend */
 .irw-legend {
   display: flex;
   justify-content: center;
@@ -125,14 +141,13 @@
   margin-right: 0.35rem;
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
-
+/* Responsive */
 @media (max-width: 640px) {
   .irw-svg {
     max-width: 92vw;
   }
 
-  .results-integrated-section {
+  .irw-section {
     padding: 1.75rem 1rem;
   }
 
@@ -143,10 +158,9 @@
   }
 }
 
-/* ── Reduced motion ──────────────────────────────────────────────────────── */
-
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .irw-segment {
+  .irw-wheel-segment {
     transition: none;
   }
 }

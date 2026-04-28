@@ -1018,7 +1018,7 @@ function renderPracticesSection(emergingStrength) {
       <div class="ep-section__header">
         <h2 id="ep-section-heading">Your Next Steps in the Resilience Atlas</h2>
         <p class="ep-section__subtitle">
-          Practices to Strengthen Your Growth Edge: <strong>${escHtml(emergingStrength)}</strong>
+          Practices to Strengthen Your Growth Frontier: <strong>${escHtml(emergingStrength)}</strong>
         </p>
         <p class="ep-disclaimer">
           <span aria-hidden="true">ℹ️</span>

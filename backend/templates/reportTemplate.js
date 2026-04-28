@@ -1116,7 +1116,7 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
         <p>${overview}</p>
         <p>Across the six dimensions assessed, your profile reveals a distinctive combination of strengths and growth opportunities.
         Your anchor strength in <strong>${esc(topMeta.label)}</strong> (${esc(getSkillLevelIcon(top.score))} ${esc(getSkillLevelLabel(top.score))}) provides a foundation you can leverage across life domains.
-        Your greatest growth edge lies in <strong>${esc(bottomMeta.label)}</strong> (${esc(getSkillLevelIcon(bottom.score))} ${esc(getSkillLevelLabel(bottom.score))}), where focused practice can
+        Your greatest growth frontier lies in <strong>${esc(bottomMeta.label)}</strong> (${esc(getSkillLevelIcon(bottom.score))} ${esc(getSkillLevelLabel(bottom.score))}), where focused practice can
         yield significant returns in overall resilience.</p>
     </div>
 
@@ -1130,7 +1130,7 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
             </ul>
         </div>
         <div>
-            <div class="content-label">⚡ Growth Edges</div>
+            <div class="content-label">⚡ Growth Frontiers</div>
             <ul>
                 ${ranked.slice(-3).reverse().map(r =>
                     `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${esc(getSkillLevelIcon(r.score))} ${esc(getSkillLevelLabel(r.score))}</li>`
@@ -1338,7 +1338,7 @@ function page11StrengthIntegration(scores, dominantType) {
     <p style="font-size:9pt;">${esc(s.desc)}</p>
 </div>`).join('')}
 
-    <div class="content-label" style="margin-top:8px;">⚡ Your Growth Edges — Where Growth Unlocks More</div>
+    <div class="content-label" style="margin-top:8px;">⚡ Your Growth Frontiers — Where Growth Unlocks More</div>
     ${gaps.map(g => `
 <div class="stress-card" style="background:${DIMENSION_META[g.dimension]?.lightColor};border-color:${DIMENSION_META[g.dimension]?.borderColor};">
     <h4 style="color:${DIMENSION_META[g.dimension]?.color};">${DIMENSION_META[g.dimension]?.icon} ${esc(DIMENSION_META[g.dimension]?.label)}</h4>
@@ -1351,7 +1351,7 @@ function page11StrengthIntegration(scores, dominantType) {
         <tbody>
         ${ranked.map(({ dimension, score }, i) => {
             const meta = DIMENSION_META[dimension];
-            const role = i === 0 ? '🌟 Your Anchor Dimension' : i === 1 ? 'Secondary Strength' : i <= 2 ? 'Supporting Capacity' : i >= ranked.length - 2 ? '⚡ Growth Edge' : 'Developing Area';
+            const role = i === 0 ? '🌟 Your Anchor Dimension' : i === 1 ? 'Secondary Strength' : i <= 2 ? 'Supporting Capacity' : i >= ranked.length - 2 ? '⚡ Growth Frontier' : 'Developing Area';
             return `<tr>
                 <td><span style="color:${meta.color};font-weight:600;">${meta.icon} ${esc(meta.shortLabel)}</span></td>
                 <td>${esc(getSkillLevelIcon(score))} ${esc(getSkillLevelLabel(score))}</td>

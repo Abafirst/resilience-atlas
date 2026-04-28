@@ -876,7 +876,7 @@ var TEAMS_CONTENT = {
       dimension: 'all',
       dimensionLabel: 'All Dimensions',
       pages: 4,
-      description: 'One-page team resilience profile with dimension scores, strengths, and growth edges. Pre/post assessment version included.',
+      description: 'One-page team resilience profile with dimension scores, strengths, and growth frontiers. Pre/post assessment version included.',
       icon: '/icons/compass.svg',
       downloadUrl: '#',
       format: 'PDF'
