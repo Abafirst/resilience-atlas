@@ -1,5 +1,7 @@
 'use strict';
 
+const { getSkillLevel, getSkillLevelLabel, getSkillLevelIcon, getSkillLevelDescription } = require('../utils/skillLevels');
+
 /**
  * reportTemplate.js
  *
@@ -1044,10 +1046,10 @@ function page1Cover(overall, dominantType, scores, assessmentDate) {
     <div class="cover-logo">The Resilience Atlas<span class="cover-trademark">™</span></div>
     <div class="cover-title">Your Personal<br>Resilience Report</div>
     <div class="cover-score-ring">
-        <div class="cover-score-number">${overall}</div>
-        <div class="cover-score-label">Overall Score</div>
+        <div class="cover-score-number">${getSkillLevelIcon(overall)}</div>
+        <div class="cover-score-label">Resilience Landscape</div>
     </div>
-    <div class="cover-level-badge">${esc(levelLabel)}</div>
+    <div class="cover-level-badge">${esc(getSkillLevelLabel(overall))}</div>
     <div class="cover-meta">Assessment Date: ${esc(assessmentDate)}</div>
     <div class="cover-divider"></div>
     <div class="cover-tagline">
@@ -1077,7 +1079,7 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
 
     const overview =
         `Your resilience profile reflects ${overall >= 70 ? 'a strong and integrated' : overall >= 50 ? 'a growing and promising' : 'an emerging and developing'} capacity ` +
-        `to navigate life's challenges. With an overall score of ${overall}% (${levelLabel}), ` +
+        `to navigate life's challenges. With ${getSkillLevelLabel(overall)} across your dimensions, ` +
         `you demonstrate particular strength in ${esc(topMeta.label)} — ${topMeta.tagline.toLowerCase()}. ` +
         `Your profile suggests that ${truncateWords(domMeta.whatItMeans[overall >= 70 ? 'strong' : 'developing'], 160)}...`;
 
@@ -1091,12 +1093,12 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
 
     <div class="stat-grid">
         <div class="stat-box">
-            <div class="stat-number" style="color:#6366f1;">${overall}%</div>
-            <div class="stat-label">Overall Score</div>
+            <div class="stat-number" style="color:#6366f1;font-size:18pt;">${esc(getSkillLevelIcon(overall))} ${esc(getSkillLevelLabel(overall))}</div>
+            <div class="stat-label">Resilience Landscape</div>
         </div>
         <div class="stat-box">
             <div class="stat-number" style="color:${topMeta.color};font-size:14pt;">${esc(topMeta.shortLabel)}</div>
-            <div class="stat-label">Top Strength</div>
+            <div class="stat-label">🌟 Your Anchor Dimension</div>
         </div>
         <div class="stat-box">
             <div class="stat-number" style="color:#64748b;">${pct}th</div>
@@ -1110,28 +1112,28 @@ function page2ExecutiveSummary(overall, dominantType, scores) {
     </div>
 
     <div class="content-block">
-        <div class="content-label">Your Resilience Profile</div>
+        <div class="content-label">Your Resilience Landscape</div>
         <p>${overview}</p>
         <p>Across the six dimensions assessed, your profile reveals a distinctive combination of strengths and growth opportunities.
-        Your top strength in <strong>${esc(topMeta.label)}</strong> (${top.score.toFixed(0)}%) provides a foundation you can leverage across life domains.
-        Your greatest growth opportunity lies in <strong>${esc(bottomMeta.label)}</strong> (${bottom.score.toFixed(0)}%), where focused practice can
+        Your anchor strength in <strong>${esc(topMeta.label)}</strong> (${esc(getSkillLevelIcon(top.score))} ${esc(getSkillLevelLabel(top.score))}) provides a foundation you can leverage across life domains.
+        Your greatest growth edge lies in <strong>${esc(bottomMeta.label)}</strong> (${esc(getSkillLevelIcon(bottom.score))} ${esc(getSkillLevelLabel(bottom.score))}), where focused practice can
         yield significant returns in overall resilience.</p>
     </div>
 
     <div class="two-col">
         <div>
-            <div class="content-label">Key Strengths Identified</div>
+            <div class="content-label">🌟 Anchor Strengths</div>
             <ul>
                 ${ranked.slice(0, 3).map(r =>
-                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
+                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${esc(getSkillLevelIcon(r.score))} ${esc(getSkillLevelLabel(r.score))}</li>`
                 ).join('')}
             </ul>
         </div>
         <div>
-            <div class="content-label">Primary Growth Areas</div>
+            <div class="content-label">⚡ Growth Edges</div>
             <ul>
                 ${ranked.slice(-3).reverse().map(r =>
-                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${r.score.toFixed(0)}% — ${esc(getScoreLevelLabel(r.score))}</li>`
+                    `<li><strong>${esc(DIMENSION_META[r.dimension].shortLabel)}:</strong> ${esc(getSkillLevelIcon(r.score))} ${esc(getSkillLevelLabel(r.score))}</li>`
                 ).join('')}
             </ul>
         </div>
@@ -1170,10 +1172,12 @@ function page3RadarChart(scores) {
     <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:8px;">
         ${DIMENSIONS.map(d => {
             const meta = DIMENSION_META[d];
-            const pct = scores[d] ? scores[d].percentage.toFixed(0) : 0;
+            const score = scores[d] ? scores[d].percentage : 0;
+            const skillLevel = getSkillLevelLabel(score);
+            const skillIcon = getSkillLevelIcon(score);
             return `<div style="display:flex;align-items:center;gap:5px;">
                 <div style="width:10px;height:10px;border-radius:50%;background:${meta.color};"></div>
-                <span style="font-size:8pt;color:#475569;">${esc(meta.shortLabel)}: <strong>${pct}%</strong></span>
+                <span style="font-size:8pt;color:#475569;">${esc(meta.shortLabel)}: <strong>${skillIcon} ${esc(skillLevel)}</strong></span>
             </div>`;
         }).join('')}
     </div>
@@ -1195,16 +1199,15 @@ function page4DimensionCards(scores) {
 
     ${ranked.map(({ dimension, score }) => {
         const meta = DIMENSION_META[dimension];
-        const level = getScoreLevelLabel(score);
-        const pct = score.toFixed(0);
+        const skillLevel = getSkillLevelLabel(score);
+        const skillIcon = getSkillLevelIcon(score);
         return `
 <div class="dim-card" style="background:${meta.lightColor};border-color:${meta.borderColor};">
     <div class="dim-card-header">
         <span style="font-size:16pt;">${meta.icon}</span>
         <span class="dim-card-title" style="flex:1;padding-left:8px;color:${meta.color};">${esc(meta.label)}</span>
-        <span class="dim-card-pct" style="color:${meta.color};">${pct}%</span>
+        <span class="dim-card-skill-badge" style="color:${meta.color};border:1px solid ${meta.borderColor};padding:2px 8px;border-radius:12px;font-size:8.5pt;font-weight:600;">${skillIcon} ${esc(skillLevel)}</span>
     </div>
-    <span class="dim-card-level" style="color:${meta.color};border:1px solid ${meta.borderColor};">${esc(level)}</span>
     <div class="progress-bar">
         <div class="progress-fill" style="width:${Math.min(score, 100)}%;background:${meta.color};"></div>
     </div>
@@ -1234,12 +1237,10 @@ function pageDimensionDeepDive(dimension, scores, pageNum) {
         <div class="dim-hero-top">
             <span class="dim-hero-icon">${meta.icon}</span>
             <span class="dim-hero-name">${esc(meta.label)}</span>
-            <span class="dim-hero-score">${score.toFixed(0)}%</span>
+            <span class="dim-hero-skill-badge" style="background:rgba(255,255,255,0.2);border-radius:12px;padding:3px 12px;font-size:9pt;font-weight:700;">${getSkillLevelIcon(score)} ${esc(getSkillLevelLabel(score))}</span>
         </div>
+        <div class="dim-hero-description" style="font-size:8.5pt;color:rgba(255,255,255,0.9);margin-top:4px;">${esc(getSkillLevelDescription(score))}</div>
         <div class="dim-hero-tagline">${esc(meta.tagline)}</div>
-        <div style="margin-top:6px;">
-            <span style="background:rgba(255,255,255,0.2);border-radius:12px;padding:2px 10px;font-size:8pt;font-weight:600;">${esc(levelLabel)}</span>
-        </div>
     </div>
 
     <div class="two-col" style="margin-bottom:9px;">
@@ -1337,7 +1338,7 @@ function page11StrengthIntegration(scores, dominantType) {
     <p style="font-size:9pt;">${esc(s.desc)}</p>
 </div>`).join('')}
 
-    <div class="content-label" style="margin-top:8px;">Potential Gaps — Where Growth Unlocks More</div>
+    <div class="content-label" style="margin-top:8px;">⚡ Your Growth Edges — Where Growth Unlocks More</div>
     ${gaps.map(g => `
 <div class="stress-card" style="background:${DIMENSION_META[g.dimension]?.lightColor};border-color:${DIMENSION_META[g.dimension]?.borderColor};">
     <h4 style="color:${DIMENSION_META[g.dimension]?.color};">${DIMENSION_META[g.dimension]?.icon} ${esc(DIMENSION_META[g.dimension]?.label)}</h4>
@@ -1346,15 +1347,14 @@ function page11StrengthIntegration(scores, dominantType) {
 
     <div class="content-label" style="margin-top:8px;">Your Resilience Blueprint</div>
     <table>
-        <thead><tr><th>Dimension</th><th>Score</th><th>Level</th><th>Role in Your Profile</th></tr></thead>
+        <thead><tr><th>Dimension</th><th>Skill Level</th><th>Role in Your Profile</th></tr></thead>
         <tbody>
         ${ranked.map(({ dimension, score }, i) => {
             const meta = DIMENSION_META[dimension];
-            const role = i === 0 ? 'Primary Anchor' : i === 1 ? 'Secondary Strength' : i <= 2 ? 'Supporting Capacity' : i >= ranked.length - 2 ? 'Growth Opportunity' : 'Developing Area';
+            const role = i === 0 ? '🌟 Your Anchor Dimension' : i === 1 ? 'Secondary Strength' : i <= 2 ? 'Supporting Capacity' : i >= ranked.length - 2 ? '⚡ Growth Edge' : 'Developing Area';
             return `<tr>
                 <td><span style="color:${meta.color};font-weight:600;">${meta.icon} ${esc(meta.shortLabel)}</span></td>
-                <td><strong>${score.toFixed(0)}%</strong></td>
-                <td>${esc(getScoreLevelLabel(score))}</td>
+                <td>${esc(getSkillLevelIcon(score))} ${esc(getSkillLevelLabel(score))}</td>
                 <td style="font-size:8.5pt;">${esc(role)}</td>
             </tr>`;
         }).join('')}
@@ -1389,13 +1389,13 @@ function page12ActionPlan(scores, dominantType) {
 
     ${weekFocus.map(({ dimension }, i) => {
         const meta = DIMENSION_META[dimension];
-        const pct = scores[dimension] ? scores[dimension].percentage.toFixed(0) : 0;
+        const score = scores[dimension] ? scores[dimension].percentage : 0;
         const weekLabels = ['Foundation Week', 'Growth Week', 'Integration Week', 'Expansion Week'];
         return `
 <div class="week-block" style="background:${meta.lightColor};border-color:${meta.borderColor};border-left:4px solid ${meta.color};">
     <div class="week-number" style="background:${meta.color};">Week ${i + 1}</div>
     <div class="week-content">
-        <strong style="color:${meta.color};">${weekLabels[i]}: ${esc(meta.label)}</strong> (${pct}%)<br>
+        <strong style="color:${meta.color};">${weekLabels[i]}: ${esc(meta.label)}</strong> (${getSkillLevelIcon(score)} ${esc(getSkillLevelLabel(score))})<br>
         ${esc(meta.thirtyDayPlan[i])}
         <div style="margin-top:5px;font-style:italic;font-size:8.5pt;color:#64748b;">
             Daily Practice: ${esc(truncateWords(meta.microPractice, 120))}
@@ -1450,8 +1450,8 @@ function page13Benchmarking(overall, dominantType, scores) {
                 <div class="stat-number" style="font-size:28pt;">${pct}th</div>
                 <div class="stat-label">Percentile</div>
                 <p style="margin-top:8px;font-size:8.5pt;color:#475569;">
-                    Your overall score of ${overall}% places you in the ${pct}th percentile of assessed individuals,
-                    suggesting ${pct >= 70 ? 'above-average' : pct >= 40 ? 'average' : 'developing'} resilience capacity
+                    Your resilience places you in the ${pct}th percentile of assessed individuals,
+                    reflecting ${pct >= 70 ? 'above-average' : pct >= 40 ? 'average' : 'developing'} resilience capacity
                     relative to the general population.
                 </p>
             </div>
@@ -1468,16 +1468,16 @@ function page13Benchmarking(overall, dominantType, scores) {
 
     <div class="content-label">Dimension-by-Dimension Context</div>
     <table>
-        <thead><tr><th>Dimension</th><th>Your Score</th><th>Approx. Percentile</th><th>General Interpretation</th></tr></thead>
+        <thead><tr><th>Dimension</th><th>Skill Level</th><th>Approx. Percentile</th><th>General Interpretation</th></tr></thead>
         <tbody>
         ${ranked.map(({ dimension, score }) => {
             const meta = DIMENSION_META[dimension];
             const dimPct = getPercentile(score);
             return `<tr>
                 <td><span style="color:${meta.color};font-weight:600;">${meta.icon} ${esc(meta.shortLabel)}</span></td>
-                <td><strong>${score.toFixed(0)}%</strong></td>
+                <td>${esc(getSkillLevelIcon(score))} ${esc(getSkillLevelLabel(score))}</td>
                 <td>${dimPct}th</td>
-                <td style="font-size:8.5pt;">${esc(getScoreLevelLabel(score))} — ${esc(meta.tagline.split(' & ')[0])}</td>
+                <td style="font-size:8.5pt;">${esc(getSkillLevelLabel(score))} — ${esc(meta.tagline.split(' & ')[0])}</td>
             </tr>`;
         }).join('')}
         </tbody>
@@ -1490,7 +1490,7 @@ function page13Benchmarking(overall, dominantType, scores) {
     </div>
 
     <div class="content-label" style="margin-top:8px;">What the Research Says</div>
-    <p>Studies in positive psychology and resilience science suggest that overall resilience scores above 70% are associated
+    <p>Studies in positive psychology and resilience science suggest that well-developed resilience skills are associated
     with lower rates of burnout, faster recovery from adversity, and higher reported life satisfaction.
     The six dimensions in this assessment align with well-established frameworks including positive psychology,
     somatic therapy, attachment theory, and cognitive-behavioral approaches.</p>

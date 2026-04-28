@@ -16,6 +16,7 @@
  */
 
 const { COLORS, DIMENSION_COLORS, progressBar, ctaButton, wrapEmail } = require('./base');
+const { getSkillLevelLabel, getSkillLevelIcon, getSkillLevelColor } = require('../../utils/skillLevels');
 
 const APP_URL = process.env.APP_URL || 'https://resilience-atlas.app';
 
@@ -35,14 +36,11 @@ function normalizeScore(val) {
 }
 
 /**
- * Score badge color helper.
+ * Skill badge color helper — uses skill level brand colors.
  * @param {number} score
  */
-function scoreBadgeColor(score) {
-  if (score >= 80) return COLORS.success;
-  if (score >= 60) return COLORS.primary;
-  if (score >= 40) return COLORS.gold;
-  return '#e74c3c';
+function skillBadgeColor(score) {
+  return getSkillLevelColor(score);
 }
 
 /**
@@ -73,27 +71,46 @@ function buildAssessmentResultsEmail(vars) {
     unsubscribeUrl,
   } = vars;
 
-  const badgeColor = scoreBadgeColor(overallScore);
+  const overallSkillLabel = getSkillLevelLabel(overallScore);
+  const overallSkillIcon = getSkillLevelIcon(overallScore);
+  const badgeColor = skillBadgeColor(overallScore);
   const top3 = topDimensions(scores);
 
   const dimensionRows = Object.entries(scores)
     .map(([dim, val]) => {
       const score = normalizeScore(val);
-      const color = DIMENSION_COLORS[dim] || COLORS.primary;
+      const color = getSkillLevelColor(score);
       const label = dim.charAt(0).toUpperCase() + dim.slice(1);
-      return progressBar(label, score, color);
+      const skillLabel = getSkillLevelLabel(score);
+      const skillIcon = getSkillLevelIcon(score);
+      // Build a skill-badge row instead of a progress bar with percentage
+      return `
+        <tr>
+          <td style="padding: 6px 0; font-size: 13px; color: ${COLORS.text}; font-weight: 500;">
+            ${label}
+          </td>
+          <td style="padding: 6px 0; text-align: right;">
+            <span style="background: ${color}18; border: 1px solid ${color}50; border-radius: 12px;
+                         padding: 3px 10px; font-size: 12px; font-weight: 600; color: ${color};">
+              ${skillIcon} ${skillLabel}
+            </span>
+          </td>
+        </tr>`;
     })
     .join('');
 
   const top3Cards = top3
     .map(([dim, score]) => {
-      const color = DIMENSION_COLORS[dim] || COLORS.primary;
+      const color = getSkillLevelColor(score);
       const label = dim.charAt(0).toUpperCase() + dim.slice(1);
+      const skillLabel = getSkillLevelLabel(score);
+      const skillIcon = getSkillLevelIcon(score);
       return `
         <td style="width: 33%; padding: 0 6px; vertical-align: top;">
           <div style="background: ${color}15; border: 1px solid ${color}40; border-radius: 10px;
                       padding: 16px 12px; text-align: center;">
-            <p style="margin: 0 0 4px; font-size: 22px; font-weight: 800; color: ${color};">${Math.round(score)}%</p>
+            <p style="margin: 0 0 4px; font-size: 22px; line-height: 1;">${skillIcon}</p>
+            <p style="margin: 0 0 4px; font-size: 13px; font-weight: 800; color: ${color};">${skillLabel}</p>
             <p style="margin: 0; font-size: 12px; font-weight: 600; color: ${COLORS.text};">${label}</p>
           </div>
         </td>`;
@@ -118,19 +135,24 @@ function buildAssessmentResultsEmail(vars) {
       Completed on ${assessmentDate}
     </p>
 
-    <!-- Overall score badge -->
+    <!-- Resilience Landscape section -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
       <tr>
         <td style="background: ${badgeColor}15; border: 2px solid ${badgeColor}; border-radius: 12px;
                     padding: 24px; text-align: center;">
           <p style="margin: 0; font-size: 13px; font-weight: 600; color: ${COLORS.textMuted}; text-transform: uppercase; letter-spacing: 1px;">
-            Overall Resilience Score
+            Your Resilience Landscape
           </p>
-          <p style="margin: 8px 0 4px; font-size: 56px; font-weight: 900; color: ${badgeColor}; line-height: 1;">
-            ${Math.round(overallScore)}%
+          <p style="margin: 8px 0 4px; font-size: 48px; line-height: 1;">${overallSkillIcon}</p>
+          <p style="margin: 4px 0; font-size: 22px; font-weight: 900; color: ${badgeColor}; line-height: 1.2;">
+            ${overallSkillLabel}
           </p>
-          <p style="margin: 0; font-size: 14px; color: ${COLORS.text}; font-weight: 600;">
-            Dominant Dimension: <span style="color: ${badgeColor};">${dominantDimension}</span>
+          <p style="margin: 8px 0 0; font-size: 13px; color: ${COLORS.text}; font-weight: 500;">
+            Your resilience isn&apos;t a fixed number &mdash; it&apos;s a living pattern of capacities<br>
+            you&apos;re actively building across all dimensions.
+          </p>
+          <p style="margin: 8px 0 0; font-size: 14px; color: ${COLORS.text}; font-weight: 600;">
+            &#127775; Anchor Dimension: <span style="color: ${badgeColor};">${dominantDimension}</span>
           </p>
         </td>
       </tr>
@@ -138,7 +160,7 @@ function buildAssessmentResultsEmail(vars) {
 
     <!-- Top 3 dimensions -->
     <h3 style="margin: 0 0 12px; font-size: 16px; color: ${COLORS.text};">
-      &#9733; Your Top 3 Dimensions
+      &#127775; Your Top 3 Developed Skills
     </h3>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
       <tr style="margin: 0 -6px;">${top3Cards}</tr>
@@ -147,9 +169,9 @@ function buildAssessmentResultsEmail(vars) {
     <!-- Key insight -->
     ${insightBlock}
 
-    <!-- All dimension scores -->
+    <!-- All dimension skill levels -->
     <h3 style="margin: 0 0 12px; font-size: 16px; color: ${COLORS.text};">
-      &#128200; Full Dimension Breakdown
+      &#128200; Your Full Skills Landscape
     </h3>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
       ${dimensionRows}
@@ -172,7 +194,7 @@ function buildAssessmentResultsEmail(vars) {
     </p>`;
 
   return {
-    subject: `Your Resilience Assessment Results — ${Math.round(overallScore)}% Overall`,
+    subject: `Your Resilience Assessment: ${overallSkillLabel} — ${dominantDimension} is Your Anchor`,
     html: wrapEmail(body, 'Your Assessment Results', unsubscribeUrl),
     text: buildPlainText(vars),
   };
@@ -180,19 +202,27 @@ function buildAssessmentResultsEmail(vars) {
 
 function buildPlainText(vars) {
   const { firstName, overallScore, dominantDimension, scores, topInsight, reportLink, retakeLink } = vars;
+  const overallSkillLabel = getSkillLevelLabel(overallScore || 0);
+  const overallSkillIcon = getSkillLevelIcon(overallScore || 0);
   const lines = [
     'The Resilience Atlas™ — Assessment Results',
     '==========================================',
     '',
     `Hello, ${firstName || 'Friend'}!`,
     '',
-    `Overall Resilience Score: ${Math.round(overallScore || 0)}%`,
-    `Dominant Dimension: ${dominantDimension || 'Balanced'}`,
+    `Your Resilience Landscape: ${overallSkillIcon} ${overallSkillLabel}`,
+    `Your Anchor Dimension: ${dominantDimension || 'Balanced'}`,
     '',
-    'Dimension Breakdown:',
+    `Your resilience isn't a fixed number — it's a living pattern of capacities`,
+    `you're actively building across all dimensions.`,
+    '',
+    'Your Full Skills Landscape:',
   ];
   Object.entries(scores || {}).forEach(([dim, val]) => {
-    lines.push(`  ${dim.charAt(0).toUpperCase() + dim.slice(1)}: ${Math.round(normalizeScore(val))}%`);
+    const score = normalizeScore(val);
+    const skillLabel = getSkillLevelLabel(score);
+    const skillIcon = getSkillLevelIcon(score);
+    lines.push(`  ${skillIcon} ${dim.charAt(0).toUpperCase() + dim.slice(1)}: ${skillLabel}`);
   });
   if (topInsight) { lines.push('', `Key Insight: ${topInsight}`); }
   lines.push(

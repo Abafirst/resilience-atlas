@@ -76,9 +76,9 @@ describe('Email templates — buildAssessmentResultsEmail', () => {
     expect(result).toHaveProperty('text');
   });
 
-  it('includes the overall score in subject', () => {
+  it('includes the skill level in subject', () => {
     const { subject } = buildAssessmentResultsEmail(vars);
-    expect(subject).toContain('78%');
+    expect(subject).toContain('Developed Skill');
   });
 
   it('includes the first name in html', () => {
@@ -131,8 +131,9 @@ describe('Email templates — buildAssessmentResultsEmail', () => {
     const { html, text } = buildAssessmentResultsEmail(spaVars);
     expect(html).not.toContain('NaN');
     expect(text).not.toContain('NaN');
-    expect(html).toContain('78%');
-    expect(text).toContain('78%');
+    // skill-based: shows "Developed Skill" or "Building Skill", not raw percentage
+    expect(html).toContain('Developed Skill');
+    expect(text).toContain('Developed Skill');
   });
 
   it('defaults to 0% for invalid/missing score values', () => {

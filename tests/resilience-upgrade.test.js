@@ -343,7 +343,7 @@ describe('reportService', () => {
         const text = generateNarrativeReport(sampleScores);
         expect(typeof text).toBe('string');
         expect(text.length).toBeGreaterThan(50);
-        expect(text).toContain('Overall Resilience Score');
+        expect(text).toContain('Your Resilience Landscape');
     });
 
     test('generatePDFReport returns a Buffer', async () => {

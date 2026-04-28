@@ -6,6 +6,7 @@ const { generateReport } = require('../scoring');
 const logger = require('../utils/logger');
 const { DIMENSION_CONTENT, getScoreBand, calculatePercentile, getLevel } = require('../templates/dimensionContent');
 const { assignArchetype, generateStressResponseProfile, generateRelationshipInsights } = require('../templates/archetypes');
+const { getSkillLevelLabel, getSkillLevelIcon } = require('../utils/skillLevels');
 
 /**
  * Build a deterministic SHA-256 hash from quiz scores.
@@ -30,13 +31,16 @@ function buildResultsHash(scores) {
 function generateNarrativeReport(scores) {
     const report = generateReport(scores);
 
+    const overallLevel = getSkillLevelLabel(report.overall);
     const lines = [
         `The Resilience Atlas™ — Personal Report`,
         `=====================================`,
         ``,
-        `Overall Resilience Score: ${report.overall}%`,
-        `Level: ${report.level}`,
-        `Dominant Type: ${report.dominantType}`,
+        `Your Resilience Landscape: ${overallLevel}`,
+        `Primary Strength: ${report.dominantType}`,
+        ``,
+        `You have developed skills across multiple dimensions. Your resilience isn't a`,
+        `fixed number — it's a living pattern of capacities you're actively building.`,
         ``,
         `Summary`,
         `-------`,
@@ -48,8 +52,13 @@ function generateNarrativeReport(scores) {
 
     for (const [category, data] of Object.entries(report.categories)) {
         const label = category.charAt(0).toUpperCase() + category.slice(1);
-        lines.push(`${label}: ${data.percentage}% — ${data.level}`);
-        if (data.recommendation) {
+        // categories may be a plain number (from scoring.generateReport) or
+        // an object with a .percentage property (from buildComprehensiveReport)
+        const pct = typeof data === 'object' && data !== null ? (data.percentage || 0) : (data || 0);
+        const skillLevel = getSkillLevelLabel(pct);
+        const icon = getSkillLevelIcon(pct);
+        lines.push(`${icon} ${label}: ${skillLevel}`);
+        if (data && data.recommendation) {
             lines.push(`  ↳ ${data.recommendation}`);
         }
     }
@@ -84,9 +93,8 @@ function generatePDFReport(scores, username) {
             doc.text(`Date: ${new Date().toLocaleDateString()}`);
             doc.moveDown();
 
-            doc.fontSize(14).font('Helvetica-Bold').text(`Overall Score: ${report.overall}%`);
-            doc.fontSize(12).font('Helvetica').text(`Level: ${report.level}`);
-            doc.text(`Dominant Type: ${report.dominantType}`);
+            doc.fontSize(14).font('Helvetica-Bold').text(`Your Resilience Landscape: ${getSkillLevelLabel(report.overall)}`);
+            doc.fontSize(12).font('Helvetica').text(`Primary Strength: ${report.dominantType}`);
             doc.moveDown();
 
             // Summary
@@ -100,8 +108,13 @@ function generatePDFReport(scores, username) {
 
             for (const [category, data] of Object.entries(report.categories)) {
                 const label = category.charAt(0).toUpperCase() + category.slice(1);
-                doc.fontSize(11).font('Helvetica-Bold').text(`${label}: ${data.percentage}%  (${data.level})`);
-                if (data.recommendation) {
+                // categories may be a plain number (from scoring.generateReport) or
+                // an object with a .percentage property (from buildComprehensiveReport)
+                const pct = typeof data === 'object' && data !== null ? (data.percentage || 0) : (data || 0);
+                const skillLevel = getSkillLevelLabel(pct);
+                const icon = getSkillLevelIcon(pct);
+                doc.fontSize(11).font('Helvetica-Bold').text(`${icon} ${label}: ${skillLevel}`);
+                if (data && data.recommendation) {
                     doc.fontSize(10).font('Helvetica').text(`   ${data.recommendation}`, { lineGap: 2 });
                 }
                 doc.moveDown(0.3);
