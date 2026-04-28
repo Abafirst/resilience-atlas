@@ -368,7 +368,7 @@ export default function CertificatePrinter({ earnedCertificates = [] }) {
         >
           <div className="cert-doc">
             <img src="/icons/trophy.svg" alt="" className="cert-doc-seal" />
-            <p className="cert-doc-org">The Resilience Atlas — IATLAS Kids Program</p>
+            <p className="cert-doc-org">The Resilience Atlas™ — IATLAS Kids Program</p>
             <h1 className="cert-doc-title">Certificate of Achievement</h1>
             <p className="cert-doc-subtitle">{activeCert.name}</p>
 
@@ -387,6 +387,20 @@ export default function CertificatePrinter({ earnedCertificates = [] }) {
             </p>
 
             <p className="cert-doc-date">Date: {today}</p>
+
+            <div style={{
+              borderTop: '1px solid #e2e8f0',
+              paddingTop: '.75rem',
+              marginTop: '1.5rem',
+              fontSize: '.72rem',
+              color: '#94a3b8',
+              textAlign: 'center',
+              lineHeight: 1.6,
+            }}>
+              <span style={{ fontWeight: 700 }}>The Resilience Atlas™ — IATLAS Kids Curriculum</span><br />
+              © 2026 The Resilience Atlas™ — a trademark of Janeen Molchany Ph.D., BCBA<br />
+              <em>For educational use only. Not a clinical or diagnostic tool.</em>
+            </div>
           </div>
         </div>
       )}

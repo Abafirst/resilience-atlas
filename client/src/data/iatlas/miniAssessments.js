@@ -37,7 +37,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'ea-prac-1',
@@ -103,7 +103,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'ag-prac-1',
@@ -169,7 +169,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'sr-prac-1',
@@ -235,7 +235,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'cn-prac-1',
@@ -301,7 +301,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'rc-prac-1',
@@ -367,7 +367,7 @@ export const MINI_ASSESSMENTS = {
       ],
     },
     practitionerVersion: {
-      instructions: 'Rate the client on the following observable behaviours over the past week:',
+      instructions: 'Rate the client on the following observable behaviors over the past week:',
       questions: [
         {
           id: 'se-prac-1',

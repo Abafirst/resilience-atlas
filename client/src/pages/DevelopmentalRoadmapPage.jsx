@@ -10,6 +10,7 @@ import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import DevelopmentalRoadmap from '../components/IATLAS/DevelopmentalRoadmap.jsx';
 import DevelopmentalWheel from '../components/IATLAS/DevelopmentalWheel.jsx';
+import PrintableFooter from '../components/IATLAS/PrintableFooter.jsx';
 import '../styles/developmentalWheel.css';
 
 const PAGE_STYLES = `
@@ -261,6 +262,9 @@ export default function DevelopmentalRoadmapPage() {
             <Link to="/iatlas/kids" className="drp-btn-secondary"><img src="/icons/kids-spark.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Back to Kids Curriculum
             </Link>
           </div>
+
+          {/* Trademark footer */}
+          <PrintableFooter />
 
         </div>
       </main>

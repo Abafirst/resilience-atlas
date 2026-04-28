@@ -91,11 +91,23 @@ const PRINT_BASE_CSS = `
   }
   .iatlas-footer {
     margin-top: 48px;
-    padding-top: 10px;
-    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+    border-top: 2px solid #e2e8f0;
     font-size: 8.5pt;
-    color: #94a3b8;
+    color: #64748b;
     text-align: center;
+    line-height: 1.7;
+  }
+  .iatlas-footer strong {
+    font-size: 9pt;
+    color: #475569;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .iatlas-footer em {
+    font-style: italic;
+    display: block;
+    margin-top: 2px;
   }
   table {
     width: 100%;
@@ -230,7 +242,9 @@ function buildActivityHTML(data, opts) {
   ${trackerHTML}
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 &nbsp;|&nbsp; Generated on ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>
@@ -357,7 +371,9 @@ function buildSessionPlanHTML(plan, opts) {
   </div>
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 Clinical &nbsp;|&nbsp; ${esc(sessionLabel)} &nbsp;|&nbsp; Generated ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>
@@ -449,7 +465,9 @@ function buildFamilyReportHTML(data, opts) {
   </div>
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 &nbsp;|&nbsp; Family Progress Report &nbsp;|&nbsp; Generated ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>
@@ -529,7 +547,9 @@ function buildProgressReportHTML(data, opts) {
   </div>
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 &nbsp;|&nbsp; Analytics Report &nbsp;|&nbsp; Generated ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>
@@ -593,7 +613,9 @@ function buildProtocolHTML(protocol, opts) {
   </div>
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 Clinical &nbsp;|&nbsp; ABA Protocol Library &nbsp;|&nbsp; Generated ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>
@@ -642,7 +664,9 @@ function buildBulkProtocolsHTML(protocols, opts) {
   `).join('')}
 
   <div class="iatlas-footer">
-    Resilience Atlas\u2122 &nbsp;|&nbsp; ABA Protocol Library &nbsp;|&nbsp; Generated ${currentDateStr()} &nbsp;|&nbsp; ${esc(headerText)}
+    <strong>The Resilience Atlas&trade; &mdash; IATLAS Kids Curriculum</strong><br>
+    &copy; 2026 The Resilience Atlas&trade; &mdash; a trademark of Janeen Molchany Ph.D., BCBA<br>
+    <em>For educational use only. Not a clinical or diagnostic tool.</em>
   </div>
 
   <script>window.onload = function(){ window.print(); }<\/script>

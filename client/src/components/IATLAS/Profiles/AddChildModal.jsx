@@ -69,7 +69,7 @@ const COMMON_GOALS = [
   'Develop communication skills',
   'Strengthen academic skills',
   'Increase independence',
-  'Reduce challenging behaviour',
+  'Reduce challenging behavior',
   'Build self-confidence',
   'Improve motor skills',
 ];
