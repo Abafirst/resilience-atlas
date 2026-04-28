@@ -336,7 +336,7 @@ function buildJourneyMapPage(doc, report) {
     const landscapeLevel = getSkillLevelLabel(overallNum);
     statTile(doc, 'Resilience Foundation', landscapeLevel, PAGE_MARGIN, tileY, tileW - 3);
     statTile(doc, 'Anchor Dimension', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1), tileY, tileW - 3);
-    statTile(doc, 'Growth Edge', bottomDim, PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
+    statTile(doc, 'Growth Frontier', bottomDim, PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
     statTile(doc, 'Your Archetype', getSkillLevelIcon(overallNum), PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
     doc.y = tileY + 58;
 
@@ -344,7 +344,7 @@ function buildJourneyMapPage(doc, report) {
     ensureSpace(doc, 40);
     subHeader(doc, 'WAYPOINTS ON YOUR RESILIENCE MAP');
     doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
-        'Six territories of resilience form your complete inner landscape. Each holds unique strengths and growth edges \u2014 together they define your resilience identity and navigation approach to life\'s challenges.',
+        'Six territories of resilience form your complete inner landscape. Each holds unique strengths and growth frontiers \u2014 together they define your resilience identity and navigation approach to life\'s challenges.',
         PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
     );
     fillColor(doc, COLORS.text);
@@ -438,7 +438,7 @@ function buildDashboardPage(doc, report) {
     const levels = [
         { icon: '🌟', label: 'Developed Skill', desc: 'Your anchor \u2014 naturally drawn on under pressure' },
         { icon: '🌱', label: 'Building Skill', desc: 'Actively strengthening \u2014 consistent practice is showing' },
-        { icon: '⚡', label: 'Foundational Skill', desc: 'Your growth edge \u2014 fertile ground for development' },
+        { icon: '⚡', label: 'Foundational Skill', desc: 'Your growth frontier \u2014 fertile ground for development' },
     ];
 
     const legColW = (CONTENT_WIDTH - 12) / 2;
@@ -676,7 +676,7 @@ function buildStrengthIntegrationPage(doc, report) {
 
     if (si.gaps && si.gaps.length > 0) {
         ensureSpace(doc, 40);
-        subHeader(doc, 'GROWTH EDGES TO CHART NEXT', COLORS.warning);
+        subHeader(doc, 'GROWTH FRONTIERS TO CHART NEXT', COLORS.warning);
         for (const g of si.gaps) { bullet(doc, g); }
         doc.y += 8;
     }
@@ -1026,7 +1026,7 @@ function buildResourcesPage(doc, report) {
     sectionHeader(doc, 'YOUR NAVIGATION TOOLKIT \u2014 PERSONALIZED RESOURCES', COLORS.primary);
 
     doc.fontSize(9).font('Helvetica').fillColor(COLORS.textMid).text(
-        'These resources have been curated based on your growth-edge dimensions \u2014 the territories with the most potential on your map. One resource from each category, committed to for 30 days, creates significant change.',
+        'These resources have been curated based on your growth-frontier dimensions \u2014 the territories with the most potential on your map. One resource from each category, committed to for 30 days, creates significant change.',
         PAGE_MARGIN, doc.y, { width: CONTENT_WIDTH, lineGap: 2 }
     );
     fillColor(doc, COLORS.text);
