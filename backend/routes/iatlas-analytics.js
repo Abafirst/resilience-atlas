@@ -91,16 +91,26 @@ function buildDimensionTrend(completedActivities, since) {
     'spiritual-existential',
   ];
 
+  /**
+   * Return an ISO 8601 week string ('YYYY-Www') for a given date.
+   * Week 1 is the week containing the first Thursday of the year.
+   */
+  function isoWeekKey(d) {
+    // Set to the nearest Thursday so that the year is correct
+    const thursday = new Date(d.getTime());
+    thursday.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+    const yearStart = new Date(thursday.getFullYear(), 0, 1);
+    const weekNum   = Math.ceil(((thursday - yearStart) / 86400000 + 1) / 7);
+    return `${thursday.getFullYear()}-W${String(weekNum).padStart(2, '0')}`;
+  }
+
   const weekly = {};
 
   for (const activity of completedActivities) {
     const d = new Date(activity.completedAt);
     if (since && d < since) continue;
 
-    // ISO week key: YYYY-Www
-    const monday = new Date(d);
-    monday.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-    const week = `${monday.getFullYear()}-W${String(monday.getMonth() * 4 + Math.ceil(monday.getDate() / 7)).padStart(2, '0')}`;
+    const week = isoWeekKey(d);
 
     if (!weekly[week]) {
       const entry = { week };

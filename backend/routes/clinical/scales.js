@@ -141,7 +141,13 @@ router.get(
       const { clientProfileId, scaleType, limit: limitRaw = '50' } = req.query;
 
       const filter = { practitionerId };
-      if (clientProfileId) filter.clientProfileId = String(clientProfileId).slice(0, 128);
+      if (clientProfileId) {
+        // Sanitize to alphanumeric/hyphens/underscores to prevent NoSQL injection
+        const safeClientId = /^[a-zA-Z0-9_-]{1,128}$/.test(String(clientProfileId))
+          ? String(clientProfileId)
+          : null;
+        if (safeClientId) filter.clientProfileId = safeClientId;
+      }
       if (scaleType && ['PHQ-9', 'GAD-7'].includes(scaleType)) filter.scaleType = scaleType;
 
       const limit = Math.min(100, Math.max(1, parseInt(limitRaw, 10) || 50));

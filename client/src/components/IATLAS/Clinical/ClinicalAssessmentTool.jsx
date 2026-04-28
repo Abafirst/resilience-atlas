@@ -14,7 +14,7 @@
  */
 
 import React, { useState } from 'react';
-import apiFetch, { getAuth0CachedToken } from '../../lib/apiFetch.js';
+import apiFetch, { getAuth0CachedToken } from '../../../lib/apiFetch.js';
 
 // ── Scale definitions ─────────────────────────────────────────────────────────
 
