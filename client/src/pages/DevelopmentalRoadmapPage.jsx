@@ -4,13 +4,15 @@
  * Route: /iatlas/developmental-roadmap
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 import DarkModeHint from '../components/DarkModeHint.jsx';
 import DevelopmentalRoadmap from '../components/IATLAS/DevelopmentalRoadmap.jsx';
 import DevelopmentalWheel from '../components/IATLAS/DevelopmentalWheel.jsx';
 import PrintableFooter from '../components/IATLAS/PrintableFooter.jsx';
+import IATLASUnlockModal from '../components/IATLAS/IATLASUnlockModal.jsx';
+import { hasKidsAccess } from '../utils/iatlasGating.js';
 import '../styles/developmentalWheel.css';
 
 const PAGE_STYLES = `
@@ -187,6 +189,17 @@ const PAGE_STYLES = `
 `;
 
 export default function DevelopmentalRoadmapPage() {
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const hasAccess = hasKidsAccess();
+
+  const handleDownloadClick = (e) => {
+    if (!hasAccess) {
+      e.preventDefault();
+      setShowUnlockModal(true);
+    }
+    // If hasAccess is true, the link proceeds normally
+  };
+
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'instant' : 'smooth' });
@@ -255,6 +268,7 @@ export default function DevelopmentalRoadmapPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="drp-btn-pdf"
+              onClick={handleDownloadClick}
             ><img src="/icons/journal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Download Printable Roadmap (PDF)
             </a>
             <Link to="/iatlas/kids/catalog" className="drp-btn-secondary"><img src="/icons/goal.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Browse Activity Catalog
@@ -268,6 +282,13 @@ export default function DevelopmentalRoadmapPage() {
 
         </div>
       </main>
+
+      {showUnlockModal && (
+        <IATLASUnlockModal
+          variant="kids"
+          onClose={() => setShowUnlockModal(false)}
+        />
+      )}
     </>
   );
 }
