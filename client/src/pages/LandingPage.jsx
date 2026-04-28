@@ -20,6 +20,15 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner story-wrap">
+          {/* Logo */}
+          <div className="hero-logo">
+            <img
+              src="/new-logo/resilience-atlas-logo-v5.svg"
+              alt="Resilience Atlas compass logo"
+              className="hero-logo-image"
+            />
+          </div>
+
           <span className="hero-eyebrow">Over 20 years of professional experience and a lifetime of application</span>
           <h1>Map Your Resilience. Master Your Response.</h1>
           <p className="hero-subheadline">
