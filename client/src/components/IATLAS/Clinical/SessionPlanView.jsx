@@ -21,10 +21,10 @@ const DIMENSION_LABELS = {
 };
 
 const TREND_DISPLAY = {
-  'making-progress': { label: '📈 Making Progress', color: '#059669', bg: '#d1fae5' },
-  flat:              { label: '➡️ Flat',             color: '#d97706', bg: '#fef3c7' },
-  regression:        { label: '📉 Regression',       color: '#dc2626', bg: '#fee2e2' },
-  mastered:          { label: '🏆 Mastered',         color: '#7c3aed', bg: '#ede9fe' },
+  'making-progress': { label: 'Making Progress', color: '#059669', bg: '#d1fae5' },
+  flat:              { label: '➡️ Flat',          color: '#d97706', bg: '#fef3c7' },
+  regression:        { label: 'Regression',       color: '#dc2626', bg: '#fee2e2' },
+  mastered:          { label: 'Mastered',         color: '#7c3aed', bg: '#ede9fe' },
 };
 
 function formatDate(val) {
@@ -41,7 +41,12 @@ function formatDate(val) {
 function Section({ title, children, icon }) {
   return (
     <div className="spv-section">
-      <h3 className="spv-section-title">{icon} {title}</h3>
+      <h3 className="spv-section-title">
+        {typeof icon === 'string' && icon.startsWith('/')
+          ? <img src={icon} alt="" aria-hidden="true" className="icon icon-sm" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} />
+          : icon}{' '}
+        {title}
+      </h3>
       {children}
     </div>
   );
@@ -89,13 +94,13 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
               label="Print Plan"
               variant="secondary"
             />
-            <button className="spv-btn spv-btn--primary" onClick={() => onEdit(plan)}>✏️ Edit</button>
+            <button className="spv-btn spv-btn--primary" onClick={() => onEdit(plan)}><img src="/icons/writing.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Edit</button>
           </div>
         </div>
 
         {/* ── Session Goals ── */}
         {goals.length > 0 && (
-          <Section title="Session Goals" icon="🎯">
+          <Section title="Session Goals" icon="/icons/goal.svg">
             <ul className="spv-list">
               {goals.map((g, i) => <li key={i}>{g}</li>)}
             </ul>
@@ -104,7 +109,7 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
 
         {/* ── Activities Selected ── */}
         {(plan.activitiesSelected || []).length > 0 && (
-          <Section title="Activities / Protocols" icon="📚">
+          <Section title="Activities / Protocols" icon="/icons/journal.svg">
             {plan.activitiesSelected.map((act, i) => (
               <div key={i} className="spv-card">
                 <div className="spv-card-row">
@@ -120,7 +125,7 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
 
         {/* ── Data Collected ── */}
         {(plan.dataCollected || []).length > 0 && (
-          <Section title="Data Collected" icon="📊">
+          <Section title="Data Collected" icon="/icons/org-leaderboards.svg">
             <div className="spv-table-wrap">
               <table className="spv-table">
                 <thead>
@@ -148,7 +153,7 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
 
         {/* ── Progress Toward Objectives ── */}
         {(plan.progressTowardObjectives || []).length > 0 && (
-          <Section title="Progress Toward Objectives" icon="📈">
+          <Section title="Progress Toward Objectives" icon="/icons/leaderboards.svg">
             {plan.progressTowardObjectives.map((obj, i) => {
               const td = obj.trend ? TREND_DISPLAY[obj.trend] : null;
               return (
@@ -170,21 +175,21 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
 
         {/* ── Generalization ── */}
         {plan.generalizationObserved && (
-          <Section title="Generalization Observed" icon="🌐">
+          <Section title="Generalization Observed" icon="/icons/network.svg">
             <p className="spv-text">{plan.generalizationObserved}</p>
           </Section>
         )}
 
         {/* ── Session Notes ── */}
         {plan.sessionNotes && (
-          <Section title="Session Notes" icon="📝">
+          <Section title="Session Notes" icon="/icons/writing.svg">
             <p className="spv-text">{plan.sessionNotes}</p>
           </Section>
         )}
 
         {/* ── Homework Assigned ── */}
         {(plan.homeworkAssigned || []).length > 0 && (
-          <Section title="Homework Assigned" icon="📌">
+          <Section title="Homework Assigned" icon="/icons/planning.svg">
             {plan.homeworkAssigned.map((hw, i) => (
               <div key={i} className="spv-card">
                 <div className="spv-card-row">
@@ -201,14 +206,14 @@ export default function SessionPlanView({ plan, onClose, onEdit }) {
 
         {/* ── Plan for Next Session ── */}
         {plan.planForNextSession && (
-          <Section title="Plan for Next Session" icon="🔮">
+          <Section title="Plan for Next Session" icon="/icons/reflection.svg">
             <p className="spv-text">{plan.planForNextSession}</p>
           </Section>
         )}
 
         {/* ── Clinical Notes ── */}
         {plan.clinicalNotes && (
-          <Section title="Clinical Notes (Private)" icon="🔒">
+          <Section title="Clinical Notes (Private)" icon="/icons/lock.svg">
             <div className="spv-private-box">
               <p className="spv-text">{plan.clinicalNotes}</p>
             </div>

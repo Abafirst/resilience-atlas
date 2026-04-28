@@ -252,7 +252,7 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
         <h1>IATLAS Analytics Report</h1>
         <pre>${text}</pre>
         <button onclick="window.print()" style="margin-top:1rem;padding:.5rem 1rem;background:#6366f1;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">
-          🖨 Print / Save as PDF
+          Print / Save as PDF
         </button>
       </body>
       </html>
@@ -269,7 +269,7 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
 
         {/* CSV Export */}
         <div className="rt-section" role="region" aria-label="CSV Export">
-          <h3 className="rt-section-title">📄 Export Raw Data (CSV)</h3>
+          <h3 className="rt-section-title"><img src="/icons/journal.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Export Raw Data (CSV)</h3>
           <p className="rt-section-desc">
             Download all activity completion records for the selected date range as a CSV file.
             Compatible with Excel, Google Sheets, and other tools.
@@ -281,14 +281,14 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
           </div>
           {csvToast && (
             <div className="rt-toast" role="status" aria-live="polite">
-              <span aria-hidden="true">✅</span> CSV downloaded successfully!
+              <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} /> CSV downloaded successfully!
             </div>
           )}
         </div>
 
         {/* PDF Report */}
         <div className="rt-section" role="region" aria-label="PDF Report">
-          <h3 className="rt-section-title">🖨 Generate PDF Report</h3>
+          <h3 className="rt-section-title"><img src="/icons/print.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Generate PDF Report</h3>
           <p className="rt-section-desc">
             Generate a comprehensive analytics report. Opens a print-friendly page that can be
             saved as a PDF using your browser's print dialog.
@@ -301,15 +301,15 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
               variant="primary"
             />
             <button className="rt-btn rt-btn-primary" onClick={handlePrintReport} aria-label="Quick print report">
-              <span aria-hidden="true">🖨</span> Quick Print
+              <img src="/icons/print.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Quick Print
             </button>
             <button className="rt-btn" onClick={handlePreviewReport} aria-label="Preview report content">
-              <span aria-hidden="true">👁</span> Preview Report
+              <img src="/icons/info.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Preview Report
             </button>
           </div>
           {printToast && (
             <div className="rt-toast" role="status" aria-live="polite">
-              <span aria-hidden="true">✅</span> Report opened in new tab. Use browser print to save as PDF.
+              <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} /> Report opened in new tab. Use browser print to save as PDF.
             </div>
           )}
           {preview && (
@@ -321,7 +321,7 @@ export default function ReportsTab({ profiles = [], rangeKey = '30d' }) {
 
         {/* Quick metrics summary */}
         <div className="rt-section" role="region" aria-label="Summary metrics">
-          <h3 className="rt-section-title">📊 Current Summary</h3>
+          <h3 className="rt-section-title"><img src="/icons/org-leaderboards.svg" aria-hidden="true" className="icon icon-sm" alt="" /> Current Summary</h3>
           <p className="rt-section-desc">Key metrics for the selected date range.</p>
           <table style={{ fontSize: '.85rem', borderCollapse: 'collapse', width: '100%' }} aria-label="Summary metrics table">
             <tbody>

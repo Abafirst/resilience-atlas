@@ -338,7 +338,7 @@ export default function ClinicalAssessmentTool({ clientProfileId, onSaved }) {
 
         {savedResult && (
           <div className="cat-alert cat-alert-success" role="status">
-            ✅ Assessment saved — Score: {savedResult.totalScore} ({savedResult.severityBand?.replace('_', ' ')})
+            <img src="/icons/success.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} /> Assessment saved — Score: {savedResult.totalScore} ({savedResult.severityBand?.replace('_', ' ')})
           </div>
         )}
 
@@ -405,7 +405,7 @@ export default function ClinicalAssessmentTool({ clientProfileId, onSaved }) {
           {/* PHQ-9 item 9 suicidal ideation clinical alert */}
           {showSuicidalWarning && (
             <div className="cat-warning-note" role="alert">
-              ⚠️ <strong>Clinical Note:</strong> The client has endorsed item 9 (suicidal ideation).
+              <img src="/icons/warning.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} /> <strong>Clinical Note:</strong> The client has endorsed item 9 (suicidal ideation).
               Per standard clinical practice, further risk assessment is indicated.
               Follow your organisation's safety protocol.
             </div>

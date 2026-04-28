@@ -203,7 +203,7 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
           padding: '.6rem 1rem', marginBottom: '1.25rem',
           fontSize: '.85rem', color: '#92400e', display: 'flex', alignItems: 'center', gap: '.5rem',
         }} role="status">
-          <span aria-hidden="true">📊</span>
+          <img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" className="icon icon-sm" />
           Showing sample data — add child profiles to see real analytics.
         </div>
       )}
@@ -211,7 +211,7 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
       {/* Metric cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(190px,1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <MetricCard
-          icon="⚡"
+          icon="/icons/strength.svg"
           title="Total XP"
           value={hasSampleMode ? 1250 : totalXP}
           subtitle="experience points earned"
@@ -219,7 +219,7 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
           tooltip="Total XP accumulated across all activities and badges."
         />
         <MetricCard
-          icon="✅"
+          icon="/icons/success.svg"
           title="Activities Completed"
           value={hasSampleMode ? 47 : totalActivities}
           subtitle="across all children"
@@ -227,7 +227,7 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
           tooltip="Total activities completed by all children."
         />
         <MetricCard
-          icon="🏅"
+          icon="/icons/trophy.svg"
           title="Badges Earned"
           value={hasSampleMode ? 8 : totalBadges}
           subtitle="milestone badges unlocked"
@@ -235,7 +235,7 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
           tooltip="Total badge milestones unlocked."
         />
         <MetricCard
-          icon="🔥"
+          icon="/icons/fire.svg"
           title="Current Streak"
           value={hasSampleMode ? 5 : currentStreak}
           subtitle="consecutive active days"
@@ -315,7 +315,13 @@ export default function OverviewTab({ profiles = [], selectedProfileId = 'all', 
                 <span className="ov-milestone-text">
                   <strong>{m.child}</strong> completed&nbsp;
                   <em>{m.label}</em>
-                  {m.stars > 0 && <span aria-label={`${m.stars} stars`}> {'⭐'.repeat(m.stars)}</span>}
+                  {m.stars > 0 && (
+                    <span aria-label={`${m.stars} stars`}>
+                      {' '}{Array.from({ length: m.stars }, (_, i) => (
+                        <img key={i} src="/icons/star.svg" alt="" aria-hidden="true" className="icon icon-sm" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
+                      ))}
+                    </span>
+                  )}
                 </span>
               </div>
             ))

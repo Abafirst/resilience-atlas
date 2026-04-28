@@ -6,7 +6,7 @@
  *   title      {string}  Metric label
  *   value      {string|number}  Primary metric value
  *   subtitle   {string}  Optional secondary text
- *   icon       {string}  Emoji or icon character
+ *   icon       {string}  Icon path (e.g. '/icons/fire.svg') or legacy emoji character
  *   color      {string}  Accent color (CSS color)
  *   trend      {number}  Optional % change (positive = up, negative = down)
  *   tooltip    {string}  Descriptive tooltip text
@@ -131,7 +131,11 @@ export default function MetricCard({ title, value, subtitle, icon, color = '#636
         <div className="mc-accent-bar" style={{ background: color }} aria-hidden="true" />
 
         <div className="mc-header">
-          <span className="mc-icon" aria-hidden="true">{icon}</span>
+          <span className="mc-icon" aria-hidden="true">
+            {typeof icon === 'string' && icon.startsWith('/')
+              ? <img src={icon} alt="" aria-hidden="true" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
+              : icon}
+          </span>
           {tooltip && (
             <div style={{ position: 'relative' }}>
               <button

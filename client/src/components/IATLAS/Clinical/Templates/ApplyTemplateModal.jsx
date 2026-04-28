@@ -200,7 +200,7 @@ export default function ApplyTemplateModal({ isOpen, onClose, onApply, getTokenF
             {showWarn && (
               <div style={s.warnBox}>
                 <p style={s.warnText}>
-                  ⚠️ The session form already has content. Applying this template will
+                  <img src="/icons/warning.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain', verticalAlign: 'middle' }} /> The session form already has content. Applying this template will
                   pre-fill the sections but you will be able to edit them afterwards.
                   Existing content will not be removed.
                 </p>

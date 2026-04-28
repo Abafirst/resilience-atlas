@@ -132,7 +132,7 @@ export default function SessionPlanList({
         <input
           className="spl-input"
           type="search"
-          placeholder="🔍 Search plans…"
+          placeholder="Search plans…"
           value={search}
           onChange={e => setSearch(e.target.value)}
           aria-label="Search session plans"
@@ -184,7 +184,7 @@ export default function SessionPlanList({
       {/* ── Empty state ── */}
       {!loading && filtered.length === 0 && (
         <div className="spl-empty">
-          <div className="spl-empty-icon">📋</div>
+          <div className="spl-empty-icon"><img src="/icons/journal.svg" alt="" aria-hidden="true" style={{ width: '3rem', height: '3rem', objectFit: 'contain' }} /></div>
           {plans.length === 0 ? (
             <>
               <h3>No session plans yet</h3>
@@ -258,17 +258,17 @@ export default function SessionPlanList({
                       className="spl-action-btn spl-action-btn--view"
                       onClick={() => onView(plan)}
                       title="View plan"
-                    >👁 View</button>
+                    ><img src="/icons/info.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> View</button>
                     <button
                       className="spl-action-btn spl-action-btn--edit"
                       onClick={() => onEdit(plan)}
                       title="Edit plan"
-                    >✏️ Edit</button>
+                    ><img src="/icons/writing.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Edit</button>
                     <button
                       className="spl-action-btn spl-action-btn--delete"
                       onClick={() => setConfirmDelete(plan.sessionPlanId)}
                       title="Archive plan"
-                    >🗑 Delete</button>
+                    >✕ Delete</button>
                   </td>
                 </tr>
               ))}

@@ -166,11 +166,11 @@ const STYLES = `
 // ── Tab definitions ───────────────────────────────────────────────────────────
 
 const TABS = [
-  { key: 'overview',     label: 'Overview',     icon: '🏠' },
-  { key: 'progress',     label: 'Progress',     icon: '📈' },
-  { key: 'skills',       label: 'Skills',       icon: '🧠' },
-  { key: 'comparative',  label: 'Comparative',  icon: '⚖️' },
-  { key: 'reports',      label: 'Reports',      icon: '📄' },
+  { key: 'overview',     label: 'Overview',     icon: '/icons/compass.svg' },
+  { key: 'progress',     label: 'Progress',     icon: '/icons/leaderboards.svg' },
+  { key: 'skills',       label: 'Skills',       icon: '/icons/cognitive-narrative.svg' },
+  { key: 'comparative',  label: 'Comparative',  icon: '/icons/org-leaderboards.svg' },
+  { key: 'reports',      label: 'Reports',      icon: '/icons/journal.svg' },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -226,7 +226,9 @@ export default function AnalyticsDashboard() {
         <header className="ad-hero">
           <div className="ad-hero-inner">
             <div className="ad-hero-text">
-              <div className="ad-hero-emoji" aria-hidden="true">📊</div>
+              <div className="ad-hero-emoji" aria-hidden="true">
+                <img src="/icons/org-leaderboards.svg" alt="" aria-hidden="true" style={{ width: '2.2rem', height: '2.2rem', objectFit: 'contain' }} />
+              </div>
               <h1 className="ad-hero-title">Analytics Dashboard</h1>
               <p className="ad-hero-sub">
                 Deep insights into family progress, skill development trends,
@@ -258,7 +260,7 @@ export default function AnalyticsDashboard() {
               className={refreshing ? 'ad-refresh-spin' : ''}
               aria-hidden="true"
             >
-              🔄
+              <img src="/icons/compass.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
             </span>
             {refreshing ? 'Refreshing…' : 'Refresh'}
           </button>
@@ -276,7 +278,9 @@ export default function AnalyticsDashboard() {
               className={`ad-tab${activeTab === tab.key ? ' ad-tab-active' : ''}`}
               onClick={() => setActiveTab(tab.key)}
             >
-              <span aria-hidden="true">{tab.icon}</span>
+              {typeof tab.icon === 'string' && tab.icon.startsWith('/')
+                ? <img src={tab.icon} alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
+                : <span aria-hidden="true">{tab.icon}</span>}
               {tab.label}
             </button>
           ))}

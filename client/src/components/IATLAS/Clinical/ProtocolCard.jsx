@@ -86,7 +86,7 @@ export default function ProtocolCard({ protocol }) {
             onClick={() => window.print()}
             aria-label={`Print ${protocol.title} protocol`}
           >
-            🖨️ Print Protocol
+            <img src="/icons/print.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Print Protocol
           </button>
         </div>
       )}

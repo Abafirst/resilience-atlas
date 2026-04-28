@@ -8,7 +8,7 @@ import React from 'react';
 import { DIMENSION_META } from '../../../data/abaProtocols.js';
 
 const DIMENSIONS = [
-  { key: 'all', label: 'All Dimensions', color: '#64748b', bgColor: '#f1f5f9', icon: '📚' },
+  { key: 'all', label: 'All Dimensions', color: '#64748b', bgColor: '#f1f5f9', icon: '/icons/journal.svg' },
   ...Object.entries(DIMENSION_META).map(([key, meta]) => ({ key, ...meta })),
 ];
 
@@ -29,7 +29,11 @@ export default function DimensionFilter({ selectedDimension, onChange }) {
                 : { borderColor: dim.color, color: dim.color }
             }
           >
-            <span className="ppl-dim-btn-icon" aria-hidden="true">{dim.icon}</span>
+            <span className="ppl-dim-btn-icon" aria-hidden="true">
+              {dim.icon && typeof dim.icon === 'string' && dim.icon.startsWith('/')
+                ? <img src={dim.icon} alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
+                : dim.icon}
+            </span>
             <span className="ppl-dim-btn-label">{dim.label}</span>
           </button>
         );
