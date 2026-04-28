@@ -335,8 +335,9 @@ function buildJourneyMapPage(doc, report) {
     const tileY = doc.y + 4;
     const landscapeLevel = getSkillLevelLabel(overallNum);
     statTile(doc, 'Resilience Foundation', landscapeLevel, PAGE_MARGIN, tileY, tileW - 3);
-    statTile(doc, 'Anchor Dimension', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
-    statTile(doc, 'Growth Edge', bottomDim, PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
+    statTile(doc, 'Anchor Dimension', topDim.split('-')[0], PAGE_MARGIN + (tileW + 1), tileY, tileW - 3);
+    statTile(doc, 'Growth Edge', bottomDim, PAGE_MARGIN + (tileW + 1) * 2, tileY, tileW - 3);
+    statTile(doc, 'Your Archetype', getSkillLevelIcon(overallNum), PAGE_MARGIN + (tileW + 1) * 3, tileY, tileW - 3);
     doc.y = tileY + 58;
 
     // Dimension summary list

@@ -6,6 +6,15 @@
  * Skill level utilities for skills-based assessment display.
  * Hides numeric scores from user-facing content while preserving backend data
  * for research and analytics purposes.
+ *
+ * Threshold rationale (based on IATLAS Skills Framework):
+ *   - MASTERY  (≥ 70%): Skills are reliably applied under pressure.
+ *   - BUILDING (≥ 40%): Skills are emerging; consistent practice is progressing.
+ *   - FOUNDATION (< 40%): Skills are at the earliest stage of development.
+ *
+ * These thresholds align with the three-tier competency model used throughout
+ * the IATLAS curriculum and correspond to "anchor", "building", and "growth edge"
+ * terminology used across all user-facing reports.
  */
 
 const SKILL_LEVELS = {
