@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { apiFetch } from '../lib/apiFetch.js';
 import ResultsHistory from '../components/ResultsHistory.jsx';
 import RadarChart from '../components/RadarChart.jsx';
+import AdultSkillsWheel from '../components/AdultSkillsWheel.jsx';
 import GameIcon from '../components/GameIcon.jsx';
 import UnlockReportModal from '../components/UnlockReportModal.jsx';
 import AssessmentHistory from '../components/AssessmentHistory.jsx';
@@ -3495,6 +3496,29 @@ export default function ResultsPage() {
             </p>
           )}
         </section>
+
+        {/* ── Skills-Based Visualization ────────────────────────────── */}
+        {results && results.scores && (
+          <section className="results-skills-section" aria-labelledby="skillsWheelHeading">
+            <div className="skills-section-header">
+              <h2 id="skillsWheelHeading">Your Resilience Skills Landscape</h2>
+              <p>
+                This wheel shows your current skill proficiency across six dimensions.
+                Click any segment to explore skill-building modules in that area.
+              </p>
+            </div>
+            <AdultSkillsWheel
+              dimensionScores={results.scores}
+              interactive={true}
+              showLabels={true}
+            />
+            <div className="skills-wheel-legend" aria-label="Skills wheel legend">
+              <span><span className="legend-icon">🌟</span> Developed (Mastery)</span>
+              <span><span className="legend-icon">🌱</span> Building</span>
+              <span><span className="legend-icon">⚡</span> Foundation</span>
+            </div>
+          </section>
+        )}
 
         {/* ── Primary Resilience Mode ───────────────────────────────── */}
         {dominantType && (() => {
