@@ -2944,6 +2944,9 @@ export default function ResultsPage() {
       svgClone.querySelectorAll('.irw-label-text, .dimension-label-text').forEach(el => {
         el.style.textDecoration = 'none';
       });
+      // Remove percentage score labels from the downloaded image so shared
+      // radar charts show dimension names and skill levels but not scores.
+      svgClone.querySelectorAll('[data-score-label]').forEach(el => el.remove());
       // Also clear any inline underline styles on other text nodes (belt and
       // suspenders — covers any future changes to the SVG structure).
       svgClone.querySelectorAll('text').forEach(el => {
