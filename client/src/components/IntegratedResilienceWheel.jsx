@@ -279,9 +279,8 @@ export default function IntegratedResilienceWheel({
             strokeWidth={strokeW}
             className="irw-segment"
             style={{
-              cursor:     interactive ? 'pointer' : 'default',
-              transition: 'fill-opacity 0.2s ease, filter 0.2s ease',
-              filter:     segFilter,
+              cursor: interactive ? 'pointer' : 'default',
+              filter: segFilter,
             }}
             role={interactive ? 'button' : undefined}
             tabIndex={interactive ? 0 : undefined}
