@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { ACTIVITY_TYPES } from '../../../data/iatlas/kidsActivities.js';
 import PrintExportButton from '../PrintExportButton.jsx';
+import PrintableActivitySheet from './PrintableActivitySheet.jsx';
 
 const CARD_STYLES = `
   .kac-card {
@@ -298,7 +299,8 @@ const CARD_STYLES = `
 `;
 
 export default function KidsActivityCard({ activity, accentColor, onComplete, isCompleted }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded,      setExpanded]      = useState(false);
+  const [showWorksheet, setShowWorksheet] = useState(false);
 
   const typeInfo = ACTIVITY_TYPES[activity.type] || ACTIVITY_TYPES.activity;
   const badgeStyle = {
@@ -418,6 +420,23 @@ export default function KidsActivityCard({ activity, accentColor, onComplete, is
           label="Print Activity"
           variant="ghost"
         />
+
+        {/* Print worksheet */}
+        <button
+          type="button"
+          className="kac-expand-btn"
+          onClick={() => setShowWorksheet(true)}
+          style={{ marginTop: '.25rem' }}
+        >
+          🖨 Print Worksheet
+        </button>
+
+        {showWorksheet && (
+          <PrintableActivitySheet
+            activity={activity}
+            onClose={() => setShowWorksheet(false)}
+          />
+        )}
       </div>
     </>
   );
