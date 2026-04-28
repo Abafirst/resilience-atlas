@@ -356,39 +356,6 @@ function UpsellModal({ targetTier, trigger, onClose, onUpgrade }) {
   );
 }
 
-// ── PromoBanner component ─────────────────────────────────────────────────
-function PromoBanner({ message, ctaLabel, targetTier, trigger, onClose, onUpgrade }) {
-  const tierRef    = useRef(targetTier);
-  const triggerRef = useRef(trigger || 'banner');
-
-  useEffect(() => {
-    upsellTrack('impression', triggerRef.current, tierRef.current, {});
-  }, []);
-
-  function handleCta() {
-    upsellTrack('click', trigger || 'banner', targetTier, {});
-    onUpgrade(targetTier);
-  }
-
-  function handleClose() {
-    upsellTrack('dismiss', trigger || 'banner', targetTier, {});
-    upsellSetCooldown();
-    onClose();
-  }
-
-  return (
-    <div id="upsell-promo-banner" className="upsell-promo-banner" role="banner" aria-label="Special offer">
-      <span className="upsell-promo-banner__text">{message}</span>
-      <button className="upsell-promo-banner__cta" data-tier={targetTier} onClick={handleCta}>
-        {ctaLabel}
-      </button>
-      <button className="upsell-promo-banner__close" aria-label="Dismiss banner" onClick={handleClose}>
-        &#10005;
-      </button>
-    </div>
-  );
-}
-
 // ── UpgradeCardsSection component ─────────────────────────────────────────
 const STARTER_FEATURES   = [
   'Full PDF summary report',
@@ -2173,9 +2140,8 @@ export default function ResultsPage() {
   // results is null (no localStorage/hash) but the user has a known email.
   const [latestAssessmentLoading, setLatestAssessmentLoading] = useState(false);
 
-  // ── Upsell modal & promo-banner state ─────────────────────────────────
+  // ── Upsell modal state ────────────────────────────────────────────────
   const [upsellModal, setUpsellModal] = useState(null);   // null | { tier, trigger }
-  const [promoBanner, setPromoBanner] = useState(null);   // null | { tier, trigger }
 
   // ── Reminder opt-in state ──────────────────────────────────────────────
   const [reminderChecked, setReminderChecked]   = useState(false);
@@ -2515,17 +2481,8 @@ export default function ResultsPage() {
       }
     }, 90 * 1000);
 
-    // 5. Promo banner — show after 5 seconds if offer is active.
-    let promoTimer;
-    if (upsellIsOfferActive()) {
-      promoTimer = setTimeout(() => {
-        setPromoBanner({ tier: 'atlas-navigator', trigger: 'timer' });
-      }, 5000);
-    }
-
     return () => {
       clearTimeout(timerHandle);
-      clearTimeout(promoTimer);
       document.removeEventListener('mouseleave', onMouseLeave);
       if (scrollObserver) scrollObserver.disconnect();
     };
@@ -3322,18 +3279,6 @@ export default function ResultsPage() {
 
       {/* ── Dark-mode readability hint ──────────────────── */}
       <DarkModeHint />
-
-      {/* ── Promotional banner (flash offer for free users) ──────────── */}
-      {promoBanner && !isCapacitorAndroid() && (
-        <PromoBanner
-          message="Get your complete Deep Resilience Report PDF for just $49.99 — lifetime access"
-          ctaLabel="Claim Offer"
-          targetTier={promoBanner.tier}
-          trigger={promoBanner.trigger}
-          onClose={() => setPromoBanner(null)}
-          onUpgrade={handleUpgrade}
-        />
-      )}
 
       {/* ── Upsell modal (smart-triggered) ───────────────────────────── */}
       {upsellModal && !upsellIsOnCooldown() && !isCapacitorAndroid() && (
