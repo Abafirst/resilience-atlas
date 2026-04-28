@@ -99,6 +99,7 @@ import PracticeTeamPage from './pages/PracticeTeamPage.jsx';
 import PracticeAnalyticsPage from './pages/PracticeAnalyticsPage.jsx';
 import OrgAnalyticsDashboardPage from './pages/OrgAnalyticsDashboardPage.jsx';
 import PredictiveAnalyticsDashboardPage from './pages/PredictiveAnalyticsDashboardPage.jsx';
+import ResearchExportPage from './pages/ResearchExportPage.jsx';
 import SupportTicketsPage from './pages/SupportTicketsPage.jsx';
 import SupportTicketDetailPage from './pages/SupportTicketDetailPage.jsx';
 import SupportWidget from './components/Support/SupportWidget.jsx';
@@ -434,6 +435,8 @@ function AppShell() {
           <Route path="/iatlas/org/dashboard" element={<OrgAnalyticsDashboardPage />} />
           {/* Predictive Analytics & ML-Powered Insights (#23b) */}
           <Route path="/iatlas/ml/insights" element={<PredictiveAnalyticsDashboardPage />} />
+          {/* Research Export Tools (#23c) */}
+          <Route path="/iatlas/research/export" element={<ResearchExportPage />} />
           {/* Support */}
           <Route path="/support/tickets" element={<SupportTicketsPage />} />
           <Route path="/support/tickets/:ticketId" element={<SupportTicketDetailPage />} />

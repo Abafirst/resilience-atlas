@@ -17,6 +17,7 @@
 
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import {
   fetchClients,
@@ -184,7 +185,18 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim]);
+  }, [selectedClient, selectedDim, getTokenFn]);
+
+  const handleFeedback = useCallback(async (activityId, rating) => {
+    setFeedback(f => ({ ...f, [activityId]: rating }));
+    if (!predictionId) return;
+    try {
+      await mlService.submitFeedback(predictionId, rating, getTokenFn);
+      setFeedbackMsg(m => ({ ...m, [activityId]: rating === 'helpful' ? '✅ Logged' : '📝 Logged' }));
+    } catch {
+      setFeedbackMsg(m => ({ ...m, [activityId]: '⚠️ Could not save' }));
+    }
+  }, [predictionId, getTokenFn]);
 
   const handleFeedback = useCallback(async (value) => {
     if (!predictionId || feedbackGiven || feedbackLoading) return;
@@ -321,7 +333,7 @@ function RegressionAlertsTab({ selectedClient }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedClient]);
+  }, [selectedClient, getTokenFn]);
 
   const dimLabel = key => DIMENSIONS.find(d => d.key === key)?.label || key;
 
@@ -417,7 +429,7 @@ function SessionFrequencyTab({ selectedClient }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedClient]);
+  }, [selectedClient, getTokenFn]);
 
   return (
     <div>
@@ -510,7 +522,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim, targetScore]);
+  }, [selectedClient, selectedDim, targetScore, getTokenFn]);
 
   return (
     <div>
@@ -1008,19 +1020,34 @@ export default function PredictiveAnalyticsDashboardPage() {
               selectedClient={selectedClient}
               selectedDim={selectedDim}
               setSelectedDim={setSelectedDim}
+              getTokenFn={getAccessTokenSilently}
             />
           )}
           {activeTab === 'regression' && (
-            <RegressionAlertsTab selectedClient={selectedClient} />
+            <RegressionAlertsTab
+              selectedClient={selectedClient}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'frequency' && (
-            <SessionFrequencyTab selectedClient={selectedClient} />
+            <SessionFrequencyTab
+              selectedClient={selectedClient}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'goal' && (
-            <GoalProbabilityTab selectedClient={selectedClient} selectedDim={selectedDim} />
+            <GoalProbabilityTab
+              selectedClient={selectedClient}
+              selectedDim={selectedDim}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
           {activeTab === 'plan' && (
-            <TreatmentPlanTab selectedClient={selectedClient} selectedDim={selectedDim} />
+            <TreatmentPlanTab
+              selectedClient={selectedClient}
+              selectedDim={selectedDim}
+              getTokenFn={getAccessTokenSilently}
+            />
           )}
         </div>
 
