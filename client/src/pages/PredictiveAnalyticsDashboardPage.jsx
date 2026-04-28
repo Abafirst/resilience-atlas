@@ -15,11 +15,20 @@
  * require practitioner review before application (human-in-the-loop).
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
-import * as mlService from '../services/mlService.js';
+import {
+  fetchClients,
+  predictActivityEffectiveness,
+  detectRegressionRisk,
+  recommendSessionFrequency,
+  scoreGoalProbability,
+  generateTreatmentPlan,
+  getModelStatus,
+  submitFeedback,
+} from '../services/mlService.js';
 
 // ── Navigation ────────────────────────────────────────────────────────────────
 
@@ -50,8 +59,6 @@ const TABS = [
   { key: 'plan',       icon: '🧠', label: 'Treatment Plans' },
 ];
 
-
-
 // ── Mini UI components ────────────────────────────────────────────────────────
 
 const AI_DISCLAIMER = 'AI recommendations are decision-support tools. All clinical decisions require practitioner review and approval.';
@@ -65,6 +72,31 @@ function DisclaimerBanner() {
     }}>
       <span style={{ fontSize: '1rem' }}>🔬</span>
       <span><strong>Human-in-the-Loop:</strong> {AI_DISCLAIMER}</span>
+    </div>
+  );
+}
+
+function TierUpgradeBanner({ message }) {
+  return (
+    <div style={{
+      background: '#f5f3ff', border: '1px solid #c4b5fd', borderRadius: 10,
+      padding: '.9rem 1rem', marginBottom: '1rem',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
+      flexWrap: 'wrap',
+    }}>
+      <span style={{ fontSize: '.88rem', color: '#5b21b6', fontWeight: 600 }}>
+        🔒 {message}
+      </span>
+      <a
+        href="/pricing"
+        style={{
+          background: '#7c3aed', color: '#fff', borderRadius: 8,
+          padding: '.4rem .9rem', fontSize: '.82rem', fontWeight: 700,
+          textDecoration: 'none', whiteSpace: 'nowrap',
+        }}
+      >
+        Upgrade Plan →
+      </a>
     </div>
   );
 }
@@ -126,30 +158,30 @@ function ProbabilityRing({ probability }) {
 
 // ── Tab: Activity Predictor ──────────────────────────────────────────────────
 
-function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, getTokenFn }) {
-  const [loading, setLoading]         = useState(false);
-  const [results, setResults]         = useState(null);
-  const [error, setError]             = useState(null);
-  const [errorExtra, setErrorExtra]   = useState(null);
-  const [feedback, setFeedback]       = useState({});
-  const [feedbackMsg, setFeedbackMsg] = useState({});
-  const [predictionId, setPredictionId] = useState(null);
+function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
+  const [loading, setLoading]                 = useState(false);
+  const [results, setResults]                 = useState(null);
+  const [predictionId, setPredictionId]       = useState(null);
+  const [error, setError]                     = useState(null);
+  const [isTierError, setIsTierError]         = useState(false);
+  const [feedbackGiven, setFeedbackGiven]     = useState(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   const handlePredict = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
-    setErrorExtra(null);
+    setIsTierError(false);
+    setResults(null);
+    setPredictionId(null);
+    setFeedbackGiven(null);
     try {
-      const data = await mlService.predictActivityEffectiveness(
-        selectedClient, selectedDim, undefined, getTokenFn
-      );
+      const data = await predictActivityEffectiveness(selectedClient, selectedDim);
       setResults(data.predictions || []);
       setPredictionId(data.predictionId || null);
     } catch (err) {
-      const e = mlService.handleMLError(err);
-      setError(e.message);
-      setErrorExtra(e);
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -165,6 +197,19 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, get
       setFeedbackMsg(m => ({ ...m, [activityId]: '⚠️ Could not save' }));
     }
   }, [predictionId, getTokenFn]);
+
+  const handleFeedback = useCallback(async (value) => {
+    if (!predictionId || feedbackGiven || feedbackLoading) return;
+    setFeedbackLoading(true);
+    try {
+      await submitFeedback(predictionId, value);
+      setFeedbackGiven(value);
+    } catch {
+      // Non-critical — feedback failure is silent
+    } finally {
+      setFeedbackLoading(false);
+    }
+  }, [predictionId, feedbackGiven, feedbackLoading]);
 
   return (
     <div>
@@ -194,25 +239,8 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, get
         </button>
       </div>
 
-      {error && (
-        <div style={styles.errorBox}>
-          {error}
-          {errorExtra?.upgradeButton && (
-            <div style={{ marginTop: '.5rem' }}>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
-                  background: '#4f46e5', color: '#fff', fontWeight: 700,
-                  fontSize: '.82rem', textDecoration: 'none',
-                }}
-              >
-                Upgrade to Practitioner
-              </a>
-            </div>
-          )}
-        </div>
-      )}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -248,20 +276,22 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, get
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.35rem', alignItems: 'flex-end' }}>
-                {!feedback[r.activityId] ? (
+                {!feedbackGiven ? (
                   <>
                     <button
                       style={{ ...styles.btnSm, background: '#d1fae5', color: '#065f46' }}
-                      onClick={() => handleFeedback(r.activityId, 'helpful')}
+                      onClick={() => handleFeedback('helpful')}
+                      disabled={feedbackLoading}
                     >👍 Helpful</button>
                     <button
                       style={{ ...styles.btnSm, background: '#fee2e2', color: '#991b1b' }}
-                      onClick={() => handleFeedback(r.activityId, 'not_helpful')}
+                      onClick={() => handleFeedback('not_helpful')}
+                      disabled={feedbackLoading}
                     >👎 Not Helpful</button>
                   </>
                 ) : (
                   <span style={{ fontSize: '.75rem', color: '#6b7280' }}>
-                    {feedbackMsg[r.activityId] || (feedback[r.activityId] === 'helpful' ? '✅ Logged' : '📝 Logged')}
+                    {feedbackGiven === 'helpful' ? '✅ Logged' : '📝 Logged'}
                   </span>
                 )}
               </div>
@@ -282,25 +312,24 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, get
 
 // ── Tab: Regression Alerts ───────────────────────────────────────────────────
 
-function RegressionAlertsTab({ selectedClient, getTokenFn }) {
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
-  const [error, setError]     = useState(null);
-  const [errorExtra, setErrorExtra] = useState(null);
-  const [reviewed, setReviewed] = useState({});
+function RegressionAlertsTab({ selectedClient }) {
+  const [loading, setLoading]         = useState(false);
+  const [results, setResults]         = useState(null);
+  const [reviewed, setReviewed]       = useState({});
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleDetect = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
-    setErrorExtra(null);
+    setIsTierError(false);
     try {
-      const data = await mlService.detectRegressionRisk(selectedClient, getTokenFn);
+      const data = await detectRegressionRisk(selectedClient);
       setResults(data.risks || []);
     } catch (err) {
-      const e = mlService.handleMLError(err);
-      setError(e.message);
-      setErrorExtra(e);
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -326,25 +355,8 @@ function RegressionAlertsTab({ selectedClient, getTokenFn }) {
         </button>
       </div>
 
-      {error && (
-        <div style={styles.errorBox}>
-          {error}
-          {errorExtra?.upgradeButton && (
-            <div style={{ marginTop: '.5rem' }}>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
-                  background: '#4f46e5', color: '#fff', fontWeight: 700,
-                  fontSize: '.82rem', textDecoration: 'none',
-                }}
-              >
-                Upgrade to Practitioner
-              </a>
-            </div>
-          )}
-        </div>
-      )}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {results && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', marginTop: '1rem' }}>
@@ -397,24 +409,23 @@ function RegressionAlertsTab({ selectedClient, getTokenFn }) {
 
 // ── Tab: Session Frequency ────────────────────────────────────────────────────
 
-function SessionFrequencyTab({ selectedClient, getTokenFn }) {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult]   = useState(null);
-  const [error, setError]     = useState(null);
-  const [errorExtra, setErrorExtra] = useState(null);
+function SessionFrequencyTab({ selectedClient }) {
+  const [loading, setLoading]         = useState(false);
+  const [result, setResult]           = useState(null);
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleRecommend = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
-    setErrorExtra(null);
+    setIsTierError(false);
     try {
-      const data = await mlService.recommendSessionFrequency(selectedClient, undefined, getTokenFn);
+      const data = await recommendSessionFrequency(selectedClient);
       setResult(data);
     } catch (err) {
-      const e = mlService.handleMLError(err);
-      setError(e.message);
-      setErrorExtra(e);
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -438,25 +449,8 @@ function SessionFrequencyTab({ selectedClient, getTokenFn }) {
         </button>
       </div>
 
-      {error && (
-        <div style={styles.errorBox}>
-          {error}
-          {errorExtra?.upgradeButton && (
-            <div style={{ marginTop: '.5rem' }}>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
-                  background: '#4f46e5', color: '#fff', fontWeight: 700,
-                  fontSize: '.82rem', textDecoration: 'none',
-                }}
-              >
-                Upgrade to Practitioner
-              </a>
-            </div>
-          )}
-        </div>
-      )}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {result && (
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -504,29 +498,27 @@ function SessionFrequencyTab({ selectedClient, getTokenFn }) {
 
 // ── Tab: Goal Probability ─────────────────────────────────────────────────────
 
-function GoalProbabilityTab({ selectedClient, selectedDim, getTokenFn }) {
-  const [loading, setLoading]     = useState(false);
-  const [result, setResult]       = useState(null);
-  const [error, setError]         = useState(null);
-  const [errorExtra, setErrorExtra] = useState(null);
-  const [targetScore, setTarget]  = useState(75);
+function GoalProbabilityTab({ selectedClient, selectedDim }) {
+  const [loading, setLoading]         = useState(false);
+  const [result, setResult]           = useState(null);
+  const [targetScore, setTarget]      = useState(75);
+  const [error, setError]             = useState(null);
+  const [isTierError, setIsTierError] = useState(false);
 
   const handleScore = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
-    setErrorExtra(null);
+    setIsTierError(false);
     try {
-      const goal = {
-        dimension:   selectedDim,
-        targetScore: Math.min(100, Math.max(0, targetScore)),
-      };
-      const data = await mlService.scoreGoalProbability(selectedClient, goal, getTokenFn);
+      const data = await scoreGoalProbability(selectedClient, {
+        dimension: selectedDim,
+        targetScore,
+      });
       setResult(data);
     } catch (err) {
-      const e = mlService.handleMLError(err);
-      setError(e.message);
-      setErrorExtra(e);
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
@@ -559,25 +551,8 @@ function GoalProbabilityTab({ selectedClient, selectedDim, getTokenFn }) {
         </div>
       </div>
 
-      {error && (
-        <div style={styles.errorBox}>
-          {error}
-          {errorExtra?.upgradeButton && (
-            <div style={{ marginTop: '.5rem' }}>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
-                  background: '#4f46e5', color: '#fff', fontWeight: 700,
-                  fontSize: '.82rem', textDecoration: 'none',
-                }}
-              >
-                Upgrade to Practitioner
-              </a>
-            </div>
-          )}
-        </div>
-      )}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {result && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -632,32 +607,34 @@ function GoalProbabilityTab({ selectedClient, selectedDim, getTokenFn }) {
 
 // ── Tab: Treatment Plan ───────────────────────────────────────────────────────
 
-function TreatmentPlanTab({ selectedClient, selectedDim, getTokenFn }) {
-  const [loading, setLoading]   = useState(false);
-  const [plan, setPlan]         = useState(null);
-  const [error, setError]       = useState(null);
-  const [errorExtra, setErrorExtra] = useState(null);
-  const [totalWeeks, setWeeks]  = useState(12);
-  const [expanded, setExpanded] = useState({});
+function TreatmentPlanTab({ selectedClient, selectedDim }) {
+  const [loading, setLoading]           = useState(false);
+  const [plan, setPlan]                 = useState(null);
+  const [totalWeeks, setWeeks]          = useState(12);
+  const [targetScore, setTargetScore]   = useState(75);
+  const [expanded, setExpanded]         = useState({});
+  const [error, setError]               = useState(null);
+  const [isTierError, setIsTierError]   = useState(false);
 
   const handleGenerate = useCallback(async () => {
     if (!selectedClient) return;
     setLoading(true);
     setError(null);
-    setErrorExtra(null);
+    setIsTierError(false);
     try {
-      const data = await mlService.generateTreatmentPlan(
-        selectedClient, undefined, totalWeeks, undefined, getTokenFn
+      const data = await generateTreatmentPlan(
+        selectedClient,
+        [{ dimension: selectedDim, targetScore }],
+        totalWeeks,
       );
       setPlan(data);
     } catch (err) {
-      const e = mlService.handleMLError(err);
-      setError(e.message);
-      setErrorExtra(e);
+      setError(err.message);
+      setIsTierError(!!err.isTierUpgrade);
     } finally {
       setLoading(false);
     }
-  }, [selectedClient, selectedDim, totalWeeks, getTokenFn]);
+  }, [selectedClient, selectedDim, totalWeeks, targetScore]);
 
   const PHASE_COLORS = ['#eef2ff', '#fce7f3', '#d1fae5', '#fef3c7', '#e0f2fe', '#ede9fe'];
 
@@ -680,6 +657,13 @@ function TreatmentPlanTab({ selectedClient, selectedDim, getTokenFn }) {
             <option key={w} value={w}>{w} weeks</option>
           ))}
         </select>
+        <label style={styles.label}>Target Score</label>
+        <input
+          type="number" min={0} max={100}
+          style={{ ...styles.select, width: 80 }}
+          value={targetScore}
+          onChange={e => setTargetScore(Number(e.target.value))}
+        />
         <button
           style={{ ...styles.btn, ...styles.btnPrimary, marginLeft: 'auto' }}
           onClick={handleGenerate}
@@ -689,25 +673,8 @@ function TreatmentPlanTab({ selectedClient, selectedDim, getTokenFn }) {
         </button>
       </div>
 
-      {error && (
-        <div style={styles.errorBox}>
-          {error}
-          {errorExtra?.upgradeButton && (
-            <div style={{ marginTop: '.5rem' }}>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', padding: '.4rem .85rem', borderRadius: 7,
-                  background: '#4f46e5', color: '#fff', fontWeight: 700,
-                  fontSize: '.82rem', textDecoration: 'none',
-                }}
-              >
-                Upgrade to Practitioner
-              </a>
-            </div>
-          )}
-        </div>
-      )}
+      {isTierError && <TierUpgradeBanner message={error} />}
+      {error && !isTierError && <div style={styles.errorBox}>{error}</div>}
 
       {plan && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
@@ -881,55 +848,53 @@ const styles = {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function PredictiveAnalyticsDashboardPage() {
-  const { getAccessTokenSilently } = useAuth0();
-
-  const [activeTab,      setActiveTab]    = useState('activity');
-  const [selectedClient, setClient]       = useState('');
-  const [selectedDim,    setSelectedDim]  = useState('emotionalAdaptive');
-  const [modelStatus,    setModelStatus]  = useState(null);
-  const [clients,        setClients]      = useState([]);
+  const [activeTab,      setActiveTab]      = useState('activity');
+  const [selectedClient, setClient]         = useState('');
+  const [selectedDim,    setSelectedDim]    = useState('emotionalAdaptive');
+  const [modelStatus,    setModelStatus]    = useState(null);
+  const [clients,        setClients]        = useState([]);
   const [clientsLoading, setClientsLoading] = useState(true);
+  const [pageError,      setPageError]      = useState(null);
 
-  // ── Load real client list on mount ──────────────────────────────────────────
+  // Load client list and model status from real API on mount
   useEffect(() => {
     let cancelled = false;
-    async function loadClients() {
-      try {
-        const data = await mlService.fetchClients(getAccessTokenSilently);
-        if (cancelled) return;
-        const list = data.clients || [];
+
+    async function init() {
+      const [clientsResult, statusResult] = await Promise.allSettled([
+        fetchClients(),
+        getModelStatus(),
+      ]);
+
+      if (cancelled) return;
+
+      if (clientsResult.status === 'fulfilled') {
+        const list = clientsResult.value;
         setClients(list);
-        if (list.length > 0) setClient(list[0]._id);
-      } catch {
-        // Non-fatal — leave the selector empty; individual tabs will show errors.
-      } finally {
-        if (!cancelled) setClientsLoading(false);
+        if (list.length > 0) {
+          const firstId = list[0]._id?.toString() || list[0].id || '';
+          setClient(firstId);
+        }
+      } else {
+        const err = clientsResult.reason;
+        setPageError({ message: err.message, isTierUpgrade: !!err.isTierUpgrade });
       }
-    }
-    loadClients();
-    return () => { cancelled = true; };
-  }, [getAccessTokenSilently]);
 
-  // ── Load real model status on mount ─────────────────────────────────────────
-  useEffect(() => {
-    let cancelled = false;
-    async function loadModelStatus() {
-      try {
-        const data = await mlService.getModelStatus(getAccessTokenSilently);
-        if (!cancelled) setModelStatus(data);
-      } catch {
-        // Non-fatal — header badge simply won't appear.
+      if (statusResult.status === 'fulfilled') {
+        setModelStatus(statusResult.value);
       }
-    }
-    loadModelStatus();
-    return () => { cancelled = true; };
-  }, [getAccessTokenSilently]);
 
-  const selectedClientName = (() => {
-    const c = clients.find(cl => cl._id === selectedClient);
-    if (!c) return '—';
-    return c.clientIdentifier || `${c.firstName || ''} ${c.lastName || ''}`.trim() || '—';
-  })();
+      setClientsLoading(false);
+    }
+
+    init();
+    return () => { cancelled = true; };
+  }, []);
+
+  const selectedClientName = useMemo(
+    () => clients.find(c => (c._id?.toString() || c.id) === selectedClient)?.clientIdentifier || '—',
+    [clients, selectedClient],
+  );
 
   return (
     <div style={{ minHeight: '100vh', background: '#f1f5f9' }}>
@@ -987,31 +952,36 @@ export default function PredictiveAnalyticsDashboardPage() {
         }}>
           <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#374151' }}>👤 Active Client:</span>
           {clientsLoading ? (
-            <span style={{ fontSize: '.83rem', color: '#9ca3af' }}>Loading clients…</span>
+            <span style={{ fontSize: '.85rem', color: '#9ca3af' }}>Loading clients…</span>
+          ) : pageError ? (
+            <div style={{ flex: 1 }}>
+              {pageError.isTierUpgrade
+                ? <TierUpgradeBanner message={pageError.message} />
+                : <div style={styles.errorBox}>{pageError.message}</div>
+              }
+            </div>
+          ) : clients.length === 0 ? (
+            <span style={{ fontSize: '.85rem', color: '#9ca3af' }}>
+              No clients found. Add a client to get started.
+            </span>
           ) : (
-            <select
-              style={{ ...styles.select, minWidth: 200 }}
-              value={selectedClient}
-              onChange={e => setClient(e.target.value)}
-            >
-              {clients.length === 0 && (
-                <option value="">No clients found</option>
-              )}
-              {clients.map(c => {
-                const label = c.clientIdentifier || `${c.firstName || ''} ${c.lastName || ''}`.trim() || c._id;
-                const dob   = c.dateOfBirth ? new Date(c.dateOfBirth) : null;
-                const age   = dob ? Math.floor((Date.now() - dob) / (365.25 * 24 * 3600 * 1000)) : null;
-                return (
-                  <option key={c._id} value={c._id}>
-                    {label}{age != null ? ` · ${age}y` : ''}
+            <>
+              <select
+                style={{ ...styles.select, minWidth: 200 }}
+                value={selectedClient}
+                onChange={e => setClient(e.target.value)}
+              >
+                {clients.map(c => (
+                  <option key={c._id || c.id} value={c._id?.toString() || c.id || ''}>
+                    {c.clientIdentifier}{c.ageGroup ? ` · ${c.ageGroup}` : ''}
                   </option>
-                );
-              })}
-            </select>
+                ))}
+              </select>
+              <span style={{ fontSize: '.82rem', color: '#9ca3af' }}>
+                Predictions are calculated for <strong style={{ color: '#374151' }}>{selectedClientName}</strong>
+              </span>
+            </>
           )}
-          <span style={{ fontSize: '.82rem', color: '#9ca3af' }}>
-            Predictions are calculated for <strong style={{ color: '#374151' }}>{selectedClientName}</strong>
-          </span>
         </div>
 
         {/* Disclaimer */}
