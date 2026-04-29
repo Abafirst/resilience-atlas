@@ -102,7 +102,7 @@ export default function PracticeSetupPage() {
       const checkoutRes = await apiFetch('/api/iatlas/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier: 'practice', practiceId }),
+        body: JSON.stringify({ tier: 'practice', practiceId, plan }),
       }, getAccessTokenSilently);
 
       if (!checkoutRes.ok) {

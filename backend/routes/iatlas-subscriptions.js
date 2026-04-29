@@ -27,6 +27,13 @@ const IATLAS_PRICE_IDS = {
     practice:     process.env.STRIPE_IATLAS_PRACTICE_PRICE_ID,
 };
 
+// Practice tier plan-specific pricing
+const PRACTICE_PRICE_MAP = {
+    'practice-5':  process.env.STRIPE_IATLAS_PRACTICE_5_PRICE_ID || process.env.STRIPE_IATLAS_PRACTICE_PRICE_ID,
+    'practice-10': process.env.STRIPE_IATLAS_PRACTICE_10_PRICE_ID,
+    'practice-25': process.env.STRIPE_IATLAS_PRACTICE_25_PRICE_ID,
+};
+
 const iatlasLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
     max: 20,
@@ -62,9 +69,24 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
             return res.status(400).json({ error: 'Invalid subscription tier.' });
         }
 
-        const priceId = IATLAS_PRICE_IDS[tier];
-        if (!priceId) {
-            return res.status(500).json({ error: `Stripe Price ID not configured for tier: ${tier}` });
+        // For practice tier, use plan-specific pricing; for others use tier pricing
+        let priceId;
+        if (tier === 'practice') {
+            const plan = req.body.plan || 'practice-5';
+            if (!PRACTICE_PRICE_MAP.hasOwnProperty(plan)) {
+                return res.status(400).json({ error: `Invalid practice plan: ${plan}.` });
+            }
+            priceId = PRACTICE_PRICE_MAP[plan];
+            if (!priceId) {
+                return res.status(400).json({
+                    error: `Stripe Price ID not configured for practice plan: ${plan}. Please contact support.`
+                });
+            }
+        } else {
+            priceId = IATLAS_PRICE_IDS[tier];
+            if (!priceId) {
+                return res.status(500).json({ error: `Stripe Price ID not configured for tier: ${tier}` });
+            }
         }
 
         const db = getDb();
@@ -128,6 +150,10 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
         };
         if (practiceId) {
             sessionMetadata.practiceId = practiceId;
+        }
+        // Add plan for practice tier
+        if (tier === 'practice') {
+            sessionMetadata.plan = req.body.plan || 'practice-5';
         }
 
         const successUrl = tier === 'practice' && practiceId
