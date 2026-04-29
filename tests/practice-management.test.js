@@ -38,6 +38,8 @@ process.env.STRIPE_SECRET_KEY = 'sk_test_placeholder';
 process.env.STRIPE_WEBHOOK_SECRET = 'whsec_placeholder';
 process.env.BASE_URL = 'http://localhost:3000';
 
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
 // ── Mongoose mock ─────────────────────────────────────────────────────────────
 jest.mock('mongoose', () => {
   class Schema {
@@ -216,14 +218,14 @@ describe('Invitation expiry', () => {
   });
 
   test('invitation is valid when expiresAt is in the future', () => {
-    const futureDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const futureDate = new Date(Date.now() + SEVEN_DAYS_MS);
     const isExpired = new Date() > futureDate;
     expect(isExpired).toBe(false);
   });
 
   test('default expiry is 7 days from creation', () => {
     const created = new Date();
-    const expiresAt = new Date(created.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const expiresAt = new Date(created.getTime() + SEVEN_DAYS_MS);
     const diffMs = expiresAt.getTime() - created.getTime();
     const diffDays = diffMs / (1000 * 60 * 60 * 24);
     expect(diffDays).toBe(7);

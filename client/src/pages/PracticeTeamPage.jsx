@@ -513,6 +513,9 @@ export default function PracticeTeamPage() {
             {/* Announcements */}
             {activeSection === 'announcements' && (
               <div role="tabpanel">
+                <div style={{ background: '#fef3c7', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#92400e', marginBottom: 16 }}>
+                  📋 Demo content — announcements board and real-time messaging are coming in a future release.
+                </div>
                 {MOCK_ANNOUNCEMENTS.map(a => (
                   <div key={a.id} className="announce-card">
                     <div className="announce-header">

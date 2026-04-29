@@ -251,7 +251,7 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
     if (!practice) {
       return res.status(404).json({ error: 'Practice not found.' });
     }
-    if (practice.seatLimit && practice.seatsUsed >= practice.seatLimit) {
+    if (practice.seatLimit > 0 && practice.seatsUsed >= practice.seatLimit) {
       return res.status(403).json({
         error: 'No seats available. Please upgrade your plan to invite more practitioners.',
         upgradeRequired: true,

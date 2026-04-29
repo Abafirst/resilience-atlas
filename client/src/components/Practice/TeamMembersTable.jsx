@@ -77,7 +77,10 @@ export default function TeamMembersTable({ members = [], currentUserId, currentU
         <tbody>
           {members.map((m, i) => {
             const roleBadge = ROLE_BADGE[m.practiceRole || m.role] || ROLE_BADGE.observer;
-            const isSelf    = currentUserId && (m.userId === currentUserId || m.id === currentUserId);
+            const isSelf    = currentUserId && (
+              String(m.userId) === String(currentUserId) ||
+              String(m.id) === String(currentUserId)
+            );
 
             return (
               <tr key={m.userId || m.id || i} style={{ borderBottom: '1px solid #f3f4f6' }}>

@@ -42,16 +42,7 @@ const ROLE_HIERARCHY = {
  */
 async function resolveMembership(practiceId, userId) {
   try {
-    const mongoose = require('mongoose');
-    // Support both ObjectId and string userId values.
-    const query = { practiceId, status: 'active' };
-    if (mongoose.Types.ObjectId.isValid(userId)) {
-      query.userId = userId;
-    } else {
-      // Auth0 sub — try string match against any stored string
-      query.userId = userId;
-    }
-
+    const query = { practiceId, status: 'active', userId };
     const pp = await PracticePractitioner.findOne(query).lean();
     return { role: pp ? pp.role : null, pp };
   } catch (err) {

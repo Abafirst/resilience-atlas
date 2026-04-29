@@ -70,7 +70,8 @@ export default function PracticeSetupPage() {
     if (!practiceName.trim()) return;
     if (plan === 'custom') {
       // Redirect to contact / enterprise flow
-      window.location.href = 'mailto:hello@theresilienceatlas.com?subject=IATLAS%20Practice%20Custom%20Plan';
+      const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'hello@theresilienceatlas.com';
+      window.location.href = `mailto:${contactEmail}?subject=IATLAS%20Practice%20Custom%20Plan`;
       return;
     }
 

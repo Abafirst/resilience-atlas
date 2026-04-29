@@ -683,8 +683,12 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
                 if (iatlasTier === 'practice' && iatlasPracticeId) {
                     try {
                         const Practice = require('../models/Practice');
+                        // Build query: prefer practiceId (UUID string), fall back to _id if valid ObjectId
+                        const practiceQuery = mongoose.Types.ObjectId.isValid(iatlasPracticeId)
+                            ? { $or: [{ practiceId: iatlasPracticeId }, { _id: iatlasPracticeId }] }
+                            : { practiceId: iatlasPracticeId };
                         await Practice.findOneAndUpdate(
-                            { $or: [{ practiceId: iatlasPracticeId }, { _id: mongoose.Types.ObjectId.isValid(iatlasPracticeId) ? iatlasPracticeId : null }] },
+                            practiceQuery,
                             {
                                 $set: {
                                     'billing.stripeCustomerId':     subscription.customer,

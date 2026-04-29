@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 
 const PracticePractitioner = require('../models/PracticePractitioner');
 const PractitionerInvitation = require('../models/PractitionerInvitation');
+const Practice = require('../models/Practice');
 const CaseAssignment = require('../models/CaseAssignment');
 const ActivityLog = require('../models/ActivityLog');
 const { authenticateJWT } = require('../middleware/auth');
@@ -119,7 +120,7 @@ router.post('/invitations/:token/accept', authenticateJWT, async (req, res) => {
       await existing.updateOne({ status: 'active', role: invitation.role, acceptedAt: new Date() });
     } else {
       // Check seat availability before joining
-      const practice = await (require('../models/Practice')).findById(invitation.practiceId);
+      const practice = await Practice.findById(invitation.practiceId);
       if (practice && practice.seatLimit && practice.seatsUsed >= practice.seatLimit) {
         return res.status(403).json({
           error: 'No seats available in this practice. Please contact the practice administrator.',
