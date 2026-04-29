@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import apiFetch from '../lib/apiFetch.js';
+import { track } from '../lib/analytics.js';
 
 const PLANS = [
   {
@@ -55,6 +56,9 @@ const PLANS = [
 ];
 
 const SEAT_LIMITS = { 'practice-5': 5, 'practice-10': 10, 'practice-25': 25, custom: 0 };
+
+// Monthly amounts in dollars — kept in sync with PLANS pricing above
+const PLAN_AMOUNTS = { 'practice-5': 399, 'practice-10': 699, 'practice-25': 1499 };
 
 export default function PracticeSetupPage() {
   const navigate = useNavigate();
@@ -98,6 +102,12 @@ export default function PracticeSetupPage() {
       const practice = data.practice;
       const practiceId = practice?._id || practice?.id || '';
 
+      track('Practice Created', {
+        plan,
+        seatLimit: SEAT_LIMITS[plan] || 5,
+        practiceName: practiceName.trim(),
+      });
+
       // Redirect to Stripe checkout for Practice tier
       const checkoutRes = await apiFetch('/api/iatlas/subscribe', {
         method: 'POST',
@@ -112,6 +122,11 @@ export default function PracticeSetupPage() {
 
       const { url } = await checkoutRes.json();
       if (url) {
+        track('Subscription Started', {
+          tier: 'practice',
+          plan,
+          amount: PLAN_AMOUNTS[plan],
+        });
         window.location.href = url;
       } else {
         // No Stripe configured — go directly to dashboard
