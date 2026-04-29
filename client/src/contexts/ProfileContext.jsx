@@ -79,20 +79,27 @@ export function ProfileProvider({ children }) {
       // Log the actual error for debugging
       console.error('[ProfileContext] Auth token error:', err);
 
-      // Throw a tagged, user-friendly error
-      const toThrow = (() => {
-        if (err.error === 'login_required') {
-          return new Error('Please log in again to continue');
-        } else if (err.error === 'consent_required') {
-          return new Error('Additional permissions required');
-        } else {
-          return new Error('Authentication failed. Please refresh the page or log in again.');
-        }
-      })();
+      // If the refresh token is missing or login is required, redirect to Auth0
+      if (
+        err.error === 'login_required' ||
+        err.message?.includes('Missing Refresh Token')
+      ) {
+        loginWithRedirect({
+          appState: { returnTo: window.location.pathname + window.location.search },
+        });
+        const toThrow = new Error('Session expired. Redirecting to login...');
+        toThrow.isAuthError = true;
+        throw toThrow;
+      }
+
+      // Throw a tagged, user-friendly error for other auth failures
+      const toThrow = err.error === 'consent_required'
+        ? new Error('Additional permissions required')
+        : new Error('Authentication failed. Please refresh the page or log in again.');
       toThrow.isAuthError = true;
       throw toThrow;
     }
-  }, [isAuthenticated, getAccessTokenSilently]);
+  }, [isAuthenticated, getAccessTokenSilently, loginWithRedirect]);
 
   // ── Fetch profiles ──────────────────────────────────────────────────────────
 
@@ -112,8 +119,11 @@ export function ProfileProvider({ children }) {
       const res     = await fetch('/api/iatlas/profiles', { headers });
 
       if (res.status === 401) {
+        loginWithRedirect({
+          appState: { returnTo: window.location.pathname + window.location.search },
+        });
         setErrorCode('auth');
-        throw new Error('Your session has expired. Please log in again.');
+        throw new Error('Session expired. Redirecting to login...');
       }
 
       if (!res.ok) {

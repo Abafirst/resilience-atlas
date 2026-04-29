@@ -27,7 +27,7 @@ const BADGE_BY_NAME = Object.fromEntries(ALL_BADGES.map(b => [b.name, b]));
  *   clearCelebration  — () → void
  */
 export default function useGamification() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const [progress, setProgress]       = useState(null);
   const [loading, setLoading]         = useState(true);
@@ -43,7 +43,21 @@ export default function useGamification() {
     try {
       const token = await getAccessTokenSilently();
       if (token) headers.Authorization = `Bearer ${token}`;
-    } catch (_) {
+    } catch (err) {
+      // If the refresh token is missing or login is required, redirect to Auth0
+      if (
+        isAuthenticated &&
+        (err.error === 'login_required' || err.message?.includes('Missing Refresh Token'))
+      ) {
+        loginWithRedirect({
+          appState: { returnTo: window.location.pathname + window.location.search },
+        });
+        const authErr = new Error('Session expired. Redirecting to login...');
+        authErr.status = 401;
+        authErr.isAuthError = true;
+        throw authErr;
+      }
+
       // No token available from Auth0 — fall back to localStorage (legacy path)
       const stored = localStorage.getItem('token') || sessionStorage.getItem('token');
       if (stored) {
@@ -61,7 +75,7 @@ export default function useGamification() {
       }
     }
     return headers;
-  }, [getAccessTokenSilently, isAuthenticated]);
+  }, [getAccessTokenSilently, isAuthenticated, loginWithRedirect]);
 
   const apiFetch = useCallback(async (path, options = {}) => {
     const headers = await getHeaders();

@@ -12,7 +12,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { apiUrl } from '../api/baseUrl.js';
 
 export default function useFavorites() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, loginWithRedirect } = useAuth0();
 
   const [favoriteIds, setFavoriteIds] = useState(/** @type {string[]} */([]));
   const [isLoading,   setIsLoading]   = useState(false);
@@ -30,10 +30,19 @@ export default function useFavorites() {
   const getToken = useCallback(async () => {
     try {
       return await getAccessTokenRef.current();
-    } catch {
+    } catch (err) {
+      // If the refresh token is missing or login is required, redirect to Auth0
+      if (
+        isAuthenticated &&
+        (err.error === 'login_required' || err.message?.includes('Missing Refresh Token'))
+      ) {
+        loginWithRedirect({
+          appState: { returnTo: window.location.pathname + window.location.search },
+        });
+      }
       return null;
     }
-  }, []);
+  }, [isAuthenticated, loginWithRedirect]);
 
   // ── Load favorites on mount ──────────────────────────────────────────────────
 
