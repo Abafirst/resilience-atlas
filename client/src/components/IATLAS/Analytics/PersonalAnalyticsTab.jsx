@@ -167,9 +167,10 @@ function ExportButton() {
     <button
       className="pat-export-btn"
       aria-label="Export analytics report (coming soon)"
+      disabled
+      title="Coming soon"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => {}}
     >
       <img src="/icons/journal.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} />
       Export Report

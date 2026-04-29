@@ -43,16 +43,16 @@ function buildRadarData() {
     if (!dimData || typeof dimData !== 'object') continue;
 
     // Normalise: strip age-group prefix if present (e.g. "age-5-7/agentic-generative")
-    const normKey = DIMENSIONS.find(d => dimKey.includes(d.key))?.key ?? dimKey;
-    if (!DIMENSIONS.find(d => d.key === normKey)) continue;
+    const normalizedKey = DIMENSIONS.find(d => dimKey.includes(d.key))?.key ?? dimKey;
+    if (!DIMENSIONS.find(d => d.key === normalizedKey)) continue;
 
     for (const record of Object.values(dimData)) {
       if (!record?.completedAt) continue;
       try {
         const t = new Date(record.completedAt).getTime();
-        current[normKey]  = (current[normKey]  || 0) + 1;
+        current[normalizedKey]  = (current[normalizedKey]  || 0) + 1;
         if (now - t > thirtyDaysMs) {
-          previous[normKey] = (previous[normKey] || 0) + 1;
+          previous[normalizedKey] = (previous[normalizedKey] || 0) + 1;
         }
       } catch {
         // skip

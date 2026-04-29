@@ -64,15 +64,7 @@ function getColor(count) {
   return '#f1f5f9'; // missed
 }
 
-function getDarkColor(count) {
-  if (count >= 3) return '#059669';
-  if (count === 2) return '#10b981';
-  if (count === 1) return '#065f46';
-  return '#1e293b';
-}
-
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 // ── Tooltip ───────────────────────────────────────────────────────────────────
 
