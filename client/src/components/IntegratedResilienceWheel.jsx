@@ -397,6 +397,7 @@ export default function IntegratedResilienceWheel({
       return (
         <text
           key={`irw-ring-label-${ring}`}
+          data-label-type="ring-level"
           x={CX}
           y={CY - radius}
           textAnchor="middle"
@@ -723,6 +724,7 @@ export default function IntegratedResilienceWheel({
           {/* Background pill for clickable labels */}
           {(isClickable || interactive) && (
             <rect
+              data-label-type="background-pill"
               x={(pillX).toFixed(2)}
               y={(hitY - pillPad / 2).toFixed(2)}
               width={pillW}
@@ -737,6 +739,7 @@ export default function IntegratedResilienceWheel({
 
           {/* Dimension short name */}
           <text
+            data-label-type="dimension-name"
             x={ptLabel.x.toFixed(2)}
             y={(ptLabel.y - 12).toFixed(2)}
             fontSize={isDom ? 15 : 13}
@@ -770,6 +773,7 @@ export default function IntegratedResilienceWheel({
 
           {/* Skill level row */}
           <text
+            data-label-type="skill-level"
             x={ptLabel.x.toFixed(2)}
             y={(ptLabel.y + 18).toFixed(2)}
             fontSize={11}
@@ -786,6 +790,7 @@ export default function IntegratedResilienceWheel({
           {isClickable && (
             <g
               className="irw-info-icon"
+              data-label-type="info-icon"
               transform={`translate(${iconX.toFixed(2)},${(ptLabel.y - 22).toFixed(2)})`}
               style={{ pointerEvents: 'none' }}
             >
