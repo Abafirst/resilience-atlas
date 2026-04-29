@@ -209,12 +209,13 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_COMPLETE_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   false,
+    comingSoon:   true,
     features: [
       'Everything in Family',
-      'Full curriculum access',
+      'Full curriculum access (49 modules)',
       'Advanced progress analytics',
-      'Priority support',
+      'Priority support (launching Q3 2026)',
+      'Downloadable resources (launching Q3 2026)',
     ],
   },
   practitioner: {
@@ -223,13 +224,13 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_PRACTITIONER_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   false,
+    comingSoon:   true,
     features: [
       'Clinical assessments & session plans',
-      'Client resources & worksheets',
-      'ABA protocol library',
+      'ABA Protocol Library',
+      'Client resources (launching Q3 2026)',
       'Progress & outcome reports',
-      'Individual practice',
+      'Professional development content',
     ],
   },
   practice: {
@@ -238,7 +239,7 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_PRACTICE_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   false,
+    comingSoon:   true,
     features: [
       'Everything in Practitioner',
       'Multi-practitioner access',
