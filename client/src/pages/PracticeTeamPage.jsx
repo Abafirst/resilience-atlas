@@ -219,7 +219,7 @@ export default function PracticeTeamPage() {
       }, getAccessTokenSilently);
       const data = await res.json();
       if (!res.ok) {
-        if (data.upgradeRequired) {
+        if (res.status === 409) {
           track('Seat Limit Reached', {
             plan: practice.plan,
             seatLimit: practice.seatLimit,

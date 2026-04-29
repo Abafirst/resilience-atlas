@@ -17,6 +17,53 @@ export default function LandingPage() {
 
   return (
     <main className="storytelling-page landing-story">
+      {/* Practice Tier Announcement Banner */}
+      <section style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        padding: '2rem 1.5rem',
+        textAlign: 'center',
+        borderRadius: 12,
+        margin: '2rem auto',
+        maxWidth: 1200,
+      }}>
+        <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
+          🎉 New! IATLAS Practice Tier
+        </h2>
+        <p style={{ fontSize: 16, marginBottom: 20, opacity: 0.95 }}>
+          Group practice management is here. Invite your team, collaborate on cases, and track analytics—all in one place.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <a
+            href="/pricing"
+            style={{
+              background: '#fff',
+              color: '#667eea',
+              padding: '12px 28px',
+              borderRadius: 8,
+              fontWeight: 700,
+              textDecoration: 'none',
+            }}
+          >
+            View Plans →
+          </a>
+          <a
+            href="/iatlas/practice/setup"
+            style={{
+              background: 'rgba(255,255,255,0.2)',
+              color: '#fff',
+              padding: '12px 28px',
+              borderRadius: 8,
+              fontWeight: 600,
+              textDecoration: 'none',
+              border: '2px solid rgba(255,255,255,0.4)',
+            }}
+          >
+            Start Free Trial
+          </a>
+        </div>
+      </section>
+
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner story-wrap">

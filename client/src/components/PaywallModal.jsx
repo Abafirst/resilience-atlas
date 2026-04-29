@@ -26,14 +26,14 @@ const TIER_DISPLAY = {
 export default function PaywallModal({ requiredTier, currentTier, onClose, feature = 'practice_dashboard' }) {
   const overlayRef = useRef(null);
 
-  // Track paywall impression on mount
+  // Track paywall shown event
   useEffect(() => {
     track('Paywall Shown', {
       requiredTier,
       currentTier,
-      feature,
+      feature: 'practice_dashboard',
     });
-  }, [requiredTier, currentTier, feature]);
+  }, [requiredTier, currentTier]);
 
   // Close on Escape key
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function PaywallModal({ requiredTier, currentTier, onClose, featu
           </p>
           <div className="paywall-actions">
             <Link
-              to="/pricing/iatlas"
+              to="/pricing"
               className="paywall-btn-primary"
               onClick={() => track('Upgrade Clicked', { from: currentTier, to: requiredTier, source: 'paywall' })}
             >

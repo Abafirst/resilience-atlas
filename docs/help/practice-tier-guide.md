@@ -1,273 +1,275 @@
 # IATLAS Practice Tier — User Guide
 
-## Table of Contents
+## Overview
 
-1. [Getting Started](#getting-started)
-2. [Invite Team Members](#invite-team-members)
-3. [Manage Roles & Permissions](#manage-roles--permissions)
-4. [Seat Management](#seat-management)
-5. [Billing & Subscriptions](#billing--subscriptions)
-6. [Team Analytics](#team-analytics)
-7. [FAQs](#faqs)
+The IATLAS Practice tier allows group practices and clinics to manage multiple practitioners under a single billing account. This guide covers everything you need to get started, invite your team, manage roles, and handle billing.
 
 ---
 
-## Getting Started
+## 1. Getting Started
 
-### How to Create a Practice
+### Creating Your Practice
 
-The Practice tier is designed for multi-practitioner clinical groups. Before you can invite team members, you need to set up your practice.
+1. **Navigate to Practice Setup:** Go to `/iatlas/practice/setup` or click **"Start Free Trial"** from the pricing page.
+2. **Step 1 — Name Your Practice:** Enter your practice or clinic name (e.g., "Green Valley Therapy Center"). This is the name team members will see in their invitation emails.
+3. **Step 2 — Select a Plan:** Choose from three seat-based plans:
 
-**Prerequisites:**
-- An active IATLAS account
-- A payment method ready for subscription
+| Plan | Seats | Monthly Price | Per-Seat Cost |
+|------|-------|---------------|---------------|
+| Practice-5 | Up to 5 practitioners | $399/mo | $79.80/seat |
+| Practice-10 | Up to 10 practitioners | $699/mo | $69.90/seat |
+| Practice-25 | Up to 25 practitioners | $1,499/mo | $59.96/seat |
+| Custom | Unlimited | Contact us | Custom pricing |
 
-### 3-Step Setup Wizard
+4. **Step 3 — Subscribe:** Click **"Proceed to Checkout"** to complete payment through Stripe. You will be redirected back to your Practice Dashboard after a successful payment.
 
-Navigate to [/iatlas/practice/setup](https://theresilienceatlas.com/iatlas/practice/setup) to begin.
+> **Note:** The practice owner's account counts as one of the seats included in your plan.
 
-#### Step 1 — Name Your Practice
+### Plan Selection Guide
 
-Enter the official name of your group practice (e.g., "Green Valley Therapy Center"). This name will appear on all invitation emails sent to your team.
+- **Practice-5:** Best for small clinics or therapy groups with 2–5 clinicians.
+- **Practice-10:** Ideal for growing practices that expect to add staff over time.
+- **Practice-25:** Designed for larger multidisciplinary clinics or group practices.
+- **Custom:** Contact `hello@theresilienceatlas.com` for organizations requiring 25+ seats, custom onboarding, or SSO.
 
-- Maximum 128 characters
-- Press **Enter** or click **Continue →** to proceed
+### Stripe Checkout Process
 
-#### Step 2 — Select Your Plan
-
-Choose the number of practitioner seats your practice needs:
-
-| Plan | Seats | Price | Overage |
-|------|-------|-------|---------|
-| **Practice-5** | 5 practitioners | $399/mo | +$80/seat/mo |
-| **Practice-10** | 10 practitioners | $699/mo | +$70/seat/mo |
-| **Practice-25** | 25 practitioners | $1,499/mo | +$60/seat/mo |
-| **Custom** | Unlimited | Contact us | — |
-
-> **Tip:** Start with Practice-5 and upgrade at any time as your team grows.
-
-Click **Continue →** to proceed.
-
-#### Step 3 — Confirm & Subscribe
-
-Review your practice name and selected plan. Click **Proceed to Checkout →** to be redirected to Stripe's secure checkout page.
-
-After successful payment, you will be redirected to your **Practice Dashboard** at `/iatlas/practice/dashboard`.
+1. After clicking **"Proceed to Checkout"**, you will be redirected to a Stripe-hosted payment page.
+2. Enter your credit card details (Visa, Mastercard, American Express accepted).
+3. Complete the purchase — Stripe handles all payment security (PCI compliant).
+4. After payment, you are redirected to `/iatlas/practice/dashboard`.
+5. Your subscription is immediately active and your seats are available.
 
 ---
 
-## Invite Team Members
+## 2. Invite Team Members
 
-### Step-by-Step Invitation Process
+### How to Send Invitations
 
-1. Go to **Practice → Team** (`/iatlas/practice/team`).
-2. Click **Invite Practitioner**.
-3. Enter the practitioner's email address.
-4. Select their role (see [Role Hierarchy](#role-hierarchy) below).
-5. Click **Send Invitation**.
+1. Go to **Practice Dashboard → Team** tab (or navigate to `/iatlas/practice/team`).
+2. Click the **"Invite Practitioner"** button.
+3. Enter the team member's **email address**.
+4. Select their **role** (see Role Descriptions below).
+5. Click **"Send Invite"**.
 
-An email invitation is sent to the practitioner with a unique link. The link expires after **7 days**.
+The invited practitioner receives an email with a unique invitation link. The link is valid for **7 days**.
 
-### Role Selection
-
-When inviting a team member, choose the role that matches their responsibilities:
+### Role Descriptions
 
 | Role | Description |
 |------|-------------|
-| **Owner** | Full access; can manage billing and delete the practice |
-| **Admin** | Manage members and all clinical features; no billing access |
-| **Clinician** | Full clinical access; cannot manage team members |
-| **Therapist** | Clinical access focused on therapy workflows |
-| **Observer** | Read-only access for supervisors or trainees |
+| **Owner** | Full control. Can manage billing, invite/remove members, change roles, and delete the practice. Only one Owner per practice. |
+| **Admin** | Can invite/remove team members and change roles (except Owner). Cannot access billing. |
+| **Clinician / Therapist** | Can access client records, session plans, and clinical tools. Cannot manage team members. |
+| **Observer** | Read-only access to the practice dashboard and analytics. Cannot create or modify records. |
 
 ### Email Invite Flow
 
-1. Practitioner receives an invitation email from `noreply@theresilienceatlas.com`.
-2. They click **Accept Invitation**.
-3. If they don't have an account, they are prompted to create one.
-4. After signing in, they are added to the practice with their assigned role.
-5. The practice's **seatsUsed** count increments by 1.
+1. The invited practitioner receives an email from `noreply@theresilienceatlas.com`.
+2. They click the **"Accept Invitation"** link in the email.
+3. If they don't have an account, they are prompted to create one (free).
+4. After account creation or login, they are added to the practice automatically.
+5. Their seat is marked as **occupied** immediately upon acceptance.
+
+> **Tip:** If a team member doesn't receive their invitation, ask them to check their spam/junk folder, then resend from the Team page.
 
 ---
 
-## Manage Roles & Permissions
+## 3. Manage Roles & Permissions
 
 ### Role Hierarchy
 
 ```
 Owner
-  └── Admin
-        └── Clinician / Therapist
-                └── Observer
+ └── Admin
+      └── Clinician / Therapist
+           └── Observer
 ```
 
-Higher roles inherit all permissions of lower roles.
+Higher roles include all permissions of lower roles plus additional capabilities.
 
-### How to Change Member Roles
+### How to Change a Member's Role
 
-1. Go to **Practice → Team → Members**.
-2. Find the team member in the table.
-3. Click **Edit Role** (pencil icon).
+1. Navigate to **Team → Members** tab.
+2. Find the team member in the list.
+3. Click the **role badge** or the **Edit** button next to their name.
 4. Select the new role from the dropdown.
 5. Click **Save**.
 
+> **Note:** Only the Owner can change Admin roles. Admins can change Clinician and Observer roles.
+
 ### Permission Matrix
 
-| Permission | Owner | Admin | Clinician | Therapist | Observer |
-|------------|:-----:|:-----:|:---------:|:---------:|:--------:|
-| View practice dashboard | ✅ | ✅ | ✅ | ✅ | ✅ |
-| View client list | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Create/edit clients | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Run assessments | ✅ | ✅ | ✅ | ✅ | ❌ |
-| View team analytics | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Invite team members | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Remove team members | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Change member roles | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Manage billing | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Delete practice | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Action | Owner | Admin | Clinician | Observer |
+|--------|-------|-------|-----------|----------|
+| View practice dashboard | ✅ | ✅ | ✅ | ✅ |
+| View client records | ✅ | ✅ | ✅ | ✅ (read) |
+| Create/edit session plans | ✅ | ✅ | ✅ | ❌ |
+| Invite team members | ✅ | ✅ | ❌ | ❌ |
+| Remove team members | ✅ | ✅ | ❌ | ❌ |
+| Change member roles | ✅ | ✅* | ❌ | ❌ |
+| View/manage billing | ✅ | ❌ | ❌ | ❌ |
+| Delete practice | ✅ | ❌ | ❌ | ❌ |
+| Transfer ownership | ✅ | ❌ | ❌ | ❌ |
+
+*Admins cannot change Owner role or promote others to Owner.
 
 ---
 
-## Seat Management
+## 4. Seat Management
 
 ### Seat Limits by Plan
 
-| Plan | Included Seats |
-|------|---------------|
-| Practice-5 | 5 |
-| Practice-10 | 10 |
-| Practice-25 | 25 |
-| Custom | Unlimited |
+| Plan | Maximum Practitioners |
+|------|-----------------------|
+| Practice-5 | 5 (including owner) |
+| Practice-10 | 10 (including owner) |
+| Practice-25 | 25 (including owner) |
 
-The **Owner** account always occupies 1 seat.
+### What Happens When You Reach the Seat Limit
 
-### What Happens When Seats Are Full
+- **Invitations are blocked:** The invite modal will display a warning that your practice is at capacity.
+- **Existing members are unaffected:** Current team members retain full access.
+- **Pending invitations remain active** but cannot be accepted until a seat is freed.
 
-When you attempt to invite a practitioner after reaching your seat limit:
+### How to Upgrade Your Plan
 
-- The invitation is blocked with the message: *"Your practice has reached its seat limit. Please upgrade your plan to invite more practitioners."*
-- No invitation email is sent.
-- Your team page shows a **Seat Limit Reached** warning with an upgrade prompt.
+1. Go to **Practice Dashboard → Billing**.
+2. Click **"Upgrade Plan"**.
+3. Select the new plan (Practice-10 or Practice-25).
+4. Stripe handles the proration — you pay only for the remaining days in your current billing period at the new rate.
 
-### How to Upgrade Plans
+### Seat Utilization Best Practices
 
-1. Go to **Practice → Billing** (`/iatlas/practice/billing`).
-2. Click **Change Plan**.
-3. Select a higher-tier plan.
-4. Confirm the prorated billing change.
-
-Alternatively, contact support at [hello@theresilienceatlas.com](mailto:hello@theresilienceatlas.com).
-
-### How to Remove Members
-
-1. Go to **Practice → Team → Members**.
-2. Find the member in the table.
-3. Click the **Remove** button (trash icon).
-4. Confirm the removal.
-
-The practitioner loses access immediately. The seat becomes available for a new invitation.
+- Assign the **Observer** role to stakeholders who only need to view reports — they still use a seat, but won't interact with client data.
+- **Remove inactive members** promptly to free up seats for new hires.
+- Monitor seat utilization in **Practice Dashboard → Analytics → Team Utilization**.
 
 ---
 
-## Billing & Subscriptions
+## 5. Billing & Subscriptions
 
 ### Payment Method Management
 
-1. Go to **Practice → Billing** (`/iatlas/practice/billing`).
-2. Click **Manage Billing** to open the Stripe Customer Portal.
-3. In the portal, you can:
-   - Add or update a payment method
-   - View and download invoices
-   - Change your plan
-   - Cancel your subscription
-
-### How to Update Your Card
-
-1. **Practice → Billing → Manage Billing** → Stripe Customer Portal.
-2. Click **Payment Methods → Add payment method**.
-3. Enter your new card details.
-4. Set as default and remove the old card if desired.
-
-### Cancellation Process
-
-1. **Practice → Billing → Manage Billing** → Stripe Customer Portal.
-2. Click **Cancel plan**.
-3. Select a reason (optional) and confirm.
-4. Access continues until the end of the current billing period.
-5. After cancellation, all practice members lose access to Practice-tier features.
-
-> **Note:** Practice data (clients, assessments, notes) is retained for 90 days after cancellation.
+1. Go to **Practice Dashboard → Billing**.
+2. Click **"Manage Payment Method"** — this opens the Stripe Customer Portal.
+3. Add, remove, or update credit cards directly in the Stripe portal.
+4. Changes take effect on the next billing cycle.
 
 ### Invoice Access
 
-All invoices are available in the Stripe Customer Portal under **Billing History**. Invoices are also emailed automatically to the practice Owner after each billing cycle.
+1. Go to **Practice Dashboard → Billing → Invoices**.
+2. Click any invoice to download a PDF copy.
+3. Invoices are also emailed to the Owner's address automatically each month.
+
+### Cancellation Process
+
+1. Go to **Practice Dashboard → Billing → Cancel Subscription**.
+2. Confirm cancellation in the dialog.
+3. Your practice remains active until the end of the current billing period.
+4. After the period ends, the practice is deactivated and team members lose access.
+5. Data is retained for 90 days after cancellation; contact support to request an export.
+
+### Prorated Billing Explanation
+
+When you **upgrade** mid-cycle:
+- You are charged immediately for the prorated difference between your old and new plan prices.
+- Your next regular invoice is at the new plan price.
+
+When you **downgrade** mid-cycle:
+- The difference is applied as a credit toward your next invoice.
+- The downgrade takes effect at the end of the current billing period.
 
 ---
 
-## Team Analytics
+## 6. Team Analytics
 
-### How to View Practice-Wide Metrics
+### Available Metrics
 
-Go to **Practice → Analytics** (`/iatlas/practice/analytics`) to see:
+| Metric | Description |
+|--------|-------------|
+| Seat Utilization | Percentage of seats filled vs. total available |
+| Active Practitioners | Practitioners who logged in within the last 30 days |
+| Session Plans Created | Total session plans across all practitioners |
+| Client Records | Total active client profiles |
+| Assessment Completions | Assessments completed by all practitioners' clients |
+| Resilience Score Distribution | Aggregate score spread across all clients |
 
-- **Seat utilization** — seats used vs. available
-- **Client outcomes** — aggregate resilience scores across all practitioners
-- **Session frequency** — sessions per week by practitioner
-- **Assessment completion rates** — percentage of clients with recent assessments
+### How to Export Data
 
-### Data Export Instructions
+1. Go to **Practice Dashboard → Analytics**.
+2. Set the desired date range.
+3. Click **"Export CSV"** to download a spreadsheet of the selected metrics.
+4. For custom reports, contact support at `hello@theresilienceatlas.com`.
 
-1. Go to **Practice → Analytics**.
-2. Click **Export Data** (top-right).
-3. Select date range and data type (CSV or JSON).
-4. Click **Download**.
+### Reading the Dashboard
 
-Exported files include anonymized client IDs, assessment scores, and timestamps.
+- **Top row:** Summary cards (seats, active practitioners, total sessions, avg. resilience score)
+- **Charts:** Monthly trend lines for key metrics
+- **Table:** Per-practitioner breakdown of sessions, clients, and completion rates
+- **Filters:** Filter by practitioner, date range, or client age group
 
 ---
 
-## FAQs
+## 7. FAQs
 
-### What's the difference between Practitioner and Practice tiers?
+### Practitioner vs. Practice Tier — What's the Difference?
 
 | Feature | Practitioner ($149/mo) | Practice ($399+/mo) |
-|---------|----------------------|---------------------|
-| Clinical assessments | ✅ | ✅ |
-| Session plans | ✅ | ✅ |
-| Client worksheets | ✅ | ✅ |
-| Individual practice management | ✅ | ✅ |
-| Multi-practitioner seats | ❌ | ✅ (5–25) |
-| Team collaboration tools | ❌ | ✅ |
-| Group practice dashboard | ❌ | ✅ |
-| Role-based permissions | ❌ | ✅ |
-| Team analytics | ❌ | ✅ |
+|---------|------------------------|---------------------|
+| Practitioners | 1 (yourself) | 5, 10, or 25 |
+| Team collaboration | ❌ | ✅ |
+| Group analytics | ❌ | ✅ |
+| Role-based access | ❌ | ✅ |
+| Shared client records | ❌ | ✅ (coming soon) |
+| Centralized billing | N/A | ✅ |
 
-### Can I upgrade or downgrade my plan?
+### How Do I Upgrade or Downgrade?
 
-**Upgrade:** Available at any time. You are charged the prorated difference immediately.
+- Navigate to **Billing → Upgrade/Downgrade Plan**.
+- Select the new plan.
+- Stripe handles proration automatically (see Prorated Billing section above).
 
-**Downgrade:** Available at the end of your billing period. If your current seat usage exceeds the lower plan's limit, you must remove members before downgrading.
+### What Happens If I Reach My Seat Limit?
 
-### How do I handle the seat limit?
+- New invitations are blocked.
+- Existing team members retain full access.
+- Upgrade your plan from the **Billing** page to add more seats.
 
-If you need more seats than your current plan allows:
+### Can I Transfer Practice Ownership to Someone Else?
 
-1. Upgrade to the next plan tier, or
-2. Remove inactive members to free up seats.
+1. Go to **Team → Members**.
+2. Find the team member you want to promote.
+3. Click **"Transfer Ownership"** next to their name (only visible to Owner).
+4. The current Owner becomes an Admin; the selected member becomes the new Owner.
 
-You cannot invite new members while at your seat limit.
+> **Warning:** This action is irreversible unless the new Owner transfers it back.
 
-### Can I transfer Practice ownership?
+### How Do I Delete the Practice?
 
-Currently, ownership transfer requires contacting support at [hello@theresilienceatlas.com](mailto:hello@theresilienceatlas.com). Automated ownership transfer is on the roadmap.
+1. Go to **Practice Dashboard → Settings**.
+2. Scroll to the **Danger Zone** section.
+3. Click **"Delete Practice"** and confirm.
+4. All team members will immediately lose access.
+5. The Stripe subscription is cancelled automatically (no further charges).
 
-### What happens if I delete my practice?
+> **Note:** Practice deletion is permanent. Contact support before deleting if you need a data export.
 
-Deleting a practice is permanent:
+### What Happens to My Data If I Cancel?
 
-- All practitioners lose access immediately.
-- All client data, assessments, and notes are permanently deleted after 90 days.
-- The subscription is cancelled automatically.
-- This action cannot be undone.
+- Data is retained for **90 days** after cancellation.
+- You can request a full data export by emailing `hello@theresilienceatlas.com`.
+- After 90 days, data is permanently deleted per our Privacy Policy.
 
-To delete your practice, contact [hello@theresilienceatlas.com](mailto:hello@theresilienceatlas.com).
+### Can Practitioners Have Their Own Individual Subscriptions Within a Practice?
+
+No. Practitioners added to a Practice account access all IATLAS features through the practice's subscription. They do not need (and cannot have) a separate individual subscription for the same features.
+
+---
+
+## Support
+
+For help, contact us at:
+- **Email:** `hello@theresilienceatlas.com`
+- **Subject line:** `IATLAS Practice Tier Support`
+- **Response time:** Within 1 business day (Priority support available on Complete+ tiers)

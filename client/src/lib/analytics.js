@@ -1,19 +1,19 @@
 /**
- * analytics.js
  * Analytics wrapper for tracking user events.
- * Supports Mixpanel, Google Analytics, and PostHog.
+ * Supports Mixpanel, Google Analytics (gtag), and PostHog.
  *
- * Enable analytics by setting VITE_ANALYTICS_ENABLED=true in your environment.
- * When disabled (default in development), events are logged to the console.
+ * Set VITE_ANALYTICS_ENABLED=true in your environment to send events
+ * to the configured providers. When disabled, events are logged to
+ * the console instead (useful during development).
  */
 
 const ANALYTICS_ENABLED = import.meta.env.VITE_ANALYTICS_ENABLED === 'true';
 
 /**
- * Track an event with optional properties.
+ * Track a named event with optional properties.
  *
- * @param {string} eventName - Name of the event (e.g. 'Practice Created')
- * @param {Object} [properties={}] - Key/value pairs describing the event
+ * @param {string} eventName - The event name (e.g. 'Practice Created')
+ * @param {Object} [properties] - Key/value metadata to attach to the event
  */
 export function track(eventName, properties = {}) {
   if (!ANALYTICS_ENABLED) {
@@ -26,7 +26,7 @@ export function track(eventName, properties = {}) {
     window.mixpanel.track(eventName, properties);
   }
 
-  // Google Analytics
+  // Google Analytics (gtag)
   if (window.gtag) {
     window.gtag('event', eventName, properties);
   }
@@ -38,10 +38,10 @@ export function track(eventName, properties = {}) {
 }
 
 /**
- * Identify a user for person-level analytics.
+ * Identify the current user so that subsequent events are attributed to them.
  *
- * @param {string} userId - Unique user identifier (e.g. Auth0 sub)
- * @param {Object} [traits={}] - User properties (name, email, tier, etc.)
+ * @param {string} userId - The user's unique ID (e.g. Auth0 sub)
+ * @param {Object} [traits] - User-level properties (name, email, tier, etc.)
  */
 export function identify(userId, traits = {}) {
   if (!ANALYTICS_ENABLED) {
