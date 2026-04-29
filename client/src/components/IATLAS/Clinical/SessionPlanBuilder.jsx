@@ -84,6 +84,31 @@ export default function SessionPlanBuilder({ plan, onSave, onCancel, getTokenFn 
   const [saveError, setSaveError] = useState('');
   const autoSaveTimer = useRef(null);
 
+  // Pick up protocol added via "Add to Session Plan" from the Protocol Library.
+  useEffect(() => {
+    if (isEdit) return;
+    try {
+      const raw = sessionStorage.getItem('iatlas_pending_protocol');
+      if (raw) {
+        const protocol = JSON.parse(raw);
+        sessionStorage.removeItem('iatlas_pending_protocol');
+        setForm(f => ({
+          ...f,
+          activitiesSelected: [
+            ...f.activitiesSelected,
+            {
+              type:      'protocol',
+              reference: protocol.activityId  || '',
+              title:     protocol.activityTitle || '',
+              notes:     protocol.dimension    ? `Dimension: ${protocol.dimension}` : '',
+            },
+          ],
+        }));
+      }
+    } catch (_) {}
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Auto-save draft to localStorage (create mode only).
   useEffect(() => {
     if (isEdit) return;

@@ -1,14 +1,42 @@
 /**
  * ProtocolCard.jsx
  * Displays a single ABA protocol in card format with expandable details.
+ *
+ * Props:
+ *   protocol  {object}    — the protocol data object
+ *   onAddToSessionPlan {function|undefined} — optional callback; if provided,
+ *                                             "Add to Session Plan" button is shown
  */
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DIMENSION_META } from '../../../data/abaProtocols.js';
 
-export default function ProtocolCard({ protocol }) {
+const SESSION_PLAN_PROTOCOL_KEY = 'iatlas_pending_protocol';
+
+export default function ProtocolCard({ protocol, onAddToSessionPlan }) {
   const [expanded, setExpanded] = useState(false);
-  const dimMeta = DIMENSION_META[protocol.dimension] || {};
+  const dimMeta  = DIMENSION_META[protocol.dimension] || {};
+  const navigate = useNavigate();
+
+  function handleAddToSessionPlan() {
+    // Store the protocol in sessionStorage so the SessionPlanBuilder can pick it up.
+    try {
+      sessionStorage.setItem(SESSION_PLAN_PROTOCOL_KEY, JSON.stringify({
+        activityId:    protocol.id,
+        activityTitle: protocol.title,
+        activityType:  'aba-protocol',
+        dimension:     protocol.dimension,
+        estimatedTime: 30,
+      }));
+    } catch (_) {}
+
+    if (typeof onAddToSessionPlan === 'function') {
+      onAddToSessionPlan(protocol);
+    } else {
+      navigate('/iatlas/clinical/session-plans');
+    }
+  }
 
   return (
     <article
@@ -81,13 +109,23 @@ export default function ProtocolCard({ protocol }) {
             </section>
           )}
 
-          <button
-            className="ppl-print-btn"
-            onClick={() => window.print()}
-            aria-label={`Print ${protocol.title} protocol`}
-          >
-            <img src="/icons/print.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Print Protocol
-          </button>
+          <div className="ppl-card-detail-actions">
+            <button
+              className="ppl-print-btn"
+              onClick={() => window.print()}
+              aria-label={`Print ${protocol.title} protocol`}
+            >
+              <img src="/icons/print.svg" alt="" aria-hidden="true" style={{ width: '1rem', height: '1rem', objectFit: 'contain' }} /> Print Protocol
+            </button>
+            <button
+              className="ppl-add-session-btn"
+              style={{ borderColor: dimMeta.color, color: dimMeta.color }}
+              onClick={handleAddToSessionPlan}
+              aria-label={`Add ${protocol.title} to session plan`}
+            >
+              + Add to Session Plan
+            </button>
+          </div>
         </div>
       )}
     </article>

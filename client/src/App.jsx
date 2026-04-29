@@ -90,6 +90,7 @@ import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
 const PractitionerProtocolLibrary      = lazy(() => import('./pages/PractitionerProtocolLibrary.jsx'));
 const SessionPlansPage                 = lazy(() => import('./pages/SessionPlansPage.jsx'));
 const ClientOutcomeReportPage          = lazy(() => import('./pages/ClientOutcomeReportPage.jsx'));
+const ClinicalIntakesPage              = lazy(() => import('./pages/ClinicalIntakesPage.jsx'));
 const ChildProfilesPage                = lazy(() => import('./pages/ChildProfilesPage.jsx'));
 const AnalyticsDashboardPage           = lazy(() => import('./pages/AnalyticsDashboardPage.jsx'));
 const PracticeSettingsPage             = lazy(() => import('./pages/PracticeSettingsPage.jsx'));
@@ -422,6 +423,7 @@ function AppShell() {
           <Route path="/iatlas/developmental-roadmap" element={<DevelopmentalRoadmapPage />} />
           <Route path="/iatlas/clinical/aba-protocols" element={<PractitionerProtocolLibrary />} />
           <Route path="/iatlas/clinical/session-plans" element={<SessionPlansPage />} />
+          <Route path="/iatlas/clinical/intakes" element={<ClinicalIntakesPage />} />
           <Route path="/iatlas/clinical/outcome-reports/:clientId" element={<ClientOutcomeReportPage />} />
           <Route path="/iatlas/profiles" element={<ChildProfilesPage />} />
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
