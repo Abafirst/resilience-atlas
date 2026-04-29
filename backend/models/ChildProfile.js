@@ -18,6 +18,7 @@ const progressSchema = new mongoose.Schema(
     badges:              { type: Array,   default: [] },
     streaks:             { type: Object,  default: {} },
     completedActivities: { type: Object,  default: {} },
+    certificates:        { type: Array,   default: [] },
   },
   { _id: false }
 );

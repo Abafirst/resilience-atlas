@@ -7,8 +7,11 @@
  * performance ratings are stored.
  *
  * Endpoints:
- *   POST /api/iatlas/progress/complete-activity  — Mark an activity as complete
- *   GET  /api/iatlas/progress                    — Fetch progress for user / child
+ *   POST   /api/iatlas/progress/complete-activity  — Mark an activity as complete
+ *   GET    /api/iatlas/progress                    — Fetch progress for user / child
+ *   GET    /api/iatlas/progress/:profileId         — Load saved progress snapshot for a child profile
+ *   POST   /api/iatlas/progress/:profileId         — Save/upsert progress snapshot for a child profile
+ *   DELETE /api/iatlas/progress/:profileId         — Clear all progress for a child profile
  */
 
 const express   = require('express');
@@ -17,6 +20,7 @@ const router    = express.Router();
 
 const { authenticateJWT }  = require('../middleware/auth');
 const IATLASProgress       = require('../models/IATLASProgress');
+const ChildProfile         = require('../models/ChildProfile');
 const logger               = require('../utils/logger');
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
@@ -309,5 +313,188 @@ router.get('/', async (req, res) => {
     return res.status(500).json({ error: 'Failed to fetch progress.' });
   }
 });
+
+// ── GET /:profileId ───────────────────────────────────────────────────────────
+
+/**
+ * Load the saved progress snapshot for a specific child profile.
+ *
+ * Route param: :profileId (UUID from ChildProfile)
+ *
+ * Returns the progress object stored in the child's profile document, or an
+ * empty object `{}` when no progress has been saved yet.
+ *
+ * Response:
+ *   { progress: { completedActivities, totalXP, level, badges, streaks, certificates },
+ *     lastSyncedAt: <ISO date or null> }
+ */
+router.get('/:profileId', async (req, res) => {
+  const userId    = getUserId(req);
+  const profileId = sanitizeProfileId(req.params.profileId);
+
+  if (!userId) {
+    return res.status(401).json({ error: 'User identity could not be determined.' });
+  }
+  if (!profileId) {
+    return res.status(400).json({ error: 'Invalid profileId.' });
+  }
+
+  try {
+    const profile = await ChildProfile.findOne({
+      profileId,
+      userId: userId.toString(),
+    }).lean();
+
+    if (!profile) {
+      return res.status(403).json({ error: 'Profile not found or access denied.' });
+    }
+
+    const progress = profile.progress || {};
+    const hasProgress = progress.totalXP > 0 ||
+      (Array.isArray(progress.badges) && progress.badges.length > 0) ||
+      (progress.completedActivities && Object.keys(progress.completedActivities).length > 0);
+
+    if (!hasProgress) {
+      return res.json({ progress: {}, lastSyncedAt: null });
+    }
+
+    return res.json({
+      progress,
+      lastSyncedAt: profile.updatedAt || null,
+    });
+  } catch (err) {
+    logger.error('[iatlas-progress/get-profile] error:', err);
+    return res.status(500).json({ error: 'Failed to fetch progress.' });
+  }
+});
+
+// ── POST /:profileId ──────────────────────────────────────────────────────────
+
+/**
+ * Save/upsert progress snapshot for a specific child profile.
+ *
+ * Route param: :profileId (UUID from ChildProfile)
+ * Body: { progress: { completedActivities?, totalXP?, level?, badges?, streaks?, certificates? } }
+ *
+ * Performs a merge: incoming fields overwrite existing values; omitted fields
+ * retain their existing values.
+ *
+ * Response:
+ *   { success: true, progress: { ... }, lastSyncedAt: <ISO date> }
+ */
+router.post('/:profileId', async (req, res) => {
+  const userId    = getUserId(req);
+  const profileId = sanitizeProfileId(req.params.profileId);
+  const { progress: incomingProgress } = req.body || {};
+
+  if (!userId) {
+    return res.status(401).json({ error: 'User identity could not be determined.' });
+  }
+  if (!profileId) {
+    return res.status(400).json({ error: 'Invalid profileId.' });
+  }
+  if (!incomingProgress || typeof incomingProgress !== 'object' || Array.isArray(incomingProgress)) {
+    return res.status(400).json({ error: 'progress is required and must be an object.' });
+  }
+
+  // Validate numeric fields
+  if (incomingProgress.totalXP !== undefined && (typeof incomingProgress.totalXP !== 'number' || incomingProgress.totalXP < 0)) {
+    return res.status(400).json({ error: 'progress.totalXP must be a non-negative number.' });
+  }
+  if (incomingProgress.level !== undefined && (typeof incomingProgress.level !== 'number' || incomingProgress.level < 1)) {
+    return res.status(400).json({ error: 'progress.level must be a number >= 1.' });
+  }
+
+  try {
+    // Verify ownership and load current document.
+    const existing = await ChildProfile.findOne({
+      profileId,
+      userId: userId.toString(),
+    });
+
+    if (!existing) {
+      return res.status(403).json({ error: 'Profile not found or access denied.' });
+    }
+
+    const current = existing.progress || {};
+
+    const merged = {
+      dimensions:          incomingProgress.dimensions          ?? current.dimensions          ?? {},
+      totalXP:             incomingProgress.totalXP             ?? current.totalXP             ?? 0,
+      level:               incomingProgress.level               ?? current.level               ?? 1,
+      badges:              incomingProgress.badges              ?? current.badges              ?? [],
+      streaks:             incomingProgress.streaks             ?? current.streaks             ?? {},
+      completedActivities: incomingProgress.completedActivities ?? current.completedActivities ?? {},
+      certificates:        incomingProgress.certificates        ?? current.certificates        ?? [],
+    };
+
+    existing.progress = merged;
+    existing.markModified('progress');
+    const saved = await existing.save();
+
+    return res.json({
+      success:      true,
+      progress:     saved.progress,
+      lastSyncedAt: saved.updatedAt,
+    });
+  } catch (err) {
+    logger.error('[iatlas-progress/post-profile] error:', err);
+    return res.status(500).json({ error: 'Failed to save progress.' });
+  }
+});
+
+// ── DELETE /:profileId ────────────────────────────────────────────────────────
+
+/**
+ * Clear all progress for a specific child profile (reset to defaults).
+ *
+ * Route param: :profileId (UUID from ChildProfile)
+ *
+ * Response:
+ *   { success: true, message: "Progress cleared for profile <profileId>" }
+ */
+router.delete('/:profileId', async (req, res) => {
+  const userId    = getUserId(req);
+  const profileId = sanitizeProfileId(req.params.profileId);
+
+  if (!userId) {
+    return res.status(401).json({ error: 'User identity could not be determined.' });
+  }
+  if (!profileId) {
+    return res.status(400).json({ error: 'Invalid profileId.' });
+  }
+
+  try {
+    const profile = await ChildProfile.findOne({
+      profileId,
+      userId: userId.toString(),
+    });
+
+    if (!profile) {
+      return res.status(403).json({ error: 'Profile not found or access denied.' });
+    }
+
+    profile.progress = {
+      dimensions:          {},
+      totalXP:             0,
+      level:               1,
+      badges:              [],
+      streaks:             {},
+      completedActivities: {},
+      certificates:        [],
+    };
+    profile.markModified('progress');
+    await profile.save();
+
+    return res.json({
+      success: true,
+      message: `Progress cleared for profile ${profileId}`,
+    });
+  } catch (err) {
+    logger.error('[iatlas-progress/delete-profile] error:', err);
+    return res.status(500).json({ error: 'Failed to clear progress.' });
+  }
+});
+
 
 module.exports = router;
