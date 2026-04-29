@@ -926,8 +926,8 @@ export default function FounderPage() {
             </p>
 
             <p>
-              The answer, the research consistently shows, is yes — and <strong>The Resilience Atlas&#8482;</strong> is
-              here to help you understand exactly how.
+              <strong>The Resilience Atlas&#8482;</strong> is here to help you map your current resilience,
+              identify your strengths, and build capacity in the dimensions that matter most to you.
             </p>
             <div className="pullquote" style={{marginTop: '1.5rem'}}>
               <p>
