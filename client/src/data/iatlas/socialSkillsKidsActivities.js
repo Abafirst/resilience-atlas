@@ -33,6 +33,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Help children identify and own a specific social goal with visual reinforcement.',
           faciliatatorNote: 'Use picture prompts for children who are not yet writing. Praise any attempt to name a social behavior.',
+            xpReward: 50,
+            skills: ['Friendship building', 'Emotional recognition', 'Assertiveness'],
         },
         {
           id: 'ss-ag-57-brave-hello',
@@ -49,6 +51,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build assertiveness for initiating greetings in safe, structured practice.',
           faciliatatorNote: 'For anxious children, start with whispering then build to a normal voice over multiple sessions.',
+            xpReward: 50,
+            skills: ['Social boundaries', 'Assertiveness'],
         },
         {
           id: 'ss-ag-57-asking-for-help',
@@ -65,6 +69,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach assertive self-advocacy: asking for help is a strength, not a weakness.',
           faciliatatorNote: 'Emphasize eye contact and a calm voice. Use AAC devices if needed for communication.',
+            xpReward: 50,
+            skills: ['Assertiveness', 'Conversation skills'],
         },
         {
           id: 'ss-ag-57-i-can-take-turns',
@@ -80,6 +86,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-regulation and social assertiveness through structured cooperative play.',
           faciliatatorNote: 'If a child struggles to wait, use a visual timer to make the wait concrete and predictable.',
+            xpReward: 75,
+            skills: ['Group participation', 'Assertiveness'],
         },
       ],
 
@@ -99,6 +107,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce structured social goal-setting with self-monitoring and reflection.',
           faciliatatorNote: 'Pair with a Goal Buddy who checks in daily. Celebrate attempts, not just successes.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-ag-810-assertive-script',
@@ -115,6 +125,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build assertive communication skills as a foundation for social self-advocacy.',
           faciliatatorNote: 'Normalize the discomfort of assertiveness for children who are used to passive responses. Practice multiple times.',
+            xpReward: 75,
+            skills: ['Assertiveness', 'Conversation skills'],
         },
         {
           id: 'ss-ag-810-join-the-game',
@@ -131,6 +143,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice active strategies for peer group entry with awareness of others\' perspectives.',
           faciliatatorNote: 'Process feelings of rejection respectfully — many children have real experiences here. Validate and coach.',
+            xpReward: 75,
+            skills: ['Group participation', 'Friendship building', 'Perspective-taking'],
         },
         {
           id: 'ss-ag-810-peer-negotiation',
@@ -147,6 +161,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop assertive negotiation skills while respecting others\' needs and perspectives.',
           faciliatatorNote: 'Keep the scenario neutral. Avoid real classroom conflicts to maintain psychological safety.',
+            xpReward: 75,
+            skills: ['Perspective-taking', 'Social boundaries', 'Assertiveness'],
         },
       ],
 
@@ -166,6 +182,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop confident social self-advocacy skills for real-world peer and adult interactions.',
           faciliatatorNote: 'Acknowledge cultural contexts where assertiveness is perceived differently. Honor diversity in communication styles.',
+            xpReward: 75,
+            skills: ['Assertiveness', 'Friendship building'],
         },
         {
           id: 'ss-ag-1114-goal-vision-map',
@@ -182,6 +200,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect social goals to identity development and long-term interpersonal vision.',
           faciliatatorNote: 'This is a vulnerable activity — create a safe, non-judgmental sharing environment.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-ag-1114-conflict-assertion',
@@ -198,6 +218,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build assertive resistance to social pressure while maintaining relationships.',
           faciliatatorNote: 'Keep scenarios realistic but not triggering. Avoid scenarios mirroring students\' real peer situations.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Assertiveness'],
         },
         {
           id: 'ss-ag-1114-leadership-social',
@@ -214,6 +236,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop social leadership — the ability to guide group dynamics assertively and inclusively.',
           faciliatatorNote: 'Frame leadership as service, not authority. Highlight listening as a leadership strength.',
+            xpReward: 75,
+            skills: ['Group participation', 'Assertiveness'],
         },
       ],
 
@@ -233,6 +257,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build adult-level intentionality and agency over one\'s social life through structured goal-setting.',
           faciliatatorNote: 'Normalize that not all domains feel strong simultaneously. This is developmentally appropriate.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-ag-1518-assertive-boundaries',
@@ -249,6 +275,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop mature assertiveness skills for boundary-setting across complex social contexts.',
           faciliatatorNote: 'Normalize that boundary violations happen. Focus on building response skills, not shame.',
+            xpReward: 100,
+            skills: ['Social boundaries', 'Assertiveness'],
         },
         {
           id: 'ss-ag-1518-advocacy-campaign',
@@ -265,6 +293,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Channel agentic energy into social change — building voice, vision, and civic social skills.',
           faciliatatorNote: 'Keep the scope small and realistic. Social change starts with one conversation.',
+            xpReward: 100,
+            skills: ['Assertiveness', 'Conversation skills'],
         },
         {
           id: 'ss-ag-1518-negotiation-mastery',
@@ -281,6 +311,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply high-level assertiveness, empathy, and problem-solving to complex interpersonal negotiations.',
           faciliatatorNote: 'This is an advanced simulation. Ensure psychological safety — debrief thoroughly and do not use real conflicts.',
+            xpReward: 100,
+            skills: ['Conflict resolution', 'Emotional recognition', 'Perspective-taking', 'Assertiveness'],
         },
       ],
     },
@@ -311,6 +343,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Help children identify the key components of friendship in a concrete, visual way.',
           faciliatatorNote: 'Keep it positive — focus on what friendship IS rather than what it isn\'t at this age.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Emotional recognition', 'Assertiveness'],
         },
         {
           id: 'ss-rc-57-active-listening-game',
@@ -327,6 +361,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build foundational active listening skills: attending, reflecting, and turn-taking.',
           faciliatatorNote: 'Make the listening rules visual. Use hand signals for eyes, ears, and mouth to anchor the concepts.',
+            xpReward: 50,
+            skills: ['Active listening', 'Group participation'],
         },
         {
           id: 'ss-rc-57-how-do-you-feel',
@@ -343,6 +379,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional recognition as the foundation of empathy and social connection.',
           faciliatatorNote: 'Accept all responses with curiosity, not correction. Focus on emotional vocabulary building.',
+            xpReward: 50,
+            skills: ['Emotional recognition', 'Friendship building', 'Perspective-taking'],
         },
         {
           id: 'ss-rc-57-compliment-circle',
@@ -359,6 +397,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build prosocial communication habits and the ability to give and receive positive attention.',
           faciliatatorNote: 'Coach children on specific, genuine compliments rather than generic ones ("you\'re nice").',
+            xpReward: 50,
+            skills: ['Active listening', 'Conversation skills'],
         },
       ],
 
@@ -379,6 +419,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach the structure of a conversation as a navigable skill with clear entry and exit strategies.',
           faciliatatorNote: 'Students with social anxiety often struggle most with starting and ending. Spend extra time on those stops.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-rc-810-perspective-detective',
@@ -395,6 +437,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build perspective-taking and Theory of Mind as core components of social connection.',
           faciliatatorNote: 'This activity works especially well for students who tend toward black-and-white social thinking.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Perspective-taking'],
         },
         {
           id: 'ss-rc-810-friendship-maintenance',
@@ -411,6 +455,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach friendship maintenance as an active skill set, not a passive outcome of being likeable.',
           faciliatatorNote: 'Normalize conflict in friendships — it does not mean the friendship is over. Repair skills are key.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-rc-810-active-listening-challenge',
@@ -427,6 +473,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop sustained active listening skills and the ability to summarize another\'s experience.',
           faciliatatorNote: 'Active listening is rare at this age. Acknowledge when students do it well with specific praise.',
+            xpReward: 75,
+            skills: ['Active listening', 'Conversation skills'],
         },
       ],
 
@@ -446,6 +494,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build conversational depth and vulnerability as foundations of meaningful connection.',
           faciliatatorNote: 'Many adolescents default to Level 1. Normalize and celebrate the risk of going deeper.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-rc-1114-empathy-interview',
@@ -462,6 +512,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop empathic listening and the discipline of understanding before responding.',
           faciliatatorNote: 'This is one of the most powerful activities for reducing self-centered communication. Be patient — it takes practice.',
+            xpReward: 100,
+            skills: ['Active listening', 'Perspective-taking', 'Emotional recognition'],
         },
         {
           id: 'ss-rc-1114-digital-connections',
@@ -478,6 +530,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build critical awareness of digital communication\'s impact on relational depth and quality.',
           faciliatatorNote: 'Avoid judgmental framing about technology. The goal is reflection, not restriction.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-rc-1114-conflict-repair',
@@ -494,6 +548,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach structured conflict repair as a relational maintenance skill for lasting friendships.',
           faciliatatorNote: 'Distinguish between a generic "sorry" and a specific apology. Model the difference explicitly.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conflict resolution'],
         },
       ],
 
@@ -513,6 +569,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop mature awareness of relationship quality, intentionality, and social ecosystems.',
           faciliatatorNote: 'Handle with care — some students\' webs may reveal loneliness or toxic relationships. Have support resources available.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-rc-1518-listening-deeply',
@@ -529,6 +587,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop mature empathic listening that supports deep relational trust and connection.',
           faciliatatorNote: 'The "fixer" and "advice-giver" tendencies are extremely common in teens. Normalize and gently challenge.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Active listening'],
         },
         {
           id: 'ss-rc-1518-friendship-investment',
@@ -545,6 +605,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build intentional, reciprocal friendship practices for lasting relational health in adulthood.',
           faciliatatorNote: 'Young adults often underestimate how much friendships need active maintenance. This reframes friendship as an investment.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-rc-1518-difficult-conversation',
@@ -561,6 +623,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Prepare young adults for the relational courage required for healthy, honest relationships.',
           faciliatatorNote: 'This is advanced. Ensure safety and normalize that hard conversations take multiple tries in real life.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
     },
@@ -591,6 +655,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect acts of kindness to inner meaning and communal contribution.',
           faciliatatorNote: 'Accept small acts of kindness — even holding a door counts. The habit of noticing matters more than magnitude.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-57-thank-you-cards',
@@ -607,6 +673,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build gratitude as a social-relational value that deepens connection and meaning.',
           faciliatatorNote: 'Delivering the card in person has a much stronger impact than simply making it. Encourage delivery whenever possible.',
+            xpReward: 50,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-57-golden-rule',
@@ -623,6 +691,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce reciprocal social values through narrative and embodied role-play.',
           faciliatatorNote: 'Keep the story simple and visually rich. Children this age learn values through narrative and imitation.',
+            xpReward: 50,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-sr-57-we-are-the-same',
@@ -639,6 +709,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a foundation of social inclusion grounded in shared humanity and appreciation of diversity.',
           faciliatatorNote: 'Use the word "interesting" rather than "weird" when discussing differences. Model curiosity over judgment.',
+            xpReward: 50,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
 
@@ -658,6 +730,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Help children identify core values that anchor their social behavior and relational identity.',
           faciliatatorNote: 'There are no right or wrong values here. Focus on reflection and personal ownership.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Assertiveness'],
         },
         {
           id: 'ss-sr-810-social-gratitude-jar',
@@ -674,6 +748,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a relational gratitude practice that strengthens social bonds through explicit appreciation.',
           faciliatatorNote: 'Ensure anonymity is preserved so students feel free to be genuine. Return jars monthly.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-810-inclusion-challenge',
@@ -690,6 +766,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect values to action through structured practice of inclusive social behavior.',
           faciliatatorNote: 'Follow up on pledges the following week. Accountability deepens the learning.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-810-purpose-in-friendship',
@@ -705,6 +783,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop reflective awareness of the deeper purpose and meaning in social relationships.',
           faciliatatorNote: 'Some students may have thin social connections. Be sensitive and include family and mentors in the definition of "friendship."',
+            xpReward: 75,
+            skills: ['Friendship building', 'Conversation skills'],
         },
       ],
 
@@ -724,6 +804,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Explore how personal values and identity shape social behavior and relationship quality.',
           faciliatatorNote: 'This can surface questions of belonging and cultural identity. Create space for diverse expressions of identity.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-1114-meaning-in-conflict',
@@ -740,6 +822,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reframe conflict as a source of self-knowledge and social wisdom rather than pure disruption.',
           faciliatatorNote: 'This requires emotional readiness. Do not pressure students to share. Private journaling is always an option.',
+            xpReward: 75,
+            skills: ['Conflict resolution', 'Conversation skills'],
         },
         {
           id: 'ss-sr-1114-community-contribution',
@@ -756,6 +840,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a sense of social purpose and community belonging through awareness of contribution.',
           faciliatatorNote: 'Help students see small acts (encouragement, showing up, listening) as genuine contributions.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-sr-1114-legacy-letter',
@@ -771,6 +857,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use reflective writing to clarify social values, aspirations, and relational identity over time.',
           faciliatatorNote: 'Letters should stay with the student — this is a private artifact. Optional to share only what they choose.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
       ],
 
@@ -790,6 +878,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop moral reasoning in social contexts and the ability to navigate values conflicts in relationships.',
           faciliatatorNote: 'There are no right answers. The goal is articulating values, not reaching agreement. Model respectful disagreement.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conflict resolution'],
         },
         {
           id: 'ss-sr-1518-spiritual-belonging',
@@ -806,6 +896,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Explore belonging as both a personal need and a social responsibility grounded in meaning.',
           faciliatatorNote: 'Students experiencing social isolation may find this activity triggering. Have follow-up support available.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-sr-1518-act-of-service',
@@ -822,6 +914,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect social values to intentional prosocial action that creates meaning and community impact.',
           faciliatatorNote: 'Keep scope realistic. One meaningful act done well is better than an ambitious project left undone.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
         {
           id: 'ss-sr-1518-life-philosophy',
@@ -838,6 +932,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Synthesize social and ethical learning into a coherent personal philosophy of relational living.',
           faciliatatorNote: 'This is a culminating, meaning-making activity. Honor the depth and diversity of philosophical perspectives students bring.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
     },
@@ -868,6 +964,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional vocabulary and self-awareness using concrete meteorological metaphors.',
           faciliatatorNote: 'Use this as a daily check-in ritual. Consistent use builds emotional awareness over time.',
+            xpReward: 50,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-57-calm-down-kit',
@@ -884,6 +982,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Equip children with concrete, portable emotional regulation tools for social situations.',
           faciliatatorNote: 'The kit should be available in the classroom corner or therapy space. Accessibility is key.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-57-mad-sad-glad',
@@ -900,6 +1000,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Identify and label three core emotional states and link them to appropriate coping responses.',
           faciliatatorNote: 'Expand to more nuanced emotions as the child builds their vocabulary over sessions.',
+            xpReward: 50,
+            skills: ['Emotional recognition', 'Social boundaries'],
         },
         {
           id: 'ss-ea-57-worry-monsters',
@@ -916,6 +1018,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Externalize social anxiety using a tangible metaphor, reducing its emotional charge.',
           faciliatatorNote: 'This works beautifully as a ritual. Return to the monster whenever new social worries arise.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
       ],
 
@@ -935,6 +1039,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional self-monitoring and matched coping strategies for social situations.',
           faciliatatorNote: 'The key skill is catching emotions early (2–3) before they escalate. Teach early detection explicitly.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-810-social-anxiety-toolkit',
@@ -951,6 +1057,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized toolkit for managing social anxiety with agency and self-knowledge.',
           faciliatatorNote: 'Normalize social anxiety as universal. "Almost everyone feels nervous in new social situations."',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-ea-810-conflict-feelings',
@@ -967,6 +1075,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach emotional perspective-taking and feelings expression as tools for conflict resolution.',
           faciliatatorNote: 'Many children skip to behavior when describing conflict. Slow them down to name feelings first.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conflict resolution', 'Body language', 'Perspective-taking'],
         },
         {
           id: 'ss-ea-810-resilience-after-rejection',
@@ -983,6 +1093,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional resilience in the face of social setbacks through structured coping practice.',
           faciliatatorNote: 'Validate the pain of rejection before moving to resilience. "It\'s okay to feel hurt first."',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
       ],
 
@@ -1002,6 +1114,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop social and emotional insight by understanding the connection between hidden emotions and visible behavior.',
           faciliatatorNote: 'This is a powerful reframe for students who tend to judge peers harshly. Cultivate curiosity, not just tolerance.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Emotional recognition', 'Active listening', 'Perspective-taking'],
         },
         {
           id: 'ss-ea-1114-managing-social-anxiety',
@@ -1018,6 +1132,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build specific, personalized strategies for managing social anxiety in targeted situations.',
           faciliatatorNote: 'For students with clinical-level anxiety, this complements rather than replaces professional support.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-ea-1114-conflict-resolution',
@@ -1034,6 +1150,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply a structured, emotion-aware conflict resolution framework to peer social situations.',
           faciliatatorNote: 'The cool-down step is most frequently skipped. Make it non-negotiable in the role-play to build the habit.',
+            xpReward: 100,
+            skills: ['Conflict resolution', 'Friendship building', 'Emotional recognition'],
         },
         {
           id: 'ss-ea-1114-emotional-regulation-menu',
@@ -1050,6 +1168,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a diverse, personalized emotional regulation repertoire for use in social contexts.',
           faciliatatorNote: 'The menu metaphor normalizes that there are many options and no single right answer. Individual preferences matter.',
+            xpReward: 75,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
       ],
 
@@ -1069,6 +1189,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive awareness of emotional intelligence as a learnable and developable social skill.',
           faciliatatorNote: 'Frame EQ as a lifelong practice, not a fixed trait. High achievers often have underdeveloped EQ — normalize the gap.',
+            xpReward: 100,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-1518-social-emotion-surfing',
@@ -1085,6 +1207,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop advanced emotional regulation through acceptance and delay of reactive social behavior.',
           faciliatatorNote: 'This is a DBT-informed concept (urge surfing). It is appropriate for mature adolescents. Pair with mindfulness practice.',
+            xpReward: 100,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-1518-toxic-relationship-patterns',
@@ -1101,6 +1225,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional and relational self-awareness to recognize and interrupt unhealthy social patterns.',
           faciliatatorNote: 'This may surface disclosures of unhealthy relationships. Have a clear referral pathway and support ready.',
+            xpReward: 100,
+            skills: ['Emotional recognition', 'Conversation skills'],
         },
         {
           id: 'ss-ea-1518-grief-and-friendship',
@@ -1117,6 +1243,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Process friendship loss as a legitimate grief experience and build forward-looking social resilience.',
           faciliatatorNote: 'This is emotionally tender. Create high safety and do not press for disclosure. Private journaling first, sharing optional.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
       ],
     },
@@ -1147,6 +1275,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop somatic awareness of emotions as a foundation for social self-regulation.',
           faciliatatorNote: 'Use open, curious language. Some children have limited access to bodily sensations — draw out responses gently.',
+            xpReward: 50,
+            skills: ['Conversation skills', 'Emotional recognition', 'Body language'],
         },
         {
           id: 'ss-so-57-personal-space-bubble',
@@ -1163,6 +1293,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach personal space and social boundaries through embodied, concrete practice.',
           faciliatatorNote: 'This is especially important for children who are physically impulsive or who have experienced boundary violations.',
+            xpReward: 50,
+            skills: ['Social boundaries', 'Conversation skills'],
         },
         {
           id: 'ss-so-57-friendly-body',
@@ -1179,6 +1311,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build nonverbal social communication awareness — the body communicates social invitation or rejection.',
           faciliatatorNote: 'Children often don\'t realize their body language is sending messages. Use humor and play to explore this.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Body language', 'Friendship building'],
         },
         {
           id: 'ss-so-57-wiggle-to-calm',
@@ -1195,6 +1329,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use movement as a somatic self-regulation tool before social interactions.',
           faciliatatorNote: 'This works as a classroom morning ritual or pre-activity regulation routine.',
+            xpReward: 50,
+            skills: ['Body language', 'Conversation skills'],
         },
       ],
 
@@ -1214,6 +1350,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop systematic nonverbal communication literacy for more accurate social perception.',
           faciliatatorNote: 'Be careful with stereotypes — body language is culturally variable. Acknowledge this explicitly.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Body language'],
         },
         {
           id: 'ss-so-810-breathing-before-social',
@@ -1230,6 +1368,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the habit of somatic preparation before challenging social situations.',
           faciliatatorNote: 'Breathing techniques need repetitive practice to become automatic in real social situations.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-so-810-mirroring',
@@ -1246,6 +1386,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build embodied attunement and nonverbal social synchrony through mirroring practice.',
           faciliatatorNote: 'The unled phase is the most powerful — students discover that social attunement can be mutual. Debrief this carefully.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Body language'],
         },
         {
           id: 'ss-so-810-body-regulation-menu',
@@ -1262,6 +1404,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a personalized somatic regulation toolkit with strategies matched to social context.',
           faciliatatorNote: 'Teach both directions — many programs focus only on calming. Some students need activating strategies too.',
+            xpReward: 75,
+            skills: ['Body language', 'Conversation skills'],
         },
       ],
 
@@ -1281,6 +1425,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use intentional body posture to improve social confidence and peer perception.',
           faciliatatorNote: 'Frame this as skill-building, not image management. Posture affects our own mood and energy, not just others\' impressions.',
+            xpReward: 75,
+            skills: ['Body language', 'Friendship building', 'Assertiveness'],
         },
         {
           id: 'ss-so-1114-stress-in-social-body',
@@ -1297,6 +1443,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build somatic literacy around social stress — locating it in the body as a step toward releasing it.',
           faciliatatorNote: 'Somatic awareness is a learnable skill. Some students will feel "nothing" at first — normalize this.',
+            xpReward: 100,
+            skills: ['Body language', 'Conversation skills'],
         },
         {
           id: 'ss-so-1114-eye-contact-training',
@@ -1313,6 +1461,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop calibrated eye contact as a nonverbal social skill for trust and connection.',
           faciliatatorNote: 'Be sensitive to neurodivergent students for whom eye contact may be genuinely uncomfortable. Offer alternatives.',
+            xpReward: 75,
+            skills: ['Friendship building', 'Body language', 'Conversation skills'],
         },
         {
           id: 'ss-so-1114-nervous-system-reset',
@@ -1329,6 +1479,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a rapid somatic tool for resetting the nervous system before or after challenging social interactions.',
           faciliatatorNote: 'This is grounded in polyvagal theory and breathing research. It has fast, measurable physiological effects.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
 
@@ -1348,6 +1500,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sophisticated understanding of the nervous system\'s role in social safety and connection.',
           faciliatatorNote: 'This framework is clinically rich. Keep it accessible and experiential rather than overly academic.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Active listening', 'Perspective-taking', 'Social boundaries'],
         },
         {
           id: 'ss-so-1518-somatic-consent',
@@ -1364,6 +1518,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate somatic awareness into social decision-making and boundary recognition.',
           faciliatatorNote: 'Handle with sensitivity — consent is deeply personal. Ensure the space is safe and non-coercive.',
+            xpReward: 100,
+            skills: ['Social boundaries', 'Active listening', 'Body language'],
         },
         {
           id: 'ss-so-1518-grounding-in-social',
@@ -1380,6 +1536,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build portable somatic grounding tools for use in real-world social overwhelm.',
           faciliatatorNote: 'This is particularly valuable for students with social anxiety, sensory sensitivities, or trauma histories.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-so-1518-embodied-presence',
@@ -1396,6 +1554,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Cultivate embodied, mindful presence as the ultimate somatic gift in social relationships.',
           faciliatatorNote: 'Full presence is increasingly rare in the digital age. This activity often generates profound insights in older adolescents.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conversation skills'],
         },
       ],
     },
@@ -1427,6 +1587,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use social stories to build cognitive scripts for managing socially challenging situations.',
           faciliatatorNote: 'Social stories are most effective when personalized and read repeatedly. Send home for re-reading.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-cn-57-why-did-they-do-that',
@@ -1443,6 +1605,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Begin developing social cognitive flexibility — understanding that behavior has multiple possible causes.',
           faciliatatorNote: 'This lays the foundation for empathy. Keep it playful and curious, not interrogative.',
+            xpReward: 50,
+            skills: ['Active listening', 'Perspective-taking'],
         },
         {
           id: 'ss-cn-57-problem-solving-steps',
@@ -1459,6 +1623,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a simple, visual social problem-solving framework for early childhood.',
           faciliatatorNote: 'The traffic light is a widely used and effective framework for this age group. Reinforce consistently.',
+            xpReward: 75,
+            skills: ['Conflict resolution', 'Conversation skills'],
         },
         {
           id: 'ss-cn-57-friendship-book',
@@ -1476,6 +1642,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative construction to solidify friendship awareness and prosocial self-concept.',
           faciliatatorNote: 'The act of giving the book is socially meaningful. It builds both the maker\'s and receiver\'s sense of connection.',
+            xpReward: 50,
+            skills: ['Friendship building', 'Conversation skills'],
         },
       ],
 
@@ -1495,6 +1663,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use collaborative script writing to build flexible, context-appropriate social responses.',
           faciliatatorNote: 'Scripts are most useful as frameworks, not rigid formulas. Encourage natural adaptation after practicing.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Social boundaries', 'Group participation'],
         },
         {
           id: 'ss-cn-810-perspective-comic',
@@ -1511,6 +1681,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop graphic perspective-taking as a concrete social cognitive skill.',
           faciliatatorNote: 'The visual format makes abstract perspective-taking concrete and accessible. Non-writers can draw instead of writing.',
+            xpReward: 75,
+            skills: ['Perspective-taking', 'Conversation skills'],
         },
         {
           id: 'ss-cn-810-social-problem-stories',
@@ -1527,6 +1699,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop social narrative reasoning — understanding how choices in stories create social consequences.',
           faciliatatorNote: 'Present all options neutrally before discussion. Avoid signaling the "right" answer too early.',
+            xpReward: 75,
+            skills: ['Active listening', 'Perspective-taking'],
         },
         {
           id: 'ss-cn-810-superhero-social-skills',
@@ -1543,6 +1717,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative identity construction to engage children in social skills development with agency and imagination.',
           faciliatatorNote: 'This works especially well for reluctant learners. The superhero metaphor creates safe distance from vulnerability.',
+            xpReward: 75,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
 
@@ -1562,6 +1738,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build cognitive flexibility in social narrative — challenging unhelpful self-stories about social identity.',
           faciliatatorNote: 'Be careful not to invalidate genuine social pain. Reframing is NOT minimizing — it is finding multiple truths.',
+            xpReward: 100,
+            skills: ['Assertiveness', 'Conversation skills'],
         },
         {
           id: 'ss-cn-1114-social-detective',
@@ -1578,6 +1756,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop systematic social perception using multiple nonverbal and contextual cues.',
           faciliatatorNote: 'This is a Social Thinking®-aligned approach. Great for students who tend toward literal social interpretation.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Active listening', 'Body language'],
         },
         {
           id: 'ss-cn-1114-narrative-identity',
@@ -1594,6 +1774,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative identity work to build conscious, agentic social self-concept.',
           faciliatatorNote: 'Narrative identity is a powerful psychological construct. Honor the vulnerability this activity invites.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-cn-1114-media-social-stories',
@@ -1610,6 +1792,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop critical social narrative literacy — the ability to analyze and resist harmful media social scripts.',
           faciliatatorNote: 'Choose media examples that are culturally relevant and not too loaded. Let students lead the critique.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
 
@@ -1628,6 +1812,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use autobiographical narrative to integrate past experiences and author a conscious social future.',
           faciliatatorNote: 'This is a rich, meaningful capstone activity. Honor privacy — sharing should be entirely voluntary.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-cn-1518-social-problem-solving',
@@ -1644,6 +1830,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply complex social problem-solving skills to multi-layered, real-world peer dilemmas.',
           faciliatatorNote: 'Keep the scenario fictional but realistic. The goal is transferable reasoning skills, not a right answer.',
+            xpReward: 100,
+            skills: ['Friendship building', 'Conflict resolution'],
         },
         {
           id: 'ss-cn-1518-reframing-rejection',
@@ -1660,6 +1848,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop cognitive resilience in the face of social rejection through structured narrative reframing.',
           faciliatatorNote: 'The goal is not toxic positivity — some rejections do hurt. The reframe expands the story, it does not erase pain.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
         {
           id: 'ss-cn-1518-social-future-visioning',
@@ -1676,6 +1866,8 @@ export const SOCIAL_SKILLS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Close the curriculum with a forward-facing, values-based vision for a fulfilling social life.',
           faciliatatorNote: 'This is a powerful closing activity. End with affirmation: social skills are learnable, and the future is being built right now.',
+            xpReward: 100,
+            skills: ['Conversation skills', 'Friendship building'],
         },
       ],
     },

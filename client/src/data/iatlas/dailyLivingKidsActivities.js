@@ -33,6 +33,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-care independence through a visual morning routine that the child owns.',
           faciliatatorNote: 'Keep the routine to 5–6 steps maximum for this age. Celebrate any attempt — partial completion is progress.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ag-self-care-goal-star',
@@ -49,6 +51,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a visual representation of self-care strengths and goals that builds motivation.',
           faciliatatorNote: 'Help children name strengths they may overlook — putting on shoes independently is a real achievement worth celebrating.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ag-i-can-dress-myself',
@@ -65,6 +69,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build dressing independence through playful timed practice and self-efficacy.',
           faciliatatorNote: 'Adapt the timer challenge to the child\'s ability — extending time reduces frustration and builds confidence.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Time management', 'Independence'],
         },
         {
           id: 'dl-ag-bedtime-routine-book',
@@ -81,6 +87,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Internalize a self-directed bedtime routine through creative authorship.',
           faciliatatorNote: 'Bedtime routines support sleep hygiene and emotional regulation — praise the child for building their own guide.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Time management', 'Independence'],
         },
       ],
 
@@ -100,6 +108,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop time awareness and introduce self-care as a planned, valued part of the daily schedule.',
           faciliatatorNote: 'Many children this age have not consciously mapped their day. The process of mapping itself builds executive function awareness.',
+          xpReward: 75,
+          skills: ['Time management', 'Self-care routines'],
         },
         {
           id: 'dl-ag-chore-goal-chart',
@@ -116,6 +126,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build goal-setting around home contribution and track progress independently.',
           faciliatatorNote: 'Emphasize that chores are a form of contributing to family — not punishment. Connect them to identity as a capable, helpful person.',
+          xpReward: 75,
+          skills: ['Home organization', 'Independence'],
         },
         {
           id: 'dl-ag-independence-ladder',
@@ -133,6 +145,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-directed goal-planning using a scaffold that breaks down independence skills into achievable steps.',
           faciliatatorNote: 'The independence ladder is a powerful motivational tool — let the child choose the top rung skill without judgment.',
+          xpReward: 75,
+          skills: ['Independence', 'Task sequencing', 'Time management'],
         },
         {
           id: 'dl-ag-routine-detective',
@@ -149,6 +163,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build problem-solving skills around routine disruptions and understand the value of consistent self-care habits.',
           faciliatatorNote: 'Use humor in the scenarios to keep this age group engaged — they love identifying what went wrong.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Problem-solving'],
         },
       ],
 
@@ -169,6 +185,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply habit design principles to build intentional, sustainable personal routines.',
           faciliatatorNote: 'Habit stacking (linking new habits to existing ones) dramatically increases follow-through for this age group.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ag-weekly-planner',
@@ -186,6 +204,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop proactive weekly planning skills that integrate self-care and home responsibilities.',
           faciliatatorNote: 'Weekly planning is a life skill many adults wish they had learned earlier. Affirm students for developing this capacity now.',
+          xpReward: 100,
+          skills: ['Time management', 'Self-care routines', 'Home organization'],
         },
         {
           id: 'dl-ag-self-care-action-plan',
@@ -202,6 +222,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-assessment and action-planning skills around personal daily living strengths and growth areas.',
           faciliatatorNote: 'Frame low ratings as opportunities, not deficits — the goal is honest self-awareness, not self-criticism.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Time management'],
         },
         {
           id: 'dl-ag-independence-goals-map',
@@ -219,6 +241,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a visual, future-oriented map of independence goals that builds motivation and self-direction.',
           faciliatatorNote: 'This visual exercise often surprises students with how much they already know and do — start with the yellow notes to build confidence.',
+          xpReward: 75,
+          skills: ['Independence', 'Self-care routines'],
         },
       ],
 
@@ -239,6 +263,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect daily living skills to a compelling personal vision of adult independence.',
           faciliatatorNote: 'For students with disabilities or complex situations, normalize that independence looks different for everyone — the goal is self-determination, not conformity to a single model.',
+          xpReward: 100,
+          skills: ['Independence', 'Self-care routines'],
         },
         {
           id: 'dl-ag-monthly-budget-plan',
@@ -256,6 +282,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop practical financial literacy skills connected to daily living independence.',
           faciliatatorNote: 'Use realistic numbers for your region. Many students are surprised by basic living costs — this surprise is productive learning.',
+          xpReward: 100,
+          skills: ['Money management', 'Independence'],
         },
         {
           id: 'dl-ag-transition-readiness-plan',
@@ -273,6 +301,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a concrete, self-directed transition plan for adult independence.',
           faciliatatorNote: 'This activity pairs well with IEP transition planning. Students who drive this process have significantly better post-secondary outcomes.',
+          xpReward: 100,
+          skills: ['Independence', 'Community navigation'],
         },
         {
           id: 'dl-ag-self-directed-routine',
@@ -290,6 +320,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop future-oriented self-awareness and self-direction around daily living skill development.',
           faciliatatorNote: 'The written commitment statement creates accountability. Offer to revisit it at the next session to check in on follow-through.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
     },
@@ -320,6 +352,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the social confidence and language to ask for help with daily living tasks.',
           faciliatatorNote: 'Asking for help is a critical daily living skill, not a sign of weakness — frame it this way explicitly for children.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-rc-please-thank-you-practice',
@@ -336,6 +370,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Establish polite social interaction skills fundamental to navigating community settings.',
           faciliatatorNote: 'Pair with real-world practice — ask parents to use this game during meals at home.',
+          xpReward: 50,
+          skills: ['Community navigation', 'Self-care routines'],
         },
         {
           id: 'dl-rc-community-helpers',
@@ -352,6 +388,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of community resources and the social scripts for accessing them.',
           faciliatatorNote: 'Children from marginalized communities may have complicated feelings about some community helpers — create space for nuanced discussion without forcing positivity.',
+          xpReward: 75,
+          skills: ['Community navigation', 'Self-care routines'],
         },
         {
           id: 'dl-rc-grocery-store-manners',
@@ -368,6 +406,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop community navigation social skills through play-based grocery store simulation.',
           faciliatatorNote: 'This activity can be extended to a real field trip to a local store if the setting allows.',
+          xpReward: 50,
+          skills: ['Community navigation', 'Meal preparation'],
         },
       ],
 
@@ -387,6 +427,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build spatial awareness and community navigation confidence for daily life independence.',
           faciliatatorNote: 'Students from different backgrounds will have very different community maps — celebrate diversity of neighborhoods while building navigation skills for all.',
+          xpReward: 75,
+          skills: ['Community navigation', 'Independence'],
         },
         {
           id: 'dl-rc-phone-call-practice',
@@ -403,6 +445,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop telephone communication skills needed for daily life independence.',
           faciliatatorNote: 'Many children this age are anxious about phone calls — normalize this and emphasize that scripts help. Practice reduces anxiety significantly.',
+          xpReward: 75,
+          skills: ['Independence', 'Self-care routines'],
         },
         {
           id: 'dl-rc-restaurant-etiquette',
@@ -419,6 +463,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build social etiquette and communication skills for community dining and service interactions.',
           faciliatatorNote: 'This activity is especially empowering for students who feel anxious in restaurant settings — practice reduces real-world anxiety.',
+          xpReward: 75,
+          skills: ['Community navigation', 'Self-care routines'],
         },
         {
           id: 'dl-rc-asking-directions',
@@ -435,6 +481,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the confidence and social scripts for community wayfinding and asking strangers for help safely.',
           faciliatatorNote: 'Discuss safe stranger guidelines alongside this activity — knowing who is appropriate to ask is as important as knowing how to ask.',
+          xpReward: 75,
+          skills: ['Community navigation', 'Safety awareness'],
         },
       ],
 
@@ -454,6 +502,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop functional social communication scripts for navigating real daily life situations.',
           faciliatatorNote: 'Encourage students to personalize their scripts — a script they wrote sounds more authentic than one they memorized.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-rc-public-transportation',
@@ -471,6 +521,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build practical public transportation skills and community navigation confidence.',
           faciliatatorNote: 'If your community lacks public transit, adapt to ride-sharing apps, biking routes, or carpooling logistics.',
+          xpReward: 100,
+          skills: ['Community navigation', 'Self-care routines'],
         },
         {
           id: 'dl-rc-conflict-resolution-home',
@@ -487,6 +539,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build conflict resolution skills specific to daily home life and shared living.',
           faciliatatorNote: 'Home conflicts are real and ongoing — acknowledge that resolution is a skill that takes practice, and imperfect attempts still count.',
+          xpReward: 100,
+          skills: ['Problem-solving', 'Home organization'],
         },
         {
           id: 'dl-rc-team-household-tasks',
@@ -504,6 +558,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop skills for collaborative household management, negotiation, and shared responsibility.',
           faciliatatorNote: 'Fairness in household tasks is a frequent source of conflict in shared living — building these skills now is directly practical.',
+          xpReward: 75,
+          skills: ['Home organization', 'Self-care routines'],
         },
       ],
 
@@ -524,6 +580,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop professional communication skills critical for housing, employment, and healthcare navigation.',
           faciliatatorNote: 'Many students have never written a professional email or made a professional phone call — this is high-stakes preparation for adult independence.',
+          xpReward: 100,
+          skills: ['Community navigation', 'Self-care routines'],
         },
         {
           id: 'dl-rc-community-resources-map',
@@ -540,6 +598,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build practical community resource knowledge and access skills for adult independence.',
           faciliatatorNote: 'Update resource lists annually — community services change frequently. Having students research current resources is itself an important skill.',
+          xpReward: 100,
+          skills: ['Community navigation', 'Independence'],
         },
         {
           id: 'dl-rc-navigating-services',
@@ -557,6 +617,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build systems-navigation skills for accessing critical adult independence services.',
           faciliatatorNote: 'This activity can feel overwhelming — normalize that navigating adult systems is confusing for everyone and that asking for help is appropriate and smart.',
+          xpReward: 100,
+          skills: ['Community navigation', 'Independence'],
         },
         {
           id: 'dl-rc-advocacy-skills',
@@ -573,6 +635,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-advocacy skills that apply across daily living contexts — health, housing, and work.',
           faciliatatorNote: 'For students with disabilities, connect explicitly to disability rights and legal protections (ADA, Section 504) — knowing your rights is self-advocacy.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
     },
@@ -603,6 +667,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build body gratitude as the motivational foundation for self-care practices.',
           faciliatatorNote: 'Children who feel grateful for their bodies are more motivated to care for them — this is the spiritual root of self-care.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-home-gratitude',
@@ -619,6 +685,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect gratitude for home to motivation for home care and orderliness.',
           faciliatatorNote: 'Be sensitive to children whose home situations are difficult — include "people who love me" and "my safe corner" as options alongside physical things.',
+          xpReward: 50,
+          skills: ['Home organization', 'Task sequencing'],
         },
         {
           id: 'dl-sr-caring-for-me-is-special',
@@ -635,6 +703,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Establish self-worth as the spiritual foundation of personal hygiene and self-care habits.',
           faciliatatorNote: 'The affirmation "I am worth caring for" is particularly impactful for children who have experienced neglect or low self-esteem.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-body-is-precious',
@@ -651,6 +721,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build intrinsic motivation for self-care by connecting it to the idea that one\'s body is a treasure worth protecting.',
           faciliatatorNote: 'The treasure chest metaphor is developmentally rich for this age — it elevates self-care from chore to honor.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
 
@@ -670,6 +742,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect home care behaviors to personal values, transforming chores into meaningful expressions of identity.',
           faciliatatorNote: 'When students see chores as value expressions rather than obligations, motivation and follow-through increase significantly.',
+          xpReward: 75,
+          skills: ['Home organization', 'Self-care routines'],
         },
         {
           id: 'dl-sr-care-ritual-meaning',
@@ -686,6 +760,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Help students distinguish between routine (functional) and ritual (meaningful), and elevate daily care practices.',
           faciliatatorNote: 'Rituals reduce friction around daily tasks — when activities carry meaning, we are more motivated to do them consistently.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-gratitude-for-basics',
@@ -702,6 +778,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use gratitude practice to build appreciation for daily living basics and the motivation to care for them.',
           faciliatatorNote: 'Gratitude is most powerful when it leads to action — end with the connection between appreciation and responsibility.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-why-i-care-for-myself',
@@ -718,6 +796,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Deepen the meaning behind self-care by connecting it to relational and communal purpose.',
           faciliatatorNote: 'The reframe from "I must" to "I choose to because it matters" is a key spiritual shift in motivation.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
 
@@ -737,6 +817,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-awareness about the relationship between personal values and daily living habits.',
           faciliatatorNote: 'Values dissonance is a powerful motivator for change — this reflection can be a turning point for students who feel disconnected from their daily habits.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Home organization'],
         },
         {
           id: 'dl-sr-self-care-as-respect',
@@ -753,6 +835,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Transform the motivation behind self-care from obligation to intrinsic self-respect.',
           faciliatatorNote: 'This activity is particularly impactful for students who resist self-care — it reframes the "why" from external pressure to internal dignity.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-meaning-in-daily-tasks',
@@ -769,6 +853,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Cultivate the ability to find meaning and purpose in daily living tasks through reframing.',
           faciliatatorNote: 'This is a profound daily living skill — the capacity to find meaning in ordinary tasks correlates strongly with life satisfaction and mental health.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-legacy-and-home',
@@ -785,6 +871,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect daily living practices to legacy, identity, and the conscious creation of home culture.',
           faciliatatorNote: 'This activity can be emotional for students with difficult home histories — acknowledge that we can both honor what was good and consciously choose differently.',
+          xpReward: 100,
+          skills: ['Home organization', 'Self-care routines'],
         },
       ],
 
@@ -805,6 +893,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the capacity to design a lifestyle consciously aligned with personal values.',
           faciliatatorNote: 'Lifestyle design is an advanced self-determination skill — this activity is most powerful when it feels like freedom rather than assignment.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-purpose-in-self-care',
@@ -821,6 +911,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Anchor self-care practices in purpose and meaning for deep, lasting motivation.',
           faciliatatorNote: 'Purpose-linked self-care is one of the strongest predictors of consistent healthy habits — this framing has lifelong impact.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sr-home-as-sanctuary',
@@ -838,6 +930,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the vision and practical skills to create a home environment that supports overall well-being.',
           faciliatatorNote: 'This activity bridges daily living skills with mental health — a clean, intentional environment has significant evidence-based benefits for stress and mood.',
+          xpReward: 100,
+          skills: ['Meal preparation', 'Home organization'],
         },
         {
           id: 'dl-sr-identity-and-daily-life',
@@ -855,6 +949,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop identity-based motivation for daily living choices — the most durable form of behavior change.',
           faciliatatorNote: 'Identity-based habits (Atomic Habits framework) are significantly more resilient than outcome-based habits — this framing creates lasting change.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
     },
@@ -885,6 +981,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional awareness around daily task completion and normalize uncomfortable feelings during responsibilities.',
           faciliatatorNote: 'Children who learn that feelings don\'t have to stop action develop stronger self-regulation. This is foundational for future independence.',
+          xpReward: 50,
+          skills: ['Home organization', 'Self-care routines'],
         },
         {
           id: 'dl-ea-when-i-dont-want-to',
@@ -901,6 +999,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce the "just start" strategy for overcoming resistance to daily tasks.',
           faciliatatorNote: 'Behavioral activation ("just start") is one of the most evidence-based strategies for task avoidance and low motivation.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ea-transition-helpers',
@@ -917,6 +1017,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personal toolkit of transition strategies that support daily routine flexibility.',
           faciliatatorNote: 'Difficulty with transitions is common in young children. These tools generalize powerfully to home and school settings.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Community navigation', 'Independence'],
         },
         {
           id: 'dl-ea-big-feelings-small-steps',
@@ -933,6 +1035,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional regulation through task decomposition — breaking overwhelming tasks into manageable steps.',
           faciliatatorNote: 'Task decomposition is a key executive function and emotional regulation strategy. The thermometer makes abstract feelings concrete and manageable.',
+          xpReward: 50,
+          skills: ['Task sequencing', 'Self-care routines'],
         },
       ],
 
@@ -952,6 +1056,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build proactive stress-management skills around the daily morning routine.',
           faciliatatorNote: 'Proactive planning (night-before preparation) is one of the most effective anxiety-reduction strategies for chaotic mornings.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ea-emotional-triggers-home',
@@ -968,6 +1074,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-awareness about home-specific emotional triggers and develop targeted coping strategies.',
           faciliatatorNote: 'Trigger mapping develops metacognitive emotional awareness. Knowing triggers in advance allows proactive coping rather than reactive outbursts.',
+          xpReward: 75,
+          skills: ['Home organization', 'Self-care routines'],
         },
         {
           id: 'dl-ea-coping-with-change',
@@ -984,6 +1092,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build adaptive resilience around daily routine disruption through narrative and normalization.',
           faciliatatorNote: 'Normalizing the "chaos before new normal" stage helps students tolerate transition without catastrophizing.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Problem-solving'],
         },
         {
           id: 'dl-ea-frustration-first-aid',
@@ -1000,6 +1110,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personal, tangible emotional regulation toolkit for use in daily life.',
           faciliatatorNote: 'Making the toolkit physical increases the likelihood of use — students can literally reach for it when frustrated.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Task sequencing'],
         },
       ],
 
@@ -1020,6 +1132,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional awareness and strategic thinking skills for managing task overwhelm.',
           faciliatatorNote: 'The overwhelm-avoidance cycle is one of the most common barriers to daily living independence — naming and addressing it is transformational.',
+          xpReward: 100,
+          skills: ['Home organization', 'Self-care routines'],
         },
         {
           id: 'dl-ea-transition-toolkit',
@@ -1037,6 +1151,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized emotional toolkit for navigating life transitions that disrupt daily living.',
           faciliatatorNote: 'Life transitions are inevitable — building a proactive toolkit before crisis hits is far more effective than scrambling during the transition.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Community navigation', 'Independence'],
         },
         {
           id: 'dl-ea-emotional-self-care',
@@ -1054,6 +1170,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a comprehensive and personalized emotional self-care plan for daily life.',
           faciliatatorNote: 'Emotional self-care is often neglected in functional daily living curricula — it is, however, the foundation for all other daily living skills.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ea-resilience-in-daily-life',
@@ -1070,6 +1188,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop resilience identity — the belief in one\'s own capacity to handle daily life challenges.',
           faciliatatorNote: 'Resilience identity is different from coping skills — it\'s a belief about oneself that predicts better outcomes across contexts.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
 
@@ -1090,6 +1210,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional intelligence and stress management skills specifically tailored to the challenges of growing independence.',
           faciliatatorNote: 'Acknowledge directly that independence is both exciting and genuinely stressful — neither dismissing the stress nor catastrophizing it.',
+          xpReward: 100,
+          skills: ['Independence', 'Problem-solving'],
         },
         {
           id: 'dl-ea-emotional-regulation-routines',
@@ -1107,6 +1229,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build proactive daily emotional regulation routines that prevent dysregulation and maintain functioning.',
           faciliatatorNote: 'Proactive regulation is far more effective than reactive coping. Students who establish morning and evening regulation routines report significantly lower daily stress.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-ea-navigating-life-transitions',
@@ -1124,6 +1248,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build comprehensive emotional and practical preparation for major life transitions.',
           faciliatatorNote: 'This is one of the highest-value activities for transition-age youth. The emotional dimension of life transitions is rarely addressed in functional skills curricula.',
+          xpReward: 100,
+          skills: ['Community navigation', 'Independence'],
         },
         {
           id: 'dl-ea-adaptive-coping-daily',
@@ -1141,6 +1267,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop conscious adaptive coping as a daily living skill, replacing avoidant or reactive patterns.',
           faciliatatorNote: 'Most adolescents have not assessed their coping styles. Making the style visible is the first step to choosing differently.',
+          xpReward: 100,
+          skills: ['Problem-solving', 'Self-care routines'],
         },
       ],
     },
@@ -1171,6 +1299,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build body awareness as a foundational skill for self-care and responsive daily living.',
           faciliatatorNote: 'Body check-ins are a key somatic skill — connecting physical sensations to needs is the basis of proactive self-care.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-wash-hands-song',
@@ -1187,6 +1317,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Establish proper hand hygiene as an automatic, body-level habit through song and movement.',
           faciliatatorNote: 'Handwashing set to a song is one of the most evidence-based methods for establishing this critical health habit.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-body-care-puzzle',
@@ -1203,6 +1335,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Establish a comprehensive understanding of morning and evening body care routines through hands-on sequencing.',
           faciliatatorNote: 'Sequencing activities build both the cognitive knowledge and the procedural memory for routine execution.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-healthy-habits-dance',
@@ -1219,6 +1353,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Embed healthy daily living habits in kinesthetic memory through movement and play.',
           faciliatatorNote: 'Movement-based learning is particularly effective for young children — the physical anchoring helps habits stick.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
 
@@ -1238,6 +1374,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop comprehensive hygiene awareness and build a personalized hygiene routine.',
           faciliatatorNote: 'Puberty changes hygiene needs significantly for this age group — address honestly without shame. New hygiene needs are a normal part of development.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-body-signals-listener',
@@ -1254,6 +1392,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive awareness — the ability to notice and respond to the body\'s signals for self-care needs.',
           faciliatatorNote: 'Interoceptive awareness is a foundational somatic skill and is often underdeveloped in children who have experienced stress or trauma.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-sleep-and-body',
@@ -1270,6 +1410,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build understanding of sleep as a critical body-care practice and develop personal sleep hygiene habits.',
           faciliatatorNote: 'Sleep deprivation in school-aged children is extremely common and significantly impacts learning and emotional regulation — take this topic seriously.',
+          xpReward: 75,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-nutrition-plate',
@@ -1286,6 +1428,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build basic nutrition literacy and the ability to make informed food choices for daily wellness.',
           faciliatatorNote: 'Avoid diet talk or weight-focused language — focus entirely on what foods DO FOR the body, not what they do to appearance.',
+          xpReward: 75,
+          skills: ['Meal preparation', 'Self-care routines'],
         },
       ],
 
@@ -1306,6 +1450,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a holistic, personalized daily wellness routine grounded in body and self-awareness.',
           faciliatatorNote: 'Teens who design their own wellness routines are far more likely to sustain them than those assigned routines by adults.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-body-awareness-journal',
@@ -1322,6 +1468,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop somatic awareness as a self-care tool through reflective body-centered journaling.',
           faciliatatorNote: 'Somatic journaling builds the mind-body connection that underlies informed self-care. It is also a powerful tool for stress awareness.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-physical-activity-plan',
@@ -1339,6 +1487,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build intrinsic motivation for physical activity by connecting movement to personal preferences and wellness goals.',
           faciliatatorNote: 'Physical activity planning should be led by enjoyment and sustainability, not performance goals. Avoid competitive framing that excludes less athletic students.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-sleep-hygiene-tracker',
@@ -1355,6 +1505,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build evidence-based sleep hygiene practices through structured self-monitoring.',
           faciliatatorNote: 'Sleep deprivation in adolescents is at near-epidemic levels. Treating sleep as a critical daily living skill — not a luxury — is essential framing.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
       ],
 
@@ -1375,6 +1527,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a comprehensive and self-directed holistic wellness plan for adult daily life.',
           faciliatatorNote: 'Holistic wellness planning at this age establishes patterns that persist into adulthood. The investment in this activity pays lifelong dividends.',
+          xpReward: 100,
+          skills: ['Independence', 'Self-care routines'],
         },
         {
           id: 'dl-sm-stress-body-connection',
@@ -1392,6 +1546,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build somatic intelligence — the ability to read, understand, and respond to the body\'s stress signals.',
           faciliatatorNote: 'Somatic intelligence is one of the most underteached and most impactful life skills. Students who understand their body\'s stress patterns can intervene before crisis.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-sm-advanced-hygiene-skills',
@@ -1409,6 +1565,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop comprehensive, independent adult-level hygiene and grooming skills.',
           faciliatatorNote: 'Address hygiene honestly and without shame — many students have gaps due to limited instruction, not laziness. This is a no-judgment learning space.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence', 'Home organization'],
         },
         {
           id: 'dl-sm-nutrition-meal-prep',
@@ -1426,6 +1584,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop practical nutrition and meal planning skills for food-secure, health-supporting independent living.',
           faciliatatorNote: 'Budget meal planning is one of the most directly relevant life skills for transition-age youth. Keep it practical and achievable rather than aspirational.',
+          xpReward: 100,
+          skills: ['Meal preparation', 'Time management', 'Safety awareness', 'Independence'],
         },
       ],
     },
@@ -1456,6 +1616,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build narrative sequencing skills and temporal awareness using the daily morning routine as the story structure.',
           faciliatatorNote: 'Narrative sequencing is foundational for executive function and planning skills — using personal routines makes the skill immediately meaningful.',
+          xpReward: 50,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-cn-sequence-cards',
@@ -1472,6 +1634,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop procedural sequencing and executive function through playful daily routine ordering.',
           faciliatatorNote: 'Identifying and correcting sequence errors builds flexible thinking alongside sequential thinking.',
+          xpReward: 75,
+          skills: ['Task sequencing', 'Self-care routines', 'Home organization'],
         },
         {
           id: 'dl-cn-picture-schedule',
@@ -1488,6 +1652,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop temporal sequencing and daily schedule awareness through personal visual schedule creation.',
           faciliatatorNote: 'Visual schedules are particularly powerful tools for children with ADHD, autism, or anxiety — they reduce uncertainty and support transitions.',
+          xpReward: 50,
+          skills: ['Time management', 'Self-care routines'],
         },
         {
           id: 'dl-cn-messy-to-tidy-story',
@@ -1504,6 +1670,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the cognitive narrative of task initiation and step-by-step completion applied to home organization.',
           faciliatatorNote: 'The messy-to-tidy narrative builds the mental model for all organizational tasks — the concept that a big mess is solved through sequential small steps.',
+          xpReward: 50,
+          skills: ['Home organization', 'Task sequencing'],
         },
       ],
 
@@ -1523,6 +1691,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop weekly planning and temporal organization skills through creative visual narrative.',
           faciliatatorNote: 'Comic strip planning engages right-brain visualization and left-brain sequencing simultaneously — this dual engagement supports strong memory of planned events.',
+          xpReward: 75,
+          skills: ['Time management', 'Self-care routines'],
         },
         {
           id: 'dl-cn-time-detective',
@@ -1539,6 +1709,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build time estimation and backward planning skills fundamental to daily schedule management.',
           faciliatatorNote: 'Time blindness (poor time estimation) is extremely common in children with ADHD and executive function challenges — this game builds the critical skill of time perception.',
+          xpReward: 75,
+          skills: ['Time management', 'Problem-solving'],
         },
         {
           id: 'dl-cn-organization-challenge',
@@ -1555,6 +1727,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop organizational thinking and categorization skills applied to daily living management.',
           faciliatatorNote: 'The timed find-it test makes the functional value of organization immediately concrete and motivating.',
+          xpReward: 75,
+          skills: ['Problem-solving', 'Self-care routines'],
         },
         {
           id: 'dl-cn-task-story-map',
@@ -1571,6 +1745,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply narrative story structure to task planning, building executive function through familiar literary tools.',
           faciliatatorNote: 'Using story grammar (setting, character, goal, problem, solution) as an executive function scaffold is highly effective — it leverages existing narrative knowledge.',
+          xpReward: 75,
+          skills: ['Time management', 'Self-care routines'],
         },
       ],
 
@@ -1591,6 +1767,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized executive function toolkit tailored to individual daily living challenges.',
           faciliatatorNote: 'Executive function tools are most effective when they are personalized and immediately applied to real situations — avoid generic advice.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Problem-solving'],
         },
         {
           id: 'dl-cn-scheduling-mastery',
@@ -1608,6 +1786,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop advanced scheduling skills incorporating prioritization, time estimation, and contingency planning.',
           faciliatatorNote: 'The 20% buffer rule and contingency planning are advanced scheduling strategies rarely taught explicitly — students who learn them experience significantly less schedule chaos.',
+          xpReward: 100,
+          skills: ['Time management', 'Self-care routines'],
         },
         {
           id: 'dl-cn-narrative-of-independence',
@@ -1625,6 +1805,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a positive independence identity narrative that frames daily living skill development as personal growth.',
           faciliatatorNote: 'Narrative identity — the story we tell about ourselves — is one of the strongest predictors of resilience. A positive independence story builds real-world follow-through.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Independence'],
         },
         {
           id: 'dl-cn-problem-solving-daily',
@@ -1641,6 +1823,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build structured problem-solving skills applied to real daily living challenges.',
           faciliatatorNote: 'The framework must be practiced on real problems to generalize — the final personal application step is the most important part of this activity.',
+          xpReward: 100,
+          skills: ['Problem-solving', 'Self-care routines'],
         },
       ],
 
@@ -1661,6 +1845,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a comprehensive personal life management system for adult independent living.',
           faciliatatorNote: 'A life management system is the cognitive infrastructure of independence. Students who build one before leaving home have dramatically better transition outcomes.',
+          xpReward: 100,
+          skills: ['Independence', 'Self-care routines'],
         },
         {
           id: 'dl-cn-financial-literacy-story',
@@ -1678,6 +1864,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build financial literacy through personal narrative and future-focused financial planning.',
           faciliatatorNote: 'Financial shame is common — the narrative approach normalizes financial history while directing energy toward growth. Avoid judgment of students\' starting points.',
+          xpReward: 100,
+          skills: ['Self-care routines', 'Money management', 'Time management'],
         },
         {
           id: 'dl-cn-emergency-planning',
@@ -1695,6 +1883,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build practical emergency preparedness and safety skills as core components of independent adult living.',
           faciliatatorNote: 'Emergency preparedness is often skipped in daily living curricula — students who have explicit plans are significantly more capable and less anxious in real emergencies.',
+          xpReward: 100,
+          skills: ['Safety awareness', 'Independence', 'Time management'],
         },
         {
           id: 'dl-cn-independent-living-blueprint',
@@ -1712,6 +1902,8 @@ export const DAILY_LIVING_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a comprehensive, self-directed independent living blueprint that integrates all daily living skill domains.',
           faciliatatorNote: 'The independent living blueprint can serve as an IEP or transition planning anchor. Students who complete this activity have a concrete, personalized roadmap for post-secondary success.',
+          xpReward: 100,
+          skills: ['Independence', 'Self-care routines'],
         },
       ],
     },

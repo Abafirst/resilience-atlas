@@ -33,6 +33,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build ownership and intrinsic motivation for ADL independence using visual reinforcement.',
           faciliatatorNote: 'Use picture symbols alongside text for early readers. Pair with a token economy if needed to sustain engagement across sessions.',
+          xpReward: 50,
+          skills: ['Visual-motor integration', 'Self-care skills'],
         },
         {
           id: 'ot-button-challenge-goals',
@@ -49,6 +51,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop fine motor goal-setting skills through timed self-challenge and personal bests.',
           faciliatatorNote: 'Use adaptive equipment (button hook) for children with significant fine motor delays; the goal is self-improvement, not speed comparison.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Self-regulation'],
         },
         {
           id: 'ot-independence-trophy',
@@ -64,6 +68,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Celebrate mastered ADL skills to reinforce self-efficacy and the growth mindset around independence.',
           faciliatatorNote: 'Photograph the child holding their trophy and share with caregivers to extend celebration into the home environment.',
+          xpReward: 50,
+          skills: ['Self-care skills', 'Self-regulation'],
         },
         {
           id: 'ot-step-by-step-goal',
@@ -79,6 +85,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach task analysis as a self-regulation and goal-monitoring strategy for functional skill development.',
           faciliatatorNote: 'Use forward or backward chaining depending on the child\'s learning profile. Backward chaining often builds faster success experiences.',
+          xpReward: 50,
+          skills: ['Executive function', 'Self-regulation', 'Adaptive strategies'],
         },
       ],
 
@@ -98,6 +106,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-monitoring and goal-persistence skills through structured weekly tracking.',
           faciliatatorNote: 'Email or send a photo of the tracker to caregivers so they can support home practice opportunities.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-daily-routine-power-map',
@@ -114,6 +124,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect OT goals to real daily routines, increasing motivation and generalization of skills.',
           faciliatatorNote: 'Invite the caregiver to review the map so they can support the chosen step at home without taking over.',
+          xpReward: 75,
+          skills: ['Self-care skills', 'Self-regulation'],
         },
         {
           id: 'ot-fine-motor-goal-game',
@@ -130,6 +142,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build realistic goal calibration and self-assessment through fine motor challenge selection.',
           faciliatatorNote: 'The calibration of goal difficulty — not the fine motor performance — is the core skill being built here.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-self-care-vision-board',
@@ -146,6 +160,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect ADL skill development to a personally meaningful self-care vision for lasting motivation.',
           faciliatatorNote: 'The scissor activity is itself an embedded fine motor task — observe grip, bilateral coordination, and visual-motor control during cutting.',
+          xpReward: 100,
+          skills: ['Self-care skills', 'Self-regulation'],
         },
       ],
 
@@ -165,6 +181,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-directed occupational performance goals using a structured SMART planning framework.',
           faciliatatorNote: 'Encourage students to bring their action plan to their IEP or caregiver meeting to practice self-advocacy alongside goal-setting.',
+          xpReward: 100,
+          skills: ['Executive function', 'Self-care skills'],
         },
         {
           id: 'ot-skill-building-contract',
@@ -181,6 +199,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use formal self-commitment to increase accountability, effort, and follow-through on therapeutic goals.',
           faciliatatorNote: 'Contracts work best when the student genuinely chooses the goal. Allow negotiation — it increases buy-in significantly.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-executive-goal-map',
@@ -197,6 +217,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive awareness of executive function as a foundation for self-directed goal pursuit.',
           faciliatatorNote: 'This activity pairs well with formal executive function assessment data — connect the map to actual profile strengths and needs.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-adaptive-strategy-goals',
@@ -213,6 +235,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build reflective practice and adaptive strategy self-selection as core self-regulation skills.',
           faciliatatorNote: 'Adaptive strategy selection is a high-level OT skill. Reinforce that finding what works for your unique sensory-motor profile is a lifelong strength.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation', 'Adaptive strategies'],
         },
       ],
 
@@ -232,6 +256,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a comprehensive, OT-informed transition plan that supports post-secondary success.',
           faciliatatorNote: 'Connect this to the student\'s formal transition plan in their IEP. OT\'s role in transition planning is often underutilized — make it explicit.',
+          xpReward: 100,
+          skills: ['Self-regulation', 'Executive function'],
         },
         {
           id: 'ot-vocational-skills-exploration',
@@ -248,6 +274,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect functional skill development to vocational identity and career planning for post-secondary readiness.',
           faciliatatorNote: 'Use O*NET or similar vocational databases to provide accurate fine motor and sensory demand data for occupations of interest.',
+          xpReward: 100,
+          skills: ['Executive function', 'Self-regulation'],
         },
         {
           id: 'ot-adult-adl-goals',
@@ -264,6 +292,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build adult IADL independence through structured self-assessment and goal prioritization.',
           faciliatatorNote: 'Involve the caregiver in this session carefully — focus on what the student will do independently, not what the family will continue to do for them.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Executive function', 'Self-care skills'],
         },
         {
           id: 'ot-self-advocacy-goals',
@@ -280,6 +310,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-advocacy competence for accessing OT-informed supports in real post-secondary environments.',
           faciliatatorNote: 'Record the role-play with consent for self-review — watching oneself advocate is a powerful confidence builder.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Environmental modification'],
         },
       ],
     },
@@ -309,6 +341,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce sensory diversity in a relational context, building peer tolerance and connection through shared sensory experience.',
           faciliatatorNote: 'Watch for tactile defensiveness — offer tool-mediated alternatives (tongs, gloves) without drawing negative attention to sensitivity.',
+          xpReward: 50,
+          skills: ['Sensory processing', 'Visual-motor integration'],
         },
         {
           id: 'ot-partner-clay-build',
@@ -324,6 +358,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build bilateral fine motor coordination and nonverbal communication in a shared relational task.',
           faciliatatorNote: 'Non-dominant hand use adds motor challenge and leveling effect. The relational attunement needed compensates for reduced motor proficiency.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-regulation-buddy-story',
@@ -340,6 +376,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce co-regulation as a relational skill, connecting attachment figures to body-based calming strategies.',
           faciliatatorNote: 'The regulation buddy drawing is a fine motor warm-up. Observe pencil grip, pressure, and letter/name writing if developmentally appropriate.',
+          xpReward: 50,
+          skills: ['Self-regulation', 'Executive function'],
         },
         {
           id: 'ot-hand-print-friendship-quilt',
@@ -355,6 +393,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build group belonging and identity through a shared, fine-motor-embedded creative activity.',
           faciliatatorNote: 'Paint on palms activates tactile receptors — this can be organizing for sensory-seeking children and alerting for tactile-avoiding children. Prepare alternatives.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
       ],
 
@@ -374,6 +414,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sensory empathy and relational flexibility by understanding how sensory profiles differ between people.',
           faciliatatorNote: 'Normalize all sensory preferences as valid. Avoid framing any preference as "weird" — frame differences as information about what supports each person.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-cooperative-fine-motor-build',
@@ -390,6 +432,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop cooperative fine motor skills, role-differentiation, and relational trust through structured group building.',
           faciliatatorNote: 'Observe fine motor strategies used by each student in their role. The inspector role is excellent for students with visual-motor integration goals.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-body-signals-sharing',
@@ -405,6 +449,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive awareness and relational attunement through shared body-signal exploration.',
           faciliatatorNote: 'Interoception is foundational to both self-regulation and empathy. Connect body-signal sharing to how students can support each other in the classroom.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Body awareness'],
         },
         {
           id: 'ot-peer-sensory-interview',
@@ -421,6 +467,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build perspective-taking and respectful curiosity about sensory differences through structured peer interviewing.',
           faciliatatorNote: 'Handwriting on the recording sheet is an embedded graphomotor task. Observe pencil grip, letter formation, and writing stamina.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration'],
         },
       ],
 
@@ -440,6 +488,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build co-regulation skills by sharing, teaching, and integrating diverse regulation strategies in a relational context.',
           faciliatatorNote: 'Teaching a strategy to peers deepens understanding. The meta-skill here is recognizing when others need support and knowing how to offer it without overstepping.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation', 'Adaptive strategies'],
         },
         {
           id: 'ot-sensory-profile-sharing',
@@ -456,6 +506,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build vulnerability-based connection and practical accommodation through mutual sensory profile disclosure.',
           faciliatatorNote: 'Sharing sensory information can feel exposing for teens who have been stigmatized. Normalize thoroughly before beginning and make sharing genuinely optional.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Adaptive strategies'],
         },
         {
           id: 'ot-collaborative-task-plan',
@@ -472,6 +524,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply task analysis skills in a collaborative relational context, building interdependence and peer support.',
           faciliatatorNote: 'The meta-lesson is that accommodation and task distribution are collaborative skills. Connect to workplace teaming and IEP accommodation conversations.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-peer-support-network-map',
@@ -488,6 +542,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build relational awareness of support networks with specific attention to who supports functional and sensory needs.',
           faciliatatorNote: 'Students with disabilities often have thinner support networks than peers. This activity makes gaps visible so they can be intentionally addressed.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Executive function'],
         },
       ],
 
@@ -507,6 +563,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-advocacy and professional communication skills for negotiating sensory accommodations in workplace settings.',
           faciliatatorNote: 'Frame accommodations positively as performance enhancers, not limitations. This framing is more effective in employment contexts and reduces stigma.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Adaptive strategies', 'Environmental modification'],
         },
         {
           id: 'ot-relationships-daily-routines',
@@ -523,6 +581,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop insight into how relational context influences occupational performance and daily routine success.',
           faciliatatorNote: 'For students in difficult family environments, focus on community or peer relationships as alternative support structures.',
+          xpReward: 100,
+          skills: ['Self-care skills', 'Self-regulation'],
         },
         {
           id: 'ot-community-participation-plan',
@@ -539,6 +599,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build community participation capacity through OT-informed access planning and barrier reduction.',
           faciliatatorNote: 'Community participation is a core OT outcome. Frame this as real occupational therapy work — not homework. Offer to contact the venue together if needed.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-peer-mentoring-adl',
@@ -555,6 +617,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Consolidate functional skill mastery through peer mentoring, building relational competence and self-efficacy simultaneously.',
           faciliatatorNote: 'Peer teaching is a powerful consolidation tool — teaching a skill requires deeper processing than simply performing it. Celebrate this milestone explicitly.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-care skills'],
         },
       ],
     },
@@ -585,6 +649,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect occupational therapy to personally meaningful activities to increase intrinsic motivation and engagement.',
           faciliatatorNote: 'The cutting and gluing are embedded fine motor tasks. If pre-cut pictures are used for time, offer some cutting as choice to address scissors skills.',
+          xpReward: 75,
+          skills: ['Self-regulation', 'Executive function'],
         },
         {
           id: 'ot-what-makes-my-hands-happy',
@@ -600,6 +666,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of the hands as tools for meaningful occupation and reinforce fine motor work as purposeful.',
           faciliatatorNote: 'This brief activity builds the therapeutic alliance by centering the child\'s own values. Revisit at every session milestone.',
+          xpReward: 50,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-gratitude-jar-making',
@@ -616,6 +684,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build gratitude practice alongside fine motor skills (tearing, pressing, manipulating small objects) in a meaningful craft.',
           faciliatatorNote: 'Tearing tissue paper is a bilateral hand coordination task with proprioceptive feedback. Choose tissue weight based on the child\'s strength and control.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-nature-sensory-wonder-walk',
@@ -632,6 +702,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect sensory exploration of natural materials to wonder, meaning-making, and acceptance of sensory diversity.',
           faciliatatorNote: 'Handling varied natural textures provides rich tactile input for sensory processing. Observe tactile responses carefully — they reveal important sensory processing data.',
+          xpReward: 50,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
       ],
 
@@ -651,6 +723,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build occupational identity by mapping meaningful activities and connecting OT goals to real-life participation.',
           faciliatatorNote: 'This map becomes a therapy compass — reference it whenever motivation dips. "Remember, we\'re working on ___ so you can do ___ better."',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-values-sensory-art',
@@ -667,6 +741,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect values to sensory-creative expression, building the link between meaningful occupation and regulation.',
           faciliatatorNote: 'The multi-texture art medium provides rich sensory processing opportunities. Sandpaper painting is particularly organizing for tactile-seeking students.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-purpose-through-hands',
@@ -682,6 +758,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build occupational meaning through narrative reflection on the hands as instruments of purposeful living.',
           faciliatatorNote: 'The handwriting is embedded graphomotor practice. Observe pencil grip, letter size, spacing, and fatigue. This is both a clinical and therapeutic task.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-meaningful-routine-story',
@@ -698,6 +776,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build narrative awareness of routine meaning and reinforce the link between functional skills and valued daily participation.',
           faciliatatorNote: 'Creating a book involves page turning, fine motor drawing, and potentially stapling — all functional hand tasks. Fold and prep pages in advance to maximize writing time.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Self-care skills'],
         },
       ],
 
@@ -717,6 +797,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build occupational identity as a stable self-concept that can sustain meaning during periods of functional limitation.',
           faciliatatorNote: 'This is a psychologically rich activity. Have a brief discussion prepared about occupational disruption — it is often a source of grief and resilience simultaneously.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-values-based-participation',
@@ -733,6 +815,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Anchor occupational therapy goals in deeply held personal values for meaning-driven, intrinsically motivated participation.',
           faciliatatorNote: 'Values-based framing is a motivational interviewing technique. It dramatically increases goal commitment compared to clinician-assigned goals.',
+          xpReward: 100,
+          skills: ['Executive function', 'Self-regulation'],
         },
         {
           id: 'ot-flow-state-exploration',
@@ -749,6 +833,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use flow theory to connect OT sensory-motor concepts to peak occupational performance and meaningful engagement.',
           faciliatatorNote: 'Flow is disrupted by sensory dysregulation. Connect flow states directly to the student\'s sensory diet and regulation strategies as performance enhancers.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-meaning-through-adaptive-living',
@@ -765,6 +851,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reframe adaptive equipment and strategies as sources of meaning and occupational liberation rather than markers of limitation.',
           faciliatatorNote: 'Disability identity work is clinically sensitive. Avoid projecting positivity — let the student\'s own narrative lead. Acknowledge grief where it exists.',
+          xpReward: 100,
+          skills: ['Adaptive strategies', 'Self-regulation'],
         },
       ],
 
@@ -784,6 +872,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect functional skill development to transcendent personal meaning through legacy reflection.',
           faciliatatorNote: 'Transcendent meaning is a protective factor for mental health. This activity bridges OT into existential resilience — genuinely powerful for older teens.',
+          xpReward: 100,
+          skills: ['Self-regulation', 'Executive function'],
         },
         {
           id: 'ot-meaningful-work-exploration',
@@ -800,6 +890,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect OT skill development to meaningful vocational aspirations, building purpose-driven career preparation.',
           faciliatatorNote: 'Use actual OT assessment data here — sensory profiles, fine motor evaluations, executive function reports — to make the demand analysis realistic and useful.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-adaptive-meaning-making',
@@ -816,6 +908,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build post-adversity meaning-making as a resilience skill, integrating OT challenge into a growth narrative.',
           faciliatatorNote: 'Be thoughtful with trauma exposure — this is not trauma processing therapy. Focus on growth and integration rather than trauma retelling.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Adaptive strategies'],
         },
         {
           id: 'ot-spirituality-daily-routine',
@@ -832,6 +926,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Cultivate the practice of infusing daily routines with meaning as a spiritual resilience strategy accessible through occupation.',
           faciliatatorNote: 'Spiritual here is broadly conceived as connection to what matters deeply — not necessarily religious. Clarify this framing at the outset.',
+          xpReward: 100,
+          skills: ['Self-care skills', 'Adaptive strategies'],
         },
       ],
     },
@@ -861,6 +957,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive awareness — the ability to sense internal body states — as a foundation for emotional identification and regulation.',
           faciliatatorNote: 'Interoception is a sensory system that OT practitioners are uniquely positioned to address. This map is both a clinical tool and a self-regulation scaffold.',
+          xpReward: 50,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-sensory-feelings-dice',
@@ -877,6 +975,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect emotions to sensory body responses and introduce matched regulation strategies through play.',
           faciliatatorNote: 'The sensory strategy cards should be individually tailored — what works for one child\'s sensory profile will not work for another. Customize the deck.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-calm-corner-toolkit',
@@ -893,6 +993,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized sensory regulation toolkit and practice using it proactively before reaching emotional overload.',
           faciliatatorNote: 'Work with teachers and caregivers to ensure the toolkit is accessible in home and classroom settings. A toolkit unused outside OT has limited carryover.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-body-thermometer-feelings',
@@ -908,6 +1010,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build early arousal awareness and proactive regulation habits using a simple visual thermometer scale.',
           faciliatatorNote: 'The thermometer framework aligns with the Zones of Regulation. This simplified version works well for ages 5–7 as an introduction.',
+          xpReward: 50,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
       ],
 
@@ -927,6 +1031,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized, categorized regulation strategy toolkit with sensory rationale for each strategy.',
           faciliatatorNote: 'The sensory rationale column is critical OT content — it teaches students WHY their strategies work, enabling them to generalize to novel situations.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation', 'Adaptive strategies'],
         },
         {
           id: 'ot-zones-of-regulation-art',
@@ -943,6 +1049,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Deepen Zones of Regulation knowledge through creative sensory engagement and personalized strategy mapping.',
           faciliatatorNote: 'Art-based zones work is more memorable than paper-based learning. The painting process itself provides sensory input that demonstrates regulation in action.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Self-regulation', 'Adaptive strategies'],
         },
         {
           id: 'ot-sensory-emotional-check-in',
@@ -958,6 +1066,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build consistent interoceptive check-in habits and teach students to use sensory-emotional data to inform their regulation needs.',
           faciliatatorNote: 'This check-in routine takes 2 minutes and dramatically improves therapeutic alliance and session effectiveness. Make it non-negotiable in your practice.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-adaptive-coping-card',
@@ -974,6 +1084,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a portable, personalized coping reference card that externalizes the regulation process for use in real settings.',
           faciliatatorNote: 'Coping cards reduce cognitive load during dysregulation — students can follow steps without relying on working memory. Ensure the card is kept accessible.',
+          xpReward: 75,
+          skills: ['Self-regulation', 'Adaptive strategies'],
         },
       ],
 
@@ -993,6 +1105,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sophisticated sensory-emotional self-knowledge that enables proactive, individualized regulation planning.',
           faciliatatorNote: 'This is advanced OT clinical content delivered therapeutically. The goal is clinical insight translated into self-regulation skill — not just self-awareness.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Executive function', 'Self-regulation'],
         },
         {
           id: 'ot-regulation-ladder',
@@ -1009,6 +1123,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build nuanced arousal self-monitoring and matched-level regulation strategy selection as a sophisticated self-regulation system.',
           faciliatatorNote: 'The principle of matching strategy complexity to arousal level is evidence-based. High arousal requires simple, automatic strategies — not therapy talk.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation', 'Adaptive strategies'],
         },
         {
           id: 'ot-triggers-and-tools-map',
@@ -1025,6 +1141,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build systematic trigger-tool pairing as an evidence-based self-regulation framework grounded in sensory processing theory.',
           faciliatatorNote: 'Trigger specificity matters — "noise" is less actionable than "the cafeteria at 12:15 pm." Push for specificity to increase strategy effectiveness.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-adaptive-emotional-response',
@@ -1041,6 +1159,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build explicit, scenario-specific adaptive emotional response plans using sensory-based intervention points.',
           faciliatatorNote: 'Response planning is cognitive-behavioral OT work. The sensory intervention point is the unique OT contribution — it is actionable before cognitive re-appraisal is possible.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Executive function', 'Self-regulation'],
         },
       ],
 
@@ -1060,6 +1180,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate emotional intelligence theory with OT sensory processing knowledge for a sophisticated adult-applicable self-regulation model.',
           faciliatatorNote: 'Mayer-Salovey-Caruso EI theory is the research-grounded model to use here. The sensory-EI connection is novel — students often find it revelatory.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-stress-inoculation-daily-life',
@@ -1077,6 +1199,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply OT sensory-regulation skills within a cognitive-behavioral stress inoculation framework for real-life stress management.',
           faciliatatorNote: 'Stress inoculation is evidence-based for anxiety disorders and general stress resilience. OT\'s sensory component significantly enriches the standard protocol.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-emotion-regulation-adl',
@@ -1093,6 +1217,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply emotion regulation skills directly to ADL performance contexts where dysregulation most commonly undermines functional independence.',
           faciliatatorNote: 'ADL-embedded emotion regulation is a highly practical OT contribution. Many clients fail at ADLs not due to motor deficits but to emotional dysregulation — this addresses the real barrier.',
+          xpReward: 100,
+          skills: ['Self-care skills', 'Self-regulation'],
         },
         {
           id: 'ot-complex-emotion-navigation',
@@ -1110,6 +1236,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sophisticated emotional literacy and complex emotion navigation as adult-level self-regulation competencies.',
           faciliatatorNote: 'Complex emotion work is typically clinical psychology territory. OT brings the sensory-body dimension, making the approach uniquely embodied and action-oriented.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
       ],
     },
@@ -1140,6 +1268,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Provide deep proprioceptive input through heavy work to modulate arousal and improve sensory regulation.',
           faciliatatorNote: 'Heavy work has the most robust evidence base in OT sensory intervention. Dosing matters — observe the child\'s response and adjust intensity accordingly.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Self-regulation', 'Body awareness'],
         },
         {
           id: 'ot-morning-sensory-diet',
@@ -1156,6 +1286,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a structured morning sensory diet routine that regulates arousal before school demands begin.',
           faciliatatorNote: 'Caregiver coaching is essential — the morning sensory diet only works if implemented at home. Spend time teaching caregivers the rationale, not just the routine.',
+          xpReward: 50,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-care skills', 'Self-regulation'],
         },
         {
           id: 'ot-body-listening-game',
@@ -1171,6 +1303,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive discrimination by attending to body signals after specific sensory inputs.',
           faciliatatorNote: 'This game is simultaneously assessment and intervention. Track responses across sessions — patterns reveal the child\'s sensory processing profile more accurately than standardized tools.',
+          xpReward: 50,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Body awareness'],
         },
         {
           id: 'ot-proprioception-adventure',
@@ -1187,6 +1321,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Deliver rich proprioceptive input in a narrative-embedded context to enhance both sensory modulation and body schema.',
           faciliatatorNote: 'Narrative embedding increases engagement and reduces behavioral resistance. The adventure frame gives children agency and purpose within the sensory activity.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Body awareness'],
         },
       ],
 
@@ -1206,6 +1342,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop student-authored sensory diets grounded in sensory processing theory and personal preference.',
           faciliatatorNote: 'Student authorship of the sensory diet dramatically improves compliance. When they understand WHY each activity is scheduled, they use it. Teach the theory.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-interoception-check-in',
@@ -1222,6 +1360,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive accuracy — the ability to sense internal body states — as a foundational self-regulation skill.',
           faciliatatorNote: 'Kelly Mahler\'s Interoception curriculum is the evidence base here. Students with poor interoceptive awareness have significantly impaired self-regulation — this is core OT work.',
+          xpReward: 75,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-regulation-obstacle-course',
@@ -1237,6 +1377,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the capacity to regulate in activated physiological states, a key resilience and functional performance skill.',
           faciliatatorNote: 'The combination of physical activation and regulation tasks mirrors real-world demands. This is one of the most functionally relevant OT activities in this curriculum.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-breath-and-body-toolkit',
@@ -1253,6 +1395,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personally tested breath-and-body regulation toolkit based on direct physiological response data.',
           faciliatatorNote: 'Personal testing is more effective than prescription — students trust what they\'ve experienced in their own bodies. The rating process teaches interoception simultaneously.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
       ],
 
@@ -1272,6 +1416,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a comprehensive, evidence-informed sensory regulation plan that the student can implement and share as a self-advocacy document.',
           faciliatatorNote: 'A student-authored sensory plan is a powerful IEP and accommodation document. Support the student to present it at their next IEP meeting.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-mindful-body-scan',
@@ -1288,6 +1434,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build interoceptive precision through systematic mindful body scanning as a clinical self-regulation foundation.',
           faciliatatorNote: 'Body scan practice builds the interoceptive accuracy that underlies all OT regulation work. 10 minutes twice a week produces measurable interoceptive gains over 6 weeks.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-regulation'],
         },
         {
           id: 'ot-vestibular-proprioceptive-lab',
@@ -1304,6 +1452,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sensory system self-knowledge through systematic vestibular-proprioceptive exploration and data-based movement prescription.',
           faciliatatorNote: 'Turning intervention into self-directed "research" builds the metacognitive understanding needed for lifelong sensory self-management.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Body awareness'],
         },
         {
           id: 'ot-sensory-environment-audit',
@@ -1320,6 +1470,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build environmental sensory analysis skills as a practical self-advocacy and self-management competency.',
           faciliatatorNote: 'Environmental modification is a primary OT intervention and an underused self-advocacy strategy. Teaching students to audit and modify their environments is empowering.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Environmental modification'],
         },
       ],
 
@@ -1339,6 +1491,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a neurologically-grounded, individualized somatic stress management toolkit for adult-level stress demands.',
           faciliatatorNote: 'Connecting autonomic nervous system theory to personal sensory experience is transformative for older teens. The neuroscience framing reduces shame and increases strategy uptake.',
+          xpReward: 100,
+          skills: ['Self-regulation', 'Executive function'],
         },
         {
           id: 'ot-body-based-productivity',
@@ -1355,6 +1509,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply somatic and sensory self-knowledge to optimize daily productivity through body-based schedule design.',
           faciliatatorNote: 'Body-based productivity framing is highly motivating for older teens — it is practical, evidence-based, and gives them agency over academic performance.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Self-regulation'],
         },
         {
           id: 'ot-sensory-self-care-routine',
@@ -1371,6 +1527,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sustainable sensory self-care practices as adult-level wellness and nervous system maintenance strategies.',
           faciliatatorNote: 'Sensory self-care is distinct from stimulating sensory seeking — it is restorative. This distinction is foundational for long-term wellness and burnout prevention.',
+          xpReward: 100,
+          skills: ['Sensory processing', 'Visual-motor integration', 'Self-care skills'],
         },
         {
           id: 'ot-advanced-autonomic-regulation',
@@ -1387,6 +1545,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply advanced autonomic nervous system theory to personal regulation planning using polyvagal-informed OT strategies.',
           faciliatatorNote: 'Polyvagal theory is increasingly evidence-supported and highly applicable to OT practice. Teens with trauma histories especially benefit from understanding their own nervous system responses.',
+          xpReward: 100,
+          skills: ['Executive function', 'Self-regulation'],
         },
       ],
     },
@@ -1417,6 +1577,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate graphomotor skill practice (pencil grip, letter formation) with narrative production in a low-pressure, meaning-driven context.',
           faciliatatorNote: 'Keep the writing demand minimal (one word per panel) so fine motor fatigue doesn\'t defeat the narrative purpose. Grade up to two words as grip and pressure improve.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Handwriting'],
         },
         {
           id: 'ot-visual-schedule-story',
@@ -1433,6 +1595,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sequential reasoning, narrative coherence, and visual-spatial ordering through personally meaningful daily schedule sequencing.',
           faciliatatorNote: 'This activity directly targets cognitive-sequencing deficits common in children with DCD, ASD, and ADHD. The personal schedule content increases engagement and real-world applicability.',
+          xpReward: 50,
+          skills: ['Visual-motor integration', 'Executive function', 'Body awareness'],
         },
         {
           id: 'ot-sequence-card-craft',
@@ -1449,6 +1613,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build task analysis and sequential ordering skills through visual-narrative creation of procedural instructions.',
           faciliatatorNote: 'Creating rather than consuming procedural sequences is cognitively and motorically richer. The drawing task is embedded fine motor practice.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-letter-formation-fairy-tale',
@@ -1465,6 +1631,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Embed letter formation practice (correct start points, directionality, multi-surface practice) in a narrative play context to increase engagement and retention.',
           faciliatatorNote: 'Multi-surface practice (sand, whiteboard, paper) is evidence-based for letter formation learning. The narrative frame reduces anxiety and increases repetitions naturally.',
+          xpReward: 75,
+          skills: ['Handwriting', 'Self-regulation'],
         },
       ],
 
@@ -1484,6 +1652,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build graphomotor fluency, self-monitoring, and goal-directed handwriting improvement through regular reflective journaling.',
           faciliatatorNote: 'Journaling that embeds graphomotor goals creates authentic writing purpose. Students who write about their own lives write longer and with more effort than with worksheets.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration', 'Handwriting'],
         },
         {
           id: 'ot-executive-function-story',
@@ -1500,6 +1670,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build planning, organization, and cognitive monitoring skills through structured narrative creation tasks.',
           faciliatatorNote: 'Story planning templates scaffold working memory and organizational demands. Explicitly naming the executive functions during the activity builds metacognitive awareness.',
+          xpReward: 75,
+          skills: ['Visual-motor integration', 'Executive function', 'Environmental modification'],
         },
         {
           id: 'ot-visual-motor-comic-strip',
@@ -1516,6 +1688,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate visual-motor integration, fine motor precision, narrative construction, and sequential reasoning through comic strip creation.',
           faciliatatorNote: 'Comics require smaller, more controlled writing and drawing than typical assignments — excellent for targeting visual-motor integration in a high-motivation format.',
+          xpReward: 100,
+          skills: ['Fine motor skills', 'Visual-motor integration'],
         },
         {
           id: 'ot-task-analysis-narrative',
@@ -1532,6 +1706,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build precise sequential reasoning and procedural writing through task analysis narrative production.',
           faciliatatorNote: 'Partner-testing the task analysis provides authentic revision motivation. The precision required (action verbs, complete steps) is both a writing and a cognitive-organizational goal.',
+          xpReward: 75,
+          skills: ['Fine motor skills', 'Visual-motor integration', 'Executive function', 'Handwriting'],
         },
       ],
 
@@ -1551,6 +1727,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive narrative skills and evidence-based cognitive strategy selection for functional performance challenges.',
           faciliatatorNote: 'Narrative as metacognition: writing the story of a cognitive challenge builds self-observation skills that are themselves cognitive interventions. This is evidence-based.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Adaptive strategies'],
         },
         {
           id: 'ot-executive-planner-creation',
@@ -1567,6 +1745,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply executive function knowledge to the design and use of a personalized planning tool that accommodates real functional needs.',
           faciliatatorNote: 'Generic planners fail students with executive dysfunction. Student-designed adaptive planners succeed because they are built around personal function patterns. The design process is itself therapeutic.',
+          xpReward: 100,
+          skills: ['Executive function', 'Self-regulation'],
         },
         {
           id: 'ot-visual-spatial-story-mapping',
@@ -1583,6 +1763,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate visual-spatial processing and narrative reasoning through combined map and story creation tasks.',
           faciliatatorNote: 'Visual-spatial story mapping targets visual processing, directional orientation, graphomotor precision, and narrative sequencing simultaneously — rich OT territory.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Body awareness'],
         },
         {
           id: 'ot-metacognitive-journaling',
@@ -1599,6 +1781,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive self-knowledge as a foundation for autonomous learning and adaptive strategy use across contexts.',
           faciliatatorNote: 'Metacognitive journaling is evidence-based for executive function intervention. Students who can describe their own cognitive processes generalize strategies more effectively.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Adaptive strategies'],
         },
       ],
 
@@ -1618,6 +1802,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply cognitive load theory to personal life design as a sophisticated self-management and adaptive planning strategy.',
           faciliatatorNote: 'Cognitive load is profoundly affected by sensory processing — this is an underused OT contribution to learning theory. The connection is clinically powerful for students with sensory processing disorders.',
+          xpReward: 100,
+          skills: ['Executive function', 'Adaptive strategies'],
         },
         {
           id: 'ot-executive-function-portfolio',
@@ -1634,6 +1820,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-awareness and self-advocacy capacity by documenting and articulating executive function progress and current profile.',
           faciliatatorNote: 'The portfolio becomes a real disclosure document for accommodations. Support students to use it in their IEP meeting, college disability services intake, or workplace HR conversation.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Executive function'],
         },
         {
           id: 'ot-adaptive-writing-strategies',
@@ -1650,6 +1838,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build informed adaptive writing strategy selection and self-advocacy for writing accommodations in post-secondary contexts.',
           faciliatatorNote: 'Challenging the assumption that handwriting is always the goal is important OT work. Functional written communication by any means is the legitimate OT outcome.',
+          xpReward: 100,
+          skills: ['Fine motor skills', 'Visual-motor integration', 'Handwriting', 'Adaptive strategies'],
         },
         {
           id: 'ot-life-story-visual-map',
@@ -1667,6 +1857,8 @@ export const OT_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build narrative identity and future orientation through comprehensive life story visual mapping that integrates OT within a growth story.',
           faciliatatorNote: 'Life story mapping is a narrative identity intervention. Placing OT within the life story reduces stigma and builds a growth narrative that sustains engagement with ongoing functional development.',
+          xpReward: 100,
+          skills: ['Visual-motor integration', 'Self-regulation'],
         },
       ],
     },

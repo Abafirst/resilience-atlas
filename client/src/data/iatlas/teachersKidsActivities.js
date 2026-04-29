@@ -33,6 +33,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce whole-class goal-setting and peer accountability in a playful way.',
           faciliatatorNote: 'Keep goals simple and achievable (e.g., "write my name neatly", "listen during circle time"). Celebrate effort, not just completion.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Student engagement', 'Social-emotional learning', 'Executive function support'],
         },
         {
           id: 'teach-i-can-board',
@@ -48,6 +50,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a visible culture of capability and growth in the classroom.',
           faciliatatorNote: 'Prompt reluctant students by asking what they are good at outside school too — sports, art, helping at home.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Student engagement', 'Executive function support'],
         },
         {
           id: 'teach-my-learning-star',
@@ -63,6 +67,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect personal learning desires to classroom content in a visual way.',
           faciliatatorNote: 'Revisit the stars monthly; encourage students to update them as they achieve goals.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Curriculum adaptation', 'Student engagement', 'Executive function support'],
         },
         {
           id: 'teach-sticker-goal-chart',
@@ -78,6 +84,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative to introduce goal-setting and connect it to classroom community.',
           faciliatatorNote: 'Link the story\'s themes to real classroom goals throughout the week.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Executive function support', 'Student engagement'],
         },
       ],
 
@@ -97,6 +105,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build collaborative goal-setting and shared accountability within small groups.',
           faciliatatorNote: 'Circulate during daily check-ins to help groups who are stuck or need redirection.',
+          xpReward: 75,
+          skills: ['Classroom management', 'Executive function support', 'Student engagement'],
         },
         {
           id: 'teach-goal-buddy-system',
@@ -112,6 +122,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use peer accountability structures to sustain goal progress over time.',
           faciliatatorNote: 'Rotate buddy pairs monthly so students build relationships across the class.',
+          xpReward: 50,
+          skills: ['Assessment strategies', 'Social-emotional learning', 'Executive function support', 'Student engagement'],
         },
         {
           id: 'teach-learning-target-cards',
@@ -127,6 +139,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect self-assessment to lesson objectives and peer learning strategies.',
           faciliatatorNote: 'Use at the start or end of lessons as a formative assessment tool.',
+          xpReward: 75,
+          skills: ['Assessment strategies', 'Curriculum adaptation', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-classroom-challenge-quest',
@@ -142,6 +156,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Gamify academic persistence and classroom community building.',
           faciliatatorNote: 'Include challenges that are purely effort-based so all students can succeed.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Student engagement', 'Curriculum adaptation', 'Executive function support'],
         },
       ],
 
@@ -161,6 +177,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop long-term academic goal ownership and motivation.',
           faciliatatorNote: 'Encourage students to include "who I want to become" goals, not just grades.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Student engagement', 'Curriculum adaptation', 'Executive function support'],
         },
         {
           id: 'teach-learning-target-reflection',
@@ -177,6 +195,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive awareness and self-directed learning skills.',
           faciliatatorNote: 'Use these reflections to guide small-group re-teaching rather than re-teaching whole class.',
+          xpReward: 75,
+          skills: ['Assessment strategies', 'Curriculum adaptation', 'Executive function support', 'Student engagement'],
         },
         {
           id: 'teach-subject-goals-tracker',
@@ -192,6 +212,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build consistent self-regulation and goal monitoring across all subjects.',
           faciliatatorNote: 'Review trackers during one-on-one conferences to identify students who need goal-setting scaffolding.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Executive function support', 'Behavior support', 'Curriculum adaptation'],
         },
         {
           id: 'teach-growth-portfolio',
@@ -207,6 +229,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Shift focus from grades to growth through evidence-based self-reflection.',
           faciliatatorNote: 'Coach students to choose pieces that show struggle and improvement, not just successes.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Executive function support', 'Student engagement'],
         },
       ],
 
@@ -226,6 +250,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop academic self-advocacy, ownership, and communicating about learning.',
           faciliatatorNote: 'This protocol shifts authority to the student — resist the urge to evaluate during the conference.',
+          xpReward: 100,
+          skills: ['Parent communication', 'Curriculum adaptation', 'Executive function support', 'Student engagement'],
         },
         {
           id: 'teach-independent-learning-plan',
@@ -242,6 +268,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Experience self-directed, inquiry-based learning with real accountability.',
           faciliatatorNote: 'Allow genuine choice while ensuring connection to curriculum standards.',
+          xpReward: 100,
+          skills: ['Executive function support', 'Student engagement'],
         },
         {
           id: 'teach-academic-advocacy',
@@ -258,6 +286,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build proactive academic help-seeking and problem-solving skills.',
           faciliatatorNote: 'Normalize asking for help as a sign of strength, not weakness.',
+          xpReward: 100,
+          skills: ['Student engagement', 'Curriculum adaptation', 'Executive function support', 'Assessment strategies'],
         },
         {
           id: 'teach-peer-goal-accountability',
@@ -274,6 +304,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use structured peer accountability to sustain long-term goal progress.',
           faciliatatorNote: 'Teach the three questions explicitly and have students practice them before starting.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Social-emotional learning', 'Executive function support', 'Student engagement'],
         },
       ],
     },
@@ -304,6 +336,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Provide a physical regulation anchor that normalizes self-calming in class.',
           faciliatatorNote: 'Explicitly teach each tool in the corner before asking students to use it independently.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-brain-break-parade',
@@ -319,6 +353,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use whole-body movement to reset focus and nervous system regulation.',
           faciliatatorNote: 'Use brain breaks every 20–25 minutes for K–2 students to maintain optimal learning readiness.',
+          xpReward: 50,
+          skills: ['Behavior support', 'Executive function support', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-whole-class-reset-breath',
@@ -334,6 +370,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a whole-class co-regulation ritual that students internalize over time.',
           faciliatatorNote: 'Consistency is key — use the same signal every time and never skip the routine.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
         {
           id: 'teach-movement-minute',
@@ -349,6 +387,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate physical regulation with content retention through active learning.',
           faciliatatorNote: 'Movement Minute cards can be created with students — a great ownership activity.',
+          xpReward: 50,
+          skills: ['Student engagement', 'Behavior support', 'Assessment strategies', 'Curriculum adaptation'],
         },
       ],
 
@@ -367,6 +407,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build leadership skills while practicing whole-body regulation strategies.',
           faciliatatorNote: 'Keep a posted "menu" of approved brain breaks so the leader has clear options.',
+          xpReward: 50,
+          skills: ['Behavior support', 'Assessment strategies', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-desk-stretch-routine',
@@ -382,6 +424,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build body awareness and proactive physical self-care during long work periods.',
           faciliatatorNote: 'Connect stretching to noticing physical tension — ask "where in your body do you feel stress?"',
+          xpReward: 50,
+          skills: ['Classroom management', 'Student engagement', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-class-calm-signal',
@@ -397,6 +441,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build shared classroom regulation language and co-regulation capacity.',
           faciliatatorNote: 'Student ownership of the signal increases buy-in significantly.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-energy-check-in',
@@ -412,6 +458,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop interoceptive awareness and connect body states to learning readiness.',
           faciliatatorNote: 'Use this as a formative check — a high-stress class needs a calm-down before new content.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Assessment strategies', 'Behavior support', 'Social-emotional learning'],
         },
       ],
 
@@ -431,6 +479,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Normalize self-regulation as a skill and provide structured tools for middle schoolers.',
           faciliatatorNote: 'Middle schoolers are more likely to use a station that everyone uses, not just struggling students.',
+          xpReward: 75,
+          skills: ['Classroom management', 'Behavior support', 'Executive function support', 'Social-emotional learning'],
         },
         {
           id: 'teach-transition-breathing',
@@ -446,6 +496,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Embed evidence-based breathing into daily transitions to reduce academic anxiety.',
           faciliatatorNote: 'Box breathing has strong research support for reducing cortisol before performance tasks.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-focus-reset-protocol',
@@ -463,6 +515,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a portable, self-directed protocol for recovering from academic distress.',
           faciliatatorNote: 'Model the protocol yourself during frustrating moments to normalize it.',
+          xpReward: 75,
+          skills: ['Curriculum adaptation', 'Executive function support', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-mindful-minute-bell',
@@ -479,6 +533,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop present-moment awareness and attention regulation skills.',
           faciliatatorNote: 'The Insight Timer app has a free classroom bell feature; use it consistently.',
+          xpReward: 50,
+          skills: ['Behavior support', 'Executive function support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
 
@@ -498,6 +554,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build literacy about the academic stress cycle and interrupt it proactively.',
           faciliatatorNote: 'This exercise often surfaces significant anxiety — be prepared to follow up individually.',
+          xpReward: 100,
+          skills: ['Student engagement', 'Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-pre-test-calm',
@@ -514,6 +572,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reduce performance anxiety and build a pre-performance routine.',
           faciliatatorNote: 'Research shows consistent pre-performance routines significantly reduce test anxiety.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
         {
           id: 'teach-study-break-science',
@@ -530,6 +590,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Teach evidence-based study skills that include regulated rest as part of learning.',
           faciliatatorNote: 'Share brief summaries of cognitive rest research to make the science real and credible.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-regulation-for-performance',
@@ -546,6 +608,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Transfer regulation skills to authentic high-stakes situations.',
           faciliatatorNote: 'This works best when students have a real upcoming event — time this to the calendar.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
       ],
     },
@@ -575,6 +639,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Normalize mistakes as learning tools and reduce fear of failure in the classroom.',
           faciliatatorNote: 'Teacher vulnerability is essential here — share real mistakes to model psychological safety.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-i-tried-sticker-wall',
@@ -590,6 +656,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reward effort over outcomes to build intrinsic motivation and persistence.',
           faciliatatorNote: 'Make sure effort is the criterion — not success — to keep this authentic.',
+          xpReward: 50,
+          skills: ['Student engagement', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-growth-word-of-day',
@@ -605,6 +673,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a shared classroom vocabulary for growth, effort, and learning.',
           faciliatatorNote: 'Create a "Growth Word Wall" where words accumulate over the year.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-learning-detective',
@@ -620,6 +690,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop curiosity, inquiry habits, and confidence in figuring things out.',
           faciliatatorNote: 'Use this as a lesson opener to prime curiosity and engagement.',
+          xpReward: 50,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
       ],
 
@@ -639,6 +711,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build divergent thinking and the confidence to share unpolished ideas.',
           faciliatatorNote: 'Explicitly say: "There are no wrong ideas in a thought storm" — protect this norm firmly.',
+          xpReward: 75,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-classroom-detectives',
@@ -654,6 +728,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build reasoning, evidence-based thinking, and collaborative problem-solving.',
           faciliatatorNote: 'The "mystery" can be academic (a historical event, a math puzzle) or social (who is the kindest person in this story?).',
+          xpReward: 75,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-growth-mindset-gallery',
@@ -669,6 +745,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Celebrate the process of learning and build a class culture of growth.',
           faciliatatorNote: 'Prompt: "Choose work that shows you struggled, not work that was easy for you."',
+          xpReward: 100,
+          skills: ['Classroom management', 'Assessment strategies', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-error-analysis',
@@ -684,6 +762,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Turn assessment errors into actionable learning opportunities.',
           faciliatatorNote: 'Error analysis shifts the focus from the grade to the learning — do this consistently, not just once.',
+          xpReward: 75,
+          skills: ['Assessment strategies', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
 
@@ -703,6 +783,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop nuanced understanding of mindset and apply it to real academic situations.',
           faciliatatorNote: 'Avoid making fixed mindset seem "bad" — normalize it as the default we all fight against.',
+          xpReward: 75,
+          skills: ['Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-academic-challenge-reflection',
@@ -718,6 +800,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive skills through structured analysis of learning struggles.',
           faciliatatorNote: 'The "letter of advice" format helps students externalize knowledge and consolidate it.',
+          xpReward: 75,
+          skills: ['Student engagement', 'Assessment strategies', 'Curriculum adaptation', 'Executive function support'],
         },
         {
           id: 'teach-learning-strategy-toolbox',
@@ -733,6 +817,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build an evidence-based repertoire of learning strategies students actively choose from.',
           faciliatatorNote: 'Use Make It Stick (Brown, Roediger, McDaniel) as a teacher reference for strategy selection.',
+          xpReward: 100,
+          skills: ['Student engagement', 'Assessment strategies', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-metacognition-challenge',
@@ -749,6 +835,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build consistent metacognitive monitoring as a self-regulated learning habit.',
           faciliatatorNote: 'Metacognition logs work best in the subject the student finds most challenging.',
+          xpReward: 100,
+          skills: ['Executive function support', 'Assessment strategies', 'Curriculum adaptation', 'Behavior support'],
         },
       ],
 
@@ -768,6 +856,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop self-awareness about the mindsets that drive or limit academic success.',
           faciliatatorNote: 'Use Sarah Hidi and Judith Harackiewicz\'s work on situational interest as a reference.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-failure-case-studies',
@@ -783,6 +873,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reframe failure as a necessary step in learning through real-world examples.',
           faciliatatorNote: 'Authentic, surprising examples are more powerful than overused ones — research new cases.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-study-strategy-optimization',
@@ -799,6 +891,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply scientific method to personal learning to build evidence-based study habits.',
           faciliatatorNote: 'This activity works especially well near mid-terms or final exams.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-critical-thinking-journal',
@@ -814,6 +908,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build daily habits of critical reflection, intellectual curiosity, and reasoning.',
           faciliatatorNote: 'Grade for completion and engagement, not content — this must feel safe to be honest.',
+          xpReward: 50,
+          skills: ['Assessment strategies', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
     },
@@ -844,6 +940,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build active listening, asking questions, and valuing peer learning.',
           faciliatatorNote: 'Deliberately pair students across friendship groups to widen social connections.',
+          xpReward: 50,
+          skills: ['Student engagement', 'Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-community-builder-game',
@@ -860,6 +958,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Visualize classroom interconnection and affirm each student\'s value to the group.',
           faciliatatorNote: 'End with: "This is our classroom web — we all hold each other up."',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-classroom-helper-board',
@@ -875,6 +975,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a sense of contribution, responsibility, and belonging through classroom roles.',
           faciliatatorNote: 'Ensure every role is genuinely necessary and recognized — avoid "make-work" jobs.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-sharing-circle',
@@ -890,6 +992,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a daily connection ritual that normalizes sharing and active listening.',
           faciliatatorNote: 'The talking object creates a physical cue for whose turn it is — essential for young children.',
+          xpReward: 50,
+          skills: ['Student engagement', 'Behavior support', 'Social-emotional learning'],
         },
       ],
 
@@ -908,6 +1012,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Deepen understanding through teaching and build the skill of giving helpful feedback.',
           faciliatatorNote: 'Teaching others is one of the most powerful memory consolidation strategies — use it often.',
+          xpReward: 75,
+          skills: ['Assessment strategies', 'Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-team-problem-huddle',
@@ -923,6 +1029,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice collaborative problem-solving, listening, and synthesizing multiple viewpoints.',
           faciliatatorNote: 'Include social problems (e.g., "a student is being left out") alongside academic ones.',
+          xpReward: 75,
+          skills: ['Behavior support', 'Social-emotional learning', 'Student engagement'],
         },
         {
           id: 'teach-community-contract',
@@ -938,6 +1046,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build shared ownership of classroom norms and community values.',
           faciliatatorNote: 'Revisit and renegotiate the contract at semester break — community needs evolve.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-collaboration-skills',
@@ -953,6 +1063,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Make collaboration skills explicit and observable rather than assumed.',
           faciliatatorNote: 'Rotate which skill each student practices so they develop all four over time.',
+          xpReward: 75,
+          skills: ['Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
 
@@ -972,6 +1084,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the skill of giving and receiving specific, useful, kind feedback.',
           faciliatatorNote: 'Model the protocol with your own work first — teacher vulnerability builds trust.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-community-circle-practice',
@@ -987,6 +1101,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build classroom community, voice, and shared responsibility for climate.',
           faciliatatorNote: 'Restorative circle practices are grounded in Indigenous peacemaking traditions — honor that context.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
         {
           id: 'teach-study-group-formation',
@@ -1002,6 +1118,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build collaborative learning habits and relationships as academic resources.',
           faciliatatorNote: 'Help students form groups with diverse strengths — not just friend groups.',
+          xpReward: 100,
+          skills: ['Curriculum adaptation', 'Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-conflict-resolution-class',
@@ -1017,6 +1135,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build practical conflict resolution skills for the academic social environment.',
           faciliatatorNote: 'Middle school conflict is often about belonging — name this as part of the debrief.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Curriculum adaptation', 'Social-emotional learning'],
         },
       ],
 
@@ -1035,6 +1155,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop leadership identity and relational skills through structured practice.',
           faciliatatorNote: 'Normalize discomfort in leadership roles — growth happens at the edge of competence.',
+          xpReward: 50,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-class-community-project',
@@ -1051,6 +1173,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect academic learning to real community impact and relational purpose.',
           faciliatatorNote: 'Authentic community projects increase motivation and engagement more than any homework assignment.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-restorative-circles',
@@ -1066,6 +1190,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice repairing relational harm through dialogue, accountability, and community care.',
           faciliatatorNote: 'Restorative practice requires significant trust — build the circle culture before needing it for conflict.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
         {
           id: 'teach-mentorship-pairs',
@@ -1082,6 +1208,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build leadership, empathy, and consolidate learning through cross-age mentorship.',
           faciliatatorNote: 'The protégé effect — teaching consolidates the teacher\'s own understanding — is most powerful here.',
+          xpReward: 100,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
       ],
     },
@@ -1111,6 +1239,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build daily emotional awareness and create a low-barrier check-in ritual.',
           faciliatatorNote: 'Use 4–6 simple feeling faces for young children; add complexity as the year progresses.',
+          xpReward: 50,
+          skills: ['Social-emotional learning', 'Classroom management', 'Assessment strategies', 'Behavior support'],
         },
         {
           id: 'teach-emotion-zones-classroom',
@@ -1126,6 +1256,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Provide a shared emotional regulation framework for the entire classroom.',
           faciliatatorNote: 'The Zones of Regulation curriculum by Leah Kuypers is the research base — consult it for full implementation.',
+          xpReward: 75,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-story-feelings-map',
@@ -1141,6 +1273,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative to develop emotional vocabulary and empathy in a low-risk format.',
           faciliatatorNote: 'Books with clear emotional arcs: "The Invisible String", "Enemy Pie", "Alexander and the Terrible Day".',
+          xpReward: 50,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-morning-feelings-circle',
@@ -1156,6 +1290,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Normalize emotional check-ins as a daily classroom ritual and community care practice.',
           faciliatatorNote: 'Always model your own feelings first to set the tone and reduce student hesitation.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Social-emotional learning', 'Assessment strategies', 'Behavior support'],
         },
       ],
 
@@ -1174,6 +1310,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Increase attentiveness to empathy in daily life and celebrate caring behavior.',
           faciliatatorNote: 'Include your own empathy sightings to model what you\'re looking for.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Assessment strategies', 'Social-emotional learning'],
         },
         {
           id: 'teach-emotional-weather-report',
@@ -1189,6 +1327,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional self-awareness and classroom connection through a shared metaphor.',
           faciliatatorNote: 'Weather is non-stigmatizing — "stormy" isn\'t "bad"; it\'s just what\'s happening.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Social-emotional learning', 'Behavior support', 'Differentiated instruction'],
         },
         {
           id: 'teach-feelings-in-books',
@@ -1204,6 +1344,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional vocabulary and perspective-taking through literature.',
           faciliatatorNote: 'Connect to English/Language Arts curriculum — this is a natural cross-curricular activity.',
+          xpReward: 75,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-empathy-role-play',
@@ -1219,6 +1361,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice empathic responding in low-stakes role-play before real situations arise.',
           faciliatatorNote: 'Debrief thoroughly — the goal is insight about what empathy looks/sounds like, not performance.',
+          xpReward: 75,
+          skills: ['Student engagement', 'Social-emotional learning', 'Behavior support'],
         },
       ],
 
@@ -1237,6 +1381,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sophisticated emotional granularity — the ability to distinguish and name precise emotional states.',
           faciliatatorNote: 'Research by Lisa Feldman Barrett shows emotional granularity predicts psychological health and academic resilience.',
+          xpReward: 100,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
         {
           id: 'teach-academic-emotions-reflection',
@@ -1252,6 +1398,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional self-awareness as a tool for improving academic engagement.',
           faciliatatorNote: 'Pekrun\'s Academic Emotions Model is the research foundation — share accessible versions with students.',
+          xpReward: 75,
+          skills: ['Student engagement', 'Assessment strategies', 'Curriculum adaptation', 'Social-emotional learning'],
         },
         {
           id: 'teach-stress-performance-connection',
@@ -1267,6 +1415,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Understand the neuroscience of stress and performance to self-regulate more strategically.',
           faciliatatorNote: 'This is a great bridge between psychology content and everyday academic experience.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Executive function support', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-classroom-climate-survey',
@@ -1282,6 +1432,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build shared responsibility for emotional safety in the learning community.',
           faciliatatorNote: 'Be prepared to hear honest — and sometimes uncomfortable — feedback about classroom dynamics.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Social-emotional learning', 'Behavior support'],
         },
       ],
 
@@ -1301,6 +1453,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional intelligence as a learnable skill with direct impact on academic and social success.',
           faciliatatorNote: 'Use Goleman\'s four-domain EQ model as the framework, but critique the oversimplification in discussion.',
+          xpReward: 100,
+          skills: ['Social-emotional learning', 'Curriculum adaptation', 'Behavior support'],
         },
         {
           id: 'teach-stress-mapping',
@@ -1316,6 +1470,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a clear, structured picture of current stressors and identify actionable responses.',
           faciliatatorNote: 'The "within control" categorization is transformational — it shifts from overwhelm to agency.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning', 'Assessment strategies'],
         },
         {
           id: 'teach-empathy-in-debates',
@@ -1331,6 +1487,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice perspective-taking and empathic understanding in intellectually charged situations.',
           faciliatatorNote: 'Steel-manning (arguing the opponent\'s position as strongly as possible) is a powerful critical thinking skill.',
+          xpReward: 100,
+          skills: ['Curriculum adaptation', 'Social-emotional learning', 'Behavior support', 'Differentiated instruction'],
         },
         {
           id: 'teach-emotional-agility-practice',
@@ -1346,6 +1504,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop emotional agility — the ability to be with difficult emotions without being driven by them.',
           faciliatatorNote: 'Susan David\'s Emotional Agility (2016) is the teacher reference. Her TED Talk is also excellent.',
+          xpReward: 100,
+          skills: ['Social-emotional learning', 'Behavior support'],
         },
       ],
     },
@@ -1375,6 +1535,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a visible, shared sense of classroom purpose that students feel part of.',
           faciliatatorNote: 'Revisit the wall when motivation is low — "remember why we\'re here."',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-why-i-learn',
@@ -1390,6 +1552,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect students to intrinsic motivation and the meaning behind school.',
           faciliatatorNote: 'Avoid answers about grades — steer toward curiosity, connection, and becoming.',
+          xpReward: 50,
+          skills: ['Student engagement', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-my-school-is-special',
@@ -1405,6 +1569,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build school belonging and a sense of place as a meaningful learning community.',
           faciliatatorNote: 'Belonging is the foundation of all learning — invest in it early and often.',
+          xpReward: 50,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-good-helper-circle',
@@ -1419,6 +1585,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Foster a sense of contribution and care as core classroom values.',
           faciliatatorNote: 'Young children have a natural helper instinct — channel it into classroom culture.',
+          xpReward: 50,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
 
@@ -1437,6 +1605,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect school experience to personal meaning, values, and aspiration.',
           faciliatatorNote: 'The connection between schoolwork and personal meaning is the engine of intrinsic motivation.',
+          xpReward: 75,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-class-legacy-project',
@@ -1452,6 +1622,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a sense of lasting contribution and connection to something bigger than oneself.',
           faciliatatorNote: 'Legacy thinking builds long-term meaning and is a powerful antidote to transactional schooling.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-community-service-circle',
@@ -1468,6 +1640,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build prosocial behavior, community awareness, and the satisfaction of contribution.',
           faciliatatorNote: 'Even small acts of service produce significant well-being benefits for children.',
+          xpReward: 100,
+          skills: ['Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-what-school-means',
@@ -1483,6 +1657,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Articulate personal meaning in school as a foundation for intrinsic motivation.',
           faciliatatorNote: 'Students who can name why school matters show greater academic engagement and resilience.',
+          xpReward: 75,
+          skills: ['Student engagement', 'Behavior support', 'Social-emotional learning', 'Assessment strategies'],
         },
       ],
 
@@ -1501,6 +1677,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build utility value for challenging subjects by connecting them to personal meaning.',
           faciliatatorNote: 'Utility value interventions have strong research support for increasing academic engagement and persistence.',
+          xpReward: 100,
+          skills: ['Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-learning-legacy-letter',
@@ -1515,6 +1693,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Reflect on personal wisdom and build a sense of meaningful contribution through sharing.',
           faciliatatorNote: 'Writing to a younger audience forces students to distill genuine insight — the wisdom is already there.',
+          xpReward: 100,
+          skills: ['Assessment strategies', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-classroom-values-charter',
@@ -1531,6 +1711,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build shared values as the moral foundation of the learning community.',
           faciliatatorNote: 'A values charter created by students holds far more power than rules imposed by teachers.',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-purpose-driven-study',
@@ -1546,6 +1728,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Anchor daily academic work in longer-term personal meaning and purpose.',
           faciliatatorNote: 'This is particularly powerful for students who struggle with motivation for "pointless" work.',
+          xpReward: 100,
+          skills: ['Curriculum adaptation', 'Behavior support', 'Social-emotional learning', 'Differentiated instruction'],
         },
       ],
 
@@ -1565,6 +1749,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a personal educational philosophy that sustains motivation through difficulty.',
           faciliatatorNote: 'Avoid purpose statements focused on grades or career — push for deeper "who I want to become" answers.',
+          xpReward: 100,
+          skills: ['Student engagement', 'Behavior support', 'Social-emotional learning', 'Assessment strategies'],
         },
         {
           id: 'teach-senior-legacy-project',
@@ -1580,6 +1766,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a generative sense of contribution and legacy as core dimensions of identity.',
           faciliatatorNote: 'Senior legacy projects work especially well in final year — connect explicitly to "what we leave behind."',
+          xpReward: 100,
+          skills: ['Classroom management', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-subject-relevance-investigation',
@@ -1595,6 +1783,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build utility value by connecting abstract academic content to real-world relevance.',
           faciliatatorNote: 'Alumni interviews are particularly powerful — connect students to graduates working in the field.',
+          xpReward: 100,
+          skills: ['Curriculum adaptation', 'Behavior support', 'Social-emotional learning'],
         },
         {
           id: 'teach-postsecondary-purpose-mapping',
@@ -1611,6 +1801,8 @@ export const TEACHERS_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Align post-secondary planning with personal purpose rather than external pressure.',
           faciliatatorNote: 'This exercise often reveals paths students haven\'t considered — widen possibilities before narrowing them.',
+          xpReward: 100,
+          skills: ['Executive function support', 'Behavior support', 'Social-emotional learning'],
         },
       ],
     },
