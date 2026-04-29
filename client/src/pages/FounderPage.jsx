@@ -500,7 +500,7 @@ export default function FounderPage() {
         <span className="hero-eyebrow">Our Founder</span>
         <div className="founder-hero-avatar" aria-hidden="true">J</div>
         <h1 id="founder-heading">Janeen Molchany</h1>
-        <p className="founder-title-hero">Founder &amp; Chief Resilience Scientist &mdash; The Resilience Atlas&#8482;</p>
+        <p className="founder-title-hero">Owner, Developer, and Researcher &mdash; The Resilience Atlas&#8482;</p>
         <div className="founder-creds-hero" role="list" aria-label="Credentials">
           <span className="cred-badge" role="listitem">Ph.D.</span>
           <span className="cred-badge" role="listitem">BCBA</span>
