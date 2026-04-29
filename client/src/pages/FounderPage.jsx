@@ -926,8 +926,8 @@ export default function FounderPage() {
             </p>
 
             <p>
-              The answer, the research consistently shows, is yes — and <strong>The Resilience Atlas&#8482;</strong> is
-              here to help you understand exactly how.
+              <strong>The Resilience Atlas&#8482;</strong> is here to help you map your current resilience,
+              identify your strengths, and build capacity in the dimensions that matter most to you.
             </p>
             <div className="pullquote" style={{marginTop: '1.5rem'}}>
               <p>
@@ -936,25 +936,6 @@ export default function FounderPage() {
                 everything I build. I know what works, what doesn't, and what families actually need."
               </p>
             </div>
-          </section>
-
-          {/* Speaking & Media */}
-          <section className="founder-section" aria-labelledby="speaking-heading">
-            <h2 id="speaking-heading">Speaking &amp; Media</h2>
-            <p>Janeen is available for:</p>
-            <ul style={{lineHeight: 1.8, color: 'var(--slate-600)'}}>
-              <li>Keynote presentations on resilience, ABA, ACT, and trauma-informed practice</li>
-              <li>Podcast interviews and media features</li>
-              <li>Workshops and professional development training for educators, clinicians, and organizations</li>
-              <li>Collaborative research and academic partnerships</li>
-            </ul>
-
-            <p style={{marginTop: '1rem'}}>
-              <strong>Contact for media inquiries:</strong>{' '}
-              <a href="mailto:media@resilienceatlas.com" style={{color: '#4F46E5', fontWeight: 600}}>
-                media@resilienceatlas.com
-              </a>
-            </p>
           </section>
 
           {/* Quick Quotes */}
