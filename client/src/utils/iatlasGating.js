@@ -265,3 +265,77 @@ export function hasPracticeAccess() {
     IATLAS_TIERS.enterprise,
   ].includes(tier);
 }
+
+/** API endpoint for IATLAS subscription status checks. */
+const IATLAS_SUBSCRIPTION_STATUS_URL = '/api/iatlas/subscription-status';
+
+/**
+ * Check whether the authenticated user has an active IATLAS subscription at or
+ * above `minTier` by calling the backend subscription-status endpoint.
+ *
+ * @param {string} minTier   — minimum tier required ('practice', 'practitioner', etc.)
+ * @param {string} [token]   — Auth0 bearer token; falls back to a cached token if omitted
+ * @returns {Promise<{
+ *   allowed: boolean,
+ *   currentTier: string,
+ *   requiredTier: string,
+ *   upgradeUrl: string
+ * }>}
+ */
+export async function requireActiveSubscription(minTier, token) {
+  const hierarchy = {
+    free: 0,
+    individual: 1,
+    family: 2,
+    complete: 3,
+    practitioner: 4,
+    practice: 5,
+    enterprise: 6,
+  };
+
+  const authToken = token || (() => {
+    try { return localStorage.getItem('auth0_cached_token') || null; } catch { return null; }
+  })();
+
+  if (!authToken) {
+    return {
+      allowed: false,
+      currentTier: 'free',
+      requiredTier: minTier,
+      upgradeUrl: '/pricing/iatlas',
+    };
+  }
+
+  try {
+    const response = await fetch(IATLAS_SUBSCRIPTION_STATUS_URL, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+
+    if (!response.ok) {
+      return {
+        allowed: false,
+        currentTier: 'free',
+        requiredTier: minTier,
+        upgradeUrl: '/pricing/iatlas',
+      };
+    }
+
+    const data = await response.json();
+    const currentTier = data.tier || 'free';
+    const allowed = (hierarchy[currentTier] ?? 0) >= (hierarchy[minTier] ?? 0);
+
+    return {
+      allowed,
+      currentTier,
+      requiredTier: minTier,
+      upgradeUrl: '/pricing/iatlas',
+    };
+  } catch {
+    return {
+      allowed: false,
+      currentTier: 'free',
+      requiredTier: minTier,
+      upgradeUrl: '/pricing/iatlas',
+    };
+  }
+}

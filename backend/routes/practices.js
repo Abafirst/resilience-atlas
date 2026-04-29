@@ -15,6 +15,7 @@ const ActivityLog = require('../models/ActivityLog');
 const User = require('../models/User');
 const emailService = require('../services/emailService');
 const { authenticateJWT } = require('../middleware/auth');
+const { requireIATLASSubscription } = require('../middleware/subscriptionAuth');
 const { hasPermission } = require('../config/practicePermissions');
 const crypto = require('crypto');
 
@@ -69,7 +70,7 @@ async function getPractitionerRole(practiceId, userId) {
 }
 
 // ── GET /api/practices/mine — Get the caller's practice ──────────────────────
-router.get('/mine', authenticateJWT, async (req, res) => {
+router.get('/mine', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     if (!userId) return res.status(401).json({ error: 'Not authenticated.' });
@@ -89,7 +90,7 @@ router.get('/mine', authenticateJWT, async (req, res) => {
 });
 
 // ── POST /api/practices — Create a new practice ──────────────────────────────
-router.post('/', authenticateJWT, async (req, res) => {
+router.post('/', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { name, subscriptionTier, settings, plan, seatLimit } = req.body;
@@ -134,7 +135,7 @@ router.post('/', authenticateJWT, async (req, res) => {
 });
 
 // ── GET /api/practices/:id — Get practice details ────────────────────────────
-router.get('/:id', authenticateJWT, async (req, res) => {
+router.get('/:id', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
@@ -156,7 +157,7 @@ router.get('/:id', authenticateJWT, async (req, res) => {
 });
 
 // ── PATCH /api/practices/:id — Update practice settings (admin only) ─────────
-router.patch('/:id', authenticateJWT, async (req, res) => {
+router.patch('/:id', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
@@ -199,7 +200,7 @@ router.patch('/:id', authenticateJWT, async (req, res) => {
 });
 
 // ── GET /api/practices/:id/practitioners — List practitioners ────────────────
-router.get('/:id/practitioners', authenticateJWT, async (req, res) => {
+router.get('/:id/practitioners', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
@@ -224,7 +225,7 @@ router.get('/:id/practitioners', authenticateJWT, async (req, res) => {
 });
 
 // ── POST /api/practices/:id/practitioners/invite — Invite practitioner ────────
-router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (req, res) => {
+router.post('/:id/practitioners/invite', authenticateJWT, requireIATLASSubscription('practice'), inviteLimiter, async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
@@ -311,7 +312,7 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
 });
 
 // ── PATCH /api/practices/:id/practitioners/:targetUserId — Update role ────────
-router.patch('/:id/practitioners/:targetUserId', authenticateJWT, async (req, res) => {
+router.patch('/:id/practitioners/:targetUserId', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id, targetUserId } = req.params;
@@ -355,7 +356,7 @@ router.patch('/:id/practitioners/:targetUserId', authenticateJWT, async (req, re
 });
 
 // ── DELETE /api/practices/:id/practitioners/:targetUserId — Remove ────────────
-router.delete('/:id/practitioners/:targetUserId', authenticateJWT, async (req, res) => {
+router.delete('/:id/practitioners/:targetUserId', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id, targetUserId } = req.params;
@@ -394,7 +395,7 @@ router.delete('/:id/practitioners/:targetUserId', authenticateJWT, async (req, r
 });
 
 // ── GET /api/practices/:id/analytics — Practice analytics ────────────────────
-router.get('/:id/analytics', authenticateJWT, async (req, res) => {
+router.get('/:id/analytics', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
@@ -474,7 +475,7 @@ router.get('/:id/analytics', authenticateJWT, async (req, res) => {
 });
 
 // ── GET /api/practices/:id/pending-invitations — List pending invitations ─────
-router.get('/:id/pending-invitations', authenticateJWT, async (req, res) => {
+router.get('/:id/pending-invitations', authenticateJWT, requireIATLASSubscription('practice'), async (req, res) => {
   try {
     const userId = getUserId(req);
     const { id } = req.params;
