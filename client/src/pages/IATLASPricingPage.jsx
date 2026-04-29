@@ -167,6 +167,12 @@ export default function IATLASPricingPage() {
     }
   }
 
+  function getTierBorder(tier) {
+    if (tier.highlighted) return '2px solid #4f46e5';
+    if (tier.comingSoon)  return '1px dashed #c7d2fe';
+    return '1px solid #e5e7eb';
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <SiteHeader activePage="pricing" />
@@ -210,7 +216,7 @@ export default function IATLASPricingPage() {
                 boxShadow: tier.highlighted
                   ? '0 8px 40px rgba(79,70,229,0.18)'
                   : '0 2px 12px rgba(0,0,0,0.07)',
-                border: tier.highlighted ? '2px solid #4f46e5' : tier.comingSoon ? '1px dashed #c7d2fe' : '1px solid #e5e7eb',
+                border: getTierBorder(tier),
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
@@ -365,25 +371,30 @@ export default function IATLASPricingPage() {
           Join hundreds of practitioners using IATLAS to build resilience every day.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a
-            href="/iatlas/subscribe?tier=family"
-            onClick={e => {
-              if (!isAuthenticated) {
-                e.preventDefault();
-                loginWithRedirect({ appState: { returnTo: '/iatlas/subscribe?tier=family' } });
-              }
-            }}
-            style={{
-              background: '#fff',
-              color: '#667eea',
-              padding: '12px 28px',
-              borderRadius: 8,
-              fontWeight: 700,
-              textDecoration: 'none',
-            }}
-          >
-            Start with Family →
-          </a>
+          {(() => {
+            const familyTier = IATLAS_TIERS.find(t => t.id === 'family');
+            return familyTier ? (
+              <a
+                href={familyTier.ctaUrl}
+                onClick={e => {
+                  if (!isAuthenticated) {
+                    e.preventDefault();
+                    loginWithRedirect({ appState: { returnTo: familyTier.ctaUrl } });
+                  }
+                }}
+                style={{
+                  background: '#fff',
+                  color: '#667eea',
+                  padding: '12px 28px',
+                  borderRadius: 8,
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                Start with Family →
+              </a>
+            ) : null;
+          })()}
           <a
             href="mailto:hello@theresilienceatlas.com?subject=IATLAS%20Pricing%20Question"
             style={{
