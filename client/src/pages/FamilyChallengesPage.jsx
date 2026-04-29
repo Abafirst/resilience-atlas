@@ -18,6 +18,8 @@ import {
 import { hasCaregiverAccess } from '../utils/iatlasGating.js';
 import IATLASUnlockModal from '../components/IATLAS/IATLASUnlockModal.jsx';
 import { isFamilyChallengeCompleted } from '../hooks/useFamilyProgress.js';
+import SafeIcon from '../components/common/SafeIcon.jsx';
+import { DIMENSION_FALLBACK_EMOJIS } from '../data/iatlas/iatlasConstants.js';
 
 const DIMENSION_COLORS = {
   'agentic-generative':    '#6366f1',
@@ -352,11 +354,9 @@ function ChallengeCard({ challenge, onClick, locked }) {
           className="fcp-card-dim-badge"
           style={{ background: color }}
         >
-          <img
+          <SafeIcon
             src={icon}
-            alt=""
-            aria-hidden="true"
-            className="icon icon-sm"
+            fallbackEmoji={DIMENSION_FALLBACK_EMOJIS[challenge.dimension] || '🔷'}
             style={{ filter: 'brightness(0) invert(1)', width: '12px', height: '12px', verticalAlign: 'middle' }}
           />
           {' '}{challenge.dimension.replace(/-/g, ' ')}
@@ -365,8 +365,8 @@ function ChallengeCard({ challenge, onClick, locked }) {
         <p className="fcp-card-desc">{challenge.description}</p>
 
         <div className="fcp-card-meta">
-          <span><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.duration}</span>
-          <span><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {challenge.participants}</span>
+          <span><SafeIcon src="/icons/planning.svg" fallbackEmoji="⏱" style={{ width: 12, height: 12 }} /> {challenge.duration}</span>
+          <span><SafeIcon src="/icons/network.svg" fallbackEmoji="👥" style={{ width: 12, height: 12 }} /> {challenge.participants}</span>
         </div>
 
         <div className="fcp-card-footer">
@@ -377,7 +377,7 @@ function ChallengeCard({ challenge, onClick, locked }) {
             {diff.label}
           </span>
           {locked
-            ? <span className="fcp-card-lock"><img src="/icons/lock.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family tier</span>
+            ? <span className="fcp-card-lock"><SafeIcon src="/icons/lock.svg" fallbackEmoji="🔒" style={{ width: 12, height: 12 }} /> Family tier</span>
             : <span className="fcp-card-xp">+{challenge.xpReward} XP</span>
           }
         </div>
@@ -424,7 +424,7 @@ export default function FamilyChallengesPage() {
 
           {/* Hero */}
           <div className="fcp-hero" role="banner">
-            <p className="fcp-hero-label"><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Family Tier · Collaborative Activities</p>
+            <p className="fcp-hero-label"><SafeIcon src="/icons/network.svg" fallbackEmoji="👥" style={{ width: 12, height: 12, verticalAlign: 'middle' }} /> Family Tier · Collaborative Activities</p>
             <h1 className="fcp-hero-title">Family Challenges</h1>
             <p className="fcp-hero-desc">
               Collaborative activities designed for parents and children to build resilience
@@ -479,7 +479,7 @@ export default function FamilyChallengesPage() {
             </div>
           ) : (
             <div className="fcp-empty">
-              <img src="/icons/goal.svg" aria-hidden="true" className="icon icon-sm" alt="" />
+              <SafeIcon src="/icons/goal.svg" fallbackEmoji="🎯" style={{ width: 48, height: 48, display: 'block', margin: '0 auto .75rem' }} />
               <p>No challenges found for this dimension.</p>
             </div>
           )}
