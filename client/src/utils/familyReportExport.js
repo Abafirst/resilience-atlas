@@ -8,7 +8,17 @@
  * The CSV includes one row per child with key progress metrics.
  *
  * @param {object} summaryMetrics - Aggregated family metrics
- * @param {Array}  profileData    - Per-profile progress data from FamilyDashboard
+ *   @param {number} summaryMetrics.totalCompleted      - Total activities completed by all children
+ *   @param {number} summaryMetrics.totalStars          - Total stars earned by all children
+ *   @param {number} summaryMetrics.totalActivitiesWeek - Activities completed this week
+ * @param {Array<{
+ *   profile:        { name: string, ageGroup?: string },
+ *   totalCompleted: number,
+ *   stars:          number,
+ *   level:          { level: number },
+ *   thisWeek:       number,
+ *   pct:            number
+ * }>} profileData - Per-profile progress data from FamilyDashboard
  */
 export function exportFamilyReportAsCSV(summaryMetrics, profileData) {
   const headers = [
@@ -26,7 +36,7 @@ export function exportFamilyReportAsCSV(summaryMetrics, profileData) {
     escapeCSV(d.profile.ageGroup || '—'),
     d.totalCompleted,
     d.stars,
-    d.level.level,
+    d.level?.level ?? 0,
     d.thisWeek,
     `${d.pct}%`,
   ]);

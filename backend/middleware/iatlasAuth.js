@@ -59,7 +59,8 @@ async function getTierFromDb(userId) {
       sort: { createdAt: -1 },
     });
     return sub?.tier || 'free';
-  } catch {
+  } catch (err) {
+    logger.error('[iatlasAuth] getTierFromDb error:', err);
     return 'free';
   }
 }
