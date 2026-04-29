@@ -938,25 +938,6 @@ export default function FounderPage() {
             </div>
           </section>
 
-          {/* Speaking & Media */}
-          <section className="founder-section" aria-labelledby="speaking-heading">
-            <h2 id="speaking-heading">Speaking &amp; Media</h2>
-            <p>Janeen is available for:</p>
-            <ul style={{lineHeight: 1.8, color: 'var(--slate-600)'}}>
-              <li>Keynote presentations on resilience, ABA, ACT, and trauma-informed practice</li>
-              <li>Podcast interviews and media features</li>
-              <li>Workshops and professional development training for educators, clinicians, and organizations</li>
-              <li>Collaborative research and academic partnerships</li>
-            </ul>
-
-            <p style={{marginTop: '1rem'}}>
-              <strong>Contact for media inquiries:</strong>{' '}
-              <a href="mailto:media@resilienceatlas.com" style={{color: '#4F46E5', fontWeight: 600}}>
-                media@resilienceatlas.com
-              </a>
-            </p>
-          </section>
-
           {/* Quick Quotes */}
           <section className="founder-section" aria-labelledby="quotes-heading">
             <h2 id="quotes-heading">Quick Quotes for Media</h2>
