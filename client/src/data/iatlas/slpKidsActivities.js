@@ -31,6 +31,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-direction and ownership of communication goals using visual supports.',
           faciliatatorNote: 'Use core vocabulary symbols or AAC if the child uses augmentative communication.',
+          xpReward: 50,
+          skills: ['Expressive language', 'AAC support'],
         },
         {
           id: 'slp-communication-vision-board',
@@ -46,6 +48,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Create a visual representation of communication goals that the child owns.',
           faciliatatorNote: 'For AAC users, include their device or symbol system as one of the communication modalities.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-script-writing-workshop-57',
@@ -61,6 +65,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build functional communication scripts that generalize to real situations.',
           faciliatatorNote: 'Keep scripts to 2–3 lines maximum for this age group to support memory.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Pragmatic language'],
         },
         {
           id: 'slp-aac-goal-setter',
@@ -76,6 +82,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate AAC use into goal-setting to increase device motivation and agency.',
           faciliatatorNote: 'The goal here is motivation — praise all communication attempts equally.',
+          xpReward: 50,
+          skills: ['Expressive language', 'AAC support'],
         },
       ],
 
@@ -94,6 +102,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication therapy goals to personally meaningful future aspirations.',
           faciliatatorNote: 'Include both social and academic communication goals to widen the vision.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-script-workshop-810',
@@ -109,6 +119,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build communication confidence through rehearsed, generalization-targeted scripts.',
           faciliatatorNote: 'Scripts work best when grounded in the student\'s actual daily environments.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Listening comprehension'],
         },
         {
           id: 'slp-goal-tracking-810',
@@ -124,6 +136,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-monitoring skills and ownership of therapy progress.',
           faciliatatorNote: 'Student-led tracking increases motivation and metacognitive awareness of communication skills.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-communication-challenge-810',
@@ -139,6 +153,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Promote generalization of communication skills across real-world contexts.',
           faciliatatorNote: 'Generalization is the ultimate goal of SLP — structure challenges around the student\'s actual environments.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Pragmatic language'],
         },
       ],
 
@@ -157,6 +173,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Shift therapy goal ownership to the student for greater intrinsic motivation.',
           faciliatatorNote: 'Student-generated goals show significantly better therapy outcomes — take extra time here.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-self-advocacy-scripts',
@@ -172,6 +190,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build communication self-advocacy skills critical for academic and social success.',
           faciliatatorNote: 'Self-advocacy scripts are particularly powerful for students with IEPs navigating mainstream settings.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-narrative-goals-1114',
@@ -187,6 +207,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect narrative language goals to personal experience and identity.',
           faciliatatorNote: 'Personal narratives are more engaging than decontextualized story grammar tasks.',
+          xpReward: 75,
+          skills: ['Language development', 'Narrative skills'],
         },
         {
           id: 'slp-communication-portfolio',
@@ -202,6 +224,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive awareness of communication growth through self-curated evidence.',
           faciliatatorNote: 'Video samples (with consent) are particularly powerful for showing progress students don\'t notice day-to-day.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Speech fluency'],
         },
       ],
 
@@ -220,6 +244,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication therapy to long-term identity and future goals.',
           faciliatatorNote: 'For students approaching transition, link explicitly to post-secondary communication demands.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-professional-communication-plan',
@@ -236,6 +262,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply communication skills to authentic high-stakes situations with deliberate preparation.',
           faciliatatorNote: 'Time this activity to an actual upcoming event in the student\'s life for maximum transfer.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Pragmatic language', 'Speech fluency'],
         },
         {
           id: 'slp-disability-identity-communication',
@@ -251,6 +279,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a positive communication identity and narrative of growth rather than deficit.',
           faciliatatorNote: 'This activity supports identity development — an often-overlooked goal of adolescent SLP.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-transition-communication-goals',
@@ -266,6 +296,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Ensure communication goals are transition-focused and self-determined.',
           faciliatatorNote: 'Transition planning communication should begin by age 14 — this activity formalizes that process.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
     },
@@ -294,6 +326,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of the connection between body regulation and voice regulation.',
           faciliatatorNote: 'Voice regulation is directly tied to self-regulation — dysregulated bodies produce dysregulated voices.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-breath-sound-practice',
@@ -309,6 +343,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use regulated breathing as a foundation for speech sound production.',
           faciliatatorNote: 'Breath support is both a physical regulation skill and a core phonation skill in SLP.',
+          xpReward: 50,
+          skills: ['Articulation', 'Expressive language'],
         },
         {
           id: 'slp-quiet-loud-sort',
@@ -324,6 +360,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build situational awareness for voice regulation and social communication.',
           faciliatatorNote: 'Connect this to pragmatic language skills — voice volume is a key social communication rule.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language', 'Pragmatic language'],
         },
         {
           id: 'slp-body-voice-connection',
@@ -339,6 +377,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build somatic awareness of the physical connection between body state and voice.',
           faciliatatorNote: 'This activity is foundational for resonance, articulation, and pragmatic voice work.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
 
@@ -358,6 +398,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a pre-communication regulation routine to reduce anxiety and improve accuracy.',
           faciliatatorNote: 'This routine is particularly helpful for children with fluency disorders or social communication anxiety.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-tension-tracking-speech',
@@ -373,6 +415,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of how physical tension affects speech production and fluency.',
           faciliatatorNote: 'Especially valuable for students with cluttering, stuttering, or voice concerns.',
+          xpReward: 75,
+          skills: ['Speech fluency', 'Expressive language'],
         },
         {
           id: 'slp-mindful-listening-810',
@@ -388,6 +432,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build active listening as both a somatic and pragmatic communication skill.',
           faciliatatorNote: 'Mindful listening is foundational to conversational turn-taking and comprehension.',
+          xpReward: 50,
+          skills: ['Receptive language', 'Expressive language', 'Pragmatic language', 'Listening comprehension'],
         },
         {
           id: 'slp-breath-pacing-810',
@@ -403,6 +449,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use breath regulation as a practical fluency support tool.',
           faciliatatorNote: 'Breath pacing works for both stuttering and rate concerns; adapt the strategy as needed.',
+          xpReward: 75,
+          skills: ['Speech fluency', 'Expressive language'],
         },
       ],
 
@@ -421,6 +469,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build somatic self-awareness about communication anxiety and develop targeted regulation strategies.',
           faciliatatorNote: 'Communication anxiety is extremely common — normalize it while building regulation skills.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Speech fluency'],
         },
         {
           id: 'slp-mindful-speech-monitoring',
@@ -436,6 +486,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build non-judgmental self-observation of speech as a metacognitive skill.',
           faciliatatorNote: 'Frame monitoring as curiosity, not self-criticism — this distinction is clinically essential.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-voice-care-1114',
@@ -451,6 +503,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build proactive voice health habits and understanding of vocal hygiene.',
           faciliatatorNote: 'Voice care is especially important for students with voice disorders or high vocal demands.',
+          xpReward: 50,
+          skills: ['Receptive language', 'Expressive language'],
         },
         {
           id: 'slp-grounding-before-speaking',
@@ -466,6 +520,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply grounding techniques to reduce communication anxiety in real-time.',
           faciliatatorNote: 'Grounding works by interrupting the stress response — particularly effective for public speaking anxiety.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
 
@@ -484,6 +540,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build sophisticated self-awareness of stress-communication interaction.',
           faciliatatorNote: 'Older students can handle complex biofeedback-style reflection — use clinical data to support insights.',
+          xpReward: 100,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-performance-anxiety-protocol',
@@ -499,6 +557,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized pre-performance regulation routine for high-stakes communication.',
           faciliatatorNote: 'Elite speakers use deliberate pre-performance routines — normalize this as professional skill.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-voice-identity-1518',
@@ -514,6 +574,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a positive voice and communication identity beyond clinical deficits.',
           faciliatatorNote: 'Linguistic identity work is crucial for multilingual students and those from non-mainstream dialect backgrounds.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-somatic-fluency-1518',
@@ -530,6 +592,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Solidify somatic fluency strategies for independent self-management.',
           faciliatatorNote: 'Generalization to real-world situations requires deliberate graduated exposure — scaffold this carefully.',
+          xpReward: 50,
+          skills: ['Speech fluency', 'Expressive language'],
         },
       ],
     },
@@ -558,6 +622,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build narrative sequencing and temporal language through structured story ordering.',
           faciliatatorNote: 'Use familiar stories at first (daily routines, favorite books) before introducing novel sequences.',
+          xpReward: 50,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-narrative-structure-map-57',
@@ -573,6 +639,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Introduce narrative structure as a framework for comprehension and retelling.',
           faciliatatorNote: 'Start with the simplest story grammar elements (character and problem) and add more as the child progresses.',
+          xpReward: 50,
+          skills: ['Narrative skills', 'Receptive language', 'Expressive language'],
         },
         {
           id: 'slp-problem-solution-scripts-57',
@@ -588,6 +656,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build problem-solution narrative structure and reasoning language.',
           faciliatatorNote: 'Problem-solution structure is a key narrative element in SLP curriculum frameworks.',
+          xpReward: 50,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-category-sort-challenge',
@@ -603,6 +673,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build categorization, semantic organization, and explanatory language.',
           faciliatatorNote: 'Flexible categorization (the second sort) assesses higher-order semantic thinking.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
 
@@ -621,6 +693,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build comprehensive narrative structure knowledge for retelling and generation.',
           faciliatatorNote: 'Use the Narrative Assessment Protocol (NAP) framework for clinical documentation.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Receptive language', 'Expressive language'],
         },
         {
           id: 'slp-problem-solution-scripts-810',
@@ -636,6 +710,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative problem-solution structure for social problem solving.',
           faciliatatorNote: 'Social problem-solving scripts support both pragmatic language and conflict resolution skills.',
+          xpReward: 75,
+          skills: ['Social communication', 'Narrative skills'],
         },
         {
           id: 'slp-category-sort-challenge-810',
@@ -651,6 +727,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build semantic flexibility and academic vocabulary organization.',
           faciliatatorNote: 'This activity supports both language processing and study skills simultaneously.',
+          xpReward: 75,
+          skills: ['Language development', 'Expressive language'],
         },
         {
           id: 'slp-inferencing-stories',
@@ -666,6 +744,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build inferencing skills using text evidence and language to support reasoning.',
           faciliatatorNote: 'Inferencing is one of the highest-leverage language comprehension skills for academic success.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Expressive language'],
         },
       ],
 
@@ -685,6 +765,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply narrative structure knowledge to personal oral and written storytelling.',
           faciliatatorNote: 'Personal narratives are the most ecologically valid context for narrative language assessment and intervention.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-expository-language-1114',
@@ -700,6 +782,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build expository language skills essential for academic reading and writing.',
           faciliatatorNote: 'Expository language is a significant area of need for students with language disorders in academic settings.',
+          xpReward: 100,
+          skills: ['Language development', 'Expressive language'],
         },
         {
           id: 'slp-figurative-language-1114',
@@ -715,6 +799,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build figurative language comprehension and production for academic and social success.',
           faciliatatorNote: 'Figurative language is a common area of challenge for students with language learning disabilities and ASD.',
+          xpReward: 75,
+          skills: ['Social communication', 'Receptive language'],
         },
         {
           id: 'slp-academic-language-challenge',
@@ -730,6 +816,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build academic vocabulary depth and breadth for classroom success.',
           faciliatatorNote: 'Vocabulary breadth and depth are the strongest predictors of reading comprehension — prioritize this.',
+          xpReward: 50,
+          skills: ['Language development', 'Expressive language'],
         },
       ],
 
@@ -748,6 +836,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative as a framework for identity development and personal meaning-making.',
           faciliatatorNote: 'Narrative identity work is both a language goal and a deeply therapeutic resilience-building activity.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-professional-narrative-1518',
@@ -763,6 +853,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a comprehensive, evidence-based communication narrative for transition.',
           faciliatatorNote: 'This is excellent preparation for college and job interviews where students must articulate their strengths.',
+          xpReward: 50,
+          skills: ['Narrative skills', 'Receptive language', 'Expressive language'],
         },
         {
           id: 'slp-critical-listening-1518',
@@ -778,6 +870,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build critical listening, analysis, and academic language production skills.',
           faciliatatorNote: 'Critical listening is an underemphasized language skill in SLP — integrate it into academic language goals.',
+          xpReward: 100,
+          skills: ['Receptive language', 'Listening comprehension'],
         },
         {
           id: 'slp-values-story-map-1518',
@@ -793,6 +887,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication identity to personal values for authentic self-expression.',
           faciliatatorNote: 'Values-based communication goals increase self-motivation far more than deficit-based targets.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language'],
         },
       ],
     },
@@ -821,6 +917,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build basic conversational exchange scripts for use in real social situations.',
           faciliatatorNote: 'Puppets reduce performance anxiety — children often communicate more freely through a puppet character.',
+          xpReward: 50,
+          skills: ['Social communication', 'Pragmatic language'],
         },
         {
           id: 'slp-talking-turns-game',
@@ -836,6 +934,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build conversational turn-taking skills using a concrete physical cue.',
           faciliatatorNote: 'The physical object externalizes the abstract concept of turn-taking — essential for early pragmatic learners.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-social-story-creator-57',
@@ -851,6 +951,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use social stories to build understanding of social scripts and expected behaviors.',
           faciliatatorNote: 'Social stories (developed by Carol Gray) should be written from the child\'s perspective using their language.',
+          xpReward: 50,
+          skills: ['Social communication', 'Narrative skills', 'Receptive language'],
         },
         {
           id: 'slp-peer-communication-circle-57',
@@ -866,6 +968,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build greeting routines as a foundation for social interaction initiation.',
           faciliatatorNote: 'Greetings are the entry point to all social relationships — mastery here opens doors.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language'],
         },
       ],
 
@@ -884,6 +988,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build conversational engagement using shared interests as the launching pad.',
           faciliatatorNote: 'Interest-based conversations build intrinsic motivation to communicate.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-social-story-creator-810',
@@ -899,6 +1005,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build perspective-taking and social script knowledge through collaborative narrative.',
           faciliatatorNote: 'Student-authored social stories have stronger ownership and generalization than clinician-authored ones.',
+          xpReward: 75,
+          skills: ['Social communication', 'Narrative skills'],
         },
         {
           id: 'slp-talking-turns-810',
@@ -914,6 +1022,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build extended conversational exchange and topic maintenance skills.',
           faciliatatorNote: 'Topic maintenance is one of the most common pragmatic goals for school-age children.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-peer-communication-role-play',
@@ -929,6 +1039,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice pragmatic communication strategies in safe, rehearsed peer scenarios.',
           faciliatatorNote: 'Role-play is most effective when the scenarios are realistic and personally relevant.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language', 'Pragmatic language', 'Listening comprehension'],
         },
       ],
 
@@ -947,6 +1059,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build metacognitive awareness of pragmatic communication strengths and needs.',
           faciliatatorNote: 'Self-assessment accuracy is itself a therapy target — compare student ratings with clinician observations.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Pragmatic language'],
         },
         {
           id: 'slp-conflict-communication-1114',
@@ -962,6 +1076,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build assertive communication skills for navigating peer conflict.',
           faciliatatorNote: 'The distinction between aggressive and assertive is nuanced — take time to explore the difference.',
+          xpReward: 100,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-perspective-taking-1114',
@@ -977,6 +1093,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build theory of mind and perspective-taking as foundational social communication skills.',
           faciliatatorNote: 'Perspective-taking is linked to both social success and narrative comprehension — a high-value target.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-peer-empathy-communication',
@@ -992,6 +1110,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Transfer empathic communication skills into authentic peer interactions.',
           faciliatatorNote: 'Real-world practice is essential — structured reflection ensures the transfer is conscious and deliberate.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language'],
         },
       ],
 
@@ -1011,6 +1131,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build professional communication skills for transition to work and post-secondary settings.',
           faciliatatorNote: 'Professional communication is a frequently neglected SLP goal area for transition-age students.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-peer-support-circle-1518',
@@ -1026,6 +1148,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build peer support, self-disclosure, and collaborative problem-solving around communication.',
           faciliatatorNote: 'Peer support groups are highly effective for adolescent communication intervention — normalize shared challenge.',
+          xpReward: 100,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-relationship-communication-1518',
@@ -1041,6 +1165,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply communication skills to the relationships that matter most to the student.',
           faciliatatorNote: 'Relationship-embedded communication goals have far higher transfer rates than decontextualized practice.',
+          xpReward: 100,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-advocacy-communication-1518',
@@ -1056,6 +1182,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build self-advocacy as the ultimate communication skill for independence.',
           faciliatatorNote: 'Self-advocacy is the most important communication skill for transition — prioritize it above all others.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
     },
@@ -1084,6 +1212,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build basic emotional vocabulary as a foundation for emotional communication.',
           faciliatatorNote: 'Emotional vocabulary is a language goal with direct impact on social-emotional development.',
+          xpReward: 50,
+          skills: ['Language development', 'Expressive language'],
         },
         {
           id: 'slp-emotion-story-maps-57',
@@ -1099,6 +1229,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build emotional vocabulary through narrative and visual mapping.',
           faciliatatorNote: 'Visual maps support both language processing and emotional understanding simultaneously.',
+          xpReward: 50,
+          skills: ['Language development', 'Narrative skills'],
         },
         {
           id: 'slp-feeling-words-bingo-57',
@@ -1114,6 +1246,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Practice emotional recognition in context using an engaging game format.',
           faciliatatorNote: 'Use situation-based calling (not just "happy") to build context-dependent emotional understanding.',
+          xpReward: 50,
+          skills: ['Language development', 'Pragmatic language'],
         },
         {
           id: 'slp-expression-matching-57',
@@ -1129,6 +1263,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build facial expression recognition across diverse faces and emotional contexts.',
           faciliatatorNote: 'Use photos of diverse people — expression recognition generalizes better with varied exemplars.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Pragmatic language'],
         },
       ],
 
@@ -1147,6 +1283,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Expand emotional vocabulary from basic to nuanced expressions.',
           faciliatatorNote: 'Emotional granularity (the ability to use precise emotion words) predicts social competence and resilience.',
+          xpReward: 75,
+          skills: ['Language development', 'Expressive language'],
         },
         {
           id: 'slp-emotion-story-maps-810',
@@ -1162,6 +1300,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use narrative to develop emotional literacy, cause-effect reasoning, and regulation awareness.',
           faciliatatorNote: 'Using books the student is reading in class makes this a powerful academic language activity too.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-feeling-words-bingo-810',
@@ -1177,6 +1317,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop nuanced emotional vocabulary and context-dependent emotional reasoning.',
           faciliatatorNote: 'Encouraging discussion of disagreements builds emotional flexibility — a key resilience skill.',
+          xpReward: 75,
+          skills: ['Language development', 'Pragmatic language'],
         },
         {
           id: 'slp-regulation-toolkit-810',
@@ -1192,6 +1334,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a personalized, retrievable regulation toolkit for real-world emotional challenges.',
           faciliatatorNote: 'Personalization is key — a toolkit the student owns is far more useful than a generic one.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
 
@@ -1210,6 +1354,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the language to express emotions clearly and constructively in relationships.',
           faciliatatorNote: 'Emotional language skills significantly reduce conflict and improve relationship satisfaction.',
+          xpReward: 100,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-emotion-regulation-language',
@@ -1225,6 +1371,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the specific language needed to communicate about emotional states and needs.',
           faciliatatorNote: 'Students who can name and communicate their emotional needs show better self-regulation outcomes.',
+          xpReward: 75,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-empathy-language-1114',
@@ -1240,6 +1388,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build pragmatic empathy language skills for authentic peer connection.',
           faciliatatorNote: 'Empathy language is one of the most powerful pragmatic intervention targets for adolescents.',
+          xpReward: 75,
+          skills: ['Language development', 'Social communication', 'Pragmatic language'],
         },
         {
           id: 'slp-emotional-narrative-1114',
@@ -1255,6 +1405,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Integrate emotional vocabulary and narrative structure in personal expressive writing.',
           faciliatatorNote: 'This activity bridges SLP emotional language goals and ELA writing standards.',
+          xpReward: 100,
+          skills: ['Language development', 'Narrative skills', 'Expressive language', 'Speech fluency'],
         },
       ],
 
@@ -1273,6 +1425,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of how emotional intelligence shapes communication quality.',
           faciliatatorNote: 'Emotional intelligence is increasingly recognized as a core professional and social competency.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-difficult-conversation-practice',
@@ -1288,6 +1442,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build confidence and skill for emotionally complex communication situations.',
           faciliatatorNote: 'Preparation and rehearsal dramatically increase success in real difficult conversations.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language', 'Pragmatic language'],
         },
         {
           id: 'slp-emotional-resilience-narrative',
@@ -1303,6 +1459,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a resilience narrative that integrates emotional and communication growth.',
           faciliatatorNote: 'Resilience narratives are powerful identity resources — students return to them in future challenges.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language', 'Speech fluency'],
         },
         {
           id: 'slp-emotional-communication-leadership',
@@ -1319,6 +1477,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Apply emotional communication skills in leadership contexts for maximum real-world impact.',
           faciliatatorNote: 'Leadership framing increases engagement significantly for older adolescents who resist "therapy" framing.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Pragmatic language'],
         },
       ],
     },
@@ -1347,6 +1507,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build personal narrative identity through a structured, meaningful story format.',
           faciliatatorNote: 'Personal story books are excellent generalization tools — children love sharing them at home.',
+          xpReward: 50,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-communication-journey-57',
@@ -1362,6 +1524,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build awareness of communication growth over time and the meaning of the journey.',
           faciliatatorNote: 'Progress visualization is deeply motivating — use real therapy data to mark milestones.',
+          xpReward: 50,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-meaningful-conversations-57',
@@ -1377,6 +1541,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication skills to meaningful relationships and belonging.',
           faciliatatorNote: 'Framing communication as meaningful connection increases engagement and generalization.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-values-story-map-57',
@@ -1392,6 +1558,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build vocabulary for expressing personal values, preferences, and meaning.',
           faciliatatorNote: 'What-matters conversations build both expressive language and a positive sense of self.',
+          xpReward: 50,
+          skills: ['Language development', 'Expressive language'],
         },
       ],
 
@@ -1410,6 +1578,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build autobiographical narrative skills and personal story ownership.',
           faciliatatorNote: 'Autobiographical narrative is a key component of self-concept and identity development.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-communication-journey-810',
@@ -1425,6 +1595,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a meaningful growth narrative around the communication therapy journey.',
           faciliatatorNote: 'Celebrating the journey normalizes the hard work and builds communication identity.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Expressive language'],
         },
         {
           id: 'slp-meaningful-conversations-810',
@@ -1440,6 +1612,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build the language and courage for meaningful, connection-building conversations.',
           faciliatatorNote: 'Meaningful conversations increase both pragmatic competence and social belonging simultaneously.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-values-story-map-810',
@@ -1455,6 +1629,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect personal values to communication identity and motivation.',
           faciliatatorNote: 'Values-based communication goals are more powerful motivators than deficit-based ones.',
+          xpReward: 75,
+          skills: ['Narrative skills', 'Expressive language'],
         },
       ],
 
@@ -1473,6 +1649,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Develop a positive identity narrative that integrates communication as one part of a whole person.',
           faciliatatorNote: 'This activity counters the harmful tendency for students to define themselves by their diagnoses.',
+          xpReward: 100,
+          skills: ['Narrative skills', 'Expressive language', 'Speech fluency'],
         },
         {
           id: 'slp-purpose-communication-1114',
@@ -1488,6 +1666,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Anchor communication therapy goals in personal purpose for sustained motivation.',
           faciliatatorNote: 'Purpose-aligned goals are far more motivating and show better generalization outcomes.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-meaning-in-communication-1114',
@@ -1503,6 +1683,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication skills to meaningful relationships and a sense of purpose.',
           faciliatatorNote: 'Meaning in communication is a powerful reframe from "fixing deficits" to "building connection."',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-gratitude-communication-1114',
@@ -1518,6 +1700,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Use meaningful communication as a vehicle for prosocial expression and connection.',
           faciliatatorNote: 'Gratitude letters are clinically therapeutic and provide an authentic functional communication context.',
+          xpReward: 75,
+          skills: ['Social communication', 'Expressive language'],
         },
       ],
 
@@ -1536,6 +1720,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a forward-looking communication identity grounded in legacy and purpose.',
           faciliatatorNote: 'Legacy thinking is a powerful motivator for older adolescents who are developing adult identity.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-meaning-advocacy-1518',
@@ -1551,6 +1737,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Connect communication skills to advocacy and meaningful social action.',
           faciliatatorNote: 'Advocacy projects develop multiple communication skills simultaneously in the most authentic context possible.',
+          xpReward: 50,
+          skills: ['Social communication', 'Expressive language'],
         },
         {
           id: 'slp-transcendent-values-1518',
@@ -1566,6 +1754,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Anchor communication identity in transcendent values for deep and lasting motivation.',
           faciliatatorNote: 'Transcendent value framing is especially powerful for students who have struggled with communication — it reframes the purpose.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
         {
           id: 'slp-future-communication-vision',
@@ -1581,6 +1771,8 @@ export const SLP_KIDS_ACTIVITIES = {
           ],
           learningGoal: 'Build a future-oriented communication vision that sustains post-therapy motivation.',
           faciliatatorNote: 'Post-therapy sustainability is the ultimate goal — this vision serves as a self-directed motivation anchor.',
+          xpReward: 100,
+          skills: ['Expressive language', 'Social communication'],
         },
       ],
     },
