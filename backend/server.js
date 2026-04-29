@@ -242,6 +242,7 @@ app.use(compression());
 // BEFORE the global express.json() parser, which would otherwise consume the
 // readable stream and make signature verification impossible.
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
+app.use("/api/ttf/payment-confirm", express.raw({ type: "application/json" }));
 
 // Body parsing with limits
 app.use(express.json({ limit: "10kb" }));
@@ -482,6 +483,8 @@ app.use("/api/ml", require("./routes/clinical/mlInsights"));
 console.log("✅ Mounted route: /api/ml (ML-powered predictive analytics)");
 app.use("/api/research", require("./routes/clinical/researchExport"));
 console.log("✅ Mounted route: /api/research (Research Export Tools)");
+app.use("/api/ttf", require("./routes/ttf"));
+console.log("✅ Mounted route: /api/ttf (Train the Facilitator)");
 
 // ==============================
 // Root API info
