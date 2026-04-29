@@ -219,6 +219,13 @@ export default function PracticeTeamPage() {
       }, getAccessTokenSilently);
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 409) {
+          track('Seat Limit Reached', {
+            plan: practice.plan,
+            seatLimit: practice.seatLimit,
+            upgradePrompted: true,
+          });
+        }
         throw new Error(data.error || 'Failed to send invitation.');
       }
       setInviteSuccess(`Invitation sent to ${email}`);
@@ -232,13 +239,6 @@ export default function PracticeTeamPage() {
       loadPractice();
     } catch (err) {
       setInviteError(err.message);
-      if (err.message && /seat|capacity|limit/i.test(err.message)) {
-        track('Seat Limit Reached', {
-          plan: practice.plan,
-          seatLimit: practice.seatLimit,
-          upgradePrompted: true,
-        });
-      }
     } finally {
       setInviting(false);
     }

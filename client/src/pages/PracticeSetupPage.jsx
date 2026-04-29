@@ -57,6 +57,9 @@ const PLANS = [
 
 const SEAT_LIMITS = { 'practice-5': 5, 'practice-10': 10, 'practice-25': 25, custom: 0 };
 
+// Monthly amounts in dollars — kept in sync with PLANS pricing above
+const PLAN_AMOUNTS = { 'practice-5': 399, 'practice-10': 699, 'practice-25': 1499 };
+
 export default function PracticeSetupPage() {
   const navigate = useNavigate();
   const { getAccessTokenSilently } = useAuth0();
@@ -122,7 +125,7 @@ export default function PracticeSetupPage() {
         track('Subscription Started', {
           tier: 'practice',
           plan,
-          amount: plan === 'practice-5' ? 399 : plan === 'practice-10' ? 699 : 1499,
+          amount: PLAN_AMOUNTS[plan],
         });
         window.location.href = url;
       } else {
