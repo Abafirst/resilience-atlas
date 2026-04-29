@@ -654,6 +654,7 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
             const subscription = event.data.object;
             const iatlasUserId = subscription.metadata?.userId;
             const iatlasTier   = subscription.metadata?.tier;
+            const iatlasPracticeId = subscription.metadata?.practiceId;
 
             if (subscription.metadata?.productType === 'iatlas' && iatlasUserId && db) {
                 await db.collection('iatlas_subscriptions').updateOne(
@@ -677,6 +678,27 @@ router.post('/webhook', webhookLimiter, async (req, res) => {
                     { upsert: true }
                 );
                 logger.info(`IATLAS subscription ${event.type}: userId=${iatlasUserId} tier=${iatlasTier} status=${subscription.status}`);
+
+                // Update Practice.billing when this is a practice-tier subscription
+                if (iatlasTier === 'practice' && iatlasPracticeId) {
+                    try {
+                        const Practice = require('../models/Practice');
+                        await Practice.findOneAndUpdate(
+                            { $or: [{ practiceId: iatlasPracticeId }, { _id: mongoose.Types.ObjectId.isValid(iatlasPracticeId) ? iatlasPracticeId : null }] },
+                            {
+                                $set: {
+                                    'billing.stripeCustomerId':     subscription.customer,
+                                    'billing.stripeSubscriptionId': subscription.id,
+                                    'billing.subscriptionStatus':   subscription.status,
+                                    'billing.currentPeriodEnd':     new Date(subscription.current_period_end * 1000),
+                                },
+                            }
+                        );
+                        logger.info(`IATLAS Practice billing updated: practiceId=${iatlasPracticeId}`);
+                    } catch (practiceErr) {
+                        logger.warn('[payments/webhook] Practice billing update skipped:', practiceErr.message);
+                    }
+                }
             }
         }
 

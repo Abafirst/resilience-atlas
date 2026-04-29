@@ -96,6 +96,23 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
 
+  // Practice membership (null if solo practitioner)
+  practiceId: {
+    type: String,
+    default: null,
+    index: true,
+  },
+
+  // Role within practice
+  practiceRole: {
+    type: String,
+    enum: ['owner', 'admin', 'clinician', 'therapist', 'observer', null],
+    default: null,
+  },
+
+  // Date joined practice
+  practiceJoinedAt: { type: Date, default: null },
+
 }, { timestamps: true });
 
 // Hash password before saving

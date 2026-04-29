@@ -209,7 +209,7 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_COMPLETE_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   true,
+    comingSoon:   false,
     features: [
       'Everything in Family',
       'Full curriculum access',
@@ -223,7 +223,7 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_PRACTITIONER_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   true,
+    comingSoon:   false,
     features: [
       'Clinical assessments & session plans',
       'Client resources & worksheets',
@@ -238,7 +238,7 @@ const IATLAS_TIER_CONFIG = {
     billing:      'monthly',
     stripePriceId: process.env.STRIPE_IATLAS_PRACTICE_PRICE_ID || null,
     maxProfiles:  5,
-    comingSoon:   true,
+    comingSoon:   false,
     features: [
       'Everything in Practitioner',
       'Multi-practitioner access',
@@ -252,7 +252,7 @@ const IATLAS_TIER_CONFIG = {
     billing:      'custom',
     stripePriceId: null,
     maxProfiles:  Infinity,
-    comingSoon:   true,
+    comingSoon:   false,
     features: [
       'Everything in Practice',
       'Custom onboarding',
