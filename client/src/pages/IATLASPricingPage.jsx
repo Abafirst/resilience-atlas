@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const IATLAS_TIERS = [
@@ -15,11 +16,12 @@ const IATLAS_TIERS = [
     price: '$19.99',
     period: '/month',
     description: 'Perfect for personal resilience development',
+    comingSoon: false,
     features: [
       'Personal resilience assessments',
       'Basic progress tracking',
       'Individual practice pathways',
-      'Mobile app access',
+      'Mobile app access (beta)',
     ],
     cta: 'Get Started',
     ctaUrl: '/iatlas/subscribe?tier=individual',
@@ -32,11 +34,12 @@ const IATLAS_TIERS = [
     price: '$39.99',
     period: '/month',
     description: 'Support your whole family\'s resilience journey',
+    comingSoon: false,
     features: [
       'Up to 5 family member profiles',
       'Family progress dashboard',
-      'Age-appropriate content',
-      'Shared family practices',
+      'Age-appropriate content (96+ activities)',
+      'Shared family practices (18 challenges)',
     ],
     cta: 'Get Started',
     ctaUrl: '/iatlas/subscribe?tier=family',
@@ -49,17 +52,18 @@ const IATLAS_TIERS = [
     price: '$99.99',
     period: '/month',
     description: 'Full curriculum access + advanced analytics',
+    comingSoon: true,
     features: [
       'Everything in Family',
-      'Full curriculum access',
-      'Advanced progress analytics',
-      'Priority support',
-      'Downloadable resources',
+      'Full curriculum access (49 modules)',
+      'Advanced progress analytics ✓',
+      'Priority support (launching Q3 2026)',
+      'Downloadable resources (launching Q3 2026)',
     ],
-    cta: 'Get Started',
-    ctaUrl: '/iatlas/subscribe?tier=complete',
+    cta: 'Join Waitlist',
+    ctaUrl: '/iatlas/waitlist?tier=complete',
     highlighted: false,
-    badge: null,
+    badge: 'COMING SOON',
   },
   {
     id: 'practitioner',
@@ -67,17 +71,18 @@ const IATLAS_TIERS = [
     price: '$149',
     period: '/month',
     description: 'Clinical tools for solo practitioners',
+    comingSoon: true,
     features: [
-      'Clinical assessments & session plans',
-      'Client resources & worksheets',
-      'Progress & outcome reports',
-      'Individual practice management',
-      'Professional development content',
+      'Clinical assessments & session plans ✓',
+      'ABA Protocol Library ✓',
+      'Client resources (launching Q3 2026)',
+      'Progress & outcome reports ✓',
+      'Professional development content ✓',
     ],
-    cta: 'Get Started',
-    ctaUrl: '/iatlas/subscribe?tier=practitioner',
+    cta: 'Join Waitlist',
+    ctaUrl: '/iatlas/waitlist?tier=practitioner',
     highlighted: false,
-    badge: null,
+    badge: 'COMING SOON',
   },
   {
     id: 'practice',
@@ -85,6 +90,7 @@ const IATLAS_TIERS = [
     price: '$399',
     period: '/month',
     description: 'Multi-practitioner group management',
+    comingSoon: true,
     features: [
       'Everything in Practitioner',
       'Multi-practitioner access (5–25 seats)',
@@ -93,10 +99,10 @@ const IATLAS_TIERS = [
       'Role-based permissions',
       'Team analytics',
     ],
-    cta: 'Start Setup',
-    ctaUrl: '/iatlas/practice/setup',
-    highlighted: true,
-    badge: 'POPULAR',
+    cta: 'Join Waitlist',
+    ctaUrl: '/iatlas/waitlist?tier=practice',
+    highlighted: false,
+    badge: 'COMING SOON',
   },
   {
     id: 'enterprise',
@@ -104,6 +110,7 @@ const IATLAS_TIERS = [
     price: 'Contact Us',
     period: '',
     description: 'Custom solutions for large organizations',
+    comingSoon: false,
     features: [
       'Everything in Practice',
       'Unlimited practitioners',
@@ -144,13 +151,26 @@ const FAQS = [
 
 export default function IATLASPricingPage() {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
 
   function handleCtaClick(e, tier) {
+    // Coming-soon tiers always route to the waitlist — never to Stripe checkout
+    if (tier.comingSoon) {
+      e.preventDefault();
+      navigate(tier.ctaUrl);
+      return;
+    }
     if (!isAuthenticated && tier.id !== 'enterprise') {
       e.preventDefault();
       loginWithRedirect({ appState: { returnTo: tier.ctaUrl } });
     }
+  }
+
+  function getTierBorder(tier) {
+    if (tier.highlighted) return '2px solid #4f46e5';
+    if (tier.comingSoon)  return '1px dashed #c7d2fe';
+    return '1px solid #e5e7eb';
   }
 
   return (
@@ -196,10 +216,11 @@ export default function IATLASPricingPage() {
                 boxShadow: tier.highlighted
                   ? '0 8px 40px rgba(79,70,229,0.18)'
                   : '0 2px 12px rgba(0,0,0,0.07)',
-                border: tier.highlighted ? '2px solid #4f46e5' : '1px solid #e5e7eb',
+                border: getTierBorder(tier),
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
+                opacity: tier.comingSoon ? 0.92 : 1,
               }}
             >
               {/* Badge */}
@@ -209,13 +230,14 @@ export default function IATLASPricingPage() {
                   top: -14,
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  background: '#4f46e5',
+                  background: tier.comingSoon ? '#f59e0b' : '#4f46e5',
                   color: '#fff',
                   fontSize: 11,
                   fontWeight: 800,
                   letterSpacing: '0.08em',
                   padding: '4px 14px',
                   borderRadius: 20,
+                  whiteSpace: 'nowrap',
                 }}>
                   {tier.badge}
                 </div>
@@ -263,9 +285,21 @@ export default function IATLASPricingPage() {
                   fontWeight: 700,
                   fontSize: 15,
                   textDecoration: 'none',
-                  background: tier.highlighted ? '#4f46e5' : '#f1f5f9',
-                  color: tier.highlighted ? '#fff' : '#374151',
-                  border: tier.highlighted ? 'none' : '1px solid #e2e8f0',
+                  background: tier.comingSoon
+                    ? '#f59e0b'
+                    : tier.highlighted
+                      ? '#4f46e5'
+                      : '#f1f5f9',
+                  color: tier.comingSoon
+                    ? '#fff'
+                    : tier.highlighted
+                      ? '#fff'
+                      : '#374151',
+                  border: tier.comingSoon
+                    ? 'none'
+                    : tier.highlighted
+                      ? 'none'
+                      : '1px solid #e2e8f0',
                   transition: 'background 0.15s',
                 }}
               >
@@ -337,25 +371,30 @@ export default function IATLASPricingPage() {
           Join hundreds of practitioners using IATLAS to build resilience every day.
         </p>
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a
-            href="/iatlas/practice/setup"
-            onClick={e => {
-              if (!isAuthenticated) {
-                e.preventDefault();
-                loginWithRedirect({ appState: { returnTo: '/iatlas/practice/setup' } });
-              }
-            }}
-            style={{
-              background: '#fff',
-              color: '#667eea',
-              padding: '12px 28px',
-              borderRadius: 8,
-              fontWeight: 700,
-              textDecoration: 'none',
-            }}
-          >
-            Start Practice Setup →
-          </a>
+          {(() => {
+            const familyTier = IATLAS_TIERS.find(t => t.id === 'family');
+            return familyTier ? (
+              <a
+                href={familyTier.ctaUrl}
+                onClick={e => {
+                  if (!isAuthenticated) {
+                    e.preventDefault();
+                    loginWithRedirect({ appState: { returnTo: familyTier.ctaUrl } });
+                  }
+                }}
+                style={{
+                  background: '#fff',
+                  color: '#667eea',
+                  padding: '12px 28px',
+                  borderRadius: 8,
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                }}
+              >
+                Start with Family →
+              </a>
+            ) : null;
+          })()}
           <a
             href="mailto:hello@theresilienceatlas.com?subject=IATLAS%20Pricing%20Question"
             style={{

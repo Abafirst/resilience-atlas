@@ -40,6 +40,7 @@ import JoinPage from './pages/JoinPage.jsx';
 import TeamsLandingPage from './pages/TeamsLandingPage.jsx';
 import PricingTeamsPage from './pages/PricingTeamsPage.jsx';
 import IATLASPricingPage from './pages/IATLASPricingPage.jsx';
+import IATLASWaitlistPage from './pages/IATLASWaitlistPage.jsx';
 import ResourcesPage from './pages/ResourcesPage.jsx';
 import QuizPage from './pages/QuizPage.jsx';
 import KidsPage from './pages/KidsPage.jsx';
@@ -363,6 +364,7 @@ function AppShell() {
           <Route path="/pricing-teams" element={<PricingTeamsPage />} />
           <Route path="/pricing" element={<IATLASPricingPage />} />
           <Route path="/iatlas/pricing" element={<IATLASPricingPage />} />
+          <Route path="/iatlas/waitlist" element={<IATLASWaitlistPage />} />
           <Route path="/resources" element={<ResourcesPage />} />
 
           {/* Insight sub-pages */}
