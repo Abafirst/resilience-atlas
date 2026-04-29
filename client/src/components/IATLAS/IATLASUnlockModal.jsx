@@ -461,6 +461,12 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
     (t) => t.tier && IATLAS_TIER_CONFIG[t.tier]?.comingSoon
   );
 
+  // Determine if the primary CTA tier is coming soon
+  const primaryTierConfig = config.primaryTier ? IATLAS_TIER_CONFIG[config.primaryTier] : null;
+  const primaryIsComingSoon = primaryTierConfig?.comingSoon ?? false;
+  // Short tier name for mailto subject/body (strip "IATLAS " prefix)
+  const primaryTierShortName = primaryTierConfig?.name?.replace(/^IATLAS\s+/, '') || '';
+
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -561,13 +567,23 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
 
           <div className="iatlas-unlock-actions">
             {config.primaryTier ? (
-              <button
-                className="iatlas-unlock-btn-primary"
-                onClick={() => handleSubscribe(config.primaryTier)}
-                disabled={loading}
-              >
-                {loading ? 'Redirecting to checkout…' : config.primaryLabel}
-              </button>
+              primaryIsComingSoon ? (
+                <a
+                  href={`mailto:support@resilienceatlas.com?subject=IATLAS%20${encodeURIComponent(primaryTierShortName)}%20Waitlist&body=I'm%20interested%20in%20being%20notified%20when%20the%20${encodeURIComponent(primaryTierShortName)}%20tier%20launches.`}
+                  className="iatlas-unlock-btn-secondary"
+                  style={{ textAlign: 'center' }}
+                >
+                  Join Waitlist — {primaryTierShortName}
+                </a>
+              ) : (
+                <button
+                  className="iatlas-unlock-btn-primary"
+                  onClick={() => handleSubscribe(config.primaryTier)}
+                  disabled={loading}
+                >
+                  {loading ? 'Redirecting to checkout…' : config.primaryLabel}
+                </button>
+              )
             ) : (
               <a
                 href={config.primaryHref}
