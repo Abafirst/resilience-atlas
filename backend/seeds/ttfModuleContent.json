@@ -1,0 +1,692 @@
+[
+  {
+    "moduleNumber": 1,
+    "moduleName": "Foundations of IATLAS",
+    "moduleDescription": "Understand the six-dimensional resilience framework and how ABA + ACT principles integrate to create a holistic approach to building resilience across all populations.",
+    "color": "#4f46e5",
+    "bg": "#eef2ff",
+    "estimatedDuration": 120,
+    "prerequisites": [],
+    "sections": [
+      {
+        "sectionId": "m1-s1",
+        "sectionTitle": "Introduction to the Six-Dimensional Framework",
+        "contentType": "reading",
+        "duration": 20,
+        "content": "# The Six-Dimensional Resilience Framework\n\nThe IATLAS framework identifies six interconnected dimensions of resilience that together create a holistic picture of how individuals, families, and communities thrive under adversity.\n\n## The Six Dimensions\n\n1. **Agentic-Generative** — The capacity to act with purpose, set goals, and generate solutions. Individuals strong in this dimension take initiative and believe in their ability to influence outcomes.\n\n2. **Somatic-Regulative** — The body's ability to regulate physiological stress responses. This dimension encompasses nervous system regulation, sensory processing, and physical wellbeing.\n\n3. **Emotional-Reflective** — The ability to recognize, understand, and process one's own emotions. This dimension supports emotional intelligence, self-compassion, and reflective capacity.\n\n4. **Cognitive-Imaginative** — Flexible thinking, creative problem-solving, and the ability to reframe challenges. This dimension supports learning, perspective-taking, and innovation.\n\n5. **Relational-Connective** — The capacity for authentic connection, secure attachment, and community belonging. Relationships are the primary vehicle through which resilience is built and maintained.\n\n6. **Spiritual-Purposive** — A sense of meaning, values, and transcendent purpose that sustains motivation through difficulty. This dimension does not require religious belief — it encompasses any source of deep meaning.\n\n## Why Six Dimensions?\n\nResilience research consistently shows that no single factor predicts resilience. Instead, it emerges from the interaction of biological, psychological, social, and meaning-making systems. The six-dimensional model provides practitioners with a comprehensive map for assessment and intervention.",
+        "keyTakeaways": [
+          "Resilience is multidimensional — no single factor predicts it",
+          "The six dimensions are interconnected and mutually reinforcing",
+          "Practitioners must understand all six dimensions to facilitate effectively",
+          "Dimensional assessment reveals both strengths and growth edges"
+        ],
+        "resources": [
+          { "title": "IATLAS Framework Overview PDF", "url": "/resources/iatlas-framework-overview.pdf" },
+          { "title": "Resilience Research Meta-Analysis", "url": "/resources/resilience-research-summary.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m1-s2",
+        "sectionTitle": "ABA + ACT Integration Principles",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Integrating ABA and ACT in Resilience Facilitation\n\nThe IATLAS protocol draws from two evidence-based traditions: Applied Behavior Analysis (ABA) and Acceptance and Commitment Therapy (ACT). Understanding how these frameworks complement each other is essential for effective facilitation.\n\n## Applied Behavior Analysis (ABA)\n\nABA focuses on observable, measurable behaviors and the environmental conditions that influence them. In resilience facilitation, ABA principles help practitioners:\n\n- Define resilience behaviors in observable, measurable terms\n- Identify antecedents and consequences that support or undermine resilient behavior\n- Use reinforcement strategically to build new response patterns\n- Track progress systematically through data collection\n\n## Acceptance and Commitment Therapy (ACT)\n\nACT is a third-wave cognitive-behavioral therapy that emphasizes psychological flexibility — the ability to act effectively even in the presence of difficult thoughts, feelings, and sensations. ACT's six core processes align directly with the IATLAS dimensions:\n\n- **Acceptance** → Somatic-Regulative and Emotional-Reflective dimensions\n- **Defusion** → Cognitive-Imaginative dimension\n- **Present Moment** → Somatic-Regulative dimension\n- **Self-as-Context** → Spiritual-Purposive dimension\n- **Values** → Agentic-Generative and Spiritual-Purposive dimensions\n- **Committed Action** → Agentic-Generative dimension\n\n## Integration in Practice\n\nEffective IATLAS facilitation uses ABA's precision and measurement within an ACT framework of acceptance and values-based action. This means:\n\n1. Setting measurable resilience goals (ABA) in alignment with the client's values (ACT)\n2. Tracking behavioral progress (ABA) while supporting acceptance of difficult internal experiences (ACT)\n3. Using behavioral reinforcement (ABA) that is intrinsically meaningful (ACT)",
+        "keyTakeaways": [
+          "ABA provides measurement precision; ACT provides psychological depth",
+          "The six dimensions map directly to ACT's hexaflex processes",
+          "Integration requires holding both behavioral precision and values-based flexibility",
+          "Data collection and acceptance practices are complementary, not contradictory"
+        ],
+        "resources": [
+          { "title": "ACT in Practice: Brief Overview", "url": "/resources/act-overview.pdf" },
+          { "title": "ABA Core Principles Guide", "url": "/resources/aba-core-principles.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m1-s3",
+        "sectionTitle": "Your Dimensional Self-Assessment",
+        "contentType": "reflection",
+        "duration": 30,
+        "content": "# Your Personal Dimensional Assessment\n\nBefore facilitating resilience in others, you must know your own dimensional profile. This reflection exercise guides you through an honest self-assessment across all six dimensions.\n\n## Instructions\n\nFor each dimension below, rate yourself on a scale of 1-5:\n- **1** = This is a significant area of growth for me\n- **2** = I'm developing in this area\n- **3** = I have moderate strength here\n- **4** = This is a genuine strength\n- **5** = This is a core strength I can model for others\n\n## Reflection Questions by Dimension\n\n### Agentic-Generative\n- When faced with obstacles, do I naturally move toward solutions?\n- How often do I act in alignment with my professional goals?\n- Am I able to help others identify their agency even when I'm feeling stuck myself?\n\n### Somatic-Regulative\n- How well do I recognize signs of stress in my own body?\n- Do I have reliable practices for nervous system regulation (breathing, movement, rest)?\n- Can I remain regulated when clients or students are dysregulated?\n\n### Emotional-Reflective\n- How comfortable am I with difficult emotions — in myself and in others?\n- Do I process my professional experiences, or do I push them aside?\n- Can I name and express emotions with precision?\n\n### Cognitive-Imaginative\n- How flexible is my thinking when situations don't go as planned?\n- Do I approach problems with curiosity or anxiety?\n- Can I help others reframe challenges without minimizing them?\n\n### Relational-Connective\n- Do I feel genuinely connected to my professional community?\n- How do I navigate ruptures in therapeutic or facilitative relationships?\n- Am I able to build authentic rapport quickly with diverse populations?\n\n### Spiritual-Purposive\n- What sustains me through the difficult parts of this work?\n- Am I connected to a clear sense of why this work matters?\n- How do I help others find meaning even in suffering?",
+        "keyTakeaways": [
+          "Self-knowledge is the foundation of effective facilitation",
+          "Your dimensional profile informs both your strengths and your blind spots",
+          "Regular self-assessment prevents burnout and maintains practice integrity",
+          "Vulnerability in self-assessment models the same process for those you serve"
+        ],
+        "resources": [
+          { "title": "Take the Full IATLAS Assessment", "url": "/quiz" },
+          { "title": "Practitioner Self-Care Planning Template", "url": "/resources/practitioner-self-care.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m1-s4",
+        "sectionTitle": "Module 1 Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m1q1",
+              "question": "How many dimensions does the IATLAS resilience framework include?",
+              "answerType": "multiple-choice",
+              "options": ["4", "5", "6", "8"],
+              "correctAnswer": "6",
+              "explanation": "The IATLAS framework has six interconnected dimensions: Agentic-Generative, Somatic-Regulative, Emotional-Reflective, Cognitive-Imaginative, Relational-Connective, and Spiritual-Purposive."
+            },
+            {
+              "questionId": "m1q2",
+              "question": "Which ACT process most directly corresponds to the Agentic-Generative dimension?",
+              "answerType": "multiple-choice",
+              "options": ["Defusion", "Acceptance", "Committed Action", "Present Moment"],
+              "correctAnswer": "Committed Action",
+              "explanation": "Committed Action — taking effective steps toward values-aligned goals — is the ACT process most directly aligned with the Agentic-Generative dimension, which focuses on purpose-driven, goal-directed behavior."
+            },
+            {
+              "questionId": "m1q3",
+              "question": "True or False: The Spiritual-Purposive dimension requires religious belief.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "The Spiritual-Purposive dimension does not require religious belief. It encompasses any source of deep meaning, values, and transcendent purpose — including secular sources of meaning and connection."
+            },
+            {
+              "questionId": "m1q4",
+              "question": "Why is self-assessment required before facilitating others?",
+              "answerType": "multiple-choice",
+              "options": [
+                "It is a legal requirement for certification",
+                "Facilitators must know their own dimensional profile to leverage strengths and address blind spots",
+                "Clients need to know their facilitator's scores",
+                "It is only required for clinicians"
+              ],
+              "correctAnswer": "Facilitators must know their own dimensional profile to leverage strengths and address blind spots",
+              "explanation": "Self-knowledge is foundational to effective facilitation. Understanding your own dimensional profile helps you leverage your strengths, acknowledge your growth edges, and avoid projecting your own patterns onto those you serve."
+            },
+            {
+              "questionId": "m1q5",
+              "question": "ABA contributes which of the following to the IATLAS integration?",
+              "answerType": "multiple-choice",
+              "options": [
+                "Mindfulness practices",
+                "Values clarification",
+                "Measurement precision and behavioral analysis",
+                "Narrative therapy techniques"
+              ],
+              "correctAnswer": "Measurement precision and behavioral analysis",
+              "explanation": "ABA contributes measurement precision and systematic behavioral analysis to the IATLAS framework, enabling practitioners to define resilience behaviors in observable terms and track progress systematically."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "moduleNumber": 2,
+    "moduleName": "Assessment & Planning",
+    "moduleDescription": "Learn to conduct dimensional assessments with diverse populations, create individualized intervention plans, and build progress monitoring systems that capture meaningful change.",
+    "color": "#059669",
+    "bg": "#d1fae5",
+    "estimatedDuration": 135,
+    "prerequisites": [1],
+    "sections": [
+      {
+        "sectionId": "m2-s1",
+        "sectionTitle": "Conducting Dimensional Assessments",
+        "contentType": "reading",
+        "duration": 30,
+        "content": "# Conducting Dimensional Assessments\n\nEffective dimensional assessment is the cornerstone of individualized resilience facilitation. This section covers how to administer, score, and interpret the IATLAS Dimensional Assessment across different populations.\n\n## Assessment Formats\n\nThe IATLAS system includes several assessment formats designed for different contexts:\n\n### 1. Full Resilience Atlas Assessment (Adults)\nThe comprehensive 36-item assessment that generates a radar chart across all six dimensions. Best used for:\n- Initial intake with adult clients\n- Program evaluation (pre/post)\n- Professional development contexts\n\n### 2. Brief Dimensional Check-In (5-item)\nA rapid assessment for ongoing monitoring. Best used for:\n- Session-by-session progress tracking\n- Group settings with limited time\n- Youth populations (adapted language)\n\n### 3. Observational Assessment\nFor non-verbal clients or very young children, dimensional assessment relies on structured observation:\n- Behavioral indicators of each dimension\n- Parent/caregiver report\n- Direct observation protocols\n\n## Scoring and Interpretation\n\nDimensional scores range from 1-10. Interpretation guidelines:\n\n- **1-3**: Low — significant support needed\n- **4-6**: Moderate — developing capacity with targeted support\n- **7-8**: Strong — well-developed with maintenance support\n- **9-10**: Exceptional — can model this dimension for others\n\n## Trauma-Informed Assessment Principles\n\nAll assessment must be conducted within a trauma-informed framework:\n1. **Safety first** — ensure physical and emotional safety before beginning\n2. **Choice and control** — clients choose how much to share\n3. **Trustworthiness** — be transparent about how data will be used\n4. **Peer support** — normalize the assessment process with examples\n5. **Empowerment** — frame assessment as a tool for growth, not evaluation",
+        "keyTakeaways": [
+          "Multiple assessment formats serve different populations and contexts",
+          "Dimensional scores from 1-10 guide intervention priority",
+          "Trauma-informed assessment principles must be applied universally",
+          "Observational assessment extends the system to non-verbal populations"
+        ],
+        "resources": [
+          { "title": "Assessment Protocol Manual", "url": "/resources/assessment-protocol-manual.pdf" },
+          { "title": "Observational Assessment Checklist", "url": "/resources/observational-assessment.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m2-s2",
+        "sectionTitle": "Creating Individualized Intervention Plans",
+        "contentType": "reading",
+        "duration": 35,
+        "content": "# Creating Individualized Intervention Plans\n\nAn effective IATLAS Intervention Plan translates dimensional assessment data into a clear, actionable roadmap for resilience building.\n\n## Components of an IATLAS Intervention Plan\n\n### 1. Dimensional Profile Summary\n- Current scores across all six dimensions\n- Identified strengths (dimensions scoring 7+)\n- Priority growth areas (dimensions scoring 1-4)\n- Cross-dimensional patterns (e.g., low somatic + low emotional often co-occur)\n\n### 2. Long-Term Goals (3-6 months)\nFor each priority dimension, articulate 1-2 observable, measurable goals:\n- **Example**: \"[Client] will independently use the 4-7-8 breathing technique during moments of somatic dysregulation, as demonstrated by self-report and reduced physiological indicators, in 4 out of 5 opportunities.\"\n\n### 3. Short-Term Objectives (2-4 week targets)\nBreak long-term goals into smaller, achievable milestones:\n- Build on existing strengths in other dimensions\n- Sequence objectives from low-challenge to higher-challenge contexts\n- Include micropractice assignments between sessions\n\n### 4. Protocol Selection\nMatch evidence-based IATLAS protocols to priority dimensions:\n- **Somatic**: Grounding practices, breath work, movement protocols\n- **Emotional**: Values clarification, emotion labeling, ACT acceptance practices\n- **Cognitive**: Defusion techniques, perspective-taking exercises, strength mapping\n- **Relational**: Connection circles, relationship mapping, community engagement\n- **Agentic**: Goal-setting frameworks, committed action planning, obstacle navigation\n- **Spiritual**: Meaning-making reflections, values exploration, legacy visioning\n\n### 5. Progress Monitoring Plan\n- Frequency of assessment (weekly, bi-weekly, monthly)\n- Who collects data (practitioner, client self-report, caregiver report)\n- Decision rules for adjusting the plan\n\n### 6. Support System Mapping\nIdentify the relational infrastructure available to support the plan:\n- Family/caregiver involvement\n- Peer support opportunities\n- Community resources\n- Professional supports",
+        "keyTakeaways": [
+          "Intervention plans must be individualized based on dimensional profile",
+          "Goals should be observable, measurable, and values-aligned",
+          "Protocol selection is guided by priority dimensions",
+          "Support system mapping ensures the plan is not implemented in isolation"
+        ],
+        "resources": [
+          { "title": "Individualized Plan Template", "url": "/resources/intervention-plan-template.pdf" },
+          { "title": "Protocol Selection Guide", "url": "/resources/protocol-selection-guide.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m2-s3",
+        "sectionTitle": "Progress Monitoring & Adapting Protocols",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Progress Monitoring and Protocol Adaptation\n\nEffective facilitation requires ongoing monitoring and a willingness to adapt protocols when they are not producing the desired results.\n\n## Progress Monitoring Systems\n\n### Data Collection Methods\n1. **Dimensional check-ins** — Brief self-report at each session\n2. **Behavioral observation data** — Frequency, duration, or intensity of target behaviors\n3. **Goal attainment scaling** — Rating progress toward individualized goals\n4. **Client/caregiver narrative** — Qualitative accounts of change\n\n### Graphing and Visual Analysis\nVisual analysis of graphed data is an ABA cornerstone that helps practitioners detect:\n- **Level changes** — Is the score consistently higher/lower?\n- **Trend lines** — Is the score moving in the desired direction?\n- **Variability** — Is the score inconsistent? What explains the variability?\n\n## Adapting Protocols Across Populations\n\n### Age Adaptations\n- **Early childhood (3-6)**: Simplified language, play-based protocols, caregiver involvement\n- **School-age (7-12)**: Narrative metaphors, peer-based activities, family systems focus\n- **Adolescents (13-17)**: Autonomy emphasis, peer connection, identity development lens\n- **Adults**: Full complexity available, developmental history context\n- **Older adults**: Life review integration, intergenerational transmission focus\n\n### Cultural Adaptations\n- Honor diverse expressions of each dimension\n- Adapt language and metaphors to cultural context\n- Involve community leaders or culture-keepers in planning\n- Assess for systemic stressors (racism, poverty, immigration) in all dimensions\n\n### Neurodiversity Adaptations\n- Multi-modal content delivery (visual, auditory, kinesthetic)\n- Sensory-sensitive environments for somatic work\n- Executive function scaffolding for agentic work\n- Social stories and explicit instruction for relational work",
+        "keyTakeaways": [
+          "Visual analysis of data reveals level, trend, and variability",
+          "Protocol adaptation is a professional competency, not a compromise",
+          "Age, culture, and neurodiversity all require thoughtful adaptation",
+          "Regular monitoring prevents drift from the intervention plan"
+        ],
+        "resources": [
+          { "title": "Progress Monitoring Toolkit", "url": "/resources/progress-monitoring-toolkit.pdf" },
+          { "title": "Cultural Adaptation Guidelines", "url": "/resources/cultural-adaptation-guidelines.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m2-s4",
+        "sectionTitle": "Module 2 Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m2q1",
+              "question": "A dimensional score of 3 indicates which level of support need?",
+              "answerType": "multiple-choice",
+              "options": ["Exceptional — no support needed", "Strong — maintenance support", "Moderate — targeted support", "Low — significant support needed"],
+              "correctAnswer": "Low — significant support needed",
+              "explanation": "Scores of 1-3 indicate low dimensional capacity where significant support is needed. These become priority areas in the intervention plan."
+            },
+            {
+              "questionId": "m2q2",
+              "question": "Which assessment format is most appropriate for a non-verbal young child?",
+              "answerType": "multiple-choice",
+              "options": ["Full Resilience Atlas Assessment", "Brief Dimensional Check-In", "Observational Assessment", "Online self-report survey"],
+              "correctAnswer": "Observational Assessment",
+              "explanation": "For non-verbal clients or very young children, observational assessment using behavioral indicators, parent/caregiver report, and direct observation protocols is the appropriate approach."
+            },
+            {
+              "questionId": "m2q3",
+              "question": "True or False: Cultural adaptation of protocols represents a compromise to protocol fidelity.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "Cultural adaptation is a professional competency, not a compromise. Culturally adapted protocols that honor diverse expressions of resilience are more effective and ethical than rigid one-size-fits-all approaches."
+            },
+            {
+              "questionId": "m2q4",
+              "question": "What does 'level change' refer to in visual analysis of progress data?",
+              "answerType": "multiple-choice",
+              "options": [
+                "A sudden increase in session frequency",
+                "A consistent shift in the overall height of data points",
+                "The practitioner changing their intervention approach",
+                "A change in assessment instrument"
+              ],
+              "correctAnswer": "A consistent shift in the overall height of data points",
+              "explanation": "In visual analysis, a level change refers to a consistent shift in the overall height (value) of data points after an intervention, indicating that the intervention has produced a meaningful change in the behavior or dimension being tracked."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "moduleNumber": 3,
+    "moduleName": "Facilitation Skills",
+    "moduleDescription": "Develop the trauma-informed, culturally responsive facilitation skills required to deliver IATLAS protocols with diverse populations in individual, group, and community settings.",
+    "color": "#db2777",
+    "bg": "#fce7f3",
+    "estimatedDuration": 150,
+    "prerequisites": [1, 2],
+    "sections": [
+      {
+        "sectionId": "m3-s1",
+        "sectionTitle": "Trauma-Informed Facilitation",
+        "contentType": "reading",
+        "duration": 35,
+        "content": "# Trauma-Informed Facilitation\n\nTrauma is not a rare exception — it is part of the lived experience of most people. Effective IATLAS facilitators approach every interaction through a trauma-informed lens.\n\n## The SAMHSA Six Key Principles\n\nThe Substance Abuse and Mental Health Services Administration (SAMHSA) identifies six key principles of trauma-informed practice:\n\n1. **Safety** — Physical and psychological safety in all spaces\n2. **Trustworthiness & Transparency** — Clear boundaries and honest communication\n3. **Peer Support** — Lived experience as a pathway to healing\n4. **Collaboration & Mutuality** — Power is shared; healing happens in relationship\n5. **Empowerment, Voice & Choice** — Strengths are the focus; choices are offered\n6. **Cultural, Historical & Gender Issues** — Cultural context is always relevant\n\n## Applying TI Principles in IATLAS Sessions\n\n### Before the Session\n- Assess physical safety of the environment (sensory load, escape routes, privacy)\n- Review prior session notes and any trauma disclosures\n- Prepare regulation tools in advance (fidgets, breathing cards, etc.)\n- Check your own regulation state before entering the space\n\n### During the Session\n- Open with a brief somatic check-in\n- Offer choices throughout (\"Would you prefer to stand or sit?\")\n- Watch for signs of activation (rapid breathing, scanning, freeze response)\n- Use grounding techniques when activation is observed\n- Never force trauma disclosure — create safety for it to emerge naturally\n\n### After the Session\n- Allow time for decompression before transitioning\n- Check in: \"How are you leaving today?\"\n- Document any trauma indicators for follow-up\n- Self-regulate before your next session",
+        "keyTakeaways": [
+          "Trauma is pervasive — assume it is present until evidence suggests otherwise",
+          "The six SAMHSA principles guide all trauma-informed practice",
+          "Pre-session preparation includes environment assessment and self-regulation",
+          "Signs of activation require grounding responses, not deeper exploration"
+        ],
+        "resources": [
+          { "title": "SAMHSA Trauma-Informed Care Concept", "url": "/resources/samhsa-trauma-informed.pdf" },
+          { "title": "Grounding Techniques Quick Reference", "url": "/resources/grounding-techniques.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m3-s2",
+        "sectionTitle": "Cultural Responsiveness in Facilitation",
+        "contentType": "reading",
+        "duration": 30,
+        "content": "# Cultural Responsiveness in IATLAS Facilitation\n\nCultural responsiveness is not an add-on to effective facilitation — it is central to it. The IATLAS framework must be applied with deep awareness of the cultural contexts that shape how resilience is understood, expressed, and built.\n\n## Cultural Humility vs. Cultural Competence\n\nCultural humility is a lifelong orientation of openness, self-reflection, and learning. It goes beyond cultural competence (knowing facts about cultures) to include:\n- Ongoing self-examination of one's own cultural assumptions\n- Willingness to not-know and to be taught\n- Power-awareness: understanding how cultural power dynamics affect facilitation\n\n## Dimensions Through a Cultural Lens\n\nEach dimension of resilience is expressed differently across cultures:\n\n- **Agentic**: Individual agency varies — some cultures prioritize collective action over individual initiative\n- **Somatic**: Bodily practices differ — respect for cultural and religious norms around touch and body\n- **Emotional**: Emotional expression norms vary dramatically — not all cultures value verbal emotional expression\n- **Cognitive**: Learning styles and cognitive frameworks reflect cultural epistemologies\n- **Relational**: Family structure, community bonds, and relationship hierarchies are culturally specific\n- **Spiritual**: Meaning-making is deeply culturally embedded — never assume a secular framework\n\n## Practical Cultural Responsiveness\n\n1. **Learn from the person in front of you** — ask before assuming\n2. **Check protocols for cultural bias** — are examples and metaphors culturally universal?\n3. **Engage cultural consultants** — involve community members in adapting protocols\n4. **Address systemic stressors** — racism, poverty, and immigration are dimensional stressors",
+        "keyTakeaways": [
+          "Cultural humility is a practice, not a destination",
+          "Each IATLAS dimension has culturally specific expressions",
+          "Ask before assuming — learn from the person in front of you",
+          "Systemic stressors are dimensional stressors that belong in the assessment"
+        ],
+        "resources": [
+          { "title": "Cultural Humility Self-Assessment", "url": "/resources/cultural-humility-self-assessment.pdf" },
+          { "title": "Cultural Adaptation Workbook", "url": "/resources/cultural-adaptation-workbook.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m3-s3",
+        "sectionTitle": "Group Facilitation Techniques",
+        "contentType": "reading",
+        "duration": 40,
+        "content": "# Group Facilitation for Resilience\n\nGroup settings offer unique opportunities for resilience building — particularly the Relational-Connective dimension — but also require specific facilitation skills.\n\n## Group Dynamics Fundamentals\n\n### Stages of Group Development (Tuckman)\n1. **Forming** — Members are polite, cautious; facilitator provides structure\n2. **Storming** — Conflict emerges; facilitator navigates disagreement\n3. **Norming** — Group establishes culture; facilitator reinforces positive norms\n4. **Performing** — Group is productive; facilitator steps back\n5. **Adjourning** — Group ends; facilitator supports closure and integration\n\n### Facilitative Roles\n- **Holder of the container** — Maintain psychological safety for the group\n- **Process observer** — Track group dynamics, not just content\n- **Equalizer** — Amplify quieter voices, redirect dominant voices\n- **Bridge builder** — Connect individual experiences to group themes\n\n## Managing Challenging Group Behaviors\n\n### Monopolizing\n- Acknowledge the contribution, then open to others: \"Thank you — I'd love to hear another perspective.\"\n- Use structured turn-taking (talking pieces, rounds)\n\n### Silence or Withdrawal\n- Normalize silence: \"It's okay to just listen today.\"\n- Use dyad work before full group sharing\n\n### Conflict Between Members\n- Validate both perspectives before problem-solving\n- Redirect to the shared experience: \"I notice we're touching something important for the whole group here.\"\n\n### Disclosure of Crisis or Trauma\n- Stay calm and regulated\n- Respond with compassion but redirect from detailed trauma narration\n- Have crisis protocols prepared in advance",
+        "keyTakeaways": [
+          "Groups move through predictable developmental stages",
+          "Facilitators hold multiple roles simultaneously in group settings",
+          "Challenging behaviors require specific, pre-planned responses",
+          "Group settings uniquely amplify the Relational-Connective dimension"
+        ],
+        "resources": [
+          { "title": "Group Facilitation Handbook", "url": "/resources/group-facilitation-handbook.pdf" },
+          { "title": "Managing Group Dynamics Quick Guide", "url": "/resources/group-dynamics-quick-guide.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m3-s4",
+        "sectionTitle": "Module 3 Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m3q1",
+              "question": "Which SAMHSA principle emphasizes that healing happens in relationship?",
+              "answerType": "multiple-choice",
+              "options": ["Safety", "Empowerment", "Collaboration & Mutuality", "Peer Support"],
+              "correctAnswer": "Collaboration & Mutuality",
+              "explanation": "Collaboration & Mutuality emphasizes that power is shared and healing happens in relationship — recognizing that the practitioner-client relationship itself is a vehicle for healing."
+            },
+            {
+              "questionId": "m3q2",
+              "question": "True or False: Cultural competence (knowing facts about cultures) is sufficient for effective IATLAS facilitation.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "Cultural humility goes beyond cultural competence. It requires ongoing self-reflection, willingness to not-know, and power-awareness — recognizing that knowing facts about cultures is not sufficient for truly responsive facilitation."
+            },
+            {
+              "questionId": "m3q3",
+              "question": "In Tuckman's group development model, what characterizes the 'storming' stage?",
+              "answerType": "multiple-choice",
+              "options": [
+                "Members are polite and cautious",
+                "Conflict emerges and must be navigated",
+                "The group is highly productive",
+                "The group prepares for closure"
+              ],
+              "correctAnswer": "Conflict emerges and must be navigated",
+              "explanation": "In the storming stage, conflict naturally emerges as members begin to assert their perspectives. The facilitator's role is to navigate this conflict productively, holding the container while supporting the group's development."
+            },
+            {
+              "questionId": "m3q4",
+              "question": "When a group member begins to describe detailed trauma in a group setting, the facilitator should:",
+              "answerType": "multiple-choice",
+              "options": [
+                "Encourage them to continue — processing trauma in group is always beneficial",
+                "Respond with compassion and gently redirect from detailed trauma narration",
+                "Immediately end the session",
+                "Ask the group to give feedback"
+              ],
+              "correctAnswer": "Respond with compassion and gently redirect from detailed trauma narration",
+              "explanation": "Detailed trauma narration in a group setting can retraumatize the speaker and activate others in the group. The trauma-informed response is to acknowledge with compassion and gently redirect to maintain safety for all members."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "moduleNumber": 4,
+    "moduleName": "Practitioner Resilience",
+    "moduleDescription": "Build and sustain your own six-dimensional resilience as a practitioner. Develop a personal growth plan, burnout prevention strategies, and reflective practice habits that will sustain your work over time.",
+    "color": "#d97706",
+    "bg": "#fef3c7",
+    "estimatedDuration": 120,
+    "prerequisites": [1, 2, 3],
+    "sections": [
+      {
+        "sectionId": "m4-s1",
+        "sectionTitle": "Your Six-Dimension Growth Plan",
+        "contentType": "reflection",
+        "duration": 35,
+        "content": "# Creating Your Practitioner Six-Dimension Growth Plan\n\nThis module asks you to make a commitment to your own resilience — not as a professional obligation but as a lived practice.\n\n## Why Practitioner Resilience Matters\n\nResearch consistently shows that practitioner burnout, secondary traumatic stress, and compassion fatigue directly impact client outcomes. The facilitation of resilience in others requires the facilitator to be actively cultivating their own.\n\n## Growth Plan Template\n\nFor each dimension, you will identify:\n1. **Current state** — Where you are now (honest self-assessment)\n2. **Growth edge** — What would shift if you developed this dimension further?\n3. **One practice** — A concrete, sustainable micro-practice\n4. **Support person** — Who will support you in this dimension?\n5. **Three-month goal** — One observable, measurable goal\n\n## Reflection Prompts\n\n### Agentic-Generative Growth\n- Where in your professional life do you feel most like a passive bystander?\n- What one professional goal have you been avoiding?\n- What committed action would shift this dimension in the next 30 days?\n\n### Somatic-Regulative Growth\n- What does your nervous system feel like at the end of a typical work week?\n- What is your most reliable regulation practice — and how consistently do you use it?\n- What would it look like to prioritize your body's needs as a professional practice?\n\n### Emotional-Reflective Growth\n- Which client situations most activate your own emotional responses?\n- How do you process difficult professional emotions — and is it working?\n- What would it mean to be more emotionally courageous in your practice?\n\n### Cognitive-Imaginative Growth\n- Where in your practice have you become rigid or formulaic?\n- When did you last approach a professional challenge with genuine curiosity?\n- What new perspective would most expand your facilitation effectiveness?\n\n### Relational-Connective Growth\n- Who in your professional community genuinely knows you?\n- Where do you feel isolated in your practice?\n- What one relationship investment would most support your resilience?\n\n### Spiritual-Purposive Growth\n- Why does this work matter to you — at the deepest level?\n- When do you feel most aligned with your professional purpose?\n- What meaning-making practice sustains you through the difficult cases?",
+        "keyTakeaways": [
+          "Practitioner resilience directly affects client outcomes",
+          "A growth plan requires honest self-assessment across all six dimensions",
+          "Micro-practices that are sustainable are more effective than occasional big efforts",
+          "A support person in each dimension creates accountability"
+        ],
+        "resources": [
+          { "title": "Practitioner Growth Plan Template", "url": "/resources/practitioner-growth-plan.pdf" },
+          { "title": "Micro-Practice Library for Practitioners", "url": "/resources/practitioner-micropractices.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m4-s2",
+        "sectionTitle": "Burnout Prevention & Professional Sustainability",
+        "contentType": "reading",
+        "duration": 30,
+        "content": "# Burnout Prevention and Professional Sustainability\n\nBurnout is not a personal failure — it is a systemic and relational phenomenon that affects most helping professionals at some point in their careers. Prevention requires both personal practices and structural changes.\n\n## The Three Dimensions of Burnout (Maslach)\n\n1. **Emotional Exhaustion** — Feeling depleted by the emotional demands of work\n2. **Depersonalization** — Developing a detached or cynical attitude toward clients\n3. **Reduced Personal Accomplishment** — Feeling ineffective and questioning the value of your work\n\n## Secondary Traumatic Stress vs. Compassion Fatigue\n\n- **Secondary Traumatic Stress**: Trauma symptoms that emerge from repeated exposure to clients' trauma\n- **Compassion Fatigue**: Gradual erosion of the capacity for empathy through overextension\n- Both require early identification and active intervention\n\n## Prevention Strategies by Dimension\n\n### Agentic\n- Set clear professional boundaries and practice saying no\n- Identify what is within and outside your control\n- Celebrate professional accomplishments explicitly\n\n### Somatic\n- Non-negotiable physical health practices (sleep, movement, nutrition)\n- Regular nervous system reset practices between clients\n- Annual health assessment as a professional requirement for yourself\n\n### Emotional\n- Regular professional supervision or peer consultation\n- Personal therapy as a professional tool, not a personal failure\n- Grief rituals for difficult cases and professional losses\n\n### Cognitive\n- Continuous learning to maintain intellectual engagement\n- Novelty and variety in caseload and professional activities\n- Regular reflection on professional growth and learning\n\n### Relational\n- A community of practice — peers who understand your work\n- Mentor relationships (both giving and receiving mentorship)\n- Clear separation between professional and personal relational roles\n\n### Spiritual\n- Regular connection to your professional why\n- Meaning-making practices after difficult case outcomes\n- Service beyond direct practice (teaching, advocacy, community)",
+        "keyTakeaways": [
+          "Burnout has three measurable dimensions: exhaustion, depersonalization, reduced accomplishment",
+          "Secondary traumatic stress and compassion fatigue require early identification",
+          "Prevention strategies exist for each of the six dimensions",
+          "Personal therapy and supervision are professional tools, not signs of inadequacy"
+        ],
+        "resources": [
+          { "title": "Maslach Burnout Inventory (MBI) Overview", "url": "/resources/burnout-inventory-overview.pdf" },
+          { "title": "Practitioner Sustainability Planning Guide", "url": "/resources/sustainability-planning.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m4-s3",
+        "sectionTitle": "Reflective Practice Habits",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Developing Reflective Practice Habits\n\nReflective practice — the disciplined habit of examining your professional actions and their effects — is the engine of continuous improvement in facilitation.\n\n## Levels of Reflection (Hatton & Smith)\n\n1. **Technical Reflection** — What happened? What did I do?\n2. **Practical Reflection** — Why did I make these choices? What were the outcomes?\n3. **Critical Reflection** — How do power, culture, and ethics shape my practice?\n\n## Daily Reflection Practice (10-15 minutes)\n\nAfter each session or work day:\n1. **Somatic check** — How is my body? What am I holding from today?\n2. **Emotional inventory** — What feelings came up? What do they tell me?\n3. **Key moment review** — What moment most stands out? Why?\n4. **Learning extraction** — What will I do differently next time?\n5. **Appreciation** — What went well? What am I grateful for?\n\n## Structured Reflection Tools\n\n### The DEAL Model (Describe, Examine, Articulate Learning)\n- **Describe**: What happened, as objectively as possible\n- **Examine**: Why did this happen? What were the dynamics?\n- **Articulate Learning**: What did I learn? How will I apply this?\n\n### The Kolb Cycle\n- **Concrete Experience** → **Reflective Observation** → **Abstract Conceptualization** → **Active Experimentation** → back to Concrete Experience\n\n## Peer Consultation as Reflective Practice\n\nRegular peer consultation amplifies reflective practice by:\n- Providing external perspectives on your blind spots\n- Normalizing the challenges of facilitation work\n- Generating collective wisdom about difficult cases\n- Building the relational dimension of your own resilience",
+        "keyTakeaways": [
+          "Three levels of reflection progress from technical to critical",
+          "Daily reflection practices prevent accumulation of unprocessed professional experience",
+          "Structured models like DEAL and Kolb's Cycle support deeper reflection",
+          "Peer consultation amplifies individual reflective practice"
+        ],
+        "resources": [
+          { "title": "Reflective Practice Journal Template", "url": "/resources/reflective-practice-journal.pdf" },
+          { "title": "Peer Consultation Protocol", "url": "/resources/peer-consultation-protocol.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m4-s4",
+        "sectionTitle": "Module 4 Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m4q1",
+              "question": "Which of Maslach's three dimensions of burnout involves developing a detached or cynical attitude toward clients?",
+              "answerType": "multiple-choice",
+              "options": ["Emotional Exhaustion", "Depersonalization", "Reduced Personal Accomplishment", "Compassion Fatigue"],
+              "correctAnswer": "Depersonalization",
+              "explanation": "Depersonalization — the development of a detached, cynical, or dehumanizing attitude toward clients — is the second dimension of Maslach's burnout model. It often emerges as a protective response to emotional exhaustion."
+            },
+            {
+              "questionId": "m4q2",
+              "question": "True or False: Personal therapy for practitioners is a sign of professional inadequacy.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "Personal therapy is a professional tool for helping professionals. Engaging in one's own therapeutic process is a mark of professional self-awareness and commitment to the quality of one's facilitation practice."
+            },
+            {
+              "questionId": "m4q3",
+              "question": "In the DEAL reflection model, what does 'A' stand for?",
+              "answerType": "multiple-choice",
+              "options": ["Analysis", "Application", "Articulate Learning", "Awareness"],
+              "correctAnswer": "Articulate Learning",
+              "explanation": "In the DEAL model, A stands for Articulate Learning — the step where the practitioner identifies what they have learned from the experience and how they will apply that learning going forward."
+            },
+            {
+              "questionId": "m4q4",
+              "question": "Secondary Traumatic Stress is best described as:",
+              "answerType": "multiple-choice",
+              "options": [
+                "Physical exhaustion from working long hours",
+                "Trauma symptoms that emerge from repeated exposure to clients' trauma",
+                "Cynicism about the effectiveness of helping interventions",
+                "A form of compassion fatigue affecting only senior practitioners"
+              ],
+              "correctAnswer": "Trauma symptoms that emerge from repeated exposure to clients' trauma",
+              "explanation": "Secondary Traumatic Stress refers to trauma symptoms — including intrusive thoughts, avoidance, and hyperarousal — that develop in practitioners through indirect exposure to clients' traumatic experiences."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "moduleNumber": 5,
+    "moduleName": "Practicum & Supervision",
+    "moduleDescription": "Prepare for supervised protocol delivery. Understand practicum requirements, peer review processes, competency demonstration standards, and portfolio development.",
+    "color": "#0891b2",
+    "bg": "#e0f2fe",
+    "estimatedDuration": 90,
+    "prerequisites": [1, 2, 3, 4],
+    "sections": [
+      {
+        "sectionId": "m5-s1",
+        "sectionTitle": "Practicum Requirements & Standards",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Practicum Requirements and Standards\n\nThe practicum component of TTF certification is where knowledge becomes practice. Three supervised sessions are required, each demonstrating increasing competency across the IATLAS dimensions.\n\n## Practicum Overview\n\nYou are required to:\n1. **Deliver three IATLAS protocol sessions** — with real clients, students, families, or groups\n2. **Record each session** — video recording for supervisor review\n3. **Write a reflection** — guided reflection after each session\n4. **Receive supervisor feedback** — your assigned supervisor reviews each submission\n5. **Implement feedback** — demonstrate growth across sessions\n\n## Session Options\n\nYou may deliver any of the following IATLAS protocols:\n- **Individual Adult Session** — One-on-one dimensional assessment + intervention\n- **Individual Child/Adolescent Session** — Age-adapted dimensional work\n- **Family Session** — Family systems dimensional assessment + intervention\n- **Group Session** — Group resilience facilitation (minimum 3 participants)\n- **Teams Protocol** — Organizational resilience facilitation\n\n## Competency Standards\n\nEach session is evaluated across seven competency areas:\n1. Trauma-informed facilitation\n2. Cultural responsiveness\n3. Protocol fidelity\n4. Group dynamics management (for group sessions)\n5. Dimensional assessment interpretation\n6. Micropractice design\n7. Ethical practice\n\n## Recording and Privacy Requirements\n\n- All recordings require written informed consent from participants\n- Use encrypted upload only (provided in the practicum submission portal)\n- Recordings are reviewed only by your assigned supervisor\n- Recordings are deleted 90 days after certification is granted",
+        "keyTakeaways": [
+          "Three supervised practicum sessions are required for certification",
+          "Video recording with informed consent is required for all sessions",
+          "Competency is evaluated across seven distinct areas",
+          "Feedback from supervisors must be reflected in subsequent sessions"
+        ],
+        "resources": [
+          { "title": "Informed Consent Template for Practicum Recording", "url": "/resources/practicum-consent-form.pdf" },
+          { "title": "Practicum Competency Rubric", "url": "/resources/practicum-competency-rubric.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m5-s2",
+        "sectionTitle": "Peer Review & Feedback Processes",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Peer Review and Feedback in the TTF Community\n\nThe TTF certification community is built on a culture of peer support and collaborative learning. Peer review is not evaluation — it is a gift of perspective.\n\n## Peer Observation Protocol\n\nDuring your cohort experience, you will have opportunities to observe and be observed by peers. The Peer Observation Protocol includes:\n\n### As the Observer\n1. **Prepare** — Review the facilitator's goals for the session\n2. **Observe** — Notice what you see, not just what you think about what you see\n3. **Document** — Use the structured observation form\n4. **Debrief** — Follow the feedback protocol (see below)\n\n### Feedback Protocol: \"I see, I wonder, I appreciate\"\n- **I see**: Specific, observable behaviors (not interpretations)\n  - \"I saw you make eye contact with each member of the group during the opening.\"\n- **I wonder**: Curious questions, not criticisms\n  - \"I wonder what prompted the shift from the somatic activity to the cognitive piece — what were you noticing?\"\n- **I appreciate**: Genuine recognition of strengths\n  - \"I appreciate the way you held the silence after the difficult disclosure — that took courage.\"\n\n## Receiving Feedback\n\nReceiving feedback well is a skill that directly relates to the Agentic-Generative and Emotional-Reflective dimensions:\n- Listen fully before responding\n- Ask clarifying questions before defending\n- Identify one specific action you will take based on the feedback\n- Express genuine appreciation, even when feedback is difficult to hear",
+        "keyTakeaways": [
+          "Peer review is a gift of perspective, not an evaluation",
+          "The 'I see, I wonder, I appreciate' protocol structures effective feedback",
+          "Receiving feedback requires the same skill as giving it",
+          "Peer observation is connected to multiple IATLAS dimensions"
+        ],
+        "resources": [
+          { "title": "Peer Observation Form", "url": "/resources/peer-observation-form.pdf" },
+          { "title": "Feedback and Receiving Feedback Guide", "url": "/resources/feedback-guide.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m5-s3",
+        "sectionTitle": "Portfolio Development",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Building Your TTF Portfolio\n\nYour portfolio is the capstone document of your TTF certification journey. It demonstrates your learning, growth, and readiness to facilitate IATLAS protocols with competence and integrity.\n\n## Portfolio Components\n\n### 1. Reflection Essay (500-1000 words)\nAddress the following questions:\n- How has the TTF program changed your understanding of resilience?\n- What was the most significant moment in your learning journey?\n- How will you integrate IATLAS facilitation into your professional practice?\n- What dimension of your own resilience has grown most through this program?\n\n### 2. Personal Resilience Growth Plan\n- Your dimensional self-assessment (before and after the program)\n- A six-dimension growth plan for the next year\n- Specific practices you are committed to\n\n### 3. Three Practicum Reflection Summaries\nFor each practicum session, a 200-300 word reflection addressing:\n- What protocol did you deliver, and to whom?\n- What went well?\n- What would you do differently?\n- How did your supervisor's feedback influence your growth?\n\n### 4. Sample Intervention Plan\nA de-identified individualized intervention plan demonstrating your ability to:\n- Interpret dimensional assessment results\n- Set measurable, values-aligned goals\n- Select appropriate protocols\n- Plan for progress monitoring\n\n## Portfolio Submission\n\nUpload all components as a single PDF or as individual documents through the assessment portal. Your assessor will review the portfolio prior to or concurrent with the final competency assessment.",
+        "keyTakeaways": [
+          "The portfolio documents your learning and demonstrates certification readiness",
+          "Four required components: reflection essay, growth plan, practicum summaries, intervention plan",
+          "All client information must be de-identified",
+          "The portfolio precedes or accompanies the final competency assessment"
+        ],
+        "resources": [
+          { "title": "Portfolio Template and Guidelines", "url": "/resources/portfolio-template.pdf" },
+          { "title": "De-identification Protocol", "url": "/resources/de-identification-protocol.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m5-s4",
+        "sectionTitle": "Module 5 Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m5q1",
+              "question": "How many supervised practicum sessions are required for TTF certification?",
+              "answerType": "multiple-choice",
+              "options": ["1", "2", "3", "5"],
+              "correctAnswer": "3",
+              "explanation": "Three supervised practicum sessions are required. Each session must be video recorded, accompanied by a written reflection, reviewed by a supervisor, and approved before the next session can be submitted."
+            },
+            {
+              "questionId": "m5q2",
+              "question": "In the 'I see, I wonder, I appreciate' feedback protocol, 'I see' statements should be:",
+              "answerType": "multiple-choice",
+              "options": [
+                "Interpretations of what the observer believes the facilitator was thinking",
+                "Specific, observable behaviors without interpretation",
+                "Questions about why the facilitator made certain choices",
+                "Evaluative judgments about the session's effectiveness"
+              ],
+              "correctAnswer": "Specific, observable behaviors without interpretation",
+              "explanation": "'I see' statements describe specific, observable behaviors without adding interpretation. This grounds the feedback in shared observation rather than subjective interpretation, making it easier to receive and act on."
+            },
+            {
+              "questionId": "m5q3",
+              "question": "How long after certification are practicum recordings deleted?",
+              "answerType": "multiple-choice",
+              "options": ["30 days", "60 days", "90 days", "1 year"],
+              "correctAnswer": "90 days",
+              "explanation": "Practicum recordings are deleted 90 days after certification is granted, in compliance with privacy and data protection requirements."
+            },
+            {
+              "questionId": "m5q4",
+              "question": "True or False: The portfolio reflection essay should include client-identifying information to demonstrate real-world application.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "All client information in portfolio materials must be de-identified. The portfolio can demonstrate real-world application while protecting client privacy and confidentiality."
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "moduleNumber": 6,
+    "moduleName": "Certification & Professional Practice",
+    "moduleDescription": "Complete your certification journey. Understand the final competency assessment, credential maintenance requirements, professional community participation, and pathways for ongoing growth as a certified TTF facilitator.",
+    "color": "#7c3aed",
+    "bg": "#f5f3ff",
+    "estimatedDuration": 90,
+    "prerequisites": [1, 2, 3, 4, 5],
+    "sections": [
+      {
+        "sectionId": "m6-s1",
+        "sectionTitle": "Preparing for the Competency Assessment",
+        "contentType": "reading",
+        "duration": 25,
+        "content": "# Preparing for the Final Competency Assessment\n\nThe final competency assessment is a strengths-based conversation with a trained assessor. It is designed to celebrate your growth and confirm your readiness to represent the IATLAS TTF program as a certified facilitator.\n\n## Assessment Prerequisites\n\nBefore scheduling your assessment, ensure you have completed:\n- ✅ All six TTF modules (100%)\n- ✅ Personal resilience assessment (IATLAS Dimensional Assessment)\n- ✅ Three supervised practicum sessions (all approved by supervisor)\n- ✅ All portfolio components submitted\n\n## What the Assessment Involves\n\n### Competency Rubric Review\nYour assessor will evaluate you across seven competency areas using a 1-4 scale:\n- **1**: Does not yet demonstrate this competency\n- **2**: Developing this competency — shows understanding but inconsistent application\n- **3**: Proficient — consistently demonstrates this competency\n- **4**: Exemplary — models this competency and can teach it to others\n\nYou must achieve an average score of ≥3.0 (85th percentile) to earn certification.\n\n### Portfolio Review\nYour assessor will have reviewed your portfolio before the assessment. They may ask you to:\n- Elaborate on your reflection essay\n- Walk through your sample intervention plan\n- Discuss your practicum growth across three sessions\n\n### Optional Oral Reflection\nSome assessors conduct a brief Zoom conversation to complement the written portfolio. This is not an interrogation — it is a dialogue about your practice and growth.\n\n## Preparing Yourself\n\n- Review your practicum feedback and identify your growth arc across three sessions\n- Re-read your reflection essay and ensure it authentically represents your learning\n- Practice describing your facilitation approach in clear, accessible language\n- Regulate: this is a celebration of your work, not a gatekeeping examination",
+        "keyTakeaways": [
+          "All prerequisites must be complete before scheduling the assessment",
+          "The 1-4 competency scale requires an average of ≥3.0 to pass",
+          "Assessment is a dialogue about your growth, not an interrogation",
+          "The portfolio is reviewed by the assessor before the assessment conversation"
+        ],
+        "resources": [
+          { "title": "Competency Assessment Rubric", "url": "/resources/competency-assessment-rubric.pdf" },
+          { "title": "Assessment Preparation Checklist", "url": "/resources/assessment-preparation-checklist.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m6-s2",
+        "sectionTitle": "Your TTF Credential & What It Means",
+        "contentType": "reading",
+        "duration": 20,
+        "content": "# Your TTF Credential and What It Represents\n\nUpon passing the competency assessment, you will receive the IATLAS Train the Facilitator (TTF) Certification — a credential that represents your demonstrated competency to facilitate IATLAS resilience protocols.\n\n## What Your Credential Confirms\n\nYour TTF Certification confirms that you have:\n- Completed comprehensive training in the six-dimensional resilience framework\n- Demonstrated competency in trauma-informed, culturally responsive facilitation\n- Delivered three supervised protocol sessions\n- Developed a personal resilience practice\n- Committed to ethical practice standards\n\n## Credential Details\n\n- **Credential ID**: A unique alphanumeric identifier for public verification\n- **Issue Date**: The date your certification was granted\n- **Expiry Date**: One year from issue date (annual renewal required)\n- **Public Verification**: Anyone can verify your credential at /iatlas/ttf/verify/[your-credential-id]\n\n## Using Your Credential\n\nYou may use the TTF designation in:\n- Professional bios and resumes\n- Business cards and websites\n- LinkedIn profile (share directly from the certificate page)\n- Grant applications and program proposals\n- Service descriptions and marketing materials\n\n## Ethical Responsibilities\n\nWith certification comes responsibility:\n- Represent the IATLAS framework accurately\n- Maintain your own dimensional resilience practice\n- Practice within your scope of competence\n- Seek supervision for challenging cases\n- Report any ethical concerns to the IATLAS program",
+        "keyTakeaways": [
+          "TTF Certification has a unique credential ID that can be publicly verified",
+          "Credentials expire annually — renewal maintains currency and accountability",
+          "The credential can be shared on LinkedIn and used in professional materials",
+          "Certification carries ethical responsibilities to clients, the field, and the IATLAS community"
+        ],
+        "resources": [
+          { "title": "TTF Ethical Guidelines", "url": "/resources/ttf-ethical-guidelines.pdf" },
+          { "title": "Using Your Credential Guide", "url": "/resources/using-your-ttf-credential.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m6-s3",
+        "sectionTitle": "Credential Renewal & Community of Practice",
+        "contentType": "reading",
+        "duration": 20,
+        "content": "# Credential Renewal and Community of Practice\n\nTTF Certification requires annual renewal — not as a bureaucratic formality, but as a commitment to continued growth, accountability, and community engagement.\n\n## Annual Renewal Requirements\n\nTo renew your TTF credential, you must complete:\n1. **10 CEU hours** — Training relevant to trauma-informed resilience facilitation\n2. **Annual self-assessment** — Updated dimensional self-assessment and growth plan\n3. **Community of practice participation** — Documented engagement with the TTF community\n\n## Community of Practice\n\nThe TTF Community of Practice is a living resource for certified facilitators:\n\n### Regular Offerings\n- **Monthly Practice Circle** (90 minutes) — Case consultation in a peer group\n- **Quarterly Training** — Advanced skill development and new protocol releases\n- **Annual TTF Summit** — Full-day convening of the TTF community\n\n### How to Engage\n- Attend live events (or access recordings)\n- Participate in the online community channel\n- Present a case or learning at a Practice Circle\n- Mentor a newer TTF candidate\n\n## Pathways for Advanced Practice\n\nAfter certification, several advanced pathways are available:\n- **TTF Supervisor Track** — Train to supervise practicum sessions for future candidates\n- **TTF Assessor Track** — Train to conduct final competency assessments\n- **IATLAS Trainer Track** — License to deliver TTF training to others\n- **Research Collaboration** — Participate in IATLAS outcomes research",
+        "keyTakeaways": [
+          "Annual renewal requires 10 CEU hours, self-assessment, and community participation",
+          "The Community of Practice offers ongoing learning and support",
+          "Multiple advanced pathways are available after initial certification",
+          "Renewal is a commitment to continuous growth, not a bureaucratic requirement"
+        ],
+        "resources": [
+          { "title": "CEU Tracking Template", "url": "/resources/ceu-tracking-template.pdf" },
+          { "title": "Community of Practice Schedule", "url": "/resources/cop-schedule.pdf" }
+        ]
+      },
+      {
+        "sectionId": "m6-s4",
+        "sectionTitle": "Module 6 Final Knowledge Check",
+        "contentType": "quiz",
+        "duration": 15,
+        "keyTakeaways": [],
+        "resources": [],
+        "quiz": {
+          "passingScore": 80,
+          "questions": [
+            {
+              "questionId": "m6q1",
+              "question": "What average competency score is required to pass the final TTF assessment?",
+              "answerType": "multiple-choice",
+              "options": ["2.0", "2.5", "3.0", "4.0"],
+              "correctAnswer": "3.0",
+              "explanation": "An average competency score of ≥3.0 (equivalent to the 85th percentile) across all seven competency areas is required to pass the final TTF competency assessment."
+            },
+            {
+              "questionId": "m6q2",
+              "question": "How long is the TTF certification valid before renewal is required?",
+              "answerType": "multiple-choice",
+              "options": ["6 months", "1 year", "2 years", "5 years"],
+              "correctAnswer": "1 year",
+              "explanation": "TTF Certification expires one year from the issue date. Annual renewal requires 10 CEU hours, an updated self-assessment, and documented community of practice participation."
+            },
+            {
+              "questionId": "m6q3",
+              "question": "True or False: Certified TTF facilitators may train others to deliver TTF without any additional licensing.",
+              "answerType": "true-false",
+              "options": ["True", "False"],
+              "correctAnswer": "False",
+              "explanation": "To deliver TTF training to others, certified facilitators must complete the IATLAS Trainer Track — an advanced pathway that provides licensing to train new TTF candidates. Basic TTF certification does not include trainer licensing."
+            },
+            {
+              "questionId": "m6q4",
+              "question": "Which of the following is NOT a required component for annual TTF renewal?",
+              "answerType": "multiple-choice",
+              "options": [
+                "10 CEU hours",
+                "Annual self-assessment",
+                "Community of practice participation",
+                "A second practicum submission"
+              ],
+              "correctAnswer": "A second practicum submission",
+              "explanation": "Annual renewal requires 10 CEU hours, an updated self-assessment, and community of practice participation. Practicum submissions are only required during initial certification, not for renewal."
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

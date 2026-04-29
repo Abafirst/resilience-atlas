@@ -108,6 +108,14 @@ const ResearchExportPage               = lazy(() => import('./pages/ResearchExpo
 const SupportTicketsPage               = lazy(() => import('./pages/SupportTicketsPage.jsx'));
 const SupportTicketDetailPage          = lazy(() => import('./pages/SupportTicketDetailPage.jsx'));
 const IATLASVideoLibrary               = lazy(() => import('./pages/IATLASVideoLibrary.jsx'));
+const TTFEnrollPage                    = lazy(() => import('./pages/ttf/TTFEnrollPage.jsx'));
+const TTFDashboardPage                 = lazy(() => import('./pages/ttf/TTFDashboardPage.jsx'));
+const TTFModulePage                    = lazy(() => import('./pages/ttf/TTFModulePage.jsx'));
+const TTFPracticumPage                 = lazy(() => import('./pages/ttf/TTFPracticumPage.jsx'));
+const TTFAssessmentPage                = lazy(() => import('./pages/ttf/TTFAssessmentPage.jsx'));
+const TTFCertificatePage               = lazy(() => import('./pages/ttf/TTFCertificatePage.jsx'));
+const TTFVerifyPage                    = lazy(() => import('./pages/ttf/TTFVerifyPage.jsx'));
+const TTFAdminPage                     = lazy(() => import('./pages/ttf/TTFAdminPage.jsx'));
 import SupportWidget from './components/Support/SupportWidget.jsx';
 import MiniAssessment from './components/IATLAS/MiniAssessment.jsx';
 import MiniAssessmentHistory from './components/IATLAS/MiniAssessmentHistory.jsx';
@@ -429,6 +437,15 @@ function AppShell() {
           <Route path="/iatlas/curriculum/:dimensionKey" element={<DimensionCurriculumPage />} />
           <Route path="/iatlas/skills/:dimensionKey/:skillId" element={<SkillModulePage />} />
           <Route path="/iatlas/train-the-facilitator" element={<TrainTheFacilitatorPage />} />
+          {/* TTF Certification System */}
+          <Route path="/iatlas/ttf/enroll"               element={<TTFEnrollPage />} />
+          <Route path="/iatlas/ttf/dashboard"            element={<TTFDashboardPage />} />
+          <Route path="/iatlas/ttf/module/:moduleNumber" element={<TTFModulePage />} />
+          <Route path="/iatlas/ttf/practicum"            element={<TTFPracticumPage />} />
+          <Route path="/iatlas/ttf/assessment"           element={<TTFAssessmentPage />} />
+          <Route path="/iatlas/ttf/certificate"          element={<TTFCertificatePage />} />
+          <Route path="/iatlas/ttf/verify/:credentialId" element={<TTFVerifyPage />} />
+          <Route path="/iatlas/ttf/admin"                element={<TTFAdminPage />} />
           {/* Analytics Dashboard */}
           <Route path="/analytics" element={<AnalyticsDashboardPage />} />
           <Route path="/iatlas/analytics" element={<AnalyticsDashboardPage />} />
@@ -437,8 +454,6 @@ function AppShell() {
           <Route path="/activity-logs" element={<ActivityLogsPage />} />
           <Route path="/invite/accept" element={<AcceptInvitationPage />} />
           <Route path="/access-denied" element={<AccessDeniedPage />} />
-          {/* Train the Facilitator */}
-          <Route path="/iatlas/train-the-facilitator" element={<TrainTheFacilitatorPage />} />
           {/* Practice Management Interface */}
           <Route path="/iatlas/practice/dashboard" element={<PracticeDashboardPage />} />
           <Route path="/iatlas/practice/clients" element={<PracticeClientsPage />} />
