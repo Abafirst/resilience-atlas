@@ -644,7 +644,7 @@ export default function ResearchPage() {
               <img src="/icons/spiritual-reflective.svg" alt="" className="icon icon-xl" />
             </div>
             <h2 className="author-name" id="author-heading">Janeen Molchany, Ph.D., BCBA</h2>
-            <p className="author-title">Founder &amp; Chief Resilience Scientist — The Resilience Atlas&#8482;</p>
+            <p className="author-title">Owner, Developer, and Researcher — The Resilience Atlas&#8482;</p>
             <p className="author-bio">
               The Resilience Atlas&#8482; framework was developed as part of Janeen's 2013 doctoral dissertation —
               a comprehensive mixed-methods study of resilience drawing on 18 resilience exemplars and 6
