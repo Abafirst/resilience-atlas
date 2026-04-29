@@ -890,7 +890,7 @@ const FAQS = [
   },
   {
     q: 'Is this program accredited or does it provide CEUs?',
-    a: 'We are actively pursuing CEU accreditation for several professional licensing boards. Details will be announced at launch. The program is designed to meet the continuing education standards of multiple professional fields.',
+    a: 'We are actively pursuing CEU accreditation for BACB (Behavior Analyst Certification Board). BACB ACE approval is currently pending. Details will be announced at launch. The program is designed to meet the continuing education standards for BCBAs, BCaBAs, and RBTs.',
   },
   {
     q: 'How is the TTF credential maintained?',
