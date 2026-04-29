@@ -12,7 +12,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProfiles } from '../../../contexts/ProfileContext.jsx';
 import AddChildModal from '../Profiles/AddChildModal.jsx';
-import PrintExportButton from '../PrintExportButton.jsx';
+import EditProfileModal from '../Profiles/EditProfileModal.jsx';
+import { exportFamilyReportAsCSV } from '../../../utils/familyReportExport.js';
 import {
   loadKidsProgress,
   getTotalKidsStars,
@@ -238,6 +239,20 @@ const STYLES = `
   gap: .6rem;
   margin-bottom: .65rem;
 }
+.fd-child-edit-btn {
+  margin-left: auto;
+  background: none;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #94a3b8;
+  padding: .15rem .4rem;
+  line-height: 1;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.fd-child-edit-btn:hover { color: #6366f1; border-color: #c7d2fe; background: #eef2ff; }
 .fd-child-avatar {
   font-size: 1.6rem;
   line-height: 1;
@@ -576,6 +591,7 @@ export default function FamilyDashboard() {
   const { profiles, loading: profilesLoading, error: profilesError, errorCode: profilesErrorCode, switchProfile, refreshProfiles, loginWithRedirect } = useProfiles();
 
   const [showAddChild,    setShowAddChild]    = useState(false);
+  const [editingProfile,  setEditingProfile]  = useState(null);
   const [activeTab,       setActiveTab]       = useState('overview');
   const [feedFilter,      setFeedFilter]      = useState('all'); // 'all' | profileId
   const [feedSort,        setFeedSort]        = useState('recent'); // 'recent' | 'stars'
@@ -845,12 +861,13 @@ export default function FamilyDashboard() {
             >
               Protocol Library
             </Link>
-            <PrintExportButton
-              resourceType="family_report"
-              resourceData={{ summaryMetrics, profileData, rangeKey: 'all time' }}
-              label="Export Family Report"
-              variant="secondary"
-            />
+            <button
+              className="fd-action-btn fd-action-btn-ghost"
+              onClick={() => exportFamilyReportAsCSV(summaryMetrics, profileData)}
+              aria-label="Export family progress report"
+            >
+              📊 Export Report
+            </button>
           </div>
         </section>
 
@@ -912,12 +929,20 @@ export default function FamilyDashboard() {
                     >
                       <div className="fd-child-card-header">
                         <span className="fd-child-avatar" aria-hidden="true"><img src={profile.avatar || '/icons/kids-spark.svg'} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'contain' }} /></span>
-                        <div>
+                        <div style={{ flex: 1 }}>
                           <p className="fd-child-name">{profile.name}</p>
                           {profile.ageGroup && (
                             <p className="fd-child-age">Ages {profile.ageGroup.replace('-', '–')}</p>
                           )}
                         </div>
+                        <button
+                          className="fd-child-edit-btn"
+                          onClick={e => { e.stopPropagation(); setEditingProfile(profile.profileId); }}
+                          aria-label={`Edit ${profile.name}'s profile`}
+                          title="Edit profile"
+                        >
+                          ⋯
+                        </button>
                       </div>
                       <div className="fd-child-stats">
                         <span className="fd-child-stat"><img src="/icons/success.svg" alt="" aria-hidden="true" className="icon icon-sm" /> {totalCompleted} done</span>
@@ -1315,6 +1340,19 @@ export default function FamilyDashboard() {
           currentCount={profiles.length}
         />
       )}
+
+      {/* ── Edit Profile Modal ── */}
+      {editingProfile && (() => {
+        const prof = profiles.find(p => p.profileId === editingProfile);
+        return prof ? (
+          <EditProfileModal
+            profile={prof}
+            onClose={() => setEditingProfile(null)}
+            onUpdated={() => { setEditingProfile(null); refreshProfiles(); }}
+            onDeleted={() => { setEditingProfile(null); refreshProfiles(); }}
+          />
+        ) : null;
+      })()}
     </>
   );
 }

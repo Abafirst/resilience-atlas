@@ -16,10 +16,11 @@ const express   = require('express');
 const router    = express.Router();
 const rateLimit = require('express-rate-limit');
 
-const { authenticateJWT } = require('../middleware/auth');
-const ChildProfile        = require('../models/ChildProfile');
-const IATLASProgress      = require('../models/IATLASProgress');
-const logger              = require('../utils/logger');
+const { authenticateJWT }      = require('../middleware/auth');
+const { requireIATLASTier }    = require('../middleware/iatlasAuth');
+const ChildProfile             = require('../models/ChildProfile');
+const IATLASProgress           = require('../models/IATLASProgress');
+const logger                   = require('../utils/logger');
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 
@@ -33,6 +34,7 @@ const parentLimiter = rateLimit({
 
 router.use(parentLimiter);
 router.use(authenticateJWT);
+router.use(requireIATLASTier('individual'));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

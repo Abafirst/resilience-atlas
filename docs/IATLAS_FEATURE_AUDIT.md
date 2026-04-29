@@ -1,6 +1,6 @@
 # IATLAS Feature Audit & Development Roadmap
 
-**Last Updated:** April 2026 (Sprint 1 complete)  
+**Last Updated:** April 2026 (Sprint 3 complete — production polish)  
 **Purpose:** Audit all advertised IATLAS features against current implementation, identify gaps, and prioritize the next 3 months of development.
 
 ---
@@ -42,13 +42,19 @@ IATLAS is a separate subscription product from Atlas Start / Atlas Navigator. It
 2. ✅ **Family Challenges UI polish** — dimension icon rendering fixed across all 3 pages (`FamilyChallengesPage.jsx`, `FamilyChallengeDetailPage.jsx`, `FamilyChallengePreview.jsx`); `DIMENSION_ICONS` corrected (somatic uses `somatic-regulative.svg`; spiritual-existential uses `spiritual-reflective.svg`); dimension badge added to `ChallengeCard`
 3. ✅ **Parent Dashboard → Caregiver Learning link** — `ParentDashboardPage.jsx` now includes a Caregiver Learning card that navigates to `/iatlas/caregiver-learning`
 
+### Sprint 3 Completed (April 2026) — Production Polish
+
+1. ✅ **Server-side tier enforcement middleware** — `backend/middleware/iatlasAuth.js` with `requireIATLASTier(minTier)` hierarchy-based factory; applied to `/api/iatlas/parent` routes (Individual tier minimum); tier bypass via localStorage is no longer possible
+2. ✅ **Edit Profile Modal wired** — `EditProfileModal.jsx` connected to `FamilyDashboard.jsx`; "⋯" button on every child card opens the full edit modal (name, avatar, age group, gender, clinical details, preferences); soft-delete confirmed via UI dialog
+3. ✅ **Family Report CSV export** — `client/src/utils/familyReportExport.js` utility created; "📊 Export Report" button in Family Dashboard generates a dated CSV with per-child progress metrics
+4. ✅ **Backend tier config `comingSoon` flags** — `backend/config/tiers.js` updated; `complete`, `practitioner`, `practice`, and `enterprise` tiers all carry `comingSoon: true`, matching the frontend `iatlasGating.js` configuration
+
 ### Remaining Priority Gaps
 
 1. 🔴 **Critical:** Practice & Enterprise tier features — entirely absent
 2. 🟠 **High:** Advanced progress analytics (Complete tier) — not built
 3. 🟠 **High:** ABA protocol library UI (Practitioner) — content exists in IARF; no UI
 4. 🟠 **High:** Clinical assessments & session plans (Practitioner) — not built
-5. 🟡 **Medium:** Progress backend persistence (`/api/iatlas/progress`) — localStorage only
 
 ### Infrastructure Summary
 
