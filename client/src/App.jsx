@@ -29,7 +29,6 @@ import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
-import IATLASPricingPage from './pages/IATLASPricingPage.jsx';
 
 // New migrated pages
 import AboutPage from './pages/AboutPage.jsx';
