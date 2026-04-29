@@ -80,6 +80,7 @@ Set the following in Railway (or your hosting provider's environment config):
 
 - [ ] Repeat the checkout test selecting the **Family** tier directly
 - [ ] Confirm up to 5 child profiles can be created
+- [x] **Family tier is ✅ 100% PRODUCTION READY** — backend tier enforcement, edit profile modal, and CSV export all implemented (Sprint 3)
 
 ### "Coming Soon" Tiers — Waitlist Button
 
