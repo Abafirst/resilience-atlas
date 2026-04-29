@@ -23,7 +23,7 @@ const TIER_DISPLAY = {
   enterprise:   'IATLAS Enterprise',
 };
 
-export default function PaywallModal({ requiredTier, currentTier, onClose }) {
+export default function PaywallModal({ requiredTier, currentTier, onClose, feature = 'practice_dashboard' }) {
   const overlayRef = useRef(null);
 
   // Track paywall impression on mount
@@ -31,9 +31,9 @@ export default function PaywallModal({ requiredTier, currentTier, onClose }) {
     track('Paywall Shown', {
       requiredTier,
       currentTier,
-      feature: 'practice_dashboard',
+      feature,
     });
-  }, [requiredTier, currentTier]);
+  }, [requiredTier, currentTier, feature]);
 
   // Close on Escape key
   useEffect(() => {

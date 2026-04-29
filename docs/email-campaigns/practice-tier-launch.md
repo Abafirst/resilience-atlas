@@ -8,6 +8,21 @@ Three-email launch sequence for the IATLAS Practice tier.
 
 ---
 
+## SendGrid Merge Tags
+
+The following dynamic merge tags are used in the email templates. Ensure they are populated from your contact list or event data:
+
+| Tag | Description | Required In |
+|-----|-------------|-------------|
+| `{{first_name}}` | Subscriber's first name | Emails 1, 2, 3 |
+| `{{trial_end_date}}` | Formatted trial expiry date (e.g. "May 5, 2026") | Email 3 |
+
+In SendGrid, map these as **Custom Fields** on the contact record:
+- `first_name` — populated from Auth0 profile on registration
+- `trial_ends_at` — set when a trial is created; format as `MMMM D, YYYY` using [SendGrid Handlebars date helpers](https://docs.sendgrid.com/for-developers/sending-email/using-handlebars#format-date)
+
+---
+
 ## A/B Testing Strategy
 
 Split each send 50/50 on subject lines. Winning variant (highest open rate after 4 hours) is sent to the remaining list. Track with UTM parameters on all links.
