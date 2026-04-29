@@ -29,6 +29,7 @@ import Payment from './pages/Payment.jsx';
 import PaymentSuccess from './pages/PaymentSuccess.jsx';
 import ResultsPage from './pages/ResultsPage.jsx';
 import Auth0LoginBar from './components/Auth0LoginBar.jsx';
+import IATLASPricingPage from './pages/IATLASPricingPage.jsx';
 
 // New migrated pages
 import AboutPage from './pages/AboutPage.jsx';
@@ -360,6 +361,8 @@ function AppShell() {
           <Route path="/join" element={<JoinPage />} />
           <Route path="/teams" element={<TeamsLandingPage />} />
           <Route path="/pricing-teams" element={<PricingTeamsPage />} />
+          <Route path="/pricing" element={<IATLASPricingPage />} />
+          <Route path="/iatlas/pricing" element={<IATLASPricingPage />} />
           <Route path="/resources" element={<ResourcesPage />} />
 
           {/* Insight sub-pages */}

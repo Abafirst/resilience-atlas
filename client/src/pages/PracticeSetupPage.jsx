@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
 import apiFetch from '../lib/apiFetch.js';
+import { track } from '../lib/analytics.js';
 
 const PLANS = [
   {
@@ -98,6 +99,12 @@ export default function PracticeSetupPage() {
       const practice = data.practice;
       const practiceId = practice?._id || practice?.id || '';
 
+      track('Practice Created', {
+        plan,
+        seatLimit: SEAT_LIMITS[plan] || 5,
+        practiceName: practiceName.trim(),
+      });
+
       // Redirect to Stripe checkout for Practice tier
       const checkoutRes = await apiFetch('/api/iatlas/subscribe', {
         method: 'POST',
@@ -112,6 +119,11 @@ export default function PracticeSetupPage() {
 
       const { url } = await checkoutRes.json();
       if (url) {
+        track('Subscription Started', {
+          tier: 'practice',
+          plan,
+          amount: plan === 'practice-5' ? 399 : plan === 'practice-10' ? 699 : 1499,
+        });
         window.location.href = url;
       } else {
         // No Stripe configured — go directly to dashboard

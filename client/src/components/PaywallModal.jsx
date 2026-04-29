@@ -11,6 +11,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { track } from '../lib/analytics.js';
 
 const TIER_DISPLAY = {
   free:         'Free',
@@ -24,6 +25,15 @@ const TIER_DISPLAY = {
 
 export default function PaywallModal({ requiredTier, currentTier, onClose }) {
   const overlayRef = useRef(null);
+
+  // Track paywall impression on mount
+  useEffect(() => {
+    track('Paywall Shown', {
+      requiredTier,
+      currentTier,
+      feature: 'practice_dashboard',
+    });
+  }, [requiredTier, currentTier]);
 
   // Close on Escape key
   useEffect(() => {
@@ -121,7 +131,11 @@ export default function PaywallModal({ requiredTier, currentTier, onClose }) {
             Your current plan: <strong>{currentLabel}</strong>
           </p>
           <div className="paywall-actions">
-            <Link to="/pricing/iatlas" className="paywall-btn-primary">
+            <Link
+              to="/pricing/iatlas"
+              className="paywall-btn-primary"
+              onClick={() => track('Upgrade Clicked', { from: currentTier, to: requiredTier, source: 'paywall' })}
+            >
               View Plans &amp; Upgrade
             </Link>
             <button className="paywall-btn-close" onClick={onClose}>
