@@ -107,7 +107,7 @@ function intakeToForm(intake) {
       community:    intake.supportSystem?.community    || '',
     },
     therapyGoals: intake.therapyGoals?.length
-      ? [...intake.therapyGoals, '', ''].slice(0, Math.max(3, intake.therapyGoals.length))
+      ? [...intake.therapyGoals, ...Array(Math.max(0, 3 - intake.therapyGoals.length)).fill('')]
       : ['', '', ''],
     additionalNotes: intake.additionalNotes || '',
   };
@@ -135,9 +135,14 @@ export default function IntakeFormBuilder({ intake, onSave, onCancel, getTokenFn
   const [saved,         setSaved]          = useState(false);
 
   // Auto-save draft (create mode only).
+  // Excludes dateOfBirth to avoid storing sensitive data in localStorage.
   useEffect(() => {
     if (isEdit) return;
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(form)); } catch (_) {}
+    try {
+      // eslint-disable-next-line no-unused-vars
+      const { dateOfBirth, guardianName, guardianPhone, guardianEmail, ...draftSafe } = form;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draftSafe));
+    } catch (_) {}
   }, [form, isEdit]);
 
   // Focus first field on mount.

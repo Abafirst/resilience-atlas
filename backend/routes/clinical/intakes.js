@@ -264,10 +264,18 @@ router.get(
       const filter = { practitionerId, archived: false };
 
       if (clientIdentifier) {
+        // Ensure clientIdentifier is a plain string before using in a regex.
+        if (typeof clientIdentifier !== 'string') {
+          return res.status(400).json({ error: 'clientIdentifier must be a string.' });
+        }
         filter.clientIdentifier = new RegExp(escapeRegex(clientIdentifier), 'i');
       }
 
       if (clientProfileId) {
+        // Ensure clientProfileId is a plain string to prevent query injection.
+        if (typeof clientProfileId !== 'string') {
+          return res.status(400).json({ error: 'clientProfileId must be a string.' });
+        }
         filter.clientProfileId = clientProfileId;
       }
 
