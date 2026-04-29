@@ -200,6 +200,7 @@ function skillLevelToSlug(level) {
  * @param {boolean}  [props.showSkillRings]   — show proficiency rings (default true)
  * @param {boolean}  [props.showScorePolygon] — show score hexagon (default true)
  * @param {boolean}  [props.showNeedle]       — show diamond needle (default true)
+ * @param {boolean}  [props.showScores]       — show percentage score labels (default true)
  * @param {Function} [props.onDimensionClick] — called with dimension name on click
  */
 export default function IntegratedResilienceWheel({
@@ -209,6 +210,7 @@ export default function IntegratedResilienceWheel({
   showSkillRings    = true,
   showScorePolygon  = true,
   showNeedle        = true,
+  showScores        = true,
   onDimensionClick,
 }) {
   const navigate     = useNavigate();
@@ -752,20 +754,22 @@ export default function IntegratedResilienceWheel({
             {DIM_SHORT[i]}
           </text>
 
-          {/* Score percentage */}
-          <text
-            data-label-type="score-percentage"
-            x={ptLabel.x.toFixed(2)}
-            y={(ptLabel.y + 3).toFixed(2)}
-            fontSize={isDom ? 13 : 11}
-            fontWeight={isDom ? '700' : '400'}
-            fill={PAL.scoreText}
-            textAnchor={anchor}
-            dominantBaseline="middle"
-            fontFamily="Inter,system-ui,sans-serif"
-          >
-            {score}%
-          </text>
+          {/* Score percentage — hidden when showScores is false */}
+          {showScores && (
+            <text
+              x={ptLabel.x.toFixed(2)}
+              y={(ptLabel.y + 3).toFixed(2)}
+              fontSize={isDom ? 13 : 11}
+              fontWeight={isDom ? '700' : '400'}
+              fill={PAL.scoreText}
+              textAnchor={anchor}
+              dominantBaseline="middle"
+              fontFamily="Inter,system-ui,sans-serif"
+              data-score-label="true"
+            >
+              {score}%
+            </text>
+          )}
 
           {/* Skill level row */}
           <text
