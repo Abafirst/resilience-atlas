@@ -4,9 +4,12 @@
  * Route: /iatlas/practice/clients
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
+import PaywallModal from '../components/PaywallModal.jsx';
+import { requireActiveSubscription } from '../utils/iatlasGating.js';
+import { getAuth0CachedToken } from '../lib/apiFetch.js';
 
 const PRACTICE_NAV = [
   { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
@@ -87,6 +90,20 @@ export default function PracticeClientsPage() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
   const [selected, setSelected] = useState(null);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallInfo, setPaywallInfo] = useState({ currentTier: 'free', requiredTier: 'practice' });
+
+  useEffect(() => {
+    async function checkAccess() {
+      const token = getAuth0CachedToken();
+      const check = await requireActiveSubscription('practice', token);
+      if (!check.allowed) {
+        setPaywallInfo({ currentTier: check.currentTier, requiredTier: check.requiredTier });
+        setShowPaywall(true);
+      }
+    }
+    checkAccess();
+  }, []);
 
   const filtered = MOCK_CLIENTS.filter(c => {
     const q = search.toLowerCase();
@@ -97,6 +114,13 @@ export default function PracticeClientsPage() {
 
   return (
     <>
+      {showPaywall && (
+        <PaywallModal
+          requiredTier={paywallInfo.requiredTier}
+          currentTier={paywallInfo.currentTier}
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
       <SiteHeader activePage="iatlas" />
       <main style={{ minHeight: '100vh', background: '#f8fafc' }}>
         <style>{`

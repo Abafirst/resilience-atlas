@@ -12,10 +12,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import PaywallModal from '../components/PaywallModal.jsx';
 import TeamMembersTable from '../components/Practice/TeamMembersTable.jsx';
 import InvitePractitionerModal from '../components/Practice/InvitePractitionerModal.jsx';
 import SeatUsageIndicator from '../components/Practice/SeatUsageIndicator.jsx';
-import apiFetch from '../lib/apiFetch.js';
+import apiFetch, { getAuth0CachedToken } from '../lib/apiFetch.js';
+import { requireActiveSubscription } from '../utils/iatlasGating.js';
 
 const PRACTICE_NAV = [
   { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
@@ -138,6 +140,10 @@ export default function PracticeTeamPage() {
   const [tasks, setTasks]                   = useState(MOCK_TASKS);
   const [showNewThread, setShowNewThread]   = useState(false);
 
+  // Paywall state
+  const [showPaywall, setShowPaywall]     = useState(false);
+  const [paywallInfo, setPaywallInfo]     = useState({ currentTier: 'free', requiredTier: 'practice' });
+
   // Practice & members state
   const [practice, setPractice]           = useState(null);
   const [practitioners, setPractitioners] = useState([]);
@@ -185,6 +191,18 @@ export default function PracticeTeamPage() {
   }, [getAccessTokenSilently]);
 
   useEffect(() => { loadPractice(); }, [loadPractice]);
+
+  useEffect(() => {
+    async function checkAccess() {
+      const token = getAuth0CachedToken();
+      const check = await requireActiveSubscription('practice', token);
+      if (!check.allowed) {
+        setPaywallInfo({ currentTier: check.currentTier, requiredTier: check.requiredTier });
+        setShowPaywall(true);
+      }
+    }
+    checkAccess();
+  }, []);
 
   async function handleInvite(email, role) {
     if (!practice) return;
@@ -285,6 +303,13 @@ export default function PracticeTeamPage() {
 
   return (
     <>
+      {showPaywall && (
+        <PaywallModal
+          requiredTier={paywallInfo.requiredTier}
+          currentTier={paywallInfo.currentTier}
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
       <SiteHeader activePage="iatlas" />
       <main style={{ minHeight: '100vh', background: '#f8fafc' }}>
         <style>{`

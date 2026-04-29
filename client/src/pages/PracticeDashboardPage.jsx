@@ -4,10 +4,12 @@
  * Route: /iatlas/practice/dashboard
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
+import PaywallModal from '../components/PaywallModal.jsx';
 import apiFetch, { getAuth0CachedToken } from '../lib/apiFetch.js';
+import { requireActiveSubscription } from '../utils/iatlasGating.js';
 
 const VALID_DIMENSIONS = [
   { value: 'emotional-adaptive',    label: 'Emotional-Adaptive' },
@@ -63,9 +65,30 @@ const ALERTS = [
 
 export default function PracticeDashboardPage() {
   const [showAddClient, setShowAddClient] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallInfo, setPaywallInfo] = useState({ currentTier: 'free', requiredTier: 'practice' });
+
+  useEffect(() => {
+    async function checkAccess() {
+      const token = getAuth0CachedToken();
+      const check = await requireActiveSubscription('practice', token);
+      if (!check.allowed) {
+        setPaywallInfo({ currentTier: check.currentTier, requiredTier: check.requiredTier });
+        setShowPaywall(true);
+      }
+    }
+    checkAccess();
+  }, []);
 
   return (
     <>
+      {showPaywall && (
+        <PaywallModal
+          requiredTier={paywallInfo.requiredTier}
+          currentTier={paywallInfo.currentTier}
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
       <SiteHeader activePage="iatlas" />
       <main style={{ minHeight: '100vh', background: '#f8fafc' }}>
         <style>{`
