@@ -23,7 +23,7 @@ const TIER_DISPLAY = {
   enterprise:   'IATLAS Enterprise',
 };
 
-export default function PaywallModal({ requiredTier, currentTier, onClose }) {
+export default function PaywallModal({ requiredTier, currentTier, onClose, feature = 'practice_dashboard' }) {
   const overlayRef = useRef(null);
 
   // Track paywall shown event
