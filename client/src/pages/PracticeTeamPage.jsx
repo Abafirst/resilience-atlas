@@ -18,6 +18,7 @@ import InvitePractitionerModal from '../components/Practice/InvitePractitionerMo
 import SeatUsageIndicator from '../components/Practice/SeatUsageIndicator.jsx';
 import apiFetch, { getAuth0CachedToken } from '../lib/apiFetch.js';
 import { requireActiveSubscription } from '../utils/iatlasGating.js';
+import { track } from '../lib/analytics.js';
 
 const PRACTICE_NAV = [
   { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
@@ -222,9 +223,22 @@ export default function PracticeTeamPage() {
       }
       setInviteSuccess(`Invitation sent to ${email}`);
       setInviteUrl(data.inviteUrl || null);
+      track('Practitioner Invited', {
+        practiceId: practice._id,
+        role,
+        seatsUsed: practice.seatsUsed,
+        seatLimit: practice.seatLimit,
+      });
       loadPractice();
     } catch (err) {
       setInviteError(err.message);
+      if (err.message && /seat|capacity|limit/i.test(err.message)) {
+        track('Seat Limit Reached', {
+          plan: practice.plan,
+          seatLimit: practice.seatLimit,
+          upgradePrompted: true,
+        });
+      }
     } finally {
       setInviting(false);
     }
