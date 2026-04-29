@@ -157,7 +157,7 @@ function ProbabilityRing({ probability }) {
 
 // ── Tab: Activity Predictor ──────────────────────────────────────────────────
 
-function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
+function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim, getTokenFn }) {
   const [loading, setLoading]                 = useState(false);
   const [results, setResults]                 = useState(null);
   const [predictionId, setPredictionId]       = useState(null);
@@ -299,7 +299,7 @@ function ActivityPredictorTab({ selectedClient, selectedDim, setSelectedDim }) {
 
 // ── Tab: Regression Alerts ───────────────────────────────────────────────────
 
-function RegressionAlertsTab({ selectedClient }) {
+function RegressionAlertsTab({ selectedClient, getTokenFn }) {
   const [loading, setLoading]         = useState(false);
   const [results, setResults]         = useState(null);
   const [reviewed, setReviewed]       = useState({});
@@ -396,7 +396,7 @@ function RegressionAlertsTab({ selectedClient }) {
 
 // ── Tab: Session Frequency ────────────────────────────────────────────────────
 
-function SessionFrequencyTab({ selectedClient }) {
+function SessionFrequencyTab({ selectedClient, getTokenFn }) {
   const [loading, setLoading]         = useState(false);
   const [result, setResult]           = useState(null);
   const [error, setError]             = useState(null);
@@ -485,7 +485,7 @@ function SessionFrequencyTab({ selectedClient }) {
 
 // ── Tab: Goal Probability ─────────────────────────────────────────────────────
 
-function GoalProbabilityTab({ selectedClient, selectedDim }) {
+function GoalProbabilityTab({ selectedClient, selectedDim, getTokenFn }) {
   const [loading, setLoading]         = useState(false);
   const [result, setResult]           = useState(null);
   const [targetScore, setTarget]      = useState(75);
@@ -592,7 +592,7 @@ function GoalProbabilityTab({ selectedClient, selectedDim }) {
 
 // ── Tab: Treatment Plan ───────────────────────────────────────────────────────
 
-function TreatmentPlanTab({ selectedClient, selectedDim }) {
+function TreatmentPlanTab({ selectedClient, selectedDim, getTokenFn }) {
   const [loading, setLoading]           = useState(false);
   const [plan, setPlan]                 = useState(null);
   const [totalWeeks, setWeeks]          = useState(12);
@@ -832,6 +832,7 @@ const styles = {
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function PredictiveAnalyticsDashboardPage() {
+  const { getAccessTokenSilently } = useAuth0();
   const [activeTab,      setActiveTab]      = useState('activity');
   const [selectedClient, setClient]         = useState('');
   const [selectedDim,    setSelectedDim]    = useState('emotionalAdaptive');
