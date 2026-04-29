@@ -22,6 +22,7 @@ import ProgressTrackingTab from './ProgressTrackingTab.jsx';
 import SkillDevelopmentTab from './SkillDevelopmentTab.jsx';
 import ComparativeAnalyticsTab from './ComparativeAnalyticsTab.jsx';
 import ReportsTab from './ReportsTab.jsx';
+import PersonalAnalyticsTab from './PersonalAnalyticsTab.jsx';
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 
@@ -171,6 +172,7 @@ const TABS = [
   { key: 'skills',       label: 'Skills',       icon: '/icons/cognitive-narrative.svg' },
   { key: 'comparative',  label: 'Comparative',  icon: '/icons/org-leaderboards.svg' },
   { key: 'reports',      label: 'Reports',      icon: '/icons/journal.svg' },
+  { key: 'personal',     label: 'Personal Insights', icon: '/icons/strength.svg' },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -311,6 +313,11 @@ export default function AnalyticsDashboard() {
           {activeTab === 'reports' && (
             <section id="panel-reports" role="tabpanel" aria-labelledby="tab-reports">
               <ReportsTab profiles={profiles} rangeKey={rangeKey} />
+            </section>
+          )}
+          {activeTab === 'personal' && (
+            <section id="panel-personal" role="tabpanel" aria-labelledby="tab-personal">
+              <PersonalAnalyticsTab />
             </section>
           )}
         </main>

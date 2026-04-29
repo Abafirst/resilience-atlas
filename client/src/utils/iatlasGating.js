@@ -230,6 +230,20 @@ export function canCreateProfiles() {
 }
 
 /**
+ * Returns true if the user has the Complete tier or any professional tier.
+ * Complete tier is required for the Advanced Personal Analytics dashboard.
+ */
+export function hasCompleteAccess() {
+  const tier = getIATLASTier();
+  return [
+    IATLAS_TIERS.complete,
+    IATLAS_TIERS.practitioner,
+    IATLAS_TIERS.practice,
+    IATLAS_TIERS.enterprise,
+  ].includes(tier);
+}
+
+/**
  * Returns true if the user can add another child profile given the count they already have.
  * @param {number} currentCount  Number of existing (non-archived) profiles.
  */
