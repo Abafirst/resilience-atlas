@@ -87,6 +87,7 @@ import ContentRoadmapPage from './components/IATLAS/ContentRoadmapPage.jsx';
 import DevelopmentalRoadmapPage from './pages/DevelopmentalRoadmapPage.jsx';
 import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
+import IATLASSubscribePage from './pages/IATLASSubscribePage.jsx';
 
 // Heavy pages — code-split to reduce initial bundle size
 const PractitionerProtocolLibrary      = lazy(() => import('./pages/PractitionerProtocolLibrary.jsx'));
@@ -365,6 +366,7 @@ function AppShell() {
           <Route path="/pricing" element={<IATLASPricingPage />} />
           <Route path="/iatlas/pricing" element={<IATLASPricingPage />} />
           <Route path="/iatlas/waitlist" element={<IATLASWaitlistPage />} />
+          <Route path="/iatlas/subscribe" element={<IATLASSubscribePage />} />
           <Route path="/resources" element={<ResourcesPage />} />
 
           {/* Insight sub-pages */}
