@@ -445,6 +445,13 @@
 }
 
 /* Print button */
+.ppl-card-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 .ppl-print-btn {
   align-self: flex-start;
   background: transparent;
@@ -456,7 +463,6 @@
   padding: 0.4rem 0.85rem;
   cursor: pointer;
   transition: background 0.15s;
-  margin-top: 0.5rem;
 }
 
 .ppl-print-btn:hover {
@@ -472,11 +478,25 @@
   background: #334155;
 }
 
+/* Add to Session Plan button */
+.ppl-add-session-btn {
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.ppl-add-session-btn:hover { opacity: 0.75; }
+
 /* ── Print styles ────────────────────────────────────────────────────────── */
 @media print {
   .ppl-controls,
   .ppl-view-btn,
   .ppl-print-btn,
+  .ppl-add-session-btn,
   .ppl-breadcrumb {
     display: none !important;
   }
