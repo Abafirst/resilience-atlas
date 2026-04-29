@@ -436,17 +436,17 @@
     ctx.restore();
   }
 
-  // Semi-transparent fill alpha for each rainbow compass segment
-  var SEGMENT_FILL_ALPHA = 0.18;
+  // Semi-transparent fill alpha for each compass segment
+  var SEGMENT_FILL_ALPHA = 0.32;
 
-  // Dimension accent colors for the rainbow compass segments
+  // Dimension accent colors for the compass segments (soft, muted palette)
   var DIM_SEGMENT_COLORS = [
-    '#D97706',  // Agentic-Generative    — Amber
-    '#059669',  // Relational-Connective — Green
-    '#7C3AED',  // Spiritual-Reflective  — Purple
-    '#DC2626',  // Emotional-Adaptive    — Red
-    '#0891B2',  // Somatic-Regulative    — Cyan
-    '#4F46E5',  // Cognitive-Narrative   — Indigo
+    '#F8E4CC',  // Agentic-Generative    — soft peach/amber
+    '#D4EDDA',  // Relational-Connective — soft mint green
+    '#E8DAEF',  // Spiritual-Reflective  — soft lavender
+    '#F8D7DA',  // Emotional-Adaptive    — soft pink/rose
+    '#D1ECF1',  // Somatic-Regulative    — soft sky blue
+    '#E2E3F7',  // Cognitive-Narrative   — soft periwinkle
   ];
 
   // Data polygon — maps dimension scores onto the hexagonal axes with rainbow segments
