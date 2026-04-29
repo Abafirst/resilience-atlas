@@ -397,6 +397,14 @@ const VARIANT_DEFAULT_TIER = {
   professional: 'practitioner',
 };
 
+// Contact email and message template for "Join Waitlist" mailto links
+const WAITLIST_EMAIL = 'support@resilienceatlas.com';
+const waitlistMailto = (tierShortName) => {
+  const subject = encodeURIComponent(`IATLAS ${tierShortName} Waitlist`);
+  const body = encodeURIComponent(`I'm interested in being notified when the ${tierShortName} tier launches.`);
+  return `mailto:${WAITLIST_EMAIL}?subject=${subject}&body=${body}`;
+};
+
 const VARIANT_CONFIG = {
   kids: {
     icon: '/icons/game.svg',
@@ -460,6 +468,12 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
   const comingSoonTiers = config.tiers.filter(
     (t) => t.tier && IATLAS_TIER_CONFIG[t.tier]?.comingSoon
   );
+
+  // Determine if the primary CTA tier is coming soon
+  const primaryTierConfig = config.primaryTier ? IATLAS_TIER_CONFIG[config.primaryTier] : null;
+  const primaryIsComingSoon = primaryTierConfig?.comingSoon ?? false;
+  // Short tier name for mailto subject/body (strip "IATLAS " prefix)
+  const primaryTierShortName = primaryTierConfig?.name?.replace(/^IATLAS\s+/, '') || '';
 
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onClose(); };
@@ -561,13 +575,23 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
 
           <div className="iatlas-unlock-actions">
             {config.primaryTier ? (
-              <button
-                className="iatlas-unlock-btn-primary"
-                onClick={() => handleSubscribe(config.primaryTier)}
-                disabled={loading}
-              >
-                {loading ? 'Redirecting to checkout…' : config.primaryLabel}
-              </button>
+              primaryIsComingSoon ? (
+                <a
+                  href={waitlistMailto(primaryTierShortName)}
+                  className="iatlas-unlock-btn-secondary"
+                  style={{ textAlign: 'center' }}
+                >
+                  Join Waitlist — {primaryTierShortName}
+                </a>
+              ) : (
+                <button
+                  className="iatlas-unlock-btn-primary"
+                  onClick={() => handleSubscribe(config.primaryTier)}
+                  disabled={loading}
+                >
+                  {loading ? 'Redirecting to checkout…' : config.primaryLabel}
+                </button>
+              )
             ) : (
               <a
                 href={config.primaryHref}

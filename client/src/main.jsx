@@ -4,6 +4,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import { Capacitor } from '@capacitor/core';
 import App from './App.jsx';
 import { apiUrl } from './api/baseUrl.js';
+import { getAuth0CachedToken } from './lib/apiFetch.js';
+import { IATLAS_TIER_KEY } from './utils/iatlasGating.js';
 
 // ===== SPA MARKER FOR DEBUGGING =====
 window._spaVersion = import.meta.env.VITE_APP_VERSION || 'dev';
@@ -47,6 +49,31 @@ async function loadAuth0Config() {
     clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
     audience: import.meta.env.VITE_AUTH0_AUDIENCE || null,
   };
+}
+
+/**
+ * Fire-and-forget IATLAS tier sync after a successful login redirect.
+ * Does not block the login flow — errors are silently swallowed.
+ */
+function syncIATLASTierOnLogin() {
+  const iatlasToken = getAuth0CachedToken();
+  if (!iatlasToken) return;
+  fetch(apiUrl('/api/iatlas/subscription-status'), {
+    headers: { Authorization: `Bearer ${iatlasToken}` },
+  })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((data) => {
+      if (data?.tier) {
+        try {
+          localStorage.setItem(IATLAS_TIER_KEY, data.tier);
+        } catch (err) {
+          if (import.meta.env?.DEV) {
+            console.debug('[IATLAS] Could not persist tier to localStorage:', err?.message || err);
+          }
+        }
+      }
+    })
+    .catch(() => {}); // Non-blocking — login flow is not affected
 }
 
 function emitLifecycleEvent(name, detail) {
@@ -147,12 +174,17 @@ async function init() {
       // bar without firing a popstate event, so React Router v6 would never
       // re-render the matching route.  A full navigation (replace, not push)
       // keeps the back-button behavior clean.
+      // Fire-and-forget IATLAS tier sync; may not complete before navigation
+      // but useIATLASTierSync in App.jsx will catch it on the next page load.
+      syncIATLASTierOnLogin();
       console.log('[Auth0] Final navigation target:', returnTarget);
       window.location.replace(returnTarget);
       return;
     }
 
     // No explicit destination — check quiz/subscription status and redirect smartly.
+    // Also fire an IATLAS tier sync in parallel (non-blocking).
+    syncIATLASTierOnLogin();
     const email = user?.email;
     if (email) {
       const userStatusUrl = apiUrl(`/api/auth/user-status?email=${encodeURIComponent(email)}`);

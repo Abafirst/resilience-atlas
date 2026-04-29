@@ -81,7 +81,7 @@ export const IATLAS_TIER_CONFIG = {
       'Advanced progress analytics',
       'Priority support',
     ],
-    comingSoon: false,
+    comingSoon: true,
   },
   practitioner: {
     name: 'IATLAS Practitioner',
@@ -97,7 +97,7 @@ export const IATLAS_TIER_CONFIG = {
       'Progress & outcome reports',
       'Individual practice',
     ],
-    comingSoon: false,
+    comingSoon: true,
   },
   practice: {
     name: 'IATLAS Practice',
@@ -112,7 +112,7 @@ export const IATLAS_TIER_CONFIG = {
       'Group practice management',
       'Team progress dashboard',
     ],
-    comingSoon: false,
+    comingSoon: true,
   },
   enterprise: {
     name: 'IATLAS Enterprise',
@@ -127,7 +127,7 @@ export const IATLAS_TIER_CONFIG = {
       'Dedicated support',
       'Custom integrations',
     ],
-    comingSoon: false,
+    comingSoon: true,
   },
 };
 
