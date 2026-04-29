@@ -114,6 +114,26 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
         // types — causing all IATLAS subscription lifecycle events to be silently
         // ignored. The session-level metadata below is a belt-and-suspenders copy.
         const APP_URL = process.env.APP_URL || 'http://localhost:3000';
+
+        // For the Practice tier, accept an optional practiceId to link the
+        // subscription directly to an existing practice document.
+        const practiceId = (tier === 'practice' && req.body.practiceId)
+            ? String(req.body.practiceId).slice(0, 64)
+            : undefined;
+
+        const sessionMetadata = {
+            userId: userId.toString(),
+            tier,
+            productType: 'iatlas',
+        };
+        if (practiceId) {
+            sessionMetadata.practiceId = practiceId;
+        }
+
+        const successUrl = tier === 'practice' && practiceId
+            ? `${APP_URL}/iatlas/practice/dashboard?session_id={CHECKOUT_SESSION_ID}&upgrade_success=true`
+            : `${APP_URL}/iatlas?session_id={CHECKOUT_SESSION_ID}&upgrade_success=true`;
+
         const session = await stripe.checkout.sessions.create({
             customer: customerId,
             payment_method_types: ['card'],
@@ -124,19 +144,11 @@ router.post('/subscribe', iatlasLimiter, authenticateJWT, async (req, res) => {
                 },
             ],
             mode: 'subscription',
-            success_url: `${APP_URL}/iatlas?session_id={CHECKOUT_SESSION_ID}&upgrade_success=true`,
+            success_url: successUrl,
             cancel_url: `${APP_URL}/iatlas?canceled=true`,
-            metadata: {
-                userId: userId.toString(),
-                tier,
-                productType: 'iatlas',
-            },
+            metadata: sessionMetadata,
             subscription_data: {
-                metadata: {
-                    userId: userId.toString(),
-                    tier,
-                    productType: 'iatlas',
-                },
+                metadata: sessionMetadata,
             },
         });
 

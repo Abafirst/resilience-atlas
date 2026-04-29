@@ -2,11 +2,20 @@
  * PracticeTeamPage.jsx
  * Team communication and collaboration page.
  * Route: /iatlas/practice/team
+ *
+ * Includes:
+ *  - Members tab: real API integration with TeamMembersTable + InvitePractitionerModal
+ *  - Announcements, Discussions, Tasks tabs (collaborative workspace mock data)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import SiteHeader from '../components/SiteHeader.jsx';
+import TeamMembersTable from '../components/Practice/TeamMembersTable.jsx';
+import InvitePractitionerModal from '../components/Practice/InvitePractitionerModal.jsx';
+import SeatUsageIndicator from '../components/Practice/SeatUsageIndicator.jsx';
+import apiFetch from '../lib/apiFetch.js';
 
 const PRACTICE_NAV = [
   { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
@@ -122,11 +131,139 @@ const MOCK_TASKS = [
 ];
 
 export default function PracticeTeamPage() {
-  const [activeSection, setActiveSection]   = useState('threads');
+  const { getAccessTokenSilently, user } = useAuth0();
+  const [activeSection, setActiveSection]   = useState('members');
   const [selectedThread, setSelectedThread] = useState(1);
   const [newMessage, setNewMessage]         = useState('');
   const [tasks, setTasks]                   = useState(MOCK_TASKS);
   const [showNewThread, setShowNewThread]   = useState(false);
+
+  // Practice & members state
+  const [practice, setPractice]           = useState(null);
+  const [practitioners, setPractitioners] = useState([]);
+  const [practiceRole, setPracticeRole]   = useState(null);
+  const [loadingPractice, setLoadingPractice] = useState(true);
+  const [practiceError, setPracticeError] = useState(null);
+
+  // Invite modal state
+  const [showInvite, setShowInvite]   = useState(false);
+  const [inviting, setInviting]       = useState(false);
+  const [inviteError, setInviteError] = useState(null);
+  const [inviteSuccess, setInviteSuccess] = useState(null);
+  const [inviteUrl, setInviteUrl]     = useState(null);
+
+  // Edit role state
+  const [editTarget, setEditTarget] = useState(null);
+  const [editRole, setEditRole]     = useState('clinician');
+  const [editLoading, setEditLoading] = useState(false);
+
+  const loadPractice = useCallback(async () => {
+    setLoadingPractice(true);
+    setPracticeError(null);
+    try {
+      const res = await apiFetch('/api/practices/mine', {}, getAccessTokenSilently);
+      if (res.ok) {
+        const data = await res.json();
+        setPractice(data.practice);
+        setPracticeRole(data.role);
+
+        // Load practitioners list
+        const pId = data.practice._id;
+        const pRes = await apiFetch(`/api/practices/${pId}/practitioners`, {}, getAccessTokenSilently);
+        if (pRes.ok) {
+          const pData = await pRes.json();
+          setPractitioners(pData.practitioners || []);
+        }
+      } else {
+        setPracticeError('Could not load practice information.');
+      }
+    } catch {
+      setPracticeError('Failed to load practice data.');
+    } finally {
+      setLoadingPractice(false);
+    }
+  }, [getAccessTokenSilently]);
+
+  useEffect(() => { loadPractice(); }, [loadPractice]);
+
+  async function handleInvite(email, role) {
+    if (!practice) return;
+    setInviting(true);
+    setInviteError(null);
+    setInviteSuccess(null);
+    setInviteUrl(null);
+    try {
+      const res = await apiFetch(`/api/practices/${practice._id}/practitioners/invite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, role }),
+      }, getAccessTokenSilently);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to send invitation.');
+      }
+      setInviteSuccess(`Invitation sent to ${email}`);
+      setInviteUrl(data.inviteUrl || null);
+      loadPractice();
+    } catch (err) {
+      setInviteError(err.message);
+    } finally {
+      setInviting(false);
+    }
+  }
+
+  async function handleRemoveMember(member) {
+    if (!practice) return;
+    const targetId = member.userId?._id || member.userId || member.id;
+    if (!window.confirm(`Remove ${member.userId?.name || member.userId?.email || 'this practitioner'} from the practice?`)) return;
+    try {
+      await apiFetch(`/api/practices/${practice._id}/practitioners/${targetId}`, {
+        method: 'DELETE',
+      }, getAccessTokenSilently);
+      loadPractice();
+    } catch {
+      // ignore
+    }
+  }
+
+  async function handleEditRole(member) {
+    setEditTarget(member);
+    setEditRole(member.role || 'clinician');
+  }
+
+  async function submitEditRole() {
+    if (!practice || !editTarget) return;
+    const targetId = editTarget.userId?._id || editTarget.userId || editTarget.id;
+    setEditLoading(true);
+    try {
+      await apiFetch(`/api/practices/${practice._id}/practitioners/${targetId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: editRole }),
+      }, getAccessTokenSilently);
+      setEditTarget(null);
+      loadPractice();
+    } catch {
+      // ignore
+    } finally {
+      setEditLoading(false);
+    }
+  }
+
+  // Normalise practitioners for TeamMembersTable
+  const members = practitioners.map(p => ({
+    id:          p._id,
+    userId:      p.userId?._id || p.userId,
+    name:        p.userId?.name || p.userId?.email || '—',
+    email:       p.userId?.email || '—',
+    practiceRole: p.role,
+    role:        p.role,
+    joinedAt:    p.acceptedAt,
+    status:      p.status,
+    clientCount: undefined,
+  }));
+
+  const currentUserId = user?.sub || user?.email;
 
   const thread = MOCK_THREADS.find(t => t.id === selectedThread);
   const messages = MOCK_MESSAGES.filter(m => m.threadId === selectedThread);
@@ -319,7 +456,7 @@ export default function PracticeTeamPage() {
 
             {/* Tabs */}
             <div className="team-tabs" role="tablist">
-              {['announcements', 'threads', 'tasks'].map(s => (
+              {['members', 'announcements', 'threads', 'tasks'].map(s => (
                 <button
                   key={s}
                   className={`team-tab${activeSection === s ? ' active' : ''}`}
@@ -327,14 +464,58 @@ export default function PracticeTeamPage() {
                   aria-selected={activeSection === s}
                   onClick={() => setActiveSection(s)}
                 >
-                  {s === 'announcements' ? 'Announcements' : s === 'threads' ? 'Discussions' : 'Tasks'}
+                  {s === 'members' ? 'Members' : s === 'announcements' ? 'Announcements' : s === 'threads' ? 'Discussions' : 'Tasks'}
                 </button>
               ))}
             </div>
 
+            {/* Members */}
+            {activeSection === 'members' && (
+              <div role="tabpanel" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                {practice && (
+                  <SeatUsageIndicator
+                    seatsUsed={practice.seatsUsed || 0}
+                    seatLimit={practice.seatLimit || 5}
+                    plan={practice.plan || 'practice-5'}
+                    onUpgrade={() => window.location.href = '/iatlas/practice/billing'}
+                  />
+                )}
+
+                {practiceError && !loadingPractice && (
+                  <div style={{ background: '#fee2e2', color: '#dc2626', padding: '12px 16px', borderRadius: 10, fontSize: 14 }}>
+                    {practiceError}
+                  </div>
+                )}
+
+                <TeamMembersTable
+                  members={members}
+                  currentUserId={currentUserId}
+                  currentUserRole={practiceRole}
+                  loading={loadingPractice}
+                  onEditRole={handleEditRole}
+                  onRemove={handleRemoveMember}
+                />
+
+                {/* Invite button for admins */}
+                {(practiceRole === 'admin' || practiceRole === 'owner') && practice && (
+                  <div>
+                    <button
+                      className="pm-btn"
+                      onClick={() => { setInviteError(null); setInviteSuccess(null); setInviteUrl(null); setShowInvite(true); }}
+                    >
+                      + Invite Practitioner
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Announcements */}
             {activeSection === 'announcements' && (
               <div role="tabpanel">
+                <div style={{ background: '#fef3c7', borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#92400e', marginBottom: 16 }}>
+                  📋 Demo content — announcements board and real-time messaging are coming in a future release.
+                </div>
                 {MOCK_ANNOUNCEMENTS.map(a => (
                   <div key={a.id} className="announce-card">
                     <div className="announce-header">
@@ -515,6 +696,59 @@ export default function PracticeTeamPage() {
                   <button type="submit" className="pm-btn">Create Thread</button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {/* Invite Practitioner Modal */}
+        <InvitePractitionerModal
+          isOpen={showInvite}
+          onClose={() => setShowInvite(false)}
+          onInvite={handleInvite}
+          loading={inviting}
+          error={inviteError}
+          success={inviteSuccess}
+          inviteUrl={inviteUrl}
+          seatsUsed={practice?.seatsUsed}
+          seatLimit={practice?.seatLimit}
+        />
+
+        {/* Edit Role Modal */}
+        {editTarget && (
+          <div
+            className="modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-role-modal-title"
+            onClick={e => { if (e.target === e.currentTarget) setEditTarget(null); }}
+          >
+            <div className="modal-box">
+              <h2 className="modal-title" id="edit-role-modal-title">
+                Edit Role — {editTarget.userId?.name || editTarget.userId?.email || '—'}
+              </h2>
+              <div className="modal-field">
+                <label className="modal-label" htmlFor="edit-role-select">Role</label>
+                <select
+                  id="edit-role-select"
+                  className="modal-input"
+                  value={editRole}
+                  onChange={e => setEditRole(e.target.value)}
+                >
+                  {['admin', 'clinician', 'therapist', 'observer'].map(r => (
+                    <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="modal-actions">
+                <button type="button" className="modal-cancel" onClick={() => setEditTarget(null)}>Cancel</button>
+                <button
+                  type="button"
+                  className="pm-btn"
+                  disabled={editLoading}
+                  onClick={submitEditRole}
+                >
+                  {editLoading ? 'Saving…' : 'Save Role'}
+                </button>
+              </div>
             </div>
           </div>
         )}

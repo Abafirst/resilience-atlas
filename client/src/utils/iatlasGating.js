@@ -81,7 +81,7 @@ export const IATLAS_TIER_CONFIG = {
       'Advanced progress analytics',
       'Priority support',
     ],
-    comingSoon: true,
+    comingSoon: false,
   },
   practitioner: {
     name: 'IATLAS Practitioner',
@@ -97,7 +97,7 @@ export const IATLAS_TIER_CONFIG = {
       'Progress & outcome reports',
       'Individual practice',
     ],
-    comingSoon: true,
+    comingSoon: false,
   },
   practice: {
     name: 'IATLAS Practice',
@@ -112,7 +112,7 @@ export const IATLAS_TIER_CONFIG = {
       'Group practice management',
       'Team progress dashboard',
     ],
-    comingSoon: true,
+    comingSoon: false,
   },
   enterprise: {
     name: 'IATLAS Enterprise',
@@ -127,7 +127,7 @@ export const IATLAS_TIER_CONFIG = {
       'Dedicated support',
       'Custom integrations',
     ],
-    comingSoon: true,
+    comingSoon: false,
   },
 };
 
@@ -251,4 +251,17 @@ export function canAddAnotherProfile(currentCount) {
   const tier = getIATLASTier();
   const max  = getMaxProfiles(tier);
   return max > 0 && currentCount < max;
+}
+
+/**
+ * Returns true if the user has the Practice tier or Enterprise tier,
+ * which enables group practice management features (multi-practitioner dashboard,
+ * seat management, team analytics, etc.)
+ */
+export function hasPracticeAccess() {
+  const tier = getIATLASTier();
+  return [
+    IATLAS_TIERS.practice,
+    IATLAS_TIERS.enterprise,
+  ].includes(tier);
 }

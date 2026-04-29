@@ -102,6 +102,7 @@ const PracticeSchedulePage             = lazy(() => import('./pages/PracticeSche
 const PracticeBillingPage              = lazy(() => import('./pages/PracticeBillingPage.jsx'));
 const PracticeTeamPage                 = lazy(() => import('./pages/PracticeTeamPage.jsx'));
 const PracticeAnalyticsPage            = lazy(() => import('./pages/PracticeAnalyticsPage.jsx'));
+const PracticeSetupPage                = lazy(() => import('./pages/PracticeSetupPage.jsx'));
 const OrgAnalyticsDashboardPage        = lazy(() => import('./pages/OrgAnalyticsDashboardPage.jsx'));
 const PredictiveAnalyticsDashboardPage = lazy(() => import('./pages/PredictiveAnalyticsDashboardPage.jsx'));
 const ResearchExportPage               = lazy(() => import('./pages/ResearchExportPage.jsx'));
@@ -455,6 +456,7 @@ function AppShell() {
           <Route path="/invite/accept" element={<AcceptInvitationPage />} />
           <Route path="/access-denied" element={<AccessDeniedPage />} />
           {/* Practice Management Interface */}
+          <Route path="/iatlas/practice/setup"     element={<PracticeSetupPage />} />
           <Route path="/iatlas/practice/dashboard" element={<PracticeDashboardPage />} />
           <Route path="/iatlas/practice/clients" element={<PracticeClientsPage />} />
           <Route path="/iatlas/practice/schedule" element={<PracticeSchedulePage />} />

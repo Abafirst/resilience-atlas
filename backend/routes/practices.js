@@ -68,19 +68,51 @@ async function getPractitionerRole(practiceId, userId) {
   return pp ? pp.role : null;
 }
 
+// ── GET /api/practices/mine — Get the caller's practice ──────────────────────
+router.get('/mine', authenticateJWT, async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    if (!userId) return res.status(401).json({ error: 'Not authenticated.' });
+
+    // Find an active PracticePractitioner record for this user
+    const pp = await PracticePractitioner.findOne({ userId, status: 'active' }).lean();
+    if (!pp) return res.status(404).json({ error: 'No practice membership found.' });
+
+    const practice = await Practice.findById(pp.practiceId).lean();
+    if (!practice) return res.status(404).json({ error: 'Practice not found.' });
+
+    res.json({ practice, role: pp.role });
+  } catch (err) {
+    console.error('[practices] GET /mine:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // ── POST /api/practices — Create a new practice ──────────────────────────────
 router.post('/', authenticateJWT, async (req, res) => {
   try {
     const userId = getUserId(req);
-    const { name, subscriptionTier, settings } = req.body;
+    const { name, subscriptionTier, settings, plan, seatLimit } = req.body;
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Practice name is required.' });
     }
 
+    // Determine seat limit from plan if not provided explicitly
+    const PLAN_SEAT_LIMITS = { 'practice-5': 5, 'practice-10': 10, 'practice-25': 25, custom: 0 };
+    const resolvedPlan = plan || 'practice-5';
+    const resolvedSeatLimit = typeof seatLimit === 'number'
+      ? seatLimit
+      : (PLAN_SEAT_LIMITS[resolvedPlan] ?? 5);
+
+    const { randomUUID } = require('crypto');
     const practice = await Practice.create({
+      practiceId: randomUUID(),
       name: name.trim(),
       ownerId: userId,
       subscriptionTier: subscriptionTier || 'basic',
+      plan: resolvedPlan,
+      seatLimit: resolvedSeatLimit,
+      seatsUsed: 1, // Owner counts as first seat
       settings: settings || {},
     });
 
@@ -214,6 +246,22 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
       return res.status(400).json({ error: 'Invalid role. Must be one of: admin, clinician, therapist, observer.' });
     }
 
+    // ── Seat limit enforcement ──────────────────────────────────────────────
+    const practice = await Practice.findById(id).lean();
+    if (!practice) {
+      return res.status(404).json({ error: 'Practice not found.' });
+    }
+    if (practice.seatLimit > 0 && practice.seatsUsed >= practice.seatLimit) {
+      return res.status(403).json({
+        error: 'No seats available. Please upgrade your plan to invite more practitioners.',
+        upgradeRequired: true,
+        upgradeUrl: '/iatlas/practice/billing',
+        seatsUsed: practice.seatsUsed,
+        seatLimit: practice.seatLimit,
+      });
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
     const invitationToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
@@ -226,7 +274,6 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
       expiresAt,
     });
 
-    const practice = await Practice.findById(id).lean();
     const inviter = await User.findById(userId).lean();
     const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000');
     if (!baseUrl) {
@@ -250,7 +297,10 @@ router.post('/:id/practitioners/invite', authenticateJWT, inviteLimiter, async (
 
     await logActivity(id, userId, 'invite_practitioner', 'practitioner', invitation._id, { email, role: inviteRole }, req);
 
-    res.status(201).json({ invitation: { id: invitation._id, email, role: inviteRole, expiresAt, status: 'pending' } });
+    res.status(201).json({
+      invitation: { id: invitation._id, email, role: inviteRole, expiresAt, status: 'pending' },
+      inviteUrl,
+    });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(409).json({ error: 'An active invitation for this email already exists.' });
@@ -313,21 +363,137 @@ router.delete('/:id/practitioners/:targetUserId', authenticateJWT, async (req, r
       return res.status(400).json({ error: 'Invalid ID.' });
     }
 
+    // Prevent self-removal
+    if (userId.toString() === targetUserId.toString()) {
+      return res.status(400).json({ error: 'You cannot remove yourself from the practice.' });
+    }
+
     const role = await getPractitionerRole(id, userId);
     if (!hasPermission(role, 'practitioners', 'remove')) {
       return res.status(403).json({ error: 'Insufficient permissions.' });
     }
 
-    await PracticePractitioner.findOneAndUpdate(
-      { practiceId: id, userId: targetUserId },
-      { $set: { status: 'removed' } }
+    const removed = await PracticePractitioner.findOneAndUpdate(
+      { practiceId: id, userId: targetUserId, status: 'active' },
+      { $set: { status: 'removed' } },
+      { new: true }
     );
+
+    // Decrement seatsUsed when an active practitioner is removed
+    if (removed) {
+      await Practice.findByIdAndUpdate(id, { $inc: { seatsUsed: -1 } });
+    }
 
     await logActivity(id, userId, 'remove_practitioner', 'practitioner', targetUserId, {}, req);
 
     res.json({ message: 'Practitioner removed.' });
   } catch (err) {
     console.error('[practices] DELETE /:id/practitioners/:targetUserId:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// ── GET /api/practices/:id/analytics — Practice analytics ────────────────────
+router.get('/:id/analytics', authenticateJWT, async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid practice ID.' });
+    }
+
+    const role = await getPractitionerRole(id, userId);
+    if (!hasPermission(role, 'analytics', 'view')) {
+      return res.status(403).json({ error: 'Insufficient permissions.' });
+    }
+
+    // Get all active practitioners in this practice
+    const practitioners = await PracticePractitioner.find({ practiceId: id, status: 'active' })
+      .populate('userId', 'email name')
+      .lean();
+
+    // Attempt to load session and client data if models are available
+    let teamProductivity = [];
+    let clientDistribution = [];
+    let totalClients = 0;
+    let activeClients = 0;
+    let averageProgress = 0;
+    let sessionCompletionRate = 0;
+
+    try {
+      const SessionPlan  = require('../models/SessionPlan');
+      const ClientProfile = require('../models/ClientProfile');
+
+      const practitionerIds = practitioners.map(p =>
+        p.userId && (p.userId._id || p.userId)
+      ).filter(Boolean);
+
+      // Sessions per practitioner
+      for (const pp of practitioners) {
+        const ppUserId = pp.userId && (pp.userId._id || pp.userId);
+        if (!ppUserId) continue;
+        const sessionCount = await SessionPlan.countDocuments({ practitionerId: ppUserId.toString() });
+        const name = (pp.userId && (pp.userId.name || pp.userId.email)) || '—';
+        teamProductivity.push({ practitionerName: name, sessionsCompleted: sessionCount });
+      }
+
+      // Clients per practitioner and totals
+      const allClients = await ClientProfile.find({
+        practitionerId: { $in: practitionerIds.map(id => id.toString()) },
+      }).lean();
+
+      totalClients = allClients.length;
+      activeClients = allClients.filter(c => c.status !== 'archived' && c.status !== 'inactive').length;
+
+      const clientsByPractitioner = {};
+      for (const c of allClients) {
+        const pid = c.practitionerId ? c.practitionerId.toString() : 'unknown';
+        clientsByPractitioner[pid] = (clientsByPractitioner[pid] || 0) + 1;
+      }
+      clientDistribution = Object.entries(clientsByPractitioner).map(([practitionerId, clientCount]) => ({
+        practitionerId,
+        clientCount,
+      }));
+    } catch (_) {
+      // Models may not have data — return zero analytics gracefully
+    }
+
+    res.json({
+      teamProductivity,
+      clientDistribution,
+      averageProgress,
+      sessionCompletionRate,
+      totalClients,
+      activeClients,
+      practitionerCount: practitioners.length,
+    });
+  } catch (err) {
+    console.error('[practices] GET /:id/analytics:', err);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
+// ── GET /api/practices/:id/pending-invitations — List pending invitations ─────
+router.get('/:id/pending-invitations', authenticateJWT, async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid practice ID.' });
+    }
+
+    const role = await getPractitionerRole(id, userId);
+    if (!hasPermission(role, 'practitioners', 'invite')) {
+      return res.status(403).json({ error: 'Insufficient permissions.' });
+    }
+
+    const invitations = await PractitionerInvitation.find({ practiceId: id, status: 'pending' })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json({ invitations });
+  } catch (err) {
+    console.error('[practices] GET /:id/pending-invitations:', err);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
