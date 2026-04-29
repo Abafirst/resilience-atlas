@@ -637,8 +637,15 @@ async function scoreAssessment(req, res) {
     const overallScore = Math.round((average / 4) * 100); // convert 1-4 scale to 0-100
     const passed = average >= 3.0; // ≥85% on a 1-4 scale
 
+    let targetObjectId;
+    try {
+      targetObjectId = new mongoose.Types.ObjectId(targetUserId);
+    } catch {
+      return res.status(400).json({ error: 'Invalid targetUserId format.' });
+    }
+
     const enrollment = await TTFEnrollment.findOne({
-      userId: new mongoose.Types.ObjectId(targetUserId),
+      userId: targetObjectId,
       status: { $nin: ['withdrawn'] },
     });
     if (!enrollment) return res.status(404).json({ error: 'Enrollment not found.' });
@@ -804,22 +811,24 @@ async function adminGetStudents(req, res) {
     const pageSize = Math.min(100, parseInt(req.query.pageSize, 10) || 20);
     const skip     = (page - 1) * pageSize;
 
-    const filter = {};
     const ALLOWED_STATUSES = ['enrolled', 'in-progress', 'certified', 'expired', 'withdrawn'];
-    if (req.query.status && ALLOWED_STATUSES.includes(req.query.status)) {
-      filter.status = req.query.status;
-    }
-    if (req.query.cohortId && mongoose.Types.ObjectId.isValid(req.query.cohortId)) {
-      filter.cohortId = new mongoose.Types.ObjectId(req.query.cohortId);
-    }
+    const statusFilter   = (req.query.status && ALLOWED_STATUSES.includes(req.query.status))
+      ? req.query.status : null;
+    const cohortIdFilter = (req.query.cohortId && mongoose.Types.ObjectId.isValid(req.query.cohortId))
+      ? new mongoose.Types.ObjectId(req.query.cohortId) : null;
+
+    // Build a static query — no user-controlled keys, only validated values
+    const baseQuery = { status: { $nin: ['withdrawn'] } };
+    if (statusFilter)   baseQuery.status    = statusFilter;
+    if (cohortIdFilter) baseQuery.cohortId  = cohortIdFilter;
 
     const [enrollments, total] = await Promise.all([
-      TTFEnrollment.find(filter)
+      TTFEnrollment.find(baseQuery)
         .sort({ enrollmentDate: -1 })
         .skip(skip)
         .limit(pageSize)
         .lean(),
-      TTFEnrollment.countDocuments(filter),
+      TTFEnrollment.countDocuments(baseQuery),
     ]);
 
     res.json({ enrollments, total, page, pageSize });
@@ -896,6 +905,11 @@ async function adminUpdateEnrollment(req, res) {
         if (field === 'paymentStatus' && !ALLOWED_PAYMENT_VALUES.includes(req.body[field])) continue;
         if (field === 'personalAssessmentCompleted') {
           update[field] = !!req.body[field];
+          continue;
+        }
+        if (field === 'cohortId') {
+          if (!mongoose.Types.ObjectId.isValid(req.body[field])) continue;
+          update[field] = new mongoose.Types.ObjectId(req.body[field]);
           continue;
         }
         update[field] = req.body[field];
