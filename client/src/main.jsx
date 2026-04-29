@@ -64,7 +64,13 @@ function syncIATLASTierOnLogin() {
     .then((r) => (r.ok ? r.json() : null))
     .then((data) => {
       if (data?.tier) {
-        try { localStorage.setItem(IATLAS_TIER_KEY, data.tier); } catch (_) {}
+        try {
+          localStorage.setItem(IATLAS_TIER_KEY, data.tier);
+        } catch (err) {
+          if (import.meta.env?.DEV) {
+            console.debug('[IATLAS] Could not persist tier to localStorage:', err?.message || err);
+          }
+        }
       }
     })
     .catch(() => {}); // Non-blocking — login flow is not affected

@@ -397,6 +397,14 @@ const VARIANT_DEFAULT_TIER = {
   professional: 'practitioner',
 };
 
+// Contact email and message template for "Join Waitlist" mailto links
+const WAITLIST_EMAIL = 'support@resilienceatlas.com';
+const waitlistMailto = (tierShortName) => {
+  const subject = encodeURIComponent(`IATLAS ${tierShortName} Waitlist`);
+  const body = encodeURIComponent(`I'm interested in being notified when the ${tierShortName} tier launches.`);
+  return `mailto:${WAITLIST_EMAIL}?subject=${subject}&body=${body}`;
+};
+
 const VARIANT_CONFIG = {
   kids: {
     icon: '/icons/game.svg',
@@ -569,7 +577,7 @@ export default function IATLASUnlockModal({ variant = 'kids', onClose, token }) 
             {config.primaryTier ? (
               primaryIsComingSoon ? (
                 <a
-                  href={`mailto:support@resilienceatlas.com?subject=IATLAS%20${encodeURIComponent(primaryTierShortName)}%20Waitlist&body=I'm%20interested%20in%20being%20notified%20when%20the%20${encodeURIComponent(primaryTierShortName)}%20tier%20launches.`}
+                  href={waitlistMailto(primaryTierShortName)}
                   className="iatlas-unlock-btn-secondary"
                   style={{ textAlign: 'center' }}
                 >
