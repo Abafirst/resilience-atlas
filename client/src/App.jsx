@@ -429,6 +429,7 @@ function AppShell() {
           <Route path="/iatlas/train-the-facilitator" element={<TrainTheFacilitatorPage />} />
           {/* Analytics Dashboard */}
           <Route path="/analytics" element={<AnalyticsDashboardPage />} />
+          <Route path="/iatlas/analytics" element={<AnalyticsDashboardPage />} />
           {/* RBAC / Practice Management */}
           <Route path="/practice-settings" element={<PracticeSettingsPage />} />
           <Route path="/activity-logs" element={<ActivityLogsPage />} />
