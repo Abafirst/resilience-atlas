@@ -237,7 +237,7 @@ function mergeServerProgressIntoLocalStorage(serverProgress, childProfileId) {
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
 export function useProgressSync(childProfileId = null) {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0();
 
   const [isSyncing, setIsSyncing]   = useState(false);
   const [lastSynced, setLastSynced] = useState(null);
@@ -254,6 +254,17 @@ export function useProgressSync(childProfileId = null) {
     try {
       return await getAccessTokenSilently();
     } catch (err) {
+      // If the refresh token is missing or login is required, redirect to Auth0
+      if (
+        isAuthenticated &&
+        (err.error === 'login_required' || err.message?.includes('Missing Refresh Token'))
+      ) {
+        loginWithRedirect({
+          appState: { returnTo: window.location.pathname + window.location.search },
+        });
+        return ''; // Return empty string while redirect loads
+      }
+
       // Fallback to localStorage cached token (legacy path / unauthenticated)
       if (import.meta.env?.DEV) {
         console.debug('[useProgressSync] getAccessTokenSilently failed, using cached token:', err?.message);
@@ -264,7 +275,7 @@ export function useProgressSync(childProfileId = null) {
         ''
       );
     }
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, isAuthenticated, loginWithRedirect]);
 
   const authFetch = useCallback(async (path, options = {}) => {
     const token  = await getToken();
