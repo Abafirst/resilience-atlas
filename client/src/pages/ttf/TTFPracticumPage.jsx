@@ -56,11 +56,7 @@ export default function TTFPracticumPage() {
     }
   }
 
-  const nextSessionNumber = Math.max(
-    1,
-    ...(sessions.map(s => s.sessionNumber + 1)),
-    1
-  );
+  const nextSessionNumber = Math.max(0, ...sessions.map(s => s.sessionNumber)) + 1;
 
   async function handleSubmit(e) {
     e.preventDefault();

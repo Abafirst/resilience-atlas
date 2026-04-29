@@ -65,15 +65,18 @@ export default function VideoPlayer({ url, title = 'Video', transcript = '' }) {
 function getEmbedUrl(url) {
   try {
     const u = new URL(url);
-    // YouTube
-    if (u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')) {
-      const id = u.hostname.includes('youtu.be')
-        ? u.pathname.slice(1)
-        : u.searchParams.get('v');
+    const host = u.hostname.toLowerCase();
+    // YouTube — allow youtube.com, www.youtube.com, youtu.be
+    if (host === 'youtube.com' || host === 'www.youtube.com') {
+      const id = u.searchParams.get('v');
       return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
     }
-    // Vimeo
-    if (u.hostname.includes('vimeo.com')) {
+    if (host === 'youtu.be') {
+      const id = u.pathname.slice(1);
+      return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
+    }
+    // Vimeo — allow vimeo.com, www.vimeo.com, player.vimeo.com
+    if (host === 'vimeo.com' || host === 'www.vimeo.com' || host === 'player.vimeo.com') {
       const id = u.pathname.split('/').filter(Boolean).pop();
       return id ? `https://player.vimeo.com/video/${id}` : null;
     }

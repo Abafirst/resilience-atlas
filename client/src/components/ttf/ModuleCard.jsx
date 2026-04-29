@@ -75,7 +75,7 @@ export default function ModuleCard({
         <div style={{ marginBottom: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
             <span style={{ fontSize: 12, color: '#6b7280' }}>{completedSections}/{sectionCount} sections</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color }}>{ pct}%</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color }}>{pct}%</span>
           </div>
           <div style={{ height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 3, transition: 'width 0.4s' }} />

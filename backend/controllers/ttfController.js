@@ -589,12 +589,20 @@ async function submitPortfolio(req, res) {
     if (!Array.isArray(portfolioUrls) || portfolioUrls.length === 0) {
       return res.status(400).json({ error: 'portfolioUrls array required.' });
     }
+    // Validate each URL is a string with an expected HTTPS URL shape
+    const safeUrls = portfolioUrls
+      .filter(u => typeof u === 'string')
+      .map(u => u.slice(0, 2048))
+      .filter(u => /^https:\/\//i.test(u));
+    if (safeUrls.length === 0) {
+      return res.status(400).json({ error: 'At least one valid HTTPS URL is required.' });
+    }
 
     const enrollment = await TTFEnrollment.findOne({ userId, status: { $nin: ['withdrawn'] } });
     if (!enrollment) return res.status(404).json({ error: 'Enrollment not found.' });
 
     await TTFEnrollment.findByIdAndUpdate(enrollment._id, {
-      'competencyAssessment.portfolioUrls': portfolioUrls,
+      'competencyAssessment.portfolioUrls': safeUrls,
     });
 
     logger.info('[TTF] Portfolio submitted', { userId });
@@ -615,6 +623,12 @@ async function scoreAssessment(req, res) {
     if (!targetUserId || !scores) {
       return res.status(400).json({ error: 'targetUserId and scores required.' });
     }
+    // Validate targetUserId is a valid ObjectId to prevent NoSQL injection
+    if (!mongoose.Types.ObjectId.isValid(targetUserId)) {
+      return res.status(400).json({ error: 'Invalid targetUserId.' });
+    }
+    // Sanitize feedback to a plain string
+    const safeFeedback = typeof feedback === 'string' ? feedback.slice(0, 2000) : '';
 
     const values = Object.values(scores).map(Number).filter(v => !isNaN(v));
     if (values.length === 0) return res.status(400).json({ error: 'Scores required.' });
@@ -624,17 +638,17 @@ async function scoreAssessment(req, res) {
     const passed = average >= 3.0; // ≥85% on a 1-4 scale
 
     const enrollment = await TTFEnrollment.findOne({
-      userId: targetUserId,
+      userId: new mongoose.Types.ObjectId(targetUserId),
       status: { $nin: ['withdrawn'] },
     });
     if (!enrollment) return res.status(404).json({ error: 'Enrollment not found.' });
 
     await TTFEnrollment.findByIdAndUpdate(enrollment._id, {
-      'competencyAssessment.completed': true,
+      'competencyAssessment.completed':    true,
       'competencyAssessment.completedDate': new Date(),
-      'competencyAssessment.score': overallScore,
-      'competencyAssessment.assessorId': getUserId(req),
-      'competencyAssessment.feedback': feedback,
+      'competencyAssessment.score':        overallScore,
+      'competencyAssessment.assessorId':   getUserId(req),
+      'competencyAssessment.feedback':     safeFeedback,
     });
 
     let certData = null;
@@ -700,7 +714,7 @@ async function getCertificate(req, res) {
 async function verifyCertificate(req, res) {
   try {
     const { credentialId } = req.params;
-    if (!credentialId || !/^TTF-\d{4}-[A-F0-9]{10}$/i.test(credentialId)) {
+    if (!credentialId || !/^TTF-\d{4}-[A-F0-9]{10}$/.test(credentialId)) {
       return res.status(400).json({ error: 'Invalid credential ID format.' });
     }
 
@@ -791,7 +805,10 @@ async function adminGetStudents(req, res) {
     const skip     = (page - 1) * pageSize;
 
     const filter = {};
-    if (req.query.status) filter.status = req.query.status;
+    const ALLOWED_STATUSES = ['enrolled', 'in-progress', 'certified', 'expired', 'withdrawn'];
+    if (req.query.status && ALLOWED_STATUSES.includes(req.query.status)) {
+      filter.status = req.query.status;
+    }
     if (req.query.cohortId && mongoose.Types.ObjectId.isValid(req.query.cohortId)) {
       filter.cohortId = new mongoose.Types.ObjectId(req.query.cohortId);
     }
@@ -870,9 +887,19 @@ async function adminUpdateEnrollment(req, res) {
       return res.status(400).json({ error: 'Invalid enrollmentId.' });
     }
     const ALLOWED = ['status', 'paymentStatus', 'personalAssessmentCompleted', 'cohortId'];
+    const ALLOWED_STATUS_VALUES = ['enrolled', 'in-progress', 'certified', 'expired', 'withdrawn'];
+    const ALLOWED_PAYMENT_VALUES = ['pending', 'paid', 'refunded', 'waived'];
     const update = {};
     for (const field of ALLOWED) {
-      if (req.body[field] !== undefined) update[field] = req.body[field];
+      if (req.body[field] !== undefined) {
+        if (field === 'status' && !ALLOWED_STATUS_VALUES.includes(req.body[field])) continue;
+        if (field === 'paymentStatus' && !ALLOWED_PAYMENT_VALUES.includes(req.body[field])) continue;
+        if (field === 'personalAssessmentCompleted') {
+          update[field] = !!req.body[field];
+          continue;
+        }
+        update[field] = req.body[field];
+      }
     }
     if (Object.keys(update).length === 0) {
       return res.status(400).json({ error: 'No valid fields to update.' });
