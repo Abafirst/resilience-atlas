@@ -30,7 +30,7 @@ export default function SiteFooter() {
           <a href="/privacy">Privacy &amp; Data Control</a>
         </div>
         <div className="footer-nav-group">
-          <strong className="footer-nav-heading">IATLAS&#8482;</strong>
+          <strong className="footer-nav-heading">IATLAS&copy;</strong>
           <p style={{ fontSize: '0.82rem', color: 'inherit', margin: '0 0 0.5rem', lineHeight: 1.5 }}>
             Integrated Applied Teaching and Learning Analysis System
           </p>
