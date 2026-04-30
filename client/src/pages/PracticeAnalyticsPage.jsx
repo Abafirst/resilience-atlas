@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard',  icon: '/icons/planning.svg' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients',    icon: '/icons/organization.svg' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule',   icon: '/icons/time.svg' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing',    icon: '/icons/currency.svg' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team',       icon: '/icons/team.svg' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics',  icon: '/icons/growth.svg' },
 ];
 
 const DIMENSIONS = [
@@ -132,6 +132,9 @@ export default function PracticeAnalyticsPage() {
           }
           .pm-nav-link:hover { background: rgba(255,255,255,.06); color: #f1f5f9; }
           .pm-nav-link.active { background: rgba(99,102,241,.15); color: #a5b4fc; border-left-color: #6366f1; }
+          .nav-icon { opacity: .85; flex-shrink: 0; }
+          .pm-nav-link.active .nav-icon { opacity: 1; }
+          button img[aria-hidden="true"] { vertical-align: text-bottom; margin-right: 6px; flex-shrink: 0; }
           .pm-sidebar-footer {
             margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,.08);
           }
@@ -202,7 +205,8 @@ export default function PracticeAnalyticsPage() {
                 to={item.to}
                 className={`pm-nav-link${item.key === 'analytics' ? ' active' : ''}`}
               >
-                {item.label}
+                <img src={item.icon} alt="" aria-hidden="true" className="nav-icon" width={16} height={16} />
+                <span>{item.label}</span>
               </Link>
             ))}
             <div className="pm-sidebar-footer">
