@@ -198,9 +198,6 @@ export default function IATLASPricingPage() {
         <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.8)', maxWidth: 560, margin: '0 auto 1.5rem', lineHeight: 1.6 }}>
           From personal resilience journeys to full group practice management — IATLAS has a plan for every stage.
         </p>
-        <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '8px 18px', fontSize: 14, color: 'rgba(255,255,255,0.9)' }}>
-          🎉 Launch offer: Use code <strong>LAUNCH50</strong> for 50% off your first month
-        </div>
       </section>
 
       {/* Pricing Grid */}
