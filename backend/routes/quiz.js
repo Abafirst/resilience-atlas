@@ -110,7 +110,7 @@ function scoreResilienceAnswers(answers) {
  */
 router.post('/', submitLimiter, async (req, res) => {
     try {
-        const { firstName, email, answers, tier, scoresConsent, scoresGoals, curriculumConsent, curriculumGoals, rememberPreference } = req.body;
+        const { firstName, email, answers, tier, sharingConsent, sharingGoals } = req.body;
 
         if (!answers || !Array.isArray(answers) || answers.length !== 72) {
             return res.status(400).json({ error: 'Please provide all 72 answers.' });
@@ -135,16 +135,17 @@ router.post('/', submitLimiter, async (req, res) => {
             JSON.stringify(result.scores)
         );
 
-        // Build sharingConsent object from submitted consent preferences
-        const now = new Date();
-        const sharingConsent = {
-            scores:          typeof scoresConsent === 'boolean'     ? scoresConsent     : null,
-            scoresDate:      typeof scoresConsent === 'boolean' && scoresConsent ? now : null,
-            scoresGoals:     scoresConsent && typeof scoresGoals === 'string'    ? scoresGoals.trim().slice(0, 500) : null,
-            curriculum:      typeof curriculumConsent === 'boolean' ? curriculumConsent : null,
-            curriculumDate:  typeof curriculumConsent === 'boolean' && curriculumConsent ? now : null,
-            curriculumGoals: curriculumConsent && typeof curriculumGoals === 'string' ? curriculumGoals.trim().slice(0, 500) : null,
-        };
+        // Resolve sharing consent value:
+        // - If explicitly provided as boolean, use that value (user made a choice)
+        // - If not provided (undefined/null), use null to indicate "not yet asked"
+        //   (covers non-org users, unauthenticated submissions, and legacy records)
+        // NOTE: null has two roles — "not yet asked" for new submissions and
+        // "legacy/pre-feature" for existing records. Both are treated as
+        // equivalent to true in team analytics queries for backward compatibility.
+        const resolvedConsent = typeof sharingConsent === 'boolean' ? sharingConsent : null;
+        const safeGoals = resolvedConsent && sharingGoals
+            ? String(sharingGoals).trim().slice(0, 1000)
+            : null;
 
         // Save to MongoDB (non-blocking — does not affect response)
         ResilienceResult.create({
@@ -154,7 +155,9 @@ router.post('/', submitLimiter, async (req, res) => {
             dominantType: result.dominantType,
             scores: result.scores,
             assessmentHash,
-            sharingConsent,
+            sharingConsent: resolvedConsent,
+            sharingConsentDate: resolvedConsent !== null ? new Date() : null,
+            sharingGoals: safeGoals,
         }).catch(err => logger.error('Failed to save resilience result:', err));
 
         // Persist consent preferences to UserDataSharing when the user belongs to an org.

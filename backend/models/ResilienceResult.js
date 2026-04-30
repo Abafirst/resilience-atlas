@@ -54,19 +54,23 @@ const ResilienceResultSchema = new mongoose.Schema({
     default: null,
   },
 
-  /**
-   * Granular sharing consent granted at the time of assessment submission.
-   * null = legacy record (unknown consent, treated as private during migration).
-   * true = user explicitly opted in.
-   * false = user explicitly opted out.
-   */
+  // ── Sharing consent fields ─────────────────────────────────────────────────
+  // Whether the user has consented to share their results with their organization.
+  // null = legacy record (pre-consent feature); treat as true during transition.
+  // false = user opted out; true = user opted in.
   sharingConsent: {
-    scores: { type: Boolean, default: null },
-    scoresDate: { type: Date, default: null },
-    scoresGoals: { type: String, default: null },
-    curriculum: { type: Boolean, default: null },
-    curriculumDate: { type: Date, default: null },
-    curriculumGoals: { type: String, default: null },
+    type: Boolean,
+    default: null,
+  },
+  // Timestamp when consent was last given or revoked
+  sharingConsentDate: {
+    type: Date,
+    default: null,
+  },
+  // Optional personal/professional goals context provided when opting in
+  sharingGoals: {
+    type: String,
+    default: null,
   },
 });
 

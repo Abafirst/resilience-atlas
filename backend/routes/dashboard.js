@@ -61,6 +61,16 @@ const SCORE_KEY_MAP = {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
+ * Build a MongoDB filter for ResilienceResult that respects sharing consent.
+ * - sharingConsent: true  → user has opted in  → include
+ * - sharingConsent: null  → legacy record (pre-feature) → include (backward compat)
+ * - sharingConsent: false → user has opted out → exclude
+ */
+function consentFilter() {
+  return { sharingConsent: { $ne: false } };
+}
+
+/**
  * Resolve dimension scores from a ResilienceResult document.
  * Supports both the structured dimension_scores field and the legacy scores Map.
  */
@@ -220,6 +230,7 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
 
     const [org, totalMembers] = await Promise.all([
       Organization.findById(orgId).lean(),
+      ResilienceResult.find({ organizationId: orgId, ...consentFilter() }).lean(),
       User.countDocuments({ organizationId: orgId }),
     ]);
 
@@ -310,14 +321,7 @@ router.get('/team-breakdown', authenticateJWT, requireOrgMember, async (req, res
     // Get all users in the org with their team names
     const members = await User.find({ organizationId: orgId }, { _id: 1, teamName: 1 }).lean();
     const userIds = members.map((m) => m._id);
-
-    // Only include results from members who have consented to share scores
-    const consentFilter = await buildConsentFilter(orgId, userIds);
-    const results = await ResilienceResult.find({
-      organizationId: orgId,
-      userId: { $in: userIds },
-      ...consentFilter,
-    })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -385,10 +389,7 @@ router.get('/members', authenticateJWT, requireOrgMember, async (req, res) => {
     ).lean();
 
     const userIds = members.map((m) => m._id);
-
-    // Fetch all results (regardless of consent) for presence detection,
-    // then apply consent to determine what data to expose.
-    const allResults = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -433,11 +434,8 @@ router.get('/members', authenticateJWT, requireOrgMember, async (req, res) => {
         overall_score:      scoresSharing && r ? (r.overall ?? r.overall_score ?? null) : null,
         dominant_dimension: scoresSharing && r ? (r.dominant_dimension ?? r.dominantType ?? null) : null,
         completed_at:       r ? r.createdAt : null,
-        dimension_scores:   scoresSharing && r ? resolveDimensionScores(r) : null,
-        // Privacy indicators
-        scores_sharing:     scoresSharing,
-        curriculum_sharing: curriculumSharing,
-        has_assessment:     !!r,
+        dimension_scores:   r ? resolveDimensionScores(r) : null,
+        sharing_consent:    r ? (r.sharingConsent ?? null) : null,
       };
     });
 
@@ -469,7 +467,7 @@ router.get('/export/csv', authenticateJWT, requireOrgMember, async (req, res) =>
     ).lean();
 
     const userIds = members.map((m) => m._id);
-    const allResults = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 

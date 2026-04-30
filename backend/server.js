@@ -487,6 +487,8 @@ app.use("/api/research", require("./routes/clinical/researchExport"));
 console.log("✅ Mounted route: /api/research (Research Export Tools)");
 app.use("/api/ttf", require("./routes/ttf"));
 console.log("✅ Mounted route: /api/ttf (Train the Facilitator)");
+app.use("/api/user/consent", require("./routes/user-consent"));
+console.log("✅ Mounted route: /api/user/consent (Assessment sharing consent)");
 
 // ==============================
 // Root API info

@@ -276,12 +276,13 @@ export default function QuizPage() {
   // ── Theme toggle state ─────────────────────────────────────────────────
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  // ── Consent modal state ────────────────────────────────────────────────
-  const [showConsentModal, setShowConsentModal]     = useState(false);
-  const [consentOrgName, setConsentOrgName]         = useState('your organization');
-  const [consentDefaults, setConsentDefaults]       = useState({ scores: false, curriculum: false });
-  // Pending quiz result payload — held until after consent dialog
-  const [pendingResults, setPendingResults]         = useState(null);
+  // ── Organization & consent state ───────────────────────────────────────
+  // Fetched from /api/auth/profile after authentication to determine
+  // whether the user belongs to an org (and thus needs to see the consent modal).
+  const [orgName, setOrgName]               = useState(null);  // null = not in org
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  const [pendingAnswers, setPendingAnswers]  = useState(null);  // held while modal is open
+  const [defaultConsent, setDefaultConsent] = useState(false);
 
   // ── Theme ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -332,6 +333,38 @@ export default function QuizPage() {
       setPrefilledFromAuth0(true);
     }
   }, [auth0Loading, isAuthenticated, auth0User]);
+
+  // ── Fetch user profile to determine org membership ────────────────────
+  // After the user is authenticated via Auth0, fetch the backend profile to
+  // check if they belong to an organization and to get the org name for the
+  // consent modal.  This is non-blocking — failure is silently ignored.
+  useEffect(() => {
+    if (auth0Loading || !isAuthenticated) return;
+
+    getAccessTokenSilently()
+      .then((token) =>
+        fetch(apiUrl('/api/auth/profile'), {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      )
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const u = data?.user;
+        if (!u) return;
+        // Store default consent preference
+        if (typeof u.defaultSharingConsent === 'boolean') {
+          setDefaultConsent(u.defaultSharingConsent);
+        }
+        // Determine org name — check both organization_id presence and org name
+        const hasOrg = !!(u.organization_id || u.organizationId);
+        if (hasOrg) {
+          // Try to get org name from the nested org object if present,
+          // otherwise use a placeholder (the modal handles a null org name gracefully).
+          setOrgName(u.organizationName || u.organization?.name || '');
+        }
+      })
+      .catch(() => { /* non-fatal */ });
+  }, [auth0Loading, isAuthenticated, getAccessTokenSilently]);
 
   // ── Auto-advance past info step when Auth0 pre-fills both fields ──────
   // When the user is already identified via Auth0, skip the name/email
@@ -604,31 +637,19 @@ export default function QuizPage() {
   }
 
   // ── Submit quiz ────────────────────────────────────────────────────────
-  async function submitQuiz() {
-    // Final check: all questions answered
-    const unansweredIdx = answers.findIndex(a => a === null);
-    if (unansweredIdx !== -1) {
-      setStep(unansweredIdx);
-      setQuestionError(true);
-      return;
-    }
 
-    setSubmitting(true);
-    setSubmitError('');
-    setSpinnerText('Generating your personalized report\u2026');
-
+  /**
+   * Actually perform the network submission with optional consent data.
+   * Called directly when the user is not in an org, or after the consent
+   * modal has been resolved.
+   */
+  async function doSubmit(orderedAnswers, consentData = {}) {
     try {
-      // Reorder answers from display order back to QUESTIONS order
-      // so the backend index-based scoring works correctly.
-      const orderedAnswers = new Array(QUESTIONS.length).fill(null);
-      questionOrder.forEach((origIdx, displayIdx) => {
-        orderedAnswers[origIdx] = answers[displayIdx];
-      });
-
       const payload = {
         firstName: firstName.trim(),
         email:     email.trim(),
         answers:   orderedAnswers,
+        ...consentData,
       };
 
       const res = await fetch(apiUrl('/api/quiz'), {
@@ -668,6 +689,19 @@ export default function QuizPage() {
             feedbackText:     '',
           }),
         }).catch(() => {});
+      }
+
+      // If the user asked to remember their preference, save it to the backend
+      if (consentData.rememberPreference && isAuthenticated) {
+        getAccessTokenSilently()
+          .then((token) =>
+            fetch(apiUrl('/api/user/consent/default'), {
+              method:  'PUT',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+              body:    JSON.stringify({ defaultConsent: consentData.sharingConsent }),
+            })
+          )
+          .catch(() => { /* non-fatal */ });
       }
 
       // Clear autosave on successful submission
@@ -719,6 +753,68 @@ export default function QuizPage() {
       setSubmitting(false);
       setSubmitError(err.message || 'Something went wrong. Please try again.');
     }
+  }
+
+  async function submitQuiz() {
+    // Final check: all questions answered
+    const unansweredIdx = answers.findIndex(a => a === null);
+    if (unansweredIdx !== -1) {
+      setStep(unansweredIdx);
+      setQuestionError(true);
+      return;
+    }
+
+    // Reorder answers from display order back to QUESTIONS order
+    // so the backend index-based scoring works correctly.
+    const orderedAnswers = new Array(QUESTIONS.length).fill(null);
+    questionOrder.forEach((origIdx, displayIdx) => {
+      orderedAnswers[origIdx] = answers[displayIdx];
+    });
+
+    // If user is in an org and authenticated, show the consent modal
+    // before actually submitting so they can choose whether to share.
+    if (orgName !== null && isAuthenticated) {
+      setPendingAnswers(orderedAnswers);
+      setShowConsentModal(true);
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError('');
+    setSpinnerText('Generating your personalized report\u2026');
+    await doSubmit(orderedAnswers);
+  }
+
+  // ── Consent modal handler ──────────────────────────────────────────────
+  async function handleConsentSubmit({ consent, goals, rememberPreference }) {
+    setShowConsentModal(false);
+    setSubmitting(true);
+    setSubmitError('');
+    setSpinnerText('Generating your personalized report\u2026');
+
+    const consentData = {
+      sharingConsent: consent,
+      sharingGoals:   goals || null,
+      rememberPreference,
+    };
+
+    await doSubmit(pendingAnswers, consentData);
+    setPendingAnswers(null);
+  }
+
+  function handleConsentClose() {
+    // User closed the modal without choosing — treat as "pending" (null consent).
+    // We don't auto-opt-out on dismiss so a mis-click doesn't accidentally
+    // revoke sharing.  The assessment is submitted with sharingConsent: null
+    // (same as a legacy / unanswered record).
+    setShowConsentModal(false);
+    setSubmitting(true);
+    setSubmitError('');
+    setSpinnerText('Generating your personalized report\u2026');
+
+    const consentData = { sharingConsent: null, sharingGoals: null, rememberPreference: false };
+    doSubmit(pendingAnswers, consentData);
+    setPendingAnswers(null);
   }
 
   // ── Theme toggle handler ───────────────────────────────────────────────
@@ -787,14 +883,13 @@ export default function QuizPage() {
 
   return (
     <>
-      {/* ── Consent modal (shown when user belongs to an org) ─────────── */}
+      {/* ── Consent modal ──────────────────────────────── */}
       {showConsentModal && (
         <ConsentModal
-          orgName={consentOrgName}
-          defaultScores={consentDefaults.scores}
-          defaultCurriculum={consentDefaults.curriculum}
-          onSave={handleConsentSave}
-          onSkip={handleConsentSkip}
+          organizationName={orgName || ''}
+          defaultConsent={defaultConsent}
+          onSubmit={handleConsentSubmit}
+          onClose={handleConsentClose}
         />
       )}
 

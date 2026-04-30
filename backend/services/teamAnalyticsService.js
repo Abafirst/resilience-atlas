@@ -413,23 +413,10 @@ async function buildTeamAnalytics(orgId, options = {}) {
 
   const userIds = members.map((m) => m._id);
 
-  // Load sharing consent records for this org
-  const sharingRecords = await UserDataSharing.find(
-    { organizationId: orgId },
-    { userId: 1, scoresEnabled: 1 }
-  ).lean();
-  const consentUserIdSet = new Set(
-    sharingRecords
-      .filter((s) => s.scoresEnabled === true)
-      .map((s) => s.userId.toString())
-  );
-
-  // Latest result per user — only for members who have consented to share scores
-  // A result qualifies if:
-  //   a) the user has a UserDataSharing record with scoresEnabled === true, OR
-  //   b) the result itself has sharingConsent.scores === true
+  // Latest result per user — only include results where the user has consented
+  // (sharingConsent: true) or has not yet set a preference (null = legacy record).
   const allResults = await ResilienceResult.find(
-    { organizationId: orgId, userId: { $in: userIds } },
+    { organizationId: orgId, userId: { $in: userIds }, sharingConsent: { $ne: false } },
   ).sort({ createdAt: -1 }).lean();
 
   const latestByUser = {};
@@ -481,13 +468,14 @@ async function buildTeamAnalytics(orgId, options = {}) {
     const riskFlags  = r ? buildRiskFlags(dimScores, dimAverages, overall) : [];
 
     return {
-      userId:         m._id,
-      name:           m.username || m.email,
-      role:           m.role || 'member',
-      score:          overall,
-      assessmentDate: lastDate,
+      userId:          m._id,
+      name:            m.username || m.email,
+      role:            m.role || 'member',
+      score:           overall,
+      assessmentDate:  lastDate,
       status,
       riskFlags,
+      sharingConsent:  r ? (r.sharingConsent ?? null) : null,
       dimensionScores: {
         relational: dimScores.relational ?? null,
         cognitive:  dimScores.cognitive  ?? null,
@@ -532,6 +520,11 @@ async function buildTeamAnalytics(orgId, options = {}) {
     .filter(Boolean)
     .sort((a, b) => new Date(b) - new Date(a))[0] || null;
 
+  // Count members who have shared scores vs. those who haven't yet
+  const sharingCount = memberStatus.filter(
+    (m) => m.sharingConsent === true || m.sharingConsent === null
+  ).length;
+
   // ── Assemble payload ──────────────────────────────────────────────────────
 
   const analyticsPayload = {
@@ -540,6 +533,7 @@ async function buildTeamAnalytics(orgId, options = {}) {
     teamProfile: {
       name:           org.name || org.company_name || 'Team',
       memberCount:    members.length,
+      sharingCount,
       overallScore:   teamOverallScore,
       assessmentDate: mostRecentAssessment,
       dimensionAverages,

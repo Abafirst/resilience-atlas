@@ -12,12 +12,12 @@ import { requireActiveSubscription } from '../utils/iatlasGating.js';
 import { getAuth0CachedToken } from '../lib/apiFetch.js';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard',  icon: '/icons/planning.svg' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients',    icon: '/icons/organization.svg' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule',   icon: '/icons/time.svg' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing',    icon: '/icons/currency.svg' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team',       icon: '/icons/team.svg' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics',  icon: '/icons/growth.svg' },
 ];
 
 const MOCK_CLIENTS = [
@@ -26,47 +26,85 @@ const MOCK_CLIENTS = [
     participants: ['Amir (age 9)', 'Zoe (age 6)'], practitioners: ['Dr. Chen', 'M. Williams'],
     status: 'active', intake: '2024-02-10', insurance: 'Blue Cross', sessions: 24,
     dimensions: { agentic: 72, somatic: 58, emotional: 65, cognitive: 81, relational: 70, spiritual: 55 },
+    activityCounts: { agentic: 5, somatic: 3, emotional: 7, cognitive: 4, relational: 6, spiritual: 2 },
   },
   {
     id: 2, family: 'Torres Family', contact: 'Maria Torres', email: 'mtorres@email.com',
     participants: ['Lily (age 7)'], practitioners: ['P. Patel'],
     status: 'active', intake: '2024-03-15', insurance: 'Aetna', sessions: 18,
     dimensions: { agentic: 60, somatic: 74, emotional: 55, cognitive: 68, relational: 62, spiritual: 70 },
+    activityCounts: { agentic: 4, somatic: 6, emotional: 3, cognitive: 5, relational: 8, spiritual: 4 },
   },
   {
     id: 3, family: 'Park Family', contact: 'David Park', email: 'dpark@email.com',
     participants: ['Owen (age 11)'], practitioners: ['P. Patel', 'Dr. Chen'],
     status: 'active', intake: '2024-01-08', insurance: 'United', sessions: 31,
     dimensions: { agentic: 85, somatic: 90, emotional: 78, cognitive: 88, relational: 75, spiritual: 80 },
+    activityCounts: { agentic: 9, somatic: 11, emotional: 8, cognitive: 10, relational: 7, spiritual: 6 },
   },
   {
     id: 4, family: 'Osei Family', contact: 'Grace Osei', email: 'gosei@email.com',
     participants: ['Maya (age 13)'], practitioners: ['J. Rodriguez'],
     status: 'active', intake: '2024-04-01', insurance: 'Cigna', sessions: 12,
     dimensions: { agentic: 45, somatic: 50, emotional: 40, cognitive: 55, relational: 48, spiritual: 42 },
+    activityCounts: { agentic: 2, somatic: 3, emotional: 2, cognitive: 4, relational: 3, spiritual: 1 },
   },
   {
     id: 5, family: 'Nguyen Family', contact: 'Thanh Nguyen', email: 'tnguyen@email.com',
     participants: ['Leo (age 8)'], practitioners: ['Dr. Chen'],
     status: 'active', intake: '2024-05-20', insurance: 'Medicaid', sessions: 9,
     dimensions: { agentic: 55, somatic: 62, emotional: 58, cognitive: 60, relational: 65, spiritual: 50 },
+    activityCounts: { agentic: 3, somatic: 4, emotional: 3, cognitive: 3, relational: 5, spiritual: 2 },
   },
   {
     id: 6, family: 'Smith Family', contact: 'Rachel Smith', email: 'rsmith@email.com',
     participants: ['Noah (age 5)'], practitioners: ['M. Williams'],
     status: 'on_hold', intake: '2023-11-12', insurance: 'Blue Cross', sessions: 40,
     dimensions: { agentic: 78, somatic: 82, emotional: 75, cognitive: 79, relational: 83, spiritual: 76 },
+    activityCounts: { agentic: 12, somatic: 14, emotional: 10, cognitive: 11, relational: 13, spiritual: 8 },
+  },
+  {
+    id: 7, family: 'Martinez Family', contact: 'Rosa Martinez', email: 'rmartinez@email.com',
+    participants: ['Rosa Martinez (age 34)'], practitioners: ['Dr. Chen'],
+    status: 'active', intake: '2024-01-15', insurance: 'Blue Cross', sessions: 16,
+    dimensions: { agentic: 68, somatic: 75, emotional: 70, cognitive: 80, relational: 72, spiritual: 65 },
+    activityCounts: null,
+    lastAssessmentDate: '2024-02-09',
+  },
+  {
+    id: 8, family: 'Williams Family', contact: 'James Williams', email: 'jwilliams@email.com',
+    participants: ['James Williams (age 29)', 'Sara Williams (age 27)'], practitioners: ['M. Williams', 'J. Rodriguez'],
+    status: 'active', intake: '2024-03-01', insurance: 'Aetna', sessions: 20,
+    dimensions: { agentic: 55, somatic: 60, emotional: 52, cognitive: 65, relational: 48, spiritual: 58 },
+    activityCounts: null,
+    lastAssessmentDate: '2024-03-22',
   },
 ];
 
 const DIM_SHORT = {
-  agentic: { label: 'Ag', color: '#4f46e5' },
-  somatic:   { label: 'So', color: '#059669' },
-  emotional: { label: 'Em', color: '#db2777' },
-  cognitive: { label: 'Co', color: '#d97706' },
-  relational:{ label: 'Re', color: '#0891b2' },
-  spiritual: { label: 'Sp', color: '#7c3aed' },
+  agentic:    { label: 'Ag', color: '#4f46e5' },
+  somatic:    { label: 'So', color: '#059669' },
+  emotional:  { label: 'Em', color: '#db2777' },
+  cognitive:  { label: 'Co', color: '#d97706' },
+  relational: { label: 'Re', color: '#0891b2' },
+  spiritual:  { label: 'Sp', color: '#7c3aed' },
 };
+
+/**
+ * Returns true if any participant in the list is 18 or older.
+ * When a participant entry does not include an age tag (e.g. "(age N)"), they
+ * are assumed to be an adult — this is the safe default because adult clients
+ * should see assessment score bars, and a missing age should not silently hide
+ * clinically relevant data. Practitioners should add explicit ages to avoid
+ * ambiguity.
+ */
+function hasAdultParticipants(participants) {
+  return participants.some(p => {
+    const match = p.match(/\(age\s+(\d+)\)/);
+    if (!match) return true; // no age listed → assume adult (see JSDoc above)
+    return parseInt(match[1], 10) >= 18;
+  });
+}
 
 function DimBar({ value, color }) {
   return (
@@ -76,13 +114,58 @@ function DimBar({ value, color }) {
         display: 'flex', alignItems: 'flex-end',
       }}>
         <div style={{
-          width: '100%', height: `${value}%`,
-          background: color, borderRadius: 4, opacity: .8,
+          width: '100%', height: `${Math.min(value, 100)}%`,
+          background: color, borderRadius: 4, opacity: .85,
           transition: 'height .3s ease',
         }} />
       </div>
-      <span style={{ fontSize: '.6rem', color: '#9ca3af', fontWeight: 600 }}>{value}</span>
+      <span style={{ fontSize: '.6rem', color: '#9ca3af', fontWeight: 600 }}>{label}</span>
     </div>
+  );
+}
+
+function ActivityBadge({ label, count, color }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      background: '#f8fafc', borderRadius: 8, padding: '.35rem .45rem', minWidth: 40,
+      border: `1.5px solid ${color}33`,
+    }}>
+      <span style={{ fontSize: '.85rem', fontWeight: 800, color, lineHeight: 1 }}>{count}</span>
+      <span style={{ fontSize: '.55rem', color: '#9ca3af', fontWeight: 600, marginTop: 2 }}>{label}</span>
+    </div>
+  );
+}
+
+function InfoTooltip({ children }) {
+  const [show, setShow] = React.useState(false);
+  return (
+    <span style={{ position: 'relative', display: 'inline-block', verticalAlign: 'middle' }}>
+      <button
+        style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: '#9ca3af', fontSize: '.8rem', padding: '0 .2rem', lineHeight: 1,
+        }}
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onFocus={() => setShow(true)}
+        onBlur={() => setShow(false)}
+        aria-label="More information"
+        type="button"
+      >ⓘ</button>
+      {show && (
+        <div style={{
+          position: 'absolute', bottom: '130%', left: '50%', transform: 'translateX(-50%)',
+          background: '#1e293b', color: '#e2e8f0',
+          borderRadius: 8, padding: '.6rem .75rem',
+          fontSize: '.72rem', lineHeight: 1.5, width: 230,
+          zIndex: 100, boxShadow: '0 4px 16px rgba(0,0,0,.25)',
+          pointerEvents: 'none',
+        }}>
+          {children}
+        </div>
+      )}
+    </span>
   );
 }
 
@@ -148,6 +231,9 @@ export default function PracticeClientsPage() {
           }
           .pm-nav-link:hover { background: rgba(255,255,255,.06); color: #f1f5f9; }
           .pm-nav-link.active { background: rgba(99,102,241,.15); color: #a5b4fc; border-left-color: #6366f1; }
+          .nav-icon { opacity: .85; flex-shrink: 0; }
+          .pm-nav-link.active .nav-icon { opacity: 1; }
+          button img[aria-hidden="true"] { vertical-align: text-bottom; margin-right: 6px; flex-shrink: 0; }
           .pm-sidebar-footer {
             margin-top: auto; padding: 1rem 1.25rem;
             border-top: 1px solid rgba(255,255,255,.08);
@@ -208,6 +294,9 @@ export default function PracticeClientsPage() {
           .pm-client-meta { font-size: .78rem; color: #9ca3af; margin-bottom: .8rem; }
           .pm-client-meta span { margin-right: .75rem; }
           .pm-dim-bars { display: flex; gap: .3rem; align-items: flex-end; height: 42px; }
+          .info-tooltip-wrap .info-tooltip-text { visibility: hidden; opacity: 0; transition: opacity .2s; }
+          .info-tooltip-wrap:hover .info-tooltip-text,
+          .info-tooltip-wrap:focus-within .info-tooltip-text { visibility: visible; opacity: 1; }
           .pm-client-practitioners {
             display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .8rem;
           }
@@ -230,7 +319,8 @@ export default function PracticeClientsPage() {
                 to={item.to}
                 className={`pm-nav-link${item.key === 'clients' ? ' active' : ''}`}
               >
-                {item.label}
+                <img src={item.icon} alt="" aria-hidden="true" className="nav-icon" width={16} height={16} />
+                <span>{item.label}</span>
               </Link>
             ))}
             <div className="pm-sidebar-footer">
@@ -246,7 +336,10 @@ export default function PracticeClientsPage() {
                 <h1 className="pm-page-title">Clients & Families</h1>
                 <p className="pm-page-sub">{MOCK_CLIENTS.length} total clients · {MOCK_CLIENTS.filter(c => c.status === 'active').length} active</p>
               </div>
-              <button className="pm-btn">+ Add Client</button>
+              <button className="pm-btn">
+                <img src="/icons/organization.svg" alt="" width={14} height={14} aria-hidden="true" />
+                <span>Add Client</span>
+              </button>
             </div>
 
             {/* Toolbar */}
@@ -317,16 +410,53 @@ export default function PracticeClientsPage() {
                       ))}
                     </div>
 
-                    {/* Dimension progress bars */}
+                    {/* Dimension scores / activity completion */}
                     <div style={{ marginBottom: '.6rem' }}>
-                      <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280', display: 'block', marginBottom: '.4rem' }}>
-                        Dimensional Progress
-                      </span>
-                      <div className="pm-dim-bars" aria-label="Dimensional progress">
-                        {Object.entries(client.dimensions).map(([key, val]) => (
-                          <DimBar key={key} value={val} color={DIM_SHORT[key].color} />
-                        ))}
-                      </div>
+                      {hasAdultParticipants(client.participants) ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', marginBottom: '.4rem' }}>
+                            <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280' }}>
+                              📊 Resilience Assessment Scores
+                            </span>
+                            <InfoTooltip>
+                              <span>Assessment scores (0–100) from the 72-question Resilience Atlas. Higher scores = stronger dimensional capacity. Updates when client retakes the assessment (typically every 30–90 days).</span>
+                              <br /><br />
+                              <span>Note: Assessment scores are for adults (18+) only.</span>
+                            </InfoTooltip>
+                          </div>
+                          {client.lastAssessmentDate && (
+                            <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.3rem' }}>
+                              Most recent assessment: {new Date(client.lastAssessmentDate).toLocaleDateString()}
+                            </span>
+                          )}
+                          <div className="pm-dim-bars" aria-label="Resilience assessment scores">
+                            {Object.entries(client.dimensions).map(([key, val]) => (
+                              <DimBar key={key} value={val} color={DIM_SHORT[key].color} />
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', marginBottom: '.4rem' }}>
+                            <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280' }}>
+                              ✨ Activity Completion Progress
+                            </span>
+                            <InfoTooltip>
+                              <span>Total activities completed across each resilience dimension. Children are tracked via activity completion and behavioral observations — not assessment scores.</span>
+                              <br /><br />
+                              <span>Assessment scores (0–100) are for adults (18+) only.</span>
+                            </InfoTooltip>
+                          </div>
+                          <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.35rem' }}>
+                            Activities completed since curriculum start
+                          </span>
+                          <div style={{ display: 'flex', gap: '.3rem', flexWrap: 'wrap' }} aria-label="Activity completion progress">
+                            {Object.entries(client.activityCounts || {}).map(([key, count]) => (
+                              <ActivityBadge key={key} label={DIM_SHORT[key].label} count={count} color={DIM_SHORT[key].color} />
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Assigned practitioners */}

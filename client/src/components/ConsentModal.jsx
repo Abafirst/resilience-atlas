@@ -1,267 +1,321 @@
 /**
- * ConsentModal.jsx — Data sharing consent modal shown after quiz submission
- * when the user belongs to an organization.
+ * ConsentModal.jsx — Assessment sharing consent modal.
  *
- * Allows users to independently opt-in to:
- *   1. Assessment scores sharing
- *   2. Curriculum progress sharing
+ * Shown to authenticated users who are part of an organization before
+ * they submit their assessment. Lets them opt in or out of sharing
+ * their dimension scores with the organization's team dashboard.
  *
  * Props:
- *   orgName           {string}  Organization display name
- *   defaultScores     {boolean} Pre-fill from user's saved defaults
- *   defaultCurriculum {boolean} Pre-fill from user's saved defaults
- *   onSave            {function({ scores, scoresGoals, curriculum, curriculumGoals, remember })}
- *   onSkip            {function}
+ *   organizationName  {string}   — Name of the user's organization
+ *   defaultConsent    {boolean}  — User's saved default preference
+ *   onSubmit          {function} — Called with { consent, goals, rememberPreference }
+ *   onClose           {function} — Called when the modal is dismissed without submitting
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const overlayStyle = {
+export default function ConsentModal({
+  organizationName,
+  defaultConsent = false,
+  onSubmit,
+  onClose,
+}) {
+  const [consent, setConsent]                   = useState(defaultConsent);
+  const [goals, setGoals]                       = useState('');
+  const [rememberPreference, setRemember]       = useState(false);
+  const dialogRef                               = useRef(null);
+
+  // Trap focus inside the modal while it's open
+  useEffect(() => {
+    const el = dialogRef.current;
+    if (!el) return;
+    el.focus();
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    el.addEventListener('keydown', handleKeyDown);
+    return () => el.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  function handleSubmit() {
+    onSubmit({ consent, goals: goals.trim(), rememberPreference });
+  }
+
+  const orgDisplay = organizationName || 'your organization';
+
+  return (
+    <div
+      style={overlay}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="consent-modal-title"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        ref={dialogRef}
+        style={modal}
+        tabIndex={-1}
+        aria-describedby="consent-modal-desc"
+      >
+        {/* Header */}
+        <div style={header}>
+          <h2 id="consent-modal-title" style={{ margin: 0, fontSize: '1.25rem' }}>
+            Share Your Results?
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            style={closeBtn}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Body */}
+        <div id="consent-modal-desc" style={body}>
+          <p style={{ marginTop: 0, color: '#4a5568' }}>
+            <strong>{orgDisplay}</strong> uses the Resilience Atlas to support
+            team wellbeing and professional development.
+          </p>
+
+          <div style={infoGrid}>
+            {/* What's shared */}
+            <div style={infoBox('#f0fdf4', '#166534')}>
+              <strong>✓ What&apos;s shared:</strong>
+              <ul style={list}>
+                <li>Your dimension scores and overall resilience score</li>
+                <li>Completion date</li>
+              </ul>
+            </div>
+
+            {/* What stays private */}
+            <div style={infoBox('#eff6ff', '#1e40af')}>
+              <strong>🔒 What stays private:</strong>
+              <ul style={list}>
+                <li>Individual question responses</li>
+                <li>Detailed narrative interpretations</li>
+                <li>Your name (visible only to admins)</li>
+              </ul>
+            </div>
+          </div>
+
+          <p style={{ color: '#4a5568', fontSize: '0.9rem' }}>
+            Your data helps create anonymous team-level insights, identify
+            professional development opportunities, and track team resilience
+            trends over time.
+          </p>
+
+          {/* Goals text area — shown only when opting in */}
+          {consent && (
+            <div style={{ marginBottom: '1rem' }}>
+              <label
+                htmlFor="consent-goals"
+                style={{ display: 'block', fontWeight: 600, marginBottom: 6, fontSize: '0.9rem' }}
+              >
+                Why are you sharing? <span style={{ fontWeight: 400, color: '#718096' }}>(optional)</span>
+              </label>
+              <p style={{ margin: '0 0 6px', fontSize: '0.8rem', color: '#718096' }}>
+                This helps your organization understand how to support your goals.
+              </p>
+              <textarea
+                id="consent-goals"
+                value={goals}
+                onChange={(e) => setGoals(e.target.value)}
+                rows={3}
+                maxLength={1000}
+                placeholder="e.g., I want to improve my stress management skills…"
+                style={textarea}
+              />
+            </div>
+          )}
+
+          {/* Consent radio / checkbox */}
+          <fieldset style={{ border: 'none', padding: 0, margin: '0 0 1rem' }}>
+            <legend style={{ fontWeight: 600, marginBottom: 8, fontSize: '0.95rem' }}>
+              Choose your preference:
+            </legend>
+
+            <label style={radioLabel}>
+              <input
+                type="radio"
+                name="sharing-consent"
+                value="share"
+                checked={consent === true}
+                onChange={() => setConsent(true)}
+                style={{ marginRight: 8 }}
+              />
+              ☑️ Share my scores with <strong>{orgDisplay}</strong> to support
+              team resilience initiatives
+            </label>
+
+            <label style={radioLabel}>
+              <input
+                type="radio"
+                name="sharing-consent"
+                value="private"
+                checked={consent === false}
+                onChange={() => setConsent(false)}
+                style={{ marginRight: 8 }}
+              />
+              🔒 Keep my results private (only I can see them)
+            </label>
+          </fieldset>
+
+          <label style={{ ...radioLabel, fontSize: '0.875rem', color: '#4a5568' }}>
+            <input
+              type="checkbox"
+              checked={rememberPreference}
+              onChange={(e) => setRemember(e.target.checked)}
+              style={{ marginRight: 8 }}
+            />
+            Remember my preference for future assessments
+          </label>
+        </div>
+
+        {/* Footer */}
+        <div style={footer}>
+          <button
+            type="button"
+            onClick={() => {
+              // "Keep Private" always saves preference as false when rememberPreference is checked,
+              // regardless of the current consent radio selection.
+              onSubmit({ consent: false, goals: '', rememberPreference });
+            }}
+            style={btnSecondary}
+          >
+            Keep Private
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            style={btnPrimary}
+          >
+            {consent ? 'Share My Results' : 'Submit Without Sharing'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Inline styles ─────────────────────────────────────────────────────────────
+
+const overlay = {
   position:        'fixed',
   inset:           0,
-  background:      'rgba(0,0,0,0.55)',
+  background:      'rgba(0, 0, 0, 0.5)',
   zIndex:          9999,
   display:         'flex',
   alignItems:      'center',
   justifyContent:  'center',
   padding:         '1rem',
+  boxSizing:       'border-box',
 };
 
-const modalStyle = {
+const modal = {
   background:    '#fff',
-  borderRadius:  '1rem',
-  padding:       '2rem',
-  maxWidth:      600,
+  borderRadius:  12,
+  maxWidth:      560,
   width:         '100%',
   maxHeight:     '90vh',
   overflowY:     'auto',
-  boxShadow:     '0 20px 60px rgba(0,0,0,0.25)',
-  position:      'relative',
+  boxShadow:     '0 20px 60px rgba(0,0,0,0.3)',
+  outline:       'none',
 };
 
-const sectionStyle = {
-  border:       '1px solid #e2e8f0',
-  borderRadius: '.75rem',
-  padding:      '1.25rem',
-  marginBottom: '1rem',
-  background:   '#f8fafc',
+const header = {
+  display:         'flex',
+  alignItems:      'center',
+  justifyContent:  'space-between',
+  padding:         '1.25rem 1.5rem 1rem',
+  borderBottom:    '1px solid #e2e8f0',
 };
 
-const checkboxRowStyle = {
-  display:     'flex',
-  alignItems:  'flex-start',
-  gap:         '.75rem',
-  marginBottom: '.75rem',
+const body = {
+  padding: '1.25rem 1.5rem',
 };
 
-const checkboxStyle = {
-  marginTop:   '2px',
-  width:       '18px',
-  height:      '18px',
-  flexShrink:  0,
+const footer = {
+  display:         'flex',
+  justifyContent:  'flex-end',
+  gap:             '0.75rem',
+  padding:         '1rem 1.5rem',
+  borderTop:       '1px solid #e2e8f0',
+};
+
+const closeBtn = {
+  background:  'none',
+  border:      'none',
   cursor:      'pointer',
-  accentColor: '#4f46e5',
+  fontSize:    '1.1rem',
+  color:       '#718096',
+  padding:     '4px 8px',
+  borderRadius: 4,
+  lineHeight:  1,
 };
 
-const textareaStyle = {
+const infoGrid = {
+  display:             'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap:                 '0.75rem',
+  marginBottom:        '1rem',
+};
+
+function infoBox(bg, color) {
+  return {
+    background:   bg,
+    border:       `1px solid ${color}33`,
+    borderRadius: 8,
+    padding:      '0.75rem 1rem',
+    fontSize:     '0.875rem',
+    color,
+  };
+}
+
+const list = {
+  margin:      '6px 0 0',
+  paddingLeft: 18,
+  lineHeight:  1.7,
+};
+
+const radioLabel = {
+  display:      'flex',
+  alignItems:   'flex-start',
+  marginBottom: '0.5rem',
+  cursor:       'pointer',
+  fontSize:     '0.95rem',
+  lineHeight:   1.5,
+};
+
+const textarea = {
   width:        '100%',
-  minHeight:    68,
-  padding:      '.5rem .75rem',
-  border:       '1px solid #cbd5e1',
-  borderRadius: '.5rem',
-  fontSize:     '.85rem',
+  borderRadius: 6,
+  border:       '1px solid #cbd5e0',
+  padding:      '0.6rem 0.75rem',
+  fontSize:     '0.9rem',
   resize:       'vertical',
+  boxSizing:    'border-box',
   fontFamily:   'inherit',
-  marginTop:    '.25rem',
 };
 
-const btnPrimaryStyle = {
-  background:   '#4f46e5',
+const btnPrimary = {
+  background:   '#3182ce',
   color:        '#fff',
   border:       'none',
-  borderRadius: '.5rem',
-  padding:      '.65rem 1.4rem',
-  fontWeight:   700,
-  fontSize:     '.9rem',
+  borderRadius: 8,
+  padding:      '0.6rem 1.25rem',
   cursor:       'pointer',
-};
-
-const btnSecondaryStyle = {
-  background:   'transparent',
-  color:        '#64748b',
-  border:       '1px solid #cbd5e1',
-  borderRadius: '.5rem',
-  padding:      '.65rem 1.4rem',
+  fontSize:     '0.95rem',
   fontWeight:   600,
-  fontSize:     '.9rem',
-  cursor:       'pointer',
 };
 
-export default function ConsentModal({
-  orgName = 'your organization',
-  defaultScores = false,
-  defaultCurriculum = false,
-  onSave,
-  onSkip,
-}) {
-  const [scores,          setScores]          = useState(defaultScores);
-  const [scoresGoals,     setScoresGoals]     = useState('');
-  const [curriculum,      setCurriculum]      = useState(defaultCurriculum);
-  const [curriculumGoals, setCurriculumGoals] = useState('');
-  const [remember,        setRemember]        = useState(false);
-
-  function handleSave() {
-    if (typeof onSave === 'function') {
-      onSave({ scores, scoresGoals, curriculum, curriculumGoals, remember });
-    }
-  }
-
-  function handleSkip() {
-    if (typeof onSkip === 'function') onSkip();
-  }
-
-  return (
-    <div style={overlayStyle} role="dialog" aria-modal="true" aria-labelledby="consent-modal-title">
-      <div style={modalStyle}>
-        <h2 id="consent-modal-title" style={{ marginTop: 0, fontSize: '1.25rem', color: '#1e293b' }}>
-          Share Your Results with {orgName}?
-        </h2>
-        <p style={{ color: '#475569', fontSize: '.9rem', marginBottom: '1.25rem' }}>
-          <strong>{orgName}</strong> uses the Resilience Atlas to support team wellbeing
-          and professional development. Choose what to share — you can change these
-          settings at any time in your privacy dashboard.
-        </p>
-
-        {/* ── Assessment Scores Section ─────────────────────────────────── */}
-        <div style={sectionStyle}>
-          <div style={checkboxRowStyle}>
-            <input
-              id="consent-scores"
-              type="checkbox"
-              style={checkboxStyle}
-              checked={scores}
-              onChange={(e) => setScores(e.target.checked)}
-            />
-            <label htmlFor="consent-scores" style={{ fontWeight: 700, color: '#1e293b', cursor: 'pointer' }}>
-              Share my assessment scores
-            </label>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem 1.5rem', marginBottom: '.75rem', fontSize: '.83rem' }}>
-            <div>
-              <p style={{ margin: '0 0 .3rem', fontWeight: 600, color: '#374151' }}>What's included:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569' }}>
-                <li>Dimension scores (Cognitive, Relational, etc.)</li>
-                <li>Overall resilience score</li>
-                <li>Assessment completion dates</li>
-              </ul>
-            </div>
-            <div>
-              <p style={{ margin: '0 0 .3rem', fontWeight: 600, color: '#374151' }}>What stays private:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569' }}>
-                <li>Individual question responses</li>
-                <li>Detailed narrative interpretations</li>
-              </ul>
-            </div>
-          </div>
-
-          {scores && (
-            <div>
-              <label htmlFor="scores-goals" style={{ fontSize: '.83rem', color: '#475569', fontWeight: 600 }}>
-                Why I&rsquo;m sharing <span style={{ fontWeight: 400 }}>(optional — helps {orgName} support your goals)</span>
-              </label>
-              <textarea
-                id="scores-goals"
-                style={textareaStyle}
-                placeholder="e.g., I want my manager to understand my professional development priorities…"
-                value={scoresGoals}
-                onChange={(e) => setScoresGoals(e.target.value)}
-                maxLength={500}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* ── Curriculum Progress Section ───────────────────────────────── */}
-        <div style={sectionStyle}>
-          <div style={checkboxRowStyle}>
-            <input
-              id="consent-curriculum"
-              type="checkbox"
-              style={checkboxStyle}
-              checked={curriculum}
-              onChange={(e) => setCurriculum(e.target.checked)}
-            />
-            <label htmlFor="consent-curriculum" style={{ fontWeight: 700, color: '#1e293b', cursor: 'pointer' }}>
-              Share my curriculum progress
-            </label>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem 1.5rem', marginBottom: '.75rem', fontSize: '.83rem' }}>
-            <div>
-              <p style={{ margin: '0 0 .3rem', fontWeight: 600, color: '#374151' }}>What's included:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569' }}>
-                <li>Modules and activities completed</li>
-                <li>Skills practiced and developed</li>
-                <li>Completion dates and streaks</li>
-              </ul>
-            </div>
-            <div>
-              <p style={{ margin: '0 0 .3rem', fontWeight: 600, color: '#374151' }}>What stays private:</p>
-              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#475569' }}>
-                <li>Detailed activity content</li>
-                <li>Personal reflections and notes</li>
-                <li>Quiz/assessment answers</li>
-              </ul>
-            </div>
-          </div>
-
-          {curriculum && (
-            <div>
-              <label htmlFor="curriculum-goals" style={{ fontSize: '.83rem', color: '#475569', fontWeight: 600 }}>
-                Why I&rsquo;m sharing <span style={{ fontWeight: 400 }}>(optional)</span>
-              </label>
-              <textarea
-                id="curriculum-goals"
-                style={textareaStyle}
-                placeholder="e.g., I want to show my commitment to professional growth…"
-                value={curriculumGoals}
-                onChange={(e) => setCurriculumGoals(e.target.value)}
-                maxLength={500}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* ── Remember preference ───────────────────────────────────────── */}
-        <div style={{ ...checkboxRowStyle, marginBottom: '1.5rem' }}>
-          <input
-            id="consent-remember"
-            type="checkbox"
-            style={checkboxStyle}
-            checked={remember}
-            onChange={(e) => setRemember(e.target.checked)}
-          />
-          <label htmlFor="consent-remember" style={{ fontSize: '.85rem', color: '#475569', cursor: 'pointer' }}>
-            Remember my preferences for future assessments
-          </label>
-        </div>
-
-        {/* ── Actions ───────────────────────────────────────────────────── */}
-        <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          <button type="button" style={btnSecondaryStyle} onClick={handleSkip}>
-            Keep All Private
-          </button>
-          <button type="button" style={btnPrimaryStyle} onClick={handleSave}>
-            Save Preferences &amp; Continue
-          </button>
-        </div>
-
-        <p style={{ marginTop: '1rem', fontSize: '.78rem', color: '#94a3b8', textAlign: 'center' }}>
-          Your name is only visible to organization administrators. You can update these
-          settings at any time in <a href="/settings/privacy" style={{ color: '#4f46e5' }}>Privacy Settings</a>.
-        </p>
-      </div>
-    </div>
-  );
-}
+const btnSecondary = {
+  background:   '#fff',
+  color:        '#4a5568',
+  border:       '1px solid #cbd5e0',
+  borderRadius: 8,
+  padding:      '0.6rem 1.25rem',
+  cursor:       'pointer',
+  fontSize:     '0.95rem',
+};

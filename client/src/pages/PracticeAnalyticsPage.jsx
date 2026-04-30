@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom';
 import SiteHeader from '../components/SiteHeader.jsx';
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard',  icon: '/icons/planning.svg' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients',    icon: '/icons/organization.svg' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule',   icon: '/icons/time.svg' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing',    icon: '/icons/currency.svg' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team',       icon: '/icons/team.svg' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics',  icon: '/icons/growth.svg' },
 ];
 
 const DIMENSIONS = [
@@ -32,10 +32,10 @@ const MOCK_PRACTICE_DIMS = {
 };
 
 const MOCK_PRACTITIONER_RESILIENCE = [
-  { name: 'Dr. Sarah Chen',   dims: { agentic: 82, somatic: 78, emotional: 85, cognitive: 90, relational: 88, spiritual: 75 }, burnout: 'low' },
-  { name: 'Marcus Williams',  dims: { agentic: 70, somatic: 65, emotional: 68, cognitive: 72, relational: 75, spiritual: 60 }, burnout: 'moderate' },
-  { name: 'Priya Patel',      dims: { agentic: 85, somatic: 90, emotional: 80, cognitive: 82, relational: 88, spiritual: 79 }, burnout: 'low' },
-  { name: 'James Rodriguez',  dims: { agentic: 55, somatic: 60, emotional: 52, cognitive: 58, relational: 65, spiritual: 48 }, burnout: 'high' },
+  { name: 'Dr. Sarah Chen',   dims: { agentic: 82, somatic: 78, emotional: 85, cognitive: 90, relational: 88, spiritual: 75 }, resilienceLevel: 'high' },
+  { name: 'Marcus Williams',  dims: { agentic: 70, somatic: 65, emotional: 68, cognitive: 72, relational: 75, spiritual: 60 }, resilienceLevel: 'moderate' },
+  { name: 'Priya Patel',      dims: { agentic: 85, somatic: 90, emotional: 80, cognitive: 82, relational: 88, spiritual: 79 }, resilienceLevel: 'high' },
+  { name: 'James Rodriguez',  dims: { agentic: 55, somatic: 60, emotional: 52, cognitive: 58, relational: 65, spiritual: 48 }, resilienceLevel: 'developing' },
 ];
 
 const MOCK_PRACTITIONER_PERF = [
@@ -100,10 +100,10 @@ function DimRadar({ dims }) {
 export default function PracticeAnalyticsPage() {
   const [activeTab, setActiveTab] = useState('outcomes');
 
-  const burnoutStyles = {
-    low:      { bg: '#d1fae5', color: '#059669', label: 'Low Risk' },
-    moderate: { bg: '#fef3c7', color: '#d97706', label: 'Moderate Risk' },
-    high:     { bg: '#fee2e2', color: '#dc2626', label: 'At Risk' },
+  const resilienceLevels = {
+    high:       { bg: '#d1fae5', color: '#059669', label: 'Thriving' },
+    moderate:   { bg: '#fef3c7', color: '#d97706', label: 'Sustaining' },
+    developing: { bg: '#fee2e2', color: '#dc2626', label: 'Building' },
   };
 
   return (
@@ -132,6 +132,9 @@ export default function PracticeAnalyticsPage() {
           }
           .pm-nav-link:hover { background: rgba(255,255,255,.06); color: #f1f5f9; }
           .pm-nav-link.active { background: rgba(99,102,241,.15); color: #a5b4fc; border-left-color: #6366f1; }
+          .nav-icon { opacity: .85; flex-shrink: 0; }
+          .pm-nav-link.active .nav-icon { opacity: 1; }
+          button img[aria-hidden="true"] { vertical-align: text-bottom; margin-right: 6px; flex-shrink: 0; }
           .pm-sidebar-footer {
             margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,.08);
           }
@@ -186,7 +189,7 @@ export default function PracticeAnalyticsPage() {
           }
           .prac-res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
           .prac-res-name { font-size: .95rem; font-weight: 700; color: #1e293b; }
-          .burnout-badge { padding: .2rem .65rem; border-radius: 999px; font-size: .72rem; font-weight: 700; }
+          .resilience-badge { padding: .2rem .65rem; border-radius: 999px; font-size: .72rem; font-weight: 700; }
 
           @media (max-width: 900px) { .pm-sidebar { display: none; } }
           @media (max-width: 640px) { .an-two-col, .an-three-col { grid-template-columns: 1fr; } }
@@ -202,7 +205,8 @@ export default function PracticeAnalyticsPage() {
                 to={item.to}
                 className={`pm-nav-link${item.key === 'analytics' ? ' active' : ''}`}
               >
-                {item.label}
+                <img src={item.icon} alt="" aria-hidden="true" className="nav-icon" width={16} height={16} />
+                <span>{item.label}</span>
               </Link>
             ))}
             <div className="pm-sidebar-footer">
@@ -261,10 +265,13 @@ export default function PracticeAnalyticsPage() {
 
                 <div className="an-two-col">
                   <div className="an-card">
-                    <h2 className="an-card-title">Average Dimensional Progress (All Clients)</h2>
+                    <h2 className="an-card-title">Average Dimensional Scores (Adult Clients Only)</h2>
+                    <p style={{ fontSize: '.75rem', color: '#6b7280', margin: '-.25rem 0 .75rem' }}>
+                      From the 72-question Resilience Atlas assessment · adults 18+ · scores 0–100
+                    </p>
                     <DimRadar dims={MOCK_PRACTICE_DIMS} />
                     <p style={{ fontSize: '.78rem', color: '#9ca3af', marginTop: '1rem' }}>
-                      Average scores across all 24 active clients. Higher = stronger dimension.
+                      Average assessment scores across adult clients (18+). Higher = stronger dimensional capacity. Child clients are tracked separately via activity completion.
                     </p>
                   </div>
                   <div className="an-card">
@@ -388,14 +395,18 @@ export default function PracticeAnalyticsPage() {
 
                 <div style={{ display: 'grid', grid: 'auto / repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
                   {MOCK_PRACTITIONER_RESILIENCE.map(p => {
-                    const bs = burnoutStyles[p.burnout];
+                    const level = resilienceLevels[p.resilienceLevel];
                     const avgScore = Math.round(Object.values(p.dims).reduce((s, v) => s + v, 0) / 6);
                     return (
                       <div key={p.name} className="prac-res-card">
                         <div className="prac-res-header">
                           <p className="prac-res-name">{p.name}</p>
-                          <span className="burnout-badge" style={{ background: bs.bg, color: bs.color }}>
-                            {bs.label}
+                          <span
+                            className="resilience-badge"
+                            style={{ background: level.bg, color: level.color }}
+                            title="Current resilience capacity based on dimensional assessment scores"
+                          >
+                            {level.label}
                           </span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.85rem' }}>
@@ -419,8 +430,8 @@ export default function PracticeAnalyticsPage() {
                 }}>
                   <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                   <p style={{ margin: 0 }}>
-                    <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Practitioner wellness dashboard — Coming 2026.</span>{' '}
-                    Live dimensional tracking for practitioners, burnout early-warning alerts,
+                    <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Practitioner wellbeing dashboard — Coming 2026.</span>{' '}
+                    Live dimensional tracking for practitioners, early-warning resilience alerts,
                     peer support matching, and professional development recommendations are in development.{' '}
                     <Link to="/iatlas/train-the-facilitator" style={{ color: '#a5b4fc', fontWeight: 600 }}>
                       Learn about TTF →
