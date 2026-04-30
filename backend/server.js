@@ -489,6 +489,8 @@ app.use("/api/ttf", require("./routes/ttf"));
 console.log("✅ Mounted route: /api/ttf (Train the Facilitator)");
 app.use("/api/user/consent", require("./routes/user-consent"));
 console.log("✅ Mounted route: /api/user/consent (Assessment sharing consent)");
+app.use("/api/progress-circles", require("./routes/progress-circles"));
+console.log("✅ Mounted route: /api/progress-circles (Progress Circles)");
 
 // ==============================
 // Root API info

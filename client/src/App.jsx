@@ -89,6 +89,9 @@ import DevelopmentalRoadmapPage from './pages/DevelopmentalRoadmapPage.jsx';
 import AcceptInvitationPage from './pages/AcceptInvitationPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
 import IATLASSubscribePage from './pages/IATLASSubscribePage.jsx';
+import ProgressCircleSetupPage from './pages/ProgressCircleSetupPage.jsx';
+import ProgressCircleDashboardPage from './pages/ProgressCircleDashboardPage.jsx';
+import InviteToCirclePage from './pages/InviteToCirclePage.jsx';
 
 // Heavy pages — code-split to reduce initial bundle size
 const PractitionerProtocolLibrary      = lazy(() => import('./pages/PractitionerProtocolLibrary.jsx'));
@@ -488,6 +491,10 @@ function AppShell() {
           <Route path="/iatlas/seasonal-activities" element={<SeasonalActivityPack />} />
           <Route path="/iatlas/crisis-toolkit" element={<CrisisToolkit />} />
           <Route path="/iatlas/video-library" element={<IATLASVideoLibrary />} />
+          {/* Progress Circles */}
+          <Route path="/iatlas/circles/new" element={<ProgressCircleSetupPage />} />
+          <Route path="/iatlas/circles/:id" element={<ProgressCircleDashboardPage />} />
+          <Route path="/iatlas/circles/:id/invite" element={<InviteToCirclePage />} />
           {/* Legacy redirect */}
           <Route path="/iarf" element={<Navigate to="/iatlas" replace />} />
 

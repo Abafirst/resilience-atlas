@@ -123,6 +123,37 @@ const childProfileSchema = new mongoose.Schema(
       default: false,
       index:   true,
     },
+
+    // ── Progress Circle fields ────────────────────────────────────────────────
+
+    // Reference to the ProgressCircle this profile is enrolled in (if any).
+    progressCircleId: {
+      type:    mongoose.Schema.Types.ObjectId,
+      ref:     'ProgressCircle',
+      default: null,
+      index:   true,
+    },
+
+    // Privacy consent for team-sharing features.
+    privacyConsent: {
+      sharingEnabled:  { type: Boolean, default: false },
+      consentedBy:     { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+      consentedAt:     { type: Date,   default: null },
+      consentVersion:  { type: String, default: '1.0' },
+    },
+
+    // Activity log tracking who completed what activity, where, and when.
+    activityLog: [
+      {
+        activityId:       { type: String,  required: true },
+        completedAt:      { type: Date,    default: Date.now },
+        completedBy:      { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+        completedByRole:  { type: String,  default: '' },
+        setting:          { type: String,  default: '' },
+        dimension:        { type: String,  default: '' },
+        xpAwarded:        { type: Number,  default: 0 },
+      },
+    ],
   },
   { timestamps: true }
 );

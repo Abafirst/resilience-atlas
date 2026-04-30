@@ -28,6 +28,7 @@ const { buildTeamInvitationEmail }     = require('../templates/emails/teamInvita
 const { buildGrowthMilestoneEmail }    = require('../templates/emails/growthMilestone');
 const { referralWelcome }              = require('../templates/emails/referralWelcome');
 const { referralThankYou }             = require('../templates/emails/referralThankYou');
+const { buildProgressCircleInvitationEmail } = require('../templates/emails/progressCircleInvitation');
 const { buildTeamPurchaseConfirmationEmail } = require('../templates/emails/teamPurchaseConfirmation');
 const { buildPurchaseWelcomeEmail }          = require('../templates/emails/purchaseWelcome');
 const { wrapEmail } = require('../templates/emails/base');
@@ -527,6 +528,18 @@ async function sendPractitionerInvitation({ to, inviterName, practiceName, role,
   });
 }
 
+/**
+ * Send an invitation email for a Progress Circle.
+ *
+ * @param {string} to
+ * @param {Object} vars  See progressCircleInvitation.js for full variable list
+ *   { inviteeName, inviterName, childName, circleName, role, invitationLink, expiryDays }
+ */
+async function sendProgressCircleInvitation(to, vars) {
+  const emailObj = buildProgressCircleInvitationEmail(vars);
+  return _send(to, emailObj);
+}
+
 /* ── Exports ──────────────────────────────────────────────────────────────── */
 
 module.exports = {
@@ -563,6 +576,9 @@ module.exports = {
 
   /* Practitioner invitation (IATLAS multi-practitioner) */
   sendPractitionerInvitation,
+
+  /* Progress Circle invitation */
+  sendProgressCircleInvitation,
 
   /* Exposed for testing */
   capitalize,
