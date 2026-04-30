@@ -104,6 +104,7 @@ export default function PracticeAnalyticsPage() {
     high:       { bg: '#d1fae5', color: '#059669', label: 'Thriving' },
     moderate:   { bg: '#fef3c7', color: '#d97706', label: 'Sustaining' },
     developing: { bg: '#fee2e2', color: '#dc2626', label: 'Building' },
+  };
 
   return (
     <>
