@@ -55,6 +55,9 @@ const VALID_SETTINGS = ['home', 'school', 'clinic', 'therapy', 'community', 'wor
 // Roles that have parent-equivalent authority (can modify privacy, invite, remove members).
 const ADMIN_ROLES = ['parent', 'guardian'];
 
+// Number of days before a pending invitation expires.
+const INVITATION_EXPIRY_DAYS = 30;
+
 // Default permissions per role.
 const DEFAULT_PERMISSIONS_BY_ROLE = {
   parent:        { canViewProgress: true,  canViewActivities: true,  canViewDimensions: true,  canViewNotes: true,  canAddActivities: true,  canInviteOthers: true  },
@@ -266,8 +269,17 @@ router.post('/:id/invite', authenticateJWT, async (req, res) => {
     }
 
     const trimmedEmail = email.trim().toLowerCase();
-    // Basic email format check.
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+    // Basic email format check — deliberately simple to avoid ReDoS.
+    // Checks for: local-part @ domain . tld with no whitespace.
+    const atIdx = trimmedEmail.indexOf('@');
+    const lastDotIdx = trimmedEmail.lastIndexOf('.');
+    if (
+      atIdx < 1 ||
+      atIdx === trimmedEmail.length - 1 ||
+      lastDotIdx <= atIdx + 1 ||
+      lastDotIdx === trimmedEmail.length - 1 ||
+      trimmedEmail.includes(' ')
+    ) {
       return res.status(400).json({ error: 'Invalid email address.' });
     }
 
@@ -327,7 +339,7 @@ router.post('/:id/invite', authenticateJWT, async (req, res) => {
         circleName:     circle.name,
         role,
         invitationLink,
-        expiryDays:     30,
+        expiryDays:     INVITATION_EXPIRY_DAYS,
       });
     } catch (emailErr) {
       // Log but don't fail the request — invitation is persisted even if email fails.

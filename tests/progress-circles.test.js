@@ -57,7 +57,18 @@ function validatePrivacyLevel(level) {
 
 function validateEmail(email) {
   if (!email || typeof email !== 'string' || !email.trim()) return 'Email is required.';
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) return 'Invalid email address.';
+  const trimmed = email.trim();
+  const atIdx = trimmed.indexOf('@');
+  const lastDotIdx = trimmed.lastIndexOf('.');
+  if (
+    atIdx < 1 ||
+    atIdx === trimmed.length - 1 ||
+    lastDotIdx <= atIdx + 1 ||
+    lastDotIdx === trimmed.length - 1 ||
+    trimmed.includes(' ')
+  ) {
+    return 'Invalid email address.';
+  }
   return null;
 }
 
@@ -77,14 +88,14 @@ function isAdminRole(role) {
   return ADMIN_ROLES.includes(role);
 }
 
-function applyPrivacyFilter(data, memberRole, privacyLevel) {
+function applyPrivacyFilter(data, memberUserId, memberRole, privacyLevel) {
   if (privacyLevel === 'full') return data;
 
   if (privacyLevel === 'minimal') {
     return {
       ...data,
       recentActivities: (data.recentActivities || []).filter(
-        (a) => a.completedByRole === memberRole
+        (a) => a.completedBy && memberUserId && a.completedBy.toString() === memberUserId.toString()
       ),
     };
   }
@@ -278,10 +289,14 @@ describe('DEFAULT_PERMISSIONS_BY_ROLE', () => {
 // ── Tests: privacy level filtering ───────────────────────────────────────────
 
 describe('applyPrivacyFilter', () => {
+  const USER_A = 'user-a-id';
+  const USER_B = 'user-b-id';
+  const USER_C = 'user-c-id';
+
   const sampleActivities = [
-    { activityId: 'act-1', completedByRole: 'parent',  setting: 'home'   },
-    { activityId: 'act-2', completedByRole: 'teacher', setting: 'school' },
-    { activityId: 'act-3', completedByRole: 'slp',     setting: 'clinic' },
+    { activityId: 'act-1', completedBy: USER_A, completedByRole: 'parent',  setting: 'home'   },
+    { activityId: 'act-2', completedBy: USER_B, completedByRole: 'teacher', setting: 'school' },
+    { activityId: 'act-3', completedBy: USER_C, completedByRole: 'slp',     setting: 'clinic' },
   ];
   const sampleData = {
     progress: { totalXP: 100, level: 2 },
@@ -289,29 +304,34 @@ describe('applyPrivacyFilter', () => {
   };
 
   test('full: all activities visible', () => {
-    const result = applyPrivacyFilter(sampleData, 'teacher', 'full');
+    const result = applyPrivacyFilter(sampleData, USER_B, 'teacher', 'full');
     expect(result.recentActivities).toHaveLength(3);
   });
 
-  test('minimal: only own role activities visible', () => {
-    const result = applyPrivacyFilter(sampleData, 'teacher', 'minimal');
+  test('minimal: only own activities visible (filtered by userId)', () => {
+    const result = applyPrivacyFilter(sampleData, USER_B, 'teacher', 'minimal');
     expect(result.recentActivities).toHaveLength(1);
-    expect(result.recentActivities[0].completedByRole).toBe('teacher');
+    expect(result.recentActivities[0].completedBy).toBe(USER_B);
+  });
+
+  test('minimal: no activities shown when user has logged nothing', () => {
+    const result = applyPrivacyFilter(sampleData, 'unknown-user', 'teacher', 'minimal');
+    expect(result.recentActivities).toHaveLength(0);
   });
 
   test('aggregated + employer: no activities shown', () => {
-    const result = applyPrivacyFilter(sampleData, 'employer', 'aggregated');
+    const result = applyPrivacyFilter(sampleData, USER_B, 'employer', 'aggregated');
     expect(result.recentActivities).toHaveLength(0);
   });
 
   test('aggregated + non-employer: all activities shown', () => {
-    const result = applyPrivacyFilter(sampleData, 'teacher', 'aggregated');
+    const result = applyPrivacyFilter(sampleData, USER_B, 'teacher', 'aggregated');
     expect(result.recentActivities).toHaveLength(3);
   });
 
   test('progress data is preserved regardless of privacy level', () => {
     (['full', 'aggregated', 'minimal']).forEach((level) => {
-      const result = applyPrivacyFilter(sampleData, 'teacher', level);
+      const result = applyPrivacyFilter(sampleData, USER_B, 'teacher', level);
       expect(result.progress.totalXP).toBe(100);
     });
   });
