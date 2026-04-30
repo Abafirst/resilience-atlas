@@ -32,10 +32,10 @@ const MOCK_PRACTICE_DIMS = {
 };
 
 const MOCK_PRACTITIONER_RESILIENCE = [
-  { name: 'Dr. Sarah Chen',   dims: { agentic: 82, somatic: 78, emotional: 85, cognitive: 90, relational: 88, spiritual: 75 }, burnout: 'low' },
-  { name: 'Marcus Williams',  dims: { agentic: 70, somatic: 65, emotional: 68, cognitive: 72, relational: 75, spiritual: 60 }, burnout: 'moderate' },
-  { name: 'Priya Patel',      dims: { agentic: 85, somatic: 90, emotional: 80, cognitive: 82, relational: 88, spiritual: 79 }, burnout: 'low' },
-  { name: 'James Rodriguez',  dims: { agentic: 55, somatic: 60, emotional: 52, cognitive: 58, relational: 65, spiritual: 48 }, burnout: 'high' },
+  { name: 'Dr. Sarah Chen',   dims: { agentic: 82, somatic: 78, emotional: 85, cognitive: 90, relational: 88, spiritual: 75 }, resilienceLevel: 'high' },
+  { name: 'Marcus Williams',  dims: { agentic: 70, somatic: 65, emotional: 68, cognitive: 72, relational: 75, spiritual: 60 }, resilienceLevel: 'moderate' },
+  { name: 'Priya Patel',      dims: { agentic: 85, somatic: 90, emotional: 80, cognitive: 82, relational: 88, spiritual: 79 }, resilienceLevel: 'high' },
+  { name: 'James Rodriguez',  dims: { agentic: 55, somatic: 60, emotional: 52, cognitive: 58, relational: 65, spiritual: 48 }, resilienceLevel: 'developing' },
 ];
 
 const MOCK_PRACTITIONER_PERF = [
@@ -100,10 +100,10 @@ function DimRadar({ dims }) {
 export default function PracticeAnalyticsPage() {
   const [activeTab, setActiveTab] = useState('outcomes');
 
-  const burnoutStyles = {
-    low:      { bg: '#d1fae5', color: '#059669', label: 'Low Risk' },
-    moderate: { bg: '#fef3c7', color: '#d97706', label: 'Moderate Risk' },
-    high:     { bg: '#fee2e2', color: '#dc2626', label: 'At Risk' },
+  const resilienceLevels = {
+    high:       { bg: '#d1fae5', color: '#059669', label: 'Thriving' },
+    moderate:   { bg: '#fef3c7', color: '#d97706', label: 'Sustaining' },
+    developing: { bg: '#fee2e2', color: '#dc2626', label: 'Building' },
   };
 
   return (
@@ -186,7 +186,7 @@ export default function PracticeAnalyticsPage() {
           }
           .prac-res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
           .prac-res-name { font-size: .95rem; font-weight: 700; color: #1e293b; }
-          .burnout-badge { padding: .2rem .65rem; border-radius: 999px; font-size: .72rem; font-weight: 700; }
+          .resilience-badge { padding: .2rem .65rem; border-radius: 999px; font-size: .72rem; font-weight: 700; }
 
           @media (max-width: 900px) { .pm-sidebar { display: none; } }
           @media (max-width: 640px) { .an-two-col, .an-three-col { grid-template-columns: 1fr; } }
@@ -388,14 +388,18 @@ export default function PracticeAnalyticsPage() {
 
                 <div style={{ display: 'grid', grid: 'auto / repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
                   {MOCK_PRACTITIONER_RESILIENCE.map(p => {
-                    const bs = burnoutStyles[p.burnout];
+                    const level = resilienceLevels[p.resilienceLevel];
                     const avgScore = Math.round(Object.values(p.dims).reduce((s, v) => s + v, 0) / 6);
                     return (
                       <div key={p.name} className="prac-res-card">
                         <div className="prac-res-header">
                           <p className="prac-res-name">{p.name}</p>
-                          <span className="burnout-badge" style={{ background: bs.bg, color: bs.color }}>
-                            {bs.label}
+                          <span
+                            className="resilience-badge"
+                            style={{ background: level.bg, color: level.color }}
+                            title="Current resilience capacity based on dimensional assessment scores"
+                          >
+                            {level.label}
                           </span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.85rem' }}>
@@ -419,8 +423,8 @@ export default function PracticeAnalyticsPage() {
                 }}>
                   <img src="/icons/warning.svg" aria-hidden="true" className="icon icon-sm" alt="" />
                   <p style={{ margin: 0 }}>
-                    <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Practitioner wellness dashboard — Coming 2026.</span>{' '}
-                    Live dimensional tracking for practitioners, burnout early-warning alerts,
+                    <span style={{ color: '#f1f5f9', fontWeight: 700 }}>Practitioner wellbeing dashboard — Coming 2026.</span>{' '}
+                    Live dimensional tracking for practitioners, early-warning resilience alerts,
                     peer support matching, and professional development recommendations are in development.{' '}
                     <Link to="/iatlas/train-the-facilitator" style={{ color: '#a5b4fc', fontWeight: 600 }}>
                       Learn about TTF →
