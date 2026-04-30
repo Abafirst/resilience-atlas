@@ -193,7 +193,7 @@ export default function DataSharingSettingsPage() {
       setScoresGoals(       data.scoresGoals        || '');
       setCurriculumEnabled( data.curriculumEnabled  === true);
       setCurriculumGoals(   data.curriculumGoals    || '');
-      setHistory((histObj.history || []).slice().reverse());
+      setHistory([...(histObj.history || [])].reverse());
 
       // Fetch org name
       if (data.organizationId) {

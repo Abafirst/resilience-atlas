@@ -108,7 +108,7 @@ function scoreResilienceAnswers(answers) {
  * Calculates resilience scores, persists to MongoDB, and returns results.
  * All tiers (free through enterprise) can access this endpoint.
  */
-router.post('/', async (req, res) => {
+router.post('/', submitLimiter, async (req, res) => {
     try {
         const { firstName, email, answers, tier, scoresConsent, scoresGoals, curriculumConsent, curriculumGoals, rememberPreference } = req.body;
 

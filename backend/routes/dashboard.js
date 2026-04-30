@@ -179,20 +179,25 @@ async function getScoringConsentUserIds(orgId) {
 async function buildConsentFilter(orgId, userIds) {
   const consentSet = await getScoringConsentUserIds(orgId);
 
-  // Intersect with users in scope
+  // Intersect with users in scope — filter out any non-ObjectId strings to avoid type mismatches
   const allowedIds = userIds
     .map((id) => id.toString())
-    .filter((id) => consentSet.has(id))
-    .map((id) => mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : id);
+    .filter((id) => consentSet.has(id) && mongoose.Types.ObjectId.isValid(id))
+    .map((id) => new mongoose.Types.ObjectId(id));
 
-  // If no one has consented via UserDataSharing, still allow results
-  // that have the sharingConsent.scores field set to true directly.
-  return {
-    $or: [
-      ...(allowedIds.length > 0 ? [{ userId: { $in: allowedIds } }] : []),
-      { 'sharingConsent.scores': true },
-    ],
-  };
+  // When we have consenting users via UserDataSharing, combine with inline consent flag.
+  // If no users have a UserDataSharing record, only include results with inline flag set.
+  if (allowedIds.length > 0) {
+    return {
+      $or: [
+        { userId: { $in: allowedIds } },
+        { 'sharingConsent.scores': true },
+      ],
+    };
+  }
+
+  // No UserDataSharing consent records — fall back to inline field only
+  return { 'sharingConsent.scores': true };
 }
 
 // ── GET /api/dashboard/org-summary ───────────────────────────────────────────

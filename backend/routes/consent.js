@@ -180,14 +180,14 @@ router.post('/', async (req, res) => {
       });
     }
 
+    const updateDoc = { $set: updateFields };
+    if (historyEntries.length > 0) {
+      updateDoc.$push = { history: { $each: historyEntries } };
+    }
+
     const sharing = await UserDataSharing.findOneAndUpdate(
       { userId: user._id, organizationId: orgId },
-      {
-        $set:  updateFields,
-        $push: historyEntries.length > 0
-          ? { history: { $each: historyEntries } }
-          : undefined,
-      },
+      updateDoc,
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
