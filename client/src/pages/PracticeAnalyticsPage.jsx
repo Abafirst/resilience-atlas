@@ -101,9 +101,9 @@ export default function PracticeAnalyticsPage() {
   const [activeTab, setActiveTab] = useState('outcomes');
 
   const burnoutStyles = {
-    low:      { bg: '#d1fae5', color: '#059669', label: 'Low Risk' },
-    moderate: { bg: '#fef3c7', color: '#d97706', label: 'Moderate Risk' },
-    high:     { bg: '#fee2e2', color: '#dc2626', label: 'At Risk' },
+    low:      { bg: '#d1fae5', color: '#059669', label: 'Well-Resourced' },
+    moderate: { bg: '#fef3c7', color: '#d97706', label: 'Sustaining' },
+    high:     { bg: '#fee2e2', color: '#dc2626', label: 'Strengthening' },
   };
 
   return (
@@ -261,10 +261,10 @@ export default function PracticeAnalyticsPage() {
 
                 <div className="an-two-col">
                   <div className="an-card">
-                    <h2 className="an-card-title">Average Dimensional Progress (All Clients)</h2>
+                    <h2 className="an-card-title">Average Resilience Assessment Scores (Adult Clients)</h2>
                     <DimRadar dims={MOCK_PRACTICE_DIMS} />
                     <p style={{ fontSize: '.78rem', color: '#9ca3af', marginTop: '1rem' }}>
-                      Average scores across all 24 active clients. Higher = stronger dimension.
+                      Average assessment scores across adult clients (18+) from their most recent 72-question Resilience Atlas assessment. Child clients are excluded — their progress is tracked via curriculum completion. Higher = stronger dimensional capacity. Scale: 0–100.
                     </p>
                   </div>
                   <div className="an-card">

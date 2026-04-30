@@ -244,10 +244,11 @@ export default function ClientOutcomeReportPage() {
 
               {/* ── Dimensional progress ── */}
               <section className="cor-section">
-                <h2 className="cor-section-title">Dimensional Progress</h2>
+                <h2 className="cor-section-title">Dimensional Assessment Progress</h2>
                 <p className="cor-section-desc">
-                  Radar chart comparing baseline (intake) scores to current scores across
-                  all six resilience dimensions.
+                  Radar chart comparing baseline (intake) assessment scores to current scores across
+                  all six resilience dimensions. Scores are from the 72-question Resilience Atlas
+                  assessment (scale 0–100). For adult clients only.
                 </p>
                 <div className="cor-chart-wrap">
                   <ProgressRadarChart baseline={baseline} current={current} />
