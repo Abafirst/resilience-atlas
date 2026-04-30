@@ -8,6 +8,7 @@ const logger = require('../utils/logger');
 const ResilienceResult = require('../models/ResilienceResult');
 const ResilienceAssessment = require('../models/ResilienceAssessment');
 const ResilienceReport = require('../models/ResilienceReport');
+const UserDataSharing = require('../models/UserDataSharing');
 const { calculateEvolution } = require('../services/evolution');
 const { generateNarrativeReport } = require('../services/reportGenerator');
 const { buildResultsHash } = require('../services/reportService');
@@ -109,7 +110,7 @@ function scoreResilienceAnswers(answers) {
  */
 router.post('/', async (req, res) => {
     try {
-        const { firstName, email, answers, tier } = req.body;
+        const { firstName, email, answers, tier, scoresConsent, scoresGoals, curriculumConsent, curriculumGoals, rememberPreference } = req.body;
 
         if (!answers || !Array.isArray(answers) || answers.length !== 72) {
             return res.status(400).json({ error: 'Please provide all 72 answers.' });
@@ -134,6 +135,17 @@ router.post('/', async (req, res) => {
             JSON.stringify(result.scores)
         );
 
+        // Build sharingConsent object from submitted consent preferences
+        const now = new Date();
+        const sharingConsent = {
+            scores:          typeof scoresConsent === 'boolean'     ? scoresConsent     : null,
+            scoresDate:      typeof scoresConsent === 'boolean' && scoresConsent ? now : null,
+            scoresGoals:     scoresConsent && typeof scoresGoals === 'string'    ? scoresGoals.trim().slice(0, 500) : null,
+            curriculum:      typeof curriculumConsent === 'boolean' ? curriculumConsent : null,
+            curriculumDate:  typeof curriculumConsent === 'boolean' && curriculumConsent ? now : null,
+            curriculumGoals: curriculumConsent && typeof curriculumGoals === 'string' ? curriculumGoals.trim().slice(0, 500) : null,
+        };
+
         // Save to MongoDB (non-blocking — does not affect response)
         ResilienceResult.create({
             email,
@@ -142,7 +154,85 @@ router.post('/', async (req, res) => {
             dominantType: result.dominantType,
             scores: result.scores,
             assessmentHash,
+            sharingConsent,
         }).catch(err => logger.error('Failed to save resilience result:', err));
+
+        // Persist consent preferences to UserDataSharing when the user belongs to an org.
+        // We look up the user by email; if not found or not in an org, we skip silently.
+        if (typeof scoresConsent === 'boolean' || typeof curriculumConsent === 'boolean') {
+            User.findOne({ email: email.trim().toLowerCase() }).lean().then(async (user) => {
+                if (!user) return;
+                const orgId = user.organizationId || user.organization_id || null;
+                if (!orgId) return;
+
+                const historyEntries = [];
+                const updateFields   = { updatedAt: now };
+
+                if (typeof scoresConsent === 'boolean') {
+                    updateFields.scoresEnabled     = scoresConsent;
+                    updateFields.scoresLastUpdated = now;
+                    if (scoresConsent) {
+                        updateFields.scoresConsentDate = now;
+                        updateFields.scoresGoals = sharingConsent.scoresGoals;
+                    }
+                    historyEntries.push({
+                        type:    'scores',
+                        action:  scoresConsent ? 'granted' : 'revoked',
+                        date:    now,
+                        goals:   sharingConsent.scoresGoals,
+                        context: 'assessment_submission',
+                    });
+                }
+
+                if (typeof curriculumConsent === 'boolean') {
+                    updateFields.curriculumEnabled     = curriculumConsent;
+                    updateFields.curriculumLastUpdated = now;
+                    if (curriculumConsent) {
+                        updateFields.curriculumConsentDate = now;
+                        updateFields.curriculumGoals = sharingConsent.curriculumGoals;
+                    }
+                    historyEntries.push({
+                        type:    'curriculum',
+                        action:  curriculumConsent ? 'granted' : 'revoked',
+                        date:    now,
+                        goals:   sharingConsent.curriculumGoals,
+                        context: 'assessment_submission',
+                    });
+                }
+
+                try {
+                    await UserDataSharing.findOneAndUpdate(
+                        { userId: user._id, organizationId: orgId },
+                        {
+                            $set:  updateFields,
+                            $push: historyEntries.length > 0
+                                ? { history: { $each: historyEntries } }
+                                : undefined,
+                        },
+                        { upsert: true, new: true, setDefaultsOnInsert: true }
+                    );
+
+                    // Remember defaults if requested
+                    if (rememberPreference) {
+                        const defaultUpdate = {};
+                        if (typeof scoresConsent === 'boolean')     defaultUpdate['defaultSharingConsent.scores']     = scoresConsent;
+                        if (typeof curriculumConsent === 'boolean') defaultUpdate['defaultSharingConsent.curriculum'] = curriculumConsent;
+                        if (Object.keys(defaultUpdate).length > 0) {
+                            await User.findByIdAndUpdate(user._id, { $set: defaultUpdate });
+                        }
+                    }
+
+                    // Append to User.consentHistory
+                    if (historyEntries.length > 0) {
+                        await User.findByIdAndUpdate(user._id, {
+                            $push: { consentHistory: { $each: historyEntries } },
+                        });
+                    }
+                } catch (consentErr) {
+                    logger.warn('[quiz] Failed to save consent preferences (non-fatal):', consentErr.message);
+                }
+            }).catch(err => logger.warn('[quiz] Failed to look up user for consent (non-fatal):', err.message));
+        }
 
         res.status(200).json(result);
     } catch (err) {

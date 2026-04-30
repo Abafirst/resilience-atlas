@@ -23,6 +23,7 @@ const Organization = require('../models/Organization');
 const ResilienceResult = require('../models/ResilienceResult');
 const User = require('../models/User');
 const Invite = require('../models/Invite');
+const UserDataSharing = require('../models/UserDataSharing');
 
 const router = express.Router();
 
@@ -151,6 +152,49 @@ async function requireOrgMember(req, res, next) {
   }
 }
 
+/**
+ * Return the set of userIds (as strings) that have scoresEnabled === true
+ * for the given organisation.  Null consent is treated as private (opt-in only).
+ */
+async function getScoringConsentUserIds(orgId) {
+  const records = await UserDataSharing.find(
+    { organizationId: orgId, scoresEnabled: true },
+    { userId: 1 }
+  ).lean();
+  return new Set(records.map((r) => r.userId.toString()));
+}
+
+/**
+ * Build a Mongoose query filter that restricts ResilienceResult documents
+ * to those belonging to members who have consented to share scores.
+ *
+ * Strategy:
+ *   1. Records with sharingConsent.scores === true are always included.
+ *   2. Records whose owning userId appears in the UserDataSharing collection
+ *      with scoresEnabled === true are also included.
+ *
+ * Returns an array of userId ObjectIds representing consenting users, or
+ * null if the set is empty (meaning no data should be returned).
+ */
+async function buildConsentFilter(orgId, userIds) {
+  const consentSet = await getScoringConsentUserIds(orgId);
+
+  // Intersect with users in scope
+  const allowedIds = userIds
+    .map((id) => id.toString())
+    .filter((id) => consentSet.has(id))
+    .map((id) => mongoose.Types.ObjectId.isValid(id) ? new mongoose.Types.ObjectId(id) : id);
+
+  // If no one has consented via UserDataSharing, still allow results
+  // that have the sharingConsent.scores field set to true directly.
+  return {
+    $or: [
+      ...(allowedIds.length > 0 ? [{ userId: { $in: allowedIds } }] : []),
+      { 'sharingConsent.scores': true },
+    ],
+  };
+}
+
 // ── GET /api/dashboard/org-summary ───────────────────────────────────────────
 
 /**
@@ -169,13 +213,21 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
   try {
     const orgId = req.orgId;
 
-    const [org, results, totalMembers] = await Promise.all([
+    const [org, totalMembers] = await Promise.all([
       Organization.findById(orgId).lean(),
-      ResilienceResult.find({ organizationId: orgId }).lean(),
       User.countDocuments({ organizationId: orgId }),
     ]);
 
     if (!org) return res.status(404).json({ error: 'Organization not found.' });
+
+    // Only include results from members who have explicitly consented to share scores
+    const allMembers  = await User.find({ organizationId: orgId }, { _id: 1 }).lean();
+    const allUserIds  = allMembers.map((m) => m._id);
+    const consentFilter = await buildConsentFilter(orgId, allUserIds);
+    const results = await ResilienceResult.find({
+      organizationId: orgId,
+      ...consentFilter,
+    }).lean();
 
     const completedAssessments = results.length;
 
@@ -198,6 +250,14 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
     const strongestDimension = extremeDimension(dimensionAverages, (a, b) => a > b);
     const weakestDimension   = extremeDimension(dimensionAverages, (a, b) => a < b);
 
+    // Participation stats
+    const sharingRecords = await UserDataSharing.find(
+      { organizationId: orgId },
+      { scoresEnabled: 1, curriculumEnabled: 1 }
+    ).lean();
+    const scoresSharing     = sharingRecords.filter((r) => r.scoresEnabled === true).length;
+    const curriculumSharing = sharingRecords.filter((r) => r.curriculumEnabled === true).length;
+
     res.json({
       organization: {
         id:         org._id,
@@ -213,6 +273,11 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
         total_members:        totalMembers,
         completed_assessments: completedAssessments,
         dimension_averages:   dimensionAverages,
+        participation: {
+          scoresSharing,
+          curriculumSharing,
+          total: totalMembers,
+        },
       },
     });
   } catch (err) {
@@ -239,10 +304,15 @@ router.get('/team-breakdown', authenticateJWT, requireOrgMember, async (req, res
 
     // Get all users in the org with their team names
     const members = await User.find({ organizationId: orgId }, { _id: 1, teamName: 1 }).lean();
-
-    // Get latest result per user
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+
+    // Only include results from members who have consented to share scores
+    const consentFilter = await buildConsentFilter(orgId, userIds);
+    const results = await ResilienceResult.find({
+      organizationId: orgId,
+      userId: { $in: userIds },
+      ...consentFilter,
+    })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -310,29 +380,59 @@ router.get('/members', authenticateJWT, requireOrgMember, async (req, res) => {
     ).lean();
 
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+
+    // Fetch all results (regardless of consent) for presence detection,
+    // then apply consent to determine what data to expose.
+    const allResults = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
       .sort({ createdAt: -1 })
       .lean();
 
-    // Map userId → latest result
+    // Map userId → latest result (any result, for activity tracking)
     const latestByUser = {};
-    for (const r of results) {
+    for (const r of allResults) {
       const uid = r.userId?.toString();
       if (uid && !latestByUser[uid]) latestByUser[uid] = r;
     }
 
+    // Fetch sharing consent records for this org
+    const sharingRecords = await UserDataSharing.find(
+      { organizationId: orgId },
+      { userId: 1, scoresEnabled: 1, curriculumEnabled: 1 }
+    ).lean();
+    const sharingByUser = {};
+    for (const s of sharingRecords) {
+      sharingByUser[s.userId.toString()] = s;
+    }
+
     const memberList = members.map((m) => {
-      const r = latestByUser[m._id.toString()];
+      const uid     = m._id.toString();
+      const r       = latestByUser[uid];
+      const sharing = sharingByUser[uid];
+
+      // Determine per-user consent state
+      // Falls back to inline sharingConsent if no UserDataSharing doc exists
+      const scoresSharing = sharing
+        ? sharing.scoresEnabled === true
+        : r?.sharingConsent?.scores === true;
+      const curriculumSharing = sharing
+        ? sharing.curriculumEnabled === true
+        : r?.sharingConsent?.curriculum === true;
+
       return {
         user_id:            m._id,
         name:               m.username || m.email,
         email:              m.email,
         team:               m.teamName || null,
         role:               m.role || 'member',
-        overall_score:      r ? (r.overall ?? r.overall_score ?? null) : null,
-        dominant_dimension: r ? (r.dominant_dimension ?? r.dominantType ?? null) : null,
+        // Only expose score data when the member has consented
+        overall_score:      scoresSharing && r ? (r.overall ?? r.overall_score ?? null) : null,
+        dominant_dimension: scoresSharing && r ? (r.dominant_dimension ?? r.dominantType ?? null) : null,
         completed_at:       r ? r.createdAt : null,
-        dimension_scores:   r ? resolveDimensionScores(r) : null,
+        dimension_scores:   scoresSharing && r ? resolveDimensionScores(r) : null,
+        // Privacy indicators
+        scores_sharing:     scoresSharing,
+        curriculum_sharing: curriculumSharing,
+        has_assessment:     !!r,
       };
     });
 
@@ -364,21 +464,32 @@ router.get('/export/csv', authenticateJWT, requireOrgMember, async (req, res) =>
     ).lean();
 
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const allResults = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
       .sort({ createdAt: -1 })
       .lean();
 
     // Map userId → latest result
     const latestByUser = {};
-    for (const r of results) {
+    for (const r of allResults) {
       const uid = r.userId?.toString();
       if (uid && !latestByUser[uid]) latestByUser[uid] = r;
+    }
+
+    // Fetch sharing consent records
+    const sharingRecords = await UserDataSharing.find(
+      { organizationId: orgId },
+      { userId: 1, scoresEnabled: 1 }
+    ).lean();
+    const sharingByUser = {};
+    for (const s of sharingRecords) {
+      sharingByUser[s.userId.toString()] = s;
     }
 
     const header = [
       'Name',
       'Email',
       'Team',
+      'Scores_Sharing',
       'Overall_Score',
       'Relational-Connective',
       'Cognitive',
@@ -391,22 +502,29 @@ router.get('/export/csv', authenticateJWT, requireOrgMember, async (req, res) =>
     ].join(',');
 
     const rows = members.map((m) => {
-      const r = latestByUser[m._id.toString()];
-      const dimScores = r ? resolveDimensionScores(r) : {};
+      const uid     = m._id.toString();
+      const r       = latestByUser[uid];
+      const sharing = sharingByUser[uid];
+      const scoresSharing = sharing
+        ? sharing.scoresEnabled === true
+        : r?.sharingConsent?.scores === true;
+
+      const dimScores   = scoresSharing && r ? resolveDimensionScores(r) : {};
       const completedAt = r ? (r.createdAt ? new Date(r.createdAt).toISOString().slice(0, 10) : '') : '';
 
       return [
         csvEscape(m.username || ''),
         csvEscape(m.email || ''),
         csvEscape(m.teamName || ''),
-        r ? (r.overall ?? r.overall_score ?? '') : '',
+        scoresSharing ? 'Yes' : 'No',
+        scoresSharing && r ? (r.overall ?? r.overall_score ?? '') : '',
         dimScores.relational  ?? '',
         dimScores.cognitive   ?? '',
         dimScores.somatic     ?? '',
         dimScores.emotional   ?? '',
         dimScores.spiritual   ?? '',
         dimScores.agentic     ?? '',
-        csvEscape(r ? (r.dominant_dimension ?? r.dominantType ?? '') : ''),
+        csvEscape(scoresSharing && r ? (r.dominant_dimension ?? r.dominantType ?? '') : ''),
         completedAt,
       ].join(',');
     });

@@ -53,6 +53,21 @@ const ResilienceResultSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+
+  /**
+   * Granular sharing consent granted at the time of assessment submission.
+   * null = legacy record (unknown consent, treated as private during migration).
+   * true = user explicitly opted in.
+   * false = user explicitly opted out.
+   */
+  sharingConsent: {
+    scores: { type: Boolean, default: null },
+    scoresDate: { type: Date, default: null },
+    scoresGoals: { type: String, default: null },
+    curriculum: { type: Boolean, default: null },
+    curriculumDate: { type: Date, default: null },
+    curriculumGoals: { type: String, default: null },
+  },
 });
 
 // Index for efficient org-level aggregation queries

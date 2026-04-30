@@ -113,6 +113,23 @@ const userSchema = new mongoose.Schema({
   // Date joined practice
   practiceJoinedAt: { type: Date, default: null },
 
+  // Default sharing consent preferences (used to pre-fill consent modals)
+  defaultSharingConsent: {
+    scores:     { type: Boolean, default: false },
+    curriculum: { type: Boolean, default: false },
+  },
+
+  // Audit trail of all consent changes
+  consentHistory: [
+    {
+      type:    { type: String, enum: ['scores', 'curriculum'] },
+      action:  { type: String, enum: ['granted', 'revoked'] },
+      date:    { type: Date,   default: Date.now },
+      goals:   { type: String, default: null },
+      context: { type: String }, // e.g. 'assessment_submission', 'settings_change'
+    },
+  ],
+
 }, { timestamps: true });
 
 // Hash password before saving

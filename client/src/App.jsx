@@ -68,6 +68,7 @@ import GamificationPage from './pages/GamificationPage.jsx';
 import OrgGamificationPage from './pages/OrgGamificationPage.jsx';
 import TeamManagementPage from './pages/TeamManagementPage.jsx';
 import PrivacyPage from './pages/PrivacyPage.jsx';
+import DataSharingSettingsPage from './pages/DataSharingSettingsPage.jsx';
 import ResultsHistoryPage from './pages/ResultsHistoryPage.jsx';
 import CompleteProfilePage from './pages/CompleteProfilePage.jsx';
 import IATLASCurriculumPage from './pages/IATLASCurriculumPage.jsx';
@@ -416,6 +417,7 @@ function AppShell() {
 
           {/* Privacy & Data Control */}
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/settings/privacy" element={<DataSharingSettingsPage />} />
 
           {/* Returning-user hub — /login and /register redirect here */}
           <Route path="/results-history" element={<ResultsHistoryPage />} />

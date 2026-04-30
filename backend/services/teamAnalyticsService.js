@@ -14,6 +14,8 @@ const ResilienceResult = require('../models/ResilienceResult');
 const Organization     = require('../models/Organization');
 const User             = require('../models/User');
 const TeamProfile      = require('../models/TeamProfile');
+const UserDataSharing  = require('../models/UserDataSharing');
+const mongoose         = require('mongoose');
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -411,7 +413,21 @@ async function buildTeamAnalytics(orgId, options = {}) {
 
   const userIds = members.map((m) => m._id);
 
-  // Latest result per user
+  // Load sharing consent records for this org
+  const sharingRecords = await UserDataSharing.find(
+    { organizationId: orgId },
+    { userId: 1, scoresEnabled: 1 }
+  ).lean();
+  const consentUserIdSet = new Set(
+    sharingRecords
+      .filter((s) => s.scoresEnabled === true)
+      .map((s) => s.userId.toString())
+  );
+
+  // Latest result per user — only for members who have consented to share scores
+  // A result qualifies if:
+  //   a) the user has a UserDataSharing record with scoresEnabled === true, OR
+  //   b) the result itself has sharingConsent.scores === true
   const allResults = await ResilienceResult.find(
     { organizationId: orgId, userId: { $in: userIds } },
   ).sort({ createdAt: -1 }).lean();
@@ -419,7 +435,11 @@ async function buildTeamAnalytics(orgId, options = {}) {
   const latestByUser = {};
   for (const r of allResults) {
     const uid = r.userId?.toString();
-    if (uid && !latestByUser[uid]) latestByUser[uid] = r;
+    if (!uid) continue;
+    if (latestByUser[uid]) continue; // already have the latest
+    // Only include if user has consented (via UserDataSharing or inline field)
+    const hasConsent = consentUserIdSet.has(uid) || r.sharingConsent?.scores === true;
+    if (hasConsent) latestByUser[uid] = r;
   }
 
   // ── Compute dimension averages ────────────────────────────────────────────
