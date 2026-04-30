@@ -21,12 +21,12 @@ const VALID_DIMENSIONS = [
 ];
 
 const PRACTICE_NAV = [
-  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard' },
-  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients' },
-  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule' },
-  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing' },
-  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team' },
-  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics' },
+  { to: '/iatlas/practice/dashboard',  label: 'Dashboard',  key: 'dashboard',  icon: '/icons/planning.svg' },
+  { to: '/iatlas/practice/clients',    label: 'Clients',    key: 'clients',    icon: '/icons/organization.svg' },
+  { to: '/iatlas/practice/schedule',   label: 'Schedule',   key: 'schedule',   icon: '/icons/time.svg' },
+  { to: '/iatlas/practice/billing',    label: 'Billing',    key: 'billing',    icon: '/icons/currency.svg' },
+  { to: '/iatlas/practice/team',       label: 'Team',       key: 'team',       icon: '/icons/team.svg' },
+  { to: '/iatlas/practice/analytics',  label: 'Analytics',  key: 'analytics',  icon: '/icons/growth.svg' },
 ];
 
 const MOCK_METRICS = [
@@ -123,6 +123,9 @@ export default function PracticeDashboardPage() {
             background: rgba(99,102,241,.15); color: #a5b4fc;
             border-left-color: #6366f1;
           }
+          .nav-icon { opacity: .85; flex-shrink: 0; }
+          .pm-nav-link.active .nav-icon { opacity: 1; }
+          button img[aria-hidden="true"] { vertical-align: text-bottom; margin-right: 6px; flex-shrink: 0; }
           .pm-sidebar-footer {
             margin-top: auto; padding: 1rem 1.25rem;
             border-top: 1px solid rgba(255,255,255,.08);
@@ -248,7 +251,8 @@ export default function PracticeDashboardPage() {
                 to={item.to}
                 className={`pm-nav-link${item.key === 'dashboard' ? ' active' : ''}`}
               >
-                {item.label}
+                <img src={item.icon} alt="" aria-hidden="true" className="nav-icon" width={16} height={16} />
+                <span>{item.label}</span>
               </Link>
             ))}
             <div className="pm-sidebar-footer">
@@ -266,7 +270,8 @@ export default function PracticeDashboardPage() {
               </div>
               <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
                 <button className="pm-btn pm-btn-outline" onClick={() => setShowAddClient(true)}>
-                  + Add Client
+                  <img src="/icons/organization.svg" alt="" width={14} height={14} aria-hidden="true" />
+                  <span>Add Client</span>
                 </button>
                 <Link to="/iatlas/practice/schedule" className="pm-btn"><img src="/icons/planning.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Schedule Session
                 </Link>
