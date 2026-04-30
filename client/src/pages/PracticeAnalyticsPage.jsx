@@ -263,11 +263,11 @@ export default function PracticeAnalyticsPage() {
                   <div className="an-card">
                     <h2 className="an-card-title">Average Dimensional Scores (Adult Clients Only)</h2>
                     <p style={{ fontSize: '.75rem', color: '#6b7280', margin: '-.25rem 0 .75rem' }}>
-                      From the 72-question Resilience Atlas assessment · scores 0–100
+                      From the 72-question Resilience Atlas assessment · adults 18+ · scores 0–100
                     </p>
                     <DimRadar dims={MOCK_PRACTICE_DIMS} />
                     <p style={{ fontSize: '.78rem', color: '#9ca3af', marginTop: '1rem' }}>
-                      Average assessment scores across adult clients. Higher = stronger dimensional capacity.
+                      Average assessment scores across adult clients (18+). Higher = stronger dimensional capacity. Child clients are tracked separately via activity completion.
                     </p>
                   </div>
                   <div className="an-card">

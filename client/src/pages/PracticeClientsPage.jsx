@@ -90,11 +90,18 @@ const DIM_SHORT = {
   spiritual: { label: 'Sp', color: '#7c3aed' },
 };
 
-/** Returns true if any participant in the list is 18 or older (or has no age listed). */
+/**
+ * Returns true if any participant in the list is 18 or older.
+ * When a participant entry does not include an age tag (e.g. "(age N)"), they
+ * are assumed to be an adult — this is the safe default because adult clients
+ * should see assessment score bars, and a missing age should not silently hide
+ * clinically relevant data. Practitioners should add explicit ages to avoid
+ * ambiguity.
+ */
 function hasAdultParticipants(participants) {
   return participants.some(p => {
     const match = p.match(/\(age\s+(\d+)\)/);
-    if (!match) return true; // no age listed → assume adult
+    if (!match) return true; // no age listed → assume adult (see JSDoc above)
     return parseInt(match[1], 10) >= 18;
   });
 }
@@ -402,10 +409,9 @@ export default function PracticeClientsPage() {
                               📊 Resilience Assessment Scores
                             </span>
                             <InfoTooltip>
-                              Assessment scores (0–100) from the 72-question Resilience Atlas.
-                              Higher scores = stronger dimensional capacity.
-                              Updates when client retakes the assessment (typically every 30–90 days).
-                              {'\n\n'}Note: Assessment scores are for adults (18+) only.
+                              <span>Assessment scores (0–100) from the 72-question Resilience Atlas. Higher scores = stronger dimensional capacity. Updates when client retakes the assessment (typically every 30–90 days).</span>
+                              <br /><br />
+                              <span>Note: Assessment scores are for adults (18+) only.</span>
                             </InfoTooltip>
                           </div>
                           {client.lastAssessmentDate && (
@@ -426,10 +432,9 @@ export default function PracticeClientsPage() {
                               ✨ Activity Completion Progress
                             </span>
                             <InfoTooltip>
-                              Total activities completed across each resilience dimension.
-                              Children are tracked via activity completion and behavioral
-                              observations — not assessment scores.
-                              {'\n\n'}Assessment scores (0–100) are for adults (18+) only.
+                              <span>Total activities completed across each resilience dimension. Children are tracked via activity completion and behavioral observations — not assessment scores.</span>
+                              <br /><br />
+                              <span>Assessment scores (0–100) are for adults (18+) only.</span>
                             </InfoTooltip>
                           </div>
                           <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.35rem' }}>
