@@ -763,13 +763,16 @@ export default function QuizPage() {
   }
 
   function handleConsentClose() {
-    // User closed the modal without choosing — treat as "keep private"
+    // User closed the modal without choosing — treat as "pending" (null consent).
+    // We don't auto-opt-out on dismiss so a mis-click doesn't accidentally
+    // revoke sharing.  The assessment is submitted with sharingConsent: null
+    // (same as a legacy / unanswered record).
     setShowConsentModal(false);
     setSubmitting(true);
     setSubmitError('');
     setSpinnerText('Generating your personalized report\u2026');
 
-    const consentData = { sharingConsent: false, sharingGoals: null, rememberPreference: false };
+    const consentData = { sharingConsent: null, sharingGoals: null, rememberPreference: false };
     doSubmit(pendingAnswers, consentData);
     setPendingAnswers(null);
   }

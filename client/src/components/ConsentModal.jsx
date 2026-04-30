@@ -177,7 +177,11 @@ export default function ConsentModal({
         <div style={footer}>
           <button
             type="button"
-            onClick={() => { setConsent(false); onSubmit({ consent: false, goals: '', rememberPreference }); }}
+            onClick={() => {
+              // "Keep Private" always saves preference as false when rememberPreference is checked,
+              // regardless of the current consent radio selection.
+              onSubmit({ consent: false, goals: '', rememberPreference });
+            }}
             style={btnSecondary}
           >
             Keep Private

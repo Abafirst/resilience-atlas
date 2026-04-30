@@ -135,8 +135,12 @@ router.post('/', async (req, res) => {
         );
 
         // Resolve sharing consent value:
-        // - If explicitly provided as boolean, use that value
-        // - Otherwise default to null (unknown)
+        // - If explicitly provided as boolean, use that value (user made a choice)
+        // - If not provided (undefined/null), use null to indicate "not yet asked"
+        //   (covers non-org users, unauthenticated submissions, and legacy records)
+        // NOTE: null has two roles — "not yet asked" for new submissions and
+        // "legacy/pre-feature" for existing records. Both are treated as
+        // equivalent to true in team analytics queries for backward compatibility.
         const resolvedConsent = typeof sharingConsent === 'boolean' ? sharingConsent : null;
         const safeGoals = resolvedConsent && sharingGoals
             ? String(sharingGoals).trim().slice(0, 1000)
