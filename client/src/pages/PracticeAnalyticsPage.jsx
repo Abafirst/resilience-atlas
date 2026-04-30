@@ -104,7 +104,6 @@ export default function PracticeAnalyticsPage() {
     high:       { bg: '#d1fae5', color: '#059669', label: 'Thriving' },
     moderate:   { bg: '#fef3c7', color: '#d97706', label: 'Sustaining' },
     developing: { bg: '#fee2e2', color: '#dc2626', label: 'Building' },
-  };
 
   return (
     <>
@@ -261,10 +260,13 @@ export default function PracticeAnalyticsPage() {
 
                 <div className="an-two-col">
                   <div className="an-card">
-                    <h2 className="an-card-title">Average Dimensional Progress (All Clients)</h2>
+                    <h2 className="an-card-title">Average Dimensional Scores (Adult Clients Only)</h2>
+                    <p style={{ fontSize: '.75rem', color: '#6b7280', margin: '-.25rem 0 .75rem' }}>
+                      From the 72-question Resilience Atlas assessment · adults 18+ · scores 0–100
+                    </p>
                     <DimRadar dims={MOCK_PRACTICE_DIMS} />
                     <p style={{ fontSize: '.78rem', color: '#9ca3af', marginTop: '1rem' }}>
-                      Average scores across all 24 active clients. Higher = stronger dimension.
+                      Average assessment scores across adult clients (18+). Higher = stronger dimensional capacity. Child clients are tracked separately via activity completion.
                     </p>
                   </div>
                   <div className="an-card">
