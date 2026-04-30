@@ -2315,6 +2315,78 @@ export default function IATLASCurriculumPage() {
             </div>
           </section>
 
+          {/* ── IATLAS Kids ──────────────────────────────────────────────── */}
+          <section aria-labelledby="iatlas-kids-title" style={{ marginTop: '2.5rem' }}>
+            <div className="iatlas-kids-banner">
+              <div className="iatlas-kids-banner-left">
+                <span className="iatlas-kids-banner-kicker">
+                  <img src="/icons/kids-spark.svg" alt="" width={14} height={14} aria-hidden="true" />
+                  New
+                </span>
+                <h2 className="iatlas-kids-banner-title" id="iatlas-kids-title">
+                  IATLAS Kids Curriculum
+                </h2>
+                <p className="iatlas-kids-banner-sub">
+                  Play-based resilience activities for children ages 5–18, spanning all 6 dimensions.
+                  Designed for parents, teachers, and kids who want to build resilience through
+                  exploration, games, and real-world challenges.
+                </p>
+                <div className="iatlas-kids-banner-stats" aria-label="Kids curriculum statistics">
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/movement.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    96+ activities
+                  </span>
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/strength.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    4 age groups
+                  </span>
+                  <span className="iatlas-kids-stat">
+                    <img src="/icons/compass.svg" alt="" width={13} height={13} aria-hidden="true" />
+                    6 dimensions
+                  </span>
+                </div>
+                <div className="iatlas-kids-banner-actions">
+                  <Link to="/iatlas/kids" className="iatlas-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+                    <img src="/icons/kids-spark.svg" alt="" width={15} height={15} aria-hidden="true" style={{ filter: 'brightness(0) invert(1)' }} />
+                    Explore Kids Curriculum
+                  </Link>
+                  <Link to="/iatlas/developmental-roadmap" className="iatlas-btn-secondary"><img src="/icons/game-map.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Developmental Roadmap →
+                  </Link>
+                  <Link to="/iatlas/roadmap" className="iatlas-btn-secondary">
+                    View Content Roadmap →
+                  </Link>
+                  {hasCaregiverAccess() && (
+                    <Link
+                      to="/iatlas/parent-dashboard"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                        background: '#0891b2', color: '#fff',
+                        borderRadius: 10, padding: '.7rem 1.4rem',
+                        fontWeight: 600, textDecoration: 'none', fontSize: '.875rem',
+                      }}
+                    ><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Parent Dashboard
+                    </Link>
+                  )}
+                </div>
+              </div>
+              <div className="iatlas-kids-banner-right" aria-hidden="true">
+                <div className="iatlas-kids-age-pills">
+                  {[
+                    { label: 'Ages 5–7', sub: 'Little Explorers', color: '#f59e0b' },
+                    { label: 'Ages 8–10', sub: 'Young Adventurers', color: '#10b981' },
+                    { label: 'Ages 11–14', sub: 'Resilience Builders', color: '#6366f1' },
+                    { label: 'Ages 15–18', sub: 'Resilience Leaders', color: '#8b5cf6' },
+                  ].map(ag => (
+                    <div key={ag.label} className="iatlas-kids-age-pill" style={{ borderLeftColor: ag.color }}>
+                      <span className="iatlas-kids-age-pill-label">{ag.label}</span>
+                      <span className="iatlas-kids-age-pill-sub">{ag.sub}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* ── Train the Facilitator Teaser ─────────────────────────── */}
           <section aria-labelledby="iatlas-ttf-title" style={{ margin: '2rem 0' }}>
             <div style={{
@@ -2474,78 +2546,6 @@ export default function IATLASCurriculumPage() {
                   <DimensionCard dim={dim} index={i} />
                 </div>
               ))}
-            </div>
-          </section>
-
-          {/* ── IATLAS Kids ──────────────────────────────────────────────── */}
-          <section aria-labelledby="iatlas-kids-title" style={{ marginTop: '2.5rem' }}>
-            <div className="iatlas-kids-banner">
-              <div className="iatlas-kids-banner-left">
-                <span className="iatlas-kids-banner-kicker">
-                  <img src="/icons/kids-spark.svg" alt="" width={14} height={14} aria-hidden="true" />
-                  New
-                </span>
-                <h2 className="iatlas-kids-banner-title" id="iatlas-kids-title">
-                  IATLAS Kids Curriculum
-                </h2>
-                <p className="iatlas-kids-banner-sub">
-                  Play-based resilience activities for children ages 5–18, spanning all 6 dimensions.
-                  Designed for parents, teachers, and kids who want to build resilience through
-                  exploration, games, and real-world challenges.
-                </p>
-                <div className="iatlas-kids-banner-stats" aria-label="Kids curriculum statistics">
-                  <span className="iatlas-kids-stat">
-                    <img src="/icons/movement.svg" alt="" width={13} height={13} aria-hidden="true" />
-                    96+ activities
-                  </span>
-                  <span className="iatlas-kids-stat">
-                    <img src="/icons/strength.svg" alt="" width={13} height={13} aria-hidden="true" />
-                    4 age groups
-                  </span>
-                  <span className="iatlas-kids-stat">
-                    <img src="/icons/compass.svg" alt="" width={13} height={13} aria-hidden="true" />
-                    6 dimensions
-                  </span>
-                </div>
-                <div className="iatlas-kids-banner-actions">
-                  <Link to="/iatlas/kids" className="iatlas-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-                    <img src="/icons/kids-spark.svg" alt="" width={15} height={15} aria-hidden="true" style={{ filter: 'brightness(0) invert(1)' }} />
-                    Explore Kids Curriculum
-                  </Link>
-                  <Link to="/iatlas/developmental-roadmap" className="iatlas-btn-secondary"><img src="/icons/game-map.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Developmental Roadmap →
-                  </Link>
-                  <Link to="/iatlas/roadmap" className="iatlas-btn-secondary">
-                    View Content Roadmap →
-                  </Link>
-                  {hasCaregiverAccess() && (
-                    <Link
-                      to="/iatlas/parent-dashboard"
-                      style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                        background: '#0891b2', color: '#fff',
-                        borderRadius: 10, padding: '.7rem 1.4rem',
-                        fontWeight: 600, textDecoration: 'none', fontSize: '.875rem',
-                      }}
-                    ><img src="/icons/network.svg" alt="" aria-hidden="true" className="icon icon-sm" /> Parent Dashboard
-                    </Link>
-                  )}
-                </div>
-              </div>
-              <div className="iatlas-kids-banner-right" aria-hidden="true">
-                <div className="iatlas-kids-age-pills">
-                  {[
-                    { label: 'Ages 5–7', sub: 'Little Explorers', color: '#f59e0b' },
-                    { label: 'Ages 8–10', sub: 'Young Adventurers', color: '#10b981' },
-                    { label: 'Ages 11–14', sub: 'Resilience Builders', color: '#6366f1' },
-                    { label: 'Ages 15–18', sub: 'Resilience Leaders', color: '#8b5cf6' },
-                  ].map(ag => (
-                    <div key={ag.label} className="iatlas-kids-age-pill" style={{ borderLeftColor: ag.color }}>
-                      <span className="iatlas-kids-age-pill-label">{ag.label}</span>
-                      <span className="iatlas-kids-age-pill-sub">{ag.sub}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </section>
 
