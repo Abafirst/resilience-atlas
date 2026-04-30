@@ -53,6 +53,25 @@ const ResilienceResultSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+
+  // ── Sharing consent fields ─────────────────────────────────────────────────
+  // Whether the user has consented to share their results with their organization.
+  // null = legacy record (pre-consent feature); treat as true during transition.
+  // false = user opted out; true = user opted in.
+  sharingConsent: {
+    type: Boolean,
+    default: null,
+  },
+  // Timestamp when consent was last given or revoked
+  sharingConsentDate: {
+    type: Date,
+    default: null,
+  },
+  // Optional personal/professional goals context provided when opting in
+  sharingGoals: {
+    type: String,
+    default: null,
+  },
 });
 
 // Index for efficient org-level aggregation queries

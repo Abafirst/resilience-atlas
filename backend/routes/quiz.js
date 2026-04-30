@@ -109,7 +109,7 @@ function scoreResilienceAnswers(answers) {
  */
 router.post('/', async (req, res) => {
     try {
-        const { firstName, email, answers, tier } = req.body;
+        const { firstName, email, answers, tier, sharingConsent, sharingGoals } = req.body;
 
         if (!answers || !Array.isArray(answers) || answers.length !== 72) {
             return res.status(400).json({ error: 'Please provide all 72 answers.' });
@@ -134,6 +134,14 @@ router.post('/', async (req, res) => {
             JSON.stringify(result.scores)
         );
 
+        // Resolve sharing consent value:
+        // - If explicitly provided as boolean, use that value
+        // - Otherwise default to null (unknown)
+        const resolvedConsent = typeof sharingConsent === 'boolean' ? sharingConsent : null;
+        const safeGoals = resolvedConsent && sharingGoals
+            ? String(sharingGoals).trim().slice(0, 1000)
+            : null;
+
         // Save to MongoDB (non-blocking — does not affect response)
         ResilienceResult.create({
             email,
@@ -142,6 +150,9 @@ router.post('/', async (req, res) => {
             dominantType: result.dominantType,
             scores: result.scores,
             assessmentHash,
+            sharingConsent: resolvedConsent,
+            sharingConsentDate: resolvedConsent !== null ? new Date() : null,
+            sharingGoals: safeGoals,
         }).catch(err => logger.error('Failed to save resilience result:', err));
 
         res.status(200).json(result);
