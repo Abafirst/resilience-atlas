@@ -14,6 +14,8 @@ const ResilienceResult = require('../models/ResilienceResult');
 const Organization     = require('../models/Organization');
 const User             = require('../models/User');
 const TeamProfile      = require('../models/TeamProfile');
+const UserDataSharing  = require('../models/UserDataSharing');
+const mongoose         = require('mongoose');
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -420,7 +422,11 @@ async function buildTeamAnalytics(orgId, options = {}) {
   const latestByUser = {};
   for (const r of allResults) {
     const uid = r.userId?.toString();
-    if (uid && !latestByUser[uid]) latestByUser[uid] = r;
+    if (!uid) continue;
+    if (latestByUser[uid]) continue; // already have the latest
+    // Only include if user has consented (via UserDataSharing or inline field)
+    const hasConsent = consentUserIdSet.has(uid) || r.sharingConsent?.scores === true;
+    if (hasConsent) latestByUser[uid] = r;
   }
 
   // ── Compute dimension averages ────────────────────────────────────────────

@@ -708,6 +708,46 @@ export default function QuizPage() {
       clearProgress();
       setSubmitting(false);
 
+      // If the user belongs to an org, show consent modal before navigating to results.
+      // We store the body as pendingResults so we can attach consent before redirect.
+      if (isAuthenticated && auth0User) {
+        try {
+          const token = await getAccessTokenSilently().catch(() => null);
+          if (token) {
+            const profileRes = await fetch(apiUrl('/api/user/consent'), {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (profileRes.ok) {
+              const consentData = await profileRes.json();
+              if (consentData.organizationId) {
+                // Look up org name for friendly display
+                let orgName = 'your organization';
+                try {
+                  const orgRes = await fetch(apiUrl('/api/orgs/' + consentData.organizationId), {
+                    headers: { Authorization: `Bearer ${token}` },
+                  });
+                  if (orgRes.ok) {
+                    const orgData = await orgRes.json();
+                    orgName = orgData.name || orgData.company_name || orgName;
+                  }
+                } catch (_) {}
+
+                setPendingResults(body);
+                setConsentOrgName(orgName);
+                setConsentDefaults({
+                  scores:     consentData.defaults?.scores     ?? false,
+                  curriculum: consentData.defaults?.curriculum ?? false,
+                });
+                setShowConsentModal(true);
+                return; // Hold off navigating until consent is handled
+              }
+            }
+          }
+        } catch (_) {
+          // Consent check failed — proceed without consent modal
+        }
+      }
+
       navigate('/results');
     } catch (err) {
       setSubmitting(false);
@@ -787,7 +827,41 @@ export default function QuizPage() {
     } catch (_) {}
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────
+  // ── Consent modal handlers ─────────────────────────────────────────────
+
+  async function handleConsentSave({ scores, scoresGoals, curriculum, curriculumGoals, remember }) {
+    // Send consent preferences to the API (non-blocking)
+    try {
+      const token = await getAccessTokenSilently().catch(() => null);
+      if (token) {
+        fetch(apiUrl('/api/user/consent'), {
+          method:  'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization:  `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            scores,
+            scoresGoals,
+            curriculum,
+            curriculumGoals,
+            rememberDefault: remember,
+            context:         'assessment_submission',
+          }),
+        }).catch(() => {});
+      }
+    } catch (_) {}
+
+    setShowConsentModal(false);
+    navigate('/results');
+  }
+
+  function handleConsentSkip() {
+    // User chose "Keep All Private" — send explicit false for both types
+    handleConsentSave({ scores: false, scoresGoals: '', curriculum: false, curriculumGoals: '', remember: false });
+  }
+
+
   // Determine the current question for the question step
   const currentQ = typeof step === 'number' && questionOrder.length > 0
     ? QUESTIONS[questionOrder[step]]
