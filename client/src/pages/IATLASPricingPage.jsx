@@ -188,8 +188,13 @@ export default function IATLASPricingPage() {
           IATLAS Subscription Plans
         </p>
         <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.75rem)', fontWeight: 800, margin: '0 0 .75rem', lineHeight: 1.15 }}>
-          Choose the Plan That Fits Your Practice
+          IATLAS Curriculum Subscription Plans
         </h1>
+        <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.9)', maxWidth: 640, margin: '0 auto .75rem', lineHeight: 1.6 }}>
+          <strong>Note:</strong> These are monthly subscriptions for full access to the IATLAS curriculum.
+          If you just took the 72-question assessment and want to unlock your PDF report, those are one-time
+          purchases available on your results page (Atlas Starter $9.99 or Atlas Navigator $49.99).
+        </p>
         <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.8)', maxWidth: 560, margin: '0 auto 1.5rem', lineHeight: 1.6 }}>
           From personal resilience journeys to full group practice management — IATLAS has a plan for every stage.
         </p>
@@ -200,6 +205,21 @@ export default function IATLASPricingPage() {
 
       {/* Pricing Grid */}
       <section style={{ maxWidth: 1200, margin: '0 auto', padding: '3rem 1.5rem' }}>
+        <div style={{
+          background: '#fef3c7',
+          border: '2px solid #f59e0b',
+          borderRadius: 12,
+          padding: '1rem 1.5rem',
+          marginBottom: '2rem',
+          maxWidth: 800,
+          margin: '0 auto 2rem',
+        }}>
+          <p style={{ fontSize: 14, color: '#92400e', margin: 0, lineHeight: 1.6 }}>
+            <strong>Looking for your assessment report?</strong> If you just completed the 72-question Resilience Atlas
+            assessment and want to download your PDF report, that&apos;s a separate one-time purchase (Atlas Starter $9.99
+            or Atlas Navigator $49.99). You&apos;ll find those options on your results page after taking the assessment.
+          </p>
+        </div>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',

@@ -2685,63 +2685,194 @@ export default function IATLASCurriculumPage() {
             <div className="iatlas-coming-features" role="region" aria-label="IATLAS pricing tiers">
               <span className="iatlas-cf-kicker">
                 <img src="/icons/compass.svg" alt="" width={14} height={14} aria-hidden="true" />
-                IATLAS Plans — Available Now
+                Choose Your Plan
               </span>
-              <h2 className="iatlas-cf-title" id="iatlas-pricing-title">Choose Your IATLAS Plan</h2>
+              <h2 className="iatlas-cf-title" id="iatlas-pricing-title">IATLAS Plans &amp; Pricing</h2>
               <p className="iatlas-cf-sub">
-                IATLAS is a separate product from Atlas Start and Atlas Navigator with its own pricing tiers.
-                Choose the plan that fits your needs.
+                Monthly subscriptions for full access to the IATLAS curriculum. These are separate from
+                the one-time Atlas assessment report purchases (Atlas Starter $9.99 / Atlas Navigator $49.99).
               </p>
 
-              <div className="iatlas-cf-grid" role="list">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                gap: '1.25rem',
+                marginBottom: '1.75rem',
+              }} role="list">
                 {[
                   {
-                    icon: '/icons/kids-trophy.svg',
-                    title: 'Individual — $19.99/mo',
-                    items: ['Full IATLAS™ curriculum (Integrated Applied Teaching and Learning Analysis System)', 'All kids games & activities', 'Progress tracking', '1 child profile'],
+                    id: 'individual',
+                    name: 'Individual',
+                    price: '$19.99',
+                    period: '/month',
+                    description: 'Perfect for personal resilience development',
+                    features: [
+                      'Personal resilience assessments',
+                      'Basic progress tracking',
+                      'Individual practice pathways',
+                      'Mobile app access (beta)',
+                    ],
+                    available: true,
+                    badge: null,
+                    cta: 'Get Started',
+                    ctaUrl: '/iatlas/subscribe?tier=individual',
                   },
                   {
-                    icon: '/icons/agentic-generative.svg',
-                    title: 'Family — $39.99/mo',
-                    items: ['Everything in Individual', 'Up to 5 child profiles', 'Caregiver resources & parent guides', 'Shared progress dashboard'],
+                    id: 'family',
+                    name: 'Family',
+                    price: '$39.99',
+                    period: '/month',
+                    description: "Support your whole family's resilience journey",
+                    features: [
+                      'Up to 5 family member profiles',
+                      'Family progress dashboard',
+                      'Age-appropriate content (96+ activities)',
+                      'Shared family practices (18 challenges)',
+                    ],
+                    available: true,
+                    badge: null,
+                    cta: 'Get Started',
+                    ctaUrl: '/iatlas/subscribe?tier=family',
                   },
                   {
-                    icon: '/icons/quest.svg',
-                    title: 'Complete — $99.99/mo',
-                    items: ['Everything in Family', 'Full curriculum access', 'Advanced analytics', 'Priority support'],
+                    id: 'complete',
+                    name: 'Complete',
+                    price: '$99.99',
+                    period: '/month',
+                    description: 'Full curriculum access + advanced analytics',
+                    features: [
+                      'Everything in Family',
+                      'Full curriculum access (49 modules)',
+                      'Advanced progress analytics',
+                      'Priority support (launching Q3 2026)',
+                    ],
+                    available: false,
+                    badge: 'COMING SOON',
+                    cta: 'Join Waitlist',
+                    ctaUrl: '/iatlas/waitlist?tier=complete',
                   },
                   {
-                    icon: '/icons/game-target.svg',
-                    title: 'Professional — from $149/mo',
-                    items: ['Full IATLAS™ clinical curriculum', 'IATLAS (Integrated Applied Teaching and Learning Analysis System) for clinical practice', 'Client resources & worksheets', 'Practitioner / Practice / Enterprise tiers'],
-                    link: '/iatlas/clinical/aba-protocols',
-                    linkLabel: 'Browse Protocol Library →',
+                    id: 'practitioner',
+                    name: 'Practitioner',
+                    price: '$149',
+                    period: '/month',
+                    description: 'Clinical tools for solo practitioners',
+                    features: [
+                      'Clinical assessments & session plans',
+                      'ABA Protocol Library',
+                      'Client resources (launching Q3 2026)',
+                      'Progress & outcome reports',
+                    ],
+                    available: false,
+                    badge: 'COMING SOON',
+                    cta: 'Join Waitlist',
+                    ctaUrl: '/iatlas/waitlist?tier=practitioner',
                   },
-                ].map((cf) => (
-                  <div key={cf.title} className="iatlas-cf-card" role="listitem">
-                    <img src={cf.icon} alt="" width={40} height={40} className="icon iatlas-cf-card-icon" aria-hidden="true" />
-                    <h3 className="iatlas-cf-card-title">{cf.title}</h3>
-                    <ul className="iatlas-cf-card-items">
-                      {cf.items.map((item, i) => (
+                  {
+                    id: 'practice',
+                    name: 'Practice',
+                    price: '$399',
+                    period: '/month',
+                    description: 'Multi-practitioner group management',
+                    features: [
+                      'Everything in Practitioner',
+                      'Multi-practitioner access (5–25 seats)',
+                      'Team collaboration tools',
+                      'Group practice dashboard',
+                    ],
+                    available: false,
+                    badge: 'COMING SOON',
+                    cta: 'Join Waitlist',
+                    ctaUrl: '/iatlas/waitlist?tier=practice',
+                  },
+                  {
+                    id: 'enterprise',
+                    name: 'Enterprise',
+                    price: 'Contact Us',
+                    period: '',
+                    description: 'Custom solutions for large organizations',
+                    features: [
+                      'Everything in Practice',
+                      'Unlimited practitioners',
+                      'Custom onboarding',
+                      'Dedicated support',
+                    ],
+                    available: true,
+                    badge: null,
+                    cta: 'Contact Sales',
+                    ctaUrl: 'mailto:hello@theresilienceatlas.com?subject=Enterprise%20Inquiry',
+                  },
+                ].map((plan) => (
+                  <div
+                    key={plan.id}
+                    role="listitem"
+                    style={{
+                      background: 'rgba(255,255,255,0.85)',
+                      border: plan.available ? '1px solid rgba(79,70,229,.25)' : '1px dashed #c7d2fe',
+                      borderRadius: 16,
+                      padding: '1.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                      opacity: plan.available ? 1 : 0.92,
+                    }}
+                  >
+                    {plan.badge && (
+                      <div style={{
+                        position: 'absolute',
+                        top: -13,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: '#f59e0b',
+                        color: '#fff',
+                        fontSize: 11,
+                        fontWeight: 800,
+                        letterSpacing: '0.08em',
+                        padding: '3px 12px',
+                        borderRadius: 20,
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {plan.badge}
+                      </div>
+                    )}
+                    <h3 className="iatlas-cf-card-title" style={{ fontSize: '1.1rem', marginBottom: '.15rem' }}>{plan.name}</h3>
+                    <p style={{ fontSize: '.82rem', color: '#64748b', margin: '0 0 .75rem', lineHeight: 1.45 }}>{plan.description}</p>
+                    <div style={{ marginBottom: '1rem' }}>
+                      <span style={{ fontSize: 28, fontWeight: 800, color: '#1e293b' }}>{plan.price}</span>
+                      {plan.period && (
+                        <span style={{ fontSize: 14, color: '#64748b', marginLeft: 3 }}>{plan.period}</span>
+                      )}
+                    </div>
+                    <ul className="iatlas-cf-card-items" style={{ flex: 1, marginBottom: '1rem' }}>
+                      {plan.features.map((feature, i) => (
                         <li key={i} className="iatlas-cf-card-item">
-                          <span aria-hidden="true">•</span>
-                          {item}
+                          <span style={{ color: '#10b981', fontWeight: 700, flexShrink: 0 }} aria-hidden="true">✓</span>
+                          {feature}
                         </li>
                       ))}
                     </ul>
-                    {cf.link && (
-                      <a href={cf.link} className="iatlas-cf-card-link">
-                        {cf.linkLabel}
-                      </a>
-                    )}
+                    <Link
+                      to={plan.ctaUrl}
+                      style={{
+                        display: 'block',
+                        textAlign: 'center',
+                        padding: '10px 16px',
+                        borderRadius: 10,
+                        fontWeight: 700,
+                        fontSize: 14,
+                        textDecoration: 'none',
+                        background: plan.available ? '#4f46e5' : '#f59e0b',
+                        color: '#fff',
+                        transition: 'background 0.15s',
+                      }}
+                    >
+                      {plan.cta}
+                    </Link>
                   </div>
                 ))}
               </div>
 
               <div className="iatlas-cf-cta">
-                <a href="/pricing/iatlas" className="iatlas-btn-white">
-                  Compare All IATLAS Plans
-                </a>
                 <a href="/quiz" className="iatlas-btn-ghost" title="For adults 18+">
                   Take the Free Assessment <span style={{fontSize: '0.85em', opacity: 0.85}}>(18+)</span> →
                 </a>
