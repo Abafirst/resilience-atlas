@@ -423,6 +423,15 @@ export default function KidsPage() {
     }
   }, []);
 
+  const handleParentZone = useCallback(() => {
+    setActiveCategory('progress');
+    setShowParentZone(true);
+    requestAnimationFrame(() => {
+      const el = document.getElementById('kids-progress') || document.getElementById('kids-content-area');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, []);
+
   const handleTryThis = useCallback((item) => {
     // 1) Close the modal
     setActiveSkill(null);
@@ -477,6 +486,14 @@ export default function KidsPage() {
             aria-label="Go to My Progress dashboard"
           >
             My Progress
+          </button>
+          <button
+            className="btn-cta-secondary"
+            onClick={handleParentZone}
+            aria-label="Open Parent Zone dashboard"
+          >
+            <img src="/icons/relational-connective.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, marginRight: 6, verticalAlign: 'middle' }} />
+            Parent Zone
           </button>
         </div>
       </section>

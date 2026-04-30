@@ -688,10 +688,9 @@ const s = {
 
 // ── Nav items for the Atlas page ──────────────────────────────────────────
 const NAV_ITEMS = [
-  { href: '/',              label: 'Home',               key: 'home' },
-  { href: '/results',       label: 'My Results',         key: 'results' },
-  { href: '/atlas',         label: 'Atlas',              key: 'atlas' },
-  { href: '/gamification',  label: 'Resilience Journey', key: 'gamification' },
+  { href: '/',          label: 'Home',       key: 'home' },
+  { href: '/results',   label: 'My Results', key: 'results' },
+  { href: '/atlas',     label: 'Atlas',      key: 'atlas' },
 ];
 
 // ── Main component ─────────────────────────────────────────────────────────
@@ -835,7 +834,7 @@ export default function AtlasJourneyPage() {
         <SiteHeader activePage="atlas" navItems={NAV_ITEMS} />
         <DarkModeHint />
         <section style={s.hero}>
-          <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
+          <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
           <p style={s.heroSub}>Navigate your resilience journey. Each assessment marks a new point on your personal atlas.</p>
         </section>
         <div style={s.signInBanner}>
@@ -857,8 +856,8 @@ export default function AtlasJourneyPage() {
       <DarkModeHint />
 
       {/* Hero */}
-      <section style={s.hero} role="banner">
-        <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
+      <section style={s.hero}>
+        <h1 style={s.heroTitle}><img src="/icons/game-map.svg" alt="" aria-hidden="true" width={22} height={22} style={{ display: 'inline-block', verticalAlign: 'text-bottom', marginRight: 8 }} />The Resilience Atlas™</h1>
         <p style={s.heroSub}>
           Navigate your resilience journey. Each assessment marks a new point on your
           personal atlas — tracking how your resilience evolves over time.

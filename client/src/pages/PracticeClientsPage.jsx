@@ -25,73 +25,59 @@ const MOCK_CLIENTS = [
     id: 1, family: 'Johnson Family', contact: 'Angela Johnson', email: 'ajohnson@email.com',
     participants: ['Amir (age 9)', 'Zoe (age 6)'], practitioners: ['Dr. Chen', 'M. Williams'],
     status: 'active', intake: '2024-02-10', insurance: 'Blue Cross', sessions: 24,
-    activityCounts: {
-      agentic: { completed: 4, total: 8 }, somatic: { completed: 2, total: 8 },
-      emotional: { completed: 5, total: 8 }, cognitive: { completed: 3, total: 8 },
-      relational: { completed: 6, total: 8 }, spiritual: { completed: 1, total: 8 },
-    },
+    dimensions: { agentic: 72, somatic: 58, emotional: 65, cognitive: 81, relational: 70, spiritual: 55 },
+    activityCounts: { agentic: 5, somatic: 3, emotional: 7, cognitive: 4, relational: 6, spiritual: 2 },
   },
   {
     id: 2, family: 'Torres Family', contact: 'Maria Torres', email: 'mtorres@email.com',
     participants: ['Lily (age 7)'], practitioners: ['P. Patel'],
     status: 'active', intake: '2024-03-15', insurance: 'Aetna', sessions: 18,
-    activityCounts: {
-      agentic: { completed: 3, total: 8 }, somatic: { completed: 5, total: 8 },
-      emotional: { completed: 2, total: 8 }, cognitive: { completed: 4, total: 8 },
-      relational: { completed: 3, total: 8 }, spiritual: { completed: 2, total: 8 },
-    },
+    dimensions: { agentic: 60, somatic: 74, emotional: 55, cognitive: 68, relational: 62, spiritual: 70 },
+    activityCounts: { agentic: 4, somatic: 6, emotional: 3, cognitive: 5, relational: 8, spiritual: 4 },
   },
   {
     id: 3, family: 'Park Family', contact: 'David Park', email: 'dpark@email.com',
     participants: ['Owen (age 11)'], practitioners: ['P. Patel', 'Dr. Chen'],
     status: 'active', intake: '2024-01-08', insurance: 'United', sessions: 31,
-    activityCounts: {
-      agentic: { completed: 7, total: 8 }, somatic: { completed: 8, total: 8 },
-      emotional: { completed: 6, total: 8 }, cognitive: { completed: 7, total: 8 },
-      relational: { completed: 5, total: 8 }, spiritual: { completed: 6, total: 8 },
-    },
+    dimensions: { agentic: 85, somatic: 90, emotional: 78, cognitive: 88, relational: 75, spiritual: 80 },
+    activityCounts: { agentic: 9, somatic: 11, emotional: 8, cognitive: 10, relational: 7, spiritual: 6 },
   },
   {
     id: 4, family: 'Osei Family', contact: 'Grace Osei', email: 'gosei@email.com',
     participants: ['Maya (age 13)'], practitioners: ['J. Rodriguez'],
     status: 'active', intake: '2024-04-01', insurance: 'Cigna', sessions: 12,
-    activityCounts: {
-      agentic: { completed: 2, total: 8 }, somatic: { completed: 3, total: 8 },
-      emotional: { completed: 1, total: 8 }, cognitive: { completed: 3, total: 8 },
-      relational: { completed: 2, total: 8 }, spiritual: { completed: 1, total: 8 },
-    },
+    dimensions: { agentic: 45, somatic: 50, emotional: 40, cognitive: 55, relational: 48, spiritual: 42 },
+    activityCounts: { agentic: 2, somatic: 3, emotional: 2, cognitive: 4, relational: 3, spiritual: 1 },
   },
   {
     id: 5, family: 'Nguyen Family', contact: 'Thanh Nguyen', email: 'tnguyen@email.com',
     participants: ['Leo (age 8)'], practitioners: ['Dr. Chen'],
     status: 'active', intake: '2024-05-20', insurance: 'Medicaid', sessions: 9,
-    activityCounts: {
-      agentic: { completed: 2, total: 8 }, somatic: { completed: 4, total: 8 },
-      emotional: { completed: 3, total: 8 }, cognitive: { completed: 3, total: 8 },
-      relational: { completed: 4, total: 8 }, spiritual: { completed: 1, total: 8 },
-    },
+    dimensions: { agentic: 55, somatic: 62, emotional: 58, cognitive: 60, relational: 65, spiritual: 50 },
+    activityCounts: { agentic: 3, somatic: 4, emotional: 3, cognitive: 3, relational: 5, spiritual: 2 },
   },
   {
     id: 6, family: 'Smith Family', contact: 'Rachel Smith', email: 'rsmith@email.com',
     participants: ['Noah (age 5)'], practitioners: ['M. Williams'],
     status: 'on_hold', intake: '2023-11-12', insurance: 'Blue Cross', sessions: 40,
-    activityCounts: {
-      agentic: { completed: 6, total: 8 }, somatic: { completed: 7, total: 8 },
-      emotional: { completed: 6, total: 8 }, cognitive: { completed: 7, total: 8 },
-      relational: { completed: 8, total: 8 }, spiritual: { completed: 6, total: 8 },
-    },
+    dimensions: { agentic: 78, somatic: 82, emotional: 75, cognitive: 79, relational: 83, spiritual: 76 },
+    activityCounts: { agentic: 12, somatic: 14, emotional: 10, cognitive: 11, relational: 13, spiritual: 8 },
   },
   {
-    id: 7, family: 'Wilson Family', contact: 'James Wilson', email: 'jwilson@email.com',
-    participants: ['James Wilson (age 42)', 'Karen Wilson (age 39)'], practitioners: ['Dr. Chen', 'P. Patel'],
-    status: 'active', intake: '2024-06-10', insurance: 'Cigna', sessions: 15,
-    dimensions: { agentic: 68, somatic: 75, emotional: 62, cognitive: 79, relational: 71, spiritual: 58 },
+    id: 7, family: 'Martinez Family', contact: 'Rosa Martinez', email: 'rmartinez@email.com',
+    participants: ['Rosa Martinez (age 34)'], practitioners: ['Dr. Chen'],
+    status: 'active', intake: '2024-01-15', insurance: 'Blue Cross', sessions: 16,
+    dimensions: { agentic: 68, somatic: 75, emotional: 70, cognitive: 80, relational: 72, spiritual: 65 },
+    activityCounts: null,
+    lastAssessmentDate: '2024-02-09',
   },
   {
-    id: 8, family: 'Davis Family', contact: 'Michelle Davis', email: 'mdavis@email.com',
-    participants: ['Michelle Davis (age 34)'], practitioners: ['J. Rodriguez'],
-    status: 'active', intake: '2024-07-22', insurance: 'United', sessions: 10,
-    dimensions: { agentic: 45, somatic: 52, emotional: 38, cognitive: 61, relational: 57, spiritual: 43 },
+    id: 8, family: 'Williams Family', contact: 'James Williams', email: 'jwilliams@email.com',
+    participants: ['James Williams (age 29)', 'Sara Williams (age 27)'], practitioners: ['M. Williams', 'J. Rodriguez'],
+    status: 'active', intake: '2024-03-01', insurance: 'Aetna', sessions: 20,
+    dimensions: { agentic: 55, somatic: 60, emotional: 52, cognitive: 65, relational: 48, spiritual: 58 },
+    activityCounts: null,
+    lastAssessmentDate: '2024-03-22',
   },
 ];
 
@@ -104,45 +90,23 @@ const DIM_SHORT = {
   spiritual:  { label: 'Sp', color: '#7c3aed' },
 };
 
-function getScoreColor(score) {
-  if (score >= 70) return '#059669';
-  if (score >= 50) return '#d97706';
-  return '#dc2626';
+/**
+ * Returns true if any participant in the list is 18 or older.
+ * When a participant entry does not include an age tag (e.g. "(age N)"), they
+ * are assumed to be an adult — this is the safe default because adult clients
+ * should see assessment score bars, and a missing age should not silently hide
+ * clinically relevant data. Practitioners should add explicit ages to avoid
+ * ambiguity.
+ */
+function hasAdultParticipants(participants) {
+  return participants.some(p => {
+    const match = p.match(/\(age\s+(\d+)\)/);
+    if (!match) return true; // no age listed → assume adult (see JSDoc above)
+    return parseInt(match[1], 10) >= 18;
+  });
 }
 
-function getClientMeasurementType(client) {
-  const participantAges = (client.participants || []).map(p => {
-    const match = p.match(/age (\d+)/);
-    return match ? parseInt(match[1], 10) : null;
-  }).filter(age => age !== null);
-
-  const isKids = participantAges.length > 0 && participantAges.every(age => age < 18);
-  return isKids ? 'curriculum_completion' : 'assessment_scores';
-}
-
-function InfoTooltip({ text }) {
-  return (
-    <span className="info-tooltip-wrap" style={{ position: 'relative', display: 'inline-block', cursor: 'help', marginLeft: '.3rem', verticalAlign: 'middle' }}>
-      <span style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        width: 14, height: 14, borderRadius: '50%', background: '#e5e7eb',
-        color: '#6b7280', fontSize: '.6rem', fontWeight: 700, lineHeight: 1,
-      }}>ⓘ</span>
-      <span className="info-tooltip-text" style={{
-        position: 'absolute', bottom: '130%', left: '50%', transform: 'translateX(-50%)',
-        background: '#1e293b', color: '#e2e8f0',
-        padding: '8px 12px', borderRadius: 8, fontSize: '.72rem', lineHeight: 1.4,
-        maxWidth: 280, width: 'max-content', zIndex: 100,
-        pointerEvents: 'none',
-        boxShadow: '0 4px 12px rgba(0,0,0,.25)',
-      }}>
-        {text}
-      </span>
-    </span>
-  );
-}
-
-function DimBar({ value, color, label }) {
+function DimBar({ value, color }) {
   return (
     <div style={{ flex: 1, textAlign: 'center' }}>
       <div style={{
@@ -157,6 +121,51 @@ function DimBar({ value, color, label }) {
       </div>
       <span style={{ fontSize: '.6rem', color: '#9ca3af', fontWeight: 600 }}>{label}</span>
     </div>
+  );
+}
+
+function ActivityBadge({ label, count, color }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      background: '#f8fafc', borderRadius: 8, padding: '.35rem .45rem', minWidth: 40,
+      border: `1.5px solid ${color}33`,
+    }}>
+      <span style={{ fontSize: '.85rem', fontWeight: 800, color, lineHeight: 1 }}>{count}</span>
+      <span style={{ fontSize: '.55rem', color: '#9ca3af', fontWeight: 600, marginTop: 2 }}>{label}</span>
+    </div>
+  );
+}
+
+function InfoTooltip({ children }) {
+  const [show, setShow] = React.useState(false);
+  return (
+    <span style={{ position: 'relative', display: 'inline-block', verticalAlign: 'middle' }}>
+      <button
+        style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: '#9ca3af', fontSize: '.8rem', padding: '0 .2rem', lineHeight: 1,
+        }}
+        onMouseEnter={() => setShow(true)}
+        onMouseLeave={() => setShow(false)}
+        onFocus={() => setShow(true)}
+        onBlur={() => setShow(false)}
+        aria-label="More information"
+        type="button"
+      >ⓘ</button>
+      {show && (
+        <div style={{
+          position: 'absolute', bottom: '130%', left: '50%', transform: 'translateX(-50%)',
+          background: '#1e293b', color: '#e2e8f0',
+          borderRadius: 8, padding: '.6rem .75rem',
+          fontSize: '.72rem', lineHeight: 1.5, width: 230,
+          zIndex: 100, boxShadow: '0 4px 16px rgba(0,0,0,.25)',
+          pointerEvents: 'none',
+        }}>
+          {children}
+        </div>
+      )}
+    </span>
   );
 }
 
@@ -394,50 +403,53 @@ export default function PracticeClientsPage() {
                       ))}
                     </div>
 
-                    {/* Dimension progress bars */}
+                    {/* Dimension scores / activity completion */}
                     <div style={{ marginBottom: '.6rem' }}>
-                      {(() => {
-                        const measureType = getClientMeasurementType(client);
-                        if (measureType === 'assessment_scores') {
-                          return (
-                            <>
-                              <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280', display: 'flex', alignItems: 'center', marginBottom: '.15rem' }}>
-                                Resilience Assessment Scores
-                                <InfoTooltip text="Scores from client's most recent 72-question Resilience Atlas assessment. Scale: 0–100. Higher scores indicate stronger dimensional capacity. For adult clients (18+) only." />
-                              </span>
-                              <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.4rem' }}>
-                                From most recent Resilience Atlas assessment
-                              </span>
-                              <div className="pm-dim-bars" aria-label="Resilience assessment scores">
-                                {Object.entries(client.dimensions || {}).map(([key, score]) => (
-                                  <DimBar key={key} value={score} color={getScoreColor(score)} label={`${score}%`} />
-                                ))}
-                              </div>
-                            </>
-                          );
-                        }
-                        return (
-                          <>
-                            <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280', display: 'flex', alignItems: 'center', marginBottom: '.15rem' }}>
-                              Curriculum Completion Progress
-                              <InfoTooltip text="Number of IATLAS curriculum activities completed in each dimension. Baseline = start of curriculum enrollment. Does not use assessment scores." />
+                      {hasAdultParticipants(client.participants) ? (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', marginBottom: '.4rem' }}>
+                            <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280' }}>
+                              📊 Resilience Assessment Scores
                             </span>
-                            <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.4rem' }}>
-                              Activities completed per dimension
+                            <InfoTooltip>
+                              <span>Assessment scores (0–100) from the 72-question Resilience Atlas. Higher scores = stronger dimensional capacity. Updates when client retakes the assessment (typically every 30–90 days).</span>
+                              <br /><br />
+                              <span>Note: Assessment scores are for adults (18+) only.</span>
+                            </InfoTooltip>
+                          </div>
+                          {client.lastAssessmentDate && (
+                            <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.3rem' }}>
+                              Most recent assessment: {new Date(client.lastAssessmentDate).toLocaleDateString()}
                             </span>
-                            <div className="pm-dim-bars" aria-label="Curriculum completion progress">
-                              {Object.entries(client.activityCounts || {}).map(([key, { completed, total }]) => (
-                                <DimBar
-                                  key={key}
-                                  value={total > 0 ? Math.round((completed / total) * 100) : 0}
-                                  color="#3b82f6"
-                                  label={`${completed}/${total}`}
-                                />
-                              ))}
-                            </div>
-                          </>
-                        );
-                      })()}
+                          )}
+                          <div className="pm-dim-bars" aria-label="Resilience assessment scores">
+                            {Object.entries(client.dimensions).map(([key, val]) => (
+                              <DimBar key={key} value={val} color={DIM_SHORT[key].color} />
+                            ))}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', marginBottom: '.4rem' }}>
+                            <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#6b7280' }}>
+                              ✨ Activity Completion Progress
+                            </span>
+                            <InfoTooltip>
+                              <span>Total activities completed across each resilience dimension. Children are tracked via activity completion and behavioral observations — not assessment scores.</span>
+                              <br /><br />
+                              <span>Assessment scores (0–100) are for adults (18+) only.</span>
+                            </InfoTooltip>
+                          </div>
+                          <span style={{ fontSize: '.65rem', color: '#9ca3af', display: 'block', marginBottom: '.35rem' }}>
+                            Activities completed since curriculum start
+                          </span>
+                          <div style={{ display: 'flex', gap: '.3rem', flexWrap: 'wrap' }} aria-label="Activity completion progress">
+                            {Object.entries(client.activityCounts || {}).map(([key, count]) => (
+                              <ActivityBadge key={key} label={DIM_SHORT[key].label} count={count} color={DIM_SHORT[key].color} />
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Assigned practitioners */}
