@@ -82,12 +82,12 @@ const MOCK_CLIENTS = [
 ];
 
 const DIM_SHORT = {
-  agentic: { label: 'Ag', color: '#4f46e5' },
-  somatic:   { label: 'So', color: '#059669' },
-  emotional: { label: 'Em', color: '#db2777' },
-  cognitive: { label: 'Co', color: '#d97706' },
-  relational:{ label: 'Re', color: '#0891b2' },
-  spiritual: { label: 'Sp', color: '#7c3aed' },
+  agentic:    { label: 'Ag', color: '#4f46e5' },
+  somatic:    { label: 'So', color: '#059669' },
+  emotional:  { label: 'Em', color: '#db2777' },
+  cognitive:  { label: 'Co', color: '#d97706' },
+  relational: { label: 'Re', color: '#0891b2' },
+  spiritual:  { label: 'Sp', color: '#7c3aed' },
 };
 
 /**
@@ -114,12 +114,12 @@ function DimBar({ value, color }) {
         display: 'flex', alignItems: 'flex-end',
       }}>
         <div style={{
-          width: '100%', height: `${value}%`,
-          background: color, borderRadius: 4, opacity: .8,
+          width: '100%', height: `${Math.min(value, 100)}%`,
+          background: color, borderRadius: 4, opacity: .85,
           transition: 'height .3s ease',
         }} />
       </div>
-      <span style={{ fontSize: '.6rem', color: '#9ca3af', fontWeight: 600 }}>{value}</span>
+      <span style={{ fontSize: '.6rem', color: '#9ca3af', fontWeight: 600 }}>{label}</span>
     </div>
   );
 }
@@ -291,6 +291,9 @@ export default function PracticeClientsPage() {
           .pm-client-meta { font-size: .78rem; color: #9ca3af; margin-bottom: .8rem; }
           .pm-client-meta span { margin-right: .75rem; }
           .pm-dim-bars { display: flex; gap: .3rem; align-items: flex-end; height: 42px; }
+          .info-tooltip-wrap .info-tooltip-text { visibility: hidden; opacity: 0; transition: opacity .2s; }
+          .info-tooltip-wrap:hover .info-tooltip-text,
+          .info-tooltip-wrap:focus-within .info-tooltip-text { visibility: visible; opacity: 1; }
           .pm-client-practitioners {
             display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .8rem;
           }
