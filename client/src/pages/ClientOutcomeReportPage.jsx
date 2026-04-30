@@ -148,8 +148,8 @@ export default function ClientOutcomeReportPage() {
           <div>
             <h1 className="cor-title">Client Outcome Report</h1>
             <p className="cor-subtitle">
-              Dimensional progress, session trends, and goal summaries for insurance
-              documentation and clinical records.
+              Assessment scores, session trends, and goal summaries for insurance
+              documentation and clinical records. Assessment data is for adult clients (18+) only.
             </p>
           </div>
           {hasPro && progressData && (
@@ -244,8 +244,9 @@ export default function ClientOutcomeReportPage() {
 
               {/* ── Dimensional progress ── */}
               <section className="cor-section">
-                <h2 className="cor-section-title">Dimensional Progress</h2>
+                <h2 className="cor-section-title">Dimensional Assessment Scores</h2>
                 <p className="cor-section-desc">
+                  Scores from the 72-question Resilience Atlas assessment (adults 18+ only).
                   Radar chart comparing baseline (intake) scores to current scores across
                   all six resilience dimensions.
                 </p>
