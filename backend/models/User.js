@@ -113,6 +113,23 @@ const userSchema = new mongoose.Schema({
   // Date joined practice
   practiceJoinedAt: { type: Date, default: null },
 
+  // ── Sharing consent preferences ────────────────────────────────────────────
+  // Default consent preference for future assessments (user can override per-assessment)
+  defaultSharingConsent: {
+    type: Boolean,
+    default: false,
+  },
+  // Audit trail of consent changes
+  consentHistory: {
+    type: [{
+      assessmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'ResilienceResult', default: null },
+      consent:      { type: Boolean, required: true },
+      date:         { type: Date, default: Date.now },
+      goals:        { type: String, default: null },
+    }],
+    default: [],
+  },
+
 }, { timestamps: true });
 
 // Hash password before saving

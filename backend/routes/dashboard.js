@@ -60,6 +60,16 @@ const SCORE_KEY_MAP = {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 /**
+ * Build a MongoDB filter for ResilienceResult that respects sharing consent.
+ * - sharingConsent: true  → user has opted in  → include
+ * - sharingConsent: null  → legacy record (pre-feature) → include (backward compat)
+ * - sharingConsent: false → user has opted out → exclude
+ */
+function consentFilter() {
+  return { sharingConsent: { $ne: false } };
+}
+
+/**
  * Resolve dimension scores from a ResilienceResult document.
  * Supports both the structured dimension_scores field and the legacy scores Map.
  */
@@ -171,7 +181,7 @@ router.get('/org-summary', authenticateJWT, requireOrgMember, async (req, res) =
 
     const [org, results, totalMembers] = await Promise.all([
       Organization.findById(orgId).lean(),
-      ResilienceResult.find({ organizationId: orgId }).lean(),
+      ResilienceResult.find({ organizationId: orgId, ...consentFilter() }).lean(),
       User.countDocuments({ organizationId: orgId }),
     ]);
 
@@ -242,7 +252,7 @@ router.get('/team-breakdown', authenticateJWT, requireOrgMember, async (req, res
 
     // Get latest result per user
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -310,7 +320,7 @@ router.get('/members', authenticateJWT, requireOrgMember, async (req, res) => {
     ).lean();
 
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -333,6 +343,7 @@ router.get('/members', authenticateJWT, requireOrgMember, async (req, res) => {
         dominant_dimension: r ? (r.dominant_dimension ?? r.dominantType ?? null) : null,
         completed_at:       r ? r.createdAt : null,
         dimension_scores:   r ? resolveDimensionScores(r) : null,
+        sharing_consent:    r ? (r.sharingConsent ?? null) : null,
       };
     });
 
@@ -364,7 +375,7 @@ router.get('/export/csv', authenticateJWT, requireOrgMember, async (req, res) =>
     ).lean();
 
     const userIds = members.map((m) => m._id);
-    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds } })
+    const results = await ResilienceResult.find({ organizationId: orgId, userId: { $in: userIds }, ...consentFilter() })
       .sort({ createdAt: -1 })
       .lean();
 
