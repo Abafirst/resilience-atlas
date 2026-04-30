@@ -2272,6 +2272,10 @@ export default function IATLASCurriculumPage() {
                     <img src="/icons/planning.svg" alt="" width={16} height={16} aria-hidden="true" />
                     View My Progress
                   </a>
+                  <Link to="/iatlas/practice/dashboard" className="iatlas-btn-secondary">
+                    <img src="/icons/organization.svg" alt="" width={16} height={16} aria-hidden="true" />
+                    Practice Dashboard
+                  </Link>
                   <Link to="/iatlas/train-the-facilitator" className="iatlas-btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(245,158,11,.12)', borderColor: 'rgba(245,158,11,.35)', color: '#fbbf24' }}>
                     <img src="/icons/certification.svg" alt="" width={16} height={16} aria-hidden="true" />
                     Train the Facilitator
@@ -2352,19 +2356,6 @@ export default function IATLASCurriculumPage() {
                         }}
                       >
                         Learn More &amp; Join Waitlist →
-                      </Link>
-                      <Link
-                        to="/iatlas/practice/dashboard"
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-                          background: 'rgba(255,255,255,.95)', color: '#334155',
-                          border: '1.5px solid #cbd5e1', borderRadius: 10,
-                          padding: '.62rem 1.3rem', fontWeight: 600, fontSize: '.88rem',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        <img src="/icons/organization.svg" alt="" width={16} height={16} aria-hidden="true" />
-                        Practice Dashboard
                       </Link>
                     </div>
                   </div>
