@@ -149,6 +149,63 @@ const organizationSchema = new mongoose.Schema(
 
     // Webhook endpoints registered for this org
     webhookUrls: [{ type: String, trim: true }],
+
+    // ── Progress Circle fields ────────────────────────────────────────────────
+
+    // Classifies what kind of organisation this is (useful for Progress Circles).
+    organizationType: {
+      type: String,
+      enum: [
+        'employer',
+        'family',
+        'caregiver_network',
+        'slp_practice',
+        'ot_practice',
+        'aba_clinic',
+        'school_district',
+        'therapy_center',
+        'healthcare_practice',
+        'counseling_center',
+        'community_org',
+        'other',
+        null,
+      ],
+      default: null,
+    },
+
+    // Specialty-specific configuration fields (all optional).
+    specialtySettings: {
+      // SLP-specific
+      slpFocus: { type: [String], default: [] },
+
+      // OT-specific
+      otFocus: { type: [String], default: [] },
+
+      // School-specific
+      schoolGrades: { type: [String], default: [] },
+      schoolType:   { type: String,   default: '' },
+
+      // ABA-specific
+      abaProtocols: { type: [String], default: [] },
+
+      // Caregiver-specific
+      caregiverTypes:  { type: [String], default: [] },
+      servicesOffered: { type: [String], default: [] },
+
+      // Employer-specific
+      employerIndustry: { type: String, default: '' },
+      employeeCount:    { type: Number, default: null },
+    },
+
+    // Progress Circles this organisation is participating in.
+    participatingCircles: [
+      {
+        circleId:  { type: mongoose.Schema.Types.ObjectId, ref: 'ProgressCircle' },
+        childName: { type: String, default: '' },
+        role:      { type: String, default: '' },
+        joinedAt:  { type: Date,   default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
