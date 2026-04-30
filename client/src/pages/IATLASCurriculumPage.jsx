@@ -2287,6 +2287,19 @@ export default function IATLASCurriculumPage() {
                       Session Plans
                     </Link>
                   )}
+                  {Object.values(IATLAS_SPECIALTIES).map((specialty) => (
+                    <button
+                      key={specialty.id}
+                      className="iatlas-btn-secondary"
+                      onClick={() => {
+                        document.querySelector('.iatlas-specialties-coming-soon')?.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => setActiveSpecialty(specialty), 400);
+                      }}
+                    >
+                      <img src={specialty.icon} alt="" width={16} height={16} aria-hidden="true" />
+                      {specialty.name}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="iatlas-hero-visual" aria-hidden="true">
@@ -2387,35 +2400,6 @@ export default function IATLASCurriculumPage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-
-          {/* ── Specialty Navigation ─────────────────────────────────────── */}
-          <section className="iatlas-specialty-nav" aria-label="Jump to specialty fields">
-            <div className="iatlas-specialty-nav-header">
-              <h2>Specialized Fields</h2>
-              <p>Jump to your professional specialty</p>
-            </div>
-            <div className="iatlas-specialty-nav-buttons">
-              {Object.values(IATLAS_SPECIALTIES).map((specialty) => (
-                <a
-                  key={specialty.id}
-                  href="#iatlas-specialties-title"
-                  className="iatlas-specialty-nav-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.querySelector('.iatlas-specialties-coming-soon')?.scrollIntoView({ behavior: 'smooth' });
-                    setTimeout(() => setActiveSpecialty(specialty), 400);
-                  }}
-                >
-                  <img
-                    src={specialty.icon}
-                    alt=""
-                    className="iatlas-specialty-nav-icon"
-                  />
-                  <span className="iatlas-specialty-nav-label">{specialty.name}</span>
-                </a>
-              ))}
             </div>
           </section>
 
